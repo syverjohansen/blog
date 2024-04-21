@@ -1,14 +1,10 @@
 +++
-title = "Hello World"
-date = "2024-04-21T12:35:29-04:00"
-author = ""
-authorTwitter = "" #do not include @
-cover = ""
-tags = ["", ""]
-keywords = ["", ""]
-description = ""
-showFullContent = false
-readingTime = false
-hideComments = false
-color = "" #color from the theme settings
+title = 'My First Post'
+date = 2024-01-14T07:07:07+01:00
+draft = false
 +++
+## Introduction
+
+This is **bold** text, and this is *emphasized* text.
+
+Visit the [Hugo](https://gohugo.io) website!
