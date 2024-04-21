@@ -1,0 +1,4 @@
+[submodule "daehl-e/public"]
+	path = daehl-e/public
+	url = https://github.com/syverjohansen/daehl-e.github.io.git
+	branch = main
