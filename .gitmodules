@@ -2,4 +2,7 @@
 	path = themes/terminal
 	url = https://github.com/panr/hugo-theme-terminal.git
 
+[submodule "daehl-e/public"]
+	path = public
+	url = https://daehl-e.com
 
