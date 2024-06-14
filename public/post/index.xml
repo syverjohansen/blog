@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Nordic Numbers</title>
+    <link>http://localhost:51205/post/</link>
+    <description>Recent content in Posts on Nordic Numbers</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 13 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:51205/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Scraping Ski Data for Statistical Analysis</title>
+      <link>http://localhost:51205/post/readme/</link>
+      <pubDate>Thu, 13 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:51205/post/readme/</guid>
+      <description>Goal: Getting the Data Needed to Perform Statistical Analysis The first step to perform any meaningful statistical analysis is to get the data needed. Because I haven’t recorded ski results since the beginning of time, I need to use an external source. The seemingly obvious way to do this is to use the FIS website and search for World Cup races. While they undoubtedly have the highest volume of data and are the official arbiter of the results, their records management has something to be desired.</description>
+    </item>
+  </channel>
+</rss>

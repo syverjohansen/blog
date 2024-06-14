@@ -1,25 +1,47 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Terminal</title>
-    <link>daehl-e.com/</link>
-    <description>Recent content on Terminal</description>
+    <title>Nordic Numbers</title>
+    <link>http://localhost:51205/</link>
+    <description>Recent content on Nordic Numbers</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 14 Jan 2024 07:07:07 +0100</lastBuildDate><atom:link href="daehl-e.com/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Thu, 13 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:51205/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>My First Post</title>
-      <link>daehl-e.com/posts/hello-world/</link>
-      <pubDate>Sun, 14 Jan 2024 07:07:07 +0100</pubDate>
-      
-      <guid>daehl-e.com/posts/hello-world/</guid>
-      <description>Introduction This is bold text, and this is emphasized text.
-Visit the Hugo website!</description>
-      <content>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;This is &lt;strong&gt;bold&lt;/strong&gt; text, and this is &lt;em&gt;emphasized&lt;/em&gt; text.&lt;/p&gt;
-&lt;p&gt;Visit the &lt;a href=&#34;https://gohugo.io&#34;&gt;Hugo&lt;/a&gt; website!&lt;/p&gt;
-</content>
+      <title>Scraping Ski Data for Statistical Analysis</title>
+      <link>http://localhost:51205/post/readme/</link>
+      <pubDate>Thu, 13 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:51205/post/readme/</guid>
+      <description>Goal: Getting the Data Needed to Perform Statistical Analysis The first step to perform any meaningful statistical analysis is to get the data needed. Because I haven’t recorded ski results since the beginning of time, I need to use an external source. The seemingly obvious way to do this is to use the FIS website and search for World Cup races. While they undoubtedly have the highest volume of data and are the official arbiter of the results, their records management has something to be desired.</description>
     </item>
-    
+    <item>
+      <title></title>
+      <link>http://localhost:51205/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:51205/about/</guid>
+      <description>About the Blog This is the blog for all things FIS and IBU World Cup statistics!&#xA;•&#x9;Articles on statistical analysis of skiing&#xA;•&#x9;Current Elo Scores&#xA;•&#x9;Podium Prediction Game&#xA;•&#x9;Forum&#xA;How it started: •&#x9;When I was in the Navy stationed on the east coast, I had nothing to do at the start of the pandemic besides work, workout, and spend time on my computer. We were not allowed to go anywhere including home to visit our families.</description>
+    </item>
+    <item>
+      <title></title>
+      <link>http://localhost:51205/notes/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:51205/notes/</guid>
+      <description>Go 语言学习笔记 Envoy 学习笔记 </description>
+    </item>
+    <item>
+      <title></title>
+      <link>http://localhost:51205/search/placeholder/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:51205/search/placeholder/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Posts Archive</title>
+      <link>http://localhost:51205/archive/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:51205/archive/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>
