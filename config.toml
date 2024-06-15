@@ -1,6 +1,6 @@
 baseurl = "https://daehl-e.com"  #The url I'm using for my file
 title = "Nordic Numbers" #The one in the top left corner and the middle
-theme = "hugo-theme-cleanwhite"  #The theme that I'm using for my project
+theme = "white"  #The theme that I'm using for my project
 languageCode = "en-us"  #Language for my site
 # Enable comments by entering your Disqus shortname
 disqusShortname = "" #Not using disqus yet.  Want to know if there are better comments
