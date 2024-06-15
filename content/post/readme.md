@@ -4,8 +4,9 @@ title:      "Scraping Ski Data for Statistical Analysis"
 subtitle:   "How to get your data"
 date:       2024-06-13
 author:     "Syver Johansen"
-image:      "/img/scrape-blog/libraries.png"
 ---
+<!--image:      "/img/scrape-blog/libraries.png"-->
+
 
 # Goal: Getting the Data Needed to Perform Statistical Analysis
 
