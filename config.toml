@@ -130,7 +130,6 @@ home = ["HTML", "RSS", "Algolia"] #Home page should be rendered in HTML, that an
   href =  "/forum/"
 
 
-
 [outputFormats.Algolia] #Configures an output format for generating a JSON file suitable for Algolia search indexing
 baseName = "algolia"
 isPlainText = true
@@ -147,3 +146,4 @@ params = ["categories", "tags"]  #Whichparameters should be included in the Algo
     startLevel = 1 #The heading level at which the table of contents should end
   [markup.highlight] 
     style = "dracula" #Syntax highlighting in code blocks
+
