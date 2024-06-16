@@ -374,6 +374,32 @@ print(time.time() - start_time)
 
 10. Write to an excel file.
 
+
+The output should look something like this.  Note the run time.
+
+```
+20240120
+20240121
+20240127
+20240128
+20240209
+20240210
+20240211
+20240213
+20240217
+20240218
+20240301
+20240302
+20240303
+20240309
+20240312
+20240315
+20240316
+20240317
+2473.1086418628693
+```
+
+
 All done!
 
     
