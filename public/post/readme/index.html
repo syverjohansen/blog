@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="/img/scrape-blog/libraries.png">
-    <meta property="twitter:image" content="/img/scrape-blog/libraries.png" />
+    <meta property="og:image" content="https://daehl-e.com//img/daehlie-stride.avif">
+    <meta property="twitter:image" content="https://daehl-e.com//img/daehlie-stride.avif" />
     
 
     
@@ -158,7 +158,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/img/scrape-blog/libraries.png')
+        background-image: url('/img/daehlie-stride.avif')
     }
 </style>
 
@@ -206,7 +206,8 @@
                 post-container">
 
                 
-                <h1 id="goal-getting-the-data-needed-to-perform-statistical-analysis">Goal: Getting the Data Needed to Perform Statistical Analysis</h1>
+                <!-- raw HTML omitted -->
+<h1 id="goal-getting-the-data-needed-to-perform-statistical-analysis">Goal: Getting the Data Needed to Perform Statistical Analysis</h1>
 <p>The first step to perform any meaningful statistical analysis is to get the data needed.  Because I haven’t recorded ski results since the beginning of time, I need to use an external source.  The seemingly obvious way to do this is to use the FIS website and search for World Cup races.  While they undoubtedly have the highest volume of data and are the official arbiter of the results, their records management has something to be desired.  Because our analysis will want to make sure that each individual skier is unique, names cannot be the ultimate form of identification since multiple people can have the same name.  Instead, we need a unique ID for each skier.  While FIS does have a FIS code, I discovered examples of people (especially women who got married) who have a FIS code for one name/spelling, and another FIS code for another name/spelling.  On top of this, biathlon data is not stored on FIS, which would mean I would need a script to scrape from an IBU site.</p>
 <p>Fortunately, I stumbled across <a href="https://firstskisport.com">firstskisport.com</a> (formerly skisport365.com).  I am not sure who maintains the site as it just says “By the fans – for the fans”.  A simple whois query on the site didn’t bring up anything meaningful other than their servers were based out of Norway.  However, email I had previously sent to the site telling them of a dead link got a reply from Tomas Skogheim Walsvik, Founder and Head of Development.  Assuming he is the main guy who runs the site, thank you Tomas for all of your hard work.</p>
 <p><a href="https://firstskisport.com">Firstskisport.com</a> is a super well organized site that has results for alpine, biathlon, cross-country, Nordic Combined, ski jumping and speed skating dating back to the earliest records.  Also, the names in the records have been normalized for each sport, so there is not the same issues as the FIS site in terms of multiple names for one person.  Due to this, there is also only one id per person, a necessity for any follow-on analysis.</p>
@@ -583,8 +584,35 @@ Then I concatenate the ski_df with table_df along columns (<code>axis=1</code>),
 <p>Write to an excel file.</p>
 </li>
 </ol>
-<p>All done!</p>
+<p>The output should look something like this.  Note the run time.</p>
+<pre tabindex="0"><code>20240120
+20240121
+20240127
+20240128
+20240209
+20240210
+20240211
+20240213
+20240217
+20240218
+20240301
+20240302
+20240303
+20240309
+20240312
+20240315
+20240316
+20240317
+2473.1086418628693
+</code></pre><p>All done!</p>
 
+
+                
+               
+
+                
+
+                
 
                 
 
@@ -607,7 +635,12 @@ Then I concatenate the ski_df with table_df along columns (<code>axis=1</code>),
                     <h5>
                         <a class="catalog-toggle" href="#">CATALOG</a>
                     </h5>
-                    <ul class="catalog-body"></ul>
+                    <ul class="catalog-body">
+                        <li><a href="#Ladies">Ladies</a></li>
+                        <li><a href="#L_Distance">Distance Elo</a></li>
+                        <li><a href="#L_Distance_C">Distance Classic Elo</a></li>
+                        <li><a href="#L_Distance_F">Distance Freestyle Elo</a></li>
+                    </ul>
                 </div>
             </div>
             
@@ -662,6 +695,15 @@ Then I concatenate the ski_df with table_df along columns (<code>axis=1</code>),
 </article>
 
 
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
+
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 
 
 <footer>
@@ -836,6 +878,14 @@ Then I concatenate the ski_df with table_df along columns (<code>axis=1</code>),
 
 
 
+
+
+<script>
+$(document).ready(function() {
+    if ($('#dataTable').length) {
+        $('#dataTable').DataTable();
+    }
+</script>
 
 </body>
 </html>

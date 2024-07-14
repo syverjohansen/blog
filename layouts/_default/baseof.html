@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+{{ partial "head.html" . }}
+{{ partial "nav.html" . }}
+<!-- Page Header -->
+{{ block "header" .}}
+<header class="intro-header" style="background-image: url('{{ .Site.Params.header_image | relURL }}')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>{{ .Site.Title}} </h1>
+                    <!--<hr class="small">-->
+		    <span class="subheading">{{ .Site.Params.slogan }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{{ end }}
+
+{{ block "main" . }}
+{{ end }}
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+{{ partial "footer.html" . }}
+
+<script>
+$(document).ready(function() {
+    if ($('#dataTable').length) {
+        $('#dataTable').DataTable();
+    }
+</script>
+
+</body>
+</html>

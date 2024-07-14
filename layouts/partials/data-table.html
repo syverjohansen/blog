@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elo Data Tables</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <style>
+        .catalog-container {
+            position: fixed;
+            right: 0;
+            top: 0px;
+            width: 250px;
+            height: 100%;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-left: 1px solid #ddd;
+        }
+        .content-container {
+            margin-left: 270px;
+            margin-right: 270px; /* Adjust based on the width of your sidebar */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <h1 id="Ladies"> Ladies</h1>
+
+        <h2 id="L"> Overall Elo</h2>
+        <table id="dataTableL" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="L_Distance">Distance Elo</h2>
+        <table id="dataTableL_Distance" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="L_Distance_Classic">Distance Classic Elo</h2>
+        <table id="dataTableL_Distance_C" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="L_Distance_Freestyle">Distance Freestyle Elo</h2>
+        <table id="dataTableL_Distance_F" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="L_Sprint">Sprint Elo</h2>
+        <table id="dataTableL_Sprint" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="L_Sprint_Classic">Sprint Classic Elo</h2>
+        <table id="dataTableL_Sprint_C" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="L_Sprint_Freestyle">Sprint Freestyle Elo</h2>
+        <table id="dataTableL_Sprint_F" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="L_Classic">Classic Elo</h2>
+        <table id="dataTableL_C" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="L_Freestyle">Freestyle Elo</h2>
+        <table id="dataTableL_F" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+
+        <!-- Add more <h2> and <table> elements as needed for the Ladies section -->
+    </div>
+
+    <div class="container-fluid">
+        <h1>Men</h1>
+
+        <h2 id="M"> Overall Elo</h2>
+        <table id="dataTableM" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="M_Distance">Distance Elo</h2>
+        <table id="dataTableM_Distance" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="M_Distance_Classic">Distance Classic Elo</h2>
+        <table id="dataTableM_Distance_C" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="M_Distance_Freestyle">Distance Freestyle Elo</h2>
+        <table id="dataTableM_Distance_F" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="M_Sprint">Sprint Elo</h2>
+        <table id="dataTableM_Sprint" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="M_Sprint_Classic">Sprint Classic Elo</h2>
+        <table id="dataTableM_Sprint_C" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="M_Sprint_Freestyle">Sprint Freestyle Elo</h2>
+        <table id="dataTableM_Sprint_F" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="M_Classic">Classic Elo</h2>
+        <table id="dataTableM_C" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <h2 id="M_Freestyle">Freestyle Elo</h2>
+        <table id="dataTableM_F" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <!-- Add more <h2> and <table> elements as needed for the Men section -->
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        // DataTable for Ladies Overall Elo
+        $.getJSON('{{ "python/excel365/L_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableL').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Ladies Overall Elo');
+        });
+
+        // DataTable for Ladies Distance Elo
+        $.getJSON('{{ "python/excel365/L_Distance_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableL_Distance').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Ladies Distance Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/L_Distance_C_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableL_Distance_C').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Ladies Distance Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/L_Distance_F_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableL_Distance_F').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Ladies Distance Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/L_Sprint_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableL_Sprint').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Ladies Sprint Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/L_Sprint_C_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableL_Sprint_C').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Ladies Sprint Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/L_Sprint_F_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableL_Sprint_F').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Ladies Sprint Elo');            
+        });
+
+                $.getJSON('{{ "python/excel365/L_C_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableL_C').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Ladies Sprint Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/L_F_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableL_F').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Ladies Sprint Elo');
+        });
+
+        // DataTable for Men Overall Elo
+        $.getJSON('{{ "python/excel365/M_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableM').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Men Overall Elo');
+        });
+
+        // DataTable for Men Distance Elo
+        $.getJSON('{{ "python/excel365/M_Distance_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableM_Distance').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Men Distance Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/M_Distance_C_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableM_Distance_C').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Men Distance Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/M_Distance_F_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableM_Distance_F').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Men Distance Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/M_Sprint_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableM_Sprint').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Men Sprint Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/M_Sprint_C_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableM_Sprint_C').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Men Sprint Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/M_Sprint_F_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableM_Sprint_F').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Men Sprint Elo');            
+        });
+
+                $.getJSON('{{ "python/excel365/M_C_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableM_C').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Men Sprint Elo');
+        });
+
+        $.getJSON('{{ "python/excel365/M_F_current.json" | relURL }}', function(data) {
+            var columns = Object.keys(data[0]).map(function(key) {
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+            });
+
+            $('#dataTableM_F').DataTable({
+                data: data,
+                columns: columns
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Men Sprint Elo');
+        });
+        });
+
+        // Add more DataTable initialization for other sections as needed
+
+    </script>
+
+</body>
+</html>

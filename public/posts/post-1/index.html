@@ -215,6 +215,13 @@
 
 
                 
+               
+
+                
+
+                
+
+                
 
                 
                 <hr>
@@ -246,7 +253,12 @@
                     <h5>
                         <a class="catalog-toggle" href="#">CATALOG</a>
                     </h5>
-                    <ul class="catalog-body"></ul>
+                    <ul class="catalog-body">
+                        <li><a href="#Ladies">Ladies</a></li>
+                        <li><a href="#L_Distance">Distance Elo</a></li>
+                        <li><a href="#L_Distance_C">Distance Classic Elo</a></li>
+                        <li><a href="#L_Distance_F">Distance Freestyle Elo</a></li>
+                    </ul>
                 </div>
             </div>
             
@@ -301,6 +313,15 @@
 </article>
 
 
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
+
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 
 
 <footer>
@@ -475,6 +496,14 @@
 
 
 
+
+
+<script>
+$(document).ready(function() {
+    if ($('#dataTable').length) {
+        $('#dataTable').DataTable();
+    }
+</script>
 
 </body>
 </html>
