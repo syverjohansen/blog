@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elo Data Tables</title>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/dt-2.0.8/datatables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/5.0.1/css/fixedColumns.dataTables.min.css">
     <style>
         .catalog-container {
             position: fixed;
@@ -21,12 +22,31 @@
             margin-left: 270px;
             margin-right: 270px; /* Adjust based on the width of your sidebar */
         }
+      .sticky-col {
+            position: sticky;
+            left: 0;
+            background: #f4f4f4;
+            z-index: 2; /* Ensures the sticky column stays above other columns */
+        }
     </style>
 </head>
 <body>
 
     <div class="container-fluid">
         <h1 id="Ladies"> Ladies</h1>
+       
+        <h2 id="L_chrono"> Ladies</h2>
+       <!--  <div style = "overflow-x:auto;">-->
+        <table id="dataTableL_chrono" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+        <!-- </div> -->
+
 
         <h2 id="L"> Overall Elo</h2>
         <div style = "overflow-x:auto;">
@@ -255,20 +275,61 @@
         <!-- Add more <h2> and <table> elements as needed for the Men section -->
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-2.0.8/datatables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.min.js"></script>
     <script>
     $(document).ready(function() {
         // DataTable for Ladies Overall Elo
-        $.getJSON('{{ "python/excel365/L_current.json" | relURL }}', function(data) {
+
+        $.getJSON('{{ "python/excel365/L_chrono_current.json" | relURL }}', function(data) {
+            sex = "L"
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                if (key === 'Skier') {
+                    return {
+                        data: key,
+                        title: key.charAt(0).toUpperCase() + key.slice(1),
+                        render: function(data, type, row) {
+                            // Create a clickable link for the skier's name using the ID from the JSON data
+                            return `<a href="/skiers/${sex}/${row.ID}" target="_blank">${data}</a>`;
+                        }
+                    };
+                }                
+                else{
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };}
+            });
+
+            $('#dataTableL_chrono').DataTable({
+                data: data,
+                columns: columns,
+                scrollX: true,
+                scrollCollapse: true,
+                fixedColumns: {leftColumns: 2}
+    
+            });
+        }).fail(function() {
+            console.error('Failed to load JSON data for Ladies Overall Elo');
+        });
+        $.getJSON('{{ "python/excel365/L_current.json" | relURL }}', function(data) {
+            sex = "L"
+            var columns = Object.keys(data[0]).map(function(key) {
+                if (key === 'Skier') {
+                    return {
+                        data: key,
+                        title: key.charAt(0).toUpperCase() + key.slice(1),
+                        render: function(data, type, row) {
+                            // Create a clickable link for the skier's name using the ID from the JSON data
+                            return `<a href="https://daehl-e.com/${sex}/${row.ID}" target="_blank">${data}</a>`;
+                        }
+                    };
+                }                
+                else{
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };}
             });
 
             $('#dataTableL').DataTable({
                 data: data,
-                columns: columns
+                columns: columns,
             });
         }).fail(function() {
             console.error('Failed to load JSON data for Ladies Overall Elo');
@@ -277,7 +338,7 @@
         // DataTable for Ladies Distance Elo
         $.getJSON('{{ "python/excel365/L_Distance_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableL_Distance').DataTable({
@@ -290,7 +351,7 @@
 
         $.getJSON('{{ "python/excel365/L_Distance_C_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableL_Distance_C').DataTable({
@@ -303,7 +364,7 @@
 
         $.getJSON('{{ "python/excel365/L_Distance_F_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableL_Distance_F').DataTable({
@@ -316,7 +377,7 @@
 
         $.getJSON('{{ "python/excel365/L_Sprint_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableL_Sprint').DataTable({
@@ -329,7 +390,7 @@
 
         $.getJSON('{{ "python/excel365/L_Sprint_C_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableL_Sprint_C').DataTable({
@@ -342,7 +403,7 @@
 
         $.getJSON('{{ "python/excel365/L_Sprint_F_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableL_Sprint_F').DataTable({
@@ -355,7 +416,7 @@
 
                 $.getJSON('{{ "python/excel365/L_C_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableL_C').DataTable({
@@ -368,7 +429,7 @@
 
         $.getJSON('{{ "python/excel365/L_F_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableL_F').DataTable({
@@ -382,7 +443,7 @@
         // DataTable for Men Overall Elo
         $.getJSON('{{ "python/excel365/M_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableM').DataTable({
@@ -396,7 +457,7 @@
         // DataTable for Men Distance Elo
         $.getJSON('{{ "python/excel365/M_Distance_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableM_Distance').DataTable({
@@ -409,7 +470,7 @@
 
         $.getJSON('{{ "python/excel365/M_Distance_C_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableM_Distance_C').DataTable({
@@ -422,7 +483,7 @@
 
         $.getJSON('{{ "python/excel365/M_Distance_F_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableM_Distance_F').DataTable({
@@ -435,7 +496,7 @@
 
         $.getJSON('{{ "python/excel365/M_Sprint_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableM_Sprint').DataTable({
@@ -448,7 +509,7 @@
 
         $.getJSON('{{ "python/excel365/M_Sprint_C_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableM_Sprint_C').DataTable({
@@ -461,7 +522,7 @@
 
         $.getJSON('{{ "python/excel365/M_Sprint_F_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableM_Sprint_F').DataTable({
@@ -474,7 +535,7 @@
 
                 $.getJSON('{{ "python/excel365/M_C_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableM_C').DataTable({
@@ -487,7 +548,7 @@
 
         $.getJSON('{{ "python/excel365/M_F_current.json" | relURL }}', function(data) {
             var columns = Object.keys(data[0]).map(function(key) {
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1) };
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };
             });
 
             $('#dataTableM_F').DataTable({

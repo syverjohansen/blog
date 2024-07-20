@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elo Data Tables</title>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/5.0.1/css/fixedColumns.dataTables.min.css">
+    <style>
+        .catalog-container {
+            position: fixed;
+            right: 0;
+            top: 0px;
+            width: 250px;
+            height: 100%;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-left: 1px solid #ddd;
+        }
+        .content-container {
+            width: 100%;
+            margin-left: 270px;
+            margin-right: 270px; /* Adjust based on the width of your sidebar */
+        }
+      .sticky-col {
+            position: sticky;
+            left: 0;
+            background: #f4f4f4;
+            z-index: 2; /* Ensures the sticky column stays above other columns */
+        }
+       .dataTables_wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table.dataTable {
+            width: 100% !important;
+        } 
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+       <!--  <div style = "overflow-x:auto;">-->
+        <table id="dataTableL_chrono" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+        <!-- </div> -->
+
+
+      
+
+
+        <!-- Add more <h2> and <table> elements as needed for the Ladies section -->
+    </div>
+
+
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+   
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    console.log("Document is ready");
+
+    // Extract sex and ID from the URL
+    const urlParts = window.location.pathname.split('/');
+    const sex = urlParts[urlParts.length - 3];
+    const id = urlParts[urlParts.length - 2];
+
+    // Log the extracted values to ensure they are correct
+    console.log("Extracted sex:", sex);
+    console.log("Extracted ID:", id);
+
+    // Construct the JSON file path
+    const jsonFilePath = `/python/excel365/${sex}/${id}.json`;
+
+    // Log the constructed JSON file path to ensure it is correct
+    console.log("Constructed JSON file path:", jsonFilePath);
+
+    // Fetch the JSON data
+    $.getJSON(jsonFilePath, function(data) {
+        console.log("Raw JSON data loaded:", data);
+
+        if (!data || !data.columns) {
+            console.error("Invalid data format: no columns key found in JSON response");
+            return;
+        }
+
+        // Transform the data to the expected format
+        const transformedData = [];
+        const numRows = data.columns[0].values.length;
+
+        for (let i = 0; i < numRows; i++) {
+            const row = {};
+            data.columns.forEach(column => {
+                row[column.name] = column.values[i];
+            });
+            transformedData.push(row);
+        }
+
+        console.log("Transformed data:", transformedData);
+
+        // Ensure transformedData is an array and has at least one element
+        if (!Array.isArray(transformedData) || transformedData.length === 0) {
+            console.error("Invalid transformed data format or empty data array");
+            return;
+        }
+
+        var columns = Object.keys(transformedData[0]).map(function(key) {
+            if (key === 'Skier') {
+                console.log("Processing Skier column");
+                return {
+                    data: key,
+                    title: key.charAt(0).toUpperCase() + key.slice(1),
+                    render: function(data, type, row) {
+                        // Create a clickable link for the skier's name using the ID from the JSON data
+                        return `<a href="/skiers/${sex}/${row.ID}" target="_blank">${data}</a>`;
+                    }
+                };
+            } else {
+                console.log(`Processing column: ${key}`);
+                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key !== 'ID' };
+            }
+        });
+        console.log("Column mappings:", columns);
+
+        console.log("Initializing DataTable");
+        var table = $('#dataTableL_chrono').DataTable({
+            data: transformedData,
+            columns: columns,
+            fixedColumns: {left: 2},
+            scrollX: true,
+            scrollY: '400px', // Set vertical scrolling
+            scrollCollapse: true,
+            paging:false
+        });
+        console.log("DataTable instance:", table);
+        console.log("FixedColumns settings:", table.settings()[0].oInit.fixedColumns);
+        console.log("DataTable columns:", table.settings()[0].aoColumns.map(col => col.sTitle));
+
+        console.log("DataTable initialized successfully");
+    }).fail(function(jqxhr, textStatus, error) {
+        const err = textStatus + ", " + error;
+        console.error(`Failed to load JSON data from ${jsonFilePath}: ${err}`);
+    });
+});
+</script>
+
+
+
+
+
+</body>
+</html>

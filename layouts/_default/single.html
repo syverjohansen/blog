@@ -89,11 +89,19 @@
                 {{ end }}
 
                 {{ if or (eq .Permalink "https://daehl-e.com/elo/") (eq .Permalink "http://localhost:1313/elo/") }}
-                    {{ partial "data-table.html" . }}
+                   {{ partial "small-table.html" . }}
+
 
                 {{ end }}
 
-                
+                {{ $permalink := .Permalink }}
+                {{ if or (strings.HasPrefix $permalink "https://daehl-e.com/skiers/") (strings.HasPrefix $permalink "http://localhost:1313/skiers/") }}
+                   <!-- Debug statement -->
+                   <div>Partial test-table.html is being called.</div>
+                   {{ partial "skier-table.html" . }}
+
+                {{ end }}
+
 
                 {{ if or (.PrevInSection) (.NextInSection) }}
                 <hr>
