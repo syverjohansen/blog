@@ -1,5 +1,6 @@
 baseurl = "https://daehl-e.com"  #The url I'm using for my file
 title = "Nordic Numbers" #The one in the top left corner and the middle
+
 theme = "white"  #The theme that I'm using for my project
 languageCode = "en-us"  #Language for my site
 # Enable comments by entering your Disqus shortname
@@ -8,6 +9,8 @@ googleAnalytics = "" #Not sure what this is
 preserveTaxonomyNames = true #Preserves original names of taxnomies in content files.
 paginate = 5 #frontpage pagination.  Number of posts on the front page
 hasCJKLanguage = false  #For Chinese, Japanese and Korean.   I don't want this
+
+
 
 [outputs] #Output formats for the homepage
 home = ["HTML", "RSS", "Algolia"] #Home page should be rendered in HTML, that an RSS feed should be generated for my home page, and that it should be indexed by Algolia

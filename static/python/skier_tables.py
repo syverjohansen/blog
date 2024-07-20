@@ -48,11 +48,10 @@ for row in unique_ladies.iter_rows(named=True):
     skier  = L_chrono.filter(pl.col("ID")==skier_id)[-1, "Skier"]
     
     # Create Markdown content for each skier
-    markdown_content = f"""
----
+    markdown_content = f"""---
 title: Skier Profile for {skier}
 sex: "L"
-id: {skier_id}
+id: "{skier_id}"
 ---
 
 # Skier Profile
@@ -77,11 +76,10 @@ for row in unique_men.iter_rows(named=True):
     skier  = M_chrono.filter(pl.col("ID")==skier_id)[-1, "Skier"]
     
     # Create Markdown content for each skier
-    markdown_content = f"""
----
+    markdown_content = f"""---
 title: Skier Profile for {skier}
 sex: "M"
-id: {skier_id}
+id: "{skier_id}"
 ---
 
 # Skier Profile

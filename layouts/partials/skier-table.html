@@ -71,7 +71,7 @@ $(document).ready(function() {
 
     // Extract sex and ID from the URL
     const urlParts = window.location.pathname.split('/');
-    const sex = urlParts[urlParts.length - 3];
+    const sex = urlParts[urlParts.length - 3].toUpperCase();
     const id = urlParts[urlParts.length - 2];
 
     // Log the extracted values to ensure they are correct
