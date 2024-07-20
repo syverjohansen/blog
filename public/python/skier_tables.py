@@ -51,6 +51,8 @@ for row in unique_ladies.iter_rows(named=True):
     markdown_content = f"""
 ---
 title: Skier Profile for {skier}
+sex: "L"
+id: {skier_id}
 ---
 
 # Skier Profile
@@ -78,6 +80,8 @@ for row in unique_men.iter_rows(named=True):
     markdown_content = f"""
 ---
 title: Skier Profile for {skier}
+sex: "M"
+id: {skier_id}
 ---
 
 # Skier Profile

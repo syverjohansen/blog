@@ -134,7 +134,6 @@ home = ["HTML", "RSS", "Algolia"] #Home page should be rendered in HTML, that an
 
 
 
-
 [outputFormats.Algolia] #Configures an output format for generating a JSON file suitable for Algolia search indexing
 baseName = "algolia"
 isPlainText = true
