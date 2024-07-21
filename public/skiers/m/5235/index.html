@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="https://daehl-e.com//img/daehlie-stride.avif">
-    <meta property="twitter:image" content="https://daehl-e.com//img/daehlie-stride.avif" />
+    <meta property="og:image" content="/img/flags/tto.svg">
+    <meta property="twitter:image" content="/img/flags/tto.svg" />
     
 
     
@@ -158,7 +158,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/img/daehlie-stride.avif')
+        background-image: url('/img/flags/tto.svg')
     }
 </style>
 
@@ -293,7 +293,7 @@ $(document).ready(function() {
 
     
     const urlParts = window.location.pathname.split('/');
-    const sex = urlParts[urlParts.length - 3];
+    const sex = urlParts[urlParts.length - 3].toUpperCase();
     const id = urlParts[urlParts.length - 2];
 
     

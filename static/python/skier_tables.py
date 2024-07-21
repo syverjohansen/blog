@@ -11,12 +11,26 @@ M_chrono = pl.read_ipc('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/
 
 L_chrono = L_chrono.filter(pl.col("City")!="Summer")
 M_chrono = M_chrono.filter(pl.col("City")!="Summer")
-output_dir_L = '/Users/syverjohansen/blog/daehl-e/content/skiers/L'
-output_dir_M = '/Users/syverjohansen/blog/daehl-e/content/skiers/M'
+output_dir_L = '/Users/syverjohansen/blog/daehl-e/content/skiers/l'
+output_dir_M = '/Users/syverjohansen/blog/daehl-e/content/skiers/m'
 
 unique_ladies = L_chrono.select("ID").unique()
 unique_men = M_chrono.select("ID").unique()
 
+def get_country_code(nation):
+    codes = {
+"Algeria":"alg", "Andorra":"and", "Argentina":"arg", "Armenia":"arm", "Australia":"aus", "Austria":"aut", "Belarus":"blr", "Belgium":"bel", "Bermuda":"ber", "Bolivia":"bol", "Bosnia&Herzegovina":"bih", "Brazil":"bra", "Bulgaria":"bul",
+"Cameroon":"cmr", "Canada":"can", "Chile":"chi", "China":"chn", "Colombia":"col", "Costa Rica":"crc", "Croatia":"cro", "Czechia":"cze", "Denmark":"den",
+"Ecuador":"ecu", "Estonia":"est", "Ethiopia":"eth", "Fiji":"fij", "Finland":"fin", "France":"fra",
+"Germany":"ger", "Great Britain":"gbr", "Greece":"gre", "Guatemala":"gua", "Haiti":"hai", "Honduras":"hon", "Hungary":"hun", 
+"Iceland":"isl", "India":"ind", "Iran":"iri", "Ireland":"irl", "Israel":"isr", "Italy":"ita", "Japan":"jpn", 
+"Kazakhstan":"kaz", "Kenya":"ken", "Kyrgyzstan":"kgz", "Latvia":"lat", "Lebanon":"lbn", "Liechtenstein":"lie", "Lithuania":"ltu", "Luxembourg":"lux",
+"Mexico":"mex", "Moldova":"mda", "Mongolia":"mgl", "Montenegro":"mne", "Morocco":"mar", "Nepal":"nep", "Netherlands":"ned", "New Zealand":"nzl", "Nigeria":"ngr", "North Korea":"prk", "North Macedonia":"mkd", "Norway":"nor",
+"Pakistan":"pak", "Peru":"per", "Poland":"pol", "Portugal":"por", "Romania":"rou", "Russia":"rus",
+"San Marino":"smr", "Serbia":"srb", "Slovakia":"svk", "Slovenia":"slo", "South Africa":"rsa", "South Korea":"kor", "Soviet":"urs", "Spain":"esp", "Sweden":"swe", "Switzerland":"sui", "Taiwan":"tpe", "Thailand":"tha", "Togo":"tog", "Tonga":"tga", "Trinidad & Tobago":"tto", "Turkey":"tur",
+"USA":"usa", "Ukraine":"ukr", "Venezuela":"ven"
+    }
+    return codes[nation]
 
 def process_chrono(df, ID, sex):
     # Filter the DataFrame to keep only the rows with the maximum date
@@ -37,21 +51,23 @@ def process_chrono(df, ID, sex):
     #    f.write(json_str)
 
 for id_value in unique_ladies["ID"]:
-    process_chrono(L_chrono, id_value, "L")
+    process_chrono(L_chrono, id_value, "l")
 
 
 for id_value in unique_men["ID"]:
-    process_chrono(M_chrono, id_value, "M")
+    process_chrono(M_chrono, id_value, "m")
 
 for row in unique_ladies.iter_rows(named=True):
     skier_id = row['ID']
     skier  = L_chrono.filter(pl.col("ID")==skier_id)[-1, "Skier"]
-    
+    nation = L_chrono.filter(pl.col("ID")==skier_id)[-1, "Nation"]
+    nation = get_country_code(nation)
     # Create Markdown content for each skier
     markdown_content = f"""---
 title: Skier Profile for {skier}
 sex: "L"
 id: "{skier_id}"
+image: "/img/flags/{nation}.svg" 
 ---
 
 # Skier Profile
@@ -74,12 +90,14 @@ print("All files have been processed.")
 for row in unique_men.iter_rows(named=True):
     skier_id = row['ID']
     skier  = M_chrono.filter(pl.col("ID")==skier_id)[-1, "Skier"]
-    
+    nation = M_chrono.filter(pl.col("ID")==skier_id)[-1, "Nation"]
+    nation = get_country_code(nation)
     # Create Markdown content for each skier
     markdown_content = f"""---
 title: Skier Profile for {skier}
 sex: "M"
 id: "{skier_id}"
+image: "/img/flags/{nation}.svg" 
 ---
 
 # Skier Profile
