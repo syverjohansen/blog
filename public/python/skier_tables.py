@@ -11,8 +11,24 @@ M_chrono = pl.read_ipc('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/
 
 L_chrono = L_chrono.filter(pl.col("City")!="Summer")
 M_chrono = M_chrono.filter(pl.col("City")!="Summer")
+
+L_chrono = L_chrono.with_columns(pl.col("Date").str.strptime(pl.Date, "%Y-%m-%d"))
+M_chrono = M_chrono.with_columns(pl.col("Date").str.strptime(pl.Date, "%Y-%m-%d"))
+
+def chop_decimals(df):
+    df = df.with_columns(pl.col("Age").cast(pl.Float64))
+    columns = ["Age", "Elo", "Distance_Elo", "Distance_C_Elo", "Distance_F_Elo",
+           "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo", "Classic_Elo", "Freestyle_Elo"]
+    for col in columns:
+        df = df.with_columns(pl.col(col).round(2))
+    return df
+
 output_dir_L = '/Users/syverjohansen/blog/daehl-e/content/skiers/l'
 output_dir_M = '/Users/syverjohansen/blog/daehl-e/content/skiers/m'
+
+L_chrono = chop_decimals(L_chrono)
+M_chrono = chop_decimals(M_chrono)
+
 
 unique_ladies = L_chrono.select("ID").unique()
 unique_men = M_chrono.select("ID").unique()
@@ -41,7 +57,7 @@ def process_chrono(df, ID, sex):
 
     
     # Select the desired columns
-    df = df.select(["Exp", "Date", "City", "Country", "Event", "Distance", "MS", "Technique", "Place", "Season", "Race", "Age", "Elo","Distance_Elo", "Distance_C_Pelo", "Distance_F_Pelo",
+    df = df.select(["Exp", "Date", "City", "Country", "Event", "Distance", "MS", "Technique", "Place", "Season", "Race", "Age", "Elo","Distance_Elo", "Distance_C_Elo", "Distance_F_Elo",
     "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo", "Classic_Elo", "Freestyle_Elo", "ID"])
 
     file_path = f"/Users/syverjohansen/blog/daehl-e/static/python/excel365/{sex}/{ID}.json"

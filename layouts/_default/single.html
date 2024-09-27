@@ -96,10 +96,8 @@
 
                 {{ $permalink := .Permalink }}
                 {{ if or (strings.HasPrefix $permalink "https://daehl-e.com/skiers/") (strings.HasPrefix $permalink "http://localhost:1313/skiers/") (findRE "^https://daehl-e.com/skiers/.+/.+$" $permalink) }}
-                    <div>Partial test-table.html is being called.</div>
+                    <!--<div>Partial test-table.html is being called.</div>-->
                     {{ partial "skier-table.html" . }}
-                {{ else }}
-                    <div>Condition not met for partial inclusion.</div>
                 {{ end }}
 
 

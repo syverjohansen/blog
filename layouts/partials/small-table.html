@@ -35,7 +35,7 @@
     <div class="container-fluid">
         <h1 id="Ladies"> Ladies</h1>
        
-        <h2 id="L_chrono"> Ladies</h2>
+        <h2 id="L_chrono"> Elo</h2>
        <!--  <div style = "overflow-x:auto;">-->
         <table id="dataTableL_chrono" class="display">
             <thead>
@@ -45,12 +45,15 @@
                 <!-- Data will be dynamically populated -->
             </tbody>
         </table>
+
+        {{ partial "ladies-graph.html" . }}
+        
  <!-- Add more <h2> and <table> elements as needed for the Ladies section -->
     </div>
     <div class="container-fluid">
         <h1 id="Mwn"> Men</h1>
 
-        <h2 id="M_chrono"> Overall Elo</h2>
+        <h2 id="M_chrono"> Elo </h2>
 
         <table id="dataTableM_chrono" class="display">
             <thead>
@@ -60,6 +63,7 @@
                 <!-- Data will be dynamically populated -->
             </tbody>
         </table>
+        {{ partial "men-graph.html" . }}
     </div>
 
 
