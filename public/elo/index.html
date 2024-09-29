@@ -724,10 +724,10 @@
             }
 
         const fetchData = async (skier) => {
-            const fileSuffix = (yAxis === 'Pct') ? '_pct' : '';
-            const response = await fetch(`/python/excel365/m/${skier}${fileSuffix}.json`);
+            
+            const response = await fetch(`/python/excel365/m/${skier}.json`);
             const json = await response.json();
-            console.log('Fetched data for skier:', skier, 'File:', `${skier}${fileSuffix}.json`, json);
+            console.log('Fetched data for skier:', skier, 'File:', `${skier}.json`, json);
             return json;
         };
 
@@ -880,8 +880,16 @@
                         title: key.charAt(0).toUpperCase() + key.slice(1),
                         render: function(data, type, row) {
                             
+
+                           
+
                             
-                            return `<a href="https://daehl-e.com/skiers/l/${row.ID}" target="_blank">${data}</a>`;
+                           
+                            return `<a href="/skiers/l/${row.ID}" target="_blank">${data}</a>`;
+                            
+                            
+
+
                         }
                     };
                 }                
@@ -920,7 +928,10 @@
                         render: function(data, type, row) {
                             
                             
-                            return `<a href="https://daehl-e.com/skiers/m/${row.ID}" target="_blank">${data}</a>`;
+                             return `<a href="/skiers/l/${row.ID}" target="_blank">${data}</a>`;
+                            
+                           
+
                         }
                     };
                 }                
@@ -961,8 +972,11 @@
 
                 
 
-                
-                
+
+
+
+
+
 
 
 

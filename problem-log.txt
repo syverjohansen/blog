@@ -12,3 +12,7 @@ It turns out that I can dynamically create pages for each skier, so no need to m
 
 28SEP
 In skier_tables.py, I just need to add the components of pct_tables.py, but add additional columns for the pcts instead of replacing them.  Also need to get rid of the part of generating index files for each skier
+
+Got skier_info working.  Now I just have to be able to create this dynamic page for each skier.  
+
+I don't know if it's possible to do the dynamic page creation using query parameters.  It doesn't seem to recognize query parameters when inputting.

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elo Data Tables</title>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/5.0.1/css/fixedColumns.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <style>
+        .catalog-container {
+            position: fixed;
+            right: 0;
+            top: 0px;
+            width: 250px;
+            height: 100%;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-left: 1px solid #ddd;
+        }
+        .content-container {
+            width: calc(100% - 270px);
+            margin-left: 270px;
+            /* margin-right: 270px;*/ /* Adjust based on the width of your sidebar */
+        }
+        .sticky-col {
+            position: sticky;
+            left: 0;
+            background: #f4f4f4;
+            z-index: 2; /* Ensures the sticky column stays above other columns */
+        }
+        .dataTables_wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table.dataTable {
+            width: 100% !important;
+        }
+        .hidden {
+            display: none;
+        }
+
+        .narrow-column{
+            width: 20px;
+        }
+
+        .dataTables_scrollHeadInner{
+            display:flex;
+            width: 100%;
+        }
+
+        .dataTables_scrollHeadInner table{
+            width:100%;
+        }
+        .dataTables_scrollBody{
+            overflow-x:auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div id="toggle-buttons">
+            <button id="elo-mode-btn">Elo Mode</button>
+            <button id="percent-mode-btn">Percent of Max Mode</button>
+        </div>
+
+        <table id="dataTableL" class="display">
+            <thead>
+                <!-- Headers will be dynamically populated -->
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically populated -->
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            console.log("Document is ready");
+
+            // Extract sex and ID from the URL
+            const urlParts = window.location.pathname.split('/');
+            const sex = urlParts[urlParts.length - 3].toUpperCase();
+            const id = urlParts[urlParts.length - 2];
+
+            // Log the extracted values to ensure they are correct
+            console.log("Extracted sex:", sex);
+            console.log("Extracted ID:", id);
+
+            // Construct the JSON file paths
+            const jsonFilePathChrono = `/python/excel365/${sex}/${id}.json`;
+            const jsonFilePathPct = `/python/excel365/${sex}/${id}_pct.json`;
+
+            // Log the constructed JSON file paths to ensure they are correct
+            console.log("Constructed JSON file path Chrono:", jsonFilePathChrono);
+            console.log("Constructed JSON file path Pct:", jsonFilePathPct);
+
+            let table;
+
+            function initializeDataTable(data) {
+                const transformedData = [];
+                const numRows = data.columns[0].values.length;
+
+                for (let i = 0; i < numRows; i++) {
+                    const row = {};
+                    data.columns.forEach(column => {
+                        row[column.name] = column.values[i];
+                    });
+                    transformedData.push(row);
+                }
+
+                const columns = Object.keys(transformedData[0]).map(function(key) {
+                    if (key === 'Skier') {
+                        return {
+                            data: key,
+                            title: key.charAt(0).toUpperCase() + key.slice(1),
+                            render: function(data, type, row) {
+                                return `<a href="/skiers/${sex}/${row.ID}" target="_blank">${data}</a>`;
+                            },
+                            className: 'narrow-column'
+                        };
+                    } else {
+                        return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key !== 'ID', className: 'narrow-column'};
+                    }
+                });
+
+                if (table) {
+                    table.clear();
+                    table.destroy();
+                }
+
+                table = $('#dataTableL').DataTable({
+                    data: transformedData,
+                    columns: columns,
+                    fixedColumns: {left: 2},
+                    scrollX: true,
+                    scrollY: '400px', // Set vertical scrolling
+                    scrollCollapse: true,
+                    paging: false
+                });
+            }
+
+            function fetchDataAndInitializeTable(jsonFilePath) {
+                $.getJSON(jsonFilePath, function(data) {
+                    console.log(`Raw JSON data loaded from ${jsonFilePath}:`, data);
+                    initializeDataTable(data);
+                }).fail(function(jqxhr, textStatus, error) {
+                    const err = textStatus + ", " + error;
+                    console.error(`Failed to load JSON data from ${jsonFilePath}: ${err}`);
+                });
+            }
+
+            // Initial load
+            fetchDataAndInitializeTable(jsonFilePathChrono);
+
+            // Event listeners for the buttons
+            $('#elo-mode-btn').click(function() {
+                fetchDataAndInitializeTable(jsonFilePathChrono);
+            });
+
+            $('#percent-mode-btn').click(function() {
+                fetchDataAndInitializeTable(jsonFilePathPct);
+            });
+        });
+    </script>
+
+</body>
+</html>
