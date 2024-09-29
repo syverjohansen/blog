@@ -158,7 +158,7 @@
 
             const fetchLadiesData = async (ladies) => {
                // const fileSuffix = (yAxis === 'Pct') ? '_pct' : '';
-                const response = await fetch(`/python/excel365/l/${ladies}.json`);
+                const response = await fetch(`/python/excel365/L/${ladies}.json`);
                 const json = await response.json();
                 console.log('Fetched data for ladies skier:', ladies, 'File:', `${ladies}.json`, json);
                 return json;
