@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "2024-25 Preview Part 2: World Cup Standings"
-date: 2024-10-17
+date: 2024-10-16
 author: "Syver Johansen"
 ---
 

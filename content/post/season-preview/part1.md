@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "2024-25 Preview Part 1: Introduction & Schedule"
-date: 2024-10-17
+date: 2024-10-15
 author: "Syver Johansen"
 ---
 
