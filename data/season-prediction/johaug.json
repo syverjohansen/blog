@@ -1,0 +1,22 @@
+{
+  "headers": [
+    "Skier",
+    "Nation",
+    "Predicted Points",
+    "Age",
+    "Elo",
+    "Distance Elo",
+    "Sprint Elo"
+  ],
+  "rows": [
+    [
+      "Therese Johaug",
+      "Norway",
+      0.625173065648618,
+      36.7111567419576,
+      1802.85931104148,
+      1818.28973717741,
+      1484.32342611202
+    ]
+  ]
+}

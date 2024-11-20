@@ -156,4 +156,7 @@ params = ["categories", "tags"]  #Whichparameters should be included in the Algo
     startLevel = 1 #The heading level at which the table of contents should end
   [markup.highlight] 
     style = "dracula" #Syntax highlighting in code blocks
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
 
