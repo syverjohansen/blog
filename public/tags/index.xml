@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Nordic Numbers</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>https://daehl-e.com/tags/</link>
     <description>Recent content in Tags on Nordic Numbers</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 15 Mar 2023 11:00:00 -0700</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://daehl-e.com/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Blue</title>
-      <link>http://localhost:1313/tags/blue/</link>
+      <link>https://daehl-e.com/tags/blue/</link>
       <pubDate>Wed, 15 Mar 2023 11:00:00 -0700</pubDate>
-      <guid>http://localhost:1313/tags/blue/</guid>
+      <guid>https://daehl-e.com/tags/blue/</guid>
       <description></description>
     </item>
     <item>
       <title>Green</title>
-      <link>http://localhost:1313/tags/green/</link>
+      <link>https://daehl-e.com/tags/green/</link>
       <pubDate>Wed, 15 Mar 2023 11:00:00 -0700</pubDate>
-      <guid>http://localhost:1313/tags/green/</guid>
+      <guid>https://daehl-e.com/tags/green/</guid>
       <description></description>
     </item>
     <item>
       <title>Red</title>
-      <link>http://localhost:1313/tags/red/</link>
+      <link>https://daehl-e.com/tags/red/</link>
       <pubDate>Wed, 15 Mar 2023 11:00:00 -0700</pubDate>
-      <guid>http://localhost:1313/tags/red/</guid>
+      <guid>https://daehl-e.com/tags/red/</guid>
       <description></description>
     </item>
   </channel>

@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tests on Nordic Numbers</title>
-    <link>http://localhost:1313/test/</link>
+    <link>https://daehl-e.com/test/</link>
     <description>Recent content in Tests on Nordic Numbers</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <atom:link href="http://localhost:1313/test/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://daehl-e.com/test/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Skier Profile for Riitta-Liisa Roponen</title>
-      <link>http://localhost:1313/test/l/15/</link>
+      <link>https://daehl-e.com/test/l/15/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/test/l/15/</guid>
+      <guid>https://daehl-e.com/test/l/15/</guid>
       <description>&lt;h1 id=&#34;skier-profile&#34;&gt;Skier Profile&lt;/h1&gt;&#xA;&lt;p&gt;This page is for: Riitta-Liisa Roponen.&lt;/p&gt;</description>
     </item>
   </channel>
