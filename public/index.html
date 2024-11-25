@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-	<meta name="generator" content="Hugo 0.134.1"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=50479&amp;path=livereload" data-no-instant defer></script>
+	<meta name="generator" content="Hugo 0.134.1"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,8 +11,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://localhost:50479//img/daehlie-stride.avif">
-    <meta property="twitter:image" content="http://localhost:50479//img/daehlie-stride.avif" />
+    <meta property="og:image" content="http://localhost:1313//img/daehlie-stride.avif">
+    <meta property="twitter:image" content="http://localhost:1313//img/daehlie-stride.avif" />
     
 
     
@@ -109,10 +109,6 @@
                     
                         <li><a href="/elo//">Elo Scores</a></li>
                     
-                        <li><a href="/game//">Podium Game</a></li>
-                    
-                        <li><a href="/forum//">FORUM</a></li>
-                    
                         <li><a href="/post//">POSTS</a></li>
                     
 		            <li>
@@ -188,21 +184,22 @@
 <div data-pagefind-ignore="all">
 
 <div class="post-preview">
-    <a href="http://localhost:50479/post/season-preview/part3/">
+    <a href="http://localhost:1313/post/season-preview/part3/">
         <h2 class="post-title">
-            2024-25 Preview Part 3: Age Analysis
+            2024-25 Preview Part 3: Breakthrough and Age Analysis
         </h2>
 	
         <div class="post-content-preview">
 	
             <h2 id="breakthrough-potential">Breakthrough Potential</h2>
-<p>By breakthrough I mean people who score more than 50% of the Pct_of_Max_Points in a given season.  Since 2002, this has only been done 41 times for men and _ times for women, and they are listed here.  I used the same criteria that went into earlier analyis, while also putting in age and the number of times a skier had raced in their career (exp).  Then I used a Random Forest method to test the importance of each possible predictor.  From the most important features, I predicted the likelihood that a given skier breaks 50% this season.  Here are the results.</p>
+<p>In Part 3, I will be going over the skiers most likely to breakthrough this year, give an age analysis of the field, and predict what it will take for Klæbo to lose the overall World Cup.</p>
+<p>By breakthrough I mean people who score more than 50% of the the maximum possible World Cup points in a given season.  Since 2002, this has only been done by 41 men and 62 women.  For this analysis, I looked at the characteristics (age, experience, Elos, etc.) of all skiers who broke that 50% barrier for the first time in their career, and then created a model to apply to the current skiers who have not accomplished the feat.  Here are some of the top contenders.</p>
        
         </div>
     </a>
     <p class="post-meta">
     
-        Posted by Syver Johansen on Thursday, October 17, 2024
+        Posted by Syver Johansen on Sunday, November 17, 2024
         
         
     
@@ -212,7 +209,7 @@
 <hr>
 
 <div class="post-preview">
-    <a href="http://localhost:50479/post/season-preview/part2/">
+    <a href="http://localhost:1313/post/season-preview/part2/">
         <h2 class="post-title">
             2024-25 Preview Part 2: World Cup Standings
         </h2>
@@ -220,15 +217,15 @@
         <div class="post-content-preview">
 	
             <h2 id="world-cup-standings-predictions">World Cup Standings Predictions</h2>
-<h3 id="data-setup">Data Setup</h3>
-<p>Elo data calculated from race data going back to 1920.  Race data includes World Cups, World Championships, and Olympic Winter Games as well as a handful of Holmenkollen races prior to the World Cup era that began in 1982.  A separate post about how Elo is calculated will be made.</p>
-<p>Once Elo data was gathered, it was compiled into a df, saved into a Feather file, and read into RStudio where the bulk of analysis for this project was done.</p>
+<h3 id="background">Background</h3>
+<p>In Part 2, I will be giving the overall standings predictions as a proportion of maximum World Cup points as well as the odds for each skier to get top-1, 3, 5, 10, and 30 in the overall World Cup.</p>
+<p>The Elo data is calculated from race data going back to 1920.  Race data includes World Cups, World Championships, and Olympic Winter Games as well as a handful of Holmenkollen races prior to the World Cup era that began in 1982.  Elo scores are calculated for overall Elo, as further broken down into distance, distance classic, distance freestyle, sprint, sprint classic, sprint freestyle, classic, and freestyle.  A separate post about how Elo is calculated will be made.</p>
        
         </div>
     </a>
     <p class="post-meta">
     
-        Posted by Syver Johansen on Wednesday, October 16, 2024
+        Posted by Syver Johansen on Saturday, November 16, 2024
         
         
     
@@ -238,7 +235,7 @@
 <hr>
 
 <div class="post-preview">
-    <a href="http://localhost:50479/post/season-preview/part1/">
+    <a href="http://localhost:1313/post/season-preview/part1/">
         <h2 class="post-title">
             2024-25 Preview Part 1: Introduction &amp; Schedule
         </h2>
@@ -254,7 +251,7 @@
     </a>
     <p class="post-meta">
     
-        Posted by Syver Johansen on Tuesday, October 15, 2024
+        Posted by Syver Johansen on Friday, November 15, 2024
         
         
     
@@ -264,7 +261,7 @@
 <hr>
 
 <div class="post-preview">
-    <a href="http://localhost:50479/post/readme/">
+    <a href="http://localhost:1313/post/readme/">
         <h2 class="post-title">
             Scraping Ski Data for Statistical Analysis
         </h2>
@@ -284,6 +281,29 @@
     <p class="post-meta">
     
         Posted by Syver Johansen on Thursday, June 13, 2024
+        
+        
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="http://localhost:1313/post/drafts/weekly-picks/20241130ruka/">
+        <h2 class="post-title">
+            
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            <p>Welcome to the first race of the season.  In this post and more to follow, I will present the likely starting list for the weekend as well as race by race predictions for odds as well as expected points</p>
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    
+        Posted by Nordic Numbers on Monday, January 1, 0001
         
         
     
@@ -366,29 +386,6 @@
     
     
     
-    
-    <section>
-        <hr class="hidden-sm hidden-xs">
-        <h5>FEATURED TAGS</h5>
-        <div class="tags">
-            
-            
-               
-            
-               
-                    <a href="/tags/green" title="green">
-                        green
-                    </a>
-               
-            
-               
-                    <a href="/tags/red" title="red">
-                        red
-                    </a>
-               
-            
-        </div>
-    </section>
     
 
     

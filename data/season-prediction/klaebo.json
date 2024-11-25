@@ -1,8 +1,8 @@
 {
   "headers": [
     "Skier",
-    "Klaebo_With_TDS",
-    "Klaebo_Without_TDS"
+    "Klaebo with TDS",
+    "Klaebo without TDS"
   ],
   "rows": [
     [
@@ -18,7 +18,7 @@
     [
       "Pål Golberg",
       11,
-      4
+      3
     ],
     [
       "Martin Løwstrøm Nyenget",
@@ -46,12 +46,12 @@
       10
     ],
     [
-      "Gus Schumacher",
+      "Didrik Tønseth",
       18,
       11
     ],
     [
-      "Didrik Tønseth",
+      "Gus Schumacher",
       18,
       11
     ],
@@ -106,12 +106,12 @@
       14
     ],
     [
-      "Edvin Anger",
+      "Johan Häggström",
       21,
       14
     ],
     [
-      "Johan Häggström",
+      "Edvin Anger",
       21,
       14
     ],

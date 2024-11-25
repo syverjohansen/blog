@@ -6,26 +6,26 @@
     <description>Recent content in 2024-25 FIS Cross-Country Skiing Season Preview on Nordic Numbers</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 17 Oct 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 17 Nov 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/post/season-preview/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>2024-25 Preview Part 3: Age Analysis</title>
+      <title>2024-25 Preview Part 3: Breakthrough and Age Analysis</title>
       <link>http://localhost:1313/post/season-preview/part3/</link>
-      <pubDate>Thu, 17 Oct 2024 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 17 Nov 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/post/season-preview/part3/</guid>
-      <description>&lt;h2 id=&#34;breakthrough-potential&#34;&gt;Breakthrough Potential&lt;/h2&gt;&#xA;&lt;p&gt;By breakthrough I mean people who score more than 50% of the Pct_of_Max_Points in a given season.  Since 2002, this has only been done 41 times for men and _ times for women, and they are listed here.  I used the same criteria that went into earlier analyis, while also putting in age and the number of times a skier had raced in their career (exp).  Then I used a Random Forest method to test the importance of each possible predictor.  From the most important features, I predicted the likelihood that a given skier breaks 50% this season.  Here are the results.&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;breakthrough-potential&#34;&gt;Breakthrough Potential&lt;/h2&gt;&#xA;&lt;p&gt;In Part 3, I will be going over the skiers most likely to breakthrough this year, give an age analysis of the field, and predict what it will take for Klæbo to lose the overall World Cup.&lt;/p&gt;&#xA;&lt;p&gt;By breakthrough I mean people who score more than 50% of the the maximum possible World Cup points in a given season.  Since 2002, this has only been done by 41 men and 62 women.  For this analysis, I looked at the characteristics (age, experience, Elos, etc.) of all skiers who broke that 50% barrier for the first time in their career, and then created a model to apply to the current skiers who have not accomplished the feat.  Here are some of the top contenders.&lt;/p&gt;</description>
     </item>
     <item>
       <title>2024-25 Preview Part 2: World Cup Standings</title>
       <link>http://localhost:1313/post/season-preview/part2/</link>
-      <pubDate>Wed, 16 Oct 2024 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 16 Nov 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/post/season-preview/part2/</guid>
-      <description>&lt;h2 id=&#34;world-cup-standings-predictions&#34;&gt;World Cup Standings Predictions&lt;/h2&gt;&#xA;&lt;h3 id=&#34;data-setup&#34;&gt;Data Setup&lt;/h3&gt;&#xA;&lt;p&gt;Elo data calculated from race data going back to 1920.  Race data includes World Cups, World Championships, and Olympic Winter Games as well as a handful of Holmenkollen races prior to the World Cup era that began in 1982.  A separate post about how Elo is calculated will be made.&lt;/p&gt;&#xA;&lt;p&gt;Once Elo data was gathered, it was compiled into a df, saved into a Feather file, and read into RStudio where the bulk of analysis for this project was done.&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;world-cup-standings-predictions&#34;&gt;World Cup Standings Predictions&lt;/h2&gt;&#xA;&lt;h3 id=&#34;background&#34;&gt;Background&lt;/h3&gt;&#xA;&lt;p&gt;In Part 2, I will be giving the overall standings predictions as a proportion of maximum World Cup points as well as the odds for each skier to get top-1, 3, 5, 10, and 30 in the overall World Cup.&lt;/p&gt;&#xA;&lt;p&gt;The Elo data is calculated from race data going back to 1920.  Race data includes World Cups, World Championships, and Olympic Winter Games as well as a handful of Holmenkollen races prior to the World Cup era that began in 1982.  Elo scores are calculated for overall Elo, as further broken down into distance, distance classic, distance freestyle, sprint, sprint classic, sprint freestyle, classic, and freestyle.  A separate post about how Elo is calculated will be made.&lt;/p&gt;</description>
     </item>
     <item>
       <title>2024-25 Preview Part 1: Introduction &amp; Schedule</title>
       <link>http://localhost:1313/post/season-preview/part1/</link>
-      <pubDate>Tue, 15 Oct 2024 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 15 Nov 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/post/season-preview/part1/</guid>
       <description>&lt;h1 id=&#34;2024-25-season-preview&#34;&gt;2024-25 Season Preview&lt;/h1&gt;&#xA;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;It&amp;rsquo;s near Thanksgiving time and you know what that means.  The 2024-25 FIS Cross Country season is here! In this post, I will give my predictions for the upcoming World Cup season based on historical relationships between Elo scores and World Cup points.&lt;/p&gt;&#xA;&lt;p&gt;The scope of this post is just the individual World Cup season.  The World Championships will have a post of their own when late February comes around.&lt;/p&gt;</description>
     </item>

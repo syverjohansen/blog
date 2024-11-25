@@ -1,65 +1,22 @@
 ---
 layout: post
 title: "2024-25 Preview Part 2: World Cup Standings"
-date: 2024-10-16
+date: 2024-11-16
 author: "Syver Johansen"
 ---
 
 ## World Cup Standings Predictions
 
-### Data Setup
+### Background
 
-Elo data calculated from race data going back to 1920.  Race data includes World Cups, World Championships, and Olympic Winter Games as well as a handful of Holmenkollen races prior to the World Cup era that began in 1982.  A separate post about how Elo is calculated will be made.
+In Part 2, I will be giving the overall standings predictions as a proportion of maximum World Cup points as well as the odds for each skier to get top-1, 3, 5, 10, and 30 in the overall World Cup.
 
-Once Elo data was gathered, it was compiled into a df, saved into a Feather file, and read into RStudio where the bulk of analysis for this project was done.
+The Elo data is calculated from race data going back to 1920.  Race data includes World Cups, World Championships, and Olympic Winter Games as well as a handful of Holmenkollen races prior to the World Cup era that began in 1982.  Elo scores are calculated for overall Elo, as further broken down into distance, distance classic, distance freestyle, sprint, sprint classic, sprint freestyle, classic, and freestyle.  A separate post about how Elo is calculated will be made.
 
-With the elo data loaded, I had to set up my data and figure out what I needed for predictions.  For this post, I was mainly curious about two things: 1) World Cup Points predictions for the upcoming season and 2) Probability of a skier winning the overall, podiuming, etc.
+In addition to Elo scores, I also considered the percent of maximum points a skier had in the previous season, their age, and World Cup racing experience.  The skiers included in these lists are the ones who competed in 10 or more races in the 2023-24 World Cup season.  This was to avoid skiers who either do not get starts because their national teams are so strong (Sindre Skar) or older skiers who only race at major events (like what Justyna Kowalczyk used to do).  Obviously, this means that Therese Johaug will not be shown in the data tables below, but more on her later.
 
-To set up the data, I created a column that measured how many points a skier got in a given season.  I did this by filtering out Olympics, World Championships, and relay races and assigning points to World Cup races based on the kind of race (regular, stage, or Tour de Ski final).  Then, because every season has a unique number of races meaning a unique number of points, I standardized it by at seasons end creating a "Pct_of_Max_Points" column that showed the proportion of points a skier had to the most possible points for that given season.  
+One thing that should be considered when viewing this data is that it only considers historical results and how one's current Elo scores and recent race history predicts their outcome in the following season.  It cannot predict illness, injury, fatigue, offseason training, or a number of other factors when determing its results.  For example, while Klæbo is the runaway favorite for the overall World Cup, the possibility of skipping the Tour de Ski, missing weekends to prepare for a major championship, and the new scoring method for World Cup races that favor participation over winning, all mean that there is chance for these to way off for any one skier.
 
-Next I did some imputting by replacing all NAs with the first quartile for that given season.  For example if the first quartile for a season's Distance Elo was 1200, all those who had NA in that column got 1200 entered there.  
-
-Finally, I filtered the dataframe to only be season's end, since I don't care about individual race results, and I created lag variables of previous year's Elo results.  This was since the rows currently corresponded to the current status of points and elo, and I wanted to measure how their end of previous season's elo scores could predict the next season's.  I also created a lag variable of Pct_of_Max_Points.  Lastly, I only wanted recent seasons since the landscape of good cross country skiers has changed into more "hybrid" skiers succeeding at the top.  Also, I wanted to filter out any skiers who did not race 10 or more times in a given season.  This is because there were certain outliers like Sindre Skar and Justyna Kowalczyk who were not high volume racers during the season either due to being selective or not getting the nod from their national team, but still carried a very high elo from earlier in their career.  Obviously this disrupted predictions.
-
-
-### Feature Selection
-
-Next came getting the variables that best explained predicting Pct_of_Max_Points.  The method for this was a simple exhaustive search with a linear model and optimizing for adjusted R2 and BIC, with a preference for BIC should the models differ.  The model was trained on the 2019-2023 seasons, with the 2024 season being the test data set.  After running the script and looking at the top features, I chose Prev_Distance, Prev_Sprint, and Prev_Pct_of_Max_Points as my explanatory variables.  These were chosen as they were near the top model for R2 and BIC (for men and women), and had mutually exclusive and completely exhaustive parts, meaning a lack of multicollinearity.  
-
-### Model Selection
-
-Since since the dataset was relatively small, I was able to be picky about what type of model to use.  So out of curiosity, I benchmarked 12 different regression model types and evaluted them using different metrics.
-
-The 12 different regression model types were
-
-1. Linear
-2. Log transformation of Pct_of_Max_Points
-3. Square root transformation of Pct_of_Max_Points
-4. Weighted regression (weighing residuals higher for higher performing skiers, to more accurately capture the top end)
-5. Quantile regression
-6. Polynomial regression (of the 3rd order, decided upon with evaluation)
-7. Tobit regression
-8. Spline regression
-9. KNN regression (with finding optimal K value prior to)
-10. GAM regression
-11. XGBoost
-12. Random Forest
-
-and I measured the models with 4 metrics in 2 different ways
-
-1. Custom R2 (R2, but weighing the residuals higher for the better skiers)
-2. RMSE
-3. MSE
-4. MAE
-
-and the two ways were
-
-1. Taking the top 30 predicted and using the metrics on those
-2. Taking the top 30 actual and using the metrics on those
-
-The models went through a for loop of seasons from 2019 through 2024 where the year would be the test data and the other years were the training data, then the final score was calculated by averaging out the metric for that given season.
-
-While the models bounced around depending on the metrics and how it was filtered, the GAM models were the only ones that were always ranked 1 to 3 no matter what.  The margins were slim, but its performance as well as its favorable residual plots let me to choosing it as the model for the season's predictions.
 
 
 ### Season Points Predictions
@@ -67,25 +24,43 @@ While the models bounced around depending on the metrics and how it was filtered
 
 #### Men
 
+For men, Klæbo is unsuprisingly the heavy favorite on paper.  Currently, he is the top in the world in every category except for distance freestyle (where he is a close second).  However, with the facts that he has already won 4 World Cup overalls, and that the World Championships are in his backyard, there's a good chance he may decide to skip out on some racing in the early/middle season to prepare for Trondheim.  
+
+Harald Østberg Amundsen's is predicted to regress this upcoming season.  While still expected to be the second best skier in the world, an overall win is unlikely (just as it was last season).  The reason for his overall win last year comes down to a few factors.  1) Incredible performances in a couple of sprint and classic races, 2) racing every race, 3) Klæbo missing several races and the TdS.  Given his improvement in classic racing last year, I wouldn't be completely surprised for him to continue to improve and be near the top in classic more frequently this year.  
+
+For "regressing-to-the-mean", look towards Friedrich Moch and Hugo Lapalus.  Although still young skiers from non-Norway nations (meaning lots of starts), with heavy probability to improve, their standing last year was bolstered heavily by podium results in Tour de Ski that pretty much came down to the last stage.  TdS is hard to predict pre-season, and even harder when you're not a top-3 skier in the world.  This means that there is solid odds of them finishing anywhere from 3-15.  Luckily for them, they will always have the final climb to look forward to.  Unfortunately, that advantage goes away with 1 bad stage prior.
 
 {{< datatable "season-prediction.men-predictions" >}}
 
 
 #### Ladies
 
+For ladies, Diggins is still the favorite to win the overall.  Her combination of racing everything on the schedule, best in the world distance freestyle, and no weakness in the other disciplines leaves her always near the top in the overall standings.  The biggest threats to her overall title will likely comes from a few factors.
+
+1) Improvement from Swedish skiers.  Any improvement from Swedish skiers leaves Diggins vulnerable even at her best to the likes of Frida Karlsson, Linn Svahn, and Jonna Sundling.  Linn Svahn and Sundling have gone from sprint specialists to hybrid skiers in recent years.  More consistent racing in distance for them will make it more difficult for Diggins to hoist the Crystal Globe.
+
+2) Inconsistent results in classic/diminished sprint ability.  Unsurprisingly, Diggins herself is a huge factor in how her own season goes!  In the past she's been prone to poor results in classic races.  Coupled with the fact that sprinting gets tougher with age, it may be more difficult for Diggins to sustain the level she displayed last season.
+
+3) Presence of Therese Johaug.  Johaug is back this season which means that the whole race dynamics change in distance races.  Instead of a pace near the front that all the top skiers can handle, Johaug sets such a demanding pace from the start that strings out the rest of the field.  This is especially tough for Diggins in the classic races and can lead to poorer results than she's used to.
+
+
 {{< datatable "season-prediction.ladies-predictions" >}}
 
 
 ## World Cup Odds Predictions
 
-For this one I tried a number of approaches and only one came out with results that made any amount of sense -- the old school binomial model.
 
 #### Men
+
+Once again, Klæbo is the clear odds favorite with Amundsen, Valnes, and Golberg the other serious contenders.  Don't expect to see any surprises on the Overall Podium this season.
 
 
 {{< datatable "season-prediction.men_placement-odds" >}}
 
 
 #### Ladies
+
+The overall will be a tough battle between Diggins and the Swedes.  Look to Brennan, Niskanen, and Carl to have a shot at the Overall Podium.
+
 
 {{< datatable "season-prediction.ladies_placement-odds" >}}

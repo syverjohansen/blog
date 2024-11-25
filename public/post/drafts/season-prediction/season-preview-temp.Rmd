@@ -2177,6 +2177,10 @@ df_2025$CI_Upper <- pmin(df_2025$CI_Upper, 1)
 output_25 = df_2025[order(-df_2025$Predicted_Points), 
         c("Skier", "Nation","Pct_of_Max_Points", "Predicted_Points", "CI_Lower", "CI_Upper")]
 
+output_25 <- output_25[,1:4]
+
+colnames(output_25) <- c("Skier", "Nation","2023-24 Points", "2024-25 Predicted Points")
+
 write.xlsx(output_25, file = "/Users/syverjohansen/blog/daehl-e/content/post/drafts/season-prediction/men_predictions.xlsx")
 
 ```
@@ -2896,6 +2900,9 @@ print(summary(top5_model))
 print(summary(top10_model))
 print(summary(top30_model))
 
+results$Outside_Prob <- NULL
+names(results) <- gsub("_", " ", names(results))
+results
 # Save results
 write.xlsx(results, file = "/Users/syverjohansen/blog/daehl-e/content/post/drafts/season-prediction/men_placement-odds.xlsx")
 ```
@@ -5159,26 +5166,26 @@ compare_skiers_dtw <- function(df, skier1_name, skier2_name) {
   ))
 }
 
-# Run the analysis
-comparison <- compare_skiers_dtw(df82, 
-                               "Johannes Høsflot Klæbo", 
-                               "Petter Northug")
-
-# Print results
-cat("\nCareer Similarity Score (0-100):", round(comparison$similarity_score, 1), "\n")
-
-# Print career summary
-print("\nCareer Summary:")
-print(comparison$career_summary)
-
-# Display the plot
-print(comparison$dtw_plot)  # Changed from plots to dtw_plot
-
-# Show some key matching points
-cat("\nKey Career Phase Matches:\n")
-print(head(comparison$phase_analysis %>% 
-     dplyr::select(Age1, Age2, Phase) %>% 
-     distinct(), 10))
+# # Run the analysis
+# comparison <- compare_skiers_dtw(df82, 
+#                                "Johannes Høsflot Klæbo", 
+#                                "Petter Northug")
+# 
+# # Print results
+# cat("\nCareer Similarity Score (0-100):", round(comparison$similarity_score, 1), "\n")
+# 
+# # Print career summary
+# print("\nCareer Summary:")
+# print(comparison$career_summary)
+# 
+# # Display the plot
+# print(comparison$dtw_plot)  # Changed from plots to dtw_plot
+# 
+# # Show some key matching points
+# cat("\nKey Career Phase Matches:\n")
+# print(head(comparison$phase_analysis %>% 
+#      dplyr::select(Age1, Age2, Phase) %>% 
+#      distinct(), 10))
 ```
 
 
@@ -5328,23 +5335,23 @@ find_similar_careers_multi <- function(df, reference_skier, n_similar = 5,
     ))
 }
 
-# Run the analysis
-similar_careers <- find_similar_careers_multi(df82, "Petter Northug", 5)
-
-# Print results
-#cat("\nMost Similar Careers to", similar_careers$reference_skier$Name, ":\n")
-print(similar_careers$similar_skiers %>%
-      dplyr::select(Name, Weighted_Similarity, Overall_Elo_Similarity,
-             Distance_Elo_Similarity, Sprint_Elo_Similarity, Points_Similarity))
-
-# Display plots for each similar skier
-for(skier in names(similar_careers$comparison_plots)) {
-    cat("\nComparison plots for", skier, ":\n")
-    print(similar_careers$comparison_plots[[skier]]$overall_elo)
-    print(similar_careers$comparison_plots[[skier]]$distance_elo)
-    print(similar_careers$comparison_plots[[skier]]$sprint_elo)
-    print(similar_careers$comparison_plots[[skier]]$points)
-}
+# # Run the analysis
+# similar_careers <- find_similar_careers_multi(df82, "Petter Northug", 5)
+# 
+# # Print results
+# #cat("\nMost Similar Careers to", similar_careers$reference_skier$Name, ":\n")
+# print(similar_careers$similar_skiers %>%
+#       dplyr::select(Name, Weighted_Similarity, Overall_Elo_Similarity,
+#              Distance_Elo_Similarity, Sprint_Elo_Similarity, Points_Similarity))
+# 
+# # Display plots for each similar skier
+# for(skier in names(similar_careers$comparison_plots)) {
+#     cat("\nComparison plots for", skier, ":\n")
+#     print(similar_careers$comparison_plots[[skier]]$overall_elo)
+#     print(similar_careers$comparison_plots[[skier]]$distance_elo)
+#     print(similar_careers$comparison_plots[[skier]]$sprint_elo)
+#     print(similar_careers$comparison_plots[[skier]]$points)
+# }
 ```
 
 
@@ -5885,6 +5892,10 @@ merged_df <- Reduce(function(x, y) merge(x, y, by="Skier", all=TRUE),
 merged_df
 colnames(merged_df)
 merged_df <- merged_df[,c(1, 6, 2, 7, 3, 4, 5)]
+merged_df <- merged_df[,c(1, 2, 3, 4, 6)]
+merged_df <- merged_df[order(-merged_df$`Predicted Points Elo Pct`), ]
+colnames(merged_df)[5] <- "Age-Adjusted Predicted Points Pct"
+
 write.xlsx(merged_df, 
            file = "/Users/syverjohansen/blog/daehl-e/content/post/drafts/season-prediction/men_age_table.xlsx",
            rowNames = FALSE)
@@ -5900,89 +5911,180 @@ johaug_last <- df82 %>%
   filter(Skier == "Therese Johaug") %>%
   filter(Season == max(Season))
 
-# Calculate population aging trends
-elo_trends <- df82 %>%
-  group_by(Skier) %>%
-  filter(max(Exp) >= 100) %>%  # Experienced skiers
-  mutate(
-    Age_Clean = floor(as.numeric(Age)),
-    Distance_Change = Distance_Pelo - Prev_Distance,
-    Sprint_Change = Sprint_Pelo - Prev_Sprint,
-    Classic_Change = Classic_Pelo - Prev_C,
-    Freestyle_Change = Freestyle_Pelo - Prev_F
-  ) %>%
-  group_by(Age_Clean) %>%
-  summarize(
-    Avg_Distance_Change = mean(Distance_Change, na.rm = TRUE),
-    Avg_Sprint_Change = mean(Sprint_Change, na.rm = TRUE),
-    Avg_Classic_Change = mean(Classic_Change, na.rm = TRUE),
-    Avg_Freestyle_Change = mean(Freestyle_Change, na.rm = TRUE),
-    n = n()
-  ) %>%
-  filter(!is.na(Age_Clean), n >= 20)
+# Function to predict for a specific number of years ahead
+predict_johaug_season <- function(base_data, years_ahead) {
+  # Get skier name from base_data
+  skier_name <- base_data$Skier[1]
+  
+  # Calculate aging effects for specific timespan
+  johaug_age <- floor(as.numeric(base_data$Age)) + years_ahead
+  aging_effects_year <- elo_trends %>%
+    filter(Age_Clean >= floor(as.numeric(base_data$Age)) & 
+           Age_Clean <= johaug_age) %>%
+    summarize(
+      Cumulative_Distance = prod((100 + Avg_Distance_Change)/100),
+      Cumulative_Distance_Classic = prod((100 + Avg_Distance_Classic_Change)/100),
+      Cumulative_Distance_Freestyle = prod((100 + Avg_Distance_Freestyle_Change)/100),
+      Cumulative_Sprint = prod((100 + Avg_Sprint_Change)/100),
+      Cumulative_Classic = prod((100 + Avg_Classic_Change)/100),
+      Cumulative_Freestyle = prod((100 + Avg_Freestyle_Change)/100)
+    )
+  
+  # Create prediction
+  year_pred <- base_data %>%
+    dplyr::select(
+      Skier, Nation, Age,
+      Pelo, Distance_Pelo, Distance_C_Pelo, Distance_F_Pelo, Sprint_C_Pelo, Sprint_F_Pelo,
+      Classic_Pelo, Freestyle_Pelo, Sprint_Pelo
+    ) %>%
+    mutate(
+      Season = 2022 + years_ahead,
+      Age = as.character(as.numeric(Age) + years_ahead),
+      Pelo = Pelo * aging_effects_year$Cumulative_Distance,
+      Distance_Pelo = Distance_Pelo * aging_effects_year$Cumulative_Distance,
+      Distance_C_Pelo = Distance_C_Pelo * aging_effects_year$Cumulative_Distance_Classic,
+      Distance_F_Pelo = Distance_F_Pelo * aging_effects_year$Cumulative_Distance_Freestyle,
+      Sprint_C_Pelo = Sprint_C_Pelo * aging_effects_year$Cumulative_Sprint,
+      Sprint_F_Pelo = Sprint_F_Pelo * aging_effects_year$Cumulative_Sprint,
+      Classic_Pelo = Classic_Pelo * aging_effects_year$Cumulative_Classic,
+      Freestyle_Pelo = Freestyle_Pelo * aging_effects_year$Cumulative_Freestyle,
+      Sprint_Pelo = Sprint_Pelo * aging_effects_year$Cumulative_Sprint,
+      Prev_Pct_of_Max_Points = if("Predicted Points" %in% names(base_data)) {
+        base_data$`Predicted Points`
+      } else {
+        base_data$Pct_of_Max_Points
+      }
+    )
+  
+  # Create temporary df without the skier we're predicting for
+  df_temp <- df_2025_simple %>%
+    filter(Skier != skier_name) %>%
+    bind_rows(year_pred)
+  
+  # Make predictions
+  predictions_temp <- predict(model_2025, newdata = df_temp, type = "response")
+  year_pred$`Predicted Points` <- tail(predictions_temp, 1)  # Get last prediction (our skier)
+  
+  return(year_pred)
+}
 
-# Calculate aging effects over 3 years
-johaug_age <- floor(as.numeric(johaug_last$Age)) + 3
-aging_effects <- elo_trends %>%
-  filter(Age_Clean >= floor(as.numeric(johaug_last$Age)) & 
-         Age_Clean <= johaug_age) %>%
-  summarize(
-    Cumulative_Distance = sum(Avg_Distance_Change),
-    Cumulative_Sprint = sum(Avg_Sprint_Change),
-    Cumulative_Classic = sum(Avg_Classic_Change),
-    Cumulative_Freestyle = sum(Avg_Freestyle_Change)
-  )
-
-# Check structures
-print("df_2025 structure:")
-str(df_2025)
-
-print("\njohaug_pred structure:")
-
-df_2025_simple <- df_2025 %>%
+# Get actual 2022 values
+johaug_2022 <- johaug_last %>%
   dplyr::select(
     Skier, Nation, Age,
-    Pelo, Distance_Pelo, Sprint_C_Pelo, Sprint_F_Pelo,
-    Classic_Pelo, Freestyle_Pelo, Sprint_Pelo
-  )
-
-johaug_last_points <- johaug_last$Pct_of_Max_Points
-# Let's create johaug_pred with identical structure to df_2025
-johaug_pred <- johaug_last %>%
-  dplyr::select(
-    Skier, Nation, Age,
-    Pelo, Distance_Pelo, Sprint_C_Pelo, Sprint_F_Pelo,
-    Classic_Pelo, Freestyle_Pelo, Sprint_Pelo
+    Pelo, Distance_Pelo, Distance_C_Pelo, Distance_F_Pelo, Sprint_C_Pelo, Sprint_F_Pelo,
+    Classic_Pelo, Freestyle_Pelo, Sprint_Pelo, Pct_of_Max_Points
   ) %>%
   mutate(
-    Age = as.character(as.numeric(Age) + 3),
-    Pelo = Pelo + aging_effects$Cumulative_Distance,
-    Distance_Pelo = Distance_Pelo + aging_effects$Cumulative_Distance,
-    Sprint_C_Pelo = Sprint_C_Pelo + aging_effects$Cumulative_Sprint,
-    Sprint_F_Pelo = Sprint_F_Pelo + aging_effects$Cumulative_Sprint,
-    Classic_Pelo = Classic_Pelo + aging_effects$Cumulative_Classic,
-    Freestyle_Pelo = Freestyle_Pelo + aging_effects$Cumulative_Freestyle,
-    Sprint_Pelo = Sprint_Pelo + aging_effects$Cumulative_Sprint,
-    Prev_Pct_of_Max_Points = johaug_last_points
-  )
+    Season = 2022,
+    `Predicted Points` = Pct_of_Max_Points
+  ) %>%
+  dplyr::select(-Pct_of_Max_Points)
 
-# Now try binding
-df_2025_with_johaug <- bind_rows(df_2025_simple, johaug_pred)
+# Get predictions for 2023 and 2024
+johaug_2023 <- predict_johaug_season(johaug_last, 1)
+johaug_2024 <- predict_johaug_season(johaug_last, 2)
+johaug_2025 <- predict_johaug_season(johaug_last, 3)
 
-# Make predictions using your existing model
-predictions_2025_with_johaug <- predict(model_2025, newdata = df_2025_with_johaug, type = "response")
+# Combine all seasons
+johaug_all_seasons <- bind_rows(johaug_2022, johaug_2023, johaug_2024, johaug_2025)
 
-# Extract Johaug's prediction
-johaug_points <- predictions_2025_with_johaug[df_2025_with_johaug$Skier == "Therese Johaug"]
-johaug_pred$`Predicted Points` = johaug_points
-johaug_pred = johaug_pred[, -c(11)]
-johaug_pred = johaug_pred[,c(1, 2, 11, 3, 4, 5, 10)]
-colnames(johaug_pred) = c("Skier", "Nation", "Predicted Points", "Age", "Elo", "Distance Elo", "Sprint Elo")
-write.xlsx(johaug_pred, 
+# Format final dataframe
+johaug_all_seasons <- johaug_all_seasons %>%
+ dplyr::select(Skier, Nation, Season, Age, `Predicted Points`, 
+               Pelo, Distance_Pelo, Distance_C_Pelo, Distance_F_Pelo) %>%
+ rename(
+   "Elo" = "Pelo",
+   "Distance Elo" = "Distance_Pelo",
+   "Distance Classic Elo" = "Distance_C_Pelo",
+   "Distance Freestyle Elo" = "Distance_F_Pelo"
+ )
+
+# Function to get historical data for a skier
+# Function to get historical data for a skier
+get_skier_history <- function(skier_name) {
+  df82 %>%
+    dplyr::filter(Skier == skier_name,
+           Season >= 2022,
+           Season <= 2024) %>%
+    dplyr::group_by(Season) %>%
+    dplyr::arrange(desc(Date)) %>%
+    dplyr::slice_head(n = 1) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(
+      Skier, Nation, Season, Age,
+      Pelo, Distance_Pelo, Distance_C_Pelo, Distance_F_Pelo, Sprint_C_Pelo, Sprint_F_Pelo,
+      Classic_Pelo, Freestyle_Pelo, Sprint_Pelo,
+      Pct_of_Max_Points
+    ) %>%
+    dplyr::rename(`Predicted Points` = Pct_of_Max_Points)
+}
+
+# Get historical data for each skier
+diggins_history <- get_skier_history("Jessie Diggins")
+karlsson_history <- get_skier_history("Frida Karlsson")
+andersson_history <- get_skier_history("Ebba Andersson")
+
+# Get 2025 predictions for each skier using their 2024 data as base
+diggins_2024 <- diggins_history %>% filter(Season == 2024)
+karlsson_2024 <- karlsson_history %>% filter(Season == 2024)
+andersson_2024 <- andersson_history %>% filter(Season == 2024)
+
+diggins_2025 <- predict_johaug_season(diggins_2024, 1)
+karlsson_2025 <- predict_johaug_season(karlsson_2024, 1)
+andersson_2025 <- predict_johaug_season(andersson_2024, 1)
+diggins_2025$Season = 2025
+karlsson_2025$Season = 2025
+andersson_2025$Season = 2025
+
+# Function to standardize column names
+standardize_columns <- function(df) {
+  df %>%
+    dplyr::rename(
+      "Elo" = "Pelo",
+      "Distance Elo" = "Distance_Pelo",
+      "Distance Classic Elo" = "Distance_C_Pelo",
+      "Distance Freestyle Elo" = "Distance_F_Pelo"
+    ) %>%
+    dplyr::select(
+      Skier, Nation, Season, Age, `Predicted Points`,
+      `Elo`, `Distance Elo`, `Distance Classic Elo`, `Distance Freestyle Elo`
+    )
+}
+
+# Combine all data
+all_seasons <- bind_rows(
+  johaug_all_seasons,
+  diggins_history %>% standardize_columns(),
+  karlsson_history %>% standardize_columns(),
+  andersson_history %>% standardize_columns(),
+  diggins_2025 %>% standardize_columns(),
+  karlsson_2025 %>% standardize_columns(),
+  andersson_2025 %>% standardize_columns()
+) %>%
+  arrange(Skier, Season)
+
+# Save to Excel
+write.xlsx(johaug_all_seasons, 
            file = "/Users/syverjohansen/blog/daehl-e/content/post/drafts/season-prediction/johaug.xlsx",
            rowNames = FALSE)
 
-print(johaug_pred)
+print(johaug_all_seasons)
+print(all_seasons)
+
+# Create the plot
+johaug_age_plot <- ggplot(all_seasons, aes(x = Season, y = `Distance Elo`, color = as.factor(Skier), group = Skier)) +
+  geom_line() +
+  labs(
+    title = "Distance Elo Across Seasons by Skier",
+    x = "Season",
+    y = "Distance Elo",
+    color = "Skier"
+  ) +
+  theme_minimal()
+
+ggsave("/Users/syverjohansen/blog/daehl-e/static/img/johaug-age.png", johaug_age_plot, width = 6, height = 4, dpi = 300)
+
 ```
 
 ### So how good is Klaebo?
@@ -7116,8 +7218,8 @@ results_klaebo_without_tds <- lapply(top_skiers[top_skiers != "Johannes Høsflot
 # Create combined dataframe
 results_df <- data.frame(
   Skier = top_skiers[top_skiers != "Johannes Høsflot Klæbo"],
-  Klaebo_With_TDS = unlist(results_klaebo_with_tds),
-  Klaebo_Without_TDS = unlist(results_klaebo_without_tds)
+  `Klaebo With TDS` = unlist(results_klaebo_with_tds),
+  `Klaebo Without TDS` = unlist(results_klaebo_without_tds)
 )
 
 # Save to Excel
