@@ -369,16 +369,18 @@
 
     
     async function fetchWithFallback() {
-        const urlParts = window.location.pathname.split('/');
-        const sex = urlParts[urlParts.length - 3];
-        const id = urlParts[urlParts.length - 2];
+        
 
-        console.log('Initial Sex:', sex);
+        const urlParams = new URLSearchParams(window.location.search);
+        const gender = urlParams.get('gender')?.toUpperCase();
+        const id = urlParams.get('id');
+
+        console.log('Initial Sex:', gender);
         console.log('ID:', id);
 
         
         try {
-            const response = await fetch(`/python/excel365/${sex}/${id}.json`);
+            const response = await fetch(`/python/excel365/${gender}/${id}.json`);
             if (!response.ok) throw new Error('First attempt failed');
             const data = await response.json();
             return createRadarChart(data);
@@ -421,9 +423,12 @@
             console.log("Document is ready");
 
             
-            const urlParts = window.location.pathname.split('/');
-            const sex = urlParts[urlParts.length - 3].toUpperCase();
-            const id = urlParts[urlParts.length - 2];
+
+            
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const sex = urlParams.get('gender')?.toUpperCase();
+            const id = urlParams.get('id');
 
             console.log("Extracted sex:", sex);
             console.log("Extracted ID:", id);

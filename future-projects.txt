@@ -17,6 +17,10 @@ Improving numbers
 -Better predictions for Noah Hoffmann fantasy (race predictions done, now just have to do the rest)
 -Predicting podiums and winners
 -Getting 
+-Percentage chance of winning
+--Last 10 in each discipline (3 for TdS)
+--Fill in rest of 10 with predictions from model
+--Create distribution and simulate results
 
 Articles
 -Finish season preview
