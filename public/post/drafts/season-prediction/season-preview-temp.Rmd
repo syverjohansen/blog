@@ -7222,6 +7222,7 @@ results_df <- data.frame(
   `Klaebo Without TDS` = unlist(results_klaebo_without_tds)
 )
 
+colnames(results_df) <- c("Skier", "Klaebo with TDS", "Klaebo without TDS")
 # Save to Excel
 write.xlsx(results_df, 
            file = "/Users/syverjohansen/blog/daehl-e/content/post/drafts/season-prediction/klaebo.xlsx",

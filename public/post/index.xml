@@ -6,21 +6,21 @@
     <description>Recent content in Posts on Nordic Numbers</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 13 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 28 Nov 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ruka 2025 Predictions</title>
+      <link>http://localhost:1313/post/weekly-picks/20241130ruka/</link>
+      <pubDate>Thu, 28 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/post/weekly-picks/20241130ruka/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Welcome to the first race of the season.  In this post and more to follow, I will present the likely starting list for the weekend as well as race by race predictions for odds as well as expected points&lt;/p&gt;&#xA;&lt;h2 id=&#34;sources&#34;&gt;Sources&lt;/h2&gt;&#xA;&lt;h4 id=&#34;overall&#34;&gt;Overall:&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://xcancel.com/FantasyXC&#34;&gt;https://xcancel.com/FantasyXC&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h4 id=&#34;canada&#34;&gt;Canada&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://proxcskiing.com/traditional-skiing/&#34;&gt;https://proxcskiing.com/traditional-skiing/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h4 id=&#34;czechia-&#34;&gt;Czechia :&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.czech-ski.com/beh-na-lyzich/aktuality&#34;&gt;https://www.czech-ski.com/beh-na-lyzich/aktuality&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.facebook.com/@czeskisnowboard/&#34;&gt;https://www.facebook.com/@czeskisnowboard/&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h4 id=&#34;finland&#34;&gt;Finland:&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;svenska.yle.fi/a/7-10067960&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://yle.fi/a/74-&#34;&gt;https://yle.fi/a/74-&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.facebook.com/xcteamfinland&#34;&gt;https://www.facebook.com/xcteamfinland&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h4 id=&#34;france&#34;&gt;France&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://ffs.fr/actualites/&#34;&gt;https://ffs.fr/actualites/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h4 id=&#34;germany&#34;&gt;Germany&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;DSV Nordic Facebook Page (&lt;a href=&#34;https://www.facebook.com/DSVNordisch&#34;&gt;https://www.facebook.com/DSVNordisch&lt;/a&gt;)&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Scraping Ski Data for Statistical Analysis</title>
       <link>http://localhost:1313/post/readme/</link>
       <pubDate>Thu, 13 Jun 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/post/readme/</guid>
       <description>&lt;!--image:      &#34;/img/scrape-blog/libraries.png&#34;--&gt;&#xA;&lt;h1 id=&#34;goal-getting-the-data-needed-to-perform-statistical-analysis&#34;&gt;Goal: Getting the Data Needed to Perform Statistical Analysis&lt;/h1&gt;&#xA;&lt;p&gt;The first step to perform any meaningful statistical analysis is to get the data needed.  Because I haven’t recorded ski results since the beginning of time, I need to use an external source.  The seemingly obvious way to do this is to use the FIS website and search for World Cup races.  While they undoubtedly have the highest volume of data and are the official arbiter of the results, their records management has something to be desired.  Because our analysis will want to make sure that each individual skier is unique, names cannot be the ultimate form of identification since multiple people can have the same name.  Instead, we need a unique ID for each skier.  While FIS does have a FIS code, I discovered examples of people (especially women who got married) who have a FIS code for one name/spelling, and another FIS code for another name/spelling.  On top of this, biathlon data is not stored on FIS, which would mean I would need a script to scrape from an IBU site.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title></title>
-      <link>http://localhost:1313/post/drafts/weekly-picks/20241130ruka/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/post/drafts/weekly-picks/20241130ruka/</guid>
-      <description>&lt;p&gt;Welcome to the first race of the season.  In this post and more to follow, I will present the likely starting list for the weekend as well as race by race predictions for odds as well as expected points&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
