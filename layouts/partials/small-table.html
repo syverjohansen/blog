@@ -20,159 +20,76 @@
         }
         .content-container {
             margin-left: 270px;
-            margin-right: 270px; /* Adjust based on the width of your sidebar */
+            margin-right: 270px;
         }
-      .sticky-col {
+        .sticky-col {
             position: sticky;
             left: 0;
             background: #f4f4f4;
-            z-index: 2; /* Ensures the sticky column stays above other columns */
+            z-index: 2;
         }
     </style>
 </head>
 <body>
-
     <div class="container-fluid">
-        <h1 id="Ladies"> Ladies</h1>
-       
-        <h2 id="L_chrono"> Elo</h2>
-       <!--  <div style = "overflow-x:auto;">-->
+        <h1 id="Ladies">Ladies</h1>
+        <h2 id="L_chrono">Elo</h2>
         <table id="dataTableL_chrono" class="display">
-            <thead>
-                <!-- Headers will be dynamically populated -->
-            </thead>
-            <tbody>
-                <!-- Data will be dynamically populated -->
-            </tbody>
+            <thead></thead>
+            <tbody></tbody>
         </table>
-
         {{ partial "ladies-graph.html" . }}
-        
- <!-- Add more <h2> and <table> elements as needed for the Ladies section -->
     </div>
+
     <div class="container-fluid">
-        <h1 id="Mwn"> Men</h1>
-
-        <h2 id="M_chrono"> Elo </h2>
-
+        <h1 id="Men">Men</h1>
+        <h2 id="M_chrono">Elo</h2>
         <table id="dataTableM_chrono" class="display">
-            <thead>
-                <!-- Headers will be dynamically populated -->
-            </thead>
-            <tbody>
-                <!-- Data will be dynamically populated -->
-            </tbody>
+            <thead></thead>
+            <tbody></tbody>
         </table>
         {{ partial "men-graph.html" . }}
     </div>
-
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
     <script>
     $(document).ready(function() {
-        console.log("Document is ready");
-
-        // DataTable for Ladies Overall Elo
-
-        $.getJSON('{{ "python/excel365/L_chrono_current.json" | relURL }}', function(data) {
-            console.log("JSON data loaded successfully", data);
-            sex = "L"
-            var columns = Object.keys(data[0]).map(function(key) {
-                if (key === 'Skier') {
-                    console.log("Processing Skier column");
+        function initializeTable(tableId, jsonUrl, gender) {
+            $.getJSON(jsonUrl, function(data) {
+                var columns = Object.keys(data[0]).map(function(key) {
+                    if (key === 'Skier') {
+                        return {
+                            data: key,
+                            title: key.charAt(0).toUpperCase() + key.slice(1),
+                            render: function(data, type, row) {
+                                return `<a href="/skiers/skier/?id=${row.ID}&gender=${gender}" target="_blank">${data}</a>`;
+                            }
+                        };
+                    }
                     return {
                         data: key,
                         title: key.charAt(0).toUpperCase() + key.slice(1),
-                        render: function(data, type, row) {
-                            /*var skierID = row.ID;
-                            console.log("Skier ID clicked:", skierID);
-                            var skierLink = `/skiers/${sex}/?id=${skierID}`;
-                            console.log("Skier link created:", skierLink);*/
-                           // return `<a href="${skierLink}" target="_blank">${data}</a>`;
-
-                            // Create a clickable link for the skier's name using the ID from the JSON data
-                           // return `<a href="https://daehl-e.com/skiers/l/${row.ID}" target="_blank">${data}</a>`;
-                            return `<a href="/skiers/l/${row.ID}" target="_blank">${data}</a>`;
-                            //return `<a href="/skiers/${sex}?id=${row.ID}" target="_blank">${data}</a>`;
-                            //return data;
-
-
-                        }
+                        visible: key !== 'ID'
                     };
-                }                
-                else{
-                    console.log(`Processing column: ${key}`);
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };}
+                });
+
+                $(tableId).DataTable({
+                    data: data,
+                    columns: columns,
+                    scrollX: true,
+                    scrollCollapse: true,
+                    fixedColumns: {leftColumns: 2}
+                });
+            }).fail(function() {
+                console.error(`Failed to load JSON data for ${gender}`);
             });
-            console.log("Column mappings:", columns);
+        }
 
-            console.log("Initializing DataTable");
-            var table = $('#dataTableL_chrono').DataTable({
-                data: data,
-                columns: columns,
-                scrollX: true,
-                scrollCollapse: true,
-                fixedColumns: {leftColumns: 2}
-    
-            });
-             console.log("DataTable instance:", table);
-            console.log("FixedColumns settings:", table.settings()[0].oInit.fixedColumns);
-
-            console.log("DataTable initialized successfully");
-        }).fail(function() {
-            console.error('Failed to load JSON data for Ladies Overall Elo');
-        });
-       
-        $.getJSON('{{ "python/excel365/M_chrono_current.json" | relURL }}?t=${new Date().getTime()}', function(data) {
-            console.log("JSON data loaded successfully", data);
-            sex = "M"
-            var columns = Object.keys(data[0]).map(function(key) {
-                if (key === 'Skier') {
-                    console.log("Processing Skier column");
-                    return {
-                        data: key,
-                        title: key.charAt(0).toUpperCase() + key.slice(1),
-                        render: function(data, type, row) {
-                            
-                            // Create a clickable link for the skier's name using the ID from the JSON data
-                             return `<a href="/skiers/m/${row.ID}" target="_blank">${data}</a>`;
-                            //return `<a href="/skiers/${sex}?id=${row.ID}" target="_blank">${data}</a>`;
-                           // return data;
-
-                        }
-                    };
-                }                
-                else{
-                    console.log(`Processing column: ${key}`);
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };}
-            });
-            console.log("Column mappings:", columns);
-
-            console.log("Initializing DataTable");
-            var table = $('#dataTableM_chrono').DataTable({
-                data: data,
-                columns: columns,
-                scrollX: true,
-                scrollCollapse: true,
-                fixedColumns: {leftColumns: 2}
-    
-            });
-             console.log("DataTable instance:", table);
-            console.log("FixedColumns settings:", table.settings()[0].oInit.fixedColumns);
-
-            console.log("DataTable initialized successfully");
-        }).fail(function() {
-            console.error('Failed to load JSON data for Men Overall Elo');
-        });
-
-
-        });
-
-        // Add more DataTable initialization for other sections as needed
-
+        initializeTable('#dataTableL_chrono', '{{ "python/excel365/L_chrono_current.json" | relURL }}', 'L');
+        initializeTable('#dataTableM_chrono', '{{ "python/excel365/M_chrono_current.json" | relURL }}?t=' + new Date().getTime(), 'M');
+    });
     </script>
-
 </body>
 </html>

@@ -86,9 +86,12 @@
             console.log("Document is ready");
 
             // Extract sex and ID from the URL
-            const urlParts = window.location.pathname.split('/');
-            const sex = urlParts[urlParts.length - 3].toUpperCase();
-            const id = urlParts[urlParts.length - 2];
+
+            //const sex = urlParts[urlParts.length - 3].toUpperCase();
+            //const id = urlParts[urlParts.length - 2];
+            const urlParams = new URLSearchParams(window.location.search);
+            const sex = urlParams.get('gender')?.toUpperCase();
+            const id = urlParams.get('id');
 
             console.log("Extracted sex:", sex);
             console.log("Extracted ID:", id);

@@ -233,32 +233,24 @@
         }
         .content-container {
             margin-left: 270px;
-            margin-right: 270px;  
+            margin-right: 270px;
         }
-      .sticky-col {
+        .sticky-col {
             position: sticky;
             left: 0;
             background: #f4f4f4;
-            z-index: 2;  
+            z-index: 2;
         }
     </style>
 </head>
 <body>
-
     <div class="container-fluid">
-        <h1 id="Ladies"> Ladies</h1>
-       
-        <h2 id="L_chrono"> Elo</h2>
-       
+        <h1 id="Ladies">Ladies</h1>
+        <h2 id="L_chrono">Elo</h2>
         <table id="dataTableL_chrono" class="display">
-            <thead>
-                
-            </thead>
-            <tbody>
-                
-            </tbody>
+            <thead></thead>
+            <tbody></tbody>
         </table>
-
         <!DOCTYPE html>
 <html lang="en">
 
@@ -547,21 +539,14 @@
 
 </html>
 
-        
- 
     </div>
+
     <div class="container-fluid">
-        <h1 id="Mwn"> Men</h1>
-
-        <h2 id="M_chrono"> Elo </h2>
-
+        <h1 id="Men">Men</h1>
+        <h2 id="M_chrono">Elo</h2>
         <table id="dataTableM_chrono" class="display">
-            <thead>
-                
-            </thead>
-            <tbody>
-                
-            </tbody>
+            <thead></thead>
+            <tbody></tbody>
         </table>
         <!DOCTYPE html>
 <html lang="en">
@@ -855,115 +840,48 @@
 
     </div>
 
-
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
     <script>
     $(document).ready(function() {
-        console.log("Document is ready");
-
-        
-
-        $.getJSON('\/python\/excel365\/L_chrono_current.json', function(data) {
-            console.log("JSON data loaded successfully", data);
-            sex = "L"
-            var columns = Object.keys(data[0]).map(function(key) {
-                if (key === 'Skier') {
-                    console.log("Processing Skier column");
+        function initializeTable(tableId, jsonUrl, gender) {
+            $.getJSON(jsonUrl, function(data) {
+                var columns = Object.keys(data[0]).map(function(key) {
+                    if (key === 'Skier') {
+                        return {
+                            data: key,
+                            title: key.charAt(0).toUpperCase() + key.slice(1),
+                            render: function(data, type, row) {
+                                return `<a href="/skiers/skier/?id=${row.ID}&gender=${gender}" target="_blank">${data}</a>`;
+                            }
+                        };
+                    }
                     return {
                         data: key,
                         title: key.charAt(0).toUpperCase() + key.slice(1),
-                        render: function(data, type, row) {
-                            
-
-                           
-
-                            
-                           
-                            return `<a href="/skiers/l/${row.ID}" target="_blank">${data}</a>`;
-                            
-                            
-
-
-                        }
+                        visible: key !== 'ID'
                     };
-                }                
-                else{
-                    console.log(`Processing column: ${key}`);
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };}
+                });
+
+                $(tableId).DataTable({
+                    data: data,
+                    columns: columns,
+                    scrollX: true,
+                    scrollCollapse: true,
+                    fixedColumns: {leftColumns: 2}
+                });
+            }).fail(function() {
+                console.error(`Failed to load JSON data for ${gender}`);
             });
-            console.log("Column mappings:", columns);
+        }
 
-            console.log("Initializing DataTable");
-            var table = $('#dataTableL_chrono').DataTable({
-                data: data,
-                columns: columns,
-                scrollX: true,
-                scrollCollapse: true,
-                fixedColumns: {leftColumns: 2}
-    
-            });
-             console.log("DataTable instance:", table);
-            console.log("FixedColumns settings:", table.settings()[0].oInit.fixedColumns);
-
-            console.log("DataTable initialized successfully");
-        }).fail(function() {
-            console.error('Failed to load JSON data for Ladies Overall Elo');
-        });
-       
-        $.getJSON('\/python\/excel365\/M_chrono_current.json?t=${new Date().getTime()}', function(data) {
-            console.log("JSON data loaded successfully", data);
-            sex = "M"
-            var columns = Object.keys(data[0]).map(function(key) {
-                if (key === 'Skier') {
-                    console.log("Processing Skier column");
-                    return {
-                        data: key,
-                        title: key.charAt(0).toUpperCase() + key.slice(1),
-                        render: function(data, type, row) {
-                            
-                            
-                             return `<a href="/skiers/m/${row.ID}" target="_blank">${data}</a>`;
-                            
-                           
-
-                        }
-                    };
-                }                
-                else{
-                    console.log(`Processing column: ${key}`);
-                return { data: key, title: key.charAt(0).toUpperCase() + key.slice(1), visible: key!=='ID' };}
-            });
-            console.log("Column mappings:", columns);
-
-            console.log("Initializing DataTable");
-            var table = $('#dataTableM_chrono').DataTable({
-                data: data,
-                columns: columns,
-                scrollX: true,
-                scrollCollapse: true,
-                fixedColumns: {leftColumns: 2}
-    
-            });
-             console.log("DataTable instance:", table);
-            console.log("FixedColumns settings:", table.settings()[0].oInit.fixedColumns);
-
-            console.log("DataTable initialized successfully");
-        }).fail(function() {
-            console.error('Failed to load JSON data for Men Overall Elo');
-        });
-
-
-        });
-
-        
-
+        initializeTable('#dataTableL_chrono', '\/python\/excel365\/L_chrono_current.json', 'L');
+        initializeTable('#dataTableM_chrono', '\/python\/excel365\/M_chrono_current.json?t=' + new Date().getTime(), 'M');
+    });
     </script>
-
 </body>
 </html>
-
 
 
                 
@@ -1058,7 +976,7 @@
 <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.min.js"></script>
 
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.5/cdn.min.js"></script>
 
 
 <footer>
