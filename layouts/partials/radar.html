@@ -11,91 +11,105 @@
 <canvas id="radarChart" width="400" height="400"></canvas>
 
 <script>
-    // Function to fetch JSON and initialize the radar chart
-    function fetchAndDrawRadarChart(jsonFilePath) {
-        fetch(jsonFilePath)
-            .then(response => response.json())
-            .then(data => {
-                // Get the most recent (last) entry
-                const mostRecentEntry = data[data.length - 1];
+    // Function to create the radar chart with the data
+    function createRadarChart(data) {
+        const mostRecentEntry = data[data.length - 1];
 
-                // Extract the values you want for the radar chart
-                const radarData = {
-                    Elo_Pct: mostRecentEntry.Elo_Pct,
-                    Distance_Elo_Pct: mostRecentEntry.Distance_Elo_Pct,
-                    Distance_C_Elo_Pct: mostRecentEntry.Distance_C_Elo_Pct,
-                    Distance_F_Elo_Pct: mostRecentEntry.Distance_F_Elo_Pct,
-                    Sprint_Elo_Pct: mostRecentEntry.Sprint_Elo_Pct,
-                    Sprint_C_Elo_Pct: mostRecentEntry.Sprint_C_Elo_Pct,
-                    Sprint_F_Elo_Pct: mostRecentEntry.Sprint_F_Elo_Pct,
-                    Classic_Elo_Pct: mostRecentEntry.Classic_Elo_Pct,
-                    Freestyle_Elo_Pct: mostRecentEntry.Freestyle_Elo_Pct
-                };
+        const radarData = {
+            Elo_Pct: mostRecentEntry.Elo_Pct,
+            Distance_Elo_Pct: mostRecentEntry.Distance_Elo_Pct,
+            Distance_C_Elo_Pct: mostRecentEntry.Distance_C_Elo_Pct,
+            Distance_F_Elo_Pct: mostRecentEntry.Distance_F_Elo_Pct,
+            Sprint_Elo_Pct: mostRecentEntry.Sprint_Elo_Pct,
+            Sprint_C_Elo_Pct: mostRecentEntry.Sprint_C_Elo_Pct,
+            Sprint_F_Elo_Pct: mostRecentEntry.Sprint_F_Elo_Pct,
+            Classic_Elo_Pct: mostRecentEntry.Classic_Elo_Pct,
+            Freestyle_Elo_Pct: mostRecentEntry.Freestyle_Elo_Pct
+        };
 
-                // Labels for the radar chart (based on the fields)
-                const radarLabels = [
-                    "Elo Pct", "Distance Elo Pct", "Distance C Elo Pct",
-                    "Distance F Elo Pct", "Sprint Elo Pct", "Sprint C Elo Pct",
-                    "Sprint F Elo Pct", "Classic Elo Pct", "Freestyle Elo Pct"
-                ];
+        const radarLabels = [
+            "Elo Pct", "Distance Elo Pct", "Distance C Elo Pct",
+            "Distance F Elo Pct", "Sprint Elo Pct", "Sprint C Elo Pct",
+            "Sprint F Elo Pct", "Classic Elo Pct", "Freestyle Elo Pct"
+        ];
 
-                // Data for the radar chart (as an array of values)
-                const radarValues = [
-                    radarData.Elo_Pct,
-                    radarData.Distance_Elo_Pct,
-                    radarData.Distance_C_Elo_Pct,
-                    radarData.Distance_F_Elo_Pct,
-                    radarData.Sprint_Elo_Pct,
-                    radarData.Sprint_C_Elo_Pct,
-                    radarData.Sprint_F_Elo_Pct,
-                    radarData.Classic_Elo_Pct,
-                    radarData.Freestyle_Elo_Pct
-                ];
+        const radarValues = [
+            radarData.Elo_Pct,
+            radarData.Distance_Elo_Pct,
+            radarData.Distance_C_Elo_Pct,
+            radarData.Distance_F_Elo_Pct,
+            radarData.Sprint_Elo_Pct,
+            radarData.Sprint_C_Elo_Pct,
+            radarData.Sprint_F_Elo_Pct,
+            radarData.Classic_Elo_Pct,
+            radarData.Freestyle_Elo_Pct
+        ];
 
-                // Create the radar chart
-                const ctx = document.getElementById('radarChart').getContext('2d');
-                const radarChart = new Chart(ctx, {
-                    type: 'radar',
-                    data: {
-                        labels: radarLabels,
-                        datasets: [{
-                            label: 'Most Recent Elo Percentiles',
-                            data: radarValues,
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            r: {
-                                angleLines: {
-                                    display: false
-                                },
-                                suggestedMin: 0,
-                                suggestedMax: 100
-                            }
-                        }
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        return new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: radarLabels,
+                datasets: [{
+                    label: 'Most Recent Elo Percentiles',
+                    data: radarValues,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: false
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
                     }
-                });
-            })
-            .catch(error => console.error('Error loading the JSON:', error));
+                }
+            }
+        });
     }
 
-    // Extract sex and id from the URL
-    const urlParts = window.location.pathname.split('/');
-    const sex = urlParts[urlParts.length - 3];  // "l" from "/skiers/l/131/"
-    const id = urlParts[urlParts.length - 2];   // "131" from "/skiers/l/131/"
+    // Function to attempt fetching JSON with error handling
+    async function fetchWithFallback() {
+        const urlParts = window.location.pathname.split('/');
+        const sex = urlParts[urlParts.length - 3];
+        const id = urlParts[urlParts.length - 2];
 
-    // Log to verify extracted values
-    console.log('Extracted Sex:', sex);
-    console.log('Extracted ID:', id);
+        console.log('Initial Sex:', sex);
+        console.log('ID:', id);
 
-    // Construct the JSON file path dynamically
-    const jsonFilePath = `/python/excel365/${sex}/${id}.json`;
+        // Try the original case first
+        try {
+            const response = await fetch(`/python/excel365/${sex}/${id}.json`);
+            if (!response.ok) throw new Error('First attempt failed');
+            const data = await response.json();
+            return createRadarChart(data);
+        } catch (error) {
+            console.log('First attempt failed, trying alternate case...');
+            
+            // Try the opposite case
+            const alternateSex = sex === 'l' ? 'L' : sex === 'L' ? 'l' : null;
+            if (!alternateSex) {
+                console.error('Invalid sex parameter in URL');
+                return;
+            }
 
-    // Fetch the JSON and draw the radar chart
-    fetchAndDrawRadarChart(jsonFilePath);
+            try {
+                const response = await fetch(`/python/excel365/${alternateSex}/${id}.json`);
+                if (!response.ok) throw new Error('Both attempts failed');
+                const data = await response.json();
+                return createRadarChart(data);
+            } catch (error) {
+                console.error('Failed to load data with both cases:', error);
+            }
+        }
+    }
+
+    // Initialize the chart with error handling
+    fetchWithFallback();
 </script>
 
 </body>
