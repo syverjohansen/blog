@@ -1,0 +1,888 @@
+---
+title: "Weekly Race Recaps"
+author: "Syver Johansen"
+date: "2024-11-30"
+output: html_document
+---
+
+```{r predicted-vs-actual}
+# Load required libraries
+library(arrow)  # for reading feather files
+library(readxl) # for reading Excel files
+library(tidyverse)
+
+# Define file paths
+men_chrono_path <- "~/ski/elo/python/ski/polars/excel365/men_chrono.csv"
+ladies_chrono_path <- "~/ski/elo/python/ski/polars/excel365/ladies_chrono.csv"
+men_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Ruka/men-points.xlsx"
+ladies_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Ruka/ladies-points.xlsx"
+
+# Read the feather files
+men_chrono <- read.csv(men_chrono_path)
+
+ladies_chrono <- read.csv(ladies_chrono_path)
+
+# Read the Excel files
+men_points <- read_xlsx(men_points_path)
+ladies_points <- read_xlsx(ladies_points_path)
+
+# Create a list to store all dataframes
+ski_data <- list(
+  men_chrono = men_chrono,
+  ladies_chrono = ladies_chrono,
+  men_points = men_points,
+  ladies_points = ladies_points
+)
+
+# Print the dimensions of each dataframe to verify loading
+lapply(ski_data, dim)
+```
+
+```{r df-setup}
+# Filter and sort men's data
+men_2025 <- men_chrono %>%
+ filter(Season == 2025, City != "Summer") %>% 
+#filter(Season == 2025) %>% 
+ arrange(Season, Race, Place)
+
+men_before <- men_chrono %>%
+  filter(Season < 2025 | (Season == 2025 & Race < 1 & City!="Summer")) %>%
+  arrange(Season, Date, Race, Place)
+
+men_end <- men_chrono %>%
+ #filter(Season == 2025, City != "Summer") %>% 
+filter(Season == 2025) %>% 
+ arrange(Season, Race, Place)
+
+
+# Filter and sort ladies' data
+ladies_2025 <- ladies_chrono %>%
+ filter(Season == 2025, City != "Summer") %>% 
+#filter(Season == 2025) %>% 
+ arrange(Season, Race, Place)
+
+ladies_end <- ladies_chrono %>%
+ #filter(Season == 2025, City != "Summer") %>% 
+filter(Season == 2025) %>% 
+ arrange(Season, Race, Place)
+
+
+# Create Points column for men
+men_2025 <- men_2025 %>%
+ mutate(Points = case_when(
+   Place > 0 & Place <= length(wc_points) ~ wc_points[Place],
+   TRUE ~ 0  # Assign 0 points for places beyond 50th or Place==0
+ ))
+
+# Create Points column for ladies
+ladies_2025 <- ladies_2025 %>%
+ mutate(Points = case_when(
+   Place > 0 & Place <= length(wc_points) ~ wc_points[Place],
+   TRUE ~ 0  # Assign 0 points for places beyond 50th or Place==0
+ ))
+
+# Create cumulative points column for men
+men_2025 <- men_2025 %>%
+ group_by(ID) %>%
+ mutate(Season_Points = cumsum(Points)) %>%
+ ungroup()
+
+# Create cumulative points column for ladies  
+ladies_2025 <- ladies_2025 %>%
+ group_by(ID) %>%
+ mutate(Season_Points = cumsum(Points)) %>%
+ ungroup()
+
+#10km Classic
+
+# Filter men's data for Race 1
+men_race1 <- men_2025 %>%
+ filter(Race == 1)
+
+# Filter ladies' data for Race 1
+ladies_race1 <- ladies_2025 %>%
+ filter(Race == 1)
+
+# Add predicted points for men
+men_race1 <- men_race1 %>%
+ left_join(men_points %>% dplyr::select(Skier, Race1_Points), by = "Skier") %>%
+ rename(Predicted_Points = Race1_Points)
+men_race1 <- men_race1 %>%
+  mutate(Predicted_Points = as.numeric(Predicted_Points),
+         Points = as.numeric(Points))
+men_race1$Points_Difference = men_race1$Points-as.double(men_race1$Predicted_Points)
+men_race1$Elo_Difference = men_race1$Distance_C_Elo- men_race1$Distance_C_Pelo
+
+men_race1 <- men_race1 %>%
+  dplyr::select(Skier, Nation, Distance_C_Pelo, Distance_C_Elo, Elo_Difference, Predicted_Points, Points, Points_Difference)
+
+# Or using dplyr
+men_race1 <- men_race1 %>%
+  rename_with(~gsub("_", " ", ., fixed=TRUE))
+
+colnames(men_race1) <- c("Skier", "Nation", "Before Elo", "After Elo", "Elo Difference", "Predicted Points", "Points", "Points Difference")
+
+max_diff <- men_race1 %>%
+  slice_max(`Points Difference`, n = 1)
+
+min_diff <- men_race1 %>%
+  slice_min(`Points Difference`, n = 1)
+
+# Create the plot
+ggplot(men_race1, aes(x = `Predicted Points`, y = Points)) +
+  geom_point() +
+  geom_point(data = max_diff, color = "green", size = 3) +
+  geom_point(data = min_diff, color = "red", size = 3) +
+  geom_text(data = max_diff, aes(label = Skier), vjust = -1) +
+  geom_text(data = min_diff, aes(label = Skier), vjust = -1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Add 1:1 reference line
+  scale_x_continuous(limits = c(0, 100), breaks = c(25, 50, 75, 100)) +
+  labs(title = "Predicted vs Actual Points",
+       x = "Predicted Points",
+       y = "Actual Points") +
+  theme_minimal()
+# Save the plot
+ggsave("~/blog/daehl-e/static/img/weekly-recap/2025Ruka/men_race1.png", 
+       width = 10, 
+       height = 8, 
+       dpi = 300)
+
+
+# Get top 3 overperformers (positive difference)
+top_over <- men_race1 %>%
+ arrange(desc(`Points Difference`)) %>%
+ dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+ head(3)
+
+# Get top 3 underperformers (negative difference)
+top_under <- men_race1 %>%
+ arrange(`Points Difference`) %>%
+ dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+ head(3)
+
+# Print results
+print("Top 3 Overperformers:")
+print(top_over)
+
+print("\nTop 3 Underperformers:")
+print(top_under)
+
+
+
+
+# Add predicted points for men
+ladies_race1 <- ladies_race1 %>%
+  left_join(ladies_points %>% dplyr::select(Skier, Race1_Points), by = "Skier") %>%
+  rename(Predicted_Points = Race1_Points)
+ladies_race1 <- ladies_race1 %>%
+  mutate(Predicted_Points = as.numeric(Predicted_Points),
+         Points = as.numeric(Points))
+ladies_race1$Points_Difference = ladies_race1$Points-as.double(ladies_race1$Predicted_Points)
+ladies_race1$Elo_Difference = ladies_race1$Distance_C_Elo- ladies_race1$Distance_C_Pelo
+
+ladies_race1 <- ladies_race1 %>%
+  dplyr::select(Skier, Nation, Distance_C_Pelo, Distance_C_Elo, Elo_Difference, Predicted_Points, Points, Points_Difference)
+
+# Or using dplyr
+ladies_race1 <- ladies_race1 %>%
+  rename_with(~gsub("_", " ", ., fixed=TRUE))
+
+colnames(ladies_race1) <- c("Skier", "Nation", "Before Elo", "After Elo", "Elo Difference", "Predicted Points", "Points", "Points Difference")
+
+max_diff <- ladies_race1 %>%
+  slice_max(`Points Difference`, n = 1)
+
+min_diff <- ladies_race1 %>%
+  slice_min(`Points Difference`, n = 1)
+
+# Create the plot
+ggplot(ladies_race1, aes(x = `Predicted Points`, y = Points)) +
+  geom_point() +
+  geom_point(data = max_diff, color = "green", size = 3) +
+  geom_point(data = min_diff, color = "red", size = 3) +
+  geom_text(data = max_diff, aes(label = Skier), vjust = -1) +
+  geom_text(data = min_diff, aes(label = Skier), vjust = -1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Add 1:1 reference line
+  scale_x_continuous(limits = c(0, 100), breaks = c(25, 50, 75, 100)) +
+  labs(title = "Predicted vs Actual Points",
+       x = "Predicted Points",
+       y = "Actual Points") +
+  theme_minimal()
+# Save the plot
+ggsave("~/blog/daehl-e/static/img/weekly-recap/2025Ruka/ladies_race1.png", 
+       width = 10, 
+       height = 8, 
+       dpi = 300)
+
+
+# Get top 3 overperformers (positive difference)
+top_over <- ladies_race1 %>%
+  arrange(desc(`Points Difference`)) %>%
+  dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+  head(3)
+
+# Get top 3 underperformers (negative difference)
+top_under <- ladies_race1 %>%
+  arrange(`Points Difference`) %>%
+  dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+  head(3)
+
+# Print results
+print("Top 3 Overperformers:")
+print(top_over)
+
+print("\nTop 3 Underperformers:")
+print(top_under)
+
+# Filter men's data for Race 1
+men_race2 <- men_2025 %>%
+ filter(Race == 2)
+
+# Filter ladies' data for Race 1
+ladies_race2 <- ladies_2025 %>%
+ filter(Race == 2)
+
+# Add predicted points for men
+men_race2 <- men_race2 %>%
+  left_join(men_points %>% dplyr::select(Skier, Race2_Points), by = "Skier") %>%
+  rename(Predicted_Points = Race2_Points)
+men_race2 <- men_race2 %>%
+  mutate(Predicted_Points = as.numeric(Predicted_Points),
+         Points = as.numeric(Points))
+men_race2$Points_Difference = men_race2$Points-as.double(men_race2$Predicted_Points)
+men_race2$Elo_Difference = men_race2$Sprint_C_Elo- men_race2$Sprint_C_Pelo
+
+men_race2 <- men_race2 %>%
+  dplyr::select(Skier, Nation, Sprint_C_Pelo, Sprint_C_Elo, Elo_Difference, Predicted_Points, Points, Points_Difference)
+
+# Or using dplyr
+men_race2 <- men_race2 %>%
+  rename_with(~gsub("_", " ", ., fixed=TRUE))
+
+colnames(men_race2) <- c("Skier", "Nation", "Before Elo", "After Elo", "Elo Difference", "Predicted Points", "Points", "Points Difference")
+
+max_diff <- men_race2 %>%
+  slice_max(`Points Difference`, n = 1)
+
+min_diff <- men_race2 %>%
+  slice_min(`Points Difference`, n = 1)
+
+# Create the plot
+ggplot(men_race2, aes(x = `Predicted Points`, y = Points)) +
+  geom_point() +
+  geom_point(data = max_diff, color = "green", size = 3) +
+  geom_point(data = min_diff, color = "red", size = 3) +
+  geom_text(data = max_diff, aes(label = Skier), vjust = -1) +
+  geom_text(data = min_diff, aes(label = Skier), vjust = -1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Add 1:1 reference line
+  scale_x_continuous(limits = c(0, 100), breaks = c(25, 50, 75, 100)) +
+  labs(title = "Predicted vs Actual Points",
+       x = "Predicted Points",
+       y = "Actual Points") +
+  theme_minimal()
+# Save the plot
+ggsave("~/blog/daehl-e/static/img/weekly-recap/2025Ruka/men_race2.png", 
+       width = 10, 
+       height = 8, 
+       dpi = 300)
+
+
+# Get top 3 overperformers (positive difference)
+top_over <- men_race2 %>%
+  arrange(desc(`Points Difference`)) %>%
+  dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+  head(3)
+
+# Get top 3 underperformers (negative difference)
+top_under <- men_race2 %>%
+  arrange(`Points Difference`) %>%
+  dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+  head(3)
+
+# Print results
+print("Top 3 Overperformers:")
+print(top_over)
+
+print("\nTop 3 Underperformers:")
+print(top_under)
+
+men_race2
+
+# Add predicted points for men
+ladies_race2 <- ladies_race2 %>%
+  left_join(ladies_points %>% dplyr::select(Skier, Race2_Points), by = "Skier") %>%
+  rename(Predicted_Points = Race2_Points)
+ladies_race2 <- ladies_race2 %>%
+  mutate(Predicted_Points = as.numeric(Predicted_Points),
+         Points = as.numeric(Points))
+ladies_race2$Points_Difference = ladies_race2$Points-as.double(ladies_race2$Predicted_Points)
+ladies_race2$Elo_Difference = ladies_race2$Sprint_C_Elo- ladies_race2$Sprint_C_Pelo
+
+ladies_race2 <- ladies_race2 %>%
+  dplyr::select(Skier, Nation, Sprint_C_Pelo, Sprint_C_Elo, Elo_Difference, Predicted_Points, Points, Points_Difference)
+
+# Or using dplyr
+ladies_race2 <- ladies_race2 %>%
+  rename_with(~gsub("_", " ", ., fixed=TRUE))
+
+colnames(ladies_race2) <- c("Skier", "Nation", "Before Elo", "After Elo", "Elo Difference", "Predicted Points", "Points", "Points Difference")
+
+max_diff <- ladies_race2 %>%
+  slice_max(`Points Difference`, n = 1)
+
+min_diff <- ladies_race2 %>%
+  slice_min(`Points Difference`, n = 1)
+
+# Create the plot
+ggplot(ladies_race2, aes(x = `Predicted Points`, y = Points)) +
+  geom_point() +
+  geom_point(data = max_diff, color = "green", size = 3) +
+  geom_point(data = min_diff, color = "red", size = 3) +
+  geom_text(data = max_diff, aes(label = Skier), vjust = -1) +
+  geom_text(data = min_diff, aes(label = Skier), vjust = -1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Add 1:1 reference line
+  scale_x_continuous(limits = c(0, 100), breaks = c(25, 50, 75, 100)) +
+  labs(title = "Predicted vs Actual Points",
+       x = "Predicted Points",
+       y = "Actual Points") +
+  theme_minimal()
+# Save the plot
+ggsave("~/blog/daehl-e/static/img/weekly-recap/2025Ruka/ladies_race2.png", 
+       width = 10, 
+       height = 8, 
+       dpi = 300)
+
+
+# Get top 3 overperformers (positive difference)
+top_over <- ladies_race2 %>%
+  arrange(desc(`Points Difference`)) %>%
+  dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+  head(3)
+
+# Get top 3 underperformers (negative difference)
+top_under <- ladies_race2 %>%
+  arrange(`Points Difference`) %>%
+  dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+  head(3)
+
+# Print results
+print("Top 3 Overperformers:")
+print(top_over)
+
+print("\nTop 3 Underperformers:")
+print(top_under)
+
+# Filter men's data for Race 1
+men_race3 <- men_2025 %>%
+ filter(Race == 3)
+
+# Filter ladies' data for Race 1
+ladies_race3 <- ladies_2025 %>%
+ filter(Race == 3)
+
+# Add predicted points for men
+men_race3 <- men_race3 %>%
+  left_join(men_points %>% dplyr::select(Skier, Race3_Points), by = "Skier") %>%
+  rename(Predicted_Points = Race3_Points)
+men_race3 <- men_race3 %>%
+  mutate(Predicted_Points = as.numeric(Predicted_Points),
+         Points = as.numeric(Points))
+men_race3$Points_Difference = men_race3$Points-as.double(men_race3$Predicted_Points)
+men_race3$Elo_Difference = men_race3$Distance_F_Elo- men_race3$Distance_F_Pelo
+
+men_race3 <- men_race3 %>%
+  dplyr::select(Skier, Nation, Distance_F_Pelo, Distance_F_Elo, Elo_Difference, Predicted_Points, Points, Points_Difference)
+
+# Or using dplyr
+men_race3 <- men_race3 %>%
+  rename_with(~gsub("_", " ", ., fixed=TRUE))
+
+colnames(men_race3) <- c("Skier", "Nation", "Before Elo", "After Elo", "Elo Difference", "Predicted Points", "Points", "Points Difference")
+
+max_diff <- men_race3 %>%
+  slice_max(`Points Difference`, n = 1)
+
+min_diff <- men_race3 %>%
+  slice_min(`Points Difference`, n = 1)
+
+# Create the plot
+ggplot(men_race3, aes(x = `Predicted Points`, y = Points)) +
+  geom_point() +
+  geom_point(data = max_diff, color = "green", size = 3) +
+  geom_point(data = min_diff, color = "red", size = 3) +
+  geom_text(data = max_diff, aes(label = Skier), vjust = -1) +
+  geom_text(data = min_diff, aes(label = Skier), vjust = -1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Add 1:1 reference line
+  scale_x_continuous(limits = c(0, 100), breaks = c(25, 50, 75, 100)) +
+  labs(title = "Predicted vs Actual Points",
+       x = "Predicted Points",
+       y = "Actual Points") +
+  theme_minimal()
+# Save the plot
+ggsave("~/blog/daehl-e/static/img/weekly-recap/2025Ruka/men_race3.png", 
+       width = 10, 
+       height = 8, 
+       dpi = 300)
+
+
+# Get top 3 overperformers (positive difference)
+top_over <- men_race3 %>%
+  arrange(desc(`Points Difference`)) %>%
+  dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+  head(3)
+
+# Get top 3 underperformers (negative difference)
+top_under <- men_race3 %>%
+  arrange(`Points Difference`) %>%
+  dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+  head(3)
+
+# Print results
+print("Top 3 Overperformers:")
+print(top_over)
+
+print("\nTop 3 Underperformers:")
+print(top_under)
+
+men_race3
+
+# Add predicted points for men
+ladies_race3 <- ladies_race3 %>%
+  left_join(ladies_points %>% dplyr::select(Skier, Race3_Points), by = "Skier") %>%
+  rename(Predicted_Points = Race3_Points)
+ladies_race3 <- ladies_race3 %>%
+  mutate(Predicted_Points = as.numeric(Predicted_Points),
+         Points = as.numeric(Points))
+ladies_race3$Points_Difference = ladies_race3$Points-as.double(ladies_race3$Predicted_Points)
+ladies_race3$Elo_Difference = ladies_race3$Distance_F_Elo- ladies_race3$Distance_F_Pelo
+
+ladies_race3 <- ladies_race3 %>%
+  dplyr::select(Skier, Nation, Distance_F_Pelo, Distance_F_Elo, Elo_Difference, Predicted_Points, Points, Points_Difference)
+
+# Or using dplyr
+ladies_race3 <- ladies_race3 %>%
+  rename_with(~gsub("_", " ", ., fixed=TRUE))
+
+colnames(ladies_race3) <- c("Skier", "Nation", "Before Elo", "After Elo", "Elo Difference", "Predicted Points", "Points", "Points Difference")
+
+max_diff <- ladies_race3 %>%
+  slice_max(`Points Difference`, n = 1)
+
+min_diff <- ladies_race3 %>%
+  slice_min(`Points Difference`, n = 1)
+
+# Create the plot
+ggplot(ladies_race3, aes(x = `Predicted Points`, y = Points)) +
+  geom_point() +
+  geom_point(data = max_diff, color = "green", size = 3) +
+  geom_point(data = min_diff, color = "red", size = 3) +
+  geom_text(data = max_diff, aes(label = Skier), vjust = -1) +
+  geom_text(data = min_diff, aes(label = Skier), vjust = -1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Add 1:1 reference line
+  scale_x_continuous(limits = c(0, 100), breaks = c(25, 50, 75, 100)) +
+  labs(title = "Predicted vs Actual Points",
+       x = "Predicted Points",
+       y = "Actual Points") +
+  theme_minimal()
+# Save the plot
+ggsave("~/blog/daehl-e/static/img/weekly-recap/2025Ruka/ladies_race3.png", 
+       width = 10, 
+       height = 8, 
+       dpi = 300)
+
+
+# Get top 3 overperformers (positive difference)
+top_over <- ladies_race3 %>%
+  arrange(desc(`Points Difference`)) %>%
+  dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+  head(3)
+
+# Get top 3 underperformers (negative difference)
+top_under <- ladies_race3 %>%
+  arrange(`Points Difference`) %>%
+  dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+  head(3)
+
+# Print results
+print("Top 3 Overperformers:")
+print(top_over)
+
+print("\nTop 3 Underperformers:")
+print(top_under)
+
+#men_weekend and ladies_weekend have Skier, Nation, Pelo, Elo, Elo Difference, Predicted Points, Points
+
+
+write.xlsx(men_race1, file = "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-recap/2025Ruka/men_race1.xlsx")
+write.xlsx(ladies_race1, file = "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-recap/2025Ruka/ladies_race1.xlsx")
+write.xlsx(men_race2, file = "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-recap/2025Ruka/men_race2.xlsx")
+write.xlsx(ladies_race2, file = "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-recap/2025Ruka/ladies_race2.xlsx")
+write.xlsx(men_race3, file = "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-recap/2025Ruka/men_race3.xlsx")
+write.xlsx(ladies_race3, file = "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-recap/2025Ruka/ladies_race3.xlsx")
+
+
+
+# Create the weekend dataframe
+
+men_weekend <- men_2025 %>%
+  # Filter to only relevant races
+  filter(Race %in% c(1,2,3)) %>%
+  # Group by Skier and Race
+  group_by(Skier, Race) %>%
+  # Get Before Elo (most recent Elo)
+  left_join(
+    men_before %>%
+      group_by(Skier) %>%
+      slice_tail(n = 1) %>%
+      dplyr::select(Skier, Before_Elo = Elo),
+    by = "Skier"
+  ) %>%
+  # Get Predicted Points
+  left_join(
+    men_points %>%
+      dplyr::select(Skier, Predicted_Points = Total_Points) %>%
+      mutate(Predicted_Points = as.numeric(Predicted_Points)),
+    by = "Skier"
+  ) %>%
+  # Calculate total points
+  group_by(Skier) %>%
+  mutate(Total_Points = cumsum(Points)) %>%
+  # Get the last row for each skier
+  slice_tail(n = 1) %>%
+  # Calculate Elo and Points differences
+  mutate(
+    After_Elo = Elo,
+    Elo_Difference = After_Elo - Before_Elo,
+    Points_Difference = Total_Points - Predicted_Points
+  )
+
+men_weekend <- men_weekend %>%
+  dplyr::select(Skier, Nation, `Before Elo` = Before_Elo, `After Elo` = After_Elo, `Elo Difference` = Elo_Difference,`Predicted Points` = Predicted_Points, `Total Points` = Total_Points, `Points Difference` = Points_Difference) %>%
+  arrange(-`Total Points`)
+men_weekend
+
+max_diff <- men_weekend %>%
+  ungroup() %>%
+  top_n(1, `Points Difference`) %>%
+  as.data.frame()
+min_diff <- men_weekend %>%
+  ungroup() %>%
+  arrange(`Points Difference`) %>%
+  head(1) %>%
+  as.data.frame()
+# Create the plot
+ggplot(men_weekend, aes(x = `Predicted Points`, y = `Total Points`)) +
+  geom_point() +
+  geom_point(data = max_diff, color = "green", size = 3) +
+  geom_point(data = min_diff, color = "red", size = 3) +
+  geom_text(data = max_diff, aes(label = Skier), vjust = -1) +
+  geom_text(data = min_diff, aes(label = Skier), vjust = -1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Add 1:1 reference line
+  scale_x_continuous(limits = c(0, 300), breaks = c(300/4, 300/3, 300/2, 300)) +
+  labs(title = "Predicted vs Actual Points",
+       x = "Predicted Points",
+       y = "Actual Points") +
+  theme_minimal()
+# Save the plot
+ggsave("~/blog/daehl-e/static/img/weekly-recap/2025Ruka/men_weekend.png", 
+       width = 10, 
+       height = 8, 
+       dpi = 300)
+```
+
+
+
+```{r above-into-function}
+library(dplyr)
+library(ggplot2)
+library(openxlsx)
+# Filter and sort men's data
+men_2025 <- men_chrono %>%
+ filter(Season == 2025, City != "Summer") %>% 
+#filter(Season == 2025) %>% 
+ arrange(Season, Race, Place)
+
+men_before <- men_chrono %>%
+  filter(Season < 2025 | (Season == 2025 & Race < 1 & City!="Summer")) %>%
+  arrange(Season, Date, Race, Place)
+
+men_end <- men_chrono %>%
+ #filter(Season == 2025, City != "Summer") %>% 
+filter(Season == 2025) %>% 
+ arrange(Season, Race, Place)
+
+
+# Filter and sort ladies' data
+ladies_2025 <- ladies_chrono %>%
+ filter(Season == 2025, City != "Summer") %>% 
+#filter(Season == 2025) %>% 
+ arrange(Season, Race, Place)
+
+ladies_end <- ladies_chrono %>%
+ #filter(Season == 2025, City != "Summer") %>% 
+filter(Season == 2025) %>% 
+ arrange(Season, Race, Place)
+
+ladies_before <- ladies_chrono %>%
+  filter(Season < 2025 | (Season == 2025 & Race < 1 & City!="Summer")) %>%
+  arrange(Season, Date, Race, Place)
+
+# Define World Cup points vector
+wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
+
+library(dplyr)
+library(ggplot2)
+library(openxlsx)
+
+# Define World Cup points vector
+wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
+
+analyze_race <- function(race_type, race_num, season, city, base_dir) {
+  # Filter season data without City filter
+  men_season <- men_chrono %>%
+    filter(Season == season) %>%
+    arrange(Season, Race, Place)
+  
+  ladies_season <- ladies_chrono %>%
+    filter(Season == season) %>%
+    arrange(Season, Race, Place)
+  
+  # Helper function to create race-specific dataframe
+  create_race_df <- function(data, points_data, pelo_col, elo_col) {
+    race_df <- data %>%
+      filter(Race == race_num) %>%
+      mutate(Points = case_when(
+        Place > 0 & Place <= length(wc_points) ~ wc_points[Place],
+        TRUE ~ 0
+      )) %>%
+      dplyr::select(Skier, Nation, Points, !!sym(paste0(pelo_col)), !!sym(paste0(elo_col))) %>%
+      left_join(
+        points_data %>% 
+          dplyr::select(Skier, !!paste0("Race", race_num, "_Points")), 
+        by = "Skier"
+      ) %>%
+      rename(Predicted_Points = !!paste0("Race", race_num, "_Points")) %>%
+      mutate(
+        Predicted_Points = as.numeric(Predicted_Points),
+        Points_Difference = Points - as.double(Predicted_Points),
+        Elo_Difference = !!sym(paste0(elo_col)) - !!sym(paste0(pelo_col))
+      ) %>%
+      dplyr::select(
+        Skier, 
+        Nation, 
+        !!sym(paste0(pelo_col)), 
+        !!sym(paste0(elo_col)),
+        Elo_Difference, 
+        Predicted_Points, 
+        Points,
+        Points_Difference
+      )
+    
+    # Rename columns
+    colnames(race_df) <- c("Skier", "Nation", "Before Elo", "After Elo", 
+                          "Elo Difference", "Predicted Points", "Points", 
+                          "Points Difference")
+    
+    return(race_df)
+  }
+  
+  # Helper function to create plots
+  create_plot <- function(data, gender, race_num, base_dir) {
+    max_diff <- data %>% slice_max(`Points Difference`, n = 1)
+    min_diff <- data %>% slice_min(`Points Difference`, n = 1)
+    
+    p <- ggplot(data, aes(x = `Predicted Points`, y = Points)) +
+      geom_point() +
+      geom_point(data = max_diff, color = "green", size = 3) +
+      geom_text(data = max_diff, aes(label = Skier), vjust = -1) +
+      geom_point(data = min_diff, color = "red", size = 3) +
+      geom_text(data = min_diff, aes(label = Skier), vjust = -1) +
+      geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+      scale_x_continuous(limits = c(0, 100), breaks = c(25, 50, 75, 100)) +
+      labs(title = "Predicted vs Actual Points",
+           x = "Predicted Points",
+           y = "Actual Points") +
+      theme_minimal()
+    
+    filename <- file.path(base_dir, "static/img/weekly-recap", 
+                         paste0(season, city),
+                         paste0(gender, "_race", race_num, ".png"))
+    ggsave(filename, plot = p, width = 10, height = 8, dpi = 300)
+  }
+  
+  # Helper function to get performance stats
+  get_performance_stats <- function(data) {
+    # Top 3 overperformers
+    top_over <- data %>%
+      arrange(desc(`Points Difference`)) %>%
+      dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+      head(3)
+    
+    # Top 3 underperformers
+    top_under <- data %>%
+      arrange(`Points Difference`) %>%
+      dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+      head(3)
+    
+    return(list(overperformers = top_over, underperformers = top_under))
+  }
+  
+  # Create directories if they don't exist
+  dir.create(file.path(base_dir, "static/img/weekly-recap", paste0(season, city)), 
+             recursive = TRUE, showWarnings = FALSE)
+  dir.create(file.path(base_dir, "content/post/drafts/weekly-recap", paste0(season, city)), 
+             recursive = TRUE, showWarnings = FALSE)
+  
+  # Determine Elo columns based on race type
+  pelo_col <- paste0(race_type, "_Pelo")
+  elo_col <- paste0(race_type, "_Elo")
+  
+  # Create race dataframes
+  men_race <- create_race_df(men_season, men_points, pelo_col, elo_col)
+  ladies_race <- create_race_df(ladies_season, ladies_points, pelo_col, elo_col)
+  
+  # Create plots
+  create_plot(men_race, "men", race_num, base_dir)
+  create_plot(ladies_race, "ladies", race_num, base_dir)
+  
+  # Get performance stats
+  men_stats <- get_performance_stats(men_race)
+  ladies_stats <- get_performance_stats(ladies_race)
+  
+  # Save to Excel
+  write.xlsx(men_race, 
+             file.path(base_dir, "content/post/drafts/weekly-recap", 
+                      paste0(season, city), 
+                      paste0("men_race", race_num, ".xlsx")))
+  write.xlsx(ladies_race, 
+             file.path(base_dir, "content/post/drafts/weekly-recap", 
+                      paste0(season, city), 
+                      paste0("ladies_race", race_num, ".xlsx")))
+  
+  return(list(
+    men = list(data = men_race, stats = men_stats),
+    ladies = list(data = ladies_race, stats = ladies_stats)
+  ))
+}
+
+analyze_weekend <- function(season, city, base_dir) {
+  create_weekend_df <- function(data, points_data, before_data) {
+    weekend_df <- data %>%
+      filter(Race %in% c(1,2,3)) %>%
+      mutate(Points = case_when(
+        Place > 0 & Place <= length(wc_points) ~ wc_points[Place],
+        TRUE ~ 0
+      )) %>%
+      dplyr::select(Skier, Nation, Race, Points, Elo) %>%
+      group_by(Skier, Race) %>%
+      left_join(
+        before_data %>%
+          group_by(Skier) %>%
+          slice_tail(n = 1) %>%
+          dplyr::select(Skier, Before_Elo = Elo),
+        by = "Skier"
+      ) %>%
+      left_join(
+        points_data %>%
+          dplyr::select(Skier, Predicted_Points = Total_Points) %>%
+          mutate(Predicted_Points = as.numeric(Predicted_Points)),
+        by = "Skier"
+      ) %>%
+      group_by(Skier) %>%
+      mutate(Total_Points = cumsum(Points)) %>%
+      slice_tail(n = 1) %>%
+      ungroup() %>%
+      mutate(
+        After_Elo = Elo,
+        Elo_Difference = After_Elo - Before_Elo,
+        Points_Difference = Total_Points - Predicted_Points
+      ) %>%
+      dplyr::select(
+        Skier, Nation, 
+        `Before Elo` = Before_Elo, 
+        `After Elo` = After_Elo, 
+        `Elo Difference` = Elo_Difference,
+        `Predicted Points` = Predicted_Points, 
+        `Total Points` = Total_Points, 
+        `Points Difference` = Points_Difference
+      ) %>%
+      arrange(-`Total Points`)
+    
+    return(weekend_df)
+  }
+  
+  create_weekend_plot <- function(data, gender, base_dir) {
+    max_diff <- data %>% 
+      slice_max(`Points Difference`, n = 1)
+    
+    min_diff <- data %>%
+      slice_min(`Points Difference`, n = 1)
+    
+    p <- ggplot(data, aes(x = `Predicted Points`, y = `Total Points`)) +
+      geom_point() +
+      geom_point(data = max_diff, color = "green", size = 3) +
+      geom_text(data = max_diff, aes(label = Skier), vjust = -1) +
+      geom_point(data = min_diff, color = "red", size = 3) +
+      geom_text(data = min_diff, aes(label = Skier), vjust = -1) +
+      geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+      scale_x_continuous(breaks = c(75, 100, 150, 300)) +
+      labs(title = "Predicted vs Actual Points",
+           x = "Predicted Points",
+           y = "Actual Points") +
+      theme_minimal()
+    
+    filename <- file.path(base_dir, "static/img/weekly-recap", 
+                         paste0(season, city),
+                         paste0(gender, "_weekend.png"))
+    ggsave(filename, plot = p, width = 10, height = 8, dpi = 300)
+  }
+  
+  # Create directories if they don't exist
+  dir.create(file.path(base_dir, "static/img/weekly-recap", paste0(season, city)), 
+             recursive = TRUE, showWarnings = FALSE)
+  dir.create(file.path(base_dir, "content/post/drafts/weekly-recap", paste0(season, city)), 
+             recursive = TRUE, showWarnings = FALSE)
+  
+  # Filter data
+  men_season <- men_chrono %>%
+    filter(Season == season) %>%
+    arrange(Season, Race, Place)
+  
+  ladies_season <- ladies_chrono %>%
+    filter(Season == season) %>%
+    arrange(Season, Race, Place)
+  
+  # Create weekend dataframes
+  men_weekend <- create_weekend_df(men_season, men_points, men_before)
+  ladies_weekend <- create_weekend_df(ladies_season, ladies_points, ladies_before)
+  
+  # Create plots
+  create_weekend_plot(men_weekend, "men", base_dir)
+  create_weekend_plot(ladies_weekend, "ladies", base_dir)
+  
+  # Save to Excel
+  write.xlsx(men_weekend, 
+             file.path(base_dir, "content/post/drafts/weekly-recap", 
+                      paste0(season, city), 
+                      "men_weekend.xlsx"))
+  write.xlsx(ladies_weekend, 
+             file.path(base_dir, "content/post/drafts/weekly-recap", 
+                      paste0(season, city), 
+                      "ladies_weekend.xlsx"))
+  
+  return(list(men = men_weekend, ladies = ladies_weekend))
+}
+base_dir <- "~/blog/daehl-e"
+
+# Analyze individual races
+race1_results <- analyze_race("Distance_C", 1, 2025, "Ruka", base_dir)
+race2_results <- analyze_race("Sprint_C", 2, 2025, "Ruka", base_dir)
+race3_results <- analyze_race("Distance_F", 3, 2025, "Ruka", base_dir)
+race1_results
+race2_results
+race3_results
+
+# Analyze weekend results
+weekend_results <- analyze_weekend(2025, "Ruka", base_dir)
+weekend_results
+```

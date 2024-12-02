@@ -171,7 +171,7 @@ for row in unique_ladies.iter_rows(named=True):
     nation = L_chrono.filter(pl.col("ID")==skier_id)[-1, "Nation"]
     nation = get_country_code(nation)
     # Create Markdown content for each skier
-    markdown_content = f"""---
+'''    markdown_content = f"""---
 title: Skier Profile for {skier}
 sex: "L"
 id: "{skier_id}"
@@ -218,7 +218,7 @@ This page is for: {skier}.
         file.write(markdown_content)
 
     print(f"Generated Markdown for skier ID {skier}")
-
+'''
 
 
 

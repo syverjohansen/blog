@@ -184,20 +184,26 @@
 <div data-pagefind-ignore="all">
 
 <div class="post-preview">
-    <a href="http://localhost:1313/post/drafts/weekly-picks/20241130ruka/">
+    <a href="http://localhost:1313/post/readme/">
         <h2 class="post-title">
-            
+            Scraping Ski Data for Statistical Analysis
         </h2>
+	
+        <h3 class="post-subtitle">
+            How to get your data
+        </h3>
 	
         <div class="post-content-preview">
 	
-            <p>Welcome to the first race of the season.  In this post and more to follow, I will present the likely starting list for the weekend as well as race by race predictions for odds as well as expected points</p>
+            <!--image:      "/img/scrape-blog/libraries.png"-->
+<h1 id="goal-getting-the-data-needed-to-perform-statistical-analysis">Goal: Getting the Data Needed to Perform Statistical Analysis</h1>
+<p>The first step to perform any meaningful statistical analysis is to get the data needed.  Because I haven’t recorded ski results since the beginning of time, I need to use an external source.  The seemingly obvious way to do this is to use the FIS website and search for World Cup races.  While they undoubtedly have the highest volume of data and are the official arbiter of the results, their records management has something to be desired.  Because our analysis will want to make sure that each individual skier is unique, names cannot be the ultimate form of identification since multiple people can have the same name.  Instead, we need a unique ID for each skier.  While FIS does have a FIS code, I discovered examples of people (especially women who got married) who have a FIS code for one name/spelling, and another FIS code for another name/spelling.  On top of this, biathlon data is not stored on FIS, which would mean I would need a script to scrape from an IBU site.</p>
        
         </div>
     </a>
     <p class="post-meta">
     
-        Posted by Nordic Numbers on Monday, January 1, 0001
+        Posted by Syver Johansen on Thursday, June 13, 2024
         
         
     
@@ -326,7 +332,7 @@
 <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.min.js"></script>
 
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.5/cdn.min.js"></script>
 
 
 <footer>
