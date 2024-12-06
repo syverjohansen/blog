@@ -8,7 +8,7 @@ author: "Syver Johansen"
 
 ## Introduction
 
-Welcome to the first race of the season.  In this post and more to follow, I will present the likely starting list for the weekend as well as race by race predictions for odds as well as expected points
+Welcome to the second race of the season.  For this weekend, watchout for Andreas Ree of Norway to continue to outpace predicitions.
 
 
 ## Sources

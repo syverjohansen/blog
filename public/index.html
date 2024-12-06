@@ -192,7 +192,7 @@
         <div class="post-content-preview">
 	
             <h2 id="introduction">Introduction</h2>
-<p>Welcome to the first race of the season.  In this post and more to follow, I will present the likely starting list for the weekend as well as race by race predictions for odds as well as expected points</p>
+<p>Welcome to the second race of the season.  For this weekend, watchout for Andreas Ree of Norway to continue to outpace predicitions.</p>
 <h2 id="sources">Sources</h2>
 <h4 id="overall">Overall:</h4>
 <ul>
@@ -2060,6 +2060,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
+                columnDefs: [{
+                    targets: '_all',
+                    render: function(data, type, row) {
+                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                        return data;
+                    }
+                }],
                 order: [],
                 language: {
                     search: "Search:",
@@ -3510,6 +3519,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
+                columnDefs: [{
+                    targets: '_all',
+                    render: function(data, type, row) {
+                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                        return data;
+                    }
+                }],
                 order: [],
                 language: {
                     search: "Search:",

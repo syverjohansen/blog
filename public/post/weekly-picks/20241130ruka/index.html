@@ -2919,6 +2919,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
+                columnDefs: [{
+                    targets: '_all',
+                    render: function(data, type, row) {
+                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                        return data;
+                    }
+                }],
                 order: [],
                 language: {
                     search: "Search:",
@@ -4946,6 +4955,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
+                columnDefs: [{
+                    targets: '_all',
+                    render: function(data, type, row) {
+                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                        return data;
+                    }
+                }],
                 order: [],
                 language: {
                     search: "Search:",
@@ -9997,6 +10015,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
+                columnDefs: [{
+                    targets: '_all',
+                    render: function(data, type, row) {
+                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                        return data;
+                    }
+                }],
                 order: [],
                 language: {
                     search: "Search:",
@@ -13786,6 +13813,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
+                columnDefs: [{
+                    targets: '_all',
+                    render: function(data, type, row) {
+                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                        return data;
+                    }
+                }],
                 order: [],
                 language: {
                     search: "Search:",
@@ -18836,6 +18872,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
+                columnDefs: [{
+                    targets: '_all',
+                    render: function(data, type, row) {
+                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                        return data;
+                    }
+                }],
                 order: [],
                 language: {
                     search: "Search:",
@@ -22625,6 +22670,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
+                columnDefs: [{
+                    targets: '_all',
+                    render: function(data, type, row) {
+                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                        return data;
+                    }
+                }],
                 order: [],
                 language: {
                     search: "Search:",
@@ -27675,6 +27729,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
+                columnDefs: [{
+                    targets: '_all',
+                    render: function(data, type, row) {
+                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                        return data;
+                    }
+                }],
                 order: [],
                 language: {
                     search: "Search:",
@@ -31464,6 +31527,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
+                columnDefs: [{
+                    targets: '_all',
+                    render: function(data, type, row) {
+                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                        return data;
+                    }
+                }],
                 order: [],
                 language: {
                     search: "Search:",
@@ -31827,6 +31899,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
+                columnDefs: [{
+                    targets: '_all',
+                    render: function(data, type, row) {
+                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                        return data;
+                    }
+                }],
                 order: [],
                 language: {
                     search: "Search:",
