@@ -104,11 +104,11 @@ Welcome to the second race of the season.  For this weekend, watchout for Andrea
 
 #### Men
 
-{{< datatable "weekly-picks.2025Lillehammer.weekend_race_odds.men_race3_Distance" >}}
+{{< datatable "weekly-picks.2025Lillehammer.weekend_race_odds.men_race3_Distance_" >}}
 
 #### Ladies
 
-{{< datatable "weekly-picks.2025Lillehammer.weekend_race_odds.women_race3_Distance" >}}
+{{< datatable "weekly-picks.2025Lillehammer.weekend_race_odds.women_race3_Distance_" >}}
 
 ## Fantasy Team
 
