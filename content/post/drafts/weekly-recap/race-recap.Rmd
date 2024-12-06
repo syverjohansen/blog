@@ -14,8 +14,8 @@ library(tidyverse)
 # Define file paths
 men_chrono_path <- "~/ski/elo/python/ski/polars/excel365/men_chrono.csv"
 ladies_chrono_path <- "~/ski/elo/python/ski/polars/excel365/ladies_chrono.csv"
-men_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Ruka/men-points.xlsx"
-ladies_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Ruka/ladies-points.xlsx"
+men_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Lillehammer/men-points_normalized.xlsx"
+ladies_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Lillehammer/ladies-points_normalized.xlsx"
 
 # Read the feather files
 men_chrono <- read.csv(men_chrono_path)
@@ -158,21 +158,39 @@ analyze_race <- function(race_type, race_num, season, city, base_dir) {
   }
   
   # Helper function to get performance stats
-  get_performance_stats <- function(data) {
+get_performance_stats <- function(data) {
+    # Calculate error metrics
+    rmse <- sqrt(mean((data$Points - data$`Predicted Points`)^2, na.rm = TRUE))
+    mae <- mean(abs(data$Points - data$`Predicted Points`), na.rm = TRUE)
+    mse <- mean((data$Points - data$`Predicted Points`)^2, na.rm = TRUE)
+    
     # Top 3 overperformers
     top_over <- data %>%
-      arrange(desc(`Points Difference`)) %>%
-      dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
-      head(3)
+        arrange(desc(`Points Difference`)) %>%
+        dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+        head(3)
     
     # Top 3 underperformers
     top_under <- data %>%
-      arrange(`Points Difference`) %>%
-      dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
-      head(3)
+        arrange(`Points Difference`) %>%
+        dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+        head(3)
     
-    return(list(overperformers = top_over, underperformers = top_under))
-  }
+    # Add error metrics to the output
+    print(paste("RMSE:", round(rmse, 2)))
+    print(paste("MAE:", round(mae, 2)))
+    print(paste("MSE:", round(mse, 2)))
+    
+    return(list(
+        overperformers = top_over, 
+        underperformers = top_under,
+        metrics = list(
+            rmse = rmse,
+            mae = mae,
+            mse = mse
+        )
+    ))
+}
   
   # Create directories if they don't exist
   dir.create(file.path(base_dir, "static/img/weekly-recap", paste0(season, city)), 
@@ -322,16 +340,66 @@ analyze_weekend <- function(season, city, base_dir) {
 base_dir <- "~/blog/daehl-e"
 
 # Analyze individual races
-race1_results <- analyze_race("Distance_C", 1, 2025, "Ruka", base_dir)
-race2_results <- analyze_race("Sprint_C", 2, 2025, "Ruka", base_dir)
-race3_results <- analyze_race("Distance_F", 3, 2025, "Ruka", base_dir)
+race1_results <- analyze_race("Distance_C", 1, 2025, "Lillehammer", base_dir)
+race2_results <- analyze_race("Sprint_C", 2, 2025, "Lillehammer", base_dir)
+race3_results <- analyze_race("Distance_F", 3, 2025, "Lillehammer", base_dir)
 race1_results
 race2_results
 race3_results
 
 # Analyze weekend results
-weekend_results <- analyze_weekend(2025, "Ruka", base_dir)
+weekend_results <- analyze_weekend(2025, "Lillehammer", base_dir)
 weekend_results
+
+# Print metrics for Race 1
+print("Men's Distance C:")
+print(race1_results$men$stats$metrics)
+print("\nLadies' Distance C:")
+print(race1_results$ladies$stats$metrics)
+
+print("\nMen's Sprint C:")
+print(race2_results$men$stats$metrics)
+print("\nLadies' Sprint C:")
+print(race2_results$ladies$stats$metrics)
+
+print("\nMen's Distance F:")
+print(race3_results$men$stats$metrics)
+print("\nLadies' Distance F:")
+print(race3_results$ladies$stats$metrics)
+
+
+# Men's combined metrics across all races
+men_all_races <- rbind(
+  race1_results$men$data,
+  race2_results$men$data,
+  race3_results$men$data
+)
+
+men_combined_rmse <- sqrt(mean((men_all_races$Points - men_all_races$`Predicted Points`)^2, na.rm = TRUE))
+men_combined_mae <- mean(abs(men_all_races$Points - men_all_races$`Predicted Points`), na.rm = TRUE)
+men_combined_mse <- mean((men_all_races$Points - men_all_races$`Predicted Points`)^2, na.rm = TRUE)
+
+# Ladies' combined metrics across all races
+ladies_all_races <- rbind(
+  race1_results$ladies$data,
+  race2_results$ladies$data,
+  race3_results$ladies$data
+)
+
+ladies_combined_rmse <- sqrt(mean((ladies_all_races$Points - ladies_all_races$`Predicted Points`)^2, na.rm = TRUE))
+ladies_combined_mae <- mean(abs(ladies_all_races$Points - ladies_all_races$`Predicted Points`), na.rm = TRUE)
+ladies_combined_mse <- mean((ladies_all_races$Points - ladies_all_races$`Predicted Points`)^2, na.rm = TRUE)
+
+print("Men's Combined Metrics:")
+print(paste("RMSE:", round(men_combined_rmse, 2)))
+print(paste("MAE:", round(men_combined_mae, 2)))
+print(paste("MSE:", round(men_combined_mse, 2)))
+
+print("\nLadies' Combined Metrics:")
+print(paste("RMSE:", round(ladies_combined_rmse, 2)))
+print(paste("MAE:", round(ladies_combined_mae, 2)))
+print(paste("MSE:", round(ladies_combined_mse, 2)))
+
 ```
 
 
@@ -539,4 +607,164 @@ print(analysis_results$probabilities)
 
 # Create plot
 plot_race_distribution(klaebo_races, klaebo_simulated)
+```
+
+
+
+```{r gams}
+# Define points vectors
+stage_points <- c(50, 47, 44, 41, 38, 35, 32, 30, 28, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+tds_points <- c(300, 285, 270, 255, 240, 216, 207, 198, 189, 180, 174, 168, 162, 156, 150, 144, 138, 132, 126, 120, 114, 108, 102, 96, 90, 84, 78, 72, 66, 60, 57, 54, 51, 48, 45, 42, 39, 36, 33, 30, 27, 24, 21, 18, 15, 12, 9, 6, 3)
+wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
+
+
+# Function to convert place to appropriate points based on race type
+get_points <- function(place, race_type) {
+  points_vector <- switch(race_type,
+                         "stage" = stage_points,
+                         "tds" = tds_points,
+                         wc_points)  # default to World Cup points
+  
+  if (place <= length(points_vector)) {
+    return(points_vector[place])
+  } else {
+    return(0)
+  }
+}
+
+# Add stage and TdS points columns to men_chrono
+men_chrono_updated <- men_chrono %>%
+  mutate(
+    Stage_Points = mapply(get_points, Place, race_type = "stage"),
+    TdS_Points = mapply(get_points, Place, race_type = "tds"),
+    Points = mapply(get_points, Place, race_type="wc")
+  )
+
+# Preview the updated dataset
+head(men_chrono_updated)
+
+# Helper function to replace NA with first quartile
+replace_na_with_quartile <- function(x) {
+    quartile_1 <- quantile(x, 0.25, na.rm = TRUE)
+    ifelse(is.na(x), quartile_1, x)
+}
+
+# Function to get weighted average of last 5 races
+get_last_5_weighted <- function(skier, df, race_distance, race_technique = NULL) {
+    races <- df %>%
+        filter(
+            Skier == skier,
+            if(race_distance == "Distance") {
+                if(!is.null(race_technique)) {
+                    Distance != "Sprint" & Technique == race_technique
+                } else {
+                    Distance != "Sprint"
+                }
+            } else {
+                if(!is.null(race_technique)) {
+                    Distance == race_distance & Technique == race_technique
+                } else {
+                    Distance == race_distance
+                }
+            }
+        ) %>%
+        arrange(desc(Date)) %>%
+        slice(1:5) %>%
+        pull(Points)
+    
+    if(length(races) > 0) {
+        weights <- seq_along(races)
+        return(weighted.mean(races, w = weights, na.rm = TRUE))
+    } else {
+        return(NA)
+    }
+}
+
+# Integrated prediction function that combines GAM predictions with distribution sampling
+create_integrated_predictor <- function(race_type, df) {
+    # Create GAM model as before
+    race_model <- create_race_model(race_type, df)
+    
+    # Create prediction function that combines GAM and distribution
+    predict_race <- function(skier_metrics, n_simulations = 1000) {
+        # Get base prediction from GAM
+        base_pred <- race_model$predict(skier_metrics)
+        
+        # Get actual results for similar predictions
+        similar_results <- df %>%
+            filter(abs(Points - base_pred) < 10) %>%
+            pull(Points)
+        
+        if(length(similar_results) >= 5) {
+            # Create distribution from similar historical results
+            simulated_points <- create_race_distribution(
+                data.frame(Points = similar_results, 
+                          Weight = rep(1, length(similar_results))),
+                n_simulations
+            )
+        } else {
+            # If not enough similar results, add variation to GAM prediction
+            sd_estimate <- 5  # Could be refined based on model residuals
+            simulated_points <- rnorm(n_simulations, base_pred, sd_estimate)
+            simulated_points <- pmin(pmax(round(simulated_points), 0), 100)
+        }
+        
+        return(list(
+            point_estimate = base_pred,
+            distribution = simulated_points,
+            summary = summary(simulated_points),
+            probabilities = c(
+                top1 = mean(simulated_points >= 100),
+                top3 = mean(simulated_points >= 90),
+                top5 = mean(simulated_points >= 85),
+                top10 = mean(simulated_points >= 69),
+                top30 = mean(simulated_points >= 22)
+            )
+        ))
+    }
+    
+    return(list(
+        model = race_model$model,
+        predict = predict_race,
+        variables = race_model$variables
+    ))
+}
+
+# Function to get predictions with uncertainty for a skier
+get_skier_predictions_with_uncertainty <- function(skier_name, models, df) {
+    # Get metrics
+    skier_metrics <- get_skier_metrics(skier_name)
+    
+    # Get predictions for each race type
+    predictions <- list()
+    for(race_type in names(models)) {
+        predictions[[race_type]] <- models[[race_type]]$predict(skier_metrics)
+    }
+    
+    # Combine into data frame
+    results <- data.frame(
+        Skier = skier_name,
+        Race_Type = names(predictions)
+    )
+    
+    # Add point estimates and probability ranges
+    for(race_type in names(predictions)) {
+        pred <- predictions[[race_type]]
+        results[race_type] <- pred$point_estimate
+        results[paste0(race_type, "_prob_top3")] <- pred$probabilities["top3"]
+        results[paste0(race_type, "_prob_top10")] <- pred$probabilities["top10"]
+    }
+    
+    return(results)
+}
+
+
+integrated_models <- list(
+    distance_classic = create_integrated_predictor("Distance Classic", men_chrono),
+    distance_freestyle = create_integrated_predictor("Distance Freestyle", men_chrono)
+)
+
+predictions <- get_skier_predictions_with_uncertainty("Johannes Høsflot Klæbo",
+                                                    integrated_models,
+                                                    men_chrono)
 ```
