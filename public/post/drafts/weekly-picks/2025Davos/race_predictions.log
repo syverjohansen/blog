@@ -1,0 +1,113 @@
+INFO [2024-12-14 07:50:04] Starting predictions for men
+INFO [2024-12-14 07:50:04] Processing men race 1
+INFO [2024-12-14 07:50:04] Reading data from ~/ski/elo/python/ski/polars/excel365/men_merged.feather
+INFO [2024-12-14 07:50:04] Calculating adjustments
+INFO [2024-12-14 07:50:04] Reading startlist from ~/ski/elo/python/ski/polars/excel365/startlist_with_probs_men.feather
+INFO [2024-12-14 07:50:05] Using training predictors: Pelo, Distance_Pelo, Distance_C_Pelo, Distance_F_Pelo, Sprint_Pelo, Sprint_C_Pelo, Sprint_F_Pelo, Classic_Pelo, Freestyle_Pelo, Weighted_Place, Grade_Effect, Altitude_Effect, Period_Effect, MS_Effect
+INFO [2024-12-14 07:50:05] Training models for Winner
+INFO [2024-12-14 07:50:05] Training data dimensions: 5434 x 15
+INFO [2024-12-14 07:50:05] Class distribution for Winner: 5360
+INFO [2024-12-14 07:50:05] Class distribution for Winner: 74
+INFO [2024-12-14 07:50:41] Starting predictions for men
+INFO [2024-12-14 07:50:41] Processing men race 1
+INFO [2024-12-14 07:50:41] Reading data from ~/ski/elo/python/ski/polars/excel365/men_merged.feather
+INFO [2024-12-14 07:50:41] Calculating adjustments
+INFO [2024-12-14 07:50:41] Reading startlist from ~/ski/elo/python/ski/polars/excel365/startlist_with_probs_men.feather
+INFO [2024-12-14 07:50:42] Using training predictors: Pelo, Distance_Pelo, Distance_C_Pelo, Distance_F_Pelo, Sprint_Pelo, Sprint_C_Pelo, Sprint_F_Pelo, Classic_Pelo, Freestyle_Pelo, Weighted_Place, Grade_Effect, Altitude_Effect, Period_Effect, MS_Effect
+INFO [2024-12-14 07:50:42] Training models for Winner
+INFO [2024-12-14 07:50:42] Training data dimensions: 5434 x 15
+INFO [2024-12-14 07:50:42] Class distribution for Winner: 5360
+INFO [2024-12-14 07:50:42] Class distribution for Winner: 74
+INFO [2024-12-14 07:53:06] Starting predictions for men
+INFO [2024-12-14 07:53:06] Processing men race 1
+INFO [2024-12-14 07:53:06] Reading data from ~/ski/elo/python/ski/polars/excel365/men_merged.feather
+INFO [2024-12-14 07:53:07] Calculating adjustments
+INFO [2024-12-14 07:53:07] Reading startlist from ~/ski/elo/python/ski/polars/excel365/startlist_with_probs_men.feather
+INFO [2024-12-14 07:53:07] Using training predictors: Pelo, Distance_Pelo, Distance_C_Pelo, Distance_F_Pelo, Sprint_Pelo, Sprint_C_Pelo, Sprint_F_Pelo, Classic_Pelo, Freestyle_Pelo, Weighted_Place, Grade_Effect, Altitude_Effect, Period_Effect, MS_Effect
+INFO [2024-12-14 07:53:07] Training models for Winner
+INFO [2024-12-14 07:53:07] Training data dimensions: 5434 x 15
+INFO [2024-12-14 07:53:07] Class distribution for Winner: 5360
+INFO [2024-12-14 07:53:07] Class distribution for Winner: 74
+INFO [2024-12-14 07:53:07] Training logistic regression for Winner
+INFO [2024-12-14 07:53:08] Logistic regression training completed for Winner
+INFO [2024-12-14 07:53:08] Training XGBoost for Winner
+INFO [2024-12-14 07:56:00] XGBoost training completed for Winner
+INFO [2024-12-14 07:56:00] Training models for TopThree
+INFO [2024-12-14 07:56:00] Training data dimensions: 5434 x 15
+INFO [2024-12-14 07:56:00] Class distribution for TopThree: 5215
+INFO [2024-12-14 07:56:00] Class distribution for TopThree: 219
+INFO [2024-12-14 07:56:00] Training logistic regression for TopThree
+INFO [2024-12-14 07:56:00] Logistic regression training completed for TopThree
+INFO [2024-12-14 07:56:00] Training XGBoost for TopThree
+INFO [2024-12-14 07:59:44] XGBoost training completed for TopThree
+INFO [2024-12-14 07:59:44] Training models for Top5
+INFO [2024-12-14 07:59:44] Training data dimensions: 5434 x 15
+INFO [2024-12-14 07:59:44] Class distribution for Top5: 5069
+INFO [2024-12-14 07:59:44] Class distribution for Top5: 365
+INFO [2024-12-14 07:59:44] Training logistic regression for Top5
+INFO [2024-12-14 07:59:44] Logistic regression training completed for Top5
+INFO [2024-12-14 07:59:44] Training XGBoost for Top5
+INFO [2024-12-14 08:03:45] XGBoost training completed for Top5
+INFO [2024-12-14 08:03:45] Training models for Top10
+INFO [2024-12-14 08:03:46] Training data dimensions: 5434 x 15
+INFO [2024-12-14 08:03:46] Class distribution for Top10: 4714
+INFO [2024-12-14 08:03:46] Class distribution for Top10: 720
+INFO [2024-12-14 08:03:46] Training logistic regression for Top10
+INFO [2024-12-14 08:03:46] Logistic regression training completed for Top10
+INFO [2024-12-14 08:03:46] Training XGBoost for Top10
+INFO [2024-12-14 08:08:03] XGBoost training completed for Top10
+INFO [2024-12-14 08:08:03] Training models for Top30
+INFO [2024-12-14 08:08:03] Training data dimensions: 5434 x 15
+INFO [2024-12-14 08:08:03] Class distribution for Top30: 3286
+INFO [2024-12-14 08:08:03] Class distribution for Top30: 2148
+INFO [2024-12-14 08:08:03] Training logistic regression for Top30
+INFO [2024-12-14 08:08:04] Logistic regression training completed for Top30
+INFO [2024-12-14 08:08:04] Training XGBoost for Top30
+INFO [2024-12-14 08:12:33] XGBoost training completed for Top30
+INFO [2024-12-14 08:12:33] Making predictions
+INFO [2024-12-14 08:12:33] Removed skiers with no Elo data: Thomas Maloney Westgard, JC SCHOONMAKER, Silvan HAUSER, Roman ALDER, Tobias GANNER, Silvestrs SVAUKSTS, Sebastian ENDRESTAD, Roman Alder, Silvan Hauser
+INFO [2024-12-14 08:12:33] ROC scores for Winner: 0.957819829424307
+INFO [2024-12-14 08:12:33] ROC scores for Winner: 0.95865671641791
+INFO [2024-12-14 08:12:33] Selected model for Winner: xgb
+INFO [2024-12-14 08:12:33] ROC scores for TopThree: 0.931350349354095
+INFO [2024-12-14 08:12:33] ROC scores for TopThree: 0.933835151893526
+INFO [2024-12-14 08:12:33] Selected model for TopThree: xgb
+INFO [2024-12-14 08:12:33] ROC scores for Top5: 0.923899428741643
+INFO [2024-12-14 08:12:33] ROC scores for Top5: 0.929139765363639
+INFO [2024-12-14 08:12:33] Selected model for Top5: xgb
+INFO [2024-12-14 08:12:33] ROC scores for Top10: 0.897415117463277
+INFO [2024-12-14 08:12:33] ROC scores for Top10: 0.897885449320892
+INFO [2024-12-14 08:12:33] Selected model for Top10: xgb
+INFO [2024-12-14 08:12:33] ROC scores for Top30: 0.888257855834737
+INFO [2024-12-14 08:12:33] ROC scores for Top30: 0.885527095383805
+INFO [2024-12-14 08:12:33] Selected model for Top30: logistic
+INFO [2024-12-14 08:12:33] Calculating odds
+INFO [2024-12-14 08:12:33] Completed processing race 1
+INFO [2024-12-14 08:12:33] Processing men race 2
+INFO [2024-12-14 08:12:33] Reading data from ~/ski/elo/python/ski/polars/excel365/men_merged.feather
+INFO [2024-12-14 08:12:33] Calculating adjustments
+INFO [2024-12-14 08:12:34] Reading startlist from ~/ski/elo/python/ski/polars/excel365/startlist_with_probs_men.feather
+INFO [2024-12-14 08:12:34] Using training predictors: Pelo, Distance_Pelo, Distance_C_Pelo, Distance_F_Pelo, Sprint_Pelo, Sprint_C_Pelo, Sprint_F_Pelo, Classic_Pelo, Freestyle_Pelo, Weighted_Place, Grade_Effect, Altitude_Effect, Period_Effect, MS_Effect
+INFO [2024-12-14 08:12:34] Training models for Winner
+INFO [2024-12-14 08:12:34] Training data dimensions: 6048 x 15
+INFO [2024-12-14 08:12:34] Class distribution for Winner: 5956
+INFO [2024-12-14 08:12:34] Class distribution for Winner: 92
+INFO [2024-12-14 08:12:34] Training logistic regression for Winner
+INFO [2024-12-14 08:12:35] Logistic regression training completed for Winner
+INFO [2024-12-14 08:12:35] Training XGBoost for Winner
+INFO [2024-12-14 08:16:48] XGBoost training completed for Winner
+INFO [2024-12-14 08:16:48] Training models for TopThree
+INFO [2024-12-14 08:16:48] Training data dimensions: 6048 x 15
+INFO [2024-12-14 08:16:48] Class distribution for TopThree: 5775
+INFO [2024-12-14 08:16:48] Class distribution for TopThree: 273
+INFO [2024-12-14 08:16:48] Training logistic regression for TopThree
+INFO [2024-12-14 08:16:49] Logistic regression training completed for TopThree
+INFO [2024-12-14 08:16:49] Training XGBoost for TopThree
+INFO [2024-12-14 08:21:26] XGBoost training completed for TopThree
+INFO [2024-12-14 08:21:26] Training models for Top5
+INFO [2024-12-14 08:21:27] Training data dimensions: 6048 x 15
+INFO [2024-12-14 08:21:27] Class distribution for Top5: 5595
+INFO [2024-12-14 08:21:27] Class distribution for Top5: 453
+INFO [2024-12-14 08:21:27] Training logistic regression for Top5
+INFO [2024-12-14 08:21:27] Logistic regression training completed for Top5
+INFO [2024-12-14 08:21:27] Training XGBoost for Top5

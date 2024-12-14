@@ -1,0 +1,495 @@
+```{r ingest}
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(arrow)
+library(AER)
+library(ggplot2)
+library(effects)
+library(segmented)
+
+M_chrono <- read_feather('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/mens_merged.feather')
+L_chrono <- read_feather('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/womens_merged.feather')
+
+# Step Two: Create a column called WC Points that maps place to world cup points from a list
+wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
+stage_points <- c(50, 47, 44, 41, 38, 35, 32, 30, 28, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+tds_points <- c(300, 285, 270, 255, 240, 216, 207, 198, 189, 180, 174, 168, 162, 156, 150, 144, 138, 132, 126, 120, 114, 108, 102, 96, 90, 84, 78, 72, 66, 60, 57, 54, 51, 48, 45, 42, 39, 36, 33, 30, 27, 24, 21, 18, 15, 12, 9, 6, 3)
+
+# Function to safely fetch points based on Place
+get_points <- function(place, points_list) {
+  if (place >= 1 && place <= length(points_list)) {
+    return(points_list[place])
+  }
+  return(0)
+}
+
+# Apply points logic based on Event and Distance
+men_df <- M_chrono %>%
+  mutate(Points = case_when(
+    City == "Tour de Ski" ~ map_int(Place, ~ get_points(.x, tds_points)),
+    TRUE ~ map_int(Place, ~ get_points(.x, stage_points))
+  ))
+
+# Apply points logic based on Event and Distance
+ladies_df <- L_chrono %>%
+  mutate(Points = case_when(
+    City == "Tour de Ski" ~ map_int(Place, ~ get_points(.x, tds_points)),
+    TRUE ~ map_int(Place, ~ get_points(.x, stage_points))
+  ))
+
+# Sort the df by Date, Race, and Place
+men_df <- men_df %>%
+  arrange(Date, Race, Place)
+
+# Sort the df by Date, Race, and Place
+ladies_df <- ladies_df %>%
+  arrange(Date, Race, Place)
+
+men_df <- men_df %>%
+  group_by(Season) %>%                                    # Group by Season
+  mutate(Num_Races = max(Race)) %>%                      # Get the maximum Race number for each Season
+  mutate(Period = case_when(
+    Num_Races <= 5 ~ 1,
+    Num_Races <= 10 ~ 2,
+    Num_Races <= 15 ~ 3,
+    Num_Races <= 20 ~ 4,
+    Num_Races <= 25 ~ 5,
+    TRUE ~ ceiling((Race / (Num_Races / 5)))             # For more than 25 races, divide into 5 equal parts
+  ))
+
+ladies_df <- ladies_df %>%
+  group_by(Season) %>%                                    # Group by Season
+  mutate(Num_Races = max(Race)) %>%                      # Get the maximum Race number for each Season
+  mutate(Period = case_when(
+    Num_Races <= 5 ~ 1,
+    Num_Races <= 10 ~ 2,
+    Num_Races <= 15 ~ 3,
+    Num_Races <= 20 ~ 4,
+    Num_Races <= 25 ~ 5,
+    TRUE ~ ceiling((Race / (Num_Races / 5)))             # For more than 25 races, divide into 5 equal parts
+  ))
+
+# Function to calculate weighted average of up to last 5 places
+calc_weighted_last_5 <- function(places) {
+  if(length(places) > 0) {
+    weights <- seq(length(places), 1)
+    return(weighted.mean(places, weights, na.rm = TRUE))
+  } else {
+    return(NA_real_)
+  }
+}
+
+# Add weighted averages for both men's and ladies' dataframes
+process_dataframe <- function(df) {
+  df %>%
+    group_by(ID) %>%
+    arrange(Date) %>%
+    mutate(
+      # Sprint Classic
+      Sprint_C_Last_5 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-5):(i-1)][Distance == "Sprint" & Technique == "C"]
+        calc_weighted_last_5(prev_races)
+      }),
+      
+      # Sprint Freestyle
+      Sprint_F_Last_5 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-5):(i-1)][Distance == "Sprint" & Technique == "F"]
+        calc_weighted_last_5(prev_races)
+      }),
+      
+      # Distance Classic
+      Distance_C_Last_5 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-5):(i-1)][Distance != "Sprint" & Technique == "C"]
+        calc_weighted_last_5(prev_races)
+      }),
+      
+      # Distance Freestyle
+      Distance_F_Last_5 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-5):(i-1)][Distance != "Sprint" & Technique == "F"]
+        calc_weighted_last_5(prev_races)
+      }),
+      
+      # All Distance
+      Distance_Last_5 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-5):(i-1)][Distance != "Sprint"]
+        calc_weighted_last_5(prev_races)
+      }),
+      
+      Sprint_C_Last_5_2 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-4):(i)][Distance == "Sprint" & Technique == "C"]
+        calc_weighted_last_5(prev_races)
+      }),
+      
+      # Sprint Freestyle
+      Sprint_F_Last_5_2 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-4):(i)][Distance == "Sprint" & Technique == "F"]
+        calc_weighted_last_5(prev_races)
+      }),
+      
+      # Distance Classic
+      Distance_C_Last_5_2 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-4):(i)][Distance != "Sprint" & Technique == "C"]
+        calc_weighted_last_5(prev_races)
+      }),
+      
+      # Distance Freestyle
+      Distance_F_Last_5_2 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-4):(i)][Distance != "Sprint" & Technique == "F"]
+        calc_weighted_last_5(prev_races)
+      }),
+      
+      # All Distance
+      Distance_Last_5_2 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-4):(i)][Distance != "Sprint"]
+        calc_weighted_last_5(prev_races)
+      }),
+    ) %>%
+    ungroup() %>%
+    # Forward fill NAs
+    group_by(ID) %>%
+    arrange(Date) %>%
+    mutate(
+      across(
+        c(Sprint_C_Last_5, Sprint_F_Last_5, Distance_C_Last_5, 
+          Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5_2, Sprint_F_Last_5_2, Distance_C_Last_5_2, 
+          Distance_F_Last_5_2, Distance_Last_5_2),
+        ~ zoo::na.locf(.x, na.rm = FALSE)  # Forward fill within each group
+      )
+    ) %>%
+    ungroup()
+}
+
+# Apply to both datasets
+men_df <- process_dataframe(men_df)
+ladies_df <- process_dataframe(ladies_df)
+
+replace_na_with_q3 <- function(df) {
+  df %>%
+    group_by(Season, Race) %>%
+    mutate(
+      across(
+        c(Sprint_C_Last_5, Sprint_F_Last_5, Distance_C_Last_5, 
+          Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5_2, Sprint_F_Last_5_2, Distance_C_Last_5_2, 
+          Distance_F_Last_5_2, Distance_Last_5_2),
+        ~ if_else(is.na(.), quantile(Place, 0.25, na.rm = TRUE), .)
+      )
+    ) %>%
+    ungroup()
+}
+
+men_df <- replace_na_with_q3(men_df)
+ladies_df <- replace_na_with_q3(ladies_df)
+
+# Step Three: Filter for the last five years
+men_df <- men_df %>%
+  filter(Season > 2014, Event %in% c("World Cup", "Nordic Opening", "Tour de Ski", "Olympic Winter Games", "World Championship", "World Cup Final", "Ski Tour Canada")) %>%
+  group_by(ID, Season) %>%
+  mutate(Cumulative_Points = cumsum(Points)) %>%
+  ungroup()
+
+# Step Three: Filter for the last five years
+ladies_df <- ladies_df %>%
+  filter(Season > 2014, Event %in% c("World Cup", "Nordic Opening", "Tour de Ski", "Olympic Winter Games", "World Championship", "World Cup Final", "Ski Tour Canada")) %>%
+  group_by(ID, Season) %>%
+  mutate(Cumulative_Points = cumsum(Points)) %>%
+  ungroup()
+
+# Function to replace NAs with the first quartile within each group
+replace_na_with_quartile <- function(x) {
+  quartile_1 <- quantile(x, 0.25, na.rm = TRUE)  # Calculate the first quartile, ignoring NAs
+  ifelse(is.na(x), quartile_1, x)  # Replace NAs with the first quartile
+}
+
+# Apply this logic to each of the specified columns and then perform the percentage calculations
+men_df <- men_df %>%
+  group_by(Season, Race) %>%
+  mutate(
+    Distance_Pelo = replace_na_with_quartile(Distance_Pelo),
+    Distance_C_Pelo = replace_na_with_quartile(Distance_C_Pelo),
+    Distance_F_Pelo = replace_na_with_quartile(Distance_F_Pelo),
+    Pelo = replace_na_with_quartile(Pelo),
+    Sprint_Pelo = replace_na_with_quartile(Sprint_Pelo),
+    Sprint_C_Pelo = replace_na_with_quartile(Sprint_C_Pelo),
+    Sprint_F_Pelo = replace_na_with_quartile(Sprint_F_Pelo),
+    Freestyle_Pelo = replace_na_with_quartile(Freestyle_Pelo),
+    Classic_Pelo = replace_na_with_quartile(Classic_Pelo)
+  ) %>%
+  # Now calculate the percentages
+  mutate(
+    Distance_Pelo_Pct = Distance_Pelo / max(Distance_Pelo),
+    Distance_C_Pelo_Pct = Distance_C_Pelo / max(Distance_C_Pelo),
+    Distance_F_Pelo_Pct = Distance_F_Pelo / max(Distance_F_Pelo),
+    Pelo_Pct = Pelo / max(Pelo),
+    Sprint_Pelo_Pct = Sprint_Pelo / max(Sprint_Pelo),
+    Sprint_C_Pelo_Pct = Sprint_C_Pelo / max(Sprint_C_Pelo),
+    Sprint_F_Pelo_Pct = Sprint_F_Pelo / max(Sprint_F_Pelo),
+    Freestyle_Pelo_Pct = Freestyle_Pelo / max(Freestyle_Pelo),
+    Classic_Pelo_Pct = Classic_Pelo / max(Classic_Pelo)
+  ) %>%
+  ungroup()
+men_df <- men_df %>%
+  filter(! Distance %in% c("Ts", "Rel"))
+
+
+ladies_df <- ladies_df %>%
+  group_by(Season, Race) %>%
+  mutate(
+    Distance_Pelo = replace_na_with_quartile(Distance_Pelo),
+    Distance_C_Pelo = replace_na_with_quartile(Distance_C_Pelo),
+    Distance_F_Pelo = replace_na_with_quartile(Distance_F_Pelo),
+    Pelo = replace_na_with_quartile(Pelo),
+    Sprint_Pelo = replace_na_with_quartile(Sprint_Pelo),
+    Sprint_C_Pelo = replace_na_with_quartile(Sprint_C_Pelo),
+    Sprint_F_Pelo = replace_na_with_quartile(Sprint_F_Pelo),
+    Freestyle_Pelo = replace_na_with_quartile(Freestyle_Pelo),
+    Classic_Pelo = replace_na_with_quartile(Classic_Pelo)
+  ) %>%
+  # Now calculate the percentages
+  mutate(
+    Distance_Pelo_Pct = Distance_Pelo / max(Distance_Pelo),
+    Distance_C_Pelo_Pct = Distance_C_Pelo / max(Distance_C_Pelo),
+    Distance_F_Pelo_Pct = Distance_F_Pelo / max(Distance_F_Pelo),
+    Pelo_Pct = Pelo / max(Pelo),
+    Sprint_Pelo_Pct = Sprint_Pelo / max(Sprint_Pelo),
+    Sprint_C_Pelo_Pct = Sprint_C_Pelo / max(Sprint_C_Pelo),
+    Sprint_F_Pelo_Pct = Sprint_F_Pelo / max(Sprint_F_Pelo),
+    Freestyle_Pelo_Pct = Freestyle_Pelo / max(Freestyle_Pelo),
+    Classic_Pelo_Pct = Classic_Pelo / max(Classic_Pelo)
+  ) %>%
+  ungroup()
+ladies_df <- ladies_df %>%
+  filter(! Distance %in% c("Ts", "Rel"))
+
+men_df <- men_df %>%
+  mutate(
+    Final_Climb = case_when(
+      City == "Val di Fiemme" & 
+      Event == "Tour de Ski" & 
+      `Average Grade` > 5 ~ TRUE &
+        Season>=2020,
+      
+      TRUE ~ FALSE
+    )
+  )
+
+ladies_df <- ladies_df %>%
+  mutate(
+    Final_Climb = case_when(
+      City == "Val di Fiemme" & 
+      Event == "Tour de Ski" & 
+      `Average Grade` > 5 ~ TRUE &
+        Season>=2020,
+      TRUE ~ FALSE
+    )
+  )
+
+```
+
+men_df %>% filter(Skier == "Johannes Høsflot Klæbo") %>% dplyr::select(Skier, Distance_F_Last_5, Place, Distance, Technique)
+
+```{r tds-model}
+# Get potential predictors
+pelo_vars <- names(men_df)[grep("Pelo_Pct$", names(men_df))]
+
+# Create the dataset for modeling
+model_data <- men_df %>%
+  filter(Final_Climb == TRUE) %>%
+  dplyr::select(Place, all_of(pelo_vars), Distance_F_Last_5) %>%
+  na.omit()
+
+# Function to fit GAM and return BIC
+fit_gam <- function(vars) {
+  formula <- as.formula(paste("Place ~", 
+                            paste(paste("s(", vars, ")", sep=""), 
+                            collapse = " + ")))
+  
+  model <- try(mgcv::gam(formula, data = model_data), silent = TRUE)
+  if(inherits(model, "try-error")) return(list(bic = Inf, model = NULL))
+  return(list(bic = BIC(model), model = model))
+}
+
+# Store results for all combinations
+results <- list()
+for(i in 1:length(pelo_vars)) {
+  combinations <- combn(pelo_vars, i, simplify = FALSE)
+  
+  for(vars in combinations) {
+    fit_result <- fit_gam(vars)
+    results[[paste(vars, collapse = " + ")]] <- list(
+      vars = vars,
+      bic = fit_result$bic,
+      n_vars = length(vars)
+    )
+  }
+}
+
+# Convert to data frame and sort by BIC
+results_df <- data.frame(
+  variables = names(results),
+  bic = sapply(results, function(x) x$bic),
+  n_vars = sapply(results, function(x) x$n_vars)
+) %>%
+  arrange(bic)
+
+# Print top 10 models
+cat("Top 10 models by BIC:\n")
+print(head(results_df, 10))
+
+# Print correlation matrix for Final Climb races
+cat("\nCorrelation matrix for Pelo_Pct variables in Final Climb races:\n")
+cor_matrix <- model_data %>%
+  dplyr::select(ends_with("Pelo_Pct")) %>%
+  cor()
+print(round(cor_matrix, 3))
+
+# Fit the best model (using the variables we found from previous analysis)
+best_formula <- as.formula("Place ~ s(Distance_Pelo_Pct) + s(Classic_Pelo_Pct)")
+final_model <- mgcv::gam(best_formula, data = model_data)
+
+# Create predictions
+predictions_df <- men_df %>%
+  filter(Final_Climb == TRUE) %>%
+  dplyr::select(Skier, Season, Place, Distance_Pelo_Pct, Classic_Pelo_Pct) %>%
+  mutate(
+    Predicted_Place = predict(final_model, newdata = .),
+    Predicted_Place = round(Predicted_Place, 1)  # Round to 1 decimal
+  ) %>%
+  arrange(Place) %>%
+  dplyr::select(Skier, Place, Predicted_Place)  # Select and order columns for clarity
+
+# Display results
+print(predictions_df, n = 20)  # Show first 20 rows
+
+# Calculate some prediction accuracy metrics
+mae <- mean(abs(predictions_df$Place - predictions_df$Predicted_Place))
+rmse <- sqrt(mean((predictions_df$Place - predictions_df$Predicted_Place)^2))
+
+cat("\nModel Performance Metrics:\n")
+cat("Mean Absolute Error:", round(mae, 2), "\n")
+cat("Root Mean Square Error:", round(rmse, 2), "\n")
+```
+
+```{r climb-rd-2}
+library(logger)
+log_path <- "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/tds_predictions.log"
+log_appender(appender_file(log_path))
+log_threshold(INFO)
+# First, let's create a function to generate simulated places based on GAM predictions
+generate_simulated_places <- function(predicted_place, n = 1) {
+  # Using normal distribution with sd based on model's RMSE
+  simulated <- rnorm(n, mean = predicted_place, sd = rmse)
+  # Ensure places are positive and round them
+  return(round(pmax(1, simulated), 1))
+}
+
+# Function to get weighted average of real and simulated places
+get_weighted_climb_average <- function(real_places, predicted_place) {
+  n_real <- length(real_places)
+  log_info("n_real":n_real)
+  n_needed <- 3 - n_real
+  log_info("n_needed":n_needed)
+  
+  if(n_needed > 0) {
+    # Generate simulated places if needed
+    simulated_places <- generate_simulated_places(predicted_place, n_needed)
+    places <- c(real_places, simulated_places)
+  } else {
+    # Take most recent 3 if we have more
+    places <- tail(real_places, 3)
+  }
+  
+  weights <- seq(length(places), 1)
+  return(weighted.mean(places, weights))
+}
+
+# Step 1: Initial GAM Model
+# Get best model from BIC selection
+pelo_vars <- names(men_df)[grep("Pelo_Pct$", names(men_df))]
+model_data <- men_df %>%
+  filter(Final_Climb == TRUE) %>%
+  dplyr::select(Place, all_of(pelo_vars)) %>%
+  na.omit()
+
+# Rerun feature selection to get actual best formula
+fit_gam <- function(vars) {
+  formula <- as.formula(paste("Place ~", 
+                            paste(paste("s(", vars, ")", sep=""), 
+                            collapse = " + ")))
+  model <- try(mgcv::gam(formula, data = model_data), silent = TRUE)
+  if(inherits(model, "try-error")) return(list(bic = Inf, model = NULL))
+  return(list(bic = BIC(model), model = model))
+}
+
+# Get best model
+results <- list()
+for(i in 1:length(pelo_vars)) {
+  combinations <- combn(pelo_vars, i, simplify = FALSE)
+  for(vars in combinations) {
+    fit_result <- fit_gam(vars)
+    results[[paste(vars, collapse = " + ")]] <- list(
+      vars = vars,
+      bic = fit_result$bic,
+      n_vars = length(vars)
+    )
+  }
+}
+
+# Find best variables
+best_model_vars <- results[[which.min(sapply(results, function(x) x$bic))]]$vars
+best_formula <- as.formula(paste("Place ~", paste(paste("s(", best_model_vars, ")", sep=""), collapse = " + ")))
+
+# Fit initial model
+initial_model <- mgcv::gam(best_formula, data = model_data)
+
+# Calculate RMSE for simulation
+initial_predictions <- predict(initial_model, newdata = model_data)
+rmse <- sqrt(mean((model_data$Place - initial_predictions)^2))
+
+# Step 2: Create Last_5_Climbs column with simulated values
+men_df <- men_df %>%
+  filter(Final_Climb == TRUE) %>%
+  arrange(Date) %>%
+  group_by(Skier) %>%
+  mutate(
+    Initial_Prediction = predict(initial_model, newdata = .),
+    Last_5_Climbs = sapply(row_number(), function(i) {
+      prev_places <- Place[max(1, i-5):(i-1)]
+      get_weighted_climb_average(prev_places, Initial_Prediction[i])
+    })
+  ) %>%
+  ungroup()
+
+# Step 3: New model including Last_5_Climbs
+final_model_data <- men_df %>%
+  dplyr::select(Place, all_of(best_model_vars), Last_5_Climbs) %>%
+  na.omit()
+
+final_formula <- as.formula(paste("Place ~", 
+                                paste(c(paste("s(", best_model_vars, ")", sep=""),
+                                      "s(Last_5_Climbs)"), 
+                                    collapse = " + ")))
+
+final_model <- mgcv::gam(final_formula, data = final_model_data)
+
+# Create final predictions
+predictions_df <- men_df %>%
+  dplyr::select(Skier, Season, Place, all_of(best_model_vars), Last_5_Climbs) %>%
+  mutate(
+    Predicted_Place = predict(final_model, newdata = .),
+    Predicted_Place = round(Predicted_Place, 1)
+  ) %>%
+  arrange(Place) %>%
+  dplyr::select(Skier, Place, Predicted_Place, Last_5_Climbs)
+
+# Display results and metrics
+print(predictions_df, n = 20)
+
+# Calculate final metrics
+final_mae <- mean(abs(predictions_df$Place - predictions_df$Predicted_Place))
+final_rmse <- sqrt(mean((predictions_df$Place - predictions_df$Predicted_Place)^2))
+
+cat("\nModel Performance Metrics:\n")
+cat("Mean Absolute Error:", round(final_mae, 2), "\n")
+cat("Root Mean Square Error:", round(final_rmse, 2), "\n")
+```

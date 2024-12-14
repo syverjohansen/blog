@@ -9,7 +9,7 @@ author: "Syver Johansen"
 
 Week two is done.
 
-## Race 1 (Distance Classic)
+## Race 1 (Distance Freestyle)
 
 {{< datatable "weekly-recap.2025Lillehammer.men_race1" >}}
 
@@ -20,7 +20,7 @@ Week two is done.
 {{< figure src="/img/weekly-recap/2025Lillehammer/ladies_race1.png" alt="ladies_race1" caption="Ladies Race 1" >}}
 
 
-## Race 2 (Sprint Classic)
+## Race 2 (Sprint Freestyle)
 
 {{< datatable "weekly-recap.2025Lillehammer.men_race2" >}}
 
@@ -30,7 +30,7 @@ Week two is done.
 
 {{< figure src="/img/weekly-recap/2025Lillehammer/ladies_race2.png" alt="ladies_race2" caption="Ladies Race 2" >}}
 
-## Race 3 (Distance Freestyle)
+## Race 3 (Distance)
 
 {{< datatable "weekly-recap.2025Lillehammer.men_race3" >}}
 

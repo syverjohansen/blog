@@ -50,7 +50,7 @@ men_2025 <- men_chrono %>%
  arrange(Season, Race, Place)
 
 men_before <- men_chrono %>%
-  filter(Season < 2025 | (Season == 2025 & Race < 1 & City!="Summer")) %>%
+  filter(Season < 2025 | (Season == 2025 & Race < 4 & City!="Summer")) %>%
   arrange(Season, Date, Race, Place)
 
 men_end <- men_chrono %>%
@@ -71,7 +71,7 @@ filter(Season == 2025) %>%
  arrange(Season, Race, Place)
 
 ladies_before <- ladies_chrono %>%
-  filter(Season < 2025 | (Season == 2025 & Race < 1 & City!="Summer")) %>%
+  filter(Season < 2025 | (Season == 2025 & Race < 4 & City!="Summer")) %>%
   arrange(Season, Date, Race, Place)
 
 # Define World Cup points vector
@@ -135,8 +135,8 @@ analyze_race <- function(race_type, race_num, race_part, season, city, base_dir)
   
   # Helper function to create plots
   create_plot <- function(data, gender, race_part, base_dir) {
-    max_diff <- data %>% slice_max(`Points Difference`, n = 1)
-    min_diff <- data %>% slice_min(`Points Difference`, n = 1)
+    max_diff <- data %>% slice_max(`Points Difference`, n = 3)
+    min_diff <- data %>% slice_min(`Points Difference`, n = 3)
     
     p <- ggplot(data, aes(x = `Predicted Points`, y = Points)) +
       geom_point() +
@@ -233,7 +233,7 @@ get_performance_stats <- function(data) {
 analyze_weekend <- function(season, city, base_dir) {
   create_weekend_df <- function(data, points_data, before_data) {
     weekend_df <- data %>%
-      filter(Race %in% c(1,2,3)) %>%
+      filter(Race %in% c(4, 5, 6)) %>%
       mutate(Points = case_when(
         Place > 0 & Place <= length(wc_points) ~ wc_points[Place],
         TRUE ~ 0
