@@ -1,0 +1,4096 @@
+Tour de Ski GAM Models Summary
+============================
+
+Men's Model:
+Variables: Sprint_F_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5 
+RMSE: 27.923 
+MAE: 21.54 
+R2: 0.887 
+
+Women's Model:
+Variables: Distance_F_Pelo_Pct, Distance_Pelo_Pct, Freestyle_Pelo_Pct, Distance_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5 
+RMSE: 23.169 
+MAE: 18.249 
+R2: 0.907 
+
+Optimized Tour de Ski Fantasy Team:
+Total Predicted Points: 3711.00
+Total Cost: $ 99396 
+
+Team Composition:
+Men: 8 
+Women: 8 
+
+Selected Team:
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+[1] "Selecting features for threshold 1 with 7 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+[1] "Selecting features for threshold 3 with 7 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+[1] "Selecting features for threshold 10 with 7 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+[1] "Selecting features for threshold 30 with 7 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+[1] "Selecting features for threshold 1 with 7 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+[1] "Selecting features for threshold 3 with 7 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+[1] "Selecting features for threshold 10 with 7 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+[1] "Selecting features for threshold 30 with 7 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+[1] "Selecting features for threshold 1 with 17 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+[1] "Selecting features for threshold 3 with 17 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+[1] "Selecting features for threshold 10 with 17 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+[1] "Selecting features for threshold 30 with 17 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+[1] "Selecting features for threshold 1 with 17 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+[1] "Selecting features for threshold 3 with 17 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+[1] "Selecting features for threshold 10 with 17 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+[1] "Selecting features for threshold 30 with 17 potential predictors"
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+7 Variables  (and intercept)
+                    Forced in Forced out
+Distance_F_Pelo_Pct     FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+1 subsets of each size up to 7
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+Subset selection object
+Call: features <- select_features(history_data, threshold, max_vars)
+17 Variables  (and intercept)
+                    Forced in Forced out
+Distance_C_Pelo_Pct     FALSE      FALSE
+Distance_F_Pelo_Pct     FALSE      FALSE
+Distance_Pelo_Pct       FALSE      FALSE
+Sprint_C_Pelo_Pct       FALSE      FALSE
+Sprint_F_Pelo_Pct       FALSE      FALSE
+Sprint_Pelo_Pct         FALSE      FALSE
+Classic_Pelo_Pct        FALSE      FALSE
+Freestyle_Pelo_Pct      FALSE      FALSE
+Pelo_Pct                FALSE      FALSE
+Distance_C_Last_5       FALSE      FALSE
+Distance_F_Last_5       FALSE      FALSE
+Distance_Last_5         FALSE      FALSE
+Sprint_C_Last_5         FALSE      FALSE
+Sprint_F_Last_5         FALSE      FALSE
+FC_Race                 FALSE      FALSE
+FC_Last_5               FALSE      FALSE
+TdS_Last_5              FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: forward
+
+> # Load required libraries
+> library(arrow)  # for reading feather files
+
+> library(readxl) # for reading Excel files
+
+> library(tidyverse)
+
+> # Define file paths
+> men_chrono_path <- "~/ski/elo/python/ski/polars/excel365/men_chrono.csv"
+
+> ladies_chrono_path <- "~/ski/elo/python/ski/polars/excel365/ladies_chrono.csv"
+
+> men_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/men-points.xlsx"
+
+> ladies_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/ladies-points.xlsx"
+
+> # Read the feather files
+> men_chrono <- read.csv(men_chrono_path)
+
+> ladies_chrono <- read.csv(ladies_chrono_path)
+
+> # Read the Excel files
+> men_points <- read_xlsx(men_points_path)
+-/                                                                                                                                                  /                                                                                                                                                  -                                                                                                                                                  
+> ladies_points <- read_xlsx(ladies_points_path)
+-/                                                                                                                                                  /                                                                                                                                                  -                                                                                                                                                  
+> # Create a list to store all dataframes
+> ski_data <- list(
++   men_chrono = men_chrono,
++   ladies_chrono = ladies_chrono,
++   men_points = men_poi .... [TRUNCATED] 
+
+> # Print the dimensions of each dataframe to verify loading
+> lapply(ski_data, dim)
+$men_chrono
+[1] 94899    35
+
+$ladies_chrono
+[1] 69398    35
+
+$men_points
+[1] 136   6
+
+$ladies_points
+[1] 83  6
+
+
+> library(dplyr)
+
+> library(ggplot2)
+
+> library(openxlsx)
+
+> # Filter and sort men's data
+> men_2025 <- men_chrono %>%
++   filter(Season == 2025, City != "Summer") %>% 
++   #filter(Season == 2025) %>% 
++   arr .... [TRUNCATED] 
+
+> men_before <- men_chrono %>%
++   filter(Season < 2025 | (Season == 2025 & Race < 4 & City!="Summer")) %>%
++   arrange(Season, Date, Race, Place)
+
+> men_end <- men_chrono %>%
++   #filter(Season == 2025, City != "Summer") %>% 
++   filter(Season == 2025) %>% 
++   arrange(Season, Race, Place)
+
+> # Filter and sort ladies' data
+> ladies_2025 <- ladies_chrono %>%
++   filter(Season == 2025, City != "Summer") %>% 
++   #filter(Season == 2025) %>%  .... [TRUNCATED] 
+
+> ladies_end <- ladies_chrono %>%
++   #filter(Season == 2025, City != "Summer") %>% 
++   filter(Season == 2025) %>% 
++   arrange(Season, Race, Place)
+
+> ladies_before <- ladies_chrono %>%
++   filter(Season < 2025 | (Season == 2025 & Race < 4 & City!="Summer")) %>%
++   arrange(Season, Date, Race, Plac .... [TRUNCATED] 
+
+> # Define World Cup points vector
+> wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,1 .... [TRUNCATED] 
+
+> library(dplyr)
+
+> library(ggplot2)
+
+> library(openxlsx)
+
+> # Define World Cup points vector
+> wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,1 .... [TRUNCATED] 
+
+> analyze_race <- function(race_type, race_num, race_part, season, city, base_dir) {
++   # Filter season data without City filter
++   men_season <- me .... [TRUNCATED] 
+
+> analyze_weekend <- function(season, city, base_dir) {
++   create_weekend_df <- function(data, points_data, before_data) {
++     weekend_df <- data % .... [TRUNCATED] 
+
+> base_dir <- "~/blog/daehl-e"
+
+> # Analyze individual races
+> race1_results <- analyze_race("Sprint_F", 8, 1, 2025, "Davos", base_dir)
+[1] "RMSE: 16.71"
+[1] "MAE: 11.67"
+[1] "MSE: 279.28"
+[1] "RMSE: 22.19"
+[1] "MAE: 15.56"
+[1] "MSE: 492.43"
+
+> race2_results <- analyze_race("Distance_C", 9,  2, 2025, "Davos", base_dir)
+[1] "RMSE: 20.08"
+[1] "MAE: 13.42"
+[1] "MSE: 403.28"
+[1] "RMSE: 25.54"
+[1] "MAE: 22.49"
+[1] "MSE: 652.45"
+
+> # Analyze weekend results
+> weekend_results <- analyze_weekend(2025, "Davos", base_dir)
+
+> weekend_results
+$men
+# A tibble: 145 × 8
+   Skier                   Nation        `Before Elo` `After Elo` `Elo Difference` `Predicted Points` `Total Points` `Points Difference`
+   <chr>                   <chr>                <dbl>       <dbl>            <dbl>              <dbl>          <dbl>               <dbl>
+ 1 Harald Østberg Amundsen Norway               1774.       1856.           81.8                 85.2            256               171. 
+ 2 Martin Løwstrøm Nyenget Norway               1786.       1863.           77.0                 72.7            190               117. 
+ 3 Simen Hegstad Krüger    Norway               1727.       1819.           91.5                 44.1            180               136. 
+ 4 Johannes Høsflot Klæbo  Norway               1881.       1901.           20.1                157.             169                11.8
+ 5 Andreas Fjorden Ree     Norway               1609.       1732.          123.                  33.8            152               118. 
+ 6 Jan Thomas Jenssen      Norway               1670.       1757.           87.3                 NA              151                NA  
+ 7 Andrew Musgrave         Great Britain        1468.       1658.          190.                  32.2            135               103. 
+ 8 Gus Schumacher          USA                  1653.       1653.           -0.595               63.1            132                68.9
+ 9 Pål Golberg             Norway               1713.       1752.           39.6                 63.9            126                62.1
+10 Friedrich Moch          Germany              1647.       1696.           48.6                 45.4            120                74.6
+# ℹ 135 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$ladies
+# A tibble: 105 × 8
+   Skier                    Nation  `Before Elo` `After Elo` `Elo Difference` `Predicted Points` `Total Points` `Points Difference`
+   <chr>                    <chr>          <dbl>       <dbl>            <dbl>              <dbl>          <dbl>               <dbl>
+ 1 Jessie Diggins           USA            1694.       1775.             81.1              117.             239               122. 
+ 2 Victoria Carl            Germany        1691.       1758.             66.8               80.2            223               143. 
+ 3 Therese Johaug           Norway         1845.       1897.             52.8               82.4            200               118. 
+ 4 Heidi Weng               Norway         1733.       1809.             76.2               NA              190                NA  
+ 5 Jonna Sundling           Sweden         1784.       1826.             42.3               83.7            175                91.3
+ 6 Astrid Øyre Slind        Norway         1612.       1716.            104.                62.3            170               108. 
+ 7 Ebba Andersson           Sweden         1717.       1769.             52.7               NA              157                NA  
+ 8 Pia Fink                 Germany        1541.       1586.             45.1               32.7            152               119. 
+ 9 Katerina Janatova        Czechia        1470.       1526.             55.5               69.0            143                74.0
+10 Kristin Austgulen Fosnæs Norway         1524.       1624.            100.                34.9            129                94.1
+# ℹ 95 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+
+> # Print metrics for Race 1
+> print("Men's Sprint:")
+[1] "Men's Sprint:"
+
+> print(race1_results$men$stats$metrics)
+$rmse
+[1] 16.71162
+
+$mae
+[1] 11.6669
+
+$mse
+[1] 279.2782
+
+
+> print("\nLadies' Distance C:")
+[1] "\nLadies' Distance C:"
+
+> print(race1_results$ladies$stats$metrics)
+$rmse
+[1] 22.19084
+
+$mae
+[1] 15.55705
+
+$mse
+[1] 492.4333
+
+
+> print("\nMen's Sprint C:")
+[1] "\nMen's Sprint C:"
+
+> print(race2_results$men$stats$metrics)
+$rmse
+[1] 20.08186
+
+$mae
+[1] 13.4152
+
+$mse
+[1] 403.281
+
+
+> print("\nLadies' Sprint C:")
+[1] "\nLadies' Sprint C:"
+
+> print(race2_results$ladies$stats$metrics)
+$rmse
+[1] 25.54317
+
+$mae
+[1] 22.49484
+
+$mse
+[1] 652.4536
+
+
+> # print("\nMen's Distance F:")
+> # print(race3_results$men$stats$metrics)
+> # print("\nLadies' Distance F:")
+> # print(race3_results$ladies$stats$me .... [TRUNCATED] 
+
+> men_combined_rmse <- sqrt(mean((men_all_races$Points - men_all_races$`Predicted Points`)^2, na.rm = TRUE))
+
+> men_combined_mae <- mean(abs(men_all_races$Points - men_all_races$`Predicted Points`), na.rm = TRUE)
+
+> men_combined_mse <- mean((men_all_races$Points - men_all_races$`Predicted Points`)^2, na.rm = TRUE)
+
+> # Ladies' combined metrics across all races
+> ladies_all_races <- rbind(
++   race1_results$ladies$data,
++   race2_results$ladies$data
++   #race3_res .... [TRUNCATED] 
+
+> ladies_combined_rmse <- sqrt(mean((ladies_all_races$Points - ladies_all_races$`Predicted Points`)^2, na.rm = TRUE))
+
+> ladies_combined_mae <- mean(abs(ladies_all_races$Points - ladies_all_races$`Predicted Points`), na.rm = TRUE)
+
+> ladies_combined_mse <- mean((ladies_all_races$Points - ladies_all_races$`Predicted Points`)^2, na.rm = TRUE)
+
+> print("Men's Combined Metrics:")
+[1] "Men's Combined Metrics:"
+
+> print(paste("RMSE:", round(men_combined_rmse, 2)))
+[1] "RMSE: 18.23"
+
+> print(paste("MAE:", round(men_combined_mae, 2)))
+[1] "MAE: 12.41"
+
+> print(paste("MSE:", round(men_combined_mse, 2)))
+[1] "MSE: 332.2"
+
+> print("\nLadies' Combined Metrics:")
+[1] "\nLadies' Combined Metrics:"
+
+> print(paste("RMSE:", round(ladies_combined_rmse, 2)))
+[1] "RMSE: 23.55"
+
+> print(paste("MAE:", round(ladies_combined_mae, 2)))
+[1] "MAE: 18.24"
+
+> print(paste("MSE:", round(ladies_combined_mse, 2)))
+[1] "MSE: 554.38"
+
+> library(dplyr)
+
+> library(mgcv)
+
+> library(leaps)
+
+> # Points system setup
+> wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15, .... [TRUNCATED] 
+
+> stage_points <- c(50,47,44,41,38,35,32,30,28,26,24,22,20,18,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
+
+> tds_points <- c(300,285,270,255,240,216,207,198,189,180,174,168,162,156,150,144,138,132,126,120,114,108,102,96,90,84,78,72,66,60,57,54,51,48,45,42,3 .... [TRUNCATED] 
+
+> # Function to replace both NAs and NaNs in a vector
+> replace_nas_vector <- function(x) {
++     if(is.null(x)) return(NULL)
++     # Convert to numer .... [TRUNCATED] 
+
+> # Function to replace NAs with first quartile
+> replace_na_with_quartile <- function(x) {
++     quartile_1 <- quantile(x, 0.25, na.rm = TRUE)
++      .... [TRUNCATED] 
+
+> # Create points conversion function that handles all three point systems
+> create_points_columns <- function(df) {
++   df %>%
++     mutate(
++        .... [TRUNCATED] 
+
+> calculate_weighted_average <- function(df) {
++   df %>%
++     group_by(ID) %>%
++     arrange(Season, Race) %>%
++     mutate(
++       Weighted_Last_5 .... [TRUNCATED] 
+
+> calculate_weighted_average2 <- function(df) {
++   df %>%
++     group_by(ID) %>%
++     arrange(Season, Race) %>%
++     mutate(
++       Weighted_Last_ .... [TRUNCATED] 
+
+> # Modified version of weighted average calculation specifically for TDS
+> calculate_weighted_average_tds <- function(df) {
++   df %>%
++     group_by .... [TRUNCATED] 
+
+> calculate_weighted_average2_tds <- function(df) {
++   df %>%
++     group_by(ID) %>%
++     arrange(Season, Race) %>%
++     mutate(
++       Weighted_L .... [TRUNCATED] 
+
+> # Create function to calculate Pelo percentages
+> create_pelo_percentages <- function(df) {
++   # Get all column names ending with _Pelo
++   pelo_co .... [TRUNCATED] 
+
+> # Function to select best features and create GAM with specified points type
+> select_gam_features <- function(df, points_col = "Points") {
++   # Ge .... [TRUNCATED] 
+
+> # Function to generate predictions for a specific race type
+> generate_race_predictions <- function(chrono_data, race_type, points_type = "wc", gend .... [TRUNCATED] 
+
+> # Create separate function for TDS predictions
+> generate_tds_predictions <- function(chrono_data, gender) {
++     # Process TDS training data
++     .... [TRUNCATED] 
+
+> # Generate predictions for both genders
+> race_types <- c("Distance", "Distance_C", "Distance_F", "Sprint_C", "Sprint_F")
+
+> all_predictions <- list()
+
+> all_models <- list()
+
+> # Generate predictions for men
+> for(race_type in race_types) {
++   cat("\nProcessing Men's WC", race_type, "...\n")
++   results <- generate_race_pr .... [TRUNCATED] 
+
+Processing Men's WC Distance ...
+
+Processing Men's Stage Distance ...
+
+Processing Men's WC Distance_C ...
+
+Processing Men's Stage Distance_C ...
+
+Processing Men's WC Distance_F ...
+
+Processing Men's Stage Distance_F ...
+
+Processing Men's WC Sprint_C ...
+
+Processing Men's Stage Sprint_C ...
+
+Processing Men's WC Sprint_F ...
+
+Processing Men's Stage Sprint_F ...
+
+> # Generate predictions for women
+> for(race_type in race_types) {
++   cat("\nProcessing Women's WC", race_type, "...\n")
++   results <- generate_rac .... [TRUNCATED] 
+
+Processing Women's WC Distance ...
+
+Processing Women's Stage Distance ...
+
+Processing Women's WC Distance_C ...
+
+Processing Women's Stage Distance_C ...
+
+Processing Women's WC Distance_F ...
+Called from: weighted.mean.default(prev_races, weights, na.rm = TRUE)
+-/                                                                                                                                                  /                                                                                                                                                  -                                                                                                                                                  -/                                                                                                                                                  /                                                                                                                                                  -                                                                                                                                                  $men_chrono
+[1] 94899    35
+
+$ladies_chrono
+[1] 69398    35
+
+$men_points
+[1] 136   6
+
+$ladies_points
+[1] 83  6
+
+[1] "RMSE: 16.71"
+[1] "MAE: 11.67"
+[1] "MSE: 279.28"
+[1] "RMSE: 22.19"
+[1] "MAE: 15.56"
+[1] "MSE: 492.43"
+[1] "RMSE: 20.08"
+[1] "MAE: 13.42"
+[1] "MSE: 403.28"
+[1] "RMSE: 25.54"
+[1] "MAE: 22.49"
+[1] "MSE: 652.45"
+$men
+# A tibble: 145 × 8
+   Skier                   Nation        `Before Elo` `After Elo` `Elo Difference` `Predicted Points` `Total Points` `Points Difference`
+   <chr>                   <chr>                <dbl>       <dbl>            <dbl>              <dbl>          <dbl>               <dbl>
+ 1 Harald Østberg Amundsen Norway               1774.       1856.           81.8                 85.2            256               171. 
+ 2 Martin Løwstrøm Nyenget Norway               1786.       1863.           77.0                 72.7            190               117. 
+ 3 Simen Hegstad Krüger    Norway               1727.       1819.           91.5                 44.1            180               136. 
+ 4 Johannes Høsflot Klæbo  Norway               1881.       1901.           20.1                157.             169                11.8
+ 5 Andreas Fjorden Ree     Norway               1609.       1732.          123.                  33.8            152               118. 
+ 6 Jan Thomas Jenssen      Norway               1670.       1757.           87.3                 NA              151                NA  
+ 7 Andrew Musgrave         Great Britain        1468.       1658.          190.                  32.2            135               103. 
+ 8 Gus Schumacher          USA                  1653.       1653.           -0.595               63.1            132                68.9
+ 9 Pål Golberg             Norway               1713.       1752.           39.6                 63.9            126                62.1
+10 Friedrich Moch          Germany              1647.       1696.           48.6                 45.4            120                74.6
+# ℹ 135 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$ladies
+# A tibble: 105 × 8
+   Skier                    Nation  `Before Elo` `After Elo` `Elo Difference` `Predicted Points` `Total Points` `Points Difference`
+   <chr>                    <chr>          <dbl>       <dbl>            <dbl>              <dbl>          <dbl>               <dbl>
+ 1 Jessie Diggins           USA            1694.       1775.             81.1              117.             239               122. 
+ 2 Victoria Carl            Germany        1691.       1758.             66.8               80.2            223               143. 
+ 3 Therese Johaug           Norway         1845.       1897.             52.8               82.4            200               118. 
+ 4 Heidi Weng               Norway         1733.       1809.             76.2               NA              190                NA  
+ 5 Jonna Sundling           Sweden         1784.       1826.             42.3               83.7            175                91.3
+ 6 Astrid Øyre Slind        Norway         1612.       1716.            104.                62.3            170               108. 
+ 7 Ebba Andersson           Sweden         1717.       1769.             52.7               NA              157                NA  
+ 8 Pia Fink                 Germany        1541.       1586.             45.1               32.7            152               119. 
+ 9 Katerina Janatova        Czechia        1470.       1526.             55.5               69.0            143                74.0
+10 Kristin Austgulen Fosnæs Norway         1524.       1624.            100.                34.9            129                94.1
+# ℹ 95 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+[1] "Men's Sprint:"
+$rmse
+[1] 16.71162
+
+$mae
+[1] 11.6669
+
+$mse
+[1] 279.2782
+
+[1] "\nLadies' Distance C:"
+$rmse
+[1] 22.19084
+
+$mae
+[1] 15.55705
+
+$mse
+[1] 492.4333
+
+[1] "\nMen's Sprint C:"
+$rmse
+[1] 20.08186
+
+$mae
+[1] 13.4152
+
+$mse
+[1] 403.281
+
+[1] "\nLadies' Sprint C:"
+$rmse
+[1] 25.54317
+
+$mae
+[1] 22.49484
+
+$mse
+[1] 652.4536
+
+[1] "Men's Combined Metrics:"
+[1] "RMSE: 18.23"
+[1] "MAE: 12.41"
+[1] "MSE: 332.2"
+[1] "\nLadies' Combined Metrics:"
+[1] "RMSE: 23.55"
+[1] "MAE: 18.24"
+[1] "MSE: 554.38"
+
+Processing Men's WC Distance ...
+
+Processing Men's Stage Distance ...
+
+Processing Men's WC Distance_C ...
+
+Processing Men's Stage Distance_C ...
+
+Processing Men's WC Distance_F ...
+
+Processing Men's Stage Distance_F ...
+
+Processing Men's WC Sprint_C ...
+
+Processing Men's Stage Sprint_C ...
+
+Processing Men's WC Sprint_F ...
+
+Processing Men's Stage Sprint_F ...
+
+Processing Women's WC Distance ...
+
+Processing Women's Stage Distance ...
+
+Processing Women's WC Distance_C ...
+
+Processing Women's Stage Distance_C ...
+
+Processing Women's WC Distance_F ...
+
+Processing Women's Stage Distance_F ...
+
+Processing Women's WC Sprint_C ...
+
+Processing Women's Stage Sprint_C ...
+
+Processing Women's WC Sprint_F ...
+
+Processing Women's Stage Sprint_F ...
+
+Processing Men's Tour de Ski...
+
+Processing Women's Tour de Ski...
+# A tibble: 340 × 7
+   Skier                  ID gender race_type wc_predicted_points stage_predicted_points tds_predicted_points
+   <chr>               <int> <chr>  <chr>                   <dbl>                  <dbl>                <dbl>
+ 1 Adam Büki            8078 M      Distance                 -3.1                   -0.4                -85.9
+ 2 Adam Fellner         2162 M      Distance                 11.1                    1.5                 77.9
+ 3 Adam Konya           2259 M      Distance                 -1.8                   -0.1                -65.5
+ 4 Alayna Sonnesyn      1872 F      Distance                  9.1                    1.9                 46.9
+ 5 Albert Kuchler       8048 M      Distance                 25.2                    4.9                113. 
+ 6 Aleksander Holmboe  12900 M      Distance                 56.1                   21.3                 90.8
+ 7 Aleksi Parttimaa     5631 M      Distance                  7                      1.6                 56.7
+ 8 Alexander Ståhlberg 12449 M      Distance                  6.6                    1.5                 52.5
+ 9 Alvar Johannes Alev  1996 M      Distance                 27.6                    7.2                159. 
+10 Alvar Myhlback      19652 M      Distance                  7.8                    1.2                 64.4
+# ℹ 330 more rows
+# ℹ Use `print(n = ...)` to see more rows
+$M_WC_Distance
+# A tibble: 203 × 7
+   Skier                      ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Martin Løwstrøm Nyenget  2295                85.1 M      Distance                      NA                   NA
+ 2 Harald Østberg Amundsen  5449                83.9 M      Distance                      NA                   NA
+ 3 Johannes Høsflot Klæbo   5164                81.5 M      Distance                      NA                   NA
+ 4 Simen Hegstad Krüger     2355                74.8 M      Distance                      NA                   NA
+ 5 Iivo Niskanen            1470                70   M      Distance                      NA                   NA
+ 6 Andreas Fjorden Ree      8678                63.1 M      Distance                      NA                   NA
+ 7 Hugo Lapalus             6018                59.2 M      Distance                      NA                   NA
+ 8 Jan Thomas Jenssen       5406                59.2 M      Distance                      NA                   NA
+ 9 Pål Golberg                88                57.7 M      Distance                      NA                   NA
+10 Erik Valnes              5923                57.1 M      Distance                      NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_Stage_Distance
+# A tibble: 203 × 7
+   Skier                      ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Martin Løwstrøm Nyenget  2295                   40.2 M      Distance                   NA                   NA
+ 2 Harald Østberg Amundsen  5449                   39.5 M      Distance                   NA                   NA
+ 3 Johannes Høsflot Klæbo   5164                   38.3 M      Distance                   NA                   NA
+ 4 Simen Hegstad Krüger     2355                   34.2 M      Distance                   NA                   NA
+ 5 Iivo Niskanen            1470                   29.7 M      Distance                   NA                   NA
+ 6 Andreas Fjorden Ree      8678                   26.1 M      Distance                   NA                   NA
+ 7 Jan Thomas Jenssen       5406                   24.4 M      Distance                   NA                   NA
+ 8 Hugo Lapalus             6018                   23.7 M      Distance                   NA                   NA
+ 9 Pål Golberg                88                   23   M      Distance                   NA                   NA
+10 Erik Valnes              5923                   22.8 M      Distance                   NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_WC_Distance_C
+# A tibble: 203 × 7
+   Skier                      ID wc_predicted_points gender race_type  stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                       <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                87   M      Distance_C                     NA                   NA
+ 2 Martin Løwstrøm Nyenget  2295                83.2 M      Distance_C                     NA                   NA
+ 3 Iivo Niskanen            1470                76.1 M      Distance_C                     NA                   NA
+ 4 Harald Østberg Amundsen  5449                75   M      Distance_C                     NA                   NA
+ 5 Pål Golberg                88                64.1 M      Distance_C                     NA                   NA
+ 6 Erik Valnes              5923                62   M      Distance_C                     NA                   NA
+ 7 Simen Hegstad Krüger     2355                62   M      Distance_C                     NA                   NA
+ 8 Hugo Lapalus             6018                60.7 M      Distance_C                     NA                   NA
+ 9 Andreas Fjorden Ree      8678                56.8 M      Distance_C                     NA                   NA
+10 Friedrich Moch           9323                53.6 M      Distance_C                     NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_Stage_Distance_C
+# A tibble: 203 × 7
+   Skier                      ID stage_predicted_points gender race_type  wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                    <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                   41.8 M      Distance_C                  NA                   NA
+ 2 Martin Løwstrøm Nyenget  2295                   38.8 M      Distance_C                  NA                   NA
+ 3 Iivo Niskanen            1470                   33.6 M      Distance_C                  NA                   NA
+ 4 Harald Østberg Amundsen  5449                   33.2 M      Distance_C                  NA                   NA
+ 5 Pål Golberg                88                   26.7 M      Distance_C                  NA                   NA
+ 6 Simen Hegstad Krüger     2355                   26   M      Distance_C                  NA                   NA
+ 7 Erik Valnes              5923                   25.7 M      Distance_C                  NA                   NA
+ 8 Hugo Lapalus             6018                   24.1 M      Distance_C                  NA                   NA
+ 9 Andreas Fjorden Ree      8678                   21.9 M      Distance_C                  NA                   NA
+10 William Poromaa         12573                   19.8 M      Distance_C                  NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_WC_Distance_F
+# A tibble: 203 × 7
+   Skier                      ID wc_predicted_points gender race_type  stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                       <dbl>                <dbl>
+ 1 Harald Østberg Amundsen  5449                82.8 M      Distance_F                     NA                   NA
+ 2 Simen Hegstad Krüger     2355                82.3 M      Distance_F                     NA                   NA
+ 3 Martin Løwstrøm Nyenget  2295                78.7 M      Distance_F                     NA                   NA
+ 4 Johannes Høsflot Klæbo   5164                73.3 M      Distance_F                     NA                   NA
+ 5 Andreas Fjorden Ree      8678                69.4 M      Distance_F                     NA                   NA
+ 6 Iver Tildheim Andersen   8590                63.7 M      Distance_F                     NA                   NA
+ 7 Friedrich Moch           9323                62.8 M      Distance_F                     NA                   NA
+ 8 Jan Thomas Jenssen       5406                62.5 M      Distance_F                     NA                   NA
+ 9 Mika Vermeulen          12673                59   M      Distance_F                     NA                   NA
+10 Iivo Niskanen            1470                55.6 M      Distance_F                     NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_Stage_Distance_F
+# A tibble: 203 × 7
+   Skier                      ID stage_predicted_points gender race_type  wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                    <dbl>                <dbl>
+ 1 Simen Hegstad Krüger     2355                   40.3 M      Distance_F                  NA                   NA
+ 2 Martin Løwstrøm Nyenget  2295                   37.2 M      Distance_F                  NA                   NA
+ 3 Harald Østberg Amundsen  5449                   36.7 M      Distance_F                  NA                   NA
+ 4 Andreas Fjorden Ree      8678                   32.6 M      Distance_F                  NA                   NA
+ 5 Johannes Høsflot Klæbo   5164                   32.6 M      Distance_F                  NA                   NA
+ 6 Friedrich Moch           9323                   28.4 M      Distance_F                  NA                   NA
+ 7 Iver Tildheim Andersen   8590                   26.7 M      Distance_F                  NA                   NA
+ 8 Jan Thomas Jenssen       5406                   24.1 M      Distance_F                  NA                   NA
+ 9 Mika Vermeulen          12673                   23.9 M      Distance_F                  NA                   NA
+10 Didrik Tønseth           1446                   22.2 M      Distance_F                  NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_WC_Sprint_C
+# A tibble: 203 × 7
+   Skier                      ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                81.8 M      Sprint_C                      NA                   NA
+ 2 Even Northug             3590                75.3 M      Sprint_C                      NA                   NA
+ 3 Erik Valnes              5923                73.4 M      Sprint_C                      NA                   NA
+ 4 Harald Østberg Amundsen  5449                63.4 M      Sprint_C                      NA                   NA
+ 5 Lucas Chanavat           3582                57.8 M      Sprint_C                      NA                   NA
+ 6 Pål Golberg                88                54.3 M      Sprint_C                      NA                   NA
+ 7 Lauri Vuorinen           2874                53.4 M      Sprint_C                      NA                   NA
+ 8 Oskar Opstad Vike       19279                52.1 M      Sprint_C                      NA                   NA
+ 9 Ansgar Evensen           8246                51.7 M      Sprint_C                      NA                   NA
+10 Edvin Anger             14039                51.6 M      Sprint_C                      NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_Stage_Sprint_C
+# A tibble: 203 × 7
+   Skier                      ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                   38.8 M      Sprint_C                   NA                   NA
+ 2 Even Northug             3590                   33.6 M      Sprint_C                   NA                   NA
+ 3 Erik Valnes              5923                   33.3 M      Sprint_C                   NA                   NA
+ 4 Harald Østberg Amundsen  5449                   26.8 M      Sprint_C                   NA                   NA
+ 5 Lucas Chanavat           3582                   23.1 M      Sprint_C                   NA                   NA
+ 6 Pål Golberg                88                   21.1 M      Sprint_C                   NA                   NA
+ 7 Ansgar Evensen           8246                   21   M      Sprint_C                   NA                   NA
+ 8 Lauri Vuorinen           2874                   20.5 M      Sprint_C                   NA                   NA
+ 9 Oskar Opstad Vike       19279                   20.1 M      Sprint_C                   NA                   NA
+10 Richard Jouve            2768                   19.7 M      Sprint_C                   NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_WC_Sprint_F
+# A tibble: 203 × 7
+   Skier                      ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                91.5 M      Sprint_F                      NA                   NA
+ 2 Even Northug             3590                74.6 M      Sprint_F                      NA                   NA
+ 3 Lucas Chanavat           3582                68.5 M      Sprint_F                      NA                   NA
+ 4 Erik Valnes              5923                62.4 M      Sprint_F                      NA                   NA
+ 5 Edvin Anger             14039                61   M      Sprint_F                      NA                   NA
+ 6 Ben Ogden                9179                59.1 M      Sprint_F                      NA                   NA
+ 7 Valerio Grond           12164                59   M      Sprint_F                      NA                   NA
+ 8 Harald Østberg Amundsen  5449                57   M      Sprint_F                      NA                   NA
+ 9 Aleksander Holmboe      12900                56.1 M      Sprint_F                      NA                   NA
+10 Federico Pellegrino        44                55.3 M      Sprint_F                      NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_Stage_Sprint_F
+# A tibble: 203 × 7
+   Skier                      ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                   42   M      Sprint_F                   NA                   NA
+ 2 Even Northug             3590                   32.7 M      Sprint_F                   NA                   NA
+ 3 Lucas Chanavat           3582                   28.6 M      Sprint_F                   NA                   NA
+ 4 Erik Valnes              5923                   27.3 M      Sprint_F                   NA                   NA
+ 5 Edvin Anger             14039                   25.1 M      Sprint_F                   NA                   NA
+ 6 Ben Ogden                9179                   23.6 M      Sprint_F                   NA                   NA
+ 7 Valerio Grond           12164                   23.4 M      Sprint_F                   NA                   NA
+ 8 Harald Østberg Amundsen  5449                   22.9 M      Sprint_F                   NA                   NA
+ 9 Federico Pellegrino        44                   21.9 M      Sprint_F                   NA                   NA
+10 Aleksander Holmboe      12900                   21.3 M      Sprint_F                   NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_WC_Distance
+# A tibble: 137 × 7
+   Skier                ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>             <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Therese Johaug        4                90   F      Distance                      NA                   NA
+ 2 Heidi Weng           60                81.2 F      Distance                      NA                   NA
+ 3 Jessie Diggins      131                76.2 F      Distance                      NA                   NA
+ 4 Jonna Sundling     1486                70.1 F      Distance                      NA                   NA
+ 5 Frida Karlsson     3998                68.1 F      Distance                      NA                   NA
+ 6 Astrid Øyre Slind   115                67.3 F      Distance                      NA                   NA
+ 7 Ebba Andersson     1789                64.7 F      Distance                      NA                   NA
+ 8 Victoria Carl      1489                64.3 F      Distance                      NA                   NA
+ 9 Katharina Hennig   1618                57.6 F      Distance                      NA                   NA
+10 Teresa Stadlober    529                56.4 F      Distance                      NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_Stage_Distance
+# A tibble: 137 × 7
+   Skier                ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>             <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Therese Johaug        4                   44.5 F      Distance                   NA                   NA
+ 2 Heidi Weng           60                   36.8 F      Distance                   NA                   NA
+ 3 Jessie Diggins      131                   34.1 F      Distance                   NA                   NA
+ 4 Jonna Sundling     1486                   31.7 F      Distance                   NA                   NA
+ 5 Astrid Øyre Slind   115                   29.7 F      Distance                   NA                   NA
+ 6 Frida Karlsson     3998                   29.4 F      Distance                   NA                   NA
+ 7 Victoria Carl      1489                   28   F      Distance                   NA                   NA
+ 8 Ebba Andersson     1789                   27.6 F      Distance                   NA                   NA
+ 9 Katharina Hennig   1618                   22.7 F      Distance                   NA                   NA
+10 Teresa Stadlober    529                   21.5 F      Distance                   NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_WC_Distance_C
+# A tibble: 137 × 7
+   Skier                ID wc_predicted_points gender race_type  stage_predicted_points predicted_tds_points
+   <chr>             <int>           <dbl[1d]> <chr>  <chr>                       <dbl>                <dbl>
+ 1 Therese Johaug        4                94.2 F      Distance_C                     NA                   NA
+ 2 Frida Karlsson     3998                75.7 F      Distance_C                     NA                   NA
+ 3 Ebba Andersson     1789                71.4 F      Distance_C                     NA                   NA
+ 4 Heidi Weng           60                71.4 F      Distance_C                     NA                   NA
+ 5 Astrid Øyre Slind   115                69.2 F      Distance_C                     NA                   NA
+ 6 Jonna Sundling     1486                68.2 F      Distance_C                     NA                   NA
+ 7 Victoria Carl      1489                67   F      Distance_C                     NA                   NA
+ 8 Jessie Diggins      131                66.6 F      Distance_C                     NA                   NA
+ 9 Teresa Stadlober    529                65.8 F      Distance_C                     NA                   NA
+10 Kerttu Niskanen      37                65.6 F      Distance_C                     NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_Stage_Distance_C
+# A tibble: 137 × 7
+   Skier                ID stage_predicted_points gender race_type  wc_predicted_points predicted_tds_points
+   <chr>             <int>              <dbl[1d]> <chr>  <chr>                    <dbl>                <dbl>
+ 1 Therese Johaug        4                   46.2 F      Distance_C                  NA                   NA
+ 2 Frida Karlsson     3998                   34   F      Distance_C                  NA                   NA
+ 3 Ebba Andersson     1789                   31.6 F      Distance_C                  NA                   NA
+ 4 Heidi Weng           60                   31.4 F      Distance_C                  NA                   NA
+ 5 Astrid Øyre Slind   115                   29.9 F      Distance_C                  NA                   NA
+ 6 Jonna Sundling     1486                   29.8 F      Distance_C                  NA                   NA
+ 7 Jessie Diggins      131                   28.5 F      Distance_C                  NA                   NA
+ 8 Victoria Carl      1489                   28.5 F      Distance_C                  NA                   NA
+ 9 Kerttu Niskanen      37                   28   F      Distance_C                  NA                   NA
+10 Teresa Stadlober    529                   27.9 F      Distance_C                  NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_WC_Distance_F
+# A tibble: 137 × 7
+   Skier                ID wc_predicted_points gender race_type  stage_predicted_points predicted_tds_points
+   <chr>             <int>           <dbl[1d]> <chr>  <chr>                       <dbl>                <dbl>
+ 1 Jessie Diggins      131                84.8 F      Distance_F                     NA                   NA
+ 2 Therese Johaug        4                84.4 F      Distance_F                     NA                   NA
+ 3 Heidi Weng           60                72.9 F      Distance_F                     NA                   NA
+ 4 Jonna Sundling     1486                66   F      Distance_F                     NA                   NA
+ 5 Victoria Carl      1489                64.9 F      Distance_F                     NA                   NA
+ 6 Frida Karlsson     3998                59.1 F      Distance_F                     NA                   NA
+ 7 Ebba Andersson     1789                56.7 F      Distance_F                     NA                   NA
+ 8 Astrid Øyre Slind   115                55.5 F      Distance_F                     NA                   NA
+ 9 Flora Dolci        2483                52.9 F      Distance_F                     NA                   NA
+10 Kerttu Niskanen      37                50.6 F      Distance_F                     NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_Stage_Distance_F
+# A tibble: 137 × 7
+   Skier                ID stage_predicted_points gender race_type  wc_predicted_points predicted_tds_points
+   <chr>             <int>              <dbl[1d]> <chr>  <chr>                    <dbl>                <dbl>
+ 1 Therese Johaug        4                   42   F      Distance_F                  NA                   NA
+ 2 Jessie Diggins      131                   39.8 F      Distance_F                  NA                   NA
+ 3 Heidi Weng           60                   33.6 F      Distance_F                  NA                   NA
+ 4 Jonna Sundling     1486                   28.7 F      Distance_F                  NA                   NA
+ 5 Victoria Carl      1489                   27.1 F      Distance_F                  NA                   NA
+ 6 Frida Karlsson     3998                   26.1 F      Distance_F                  NA                   NA
+ 7 Ebba Andersson     1789                   23.7 F      Distance_F                  NA                   NA
+ 8 Astrid Øyre Slind   115                   23.4 F      Distance_F                  NA                   NA
+ 9 Flora Dolci        2483                   21.1 F      Distance_F                  NA                   NA
+10 Kerttu Niskanen      37                   18.3 F      Distance_F                  NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_WC_Sprint_C
+# A tibble: 137 × 7
+   Skier                      ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Jonna Sundling           1486                82.6 F      Sprint_C                      NA                   NA
+ 2 Julie Myhre              1841                70.4 F      Sprint_C                      NA                   NA
+ 3 Kristine Stavås Skistad  3207                68.9 F      Sprint_C                      NA                   NA
+ 4 Linn Svahn               3190                68.6 F      Sprint_C                      NA                   NA
+ 5 Johanna Hagström         3212                68.3 F      Sprint_C                      NA                   NA
+ 6 Maja Dahlqvist           1673                60.9 F      Sprint_C                      NA                   NA
+ 7 Emma Ribom               1844                58.4 F      Sprint_C                      NA                   NA
+ 8 Jasmi Joensuu            1675                56.8 F      Sprint_C                      NA                   NA
+ 9 Coletta Rydzek           3254                56.6 F      Sprint_C                      NA                   NA
+10 Laura Gimmler            1495                55.3 F      Sprint_C                      NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_Stage_Sprint_C
+# A tibble: 137 × 7
+   Skier                      ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Jonna Sundling           1486                   39.2 F      Sprint_C                   NA                   NA
+ 2 Kristine Stavås Skistad  3207                   32   F      Sprint_C                   NA                   NA
+ 3 Linn Svahn               3190                   31.8 F      Sprint_C                   NA                   NA
+ 4 Julie Myhre              1841                   27.6 F      Sprint_C                   NA                   NA
+ 5 Emma Ribom               1844                   26.7 F      Sprint_C                   NA                   NA
+ 6 Johanna Hagström         3212                   26.6 F      Sprint_C                   NA                   NA
+ 7 Maja Dahlqvist           1673                   23.1 F      Sprint_C                   NA                   NA
+ 8 Laura Gimmler            1495                   21.3 F      Sprint_C                   NA                   NA
+ 9 Jasmi Joensuu            1675                   21.2 F      Sprint_C                   NA                   NA
+10 Coletta Rydzek           3254                   21.1 F      Sprint_C                   NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_WC_Sprint_F
+# A tibble: 137 × 7
+   Skier                      ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Jonna Sundling           1486                78.4 F      Sprint_F                      NA                   NA
+ 2 Johanna Hagström         3212                67.1 F      Sprint_F                      NA                   NA
+ 3 Linn Svahn               3190                65.3 F      Sprint_F                      NA                   NA
+ 4 Maja Dahlqvist           1673                65.3 F      Sprint_F                      NA                   NA
+ 5 Mathilde Myhrvold        2298                61.8 F      Sprint_F                      NA                   NA
+ 6 Jessie Diggins            131                60.2 F      Sprint_F                      NA                   NA
+ 7 Julie Myhre              1841                59.9 F      Sprint_F                      NA                   NA
+ 8 Kristine Stavås Skistad  3207                59.7 F      Sprint_F                      NA                   NA
+ 9 Jasmi Joensuu            1675                58.8 F      Sprint_F                      NA                   NA
+10 Coletta Rydzek           3254                56.4 F      Sprint_F                      NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_Stage_Sprint_F
+# A tibble: 137 × 7
+   Skier                      ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Jonna Sundling           1486                   39   F      Sprint_F                   NA                   NA
+ 2 Maja Dahlqvist           1673                   30.6 F      Sprint_F                   NA                   NA
+ 3 Linn Svahn               3190                   29   F      Sprint_F                   NA                   NA
+ 4 Jessie Diggins            131                   28.1 F      Sprint_F                   NA                   NA
+ 5 Johanna Hagström         3212                   27.2 F      Sprint_F                   NA                   NA
+ 6 Kristine Stavås Skistad  3207                   24.5 F      Sprint_F                   NA                   NA
+ 7 Victoria Carl            1489                   23.2 F      Sprint_F                   NA                   NA
+ 8 Jasmi Joensuu            1675                   21.3 F      Sprint_F                   NA                   NA
+ 9 Nadine Fähndrich         1590                   20.9 F      Sprint_F                   NA                   NA
+10 Coletta Rydzek           3254                   20.8 F      Sprint_F                   NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_TDS
+# A tibble: 203 × 7
+   Skier                      ID predicted_tds_points wc_predicted_points stage_predicted_points gender race_type
+   <chr>                   <int>            <dbl[1d]>               <dbl>                  <dbl> <chr>  <chr>    
+ 1 Martin Løwstrøm Nyenget  2295                 325.                  NA                     NA M      TDS      
+ 2 Simen Hegstad Krüger     2355                 325.                  NA                     NA M      TDS      
+ 3 Hugo Lapalus             6018                 261.                  NA                     NA M      TDS      
+ 4 Jan Thomas Jenssen       5406                 255.                  NA                     NA M      TDS      
+ 5 Johannes Høsflot Klæbo   5164                 254.                  NA                     NA M      TDS      
+ 6 Friedrich Moch           9323                 253.                  NA                     NA M      TDS      
+ 7 Iivo Niskanen            1470                 243.                  NA                     NA M      TDS      
+ 8 Harald Østberg Amundsen  5449                 237.                  NA                     NA M      TDS      
+ 9 Andreas Fjorden Ree      8678                 226.                  NA                     NA M      TDS      
+10 Didrik Tønseth           1446                 210.                  NA                     NA M      TDS      
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_TDS
+# A tibble: 137 × 7
+   Skier                ID predicted_tds_points wc_predicted_points stage_predicted_points gender race_type
+   <chr>             <int>            <dbl[1d]>               <dbl>                  <dbl> <chr>  <chr>    
+ 1 Therese Johaug        4                 287.                  NA                     NA F      TDS      
+ 2 Heidi Weng           60                 243.                  NA                     NA F      TDS      
+ 3 Ebba Andersson     1789                 232.                  NA                     NA F      TDS      
+ 4 Frida Karlsson     3998                 222.                  NA                     NA F      TDS      
+ 5 Astrid Øyre Slind   115                 214.                  NA                     NA F      TDS      
+ 6 Jessie Diggins      131                 209.                  NA                     NA F      TDS      
+ 7 Jonna Sundling     1486                 209.                  NA                     NA F      TDS      
+ 8 Kerttu Niskanen      37                 205.                  NA                     NA F      TDS      
+ 9 Victoria Carl      1489                 197.                  NA                     NA F      TDS      
+10 Krista Pärmäkoski    13                 195.                  NA                     NA F      TDS      
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+
+Processing male skier: Harald Østberg Amundsen 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+
+Processing male skier: Johannes Høsflot Klæbo 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing male skier: Martin Løwstrøm Nyenget 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 2
+
+Processing male skier: Simen Hegstad Krüger 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 7
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing male skier: Erik Valnes 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+
+Processing male skier: Iivo Niskanen 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+
+Processing male skier: Andreas Fjorden Ree 
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+Called from: mapply(FUN = function(place) {
+    if (is.na(place)) return(0)
+    if (place <= length(stage_points)) stage_points[place] else 0
+}, place = c(16L, 4L, 9L, 7L, 0L, 8L, 13L, 11L, 7L, 23L, 8L, 
+1L, 24L, 9L, 23L, 5L, 0L, 8L, 4L, 3L, 15L, 4L, 4L, 11L, 5L, 21L, 
+8L, 27L, 3L, 0L, 24L, 4L, 7L, 5L, 5L, 5L, 12L, 7L, 6L, 10L, 0L, 
+61L, 14L, 12L, 8L, 3L, 11L, 4L, 19L, 0L, 7L, 4L, 6L, 2L, 2L, 
+2L, 2L, 1L, 1L, 5L, 1L, 6L, 2L, 1L, 20L, 0L, 27L, 8L, 32L, 4L, 
+2L, 14L, 1L, 0L, 2L, 7L, 1L, 5L, 2L, 1L, 13L, 0L, 2L, 3L, 13L, 
+18L, 1L, 1L, 16L, 5L, 12L, 1L, 30L, 0L, 6L, 3L, 11L, 25L, 4L, 
+7L, 2L, 20L, 11L, 12L, 1L, 2L, 12L, 1L, 4L, 1L, 1L, 0L, 23L, 
+16L, 36L, 30L, 30L, 19L, 14L, 18L, 1L, 41L, 10L, 58L, 44L, 0L, 
+35L, 0L, 21L, 12L, 20L, 23L, 31L, 7L, 1L, 15L, 10L, 2L, 0L, 11L, 
+23L, 41L, 5L, 22L, 8L, 3L, 8L, 30L, 4L, 34L, 5L, 5L, 24L, 1L, 
+7L, 37L, 12L, 23L, 0L, 4L, 22L, 29L, 29L, 11L, 5L, 27L, 23L, 
+1L, 13L, 25L, 8L, 30L, 22L, 42L, 9L, 45L, 11L, 15L, 32L, 8L, 
+8L, 10L, 6L, 0L, 3L, 1L, 55L, 19L, 3L, 9L, 7L, 28L, 1L, 8L, 13L, 
+2L, 12L, 15L, 29L, 1L, 1L, 1L, 7L, 2L, 5L, 19L, 7L, 19L, 12L, 
+4L, 0L, 4L, 1L, 21L, 2L, 1L, 1L, 1L, 1L, 2L, 45L, 1L, 3L, 2L, 
+16L, 2L, 41L, 3L, 11L, 1L, 2L, 1L, 2L, 4L, 1L, 1L, 8L, 0L, 13L, 
+  ...
+
+> # Load required libraries
+> library(arrow)  # for reading feather files
+
+> library(readxl) # for reading Excel files
+
+> library(tidyverse)
+
+> # Define file paths
+> men_chrono_path <- "~/ski/elo/python/ski/polars/excel365/men_chrono.csv"
+
+> ladies_chrono_path <- "~/ski/elo/python/ski/polars/excel365/ladies_chrono.csv"
+
+> men_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/men-points.xlsx"
+
+> ladies_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/ladies-points.xlsx"
+
+> # Read the feather files
+> men_chrono <- read.csv(men_chrono_path)
+
+> ladies_chrono <- read.csv(ladies_chrono_path)
+-/                                                                                                                                                  /                                                                                                                                                  -                                                                                                                                                  -/                                                                                                                                                  /                                                                                                                                                  -                                                                                                                                                  $men_chrono
+[1] 94899    35
+
+$ladies_chrono
+[1] 69398    35
+
+$men_points
+[1] 136   6
+
+$ladies_points
+[1] 83  6
+
+[1] "RMSE: 16.71"
+[1] "MAE: 11.67"
+[1] "MSE: 279.28"
+[1] "RMSE: 22.19"
+[1] "MAE: 15.56"
+[1] "MSE: 492.43"
+[1] "RMSE: 20.08"
+[1] "MAE: 13.42"
+[1] "MSE: 403.28"
+[1] "RMSE: 25.54"
+[1] "MAE: 22.49"
+[1] "MSE: 652.45"
+$men
+# A tibble: 145 × 8
+   Skier                   Nation        `Before Elo` `After Elo` `Elo Difference` `Predicted Points` `Total Points` `Points Difference`
+   <chr>                   <chr>                <dbl>       <dbl>            <dbl>              <dbl>          <dbl>               <dbl>
+ 1 Harald Østberg Amundsen Norway               1774.       1856.           81.8                 85.2            256               171. 
+ 2 Martin Løwstrøm Nyenget Norway               1786.       1863.           77.0                 72.7            190               117. 
+ 3 Simen Hegstad Krüger    Norway               1727.       1819.           91.5                 44.1            180               136. 
+ 4 Johannes Høsflot Klæbo  Norway               1881.       1901.           20.1                157.             169                11.8
+ 5 Andreas Fjorden Ree     Norway               1609.       1732.          123.                  33.8            152               118. 
+ 6 Jan Thomas Jenssen      Norway               1670.       1757.           87.3                 NA              151                NA  
+ 7 Andrew Musgrave         Great Britain        1468.       1658.          190.                  32.2            135               103. 
+ 8 Gus Schumacher          USA                  1653.       1653.           -0.595               63.1            132                68.9
+ 9 Pål Golberg             Norway               1713.       1752.           39.6                 63.9            126                62.1
+10 Friedrich Moch          Germany              1647.       1696.           48.6                 45.4            120                74.6
+# ℹ 135 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$ladies
+# A tibble: 105 × 8
+   Skier                    Nation  `Before Elo` `After Elo` `Elo Difference` `Predicted Points` `Total Points` `Points Difference`
+   <chr>                    <chr>          <dbl>       <dbl>            <dbl>              <dbl>          <dbl>               <dbl>
+ 1 Jessie Diggins           USA            1694.       1775.             81.1              117.             239               122. 
+ 2 Victoria Carl            Germany        1691.       1758.             66.8               80.2            223               143. 
+ 3 Therese Johaug           Norway         1845.       1897.             52.8               82.4            200               118. 
+ 4 Heidi Weng               Norway         1733.       1809.             76.2               NA              190                NA  
+ 5 Jonna Sundling           Sweden         1784.       1826.             42.3               83.7            175                91.3
+ 6 Astrid Øyre Slind        Norway         1612.       1716.            104.                62.3            170               108. 
+ 7 Ebba Andersson           Sweden         1717.       1769.             52.7               NA              157                NA  
+ 8 Pia Fink                 Germany        1541.       1586.             45.1               32.7            152               119. 
+ 9 Katerina Janatova        Czechia        1470.       1526.             55.5               69.0            143                74.0
+10 Kristin Austgulen Fosnæs Norway         1524.       1624.            100.                34.9            129                94.1
+# ℹ 95 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+[1] "Men's Sprint:"
+$rmse
+[1] 16.71162
+
+$mae
+[1] 11.6669
+
+$mse
+[1] 279.2782
+
+[1] "\nLadies' Distance C:"
+$rmse
+[1] 22.19084
+
+$mae
+[1] 15.55705
+
+$mse
+[1] 492.4333
+
+[1] "\nMen's Sprint C:"
+$rmse
+[1] 20.08186
+
+$mae
+[1] 13.4152
+
+$mse
+[1] 403.281
+
+[1] "\nLadies' Sprint C:"
+$rmse
+[1] 25.54317
+
+$mae
+[1] 22.49484
+
+$mse
+[1] 652.4536
+
+[1] "Men's Combined Metrics:"
+[1] "RMSE: 18.23"
+[1] "MAE: 12.41"
+[1] "MSE: 332.2"
+[1] "\nLadies' Combined Metrics:"
+[1] "RMSE: 23.55"
+[1] "MAE: 18.24"
+[1] "MSE: 554.38"
+
+Processing Men's WC Distance ...
+
+Processing Men's Stage Distance ...
+
+Processing Men's WC Distance_C ...
+
+Processing Men's Stage Distance_C ...
+
+Processing Men's WC Distance_F ...
+
+Processing Men's Stage Distance_F ...
+
+Processing Men's WC Sprint_C ...
+
+Processing Men's Stage Sprint_C ...
+
+Processing Men's WC Sprint_F ...
+
+Processing Men's Stage Sprint_F ...
+
+Processing Women's WC Distance ...
+
+Processing Women's Stage Distance ...
+
+Processing Women's WC Distance_C ...
+
+Processing Women's Stage Distance_C ...
+
+Processing Women's WC Distance_F ...
+
+Processing Women's Stage Distance_F ...
+
+Processing Women's WC Sprint_C ...
+
+Processing Women's Stage Sprint_C ...
+
+Processing Women's WC Sprint_F ...
+
+Processing Women's Stage Sprint_F ...
+
+Processing Men's Tour de Ski...
+
+Processing Women's Tour de Ski...
+# A tibble: 340 × 7
+   Skier                  ID gender race_type wc_predicted_points stage_predicted_points tds_predicted_points
+   <chr>               <int> <chr>  <chr>                   <dbl>                  <dbl>                <dbl>
+ 1 Adam Büki            8078 M      Distance                 -3.1                   -0.4                -85.9
+ 2 Adam Fellner         2162 M      Distance                 11.1                    1.5                 77.9
+ 3 Adam Konya           2259 M      Distance                 -1.8                   -0.1                -65.5
+ 4 Alayna Sonnesyn      1872 F      Distance                  9.1                    1.9                 46.9
+ 5 Albert Kuchler       8048 M      Distance                 25.2                    4.9                113. 
+ 6 Aleksander Holmboe  12900 M      Distance                 56.1                   21.3                 90.8
+ 7 Aleksi Parttimaa     5631 M      Distance                  7                      1.6                 56.7
+ 8 Alexander Ståhlberg 12449 M      Distance                  6.6                    1.5                 52.5
+ 9 Alvar Johannes Alev  1996 M      Distance                 27.6                    7.2                159. 
+10 Alvar Myhlback      19652 M      Distance                  7.8                    1.2                 64.4
+# ℹ 330 more rows
+# ℹ Use `print(n = ...)` to see more rows
+$M_WC_Distance
+# A tibble: 203 × 7
+   Skier                      ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Martin Løwstrøm Nyenget  2295                85.1 M      Distance                      NA                   NA
+ 2 Harald Østberg Amundsen  5449                83.9 M      Distance                      NA                   NA
+ 3 Johannes Høsflot Klæbo   5164                81.5 M      Distance                      NA                   NA
+ 4 Simen Hegstad Krüger     2355                74.8 M      Distance                      NA                   NA
+ 5 Iivo Niskanen            1470                70   M      Distance                      NA                   NA
+ 6 Andreas Fjorden Ree      8678                63.1 M      Distance                      NA                   NA
+ 7 Hugo Lapalus             6018                59.2 M      Distance                      NA                   NA
+ 8 Jan Thomas Jenssen       5406                59.2 M      Distance                      NA                   NA
+ 9 Pål Golberg                88                57.7 M      Distance                      NA                   NA
+10 Erik Valnes              5923                57.1 M      Distance                      NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_Stage_Distance
+# A tibble: 203 × 7
+   Skier                      ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Martin Løwstrøm Nyenget  2295                   40.2 M      Distance                   NA                   NA
+ 2 Harald Østberg Amundsen  5449                   39.5 M      Distance                   NA                   NA
+ 3 Johannes Høsflot Klæbo   5164                   38.3 M      Distance                   NA                   NA
+ 4 Simen Hegstad Krüger     2355                   34.2 M      Distance                   NA                   NA
+ 5 Iivo Niskanen            1470                   29.7 M      Distance                   NA                   NA
+ 6 Andreas Fjorden Ree      8678                   26.1 M      Distance                   NA                   NA
+ 7 Jan Thomas Jenssen       5406                   24.4 M      Distance                   NA                   NA
+ 8 Hugo Lapalus             6018                   23.7 M      Distance                   NA                   NA
+ 9 Pål Golberg                88                   23   M      Distance                   NA                   NA
+10 Erik Valnes              5923                   22.8 M      Distance                   NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_WC_Distance_C
+# A tibble: 203 × 7
+   Skier                      ID wc_predicted_points gender race_type  stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                       <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                87   M      Distance_C                     NA                   NA
+ 2 Martin Løwstrøm Nyenget  2295                83.2 M      Distance_C                     NA                   NA
+ 3 Iivo Niskanen            1470                76.1 M      Distance_C                     NA                   NA
+ 4 Harald Østberg Amundsen  5449                75   M      Distance_C                     NA                   NA
+ 5 Pål Golberg                88                64.1 M      Distance_C                     NA                   NA
+ 6 Erik Valnes              5923                62   M      Distance_C                     NA                   NA
+ 7 Simen Hegstad Krüger     2355                62   M      Distance_C                     NA                   NA
+ 8 Hugo Lapalus             6018                60.7 M      Distance_C                     NA                   NA
+ 9 Andreas Fjorden Ree      8678                56.8 M      Distance_C                     NA                   NA
+10 Friedrich Moch           9323                53.6 M      Distance_C                     NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_Stage_Distance_C
+# A tibble: 203 × 7
+   Skier                      ID stage_predicted_points gender race_type  wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                    <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                   41.8 M      Distance_C                  NA                   NA
+ 2 Martin Løwstrøm Nyenget  2295                   38.8 M      Distance_C                  NA                   NA
+ 3 Iivo Niskanen            1470                   33.6 M      Distance_C                  NA                   NA
+ 4 Harald Østberg Amundsen  5449                   33.2 M      Distance_C                  NA                   NA
+ 5 Pål Golberg                88                   26.7 M      Distance_C                  NA                   NA
+ 6 Simen Hegstad Krüger     2355                   26   M      Distance_C                  NA                   NA
+ 7 Erik Valnes              5923                   25.7 M      Distance_C                  NA                   NA
+ 8 Hugo Lapalus             6018                   24.1 M      Distance_C                  NA                   NA
+ 9 Andreas Fjorden Ree      8678                   21.9 M      Distance_C                  NA                   NA
+10 William Poromaa         12573                   19.8 M      Distance_C                  NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_WC_Distance_F
+# A tibble: 203 × 7
+   Skier                      ID wc_predicted_points gender race_type  stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                       <dbl>                <dbl>
+ 1 Harald Østberg Amundsen  5449                82.8 M      Distance_F                     NA                   NA
+ 2 Simen Hegstad Krüger     2355                82.3 M      Distance_F                     NA                   NA
+ 3 Martin Løwstrøm Nyenget  2295                78.7 M      Distance_F                     NA                   NA
+ 4 Johannes Høsflot Klæbo   5164                73.3 M      Distance_F                     NA                   NA
+ 5 Andreas Fjorden Ree      8678                69.4 M      Distance_F                     NA                   NA
+ 6 Iver Tildheim Andersen   8590                63.7 M      Distance_F                     NA                   NA
+ 7 Friedrich Moch           9323                62.8 M      Distance_F                     NA                   NA
+ 8 Jan Thomas Jenssen       5406                62.5 M      Distance_F                     NA                   NA
+ 9 Mika Vermeulen          12673                59   M      Distance_F                     NA                   NA
+10 Iivo Niskanen            1470                55.6 M      Distance_F                     NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_Stage_Distance_F
+# A tibble: 203 × 7
+   Skier                      ID stage_predicted_points gender race_type  wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                    <dbl>                <dbl>
+ 1 Simen Hegstad Krüger     2355                   40.3 M      Distance_F                  NA                   NA
+ 2 Martin Løwstrøm Nyenget  2295                   37.2 M      Distance_F                  NA                   NA
+ 3 Harald Østberg Amundsen  5449                   36.7 M      Distance_F                  NA                   NA
+ 4 Andreas Fjorden Ree      8678                   32.6 M      Distance_F                  NA                   NA
+ 5 Johannes Høsflot Klæbo   5164                   32.6 M      Distance_F                  NA                   NA
+ 6 Friedrich Moch           9323                   28.4 M      Distance_F                  NA                   NA
+ 7 Iver Tildheim Andersen   8590                   26.7 M      Distance_F                  NA                   NA
+ 8 Jan Thomas Jenssen       5406                   24.1 M      Distance_F                  NA                   NA
+ 9 Mika Vermeulen          12673                   23.9 M      Distance_F                  NA                   NA
+10 Didrik Tønseth           1446                   22.2 M      Distance_F                  NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_WC_Sprint_C
+# A tibble: 203 × 7
+   Skier                      ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                81.8 M      Sprint_C                      NA                   NA
+ 2 Even Northug             3590                75.3 M      Sprint_C                      NA                   NA
+ 3 Erik Valnes              5923                73.4 M      Sprint_C                      NA                   NA
+ 4 Harald Østberg Amundsen  5449                63.4 M      Sprint_C                      NA                   NA
+ 5 Lucas Chanavat           3582                57.8 M      Sprint_C                      NA                   NA
+ 6 Pål Golberg                88                54.3 M      Sprint_C                      NA                   NA
+ 7 Lauri Vuorinen           2874                53.4 M      Sprint_C                      NA                   NA
+ 8 Oskar Opstad Vike       19279                52.1 M      Sprint_C                      NA                   NA
+ 9 Ansgar Evensen           8246                51.7 M      Sprint_C                      NA                   NA
+10 Edvin Anger             14039                51.6 M      Sprint_C                      NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_Stage_Sprint_C
+# A tibble: 203 × 7
+   Skier                      ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                   38.8 M      Sprint_C                   NA                   NA
+ 2 Even Northug             3590                   33.6 M      Sprint_C                   NA                   NA
+ 3 Erik Valnes              5923                   33.3 M      Sprint_C                   NA                   NA
+ 4 Harald Østberg Amundsen  5449                   26.8 M      Sprint_C                   NA                   NA
+ 5 Lucas Chanavat           3582                   23.1 M      Sprint_C                   NA                   NA
+ 6 Pål Golberg                88                   21.1 M      Sprint_C                   NA                   NA
+ 7 Ansgar Evensen           8246                   21   M      Sprint_C                   NA                   NA
+ 8 Lauri Vuorinen           2874                   20.5 M      Sprint_C                   NA                   NA
+ 9 Oskar Opstad Vike       19279                   20.1 M      Sprint_C                   NA                   NA
+10 Richard Jouve            2768                   19.7 M      Sprint_C                   NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_WC_Sprint_F
+# A tibble: 203 × 7
+   Skier                      ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                91.5 M      Sprint_F                      NA                   NA
+ 2 Even Northug             3590                74.6 M      Sprint_F                      NA                   NA
+ 3 Lucas Chanavat           3582                68.5 M      Sprint_F                      NA                   NA
+ 4 Erik Valnes              5923                62.4 M      Sprint_F                      NA                   NA
+ 5 Edvin Anger             14039                61   M      Sprint_F                      NA                   NA
+ 6 Ben Ogden                9179                59.1 M      Sprint_F                      NA                   NA
+ 7 Valerio Grond           12164                59   M      Sprint_F                      NA                   NA
+ 8 Harald Østberg Amundsen  5449                57   M      Sprint_F                      NA                   NA
+ 9 Aleksander Holmboe      12900                56.1 M      Sprint_F                      NA                   NA
+10 Federico Pellegrino        44                55.3 M      Sprint_F                      NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_Stage_Sprint_F
+# A tibble: 203 × 7
+   Skier                      ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Johannes Høsflot Klæbo   5164                   42   M      Sprint_F                   NA                   NA
+ 2 Even Northug             3590                   32.7 M      Sprint_F                   NA                   NA
+ 3 Lucas Chanavat           3582                   28.6 M      Sprint_F                   NA                   NA
+ 4 Erik Valnes              5923                   27.3 M      Sprint_F                   NA                   NA
+ 5 Edvin Anger             14039                   25.1 M      Sprint_F                   NA                   NA
+ 6 Ben Ogden                9179                   23.6 M      Sprint_F                   NA                   NA
+ 7 Valerio Grond           12164                   23.4 M      Sprint_F                   NA                   NA
+ 8 Harald Østberg Amundsen  5449                   22.9 M      Sprint_F                   NA                   NA
+ 9 Federico Pellegrino        44                   21.9 M      Sprint_F                   NA                   NA
+10 Aleksander Holmboe      12900                   21.3 M      Sprint_F                   NA                   NA
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_WC_Distance
+# A tibble: 137 × 7
+   Skier                ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>             <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Therese Johaug        4                90   F      Distance                      NA                   NA
+ 2 Heidi Weng           60                81.2 F      Distance                      NA                   NA
+ 3 Jessie Diggins      131                76.2 F      Distance                      NA                   NA
+ 4 Jonna Sundling     1486                70.1 F      Distance                      NA                   NA
+ 5 Frida Karlsson     3998                68.1 F      Distance                      NA                   NA
+ 6 Astrid Øyre Slind   115                67.3 F      Distance                      NA                   NA
+ 7 Ebba Andersson     1789                64.7 F      Distance                      NA                   NA
+ 8 Victoria Carl      1489                64.3 F      Distance                      NA                   NA
+ 9 Katharina Hennig   1618                57.6 F      Distance                      NA                   NA
+10 Teresa Stadlober    529                56.4 F      Distance                      NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_Stage_Distance
+# A tibble: 137 × 7
+   Skier                ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>             <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Therese Johaug        4                   44.5 F      Distance                   NA                   NA
+ 2 Heidi Weng           60                   36.8 F      Distance                   NA                   NA
+ 3 Jessie Diggins      131                   34.1 F      Distance                   NA                   NA
+ 4 Jonna Sundling     1486                   31.7 F      Distance                   NA                   NA
+ 5 Astrid Øyre Slind   115                   29.7 F      Distance                   NA                   NA
+ 6 Frida Karlsson     3998                   29.4 F      Distance                   NA                   NA
+ 7 Victoria Carl      1489                   28   F      Distance                   NA                   NA
+ 8 Ebba Andersson     1789                   27.6 F      Distance                   NA                   NA
+ 9 Katharina Hennig   1618                   22.7 F      Distance                   NA                   NA
+10 Teresa Stadlober    529                   21.5 F      Distance                   NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_WC_Distance_C
+# A tibble: 137 × 7
+   Skier                ID wc_predicted_points gender race_type  stage_predicted_points predicted_tds_points
+   <chr>             <int>           <dbl[1d]> <chr>  <chr>                       <dbl>                <dbl>
+ 1 Therese Johaug        4                94.2 F      Distance_C                     NA                   NA
+ 2 Frida Karlsson     3998                75.7 F      Distance_C                     NA                   NA
+ 3 Ebba Andersson     1789                71.4 F      Distance_C                     NA                   NA
+ 4 Heidi Weng           60                71.4 F      Distance_C                     NA                   NA
+ 5 Astrid Øyre Slind   115                69.2 F      Distance_C                     NA                   NA
+ 6 Jonna Sundling     1486                68.2 F      Distance_C                     NA                   NA
+ 7 Victoria Carl      1489                67   F      Distance_C                     NA                   NA
+ 8 Jessie Diggins      131                66.6 F      Distance_C                     NA                   NA
+ 9 Teresa Stadlober    529                65.8 F      Distance_C                     NA                   NA
+10 Kerttu Niskanen      37                65.6 F      Distance_C                     NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_Stage_Distance_C
+# A tibble: 137 × 7
+   Skier                ID stage_predicted_points gender race_type  wc_predicted_points predicted_tds_points
+   <chr>             <int>              <dbl[1d]> <chr>  <chr>                    <dbl>                <dbl>
+ 1 Therese Johaug        4                   46.2 F      Distance_C                  NA                   NA
+ 2 Frida Karlsson     3998                   34   F      Distance_C                  NA                   NA
+ 3 Ebba Andersson     1789                   31.6 F      Distance_C                  NA                   NA
+ 4 Heidi Weng           60                   31.4 F      Distance_C                  NA                   NA
+ 5 Astrid Øyre Slind   115                   29.9 F      Distance_C                  NA                   NA
+ 6 Jonna Sundling     1486                   29.8 F      Distance_C                  NA                   NA
+ 7 Jessie Diggins      131                   28.5 F      Distance_C                  NA                   NA
+ 8 Victoria Carl      1489                   28.5 F      Distance_C                  NA                   NA
+ 9 Kerttu Niskanen      37                   28   F      Distance_C                  NA                   NA
+10 Teresa Stadlober    529                   27.9 F      Distance_C                  NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_WC_Distance_F
+# A tibble: 137 × 7
+   Skier                ID wc_predicted_points gender race_type  stage_predicted_points predicted_tds_points
+   <chr>             <int>           <dbl[1d]> <chr>  <chr>                       <dbl>                <dbl>
+ 1 Jessie Diggins      131                84.8 F      Distance_F                     NA                   NA
+ 2 Therese Johaug        4                84.4 F      Distance_F                     NA                   NA
+ 3 Heidi Weng           60                72.9 F      Distance_F                     NA                   NA
+ 4 Jonna Sundling     1486                66   F      Distance_F                     NA                   NA
+ 5 Victoria Carl      1489                64.9 F      Distance_F                     NA                   NA
+ 6 Frida Karlsson     3998                59.1 F      Distance_F                     NA                   NA
+ 7 Ebba Andersson     1789                56.7 F      Distance_F                     NA                   NA
+ 8 Astrid Øyre Slind   115                55.5 F      Distance_F                     NA                   NA
+ 9 Flora Dolci        2483                52.9 F      Distance_F                     NA                   NA
+10 Kerttu Niskanen      37                50.6 F      Distance_F                     NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_Stage_Distance_F
+# A tibble: 137 × 7
+   Skier                ID stage_predicted_points gender race_type  wc_predicted_points predicted_tds_points
+   <chr>             <int>              <dbl[1d]> <chr>  <chr>                    <dbl>                <dbl>
+ 1 Therese Johaug        4                   42   F      Distance_F                  NA                   NA
+ 2 Jessie Diggins      131                   39.8 F      Distance_F                  NA                   NA
+ 3 Heidi Weng           60                   33.6 F      Distance_F                  NA                   NA
+ 4 Jonna Sundling     1486                   28.7 F      Distance_F                  NA                   NA
+ 5 Victoria Carl      1489                   27.1 F      Distance_F                  NA                   NA
+ 6 Frida Karlsson     3998                   26.1 F      Distance_F                  NA                   NA
+ 7 Ebba Andersson     1789                   23.7 F      Distance_F                  NA                   NA
+ 8 Astrid Øyre Slind   115                   23.4 F      Distance_F                  NA                   NA
+ 9 Flora Dolci        2483                   21.1 F      Distance_F                  NA                   NA
+10 Kerttu Niskanen      37                   18.3 F      Distance_F                  NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_WC_Sprint_C
+# A tibble: 137 × 7
+   Skier                      ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Jonna Sundling           1486                82.6 F      Sprint_C                      NA                   NA
+ 2 Julie Myhre              1841                70.4 F      Sprint_C                      NA                   NA
+ 3 Kristine Stavås Skistad  3207                68.9 F      Sprint_C                      NA                   NA
+ 4 Linn Svahn               3190                68.6 F      Sprint_C                      NA                   NA
+ 5 Johanna Hagström         3212                68.3 F      Sprint_C                      NA                   NA
+ 6 Maja Dahlqvist           1673                60.9 F      Sprint_C                      NA                   NA
+ 7 Emma Ribom               1844                58.4 F      Sprint_C                      NA                   NA
+ 8 Jasmi Joensuu            1675                56.8 F      Sprint_C                      NA                   NA
+ 9 Coletta Rydzek           3254                56.6 F      Sprint_C                      NA                   NA
+10 Laura Gimmler            1495                55.3 F      Sprint_C                      NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_Stage_Sprint_C
+# A tibble: 137 × 7
+   Skier                      ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Jonna Sundling           1486                   39.2 F      Sprint_C                   NA                   NA
+ 2 Kristine Stavås Skistad  3207                   32   F      Sprint_C                   NA                   NA
+ 3 Linn Svahn               3190                   31.8 F      Sprint_C                   NA                   NA
+ 4 Julie Myhre              1841                   27.6 F      Sprint_C                   NA                   NA
+ 5 Emma Ribom               1844                   26.7 F      Sprint_C                   NA                   NA
+ 6 Johanna Hagström         3212                   26.6 F      Sprint_C                   NA                   NA
+ 7 Maja Dahlqvist           1673                   23.1 F      Sprint_C                   NA                   NA
+ 8 Laura Gimmler            1495                   21.3 F      Sprint_C                   NA                   NA
+ 9 Jasmi Joensuu            1675                   21.2 F      Sprint_C                   NA                   NA
+10 Coletta Rydzek           3254                   21.1 F      Sprint_C                   NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_WC_Sprint_F
+# A tibble: 137 × 7
+   Skier                      ID wc_predicted_points gender race_type stage_predicted_points predicted_tds_points
+   <chr>                   <int>           <dbl[1d]> <chr>  <chr>                      <dbl>                <dbl>
+ 1 Jonna Sundling           1486                78.4 F      Sprint_F                      NA                   NA
+ 2 Johanna Hagström         3212                67.1 F      Sprint_F                      NA                   NA
+ 3 Linn Svahn               3190                65.3 F      Sprint_F                      NA                   NA
+ 4 Maja Dahlqvist           1673                65.3 F      Sprint_F                      NA                   NA
+ 5 Mathilde Myhrvold        2298                61.8 F      Sprint_F                      NA                   NA
+ 6 Jessie Diggins            131                60.2 F      Sprint_F                      NA                   NA
+ 7 Julie Myhre              1841                59.9 F      Sprint_F                      NA                   NA
+ 8 Kristine Stavås Skistad  3207                59.7 F      Sprint_F                      NA                   NA
+ 9 Jasmi Joensuu            1675                58.8 F      Sprint_F                      NA                   NA
+10 Coletta Rydzek           3254                56.4 F      Sprint_F                      NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_Stage_Sprint_F
+# A tibble: 137 × 7
+   Skier                      ID stage_predicted_points gender race_type wc_predicted_points predicted_tds_points
+   <chr>                   <int>              <dbl[1d]> <chr>  <chr>                   <dbl>                <dbl>
+ 1 Jonna Sundling           1486                   39   F      Sprint_F                   NA                   NA
+ 2 Maja Dahlqvist           1673                   30.6 F      Sprint_F                   NA                   NA
+ 3 Linn Svahn               3190                   29   F      Sprint_F                   NA                   NA
+ 4 Jessie Diggins            131                   28.1 F      Sprint_F                   NA                   NA
+ 5 Johanna Hagström         3212                   27.2 F      Sprint_F                   NA                   NA
+ 6 Kristine Stavås Skistad  3207                   24.5 F      Sprint_F                   NA                   NA
+ 7 Victoria Carl            1489                   23.2 F      Sprint_F                   NA                   NA
+ 8 Jasmi Joensuu            1675                   21.3 F      Sprint_F                   NA                   NA
+ 9 Nadine Fähndrich         1590                   20.9 F      Sprint_F                   NA                   NA
+10 Coletta Rydzek           3254                   20.8 F      Sprint_F                   NA                   NA
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$M_TDS
+# A tibble: 203 × 7
+   Skier                      ID predicted_tds_points wc_predicted_points stage_predicted_points gender race_type
+   <chr>                   <int>            <dbl[1d]>               <dbl>                  <dbl> <chr>  <chr>    
+ 1 Martin Løwstrøm Nyenget  2295                 325.                  NA                     NA M      TDS      
+ 2 Simen Hegstad Krüger     2355                 325.                  NA                     NA M      TDS      
+ 3 Hugo Lapalus             6018                 261.                  NA                     NA M      TDS      
+ 4 Jan Thomas Jenssen       5406                 255.                  NA                     NA M      TDS      
+ 5 Johannes Høsflot Klæbo   5164                 254.                  NA                     NA M      TDS      
+ 6 Friedrich Moch           9323                 253.                  NA                     NA M      TDS      
+ 7 Iivo Niskanen            1470                 243.                  NA                     NA M      TDS      
+ 8 Harald Østberg Amundsen  5449                 237.                  NA                     NA M      TDS      
+ 9 Andreas Fjorden Ree      8678                 226.                  NA                     NA M      TDS      
+10 Didrik Tønseth           1446                 210.                  NA                     NA M      TDS      
+# ℹ 193 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+$F_TDS
+# A tibble: 137 × 7
+   Skier                ID predicted_tds_points wc_predicted_points stage_predicted_points gender race_type
+   <chr>             <int>            <dbl[1d]>               <dbl>                  <dbl> <chr>  <chr>    
+ 1 Therese Johaug        4                 287.                  NA                     NA F      TDS      
+ 2 Heidi Weng           60                 243.                  NA                     NA F      TDS      
+ 3 Ebba Andersson     1789                 232.                  NA                     NA F      TDS      
+ 4 Frida Karlsson     3998                 222.                  NA                     NA F      TDS      
+ 5 Astrid Øyre Slind   115                 214.                  NA                     NA F      TDS      
+ 6 Jessie Diggins      131                 209.                  NA                     NA F      TDS      
+ 7 Jonna Sundling     1486                 209.                  NA                     NA F      TDS      
+ 8 Kerttu Niskanen      37                 205.                  NA                     NA F      TDS      
+ 9 Victoria Carl      1489                 197.                  NA                     NA F      TDS      
+10 Krista Pärmäkoski    13                 195.                  NA                     NA F      TDS      
+# ℹ 127 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+
+Processing male skier: Harald Østberg Amundsen 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+
+Processing male skier: Johannes Høsflot Klæbo 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing male skier: Martin Løwstrøm Nyenget 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 2
+
+Processing male skier: Simen Hegstad Krüger 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 7
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing male skier: Erik Valnes 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+
+Processing male skier: Iivo Niskanen 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+
+Processing male skier: Andreas Fjorden Ree 
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+
+Processing male skier: Gus Schumacher 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+
+Processing male skier: Federico Pellegrino 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing male skier: Edvin Anger 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 1
+
+Processing male skier: Hugo Lapalus 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 9
+[1] "The skier has participated in: "
+[1] 9
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 3
+
+Processing male skier: Friedrich Moch 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 4
+[1] "The skier has participated in: "
+[1] 4
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing male skier: Pål Golberg 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing male skier: Jan Thomas Jenssen 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 1
+[1] "The skier has participated in: "
+[1] 1
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 2
+
+Processing male skier: Even Northug 
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 2
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 1
+
+Processing male skier: Ben Ogden 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 1
+
+Processing male skier: Lauri Vuorinen 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 0
+
+Processing male skier: Mathis Desloges 
+[1] "The skier has participated in: "
+[1] 9
+[1] "The skier has participated in: "
+[1] 9
+[1] "The skier has participated in: "
+[1] 4
+[1] "The skier has participated in: "
+[1] 4
+[1] "The skier has participated in: "
+[1] 4
+[1] "The skier has participated in: "
+[1] 4
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+
+Processing male skier: Mika Vermeulen 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 5
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+
+Processing male skier: William Poromaa 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 3
+
+Processing male skier: Thomas Hjalmar Westgård 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing male skier: Lucas Chanavat 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 8
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 1
+
+Processing male skier: Arsi Ruuskanen 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 1
+
+Processing male skier: Zanden McMullen 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 1
+
+Processing male skier: Niilo Moilanen 
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 1
+[1] "The skier has participated in: "
+[1] 1
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 0
+
+Processing male skier: Andrew Musgrave 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing male skier: Truls Gisselman 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 9
+[1] "The skier has participated in: "
+[1] 9
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 1
+
+Processing male skier: Matz William Jenssen 
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 9
+[1] "The skier has participated in: "
+[1] 9
+[1] "The skier has participated in: "
+[1] 1
+
+Processing male skier: Valerio Grond 
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 4
+[1] "The skier has participated in: "
+[1] 4
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 0
+
+Processing male skier: Benjamin Moser 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 5
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 0
+
+Processing female skier: Jessie Diggins 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Victoria Carl 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 1
+
+Processing female skier: Jonna Sundling 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Therese Johaug 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Astrid Øyre Slind 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 3
+[1] "The skier has participated in: "
+[1] 1
+
+Processing female skier: Heidi Weng 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Katharina Hennig 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Lotta Udnes Weng 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 1
+
+Processing female skier: Ebba Andersson 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 2
+
+Processing female skier: Kristin Austgulen Fosnæs 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 9
+[1] "The skier has participated in: "
+[1] 9
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 1
+
+Processing female skier: Kerttu Niskanen 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Rosie Brennan 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Teresa Stadlober 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Pia Fink 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Jasmi Joensuu 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 0
+
+Processing female skier: Katerina Janatova 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Julie Myhre 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 0
+
+Processing female skier: Silje Theodorsen 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 5
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 2
+
+Processing female skier: Krista Pärmäkoski 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Nora Sanness 
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 7
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 4
+[1] "The skier has participated in: "
+[1] 4
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+[1] "The skier has participated in: "
+[1] 0
+
+Processing female skier: Katri Lylynperä 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 0
+
+Processing female skier: Frida Karlsson 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+
+Processing female skier: Coletta Rydzek 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 0
+
+Processing female skier: Moa Ilar 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 6
+[1] "The skier has participated in: "
+[1] 6
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Emma Ribom 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+
+Processing female skier: Laura Gimmler 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 1
+
+Processing female skier: Caterina Ganz 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Johanna Hagström 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 1
+
+Processing female skier: Sophia Laukli 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 2
+[1] "The skier has participated in: "
+[1] 4
+[1] "The skier has participated in: "
+[1] 4
+[1] "The skier has participated in: "
+[1] 3
+
+Processing female skier: Flora Dolci 
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "Met the requirement"
+[1] "The skier has participated in: "
+[1] 1
+[1] "The skier has participated in: "
+[1] 1
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 8
+[1] "The skier has participated in: "
+[1] 1
+[1] "\nSummary of all histories by gender:"
+# A tibble: 20 × 6
+# Groups:   Gender [2]
+   Skier                   Gender Race_Type        N_Real_Results Mean_Score SD_Score
+   <chr>                   <chr>  <chr>                     <int>      <dbl>    <dbl>
+ 1 Jessie Diggins          F      WC_Distance                  10       78.4    18.6 
+ 2 Jessie Diggins          F      Stage_Distance               10       36.2    12.4 
+ 3 Jessie Diggins          F      WC_Distance_C                10       71.1    14.8 
+ 4 Jessie Diggins          F      Stage_Distance_C             10       31.5    10.1 
+ 5 Jessie Diggins          F      WC_Distance_F                10       94.5     9.56
+ 6 Jessie Diggins          F      Stage_Distance_F             10       46.7     5.74
+ 7 Jessie Diggins          F      WC_Sprint_C                  10       51.6    16.7 
+ 8 Jessie Diggins          F      Stage_Sprint_C               10       17.7    11.2 
+ 9 Jessie Diggins          F      WC_Sprint_F                  10       67.8    20.9 
+10 Jessie Diggins          F      Stage_Sprint_F               10       29.5    13.7 
+11 Harald Østberg Amundsen M      WC_Distance                  10       83.2    16.6 
+12 Harald Østberg Amundsen M      Stage_Distance               10       39.3    11.2 
+13 Harald Østberg Amundsen M      WC_Distance_C                10       80.3    13.5 
+14 Harald Østberg Amundsen M      Stage_Distance_C             10       37.6     9.24
+15 Harald Østberg Amundsen M      WC_Distance_F                10       88.8    15.8 
+16 Harald Østberg Amundsen M      Stage_Distance_F             10       42.8    10.9 
+17 Harald Østberg Amundsen M      WC_Sprint_C                  10       57      24.8 
+18 Harald Østberg Amundsen M      Stage_Sprint_C               10       22.8    15.0 
+19 Harald Østberg Amundsen M      WC_Sprint_F                  10       61.5    18.4 
+20 Harald Østberg Amundsen M      Stage_Sprint_F               10       24.6    12.7 
+           used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)
+Ncells  3948584 210.9    6956265 371.6         NA  6956265 371.6
+Vcells 34947463 266.7   60631127 462.6     102400 60631127 462.6

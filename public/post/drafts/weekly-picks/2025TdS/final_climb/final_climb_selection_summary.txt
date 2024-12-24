@@ -1,0 +1,12 @@
+Final Climb Feature Selection Summary
+===================================
+
+Men's Model:
+Number of observations: 269 
+Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5 
+BIC score: -205.3028 
+
+Women's Model:
+Number of observations: 195 
+Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5 
+BIC score: -172.5781 

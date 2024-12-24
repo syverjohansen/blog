@@ -1,0 +1,19 @@
+Women FC Models Summary
+============================
+
+
+Top 1 Model:
+Selected variables: FC_Last_5 
+Brier Score: 0.0186 
+
+Top 3 Model:
+Selected variables: FC_Last_5 
+Brier Score: 0.0298 
+
+Top 10 Model:
+Selected variables: FC_Last_5 
+Brier Score: 0.0883 
+
+Top 30 Model:
+Selected variables: FC_Last_5 
+Brier Score: 0.1075 

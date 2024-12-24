@@ -1,0 +1,19 @@
+Women TdS Models Summary
+============================
+
+
+Top 1 Model:
+Selected variables: Distance_Last_5 
+Brier Score: 0.0125 
+
+Top 3 Model:
+Selected variables: Classic_Pelo_Pct, Distance_C_Last_5, Distance_Last_5 
+Brier Score: 0.0101 
+
+Top 10 Model:
+Selected variables: Distance_C_Last_5, Distance_Last_5, FC_Last_5 
+Brier Score: 0.0428 
+
+Top 30 Model:
+Selected variables: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_Pelo_Pct, Freestyle_Pelo_Pct, Distance_C_Last_5, TdS_Last_5 
+Brier Score: 0.0416 

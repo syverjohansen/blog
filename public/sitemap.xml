@@ -2,10 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/post/weekly-recap/2025lillehammer/</loc>
-    <lastmod>2024-12-08T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/post/weekly-recap/2025davos/</loc>
+    <lastmod>2024-12-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/post/</loc>
+    <lastmod>2024-12-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/post/weekly-picks/2025davos/</loc>
+    <lastmod>2024-12-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/post/weekly-recap/2025lillehammer/</loc>
     <lastmod>2024-12-08T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/post/drafts/weekly-recap/simulation_summary/</loc>

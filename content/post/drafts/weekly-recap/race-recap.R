@@ -6,8 +6,8 @@ library(tidyverse)
 # Define file paths
 men_chrono_path <- "~/ski/elo/python/ski/polars/excel365/men_chrono.csv"
 ladies_chrono_path <- "~/ski/elo/python/ski/polars/excel365/ladies_chrono.csv"
-men_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Lillehammer/men-points_normalized.xlsx"
-ladies_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Lillehammer/ladies-points_normalized.xlsx"
+men_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/men-points.xlsx"
+ladies_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/ladies-points.xlsx"
 
 # Read the feather files
 men_chrono <- read.csv(men_chrono_path)
@@ -34,33 +34,33 @@ library(ggplot2)
 library(openxlsx)
 # Filter and sort men's data
 men_2025 <- men_chrono %>%
- filter(Season == 2025, City != "Summer") %>% 
-#filter(Season == 2025) %>% 
- arrange(Season, Race, Place)
+  filter(Season == 2025, City != "Summer") %>% 
+  #filter(Season == 2025) %>% 
+  arrange(Season, Race, Place)
 
 men_before <- men_chrono %>%
-  filter(Season < 2025 | (Season == 2025 & Race < 1 & City!="Summer")) %>%
+  filter(Season < 2025 | (Season == 2025 & Race < 4 & City!="Summer")) %>%
   arrange(Season, Date, Race, Place)
 
 men_end <- men_chrono %>%
- #filter(Season == 2025, City != "Summer") %>% 
-filter(Season == 2025) %>% 
- arrange(Season, Race, Place)
+  #filter(Season == 2025, City != "Summer") %>% 
+  filter(Season == 2025) %>% 
+  arrange(Season, Race, Place)
 
 
 # Filter and sort ladies' data
 ladies_2025 <- ladies_chrono %>%
- filter(Season == 2025, City != "Summer") %>% 
-#filter(Season == 2025) %>% 
- arrange(Season, Race, Place)
+  filter(Season == 2025, City != "Summer") %>% 
+  #filter(Season == 2025) %>% 
+  arrange(Season, Race, Place)
 
 ladies_end <- ladies_chrono %>%
- #filter(Season == 2025, City != "Summer") %>% 
-filter(Season == 2025) %>% 
- arrange(Season, Race, Place)
+  #filter(Season == 2025, City != "Summer") %>% 
+  filter(Season == 2025) %>% 
+  arrange(Season, Race, Place)
 
 ladies_before <- ladies_chrono %>%
-  filter(Season < 2025 | (Season == 2025 & Race < 1 & City!="Summer")) %>%
+  filter(Season < 2025 | (Season == 2025 & Race < 4 & City!="Summer")) %>%
   arrange(Season, Date, Race, Place)
 
 # Define World Cup points vector
@@ -73,7 +73,7 @@ library(openxlsx)
 # Define World Cup points vector
 wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
 
-analyze_race <- function(race_type, race_num, season, city, base_dir) {
+analyze_race <- function(race_type, race_num, race_part, season, city, base_dir) {
   # Filter season data without City filter
   men_season <- men_chrono %>%
     filter(Season == season) %>%
@@ -94,10 +94,10 @@ analyze_race <- function(race_type, race_num, season, city, base_dir) {
       dplyr::select(Skier, Nation, Points, !!sym(paste0(pelo_col)), !!sym(paste0(elo_col))) %>%
       left_join(
         points_data %>% 
-          dplyr::select(Skier, !!paste0("Race", race_num, "_Points")), 
+          dplyr::select(Skier, !!paste0("Race", race_part, "_Points")), 
         by = "Skier"
       ) %>%
-      rename(Predicted_Points = !!paste0("Race", race_num, "_Points")) %>%
+      rename(Predicted_Points = !!paste0("Race", race_part, "_Points")) %>%
       mutate(
         Predicted_Points = as.numeric(Predicted_Points),
         Points_Difference = Points - as.double(Predicted_Points),
@@ -116,16 +116,16 @@ analyze_race <- function(race_type, race_num, season, city, base_dir) {
     
     # Rename columns
     colnames(race_df) <- c("Skier", "Nation", "Before Elo", "After Elo", 
-                          "Elo Difference", "Predicted Points", "Points", 
-                          "Points Difference")
+                           "Elo Difference", "Predicted Points", "Points", 
+                           "Points Difference")
     
     return(race_df)
   }
   
   # Helper function to create plots
-  create_plot <- function(data, gender, race_num, base_dir) {
-    max_diff <- data %>% slice_max(`Points Difference`, n = 1)
-    min_diff <- data %>% slice_min(`Points Difference`, n = 1)
+  create_plot <- function(data, gender, race_part, base_dir) {
+    max_diff <- data %>% slice_max(`Points Difference`, n = 3)
+    min_diff <- data %>% slice_min(`Points Difference`, n = 3)
     
     p <- ggplot(data, aes(x = `Predicted Points`, y = Points)) +
       geom_point() +
@@ -141,13 +141,13 @@ analyze_race <- function(race_type, race_num, season, city, base_dir) {
       theme_minimal()
     
     filename <- file.path(base_dir, "static/img/weekly-recap", 
-                         paste0(season, city),
-                         paste0(gender, "_race", race_num, ".png"))
+                          paste0(season, city),
+                          paste0(gender, "_race", race_part, ".png"))
     ggsave(filename, plot = p, width = 10, height = 8, dpi = 300)
   }
   
   # Helper function to get performance stats
-get_performance_stats <- function(data) {
+  get_performance_stats <- function(data) {
     # Calculate error metrics
     rmse <- sqrt(mean((data$Points - data$`Predicted Points`)^2, na.rm = TRUE))
     mae <- mean(abs(data$Points - data$`Predicted Points`), na.rm = TRUE)
@@ -155,15 +155,15 @@ get_performance_stats <- function(data) {
     
     # Top 3 overperformers
     top_over <- data %>%
-        arrange(desc(`Points Difference`)) %>%
-        dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
-        head(3)
+      arrange(desc(`Points Difference`)) %>%
+      dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+      head(3)
     
     # Top 3 underperformers
     top_under <- data %>%
-        arrange(`Points Difference`) %>%
-        dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
-        head(3)
+      arrange(`Points Difference`) %>%
+      dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
+      head(3)
     
     # Add error metrics to the output
     print(paste("RMSE:", round(rmse, 2)))
@@ -171,15 +171,15 @@ get_performance_stats <- function(data) {
     print(paste("MSE:", round(mse, 2)))
     
     return(list(
-        overperformers = top_over, 
-        underperformers = top_under,
-        metrics = list(
-            rmse = rmse,
-            mae = mae,
-            mse = mse
-        )
+      overperformers = top_over, 
+      underperformers = top_under,
+      metrics = list(
+        rmse = rmse,
+        mae = mae,
+        mse = mse
+      )
     ))
-}
+  }
   
   # Create directories if they don't exist
   dir.create(file.path(base_dir, "static/img/weekly-recap", paste0(season, city)), 
@@ -196,8 +196,8 @@ get_performance_stats <- function(data) {
   ladies_race <- create_race_df(ladies_season, ladies_points, pelo_col, elo_col)
   
   # Create plots
-  create_plot(men_race, "men", race_num, base_dir)
-  create_plot(ladies_race, "ladies", race_num, base_dir)
+  create_plot(men_race, "men", race_part, base_dir)
+  create_plot(ladies_race, "ladies", race_part, base_dir)
   
   # Get performance stats
   men_stats <- get_performance_stats(men_race)
@@ -206,12 +206,12 @@ get_performance_stats <- function(data) {
   # Save to Excel
   write.xlsx(men_race, 
              file.path(base_dir, "content/post/drafts/weekly-recap", 
-                      paste0(season, city), 
-                      paste0("men_race", race_num, ".xlsx")))
+                       paste0(season, city), 
+                       paste0("men_race", race_part, ".xlsx")))
   write.xlsx(ladies_race, 
              file.path(base_dir, "content/post/drafts/weekly-recap", 
-                      paste0(season, city), 
-                      paste0("ladies_race", race_num, ".xlsx")))
+                       paste0(season, city), 
+                       paste0("ladies_race", race_part, ".xlsx")))
   
   return(list(
     men = list(data = men_race, stats = men_stats),
@@ -222,7 +222,7 @@ get_performance_stats <- function(data) {
 analyze_weekend <- function(season, city, base_dir) {
   create_weekend_df <- function(data, points_data, before_data) {
     weekend_df <- data %>%
-      filter(Race %in% c(1,2,3)) %>%
+      filter(Race %in% c(4, 5, 6)) %>%
       mutate(Points = case_when(
         Place > 0 & Place <= length(wc_points) ~ wc_points[Place],
         TRUE ~ 0
@@ -267,10 +267,10 @@ analyze_weekend <- function(season, city, base_dir) {
   
   create_weekend_plot <- function(data, gender, base_dir) {
     max_diff <- data %>% 
-      slice_max(`Points Difference`, n = 1)
+      slice_max(`Points Difference`, n = 3)
     
     min_diff <- data %>%
-      slice_min(`Points Difference`, n = 1)
+      slice_min(`Points Difference`, n = 3)
     
     p <- ggplot(data, aes(x = `Predicted Points`, y = `Total Points`)) +
       geom_point() +
@@ -286,8 +286,8 @@ analyze_weekend <- function(season, city, base_dir) {
       theme_minimal()
     
     filename <- file.path(base_dir, "static/img/weekly-recap", 
-                         paste0(season, city),
-                         paste0(gender, "_weekend.png"))
+                          paste0(season, city),
+                          paste0(gender, "_weekend.png"))
     ggsave(filename, plot = p, width = 10, height = 8, dpi = 300)
   }
   
@@ -317,31 +317,28 @@ analyze_weekend <- function(season, city, base_dir) {
   # Save to Excel
   write.xlsx(men_weekend, 
              file.path(base_dir, "content/post/drafts/weekly-recap", 
-                      paste0(season, city), 
-                      "men_weekend.xlsx"))
+                       paste0(season, city), 
+                       "men_weekend.xlsx"))
   write.xlsx(ladies_weekend, 
              file.path(base_dir, "content/post/drafts/weekly-recap", 
-                      paste0(season, city), 
-                      "ladies_weekend.xlsx"))
+                       paste0(season, city), 
+                       "ladies_weekend.xlsx"))
   
   return(list(men = men_weekend, ladies = ladies_weekend))
 }
 base_dir <- "~/blog/daehl-e"
 
 # Analyze individual races
-race1_results <- analyze_race("Distance_C", 1, 2025, "Lillehammer", base_dir)
-race2_results <- analyze_race("Sprint_C", 2, 2025, "Lillehammer", base_dir)
-race3_results <- analyze_race("Distance_F", 3, 2025, "Lillehammer", base_dir)
-race1_results
-race2_results
-race3_results
+race1_results <- analyze_race("Sprint_F", 8, 1, 2025, "Davos", base_dir)
+race2_results <- analyze_race("Distance_C", 9,  2, 2025, "Davos", base_dir)
+
 
 # Analyze weekend results
-weekend_results <- analyze_weekend(2025, "Lillehammer", base_dir)
+weekend_results <- analyze_weekend(2025, "Davos", base_dir)
 weekend_results
 
 # Print metrics for Race 1
-print("Men's Distance C:")
+print("Men's Sprint:")
 print(race1_results$men$stats$metrics)
 print("\nLadies' Distance C:")
 print(race1_results$ladies$stats$metrics)
@@ -351,17 +348,17 @@ print(race2_results$men$stats$metrics)
 print("\nLadies' Sprint C:")
 print(race2_results$ladies$stats$metrics)
 
-print("\nMen's Distance F:")
-print(race3_results$men$stats$metrics)
-print("\nLadies' Distance F:")
-print(race3_results$ladies$stats$metrics)
+# print("\nMen's Distance F:")
+# print(race3_results$men$stats$metrics)
+# print("\nLadies' Distance F:")
+# print(race3_results$ladies$stats$metrics)
 
 
 # Men's combined metrics across all races
 men_all_races <- rbind(
   race1_results$men$data,
-  race2_results$men$data,
-  race3_results$men$data
+  race2_results$men$data
+  # race3_results$men$data
 )
 
 men_combined_rmse <- sqrt(mean((men_all_races$Points - men_all_races$`Predicted Points`)^2, na.rm = TRUE))
@@ -371,8 +368,8 @@ men_combined_mse <- mean((men_all_races$Points - men_all_races$`Predicted Points
 # Ladies' combined metrics across all races
 ladies_all_races <- rbind(
   race1_results$ladies$data,
-  race2_results$ladies$data,
-  race3_results$ladies$data
+  race2_results$ladies$data
+  #race3_results$ladies$data
 )
 
 ladies_combined_rmse <- sqrt(mean((ladies_all_races$Points - ladies_all_races$`Predicted Points`)^2, na.rm = TRUE))
@@ -388,7 +385,6 @@ print("\nLadies' Combined Metrics:")
 print(paste("RMSE:", round(ladies_combined_rmse, 2)))
 print(paste("MAE:", round(ladies_combined_mae, 2)))
 print(paste("MSE:", round(ladies_combined_mse, 2)))
-
 library(dplyr)
 library(mgcv)
 library(leaps)
@@ -1312,10 +1308,10 @@ log_info("{simulated_points}")
 remaining_races <- list(
     WC = list(
         Distance = 0,
-        Distance_C = 6,
-        Distance_F = 5,
+        Distance_C = 4,
+        Distance_F = 4,
         Sprint_C = 3,
-        Sprint_F = 4
+        Sprint_F = 3
     ),
     Stage = list(
         Distance = 1,
@@ -1533,7 +1529,7 @@ create_standings_summary <- function(simulation_results, standings_df, gender) {
     # Get current standings
     current_standings <- standings_df %>%
         filter(Skier %in% colnames(simulation_results)) %>%
-        select(Skier, Points) %>%
+        dplyr::select(Skier, Points) %>%
         arrange(desc(Points))
     
     # Calculate summary statistics
@@ -1575,11 +1571,11 @@ create_standings_summary <- function(simulation_results, standings_df, gender) {
                   ~round(as.numeric(.), 2))
         )
     # Create directory if it doesn't exist
-dir.create("~/blog/daehl-e/content/post/drafts/weekly-recap/2025Lillehammer", 
+dir.create("~/blog/daehl-e/content/post/drafts/weekly-recap/2025Davos", 
            recursive = TRUE,  # This creates parent directories if needed
            showWarnings = FALSE)  # Don't warn if directory already exists
     # Save to Excel
-    write_xlsx(final_table, "~/blog/daehl-e/content/post/drafts/weekly-recap/2025Lillehammer/standings_predictions.xlsx")
+    write_xlsx(final_table, "~/blog/daehl-e/content/post/drafts/weekly-recap/2025Davos/standings_predictions.xlsx")
     
     return(final_table)
 }
@@ -1595,8 +1591,8 @@ men_summary <- create_standings_summary_by_gender(men_sims$simulation_results, s
 women_summary <- create_standings_summary_by_gender(women_sims$simulation_results, ladies_standings_df, "F")
 
 # Save separate Excel files for each gender
-write_xlsx(men_summary, "~/blog/daehl-e/content/post/drafts/weekly-recap/2025Lillehammer/mens_standings_predictions.xlsx")
-write_xlsx(women_summary, "~/blog/daehl-e/content/post/drafts/weekly-recap/2025Lillehammer/womens_standings_predictions.xlsx")
+write_xlsx(men_summary, "~/blog/daehl-e/content/post/drafts/weekly-recap/2025Davos/mens_standings_predictions.xlsx")
+write_xlsx(women_summary, "~/blog/daehl-e/content/post/drafts/weekly-recap/2025Davos/womens_standings_predictions.xlsx")
 
 # Create combined markdown summary
 summary_file <- "~/blog/daehl-e/content/post/drafts/weekly-recap/simulation_summary.md"

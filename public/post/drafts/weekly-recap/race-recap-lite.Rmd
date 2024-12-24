@@ -14,8 +14,8 @@ library(tidyverse)
 # Define file paths
 men_chrono_path <- "~/ski/elo/python/ski/polars/excel365/men_chrono.csv"
 ladies_chrono_path <- "~/ski/elo/python/ski/polars/excel365/ladies_chrono.csv"
-men_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Lillehammer/men-points.xlsx"
-ladies_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Lillehammer/ladies-points.xlsx"
+men_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/men-points.xlsx"
+ladies_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/ladies-points.xlsx"
 
 # Read the feather files
 men_chrono <- read.csv(men_chrono_path)
@@ -340,19 +340,16 @@ analyze_weekend <- function(season, city, base_dir) {
 base_dir <- "~/blog/daehl-e"
 
 # Analyze individual races
-race1_results <- analyze_race("Distance_F", 4, 1, 2025, "Lillehammer", base_dir)
-race2_results <- analyze_race("Sprint_F", 5,  2, 2025, "Lillehammer", base_dir)
-race3_results <- analyze_race("Distance", 6, 3, 2025, "Lillehammer", base_dir)
-race1_results
-race2_results
-race3_results
+race1_results <- analyze_race("Sprint_F", 8, 1, 2025, "Davos", base_dir)
+race2_results <- analyze_race("Distance_C", 9,  2, 2025, "Davos", base_dir)
+
 
 # Analyze weekend results
-weekend_results <- analyze_weekend(2025, "Lillehammer", base_dir)
+weekend_results <- analyze_weekend(2025, "Davos", base_dir)
 weekend_results
 
 # Print metrics for Race 1
-print("Men's Distance C:")
+print("Men's Sprint:")
 print(race1_results$men$stats$metrics)
 print("\nLadies' Distance C:")
 print(race1_results$ladies$stats$metrics)
@@ -362,17 +359,17 @@ print(race2_results$men$stats$metrics)
 print("\nLadies' Sprint C:")
 print(race2_results$ladies$stats$metrics)
 
-print("\nMen's Distance F:")
-print(race3_results$men$stats$metrics)
-print("\nLadies' Distance F:")
-print(race3_results$ladies$stats$metrics)
+# print("\nMen's Distance F:")
+# print(race3_results$men$stats$metrics)
+# print("\nLadies' Distance F:")
+# print(race3_results$ladies$stats$metrics)
 
 
 # Men's combined metrics across all races
 men_all_races <- rbind(
   race1_results$men$data,
-  race2_results$men$data,
-  race3_results$men$data
+  race2_results$men$data
+ # race3_results$men$data
 )
 
 men_combined_rmse <- sqrt(mean((men_all_races$Points - men_all_races$`Predicted Points`)^2, na.rm = TRUE))
@@ -382,8 +379,8 @@ men_combined_mse <- mean((men_all_races$Points - men_all_races$`Predicted Points
 # Ladies' combined metrics across all races
 ladies_all_races <- rbind(
   race1_results$ladies$data,
-  race2_results$ladies$data,
-  race3_results$ladies$data
+  race2_results$ladies$data
+  #race3_results$ladies$data
 )
 
 ladies_combined_rmse <- sqrt(mean((ladies_all_races$Points - ladies_all_races$`Predicted Points`)^2, na.rm = TRUE))
