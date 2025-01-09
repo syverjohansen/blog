@@ -390,3 +390,146 @@ INFO [2024-12-23 21:07:20] Creating correlation groups
 INFO [2024-12-23 21:07:20] Saving correlation groups
 INFO [2024-12-23 21:07:20] Creating analysis summary
 INFO [2024-12-23 21:07:20] Analysis complete
+INFO [2024-12-27 12:03:16] Starting correlation analysis
+INFO [2024-12-27 12:03:16] Identifying potential predictor columns
+INFO [2024-12-27 12:03:16] Creating predictor dataframe
+DEBUG [2024-12-27 12:03:16] Number of Pelo columns: 9
+DEBUG [2024-12-27 12:03:16] Number of Last 5 columns: 10
+INFO [2024-12-27 12:03:16] Computing correlation matrix
+INFO [2024-12-27 12:03:17] Performing variable clustering
+INFO [2024-12-27 12:03:17] Analyzing cluster information
+INFO [2024-12-27 12:03:17] Identifying highly correlated variable pairs
+INFO [2024-12-27 12:03:17] Creating correlation groups
+INFO [2024-12-27 12:03:17] Saving correlation groups
+INFO [2024-12-27 12:03:17] Creating analysis summary
+INFO [2024-12-27 12:03:17] Analysis complete
+INFO [2024-12-27 12:06:08] Starting correlation analysis
+INFO [2024-12-27 12:06:08] Identifying potential predictor columns
+INFO [2024-12-27 12:06:08] Creating predictor dataframe
+DEBUG [2024-12-27 12:06:08] Number of Pelo columns: 9
+DEBUG [2024-12-27 12:06:08] Number of Last 5 columns: 10
+INFO [2024-12-27 12:06:08] Computing correlation matrix
+INFO [2024-12-27 12:06:09] Performing variable clustering
+INFO [2024-12-27 12:06:09] Analyzing cluster information
+INFO [2024-12-27 12:06:09] Identifying highly correlated variable pairs
+INFO [2024-12-27 12:06:09] Creating correlation groups
+INFO [2024-12-27 12:06:09] Saving correlation groups
+INFO [2024-12-27 12:06:09] Creating analysis summary
+INFO [2024-12-27 12:06:09] Analysis complete
+INFO [2024-12-27 12:08:51] Starting correlation analysis
+INFO [2024-12-27 12:08:51] Identifying potential predictor columns
+INFO [2024-12-27 12:08:51] Creating predictor dataframe
+DEBUG [2024-12-27 12:08:51] Number of Pelo columns: 9
+DEBUG [2024-12-27 12:08:51] Number of Last 5 columns: 10
+INFO [2024-12-27 12:08:51] Computing correlation matrix
+INFO [2024-12-27 12:08:53] Performing variable clustering
+INFO [2024-12-27 12:08:53] Analyzing cluster information
+INFO [2024-12-27 12:08:53] Identifying highly correlated variable pairs
+INFO [2024-12-27 12:08:53] Creating correlation groups
+INFO [2024-12-27 12:08:53] Saving correlation groups
+INFO [2024-12-27 12:08:53] Creating analysis summary
+INFO [2024-12-27 12:08:53] Analysis complete
+INFO [2024-12-27 12:27:38] Starting correlation analysis
+INFO [2024-12-27 12:27:38] Identifying potential predictor columns
+INFO [2024-12-27 12:27:38] Creating predictor dataframe
+DEBUG [2024-12-27 12:27:38] Number of Pelo columns: 9
+DEBUG [2024-12-27 12:27:38] Number of Last 5 columns: 10
+INFO [2024-12-27 12:27:38] Computing correlation matrix
+INFO [2024-12-27 12:27:40] Performing variable clustering
+INFO [2024-12-27 12:27:40] Analyzing cluster information
+INFO [2024-12-27 12:27:40] Identifying highly correlated variable pairs
+INFO [2024-12-27 12:27:40] Creating correlation groups
+INFO [2024-12-27 12:27:40] Saving correlation groups
+INFO [2024-12-27 12:27:40] Creating analysis summary
+INFO [2024-12-27 12:27:40] Analysis complete
+INFO [2024-12-27 14:44:39] Starting correlation analysis
+INFO [2024-12-27 14:44:39] Identifying potential predictor columns
+INFO [2024-12-27 14:44:39] Creating predictor dataframe
+DEBUG [2024-12-27 14:44:39] Number of Pelo columns: 9
+DEBUG [2024-12-27 14:44:39] Number of Last 5 columns: 10
+INFO [2024-12-27 14:44:39] Computing correlation matrix
+INFO [2024-12-27 14:44:41] Performing variable clustering
+INFO [2024-12-27 14:44:41] Analyzing cluster information
+INFO [2024-12-27 14:44:41] Identifying highly correlated variable pairs
+INFO [2024-12-27 14:44:41] Creating correlation groups
+INFO [2024-12-27 14:44:41] Saving correlation groups
+INFO [2024-12-27 14:44:41] Creating analysis summary
+INFO [2024-12-27 14:44:41] Analysis complete
+INFO [2024-12-27 14:54:48] Starting correlation analysis
+INFO [2024-12-27 14:54:48] Identifying potential predictor columns
+INFO [2024-12-27 14:54:48] Creating predictor dataframe
+DEBUG [2024-12-27 14:54:48] Number of Pelo columns: 9
+DEBUG [2024-12-27 14:54:48] Number of Last 5 columns: 10
+INFO [2024-12-27 14:54:48] Computing correlation matrix
+INFO [2024-12-27 14:54:50] Performing variable clustering
+INFO [2024-12-27 14:54:50] Analyzing cluster information
+INFO [2024-12-27 14:54:50] Identifying highly correlated variable pairs
+INFO [2024-12-27 14:54:50] Creating correlation groups
+INFO [2024-12-27 14:54:50] Saving correlation groups
+INFO [2024-12-27 14:54:50] Creating analysis summary
+INFO [2024-12-27 14:54:50] Analysis complete
+INFO [2024-12-30 08:44:54] Starting correlation analysis
+INFO [2024-12-30 08:44:54] Identifying potential predictor columns
+INFO [2024-12-30 08:44:54] Creating predictor dataframe
+DEBUG [2024-12-30 08:44:54] Number of Pelo columns: 9
+DEBUG [2024-12-30 08:44:54] Number of Last 5 columns: 10
+INFO [2024-12-30 08:44:54] Computing correlation matrix
+INFO [2024-12-30 08:44:56] Performing variable clustering
+INFO [2024-12-30 08:44:56] Analyzing cluster information
+INFO [2024-12-30 08:44:56] Identifying highly correlated variable pairs
+INFO [2024-12-30 08:44:56] Creating correlation groups
+INFO [2024-12-30 08:44:56] Saving correlation groups
+INFO [2024-12-30 08:44:56] Creating analysis summary
+INFO [2024-12-30 08:44:56] Analysis complete
+INFO [2024-12-30 09:02:16] Starting correlation analysis
+INFO [2024-12-30 09:02:16] Identifying potential predictor columns
+INFO [2024-12-30 09:02:17] Creating predictor dataframe
+DEBUG [2024-12-30 09:02:17] Number of Pelo columns: 9
+DEBUG [2024-12-30 09:02:17] Number of Last 5 columns: 10
+INFO [2024-12-30 09:02:17] Computing correlation matrix
+INFO [2024-12-30 09:02:18] Performing variable clustering
+INFO [2024-12-30 09:02:19] Analyzing cluster information
+INFO [2024-12-30 09:02:19] Identifying highly correlated variable pairs
+INFO [2024-12-30 09:02:19] Creating correlation groups
+INFO [2024-12-30 09:02:19] Saving correlation groups
+INFO [2024-12-30 09:02:19] Creating analysis summary
+INFO [2024-12-30 09:02:19] Analysis complete
+INFO [2024-12-30 16:14:19] Starting correlation analysis
+INFO [2024-12-30 16:14:19] Identifying potential predictor columns
+INFO [2024-12-30 16:14:19] Creating predictor dataframe
+DEBUG [2024-12-30 16:14:19] Number of Pelo columns: 9
+DEBUG [2024-12-30 16:14:19] Number of Last 5 columns: 10
+INFO [2024-12-30 16:14:19] Computing correlation matrix
+INFO [2024-12-30 16:14:20] Performing variable clustering
+INFO [2024-12-30 16:14:21] Analyzing cluster information
+INFO [2024-12-30 16:14:21] Identifying highly correlated variable pairs
+INFO [2024-12-30 16:14:21] Creating correlation groups
+INFO [2024-12-30 16:14:21] Saving correlation groups
+INFO [2024-12-30 16:14:21] Creating analysis summary
+INFO [2024-12-30 16:14:21] Analysis complete
+INFO [2025-01-04 14:04:05] Starting correlation analysis
+INFO [2025-01-04 14:04:05] Identifying potential predictor columns
+INFO [2025-01-04 14:04:05] Creating predictor dataframe
+DEBUG [2025-01-04 14:04:05] Number of Pelo columns: 9
+DEBUG [2025-01-04 14:04:05] Number of Last 5 columns: 10
+INFO [2025-01-04 14:04:05] Computing correlation matrix
+INFO [2025-01-04 14:04:07] Performing variable clustering
+INFO [2025-01-04 14:04:07] Analyzing cluster information
+INFO [2025-01-04 14:04:07] Identifying highly correlated variable pairs
+INFO [2025-01-04 14:04:07] Creating correlation groups
+INFO [2025-01-04 14:04:07] Saving correlation groups
+INFO [2025-01-04 14:04:07] Creating analysis summary
+INFO [2025-01-04 14:04:07] Analysis complete
+INFO [2025-01-04 14:14:06] Starting correlation analysis
+INFO [2025-01-04 14:14:06] Identifying potential predictor columns
+INFO [2025-01-04 14:14:06] Creating predictor dataframe
+DEBUG [2025-01-04 14:14:06] Number of Pelo columns: 9
+DEBUG [2025-01-04 14:14:06] Number of Last 5 columns: 10
+INFO [2025-01-04 14:14:06] Computing correlation matrix
+INFO [2025-01-04 14:14:08] Performing variable clustering
+INFO [2025-01-04 14:14:08] Analyzing cluster information
+INFO [2025-01-04 14:14:09] Identifying highly correlated variable pairs
+INFO [2025-01-04 14:14:09] Creating correlation groups
+INFO [2025-01-04 14:14:09] Saving correlation groups
+INFO [2025-01-04 14:14:09] Creating analysis summary
+INFO [2025-01-04 14:14:09] Analysis complete

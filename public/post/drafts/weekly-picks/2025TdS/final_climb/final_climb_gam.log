@@ -3336,3 +3336,135 @@ INFO [2024-12-23 21:07:21] MAE: 6.896
 INFO [2024-12-23 21:07:21] R2: 0.645
 INFO [2024-12-23 21:07:22] Calculating Final Climb history for men
 INFO [2024-12-23 21:07:29] Calculating Final Climb history for women
+INFO [2024-12-27 12:03:18] Fitting GAM model for men
+INFO [2024-12-27 12:03:18] Model metrics for men
+INFO [2024-12-27 12:03:18] RMSE: 9.185
+INFO [2024-12-27 12:03:18] MAE: 6.613
+INFO [2024-12-27 12:03:18] R2: 0.594
+INFO [2024-12-27 12:03:18] Fitting GAM model for women
+INFO [2024-12-27 12:03:18] Model metrics for women
+INFO [2024-12-27 12:03:18] RMSE: 9.193
+INFO [2024-12-27 12:03:18] MAE: 7.078
+INFO [2024-12-27 12:03:18] R2: 0.621
+INFO [2024-12-27 12:03:19] Calculating Final Climb history for men
+INFO [2024-12-27 12:03:23] Calculating Final Climb history for women
+INFO [2024-12-27 12:06:10] Fitting GAM model for men
+INFO [2024-12-27 12:06:10] Model metrics for men
+INFO [2024-12-27 12:06:10] RMSE: 9.185
+INFO [2024-12-27 12:06:10] MAE: 6.613
+INFO [2024-12-27 12:06:10] R2: 0.594
+INFO [2024-12-27 12:06:10] Fitting GAM model for women
+INFO [2024-12-27 12:06:10] Model metrics for women
+INFO [2024-12-27 12:06:10] RMSE: 9.193
+INFO [2024-12-27 12:06:10] MAE: 7.078
+INFO [2024-12-27 12:06:10] R2: 0.621
+INFO [2024-12-27 12:06:10] Calculating Final Climb history for men
+INFO [2024-12-27 12:06:14] Calculating Final Climb history for women
+INFO [2024-12-27 12:08:54] Fitting GAM model for men
+INFO [2024-12-27 12:08:54] Model metrics for men
+INFO [2024-12-27 12:08:54] RMSE: 10.423
+INFO [2024-12-27 12:08:54] MAE: 7.728
+INFO [2024-12-27 12:08:54] R2: 0.494
+INFO [2024-12-27 12:08:54] Fitting GAM model for women
+INFO [2024-12-27 12:08:54] Model metrics for women
+INFO [2024-12-27 12:08:54] RMSE: 9.476
+INFO [2024-12-27 12:08:54] MAE: 7.259
+INFO [2024-12-27 12:08:54] R2: 0.596
+INFO [2024-12-27 12:08:55] Calculating Final Climb history for men
+INFO [2024-12-27 12:09:02] Calculating Final Climb history for women
+INFO [2024-12-27 12:27:41] Fitting GAM model for men
+INFO [2024-12-27 12:27:41] Model metrics for men
+INFO [2024-12-27 12:27:41] RMSE: 10.423
+INFO [2024-12-27 12:27:41] MAE: 7.728
+INFO [2024-12-27 12:27:41] R2: 0.494
+INFO [2024-12-27 12:27:41] Fitting GAM model for women
+INFO [2024-12-27 12:27:41] Model metrics for women
+INFO [2024-12-27 12:27:41] RMSE: 9.476
+INFO [2024-12-27 12:27:41] MAE: 7.259
+INFO [2024-12-27 12:27:41] R2: 0.596
+INFO [2024-12-27 12:27:41] Calculating Final Climb history for men
+INFO [2024-12-27 12:27:49] Calculating Final Climb history for women
+INFO [2024-12-27 14:44:42] Fitting GAM model for men
+INFO [2024-12-27 14:44:42] Model metrics for men
+INFO [2024-12-27 14:44:42] RMSE: 10.423
+INFO [2024-12-27 14:44:42] MAE: 7.728
+INFO [2024-12-27 14:44:42] R2: 0.494
+INFO [2024-12-27 14:44:42] Fitting GAM model for women
+INFO [2024-12-27 14:44:42] Model metrics for women
+INFO [2024-12-27 14:44:42] RMSE: 9.476
+INFO [2024-12-27 14:44:42] MAE: 7.259
+INFO [2024-12-27 14:44:42] R2: 0.596
+INFO [2024-12-27 14:44:42] Calculating Final Climb history for men
+INFO [2024-12-27 14:44:50] Calculating Final Climb history for women
+INFO [2024-12-27 14:54:51] Fitting GAM model for men
+INFO [2024-12-27 14:54:51] Model metrics for men
+INFO [2024-12-27 14:54:51] RMSE: 10.423
+INFO [2024-12-27 14:54:51] MAE: 7.728
+INFO [2024-12-27 14:54:51] R2: 0.494
+INFO [2024-12-27 14:54:51] Fitting GAM model for women
+INFO [2024-12-27 14:54:51] Model metrics for women
+INFO [2024-12-27 14:54:51] RMSE: 9.476
+INFO [2024-12-27 14:54:51] MAE: 7.259
+INFO [2024-12-27 14:54:51] R2: 0.596
+INFO [2024-12-27 14:54:51] Calculating Final Climb history for men
+INFO [2024-12-27 14:54:59] Calculating Final Climb history for women
+INFO [2024-12-30 08:44:57] Fitting GAM model for men
+INFO [2024-12-30 08:44:58] Model metrics for men
+INFO [2024-12-30 08:44:58] RMSE: 10.423
+INFO [2024-12-30 08:44:58] MAE: 7.728
+INFO [2024-12-30 08:44:58] R2: 0.494
+INFO [2024-12-30 08:44:58] Fitting GAM model for women
+INFO [2024-12-30 08:44:58] Model metrics for women
+INFO [2024-12-30 08:44:58] RMSE: 9.476
+INFO [2024-12-30 08:44:58] MAE: 7.259
+INFO [2024-12-30 08:44:58] R2: 0.596
+INFO [2024-12-30 08:44:58] Calculating Final Climb history for men
+INFO [2024-12-30 08:45:05] Calculating Final Climb history for women
+INFO [2024-12-30 09:02:19] Fitting GAM model for men
+INFO [2024-12-30 09:02:19] Model metrics for men
+INFO [2024-12-30 09:02:19] RMSE: 10.423
+INFO [2024-12-30 09:02:19] MAE: 7.728
+INFO [2024-12-30 09:02:19] R2: 0.494
+INFO [2024-12-30 09:02:19] Fitting GAM model for women
+INFO [2024-12-30 09:02:20] Model metrics for women
+INFO [2024-12-30 09:02:20] RMSE: 9.476
+INFO [2024-12-30 09:02:20] MAE: 7.259
+INFO [2024-12-30 09:02:20] R2: 0.596
+INFO [2024-12-30 09:02:20] Calculating Final Climb history for men
+INFO [2024-12-30 09:02:27] Calculating Final Climb history for women
+INFO [2024-12-30 16:14:21] Fitting GAM model for men
+INFO [2024-12-30 16:14:22] Model metrics for men
+INFO [2024-12-30 16:14:22] RMSE: 10.423
+INFO [2024-12-30 16:14:22] MAE: 7.728
+INFO [2024-12-30 16:14:22] R2: 0.494
+INFO [2024-12-30 16:14:22] Fitting GAM model for women
+INFO [2024-12-30 16:14:22] Model metrics for women
+INFO [2024-12-30 16:14:22] RMSE: 9.476
+INFO [2024-12-30 16:14:22] MAE: 7.259
+INFO [2024-12-30 16:14:22] R2: 0.596
+INFO [2024-12-30 16:14:22] Calculating Final Climb history for men
+INFO [2024-12-30 16:14:30] Calculating Final Climb history for women
+INFO [2025-01-04 14:04:27] Fitting GAM model for men
+INFO [2025-01-04 14:04:27] Model metrics for men
+INFO [2025-01-04 14:04:27] RMSE: 10.423
+INFO [2025-01-04 14:04:27] MAE: 7.728
+INFO [2025-01-04 14:04:27] R2: 0.494
+INFO [2025-01-04 14:04:27] Fitting GAM model for women
+INFO [2025-01-04 14:04:28] Model metrics for women
+INFO [2025-01-04 14:04:28] RMSE: 9.476
+INFO [2025-01-04 14:04:28] MAE: 7.259
+INFO [2025-01-04 14:04:28] R2: 0.596
+INFO [2025-01-04 14:04:30] Calculating Final Climb history for men
+INFO [2025-01-04 14:04:37] Calculating Final Climb history for women
+INFO [2025-01-04 14:14:09] Fitting GAM model for men
+INFO [2025-01-04 14:14:09] Model metrics for men
+INFO [2025-01-04 14:14:09] RMSE: 10.423
+INFO [2025-01-04 14:14:09] MAE: 7.728
+INFO [2025-01-04 14:14:09] R2: 0.494
+INFO [2025-01-04 14:14:09] Fitting GAM model for women
+INFO [2025-01-04 14:14:10] Model metrics for women
+INFO [2025-01-04 14:14:10] RMSE: 9.476
+INFO [2025-01-04 14:14:10] MAE: 7.259
+INFO [2025-01-04 14:14:10] R2: 0.596
+INFO [2025-01-04 14:14:10] Calculating Final Climb history for men
+INFO [2025-01-04 14:14:17] Calculating Final Climb history for women

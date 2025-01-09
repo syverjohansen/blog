@@ -860,10 +860,15 @@
                     return {
                         data: key,
                         title: key.charAt(0).toUpperCase() + key.slice(1),
-                        visible: key !== 'ID'
+                        visible: key !== 'ID',
+                        render: function(data, type, row) {
+                            if (type === 'display' && typeof data === 'number') {
+                                return data.toFixed(2);
+                            }
+                            return data;
+                        }
                     };
                 });
-
                 $(tableId).DataTable({
                     data: data,
                     columns: columns,
@@ -875,7 +880,6 @@
                 console.error(`Failed to load JSON data for ${gender}`);
             });
         }
-
         initializeTable('#dataTableL_chrono', '\/python\/excel365\/L_chrono_current.json', 'L');
         initializeTable('#dataTableM_chrono', '\/python\/excel365\/M_chrono_current.json?t=' + new Date().getTime(), 'M');
     });
@@ -1035,7 +1039,7 @@
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Nordic Numbers 2024
+                    Copyright &copy; Nordic Numbers 2025
                     
                     
                     

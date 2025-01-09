@@ -3158,3 +3158,623 @@ INFO [2024-12-23 21:07:50] TdS Model metrics for women
 INFO [2024-12-23 21:07:50] RMSE: 23.169
 INFO [2024-12-23 21:07:50] MAE: 18.249
 INFO [2024-12-23 21:07:50] R2: 0.907
+INFO [2024-12-27 12:03:25] Adding Final Climb history to TdS features
+INFO [2024-12-27 12:03:25] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 12:03:25] Number of potential predictors: 15
+INFO [2024-12-27 12:03:25] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:03:25] Best model selected with 5 variables
+INFO [2024-12-27 12:03:25] Selected variables: Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:03:25] BIC score: -527.498564928485
+INFO [2024-12-27 12:03:25] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 12:03:25] Number of potential predictors: 15
+INFO [2024-12-27 12:03:25] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:03:25] Best model selected with 8 variables
+INFO [2024-12-27 12:03:25] Selected variables: Distance_C_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, FC_Last_5
+INFO [2024-12-27 12:03:25] BIC score: -414.457140770867
+INFO [2024-12-27 12:03:25] TdS feature selection complete
+INFO [2024-12-27 12:03:25] Fitting TdS GAM model for men
+INFO [2024-12-27 12:03:25] Using variables: Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:03:26] TdS Model metrics for men
+INFO [2024-12-27 12:03:26] RMSE: 27.774
+INFO [2024-12-27 12:03:26] MAE: 22.002
+INFO [2024-12-27 12:03:26] R2: 0.888
+INFO [2024-12-27 12:03:26] Fitting TdS GAM model for women
+INFO [2024-12-27 12:03:26] Using variables: Distance_C_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, FC_Last_5
+INFO [2024-12-27 12:03:26] TdS Model metrics for women
+INFO [2024-12-27 12:03:26] RMSE: 21.945
+INFO [2024-12-27 12:03:26] MAE: 17.43
+INFO [2024-12-27 12:03:26] R2: 0.917
+INFO [2024-12-27 12:03:26] Calculating TdS history for men
+INFO [2024-12-27 12:03:31] Calculating TdS history for women
+INFO [2024-12-27 12:03:35] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 12:03:35] Number of potential predictors: 16
+INFO [2024-12-27 12:03:35] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:03:35] Best model selected with 5 variables
+INFO [2024-12-27 12:03:35] Selected variables: Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:03:35] BIC score: -527.498564928485
+INFO [2024-12-27 12:03:36] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 12:03:36] Number of potential predictors: 16
+INFO [2024-12-27 12:03:36] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:03:36] Best model selected with 5 variables
+INFO [2024-12-27 12:03:36] Selected variables: Freestyle_Pelo_Pct, Pelo_Pct, Distance_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:03:36] BIC score: -420.444402451498
+INFO [2024-12-27 12:03:36] Fitting TdS GAM model for men
+INFO [2024-12-27 12:03:36] Using variables: Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:03:36] TdS Model metrics for men
+INFO [2024-12-27 12:03:36] RMSE: 27.774
+INFO [2024-12-27 12:03:36] MAE: 22.002
+INFO [2024-12-27 12:03:36] R2: 0.888
+INFO [2024-12-27 12:03:36] Fitting TdS GAM model for women
+INFO [2024-12-27 12:03:36] Using variables: Freestyle_Pelo_Pct, Pelo_Pct, Distance_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:03:36] TdS Model metrics for women
+INFO [2024-12-27 12:03:36] RMSE: 23.549
+INFO [2024-12-27 12:03:36] MAE: 19.016
+INFO [2024-12-27 12:03:36] R2: 0.904
+INFO [2024-12-27 12:06:16] Adding Final Climb history to TdS features
+INFO [2024-12-27 12:06:17] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 12:06:17] Number of potential predictors: 15
+INFO [2024-12-27 12:06:17] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:06:17] Best model selected with 5 variables
+INFO [2024-12-27 12:06:17] Selected variables: Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:06:17] BIC score: -527.834788196612
+INFO [2024-12-27 12:06:17] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 12:06:17] Number of potential predictors: 15
+INFO [2024-12-27 12:06:17] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:06:17] Best model selected with 8 variables
+INFO [2024-12-27 12:06:17] Selected variables: Distance_C_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, FC_Last_5
+INFO [2024-12-27 12:06:17] BIC score: -414.08828448284
+INFO [2024-12-27 12:06:17] TdS feature selection complete
+INFO [2024-12-27 12:06:17] Fitting TdS GAM model for men
+INFO [2024-12-27 12:06:17] Using variables: Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:06:17] TdS Model metrics for men
+INFO [2024-12-27 12:06:17] RMSE: 27.736
+INFO [2024-12-27 12:06:17] MAE: 21.949
+INFO [2024-12-27 12:06:17] R2: 0.889
+INFO [2024-12-27 12:06:17] Fitting TdS GAM model for women
+INFO [2024-12-27 12:06:17] Using variables: Distance_C_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, FC_Last_5
+INFO [2024-12-27 12:06:17] TdS Model metrics for women
+INFO [2024-12-27 12:06:17] RMSE: 21.927
+INFO [2024-12-27 12:06:17] MAE: 17.439
+INFO [2024-12-27 12:06:17] R2: 0.917
+INFO [2024-12-27 12:06:17] Calculating TdS history for men
+INFO [2024-12-27 12:06:22] Calculating TdS history for women
+INFO [2024-12-27 12:06:26] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 12:06:26] Number of potential predictors: 16
+INFO [2024-12-27 12:06:26] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:06:26] Best model selected with 5 variables
+INFO [2024-12-27 12:06:26] Selected variables: Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:06:26] BIC score: -527.834788196612
+INFO [2024-12-27 12:06:26] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 12:06:26] Number of potential predictors: 16
+INFO [2024-12-27 12:06:26] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:06:26] Best model selected with 5 variables
+INFO [2024-12-27 12:06:26] Selected variables: Freestyle_Pelo_Pct, Pelo_Pct, Distance_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:06:26] BIC score: -420.343681827625
+INFO [2024-12-27 12:06:26] Fitting TdS GAM model for men
+INFO [2024-12-27 12:06:26] Using variables: Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:06:27] TdS Model metrics for men
+INFO [2024-12-27 12:06:27] RMSE: 27.736
+INFO [2024-12-27 12:06:27] MAE: 21.949
+INFO [2024-12-27 12:06:27] R2: 0.889
+INFO [2024-12-27 12:06:27] Fitting TdS GAM model for women
+INFO [2024-12-27 12:06:27] Using variables: Freestyle_Pelo_Pct, Pelo_Pct, Distance_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:06:27] TdS Model metrics for women
+INFO [2024-12-27 12:06:27] RMSE: 23.603
+INFO [2024-12-27 12:06:27] MAE: 19.074
+INFO [2024-12-27 12:06:27] R2: 0.904
+INFO [2024-12-27 12:09:08] Adding Final Climb history to TdS features
+INFO [2024-12-27 12:09:08] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 12:09:08] Number of potential predictors: 15
+INFO [2024-12-27 12:09:08] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:09:08] Best model selected with 6 variables
+INFO [2024-12-27 12:09:08] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:09:08] BIC score: -1039.70825993448
+INFO [2024-12-27 12:09:08] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 12:09:08] Number of potential predictors: 15
+INFO [2024-12-27 12:09:08] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:09:08] Best model selected with 7 variables
+INFO [2024-12-27 12:09:08] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:09:08] BIC score: -798.520551355464
+INFO [2024-12-27 12:09:08] TdS feature selection complete
+INFO [2024-12-27 12:09:08] Fitting TdS GAM model for men
+INFO [2024-12-27 12:09:08] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:09:08] TdS Model metrics for men
+INFO [2024-12-27 12:09:08] RMSE: 29.07
+INFO [2024-12-27 12:09:08] MAE: 22.716
+INFO [2024-12-27 12:09:08] R2: 0.873
+INFO [2024-12-27 12:09:08] Fitting TdS GAM model for women
+INFO [2024-12-27 12:09:08] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:09:09] TdS Model metrics for women
+INFO [2024-12-27 12:09:09] RMSE: 24.076
+INFO [2024-12-27 12:09:09] MAE: 19.317
+INFO [2024-12-27 12:09:09] R2: 0.896
+INFO [2024-12-27 12:09:09] Calculating TdS history for men
+INFO [2024-12-27 12:09:20] Calculating TdS history for women
+INFO [2024-12-27 12:09:29] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 12:09:29] Number of potential predictors: 16
+INFO [2024-12-27 12:09:29] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:09:29] Best model selected with 6 variables
+INFO [2024-12-27 12:09:29] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:09:29] BIC score: -1039.70825993448
+INFO [2024-12-27 12:09:29] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 12:09:29] Number of potential predictors: 16
+INFO [2024-12-27 12:09:29] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:09:29] Best model selected with 7 variables
+INFO [2024-12-27 12:09:29] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:09:29] BIC score: -798.520551355464
+INFO [2024-12-27 12:09:29] Fitting TdS GAM model for men
+INFO [2024-12-27 12:09:29] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:09:29] TdS Model metrics for men
+INFO [2024-12-27 12:09:29] RMSE: 29.07
+INFO [2024-12-27 12:09:29] MAE: 22.716
+INFO [2024-12-27 12:09:29] R2: 0.873
+INFO [2024-12-27 12:09:29] Fitting TdS GAM model for women
+INFO [2024-12-27 12:09:29] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:09:30] TdS Model metrics for women
+INFO [2024-12-27 12:09:30] RMSE: 24.076
+INFO [2024-12-27 12:09:30] MAE: 19.317
+INFO [2024-12-27 12:09:30] R2: 0.896
+INFO [2024-12-27 12:27:54] Adding Final Climb history to TdS features
+INFO [2024-12-27 12:27:54] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 12:27:54] Number of potential predictors: 15
+INFO [2024-12-27 12:27:54] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:27:54] Best model selected with 6 variables
+INFO [2024-12-27 12:27:54] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:27:54] BIC score: -1040.68483018615
+INFO [2024-12-27 12:27:54] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 12:27:54] Number of potential predictors: 15
+INFO [2024-12-27 12:27:54] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 12:27:54] Best model selected with 7 variables
+INFO [2024-12-27 12:27:54] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:27:54] BIC score: -799.492149387662
+INFO [2024-12-27 12:27:54] TdS feature selection complete
+INFO [2024-12-27 12:27:54] Fitting TdS GAM model for men
+INFO [2024-12-27 12:27:54] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:27:54] TdS Model metrics for men
+INFO [2024-12-27 12:27:54] RMSE: 29.07
+INFO [2024-12-27 12:27:54] MAE: 22.738
+INFO [2024-12-27 12:27:54] R2: 0.873
+INFO [2024-12-27 12:27:54] Fitting TdS GAM model for women
+INFO [2024-12-27 12:27:54] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:27:55] TdS Model metrics for women
+INFO [2024-12-27 12:27:55] RMSE: 23.989
+INFO [2024-12-27 12:27:55] MAE: 19.246
+INFO [2024-12-27 12:27:55] R2: 0.897
+INFO [2024-12-27 12:27:55] Calculating TdS history for men
+INFO [2024-12-27 12:28:05] Calculating TdS history for women
+INFO [2024-12-27 12:28:14] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 12:28:14] Number of potential predictors: 16
+INFO [2024-12-27 12:28:14] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:28:14] Best model selected with 6 variables
+INFO [2024-12-27 12:28:14] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:28:14] BIC score: -1040.68483018615
+INFO [2024-12-27 12:28:14] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 12:28:14] Number of potential predictors: 16
+INFO [2024-12-27 12:28:14] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 12:28:14] Best model selected with 7 variables
+INFO [2024-12-27 12:28:14] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:28:14] BIC score: -799.492149387662
+INFO [2024-12-27 12:28:14] Fitting TdS GAM model for men
+INFO [2024-12-27 12:28:14] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:28:14] TdS Model metrics for men
+INFO [2024-12-27 12:28:14] RMSE: 29.07
+INFO [2024-12-27 12:28:14] MAE: 22.738
+INFO [2024-12-27 12:28:14] R2: 0.873
+INFO [2024-12-27 12:28:14] Fitting TdS GAM model for women
+INFO [2024-12-27 12:28:14] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 12:28:15] TdS Model metrics for women
+INFO [2024-12-27 12:28:15] RMSE: 23.989
+INFO [2024-12-27 12:28:15] MAE: 19.246
+INFO [2024-12-27 12:28:15] R2: 0.897
+INFO [2024-12-27 14:44:55] Adding Final Climb history to TdS features
+INFO [2024-12-27 14:44:55] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 14:44:55] Number of potential predictors: 15
+INFO [2024-12-27 14:44:55] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 14:44:55] Best model selected with 6 variables
+INFO [2024-12-27 14:44:55] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:44:55] BIC score: -1039.43567959122
+INFO [2024-12-27 14:44:55] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 14:44:55] Number of potential predictors: 15
+INFO [2024-12-27 14:44:55] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 14:44:55] Best model selected with 7 variables
+INFO [2024-12-27 14:44:55] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:44:55] BIC score: -799.720319258693
+INFO [2024-12-27 14:44:55] TdS feature selection complete
+INFO [2024-12-27 14:44:55] Fitting TdS GAM model for men
+INFO [2024-12-27 14:44:55] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:44:56] TdS Model metrics for men
+INFO [2024-12-27 14:44:56] RMSE: 29.145
+INFO [2024-12-27 14:44:56] MAE: 22.795
+INFO [2024-12-27 14:44:56] R2: 0.873
+INFO [2024-12-27 14:44:56] Fitting TdS GAM model for women
+INFO [2024-12-27 14:44:56] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:44:56] TdS Model metrics for women
+INFO [2024-12-27 14:44:56] RMSE: 24.036
+INFO [2024-12-27 14:44:56] MAE: 19.299
+INFO [2024-12-27 14:44:56] R2: 0.897
+INFO [2024-12-27 14:44:56] Calculating TdS history for men
+INFO [2024-12-27 14:45:07] Calculating TdS history for women
+INFO [2024-12-27 14:45:15] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 14:45:15] Number of potential predictors: 16
+INFO [2024-12-27 14:45:15] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 14:45:15] Best model selected with 6 variables
+INFO [2024-12-27 14:45:15] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:45:15] BIC score: -1039.43567959122
+INFO [2024-12-27 14:45:15] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 14:45:15] Number of potential predictors: 16
+INFO [2024-12-27 14:45:15] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 14:45:15] Best model selected with 7 variables
+INFO [2024-12-27 14:45:15] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:45:15] BIC score: -799.720319258694
+INFO [2024-12-27 14:45:16] Fitting TdS GAM model for men
+INFO [2024-12-27 14:45:16] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:45:16] TdS Model metrics for men
+INFO [2024-12-27 14:45:16] RMSE: 29.145
+INFO [2024-12-27 14:45:16] MAE: 22.795
+INFO [2024-12-27 14:45:16] R2: 0.873
+INFO [2024-12-27 14:45:16] Fitting TdS GAM model for women
+INFO [2024-12-27 14:45:16] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:45:16] TdS Model metrics for women
+INFO [2024-12-27 14:45:16] RMSE: 24.036
+INFO [2024-12-27 14:45:16] MAE: 19.299
+INFO [2024-12-27 14:45:16] R2: 0.897
+INFO [2024-12-27 14:55:04] Adding Final Climb history to TdS features
+INFO [2024-12-27 14:55:04] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 14:55:04] Number of potential predictors: 15
+INFO [2024-12-27 14:55:04] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 14:55:04] Best model selected with 6 variables
+INFO [2024-12-27 14:55:04] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:55:04] BIC score: -1039.06499580602
+INFO [2024-12-27 14:55:04] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 14:55:04] Number of potential predictors: 15
+INFO [2024-12-27 14:55:04] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-27 14:55:04] Best model selected with 7 variables
+INFO [2024-12-27 14:55:04] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:55:04] BIC score: -799.782141386092
+INFO [2024-12-27 14:55:04] TdS feature selection complete
+INFO [2024-12-27 14:55:04] Fitting TdS GAM model for men
+INFO [2024-12-27 14:55:04] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:55:04] TdS Model metrics for men
+INFO [2024-12-27 14:55:04] RMSE: 29.112
+INFO [2024-12-27 14:55:04] MAE: 22.753
+INFO [2024-12-27 14:55:04] R2: 0.873
+INFO [2024-12-27 14:55:04] Fitting TdS GAM model for women
+INFO [2024-12-27 14:55:04] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:55:05] TdS Model metrics for women
+INFO [2024-12-27 14:55:05] RMSE: 24.04
+INFO [2024-12-27 14:55:05] MAE: 19.278
+INFO [2024-12-27 14:55:05] R2: 0.897
+INFO [2024-12-27 14:55:05] Calculating TdS history for men
+INFO [2024-12-27 14:55:16] Calculating TdS history for women
+INFO [2024-12-27 14:55:24] Starting Tour de Ski feature selection for men
+INFO [2024-12-27 14:55:24] Number of potential predictors: 16
+INFO [2024-12-27 14:55:24] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 14:55:24] Best model selected with 6 variables
+INFO [2024-12-27 14:55:24] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:55:24] BIC score: -1039.06499580602
+INFO [2024-12-27 14:55:24] Starting Tour de Ski feature selection for women
+INFO [2024-12-27 14:55:24] Number of potential predictors: 16
+INFO [2024-12-27 14:55:24] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-27 14:55:24] Best model selected with 7 variables
+INFO [2024-12-27 14:55:24] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:55:24] BIC score: -799.782141386092
+INFO [2024-12-27 14:55:24] Fitting TdS GAM model for men
+INFO [2024-12-27 14:55:24] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:55:24] TdS Model metrics for men
+INFO [2024-12-27 14:55:24] RMSE: 29.112
+INFO [2024-12-27 14:55:24] MAE: 22.753
+INFO [2024-12-27 14:55:24] R2: 0.873
+INFO [2024-12-27 14:55:24] Fitting TdS GAM model for women
+INFO [2024-12-27 14:55:24] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-27 14:55:25] TdS Model metrics for women
+INFO [2024-12-27 14:55:25] RMSE: 24.04
+INFO [2024-12-27 14:55:25] MAE: 19.278
+INFO [2024-12-27 14:55:25] R2: 0.897
+INFO [2024-12-30 08:45:10] Adding Final Climb history to TdS features
+INFO [2024-12-30 08:45:10] Starting Tour de Ski feature selection for men
+INFO [2024-12-30 08:45:10] Number of potential predictors: 15
+INFO [2024-12-30 08:45:10] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-30 08:45:10] Best model selected with 6 variables
+INFO [2024-12-30 08:45:10] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 08:45:10] BIC score: -1039.62761318459
+INFO [2024-12-30 08:45:10] Starting Tour de Ski feature selection for women
+INFO [2024-12-30 08:45:10] Number of potential predictors: 15
+INFO [2024-12-30 08:45:10] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-30 08:45:10] Best model selected with 7 variables
+INFO [2024-12-30 08:45:10] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 08:45:10] BIC score: -799.588987453595
+INFO [2024-12-30 08:45:10] TdS feature selection complete
+INFO [2024-12-30 08:45:10] Fitting TdS GAM model for men
+INFO [2024-12-30 08:45:10] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 08:45:10] TdS Model metrics for men
+INFO [2024-12-30 08:45:10] RMSE: 29.147
+INFO [2024-12-30 08:45:10] MAE: 22.805
+INFO [2024-12-30 08:45:10] R2: 0.873
+INFO [2024-12-30 08:45:10] Fitting TdS GAM model for women
+INFO [2024-12-30 08:45:10] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 08:45:11] TdS Model metrics for women
+INFO [2024-12-30 08:45:11] RMSE: 24.025
+INFO [2024-12-30 08:45:11] MAE: 19.296
+INFO [2024-12-30 08:45:11] R2: 0.897
+INFO [2024-12-30 08:45:11] Calculating TdS history for men
+INFO [2024-12-30 08:45:21] Calculating TdS history for women
+INFO [2024-12-30 08:45:29] Starting Tour de Ski feature selection for men
+INFO [2024-12-30 08:45:29] Number of potential predictors: 16
+INFO [2024-12-30 08:45:29] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-30 08:45:29] Best model selected with 6 variables
+INFO [2024-12-30 08:45:29] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 08:45:29] BIC score: -1039.62761318459
+INFO [2024-12-30 08:45:29] Starting Tour de Ski feature selection for women
+INFO [2024-12-30 08:45:29] Number of potential predictors: 16
+INFO [2024-12-30 08:45:29] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-30 08:45:29] Best model selected with 7 variables
+INFO [2024-12-30 08:45:29] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 08:45:29] BIC score: -799.588987453596
+INFO [2024-12-30 08:45:30] Fitting TdS GAM model for men
+INFO [2024-12-30 08:45:30] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 08:45:30] TdS Model metrics for men
+INFO [2024-12-30 08:45:30] RMSE: 29.147
+INFO [2024-12-30 08:45:30] MAE: 22.805
+INFO [2024-12-30 08:45:30] R2: 0.873
+INFO [2024-12-30 08:45:30] Fitting TdS GAM model for women
+INFO [2024-12-30 08:45:30] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 08:45:30] TdS Model metrics for women
+INFO [2024-12-30 08:45:30] RMSE: 24.025
+INFO [2024-12-30 08:45:30] MAE: 19.296
+INFO [2024-12-30 08:45:30] R2: 0.897
+INFO [2024-12-30 09:02:32] Adding Final Climb history to TdS features
+INFO [2024-12-30 09:02:32] Starting Tour de Ski feature selection for men
+INFO [2024-12-30 09:02:32] Number of potential predictors: 15
+INFO [2024-12-30 09:02:32] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-30 09:02:32] Best model selected with 6 variables
+INFO [2024-12-30 09:02:32] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 09:02:32] BIC score: -1039.76829859533
+INFO [2024-12-30 09:02:32] Starting Tour de Ski feature selection for women
+INFO [2024-12-30 09:02:32] Number of potential predictors: 15
+INFO [2024-12-30 09:02:32] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-30 09:02:32] Best model selected with 7 variables
+INFO [2024-12-30 09:02:32] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 09:02:32] BIC score: -798.850129113827
+INFO [2024-12-30 09:02:32] TdS feature selection complete
+INFO [2024-12-30 09:02:32] Fitting TdS GAM model for men
+INFO [2024-12-30 09:02:32] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 09:02:33] TdS Model metrics for men
+INFO [2024-12-30 09:02:33] RMSE: 29.097
+INFO [2024-12-30 09:02:33] MAE: 22.751
+INFO [2024-12-30 09:02:33] R2: 0.873
+INFO [2024-12-30 09:02:33] Fitting TdS GAM model for women
+INFO [2024-12-30 09:02:33] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 09:02:33] TdS Model metrics for women
+INFO [2024-12-30 09:02:33] RMSE: 24.049
+INFO [2024-12-30 09:02:33] MAE: 19.334
+INFO [2024-12-30 09:02:33] R2: 0.897
+INFO [2024-12-30 09:02:33] Calculating TdS history for men
+INFO [2024-12-30 09:02:43] Calculating TdS history for women
+INFO [2024-12-30 09:02:51] Starting Tour de Ski feature selection for men
+INFO [2024-12-30 09:02:51] Number of potential predictors: 16
+INFO [2024-12-30 09:02:51] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-30 09:02:51] Best model selected with 6 variables
+INFO [2024-12-30 09:02:51] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 09:02:51] BIC score: -1039.76829859533
+INFO [2024-12-30 09:02:51] Starting Tour de Ski feature selection for women
+INFO [2024-12-30 09:02:51] Number of potential predictors: 16
+INFO [2024-12-30 09:02:51] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-30 09:02:51] Best model selected with 7 variables
+INFO [2024-12-30 09:02:51] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 09:02:51] BIC score: -798.850129113827
+INFO [2024-12-30 09:02:52] Fitting TdS GAM model for men
+INFO [2024-12-30 09:02:52] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 09:02:52] TdS Model metrics for men
+INFO [2024-12-30 09:02:52] RMSE: 29.097
+INFO [2024-12-30 09:02:52] MAE: 22.751
+INFO [2024-12-30 09:02:52] R2: 0.873
+INFO [2024-12-30 09:02:52] Fitting TdS GAM model for women
+INFO [2024-12-30 09:02:52] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 09:02:52] TdS Model metrics for women
+INFO [2024-12-30 09:02:52] RMSE: 24.049
+INFO [2024-12-30 09:02:52] MAE: 19.334
+INFO [2024-12-30 09:02:52] R2: 0.897
+INFO [2024-12-30 09:07:55] Fitting TdS GAM model for men
+INFO [2024-12-30 09:07:55] Using variables: Distance_F_Last_5, FC_Last_5
+INFO [2024-12-30 09:07:55] TdS Model metrics for men
+INFO [2024-12-30 09:07:55] RMSE: 9.322
+INFO [2024-12-30 09:07:55] MAE: 6.56
+INFO [2024-12-30 09:07:55] R2: 0.595
+INFO [2024-12-30 09:07:55] Fitting TdS GAM model for women
+INFO [2024-12-30 09:07:55] Using variables: Freestyle_Pelo_Pct, Distance_F_Last_5, FC_Last_5
+INFO [2024-12-30 09:07:55] TdS Model metrics for women
+INFO [2024-12-30 09:07:55] RMSE: 8.137
+INFO [2024-12-30 09:07:55] MAE: 6.101
+INFO [2024-12-30 09:07:55] R2: 0.702
+INFO [2024-12-30 16:14:35] Adding Final Climb history to TdS features
+INFO [2024-12-30 16:14:35] Starting Tour de Ski feature selection for men
+INFO [2024-12-30 16:14:35] Number of potential predictors: 15
+INFO [2024-12-30 16:14:35] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-30 16:14:35] Best model selected with 6 variables
+INFO [2024-12-30 16:14:35] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 16:14:35] BIC score: -1038.64674911842
+INFO [2024-12-30 16:14:35] Starting Tour de Ski feature selection for women
+INFO [2024-12-30 16:14:35] Number of potential predictors: 15
+INFO [2024-12-30 16:14:35] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2024-12-30 16:14:35] Best model selected with 7 variables
+INFO [2024-12-30 16:14:35] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 16:14:35] BIC score: -797.534248664305
+INFO [2024-12-30 16:14:36] TdS feature selection complete
+INFO [2024-12-30 16:14:36] Fitting TdS GAM model for men
+INFO [2024-12-30 16:14:36] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 16:14:36] TdS Model metrics for men
+INFO [2024-12-30 16:14:36] RMSE: 29.124
+INFO [2024-12-30 16:14:36] MAE: 22.754
+INFO [2024-12-30 16:14:36] R2: 0.873
+INFO [2024-12-30 16:14:36] Fitting TdS GAM model for women
+INFO [2024-12-30 16:14:36] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2024-12-30 16:14:36] TdS Model metrics for women
+INFO [2024-12-30 16:14:36] RMSE: 24.085
+INFO [2024-12-30 16:14:36] MAE: 19.337
+INFO [2024-12-30 16:14:36] R2: 0.896
+INFO [2024-12-30 16:14:37] Calculating TdS history for men
+INFO [2024-12-30 16:14:47] Calculating TdS history for women
+INFO [2024-12-30 16:14:55] Starting Tour de Ski feature selection for men
+INFO [2024-12-30 16:14:55] Number of potential predictors: 16
+INFO [2024-12-30 16:14:55] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-30 16:14:55] Best model selected with 7 variables
+INFO [2024-12-30 16:14:55] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-30 16:14:55] BIC score: -1038.96833308645
+INFO [2024-12-30 16:14:55] Starting Tour de Ski feature selection for women
+INFO [2024-12-30 16:14:55] Number of potential predictors: 16
+INFO [2024-12-30 16:14:55] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-30 16:14:55] Best model selected with 3 variables
+INFO [2024-12-30 16:14:55] Selected variables: Distance_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-30 16:14:55] BIC score: -798.775267577961
+INFO [2024-12-30 16:14:55] Fitting TdS GAM model for men
+INFO [2024-12-30 16:14:55] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-30 16:14:56] TdS Model metrics for men
+INFO [2024-12-30 16:14:56] RMSE: 29.123
+INFO [2024-12-30 16:14:56] MAE: 22.741
+INFO [2024-12-30 16:14:56] R2: 0.873
+INFO [2024-12-30 16:14:56] Fitting TdS GAM model for women
+INFO [2024-12-30 16:14:56] Using variables: Distance_Last_5, FC_Last_5, TdS_Last_5
+INFO [2024-12-30 16:14:56] TdS Model metrics for women
+INFO [2024-12-30 16:14:56] RMSE: 26.168
+INFO [2024-12-30 16:14:56] MAE: 20.921
+INFO [2024-12-30 16:14:56] R2: 0.878
+INFO [2024-12-30 16:15:17] Fitting TdS GAM model for men
+INFO [2024-12-30 16:15:17] Using variables: Distance_F_Last_5, FC_Last_5
+INFO [2024-12-30 16:15:17] TdS Model metrics for men
+INFO [2024-12-30 16:15:17] RMSE: 9.321
+INFO [2024-12-30 16:15:17] MAE: 6.559
+INFO [2024-12-30 16:15:17] R2: 0.595
+INFO [2024-12-30 16:15:17] Fitting TdS GAM model for women
+INFO [2024-12-30 16:15:17] Using variables: Distance_F_Last_5, FC_Last_5
+INFO [2024-12-30 16:15:17] TdS Model metrics for women
+INFO [2024-12-30 16:15:17] RMSE: 8.208
+INFO [2024-12-30 16:15:17] MAE: 6.152
+INFO [2024-12-30 16:15:17] R2: 0.697
+INFO [2025-01-04 14:04:47] Adding Final Climb history to TdS features
+INFO [2025-01-04 14:04:47] Starting Tour de Ski feature selection for men
+INFO [2025-01-04 14:04:47] Number of potential predictors: 15
+INFO [2025-01-04 14:04:47] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2025-01-04 14:04:47] Best model selected with 6 variables
+INFO [2025-01-04 14:04:47] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:04:47] BIC score: -1038.44678175822
+INFO [2025-01-04 14:04:47] Starting Tour de Ski feature selection for women
+INFO [2025-01-04 14:04:47] Number of potential predictors: 15
+INFO [2025-01-04 14:04:47] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2025-01-04 14:04:47] Best model selected with 7 variables
+INFO [2025-01-04 14:04:47] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:04:47] BIC score: -798.957142873394
+INFO [2025-01-04 14:04:47] TdS feature selection complete
+INFO [2025-01-04 14:04:51] Fitting TdS GAM model for men
+INFO [2025-01-04 14:04:51] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:04:51] TdS Model metrics for men
+INFO [2025-01-04 14:04:51] RMSE: 29.159
+INFO [2025-01-04 14:04:51] MAE: 22.819
+INFO [2025-01-04 14:04:51] R2: 0.873
+INFO [2025-01-04 14:04:51] Fitting TdS GAM model for women
+INFO [2025-01-04 14:04:51] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:04:52] TdS Model metrics for women
+INFO [2025-01-04 14:04:52] RMSE: 24.047
+INFO [2025-01-04 14:04:52] MAE: 19.308
+INFO [2025-01-04 14:04:52] R2: 0.897
+INFO [2025-01-04 14:04:55] Calculating TdS history for men
+INFO [2025-01-04 14:05:06] Calculating TdS history for women
+INFO [2025-01-04 14:05:14] Starting Tour de Ski feature selection for men
+INFO [2025-01-04 14:05:14] Number of potential predictors: 16
+INFO [2025-01-04 14:05:14] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2025-01-04 14:05:14] Best model selected with 6 variables
+INFO [2025-01-04 14:05:14] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:05:14] BIC score: -1038.44678175822
+INFO [2025-01-04 14:05:14] Starting Tour de Ski feature selection for women
+INFO [2025-01-04 14:05:14] Number of potential predictors: 16
+INFO [2025-01-04 14:05:14] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2025-01-04 14:05:14] Best model selected with 4 variables
+INFO [2025-01-04 14:05:14] Selected variables: Sprint_C_Pelo_Pct, Distance_Last_5, FC_Last_5, TdS_Last_5
+INFO [2025-01-04 14:05:14] BIC score: -799.228453143364
+INFO [2025-01-04 14:05:14] Fitting TdS GAM model for men
+INFO [2025-01-04 14:05:14] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:05:14] TdS Model metrics for men
+INFO [2025-01-04 14:05:14] RMSE: 29.159
+INFO [2025-01-04 14:05:14] MAE: 22.819
+INFO [2025-01-04 14:05:14] R2: 0.873
+INFO [2025-01-04 14:05:15] Fitting TdS GAM model for women
+INFO [2025-01-04 14:05:15] Using variables: Sprint_C_Pelo_Pct, Distance_Last_5, FC_Last_5, TdS_Last_5
+INFO [2025-01-04 14:05:15] TdS Model metrics for women
+INFO [2025-01-04 14:05:15] RMSE: 25.541
+INFO [2025-01-04 14:05:15] MAE: 20.448
+INFO [2025-01-04 14:05:15] R2: 0.883
+INFO [2025-01-04 14:05:39] Fitting TdS GAM model for men
+INFO [2025-01-04 14:05:39] Using variables: Distance_F_Last_5, FC_Last_5
+INFO [2025-01-04 14:05:39] TdS Model metrics for men
+INFO [2025-01-04 14:05:39] RMSE: 9.327
+INFO [2025-01-04 14:05:39] MAE: 6.573
+INFO [2025-01-04 14:05:39] R2: 0.595
+INFO [2025-01-04 14:05:39] Fitting TdS GAM model for women
+INFO [2025-01-04 14:05:39] Using variables: Freestyle_Pelo_Pct, Distance_F_Last_5, FC_Last_5
+INFO [2025-01-04 14:05:39] TdS Model metrics for women
+INFO [2025-01-04 14:05:39] RMSE: 8.115
+INFO [2025-01-04 14:05:39] MAE: 6.068
+INFO [2025-01-04 14:05:39] R2: 0.704
+INFO [2025-01-04 14:14:22] Adding Final Climb history to TdS features
+INFO [2025-01-04 14:14:22] Starting Tour de Ski feature selection for men
+INFO [2025-01-04 14:14:22] Number of potential predictors: 15
+INFO [2025-01-04 14:14:22] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2025-01-04 14:14:22] Best model selected with 6 variables
+INFO [2025-01-04 14:14:22] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:14:22] BIC score: -1038.26967541975
+INFO [2025-01-04 14:14:22] Starting Tour de Ski feature selection for women
+INFO [2025-01-04 14:14:22] Number of potential predictors: 15
+INFO [2025-01-04 14:14:22] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5
+INFO [2025-01-04 14:14:22] Best model selected with 7 variables
+INFO [2025-01-04 14:14:22] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:14:22] BIC score: -799.358442053836
+INFO [2025-01-04 14:14:22] TdS feature selection complete
+INFO [2025-01-04 14:14:22] Fitting TdS GAM model for men
+INFO [2025-01-04 14:14:22] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:14:23] TdS Model metrics for men
+INFO [2025-01-04 14:14:23] RMSE: 29.152
+INFO [2025-01-04 14:14:23] MAE: 22.82
+INFO [2025-01-04 14:14:23] R2: 0.873
+INFO [2025-01-04 14:14:23] Fitting TdS GAM model for women
+INFO [2025-01-04 14:14:23] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:14:23] TdS Model metrics for women
+INFO [2025-01-04 14:14:23] RMSE: 24.057
+INFO [2025-01-04 14:14:23] MAE: 19.293
+INFO [2025-01-04 14:14:23] R2: 0.897
+INFO [2025-01-04 14:14:23] Calculating TdS history for men
+INFO [2025-01-04 14:14:34] Calculating TdS history for women
+INFO [2025-01-04 14:14:42] Starting Tour de Ski feature selection for men
+INFO [2025-01-04 14:14:42] Number of potential predictors: 16
+INFO [2025-01-04 14:14:42] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2025-01-04 14:14:42] Best model selected with 8 variables
+INFO [2025-01-04 14:14:42] Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2025-01-04 14:14:42] BIC score: -1038.33508488956
+INFO [2025-01-04 14:14:42] Starting Tour de Ski feature selection for women
+INFO [2025-01-04 14:14:42] Number of potential predictors: 16
+INFO [2025-01-04 14:14:42] Predictors: Distance_C_Pelo_Pct, Distance_F_Pelo_Pct, Distance_Pelo_Pct, Sprint_C_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Classic_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_C_Last_5, Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2025-01-04 14:14:42] Best model selected with 7 variables
+INFO [2025-01-04 14:14:42] Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:14:42] BIC score: -799.358442053837
+INFO [2025-01-04 14:14:42] Fitting TdS GAM model for men
+INFO [2025-01-04 14:14:42] Using variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5
+INFO [2025-01-04 14:14:43] TdS Model metrics for men
+INFO [2025-01-04 14:14:43] RMSE: 28.734
+INFO [2025-01-04 14:14:43] MAE: 22.569
+INFO [2025-01-04 14:14:43] R2: 0.876
+INFO [2025-01-04 14:14:43] Fitting TdS GAM model for women
+INFO [2025-01-04 14:14:43] Using variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5
+INFO [2025-01-04 14:14:43] TdS Model metrics for women
+INFO [2025-01-04 14:14:43] RMSE: 24.057
+INFO [2025-01-04 14:14:43] MAE: 19.293
+INFO [2025-01-04 14:14:43] R2: 0.897
+INFO [2025-01-04 14:15:03] Fitting TdS GAM model for men
+INFO [2025-01-04 14:15:03] Using variables: Distance_F_Last_5, FC_Last_5
+INFO [2025-01-04 14:15:03] TdS Model metrics for men
+INFO [2025-01-04 14:15:03] RMSE: 9.312
+INFO [2025-01-04 14:15:03] MAE: 6.552
+INFO [2025-01-04 14:15:03] R2: 0.596
+INFO [2025-01-04 14:15:03] Fitting TdS GAM model for women
+INFO [2025-01-04 14:15:03] Using variables: Freestyle_Pelo_Pct, Distance_F_Last_5, FC_Last_5
+INFO [2025-01-04 14:15:03] TdS Model metrics for women
+INFO [2025-01-04 14:15:03] RMSE: 8.118
+INFO [2025-01-04 14:15:03] MAE: 6.068
+INFO [2025-01-04 14:15:03] R2: 0.703

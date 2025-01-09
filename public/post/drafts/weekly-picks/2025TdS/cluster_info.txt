@@ -3,129 +3,169 @@ varclus(x = as.matrix(predictors_df))
 
 Similarity matrix (Spearman rho^2)
 
-                    Distance_Pelo_Pct Distance_C_Pelo_Pct Distance_F_Pelo_Pct Pelo_Pct Sprint_Pelo_Pct Sprint_C_Pelo_Pct Sprint_F_Pelo_Pct
-Distance_Pelo_Pct                1.00                0.87                0.88     0.68            0.06              0.06              0.05
-Distance_C_Pelo_Pct              0.87                1.00                0.71     0.63            0.08              0.10              0.07
-Distance_F_Pelo_Pct              0.88                0.71                1.00     0.58            0.04              0.03              0.04
-Pelo_Pct                         0.68                0.63                0.58     1.00            0.39              0.35              0.36
-Sprint_Pelo_Pct                  0.06                0.08                0.04     0.39            1.00              0.83              0.89
-Sprint_C_Pelo_Pct                0.06                0.10                0.03     0.35            0.83              1.00              0.62
-Sprint_F_Pelo_Pct                0.05                0.07                0.04     0.36            0.89              0.62              1.00
-Freestyle_Pelo_Pct               0.58                0.50                0.57     0.89            0.39              0.28              0.44
-Classic_Pelo_Pct                 0.63                0.71                0.48     0.86            0.37              0.43              0.29
-Sprint_C_Last_5                  0.05                0.06                0.02     0.18            0.39              0.39              0.32
-Sprint_C_Last_5_2                0.06                0.07                0.03     0.21            0.42              0.40              0.35
-Distance_C_Last_5                0.39                0.36                0.31     0.32            0.05              0.07              0.04
-Distance_C_Last_5_2              0.41                0.37                0.33     0.35            0.06              0.08              0.05
-Sprint_F_Last_5                  0.02                0.02                0.02     0.20            0.46              0.34              0.46
-Sprint_F_Last_5_2                0.03                0.03                0.02     0.22            0.48              0.35              0.47
-Distance_F_Last_5                0.41                0.31                0.40     0.34            0.03              0.03              0.03
-Distance_F_Last_5_2              0.43                0.34                0.41     0.37            0.03              0.03              0.03
-Distance_Last_5                  0.47                0.41                0.40     0.42            0.05              0.06              0.05
-Distance_Last_5_2                0.48                0.42                0.42     0.45            0.06              0.07              0.06
-                    Freestyle_Pelo_Pct Classic_Pelo_Pct Sprint_C_Last_5 Sprint_C_Last_5_2 Distance_C_Last_5 Distance_C_Last_5_2
-Distance_Pelo_Pct                 0.58             0.63            0.05              0.06              0.39                0.41
-Distance_C_Pelo_Pct               0.50             0.71            0.06              0.07              0.36                0.37
-Distance_F_Pelo_Pct               0.57             0.48            0.02              0.03              0.31                0.33
-Pelo_Pct                          0.89             0.86            0.18              0.21              0.32                0.35
-Sprint_Pelo_Pct                   0.39             0.37            0.39              0.42              0.05                0.06
-Sprint_C_Pelo_Pct                 0.28             0.43            0.39              0.40              0.07                0.08
-Sprint_F_Pelo_Pct                 0.44             0.29            0.32              0.35              0.04                0.05
-Freestyle_Pelo_Pct                1.00             0.66            0.16              0.19              0.23                0.26
-Classic_Pelo_Pct                  0.66             1.00            0.23              0.25              0.37                0.39
-Sprint_C_Last_5                   0.16             0.23            1.00              0.91              0.10                0.09
-Sprint_C_Last_5_2                 0.19             0.25            0.91              1.00              0.09                0.09
-Distance_C_Last_5                 0.23             0.37            0.10              0.09              1.00                0.92
-Distance_C_Last_5_2               0.26             0.39            0.09              0.09              0.92                1.00
-Sprint_F_Last_5                   0.25             0.16            0.31              0.33              0.05                0.05
-Sprint_F_Last_5_2                 0.26             0.17            0.31              0.33              0.05                0.05
-Distance_F_Last_5                 0.31             0.28            0.05              0.05              0.50                0.50
-Distance_F_Last_5_2               0.34             0.31            0.05              0.05              0.51                0.50
-Distance_Last_5                   0.33             0.39            0.06              0.07              0.60                0.61
-Distance_Last_5_2                 0.35             0.41            0.06              0.07              0.55                0.61
-                    Sprint_F_Last_5 Sprint_F_Last_5_2 Distance_F_Last_5 Distance_F_Last_5_2 Distance_Last_5 Distance_Last_5_2
-Distance_Pelo_Pct              0.02              0.03              0.41                0.43            0.47              0.48
-Distance_C_Pelo_Pct            0.02              0.03              0.31                0.34            0.41              0.42
-Distance_F_Pelo_Pct            0.02              0.02              0.40                0.41            0.40              0.42
-Pelo_Pct                       0.20              0.22              0.34                0.37            0.42              0.45
-Sprint_Pelo_Pct                0.46              0.48              0.03                0.03            0.05              0.06
-Sprint_C_Pelo_Pct              0.34              0.35              0.03                0.03            0.06              0.07
-Sprint_F_Pelo_Pct              0.46              0.47              0.03                0.03            0.05              0.06
-Freestyle_Pelo_Pct             0.25              0.26              0.31                0.34            0.33              0.35
-Classic_Pelo_Pct               0.16              0.17              0.28                0.31            0.39              0.41
-Sprint_C_Last_5                0.31              0.31              0.05                0.05            0.06              0.06
-Sprint_C_Last_5_2              0.33              0.33              0.05                0.05            0.07              0.07
-Distance_C_Last_5              0.05              0.05              0.50                0.51            0.60              0.55
-Distance_C_Last_5_2            0.05              0.05              0.50                0.50            0.61              0.61
-Sprint_F_Last_5                1.00              0.94              0.05                0.05            0.04              0.04
-Sprint_F_Last_5_2              0.94              1.00              0.05                0.05            0.04              0.04
-Distance_F_Last_5              0.05              0.05              1.00                0.91            0.64              0.58
-Distance_F_Last_5_2            0.05              0.05              0.91                1.00            0.67              0.65
-Distance_Last_5                0.04              0.04              0.64                0.67            1.00              0.89
-Distance_Last_5_2              0.04              0.04              0.58                0.65            0.89              1.00
+                    Distance_Pelo_Pct Distance_C_Pelo_Pct Distance_F_Pelo_Pct Pelo_Pct Sprint_Pelo_Pct
+Distance_Pelo_Pct                1.00                0.53                0.56     0.55            0.01
+Distance_C_Pelo_Pct              0.53                1.00                0.30     0.29            0.01
+Distance_F_Pelo_Pct              0.56                0.30                1.00     0.32            0.00
+Pelo_Pct                         0.55                0.29                0.32     1.00            0.16
+Sprint_Pelo_Pct                  0.01                0.01                0.00     0.16            1.00
+Sprint_C_Pelo_Pct                0.01                0.00                0.00     0.09            0.55
+Sprint_F_Pelo_Pct                0.01                0.01                0.00     0.09            0.49
+Freestyle_Pelo_Pct               0.47                0.22                0.56     0.55            0.14
+Classic_Pelo_Pct                 0.39                0.57                0.20     0.51            0.19
+Sprint_C_Last_5                  0.03                0.02                0.01     0.17            0.12
+Sprint_C_Last_5_2                0.04                0.02                0.01     0.19            0.14
+Distance_C_Last_5                0.33                0.20                0.17     0.30            0.00
+Distance_C_Last_5_2              0.36                0.21                0.19     0.33            0.00
+Sprint_F_Last_5                  0.02                0.01                0.01     0.22            0.18
+Sprint_F_Last_5_2                0.03                0.01                0.02     0.24            0.19
+Distance_F_Last_5                0.35                0.16                0.25     0.28            0.00
+Distance_F_Last_5_2              0.38                0.17                0.27     0.32            0.00
+Distance_Last_5                  0.39                0.19                0.24     0.37            0.00
+Distance_Last_5_2                0.41                0.21                0.26     0.40            0.00
+                    Sprint_C_Pelo_Pct Sprint_F_Pelo_Pct Freestyle_Pelo_Pct Classic_Pelo_Pct Sprint_C_Last_5
+Distance_Pelo_Pct                0.01              0.01               0.47             0.39            0.03
+Distance_C_Pelo_Pct              0.00              0.01               0.22             0.57            0.02
+Distance_F_Pelo_Pct              0.00              0.00               0.56             0.20            0.01
+Pelo_Pct                         0.09              0.09               0.55             0.51            0.17
+Sprint_Pelo_Pct                  0.55              0.49               0.14             0.19            0.12
+Sprint_C_Pelo_Pct                1.00              0.23               0.05             0.15            0.10
+Sprint_F_Pelo_Pct                0.23              1.00               0.10             0.08            0.03
+Freestyle_Pelo_Pct               0.05              0.10               1.00             0.31            0.07
+Classic_Pelo_Pct                 0.15              0.08               0.31             1.00            0.16
+Sprint_C_Last_5                  0.10              0.03               0.07             0.16            1.00
+Sprint_C_Last_5_2                0.11              0.03               0.08             0.17            0.93
+Distance_C_Last_5                0.00              0.00               0.14             0.18            0.10
+Distance_C_Last_5_2              0.00              0.00               0.15             0.19            0.10
+Sprint_F_Last_5                  0.06              0.06               0.15             0.10            0.24
+Sprint_F_Last_5_2                0.07              0.06               0.16             0.11            0.24
+Distance_F_Last_5                0.00              0.00               0.19             0.11            0.05
+Distance_F_Last_5_2              0.00              0.00               0.21             0.12            0.04
+Distance_Last_5                  0.00              0.00               0.20             0.16            0.05
+Distance_Last_5_2                0.00              0.00               0.21             0.17            0.05
+                    Sprint_C_Last_5_2 Distance_C_Last_5 Distance_C_Last_5_2 Sprint_F_Last_5 Sprint_F_Last_5_2
+Distance_Pelo_Pct                0.04              0.33                0.36            0.02              0.03
+Distance_C_Pelo_Pct              0.02              0.20                0.21            0.01              0.01
+Distance_F_Pelo_Pct              0.01              0.17                0.19            0.01              0.02
+Pelo_Pct                         0.19              0.30                0.33            0.22              0.24
+Sprint_Pelo_Pct                  0.14              0.00                0.00            0.18              0.19
+Sprint_C_Pelo_Pct                0.11              0.00                0.00            0.06              0.07
+Sprint_F_Pelo_Pct                0.03              0.00                0.00            0.06              0.06
+Freestyle_Pelo_Pct               0.08              0.14                0.15            0.15              0.16
+Classic_Pelo_Pct                 0.17              0.18                0.19            0.10              0.11
+Sprint_C_Last_5                  0.93              0.10                0.10            0.24              0.24
+Sprint_C_Last_5_2                1.00              0.10                0.09            0.26              0.26
+Distance_C_Last_5                0.10              1.00                0.92            0.05              0.05
+Distance_C_Last_5_2              0.09              0.92                1.00            0.05              0.05
+Sprint_F_Last_5                  0.26              0.05                0.05            1.00              0.93
+Sprint_F_Last_5_2                0.26              0.05                0.05            0.93              1.00
+Distance_F_Last_5                0.04              0.44                0.44            0.04              0.04
+Distance_F_Last_5_2              0.04              0.45                0.44            0.04              0.04
+Distance_Last_5                  0.05              0.57                0.58            0.03              0.03
+Distance_Last_5_2                0.05              0.51                0.57            0.03              0.03
+                    Distance_F_Last_5 Distance_F_Last_5_2 Distance_Last_5 Distance_Last_5_2
+Distance_Pelo_Pct                0.35                0.38            0.39              0.41
+Distance_C_Pelo_Pct              0.16                0.17            0.19              0.21
+Distance_F_Pelo_Pct              0.25                0.27            0.24              0.26
+Pelo_Pct                         0.28                0.32            0.37              0.40
+Sprint_Pelo_Pct                  0.00                0.00            0.00              0.00
+Sprint_C_Pelo_Pct                0.00                0.00            0.00              0.00
+Sprint_F_Pelo_Pct                0.00                0.00            0.00              0.00
+Freestyle_Pelo_Pct               0.19                0.21            0.20              0.21
+Classic_Pelo_Pct                 0.11                0.12            0.16              0.17
+Sprint_C_Last_5                  0.05                0.04            0.05              0.05
+Sprint_C_Last_5_2                0.04                0.04            0.05              0.05
+Distance_C_Last_5                0.44                0.45            0.57              0.51
+Distance_C_Last_5_2              0.44                0.44            0.58              0.57
+Sprint_F_Last_5                  0.04                0.04            0.03              0.03
+Sprint_F_Last_5_2                0.04                0.04            0.03              0.03
+Distance_F_Last_5                1.00                0.91            0.61              0.55
+Distance_F_Last_5_2              0.91                1.00            0.63              0.61
+Distance_Last_5                  0.61                0.63            1.00              0.89
+Distance_Last_5_2                0.55                0.61            0.89              1.00
 
 No. of observations used for each pair:
 
-                    Distance_Pelo_Pct Distance_C_Pelo_Pct Distance_F_Pelo_Pct Pelo_Pct Sprint_Pelo_Pct Sprint_C_Pelo_Pct Sprint_F_Pelo_Pct
-Distance_Pelo_Pct               11687               11687               11687    11687           11687             11687             11687
-Distance_C_Pelo_Pct             11687               11687               11687    11687           11687             11687             11687
-Distance_F_Pelo_Pct             11687               11687               11687    11687           11687             11687             11687
-Pelo_Pct                        11687               11687               11687    11687           11687             11687             11687
-Sprint_Pelo_Pct                 11687               11687               11687    11687           11687             11687             11687
-Sprint_C_Pelo_Pct               11687               11687               11687    11687           11687             11687             11687
-Sprint_F_Pelo_Pct               11687               11687               11687    11687           11687             11687             11687
-Freestyle_Pelo_Pct              11687               11687               11687    11687           11687             11687             11687
-Classic_Pelo_Pct                11687               11687               11687    11687           11687             11687             11687
-Sprint_C_Last_5                 11687               11687               11687    11687           11687             11687             11687
-Sprint_C_Last_5_2               11687               11687               11687    11687           11687             11687             11687
-Distance_C_Last_5               11687               11687               11687    11687           11687             11687             11687
-Distance_C_Last_5_2             11687               11687               11687    11687           11687             11687             11687
-Sprint_F_Last_5                 11687               11687               11687    11687           11687             11687             11687
-Sprint_F_Last_5_2               11687               11687               11687    11687           11687             11687             11687
-Distance_F_Last_5               11687               11687               11687    11687           11687             11687             11687
-Distance_F_Last_5_2             11687               11687               11687    11687           11687             11687             11687
-Distance_Last_5                 11687               11687               11687    11687           11687             11687             11687
-Distance_Last_5_2               11687               11687               11687    11687           11687             11687             11687
-                    Freestyle_Pelo_Pct Classic_Pelo_Pct Sprint_C_Last_5 Sprint_C_Last_5_2 Distance_C_Last_5 Distance_C_Last_5_2
-Distance_Pelo_Pct                11687            11687           11687             11687             11687               11687
-Distance_C_Pelo_Pct              11687            11687           11687             11687             11687               11687
-Distance_F_Pelo_Pct              11687            11687           11687             11687             11687               11687
-Pelo_Pct                         11687            11687           11687             11687             11687               11687
-Sprint_Pelo_Pct                  11687            11687           11687             11687             11687               11687
-Sprint_C_Pelo_Pct                11687            11687           11687             11687             11687               11687
-Sprint_F_Pelo_Pct                11687            11687           11687             11687             11687               11687
-Freestyle_Pelo_Pct               11687            11687           11687             11687             11687               11687
-Classic_Pelo_Pct                 11687            11687           11687             11687             11687               11687
-Sprint_C_Last_5                  11687            11687           11687             11687             11687               11687
-Sprint_C_Last_5_2                11687            11687           11687             11687             11687               11687
-Distance_C_Last_5                11687            11687           11687             11687             11687               11687
-Distance_C_Last_5_2              11687            11687           11687             11687             11687               11687
-Sprint_F_Last_5                  11687            11687           11687             11687             11687               11687
-Sprint_F_Last_5_2                11687            11687           11687             11687             11687               11687
-Distance_F_Last_5                11687            11687           11687             11687             11687               11687
-Distance_F_Last_5_2              11687            11687           11687             11687             11687               11687
-Distance_Last_5                  11687            11687           11687             11687             11687               11687
-Distance_Last_5_2                11687            11687           11687             11687             11687               11687
-                    Sprint_F_Last_5 Sprint_F_Last_5_2 Distance_F_Last_5 Distance_F_Last_5_2 Distance_Last_5 Distance_Last_5_2
-Distance_Pelo_Pct             11687             11687             11687               11687           11687             11687
-Distance_C_Pelo_Pct           11687             11687             11687               11687           11687             11687
-Distance_F_Pelo_Pct           11687             11687             11687               11687           11687             11687
-Pelo_Pct                      11687             11687             11687               11687           11687             11687
-Sprint_Pelo_Pct               11687             11687             11687               11687           11687             11687
-Sprint_C_Pelo_Pct             11687             11687             11687               11687           11687             11687
-Sprint_F_Pelo_Pct             11687             11687             11687               11687           11687             11687
-Freestyle_Pelo_Pct            11687             11687             11687               11687           11687             11687
-Classic_Pelo_Pct              11687             11687             11687               11687           11687             11687
-Sprint_C_Last_5               11687             11687             11687               11687           11687             11687
-Sprint_C_Last_5_2             11687             11687             11687               11687           11687             11687
-Distance_C_Last_5             11687             11687             11687               11687           11687             11687
-Distance_C_Last_5_2           11687             11687             11687               11687           11687             11687
-Sprint_F_Last_5               11687             11687             11687               11687           11687             11687
-Sprint_F_Last_5_2             11687             11687             11687               11687           11687             11687
-Distance_F_Last_5             11687             11687             11687               11687           11687             11687
-Distance_F_Last_5_2           11687             11687             11687               11687           11687             11687
-Distance_Last_5               11687             11687             11687               11687           11687             11687
-Distance_Last_5_2             11687             11687             11687               11687           11687             11687
+                    Distance_Pelo_Pct Distance_C_Pelo_Pct Distance_F_Pelo_Pct Pelo_Pct Sprint_Pelo_Pct
+Distance_Pelo_Pct               28101               28101               28101    28101           28101
+Distance_C_Pelo_Pct             28101               28101               28101    28101           28101
+Distance_F_Pelo_Pct             28101               28101               28101    28101           28101
+Pelo_Pct                        28101               28101               28101    28101           28101
+Sprint_Pelo_Pct                 28101               28101               28101    28101           28101
+Sprint_C_Pelo_Pct               28101               28101               28101    28101           28101
+Sprint_F_Pelo_Pct               28101               28101               28101    28101           28101
+Freestyle_Pelo_Pct              28101               28101               28101    28101           28101
+Classic_Pelo_Pct                28101               28101               28101    28101           28101
+Sprint_C_Last_5                 28101               28101               28101    28101           28101
+Sprint_C_Last_5_2               28101               28101               28101    28101           28101
+Distance_C_Last_5               28101               28101               28101    28101           28101
+Distance_C_Last_5_2             28101               28101               28101    28101           28101
+Sprint_F_Last_5                 28101               28101               28101    28101           28101
+Sprint_F_Last_5_2               28101               28101               28101    28101           28101
+Distance_F_Last_5               28101               28101               28101    28101           28101
+Distance_F_Last_5_2             28101               28101               28101    28101           28101
+Distance_Last_5                 28101               28101               28101    28101           28101
+Distance_Last_5_2               28101               28101               28101    28101           28101
+                    Sprint_C_Pelo_Pct Sprint_F_Pelo_Pct Freestyle_Pelo_Pct Classic_Pelo_Pct Sprint_C_Last_5
+Distance_Pelo_Pct               28101             28101              28101            28101           28101
+Distance_C_Pelo_Pct             28101             28101              28101            28101           28101
+Distance_F_Pelo_Pct             28101             28101              28101            28101           28101
+Pelo_Pct                        28101             28101              28101            28101           28101
+Sprint_Pelo_Pct                 28101             28101              28101            28101           28101
+Sprint_C_Pelo_Pct               28101             28101              28101            28101           28101
+Sprint_F_Pelo_Pct               28101             28101              28101            28101           28101
+Freestyle_Pelo_Pct              28101             28101              28101            28101           28101
+Classic_Pelo_Pct                28101             28101              28101            28101           28101
+Sprint_C_Last_5                 28101             28101              28101            28101           28101
+Sprint_C_Last_5_2               28101             28101              28101            28101           28101
+Distance_C_Last_5               28101             28101              28101            28101           28101
+Distance_C_Last_5_2             28101             28101              28101            28101           28101
+Sprint_F_Last_5                 28101             28101              28101            28101           28101
+Sprint_F_Last_5_2               28101             28101              28101            28101           28101
+Distance_F_Last_5               28101             28101              28101            28101           28101
+Distance_F_Last_5_2             28101             28101              28101            28101           28101
+Distance_Last_5                 28101             28101              28101            28101           28101
+Distance_Last_5_2               28101             28101              28101            28101           28101
+                    Sprint_C_Last_5_2 Distance_C_Last_5 Distance_C_Last_5_2 Sprint_F_Last_5 Sprint_F_Last_5_2
+Distance_Pelo_Pct               28101             28101               28101           28101             28101
+Distance_C_Pelo_Pct             28101             28101               28101           28101             28101
+Distance_F_Pelo_Pct             28101             28101               28101           28101             28101
+Pelo_Pct                        28101             28101               28101           28101             28101
+Sprint_Pelo_Pct                 28101             28101               28101           28101             28101
+Sprint_C_Pelo_Pct               28101             28101               28101           28101             28101
+Sprint_F_Pelo_Pct               28101             28101               28101           28101             28101
+Freestyle_Pelo_Pct              28101             28101               28101           28101             28101
+Classic_Pelo_Pct                28101             28101               28101           28101             28101
+Sprint_C_Last_5                 28101             28101               28101           28101             28101
+Sprint_C_Last_5_2               28101             28101               28101           28101             28101
+Distance_C_Last_5               28101             28101               28101           28101             28101
+Distance_C_Last_5_2             28101             28101               28101           28101             28101
+Sprint_F_Last_5                 28101             28101               28101           28101             28101
+Sprint_F_Last_5_2               28101             28101               28101           28101             28101
+Distance_F_Last_5               28101             28101               28101           28101             28101
+Distance_F_Last_5_2             28101             28101               28101           28101             28101
+Distance_Last_5                 28101             28101               28101           28101             28101
+Distance_Last_5_2               28101             28101               28101           28101             28101
+                    Distance_F_Last_5 Distance_F_Last_5_2 Distance_Last_5 Distance_Last_5_2
+Distance_Pelo_Pct               28101               28101           28101             28101
+Distance_C_Pelo_Pct             28101               28101           28101             28101
+Distance_F_Pelo_Pct             28101               28101           28101             28101
+Pelo_Pct                        28101               28101           28101             28101
+Sprint_Pelo_Pct                 28101               28101           28101             28101
+Sprint_C_Pelo_Pct               28101               28101           28101             28101
+Sprint_F_Pelo_Pct               28101               28101           28101             28101
+Freestyle_Pelo_Pct              28101               28101           28101             28101
+Classic_Pelo_Pct                28101               28101           28101             28101
+Sprint_C_Last_5                 28101               28101           28101             28101
+Sprint_C_Last_5_2               28101               28101           28101             28101
+Distance_C_Last_5               28101               28101           28101             28101
+Distance_C_Last_5_2             28101               28101           28101             28101
+Sprint_F_Last_5                 28101               28101           28101             28101
+Sprint_F_Last_5_2               28101               28101           28101             28101
+Distance_F_Last_5               28101               28101           28101             28101
+Distance_F_Last_5_2             28101               28101           28101             28101
+Distance_Last_5                 28101               28101           28101             28101
+Distance_Last_5_2               28101               28101           28101             28101
 
 hclust results (method=complete)
 

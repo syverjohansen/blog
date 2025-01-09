@@ -128,7 +128,8 @@ def process_season(df, ID, sex):
     
     # Sort the filtered DataFrame by the "Elo" column in descending order
     df = df.sort(["Season", "Race"])
-
+    if(str(ID)==str(5164)):
+        print(df)
     
     # Select the desired columns
     df = df.select(["Exp", "Date", "City", "Country", "Event", "Distance", "MS", "Technique", "Place", "Season", "Race", "Age","Elo", "Distance_Elo", "Distance_C_Elo", "Distance_F_Elo",

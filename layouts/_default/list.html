@@ -3,6 +3,15 @@
   {{ .Content }}
   {{ range .Pages }}
     <h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
-    {{ .Summary }}
+    <div class="post-meta">
+      {{ .Date.Format "January 2, 2006" }} by {{ .Params.author }}
+    </div>
+    <div class="post-summary">
+      {{ with .Description }}
+        {{ . }}
+      {{ else }}
+        {{ .Summary | truncate 150 }}
+      {{ end }}
+    </div>
   {{ end }}
 {{ end }}

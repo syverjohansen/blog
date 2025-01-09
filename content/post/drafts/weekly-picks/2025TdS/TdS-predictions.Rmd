@@ -8,8 +8,8 @@ library(ggplot2)
 library(effects)
 library(segmented)
 
-M_chrono <- read_feather('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/men_merged.feather')
-L_chrono <- read_feather('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/ladies_merged.feather')
+M_chrono <- arrow::read_feather('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/men_merged.feather')
+L_chrono <- arrow::read_feather('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/ladies_merged.feather')
 
 M_chrono <- M_chrono %>% filter(Distance != "Ts", Distance != "Rel")
 L_chrono <- L_chrono %>% filter(Distance != "Ts", Distance != "Rel")
@@ -350,14 +350,14 @@ ladies_df <- ladies_df %>%
 
 # Step Three: Filter for the last five years
 men_df <- men_df %>%
-  filter(Season > 2019, Event %in% c("World Cup", "Nordic Opening", "Tour de Ski", "Olympic Winter Games", "World Championship", "World Cup Final", "Ski Tour Canada")) %>%
+  filter(Season >= 2014, Event %in% c("World Cup", "Nordic Opening", "Tour de Ski", "Olympic Winter Games", "World Championship", "World Cup Final", "Ski Tour Canada")) %>%
   group_by(ID, Season) %>%
   mutate(Cumulative_Points = cumsum(Points)) %>%
   ungroup()
 
 # Step Three: Filter for the last five years
 ladies_df <- ladies_df %>%
-  filter(Season > 2019, Event %in% c("World Cup", "Nordic Opening", "Tour de Ski", "Olympic Winter Games", "World Championship", "World Cup Final", "Ski Tour Canada")) %>%
+  filter(Season >= 2014, Event %in% c("World Cup", "Nordic Opening", "Tour de Ski", "Olympic Winter Games", "World Championship", "World Cup Final", "Ski Tour Canada")) %>%
   group_by(ID, Season) %>%
   mutate(Cumulative_Points = cumsum(Points)) %>%
   ungroup()
@@ -434,7 +434,7 @@ men_df <- men_df %>%
       City == "Val di Fiemme" & 
       Event == "Tour de Ski" & 
       `Average Grade` > 5 ~ TRUE &
-        Season>=2020,
+        Season>=2014,
       
       TRUE ~ FALSE
     )
@@ -446,7 +446,7 @@ ladies_df <- ladies_df %>%
       City == "Val di Fiemme" & 
       Event == "Tour de Ski" & 
       `Average Grade` > 5 ~ TRUE &
-        Season>=2020,
+        Season>=2014,
       TRUE ~ FALSE
     )
   )
@@ -1099,7 +1099,7 @@ calculate_fc_history <- function(gender = "M") {
     # Process each row chronologically, but only once per race
     results <- data %>%
         group_by(ID, Season, Race) %>%  # Group by ID, Season, and Race
-        slice(1) %>%  # Take first row of each group
+        dplyr::slice(1) %>%  # Take first row of each group
         group_by(ID) %>%  # Now group by ID for chronological processing
         arrange(Date) %>%
         mutate(
@@ -1808,12 +1808,64 @@ men_df2 = men_df
 ladies_df2 = ladies_df
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```{r load-startlist}
 
 
 library(stringr)
 library(dplyr)
 
+normalize_tds_predictions <- function(predictions) {
+ tds_points <- c(300,285,270,255,240,216,207,198,189,180,174,168,162,156,150,144,138,132,126,120,114,108,102,96,90,84,78,72,66,60,57,54,51,48,45,42,39,36,33,30,27,24,21,18,15,12,9,6,3)
+ 
+ predictions <- as.numeric(predictions)
+ predictions[is.na(predictions)] <- 0
+ predictions <- pmin(predictions, 300)
+ 
+ target_sum <- sum(tds_points[1:length(predictions)]) 
+ print(target_sum)
+ current_sum <- sum(predictions, na.rm=TRUE)
+ print(current_sum)
+ 
+ if(!is.na(current_sum) && !is.na(target_sum) && current_sum > target_sum) {
+   scaling_factor <- target_sum / current_sum
+   predictions <- predictions * scaling_factor
+ }
+ 
+ return(round(predictions))
+}
 predict_points <- function(startlist, gender = "M") {
     # Select appropriate model
     model <- if(gender == "M") {
@@ -1822,12 +1874,25 @@ predict_points <- function(startlist, gender = "M") {
         readRDS(file.path(tds_log_dir, "women_tds_gam1.rds"))
     }
     
-    # Generate predictions
-    predictions <- predict(model, newdata = startlist)
-    predictions <- pmax(pmin(round(predictions), 300), 0)
+    # Generate predictions with standard error
+    pred <- predict(model, newdata = startlist, se.fit = TRUE)
+    predictions <- pred$fit
+    se <- pred$se.fit
     
-    # Add predictions to startlist
+    # Calculate base, safe and upside predictions
+    predictions <- pmax(pmin(round(predictions), 300), 0)
+    safe_predictions <- pmax(pmin(round(predictions - 1.96*se), 300), 0)  # 95% lower bound
+    upside_predictions <- pmax(pmin(round(predictions + 1.96*se), 300), 0)  # 95% upper bound
+    
+    # Normalize all three sets
+    predictions <- normalize_tds_predictions(predictions)
+    safe_predictions <- normalize_tds_predictions(safe_predictions)
+    upside_predictions <- normalize_tds_predictions(upside_predictions)
+    
+    # Add all predictions to startlist
     startlist$Predicted_Points <- predictions
+    startlist$Safe_Prediction <- safe_predictions
+    startlist$Upside_Prediction <- upside_predictions
     
     return(startlist)
 }
@@ -1849,7 +1914,7 @@ calculate_tds_value <- function(skier_id, startlist, gender = "M") {
         filter(ID == skier_id, 
                City == "Tour de Ski") %>%
         arrange(desc(Date)) %>%
-        slice_head(n = 1) %>%
+        dplyr::slice_head(n = 1) %>%
         pull(TdS_Historical)
     if(skier_id == 8678){
       print(historical_string)
@@ -1871,7 +1936,7 @@ calculate_tds_value <- function(skier_id, startlist, gender = "M") {
         latest_data <- data %>%
             filter(ID == skier_id) %>%
             arrange(desc(Date)) %>%
-            slice_head(n = 1)
+            dplyr::slice_head(n = 1)
         
         if(nrow(latest_data) > 0) {
             # Get prediction from GAM model
@@ -1880,7 +1945,7 @@ calculate_tds_value <- function(skier_id, startlist, gender = "M") {
             pred_se <- pred$se.fit
         } else {
             # If no data available, use model predictions on empty data
-            latest_data <- data %>% slice(1) %>% mutate(across(everything(), ~NA))
+            latest_data <- data %>% dplyr::slice(1) %>% mutate(across(everything(), ~NA))
             pred <- predict(model, newdata = latest_data, se.fit = TRUE)
             pred_value <- pred$fit
             pred_se <- pred$se.fit
@@ -1920,7 +1985,7 @@ calculate_fc_value <- function(skier_id, gender = "M") {
     
     # Get actual results, sorted by most recent
     real_results <- data %>%
-        filter(ID == skier_id, City=="Val di Fiemme", Season>2020, `Average Grade` > 5, Event=="Tour de Ski") %>%
+        filter(ID == skier_id, City=="Val di Fiemme", Season>2014, `Average Grade` > 5, Event=="Tour de Ski") %>%
         arrange(desc(Date)) %>%
         slice_head(n = 3) %>%
         pull(Points)
@@ -1949,7 +2014,7 @@ calculate_fc_value <- function(skier_id, gender = "M") {
             pred_se <- pred$se.fit
         } else {
             # If no data available, use model predictions on empty data
-            latest_data <- data %>% slice(1) %>% mutate(across(everything(), ~NA))
+            latest_data <- data %>% dplyr::slice(1) %>% mutate(across(everything(), ~NA))
             pred <- predict(model, newdata = latest_data, se.fit = TRUE)
             pred_value <- pred$fit
             pred_se <- pred$se.fit
@@ -1997,7 +2062,7 @@ add_last_5_values <- function(startlist, history_df, gender) {
     recent_values <- history_df %>%
         group_by(ID) %>%
         arrange(desc(Date)) %>%
-        slice(1) %>%
+        dplyr::slice(1) %>%
         dplyr::select(ID, all_of(last_5_columns))
     
     # Join with startlist and rename columns to remove the "_2"
@@ -2099,20 +2164,41 @@ cat("MAE:", round(ladies_gam$metrics$MAE, 3), "\n")
 cat("R2:", round(ladies_gam$metrics$R2, 3), "\n")
 
 men_startlist %>% filter(ID==5164) %>% dplyr::select(Distance_C_Last_5, FC_Last_5)
+
+# if(sum(men_startlist$Predicted_Points)>sum(tds_points)){
+# 
+# men_startlist$Predicted_Points = (sum(tds_points)/sum(men_startlist$Predicted_Points))*men_startlist$Predicted_Points
+# }
 # Format and save men's data
 men_output <- men_startlist %>%
-  dplyr::select(Skier, Nation, Predicted_Points) %>%
-  rename(`Predicted Points` = Predicted_Points) %>%
+  dplyr::select(Skier, Nation, Predicted_Points, Safe_Prediction, Upside_Prediction) %>%
+  rename(
+    `Predicted Points` = Predicted_Points,
+    `Safe Points` = Safe_Prediction,
+    `Upside Points` = Upside_Prediction
+  ) %>%
   arrange(desc(`Predicted Points`))
 
+library(openxlsx)
 write.xlsx(men_output, 
           "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/men-points.xlsx")
 
+
+# if(sum(ladies_startlist$Predicted_Points)>sum(tds_points)){
+# 
+# ladies_startlist$Predicted_Points = (sum(tds_points)/sum(ladies_startlist$Predicted_Points))*ladies_startlist$Predicted_Points
+# }
 # Format and save ladies' data
 ladies_output <- ladies_startlist %>%
-  dplyr::select(Skier, Nation, Predicted_Points) %>%
-  rename(`Predicted Points` = Predicted_Points) %>%
+  dplyr::select(Skier, Nation, Predicted_Points, Safe_Prediction, Upside_Prediction) %>%
+  rename(
+    `Predicted Points` = Predicted_Points,
+    `Safe Points` = Safe_Prediction,
+    `Upside Points` = Upside_Prediction
+  ) %>%
   arrange(desc(`Predicted Points`))
+
+
 
 write.xlsx(ladies_output,
           "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/ladies-points.xlsx")
@@ -2125,8 +2211,143 @@ men_tds_history2 = men_tds_history
 ladies_fc_history2 = ladies_fc_history
 ladies_tds_history2 = ladies_tds_history
 
+sum(tds_points)
+
 ```
 
+
+
+
+```{r fc_gam_1}
+# Select Final Climb features
+select_fc_features <- function(data, outcome = "Points", gender = "men", max_vars = 100) {
+    # Get predictor columns
+    pred_cols <- names(data)[!names(data) %in% c("ID", "Season", "Race", "Date", "Points", 
+                                                "FC_Race", "TdS_Last_5_2", "FC_Last_5_2",
+                                                "Place", "Skier")]
+    
+    # Create formula for regsubsets
+    formula_str <- paste(outcome, "~", paste(pred_cols, collapse = " + "))
+    
+    # Perform exhaustive search
+    subset_search <- regsubsets(as.formula(formula_str),
+                            data = data,
+                            nvmax = max_vars,
+                            method = "exhaustive",
+                            really.big = TRUE)
+    
+    # Find best model by BIC
+    subset_summary <- summary(subset_search)
+    best_model_idx <- which.min(subset_summary$bic)
+    selected_vars <- names(subset_summary$which[best_model_idx, ])[subset_summary$which[best_model_idx, ]][-1]
+    
+    return(list(
+        selected_vars = selected_vars,
+        bic_scores = subset_summary$bic,
+        full_summary = subset_summary,
+        best_model_idx = best_model_idx
+    ))
+}
+
+
+men_fc_history2
+# Get Final Climb history
+men_fc_history <- men_fc_history2
+
+ladies_fc_history <- ladies_fc_history2
+
+# Select features
+men_fc_selection <- select_fc_features(men_fc_history, gender = "men")
+ladies_fc_selection <- select_fc_features(ladies_fc_history, gender = "women")
+
+# Fit GAM models
+men_fc_gam <- fit_validate_gam(
+    data = men_fc_history,
+    selected_vars = men_fc_selection$selected_vars,
+    gender = "men"
+)
+
+ladies_fc_gam <- fit_validate_gam(
+    data = ladies_fc_history,
+    selected_vars = ladies_fc_selection$selected_vars,
+    gender = "women"
+)
+
+# Save models
+saveRDS(men_fc_gam$model, file.path(log_dir, "men_final_climb_gam1.rds"))
+saveRDS(ladies_fc_gam$model, file.path(log_dir, "women_final_climb_gam1.rds"))
+
+# Create summary
+sink(file.path(log_dir, "final_climb_gam_summary.txt"))
+cat("Final Climb GAM Models Summary\n")
+cat("============================\n\n")
+
+cat("Men's Model:\n")
+cat("Variables:", paste(men_fc_selection$selected_vars, collapse=", "), "\n")
+cat("RMSE:", round(men_fc_gam$metrics$RMSE, 3), "\n")
+cat("MAE:", round(men_fc_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(men_fc_gam$metrics$R2, 3), "\n\n")
+
+cat("Women's Model:\n")
+cat("Variables:", paste(ladies_fc_selection$selected_vars, collapse=", "), "\n")
+cat("RMSE:", round(ladies_fc_gam$metrics$RMSE, 3), "\n")
+cat("MAE:", round(ladies_fc_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(ladies_fc_gam$metrics$R2, 3), "\n")
+sink()
+```
+
+
+
+```{r final-climb-pred}
+prepare_fc_data <- function(startlist, gender = "M") {
+    startlist <- startlist %>%
+        rename_with(~str_remove(., "\\.x$"), ends_with(".x"))
+    return(startlist)
+}
+
+predict_fc_points <- function(startlist, gender = "M") {
+    model <- if(gender == "M") {
+        readRDS(file.path(log_dir, "men_final_climb_gam1.rds"))
+    } else {
+        readRDS(file.path(log_dir, "women_final_climb_gam1.rds"))
+    }
+    
+    pred <- predict(model, newdata = startlist, se.fit = TRUE)
+    predictions <- pred$fit
+    se <- pred$se.fit
+    
+    startlist$FC_Predicted_Points <- pmax(pmin(round(predictions), 100), 0)
+    startlist$FC_Safe_Prediction <- pmax(pmin(round(predictions - 1.96*se), 100), 0)
+    startlist$FC_Upside_Prediction <- pmax(pmin(round(predictions + 1.96*se), 100), 0)
+    
+    return(startlist)
+}
+
+format_fc_predictions <- function(predictions) {
+    predictions %>%
+        dplyr::select(Skier, Nation, 
+               FC_Predicted_Points, FC_Safe_Prediction, FC_Upside_Prediction) %>%
+        rename(
+            `Predicted Points` = FC_Predicted_Points,
+            `Safe Points` = FC_Safe_Prediction,
+            `Upside Points` = FC_Upside_Prediction
+        ) %>%
+        arrange(desc(`Predicted Points`))
+}
+
+men_fc_startlist <- prepare_fc_data(men_startlist, "M")
+men_fc_predictions <- predict_fc_points(men_fc_startlist, "M")
+
+ladies_fc_startlist <- prepare_fc_data(ladies_startlist, "F")
+ladies_fc_predictions <- predict_fc_points(ladies_fc_startlist, "F")
+
+write.xlsx(format_fc_predictions(men_fc_predictions),
+           "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/men-fc-points.xlsx")
+write.xlsx(format_fc_predictions(ladies_fc_predictions),
+           "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/ladies-fc-points.xlsx")
+
+men_fc_predictions %>% arrange(desc(FC_Predicted_Points))
+```
 
 
 ```{r knapsack}
@@ -2134,22 +2355,27 @@ library(dplyr)
 library(ompr)
 library(ompr.roi)
 library(ROI.plugin.glpk)
-prepare_tds_data <- function(men_startlist, ladies_startlist) {
+prepare_tds_data <- function(men_startlist, ladies_startlist, prediction_type = "normal") {
     # Add gender to predictions
     men_df <- men_startlist %>%
         mutate(sex = "m")
-
     ladies_df <- ladies_startlist %>%
         mutate(sex = "f")
-
+    
+    # Choose which prediction column to use
+    points_col <- case_when(
+        prediction_type == "safe" ~ "Safe_Prediction",
+        prediction_type == "upside" ~ "Upside_Prediction",
+        TRUE ~ "Predicted_Points"
+    )
+    
     # Combine predictions and ensure numeric price
     combined_df <- bind_rows(men_df, ladies_df) %>%
         mutate(
-          row_id = row_number(),
-          Price = as.numeric(Price),
-          Points = Predicted_Points  # Create clean column name for optimization
+            row_id = row_number(),
+            Price = as.numeric(Price),
+            Points = get(points_col)  # Use selected prediction column
         )
-
     return(combined_df)
 }
 
@@ -2207,15 +2433,40 @@ optimize_tds_team <- function(fantasy_df) {
     return(selected_team)
 }
 
-# Run optimization
-combined_df <- prepare_tds_data(men_startlist, ladies_startlist)
-tds_team <- optimize_tds_team(combined_df)
+# Run all three optimizations
+combined_df_normal <- prepare_tds_data(men_fc_predictions, ladies_fc_predictions, "normal")
+combined_df_safe <- prepare_tds_data(men_fc_predictions, ladies_fc_predictions, "safe")
+combined_df_upside <- prepare_tds_data(men_fc_predictions, ladies_fc_predictions, "upside")
+
+tds_team_normal <- optimize_tds_team(combined_df_normal)
+tds_team_safe <- optimize_tds_team(combined_df_safe)
+tds_team_upside <- optimize_tds_team(combined_df_upside)
+
+# Save all teams to Excel
+write.xlsx(list(
+    "Normal Team" = tds_team_normal %>% 
+        dplyr::select(Skier, sex, Nation, Price, Points) %>%
+        rename(`Predicted Points` = Points),
+    "Safe Team" = tds_team_safe %>% 
+        dplyr::select(Skier, sex, Nation, Price, Points) %>%
+        rename(`Safe Points` = Points),
+    "Upside Team" = tds_team_upside %>% 
+        dplyr::select(Skier, sex, Nation, Price, Points) %>%
+        rename(`Upside Points` = Points)
+),"/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/fantasy-teams.xlsx")
+
+print(tds_team_normal)
+print(tds_team_safe)
+print(tds_team_upside)
+
 
 # Save to Excel with renamed column
-tds_team_output <- tds_team %>% 
+tds_team_output <- tds_team_upside %>% 
     dplyr::select(Skier, sex, Nation, Price, Points) %>%
     rename(`Predicted Points` = Points) %>%
     arrange(sex, desc(`Predicted Points`))
+
+print(tds_team_output)
 
 write.xlsx(tds_team_output, 
           "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/fantasy-team.xlsx")
@@ -2395,7 +2646,7 @@ library(writexl)
 
 clean_predictions <- function(df) {
   df %>%
-    select(-ID) %>%
+    dplyr::select(-ID) %>%
     rename(
       "Top 1" = prob_top1,
       "Top 3" = prob_top3,
