@@ -1,0 +1,444 @@
+INFO [2024-12-14 21:17:33] Starting men's Final Climb feature selection
+INFO [2024-12-14 21:17:33] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-14 21:17:33] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-14 21:17:33] Best model selected with 3 variables
+INFO [2024-12-14 21:17:33] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-14 21:17:33] BIC score: -205.302759184732
+INFO [2024-12-14 21:17:33] Starting women's Final Climb feature selection
+INFO [2024-12-14 21:17:33] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-14 21:17:33] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-14 21:17:33] Best model selected with 4 variables
+INFO [2024-12-14 21:17:33] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-14 21:17:33] BIC score: -172.57807572461
+INFO [2024-12-16 20:48:45] Starting men's Final Climb feature selection
+INFO [2024-12-16 20:48:45] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-16 20:48:45] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-16 20:48:45] Best model selected with 3 variables
+INFO [2024-12-16 20:48:45] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-16 20:48:45] BIC score: -205.302759184732
+INFO [2024-12-16 20:48:45] Starting women's Final Climb feature selection
+INFO [2024-12-16 20:48:45] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-16 20:48:45] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-16 20:48:45] Best model selected with 4 variables
+INFO [2024-12-16 20:48:45] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-16 20:48:45] BIC score: -172.57807572461
+INFO [2024-12-16 20:55:34] Starting men's Final Climb feature selection
+INFO [2024-12-16 20:55:34] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-16 20:55:34] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-16 20:55:34] Best model selected with 3 variables
+INFO [2024-12-16 20:55:34] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-16 20:55:34] BIC score: -205.302759184732
+INFO [2024-12-16 20:55:34] Starting women's Final Climb feature selection
+INFO [2024-12-16 20:55:34] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-16 20:55:34] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-16 20:55:34] Best model selected with 4 variables
+INFO [2024-12-16 20:55:34] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-16 20:55:34] BIC score: -172.57807572461
+INFO [2024-12-16 20:57:59] Starting men's Final Climb feature selection
+INFO [2024-12-16 20:57:59] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-16 20:57:59] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-16 20:57:59] Best model selected with 3 variables
+INFO [2024-12-16 20:57:59] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-16 20:57:59] BIC score: -205.302759184732
+INFO [2024-12-16 20:57:59] Starting women's Final Climb feature selection
+INFO [2024-12-16 20:57:59] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-16 20:57:59] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-16 20:57:59] Best model selected with 4 variables
+INFO [2024-12-16 20:57:59] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-16 20:57:59] BIC score: -172.57807572461
+INFO [2024-12-16 21:38:19] Starting men's Final Climb feature selection
+INFO [2024-12-16 21:38:19] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-16 21:38:19] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-16 21:38:19] Best model selected with 3 variables
+INFO [2024-12-16 21:38:19] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-16 21:38:19] BIC score: -205.302759184732
+INFO [2024-12-16 21:38:19] Starting women's Final Climb feature selection
+INFO [2024-12-16 21:38:19] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-16 21:38:19] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-16 21:38:19] Best model selected with 4 variables
+INFO [2024-12-16 21:38:19] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-16 21:38:19] BIC score: -172.57807572461
+INFO [2024-12-17 21:16:37] Starting men's Final Climb feature selection
+INFO [2024-12-17 21:16:37] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-17 21:16:37] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-17 21:16:37] Best model selected with 3 variables
+INFO [2024-12-17 21:16:37] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-17 21:16:37] BIC score: -205.302759184732
+INFO [2024-12-17 21:16:37] Starting women's Final Climb feature selection
+INFO [2024-12-17 21:16:37] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-17 21:16:37] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-17 21:16:37] Best model selected with 4 variables
+INFO [2024-12-17 21:16:37] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-17 21:16:37] BIC score: -172.57807572461
+INFO [2024-12-17 21:40:29] Starting men's Final Climb feature selection
+INFO [2024-12-17 21:40:29] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-17 21:40:29] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-17 21:40:29] Best model selected with 3 variables
+INFO [2024-12-17 21:40:29] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-17 21:40:29] BIC score: -205.302759184732
+INFO [2024-12-17 21:40:29] Starting women's Final Climb feature selection
+INFO [2024-12-17 21:40:29] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-17 21:40:29] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-17 21:40:29] Best model selected with 4 variables
+INFO [2024-12-17 21:40:29] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-17 21:40:29] BIC score: -172.57807572461
+INFO [2024-12-17 21:45:39] Starting men's Final Climb feature selection
+INFO [2024-12-17 21:45:39] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-17 21:45:39] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-17 21:45:39] Best model selected with 3 variables
+INFO [2024-12-17 21:45:39] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-17 21:45:39] BIC score: -205.302759184732
+INFO [2024-12-17 21:45:40] Starting women's Final Climb feature selection
+INFO [2024-12-17 21:45:40] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-17 21:45:40] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-17 21:45:40] Best model selected with 4 variables
+INFO [2024-12-17 21:45:40] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-17 21:45:40] BIC score: -172.57807572461
+INFO [2024-12-17 21:51:57] Starting men's Final Climb feature selection
+INFO [2024-12-17 21:51:57] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-17 21:51:57] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-17 21:51:57] Best model selected with 3 variables
+INFO [2024-12-17 21:51:57] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-17 21:51:57] BIC score: -205.302759184732
+INFO [2024-12-17 21:51:57] Starting women's Final Climb feature selection
+INFO [2024-12-17 21:51:57] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-17 21:51:57] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-17 21:51:57] Best model selected with 4 variables
+INFO [2024-12-17 21:51:57] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-17 21:51:57] BIC score: -172.57807572461
+INFO [2024-12-18 08:55:23] Starting men's Final Climb feature selection
+INFO [2024-12-18 08:55:23] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-18 08:55:23] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-18 08:55:23] Best model selected with 3 variables
+INFO [2024-12-18 08:55:23] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-18 08:55:23] BIC score: -205.302759184732
+INFO [2024-12-18 08:55:23] Starting women's Final Climb feature selection
+INFO [2024-12-18 08:55:23] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-18 08:55:23] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-18 08:55:23] Best model selected with 4 variables
+INFO [2024-12-18 08:55:23] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-18 08:55:23] BIC score: -172.57807572461
+INFO [2024-12-18 08:57:37] Starting men's Final Climb feature selection
+INFO [2024-12-18 08:57:37] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-18 08:57:37] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-18 08:57:37] Best model selected with 3 variables
+INFO [2024-12-18 08:57:37] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-18 08:57:37] BIC score: -205.302759184732
+INFO [2024-12-18 08:57:37] Starting women's Final Climb feature selection
+INFO [2024-12-18 08:57:37] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-18 08:57:37] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-18 08:57:37] Best model selected with 4 variables
+INFO [2024-12-18 08:57:37] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-18 08:57:37] BIC score: -172.57807572461
+INFO [2024-12-18 09:14:48] Starting men's Final Climb feature selection
+INFO [2024-12-18 09:14:48] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-18 09:14:48] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-18 09:14:48] Best model selected with 3 variables
+INFO [2024-12-18 09:14:48] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-18 09:14:48] BIC score: -205.302759184732
+INFO [2024-12-18 09:14:48] Starting women's Final Climb feature selection
+INFO [2024-12-18 09:14:48] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-18 09:14:48] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-18 09:14:48] Best model selected with 4 variables
+INFO [2024-12-18 09:14:48] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-18 09:14:48] BIC score: -172.57807572461
+INFO [2024-12-19 08:16:35] Starting men's Final Climb feature selection
+INFO [2024-12-19 08:16:35] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-19 08:16:35] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-19 08:16:35] Best model selected with 3 variables
+INFO [2024-12-19 08:16:35] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-19 08:16:35] BIC score: -205.302759184732
+INFO [2024-12-19 08:16:35] Starting women's Final Climb feature selection
+INFO [2024-12-19 08:16:35] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-19 08:16:35] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-19 08:16:35] Best model selected with 4 variables
+INFO [2024-12-19 08:16:35] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-19 08:16:35] BIC score: -172.57807572461
+INFO [2024-12-20 08:19:11] Starting men's Final Climb feature selection
+INFO [2024-12-20 08:19:11] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 08:19:11] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 08:19:11] Best model selected with 3 variables
+INFO [2024-12-20 08:19:11] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-20 08:19:11] BIC score: -205.302759184732
+INFO [2024-12-20 08:19:11] Starting women's Final Climb feature selection
+INFO [2024-12-20 08:19:11] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 08:19:11] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 08:19:11] Best model selected with 4 variables
+INFO [2024-12-20 08:19:11] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-20 08:19:11] BIC score: -172.57807572461
+INFO [2024-12-20 08:20:39] Starting men's Final Climb feature selection
+INFO [2024-12-20 08:20:39] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 08:20:39] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 08:20:39] Best model selected with 3 variables
+INFO [2024-12-20 08:20:39] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-20 08:20:39] BIC score: -205.302759184732
+INFO [2024-12-20 08:20:39] Starting women's Final Climb feature selection
+INFO [2024-12-20 08:20:39] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 08:20:39] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 08:20:39] Best model selected with 4 variables
+INFO [2024-12-20 08:20:39] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-20 08:20:39] BIC score: -172.57807572461
+INFO [2024-12-20 09:27:47] Starting men's Final Climb feature selection
+INFO [2024-12-20 09:27:47] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 09:27:47] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 09:27:47] Best model selected with 3 variables
+INFO [2024-12-20 09:27:47] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-20 09:27:47] BIC score: -205.302759184732
+INFO [2024-12-20 09:27:47] Starting women's Final Climb feature selection
+INFO [2024-12-20 09:27:47] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 09:27:47] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 09:27:47] Best model selected with 4 variables
+INFO [2024-12-20 09:27:47] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-20 09:27:47] BIC score: -172.57807572461
+INFO [2024-12-20 20:28:49] Starting men's Final Climb feature selection
+INFO [2024-12-20 20:28:49] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 20:28:49] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 20:28:49] Best model selected with 3 variables
+INFO [2024-12-20 20:28:49] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-20 20:28:49] BIC score: -205.302759184733
+INFO [2024-12-20 20:28:49] Starting women's Final Climb feature selection
+INFO [2024-12-20 20:28:49] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 20:28:49] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 20:28:49] Best model selected with 4 variables
+INFO [2024-12-20 20:28:49] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-20 20:28:49] BIC score: -172.57807572461
+INFO [2024-12-20 21:24:06] Starting men's Final Climb feature selection
+INFO [2024-12-20 21:24:06] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 21:24:06] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 21:24:06] Best model selected with 3 variables
+INFO [2024-12-20 21:24:06] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-20 21:24:06] BIC score: -205.302759184733
+INFO [2024-12-20 21:24:06] Starting women's Final Climb feature selection
+INFO [2024-12-20 21:24:06] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 21:24:06] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 21:24:06] Best model selected with 4 variables
+INFO [2024-12-20 21:24:06] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-20 21:24:06] BIC score: -172.57807572461
+INFO [2024-12-20 21:58:37] Starting men's Final Climb feature selection
+INFO [2024-12-20 21:58:37] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 21:58:37] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 21:58:37] Best model selected with 3 variables
+INFO [2024-12-20 21:58:37] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-20 21:58:37] BIC score: -205.302759184733
+INFO [2024-12-20 21:58:37] Starting women's Final Climb feature selection
+INFO [2024-12-20 21:58:37] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 21:58:37] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 21:58:37] Best model selected with 4 variables
+INFO [2024-12-20 21:58:37] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-20 21:58:37] BIC score: -172.57807572461
+INFO [2024-12-20 22:03:03] Starting men's Final Climb feature selection
+INFO [2024-12-20 22:03:03] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 22:03:03] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 22:03:03] Best model selected with 3 variables
+INFO [2024-12-20 22:03:03] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-20 22:03:03] BIC score: -205.302759184733
+INFO [2024-12-20 22:03:03] Starting women's Final Climb feature selection
+INFO [2024-12-20 22:03:03] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 22:03:03] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 22:03:03] Best model selected with 4 variables
+INFO [2024-12-20 22:03:03] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-20 22:03:03] BIC score: -172.57807572461
+INFO [2024-12-20 22:06:44] Starting men's Final Climb feature selection
+INFO [2024-12-20 22:06:44] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 22:06:44] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 22:06:44] Best model selected with 3 variables
+INFO [2024-12-20 22:06:44] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-20 22:06:44] BIC score: -205.302759184733
+INFO [2024-12-20 22:06:44] Starting women's Final Climb feature selection
+INFO [2024-12-20 22:06:44] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-20 22:06:44] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-20 22:06:44] Best model selected with 4 variables
+INFO [2024-12-20 22:06:44] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-20 22:06:44] BIC score: -172.57807572461
+INFO [2024-12-22 12:39:09] Starting men's Final Climb feature selection
+INFO [2024-12-22 12:39:09] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-22 12:39:09] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-22 12:39:09] Best model selected with 3 variables
+INFO [2024-12-22 12:39:09] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-22 12:39:09] BIC score: -205.302759184733
+INFO [2024-12-22 12:39:09] Starting women's Final Climb feature selection
+INFO [2024-12-22 12:39:09] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-22 12:39:09] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-22 12:39:09] Best model selected with 4 variables
+INFO [2024-12-22 12:39:09] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-22 12:39:09] BIC score: -172.57807572461
+INFO [2024-12-22 12:48:40] Starting men's Final Climb feature selection
+INFO [2024-12-22 12:48:40] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-22 12:48:40] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-22 12:48:40] Best model selected with 3 variables
+INFO [2024-12-22 12:48:40] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-22 12:48:40] BIC score: -205.302759184733
+INFO [2024-12-22 12:48:40] Starting women's Final Climb feature selection
+INFO [2024-12-22 12:48:40] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-22 12:48:40] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-22 12:48:40] Best model selected with 4 variables
+INFO [2024-12-22 12:48:40] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-22 12:48:40] BIC score: -172.57807572461
+INFO [2024-12-22 12:58:46] Starting men's Final Climb feature selection
+INFO [2024-12-22 12:58:46] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-22 12:58:46] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-22 12:58:46] Best model selected with 3 variables
+INFO [2024-12-22 12:58:46] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-22 12:58:46] BIC score: -205.302759184733
+INFO [2024-12-22 12:58:46] Starting women's Final Climb feature selection
+INFO [2024-12-22 12:58:46] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-22 12:58:46] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-22 12:58:46] Best model selected with 4 variables
+INFO [2024-12-22 12:58:46] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-22 12:58:46] BIC score: -172.57807572461
+INFO [2024-12-22 13:06:37] Starting men's Final Climb feature selection
+INFO [2024-12-22 13:06:38] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-22 13:06:38] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-22 13:06:38] Best model selected with 3 variables
+INFO [2024-12-22 13:06:38] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-22 13:06:38] BIC score: -205.302759184733
+INFO [2024-12-22 13:06:38] Starting women's Final Climb feature selection
+INFO [2024-12-22 13:06:38] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-22 13:06:38] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-22 13:06:38] Best model selected with 4 variables
+INFO [2024-12-22 13:06:38] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-22 13:06:38] BIC score: -172.57807572461
+INFO [2024-12-23 21:07:21] Starting men's Final Climb feature selection
+INFO [2024-12-23 21:07:21] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-23 21:07:21] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-23 21:07:21] Best model selected with 3 variables
+INFO [2024-12-23 21:07:21] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-23 21:07:21] BIC score: -205.302759184733
+INFO [2024-12-23 21:07:21] Starting women's Final Climb feature selection
+INFO [2024-12-23 21:07:21] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-23 21:07:21] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-23 21:07:21] Best model selected with 4 variables
+INFO [2024-12-23 21:07:21] Selected variables: Distance_F_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Sprint_F_Last_5
+INFO [2024-12-23 21:07:21] BIC score: -172.57807572461
+INFO [2024-12-27 12:03:18] Starting men's Final Climb feature selection
+INFO [2024-12-27 12:03:18] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 12:03:18] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:03:18] Best model selected with 3 variables
+INFO [2024-12-27 12:03:18] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-27 12:03:18] BIC score: -195.423147921262
+INFO [2024-12-27 12:03:18] Starting women's Final Climb feature selection
+INFO [2024-12-27 12:03:18] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 12:03:18] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:03:18] Best model selected with 3 variables
+INFO [2024-12-27 12:03:18] Selected variables: Freestyle_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:03:18] BIC score: -155.996168828683
+INFO [2024-12-27 12:06:10] Starting men's Final Climb feature selection
+INFO [2024-12-27 12:06:10] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 12:06:10] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:06:10] Best model selected with 3 variables
+INFO [2024-12-27 12:06:10] Selected variables: Distance_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5
+INFO [2024-12-27 12:06:10] BIC score: -195.423147921262
+INFO [2024-12-27 12:06:10] Starting women's Final Climb feature selection
+INFO [2024-12-27 12:06:10] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 12:06:10] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:06:10] Best model selected with 3 variables
+INFO [2024-12-27 12:06:10] Selected variables: Freestyle_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:06:10] BIC score: -155.996168828683
+INFO [2024-12-27 12:08:54] Starting men's Final Climb feature selection
+INFO [2024-12-27 12:08:54] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 12:08:54] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:08:54] Best model selected with 3 variables
+INFO [2024-12-27 12:08:54] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:08:54] BIC score: -309.859270039316
+INFO [2024-12-27 12:08:54] Starting women's Final Climb feature selection
+INFO [2024-12-27 12:08:54] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 12:08:54] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:08:54] Best model selected with 3 variables
+INFO [2024-12-27 12:08:54] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:08:54] BIC score: -322.980691179281
+INFO [2024-12-27 12:27:41] Starting men's Final Climb feature selection
+INFO [2024-12-27 12:27:41] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 12:27:41] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:27:41] Best model selected with 3 variables
+INFO [2024-12-27 12:27:41] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:27:41] BIC score: -309.859270039316
+INFO [2024-12-27 12:27:41] Starting women's Final Climb feature selection
+INFO [2024-12-27 12:27:41] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 12:27:41] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:27:41] Best model selected with 3 variables
+INFO [2024-12-27 12:27:41] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 12:27:41] BIC score: -322.980691179281
+INFO [2024-12-27 14:44:42] Starting men's Final Climb feature selection
+INFO [2024-12-27 14:44:42] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 14:44:42] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 14:44:42] Best model selected with 3 variables
+INFO [2024-12-27 14:44:42] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 14:44:42] BIC score: -309.859270039316
+INFO [2024-12-27 14:44:42] Starting women's Final Climb feature selection
+INFO [2024-12-27 14:44:42] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 14:44:42] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 14:44:42] Best model selected with 3 variables
+INFO [2024-12-27 14:44:42] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 14:44:42] BIC score: -322.980691179281
+INFO [2024-12-27 14:54:51] Starting men's Final Climb feature selection
+INFO [2024-12-27 14:54:51] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 14:54:51] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 14:54:51] Best model selected with 3 variables
+INFO [2024-12-27 14:54:51] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 14:54:51] BIC score: -309.859270039316
+INFO [2024-12-27 14:54:51] Starting women's Final Climb feature selection
+INFO [2024-12-27 14:54:51] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-27 14:54:51] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 14:54:51] Best model selected with 3 variables
+INFO [2024-12-27 14:54:51] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-27 14:54:51] BIC score: -322.980691179281
+INFO [2024-12-30 08:44:57] Starting men's Final Climb feature selection
+INFO [2024-12-30 08:44:57] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-30 08:44:57] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 08:44:57] Best model selected with 3 variables
+INFO [2024-12-30 08:44:57] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 08:44:57] BIC score: -309.859270039316
+INFO [2024-12-30 08:44:57] Starting women's Final Climb feature selection
+INFO [2024-12-30 08:44:57] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-30 08:44:57] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 08:44:57] Best model selected with 3 variables
+INFO [2024-12-30 08:44:57] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 08:44:57] BIC score: -322.980691179281
+INFO [2024-12-30 09:02:19] Starting men's Final Climb feature selection
+INFO [2024-12-30 09:02:19] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-30 09:02:19] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 09:02:19] Best model selected with 3 variables
+INFO [2024-12-30 09:02:19] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 09:02:19] BIC score: -309.859270039316
+INFO [2024-12-30 09:02:19] Starting women's Final Climb feature selection
+INFO [2024-12-30 09:02:19] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-30 09:02:19] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 09:02:19] Best model selected with 3 variables
+INFO [2024-12-30 09:02:19] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 09:02:19] BIC score: -322.980691179281
+INFO [2024-12-30 16:14:21] Starting men's Final Climb feature selection
+INFO [2024-12-30 16:14:21] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-30 16:14:21] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 16:14:21] Best model selected with 3 variables
+INFO [2024-12-30 16:14:21] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 16:14:21] BIC score: -309.859270039316
+INFO [2024-12-30 16:14:21] Starting women's Final Climb feature selection
+INFO [2024-12-30 16:14:21] Starting Final Climb feature selection with 6 predictors
+INFO [2024-12-30 16:14:21] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 16:14:21] Best model selected with 3 variables
+INFO [2024-12-30 16:14:21] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2024-12-30 16:14:21] BIC score: -322.980691179281
+INFO [2025-01-04 14:04:22] Starting men's Final Climb feature selection
+INFO [2025-01-04 14:04:22] Starting Final Climb feature selection with 6 predictors
+INFO [2025-01-04 14:04:22] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2025-01-04 14:04:22] Best model selected with 3 variables
+INFO [2025-01-04 14:04:22] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2025-01-04 14:04:22] BIC score: -309.859270039316
+INFO [2025-01-04 14:04:22] Starting women's Final Climb feature selection
+INFO [2025-01-04 14:04:22] Starting Final Climb feature selection with 6 predictors
+INFO [2025-01-04 14:04:22] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2025-01-04 14:04:22] Best model selected with 3 variables
+INFO [2025-01-04 14:04:22] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2025-01-04 14:04:22] BIC score: -322.980691179281
+INFO [2025-01-04 14:14:09] Starting men's Final Climb feature selection
+INFO [2025-01-04 14:14:09] Starting Final Climb feature selection with 6 predictors
+INFO [2025-01-04 14:14:09] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2025-01-04 14:14:09] Best model selected with 3 variables
+INFO [2025-01-04 14:14:09] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2025-01-04 14:14:09] BIC score: -309.859270039316
+INFO [2025-01-04 14:14:09] Starting women's Final Climb feature selection
+INFO [2025-01-04 14:14:09] Starting Final Climb feature selection with 6 predictors
+INFO [2025-01-04 14:14:09] Predictors: Distance_F_Pelo_Pct, Freestyle_Pelo_Pct, Sprint_F_Pelo_Pct, Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2025-01-04 14:14:09] Best model selected with 3 variables
+INFO [2025-01-04 14:14:09] Selected variables: Distance_F_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5
+INFO [2025-01-04 14:14:09] BIC score: -322.980691179281

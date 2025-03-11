@@ -1,0 +1,134 @@
+Tour de Ski GAM Models Summary
+============================
+
+Men's Model:
+Variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5 
+RMSE: 28.734 
+MAE: 22.569 
+R2: 0.876 
+
+Women's Model:
+Variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5 
+RMSE: 24.057 
+MAE: 19.293 
+R2: 0.897 
+[1] 5250
+
+Method: REML   Optimizer: outer newton
+full convergence after 5 iterations.
+Gradient range [-0.0001154169,6.494807e-05]
+(score 1972.249 & scale 87.38785).
+Hessian positive definite, eigenvalue range [0.0001153304,268.5011].
+Model rank =  19 / 19 
+
+Basis dimension (k) checking results. Low p-value (k-index<1) may
+indicate that k is too low, especially if edf is close to k'.
+
+                       k'  edf k-index p-value
+s(Distance_F_Last_5) 9.00 1.00    0.97    0.22
+s(FC_Last_5)         9.00 2.13    1.02    0.59
+
+Method: REML   Optimizer: outer newton
+full convergence after 6 iterations.
+Gradient range [-0.0004619434,0.0006102471]
+(score 1430.248 & scale 67.13211).
+Hessian positive definite, eigenvalue range [0.0004621532,201.0067].
+Model rank =  28 / 28 
+
+Basis dimension (k) checking results. Low p-value (k-index<1) may
+indicate that k is too low, especially if edf is close to k'.
+
+                        k'  edf k-index p-value
+s(Freestyle_Pelo_Pct) 9.00 1.00    1.03    0.68
+s(Distance_F_Last_5)  9.00 2.92    1.12    0.98
+s(FC_Last_5)          9.00 2.48    1.00    0.45
+
+Optimized Tour de Ski Fantasy Team:
+Total Predicted Points: 589.00
+Total Cost: $ 99277 
+
+Team Composition:
+Men: 8 
+Women: 8 
+
+Selected Team:
+
+Optimized Tour de Ski Fantasy Team:
+Total Predicted Points: 544.00
+Total Cost: $ 99277 
+
+Team Composition:
+Men: 8 
+Women: 8 
+
+Selected Team:
+
+Optimized Tour de Ski Fantasy Team:
+Total Predicted Points: 636.00
+Total Cost: $ 99277 
+
+Team Composition:
+Men: 8 
+Women: 8 
+
+Selected Team:
+
+Optimized Tour de Ski Fantasy Team:
+Total Predicted Points: 3560.00
+Total Cost: $ 99282 
+
+Team Composition:
+Men: 8 
+Women: 8 
+
+Selected Team:
+
+Optimized Tour de Ski Fantasy Team:
+Total Predicted Points: 3372.00
+Total Cost: $ 99562 
+
+Team Composition:
+Men: 8 
+Women: 8 
+
+Selected Team:
+
+Optimized Tour de Ski Fantasy Team:
+Total Predicted Points: 3567.00
+Total Cost: $ 97328 
+
+Team Composition:
+Men: 8 
+Women: 8 
+
+Selected Team:
+
+Optimized Tour de Ski Fantasy Team:
+Total Predicted Points: 589.00
+Total Cost: $ 99277 
+
+Team Composition:
+Men: 8 
+Women: 8 
+
+Selected Team:
+
+Optimized Tour de Ski Fantasy Team:
+Total Predicted Points: 544.00
+Total Cost: $ 99277 
+
+Team Composition:
+Men: 8 
+Women: 8 
+
+Selected Team:
+
+Optimized Tour de Ski Fantasy Team:
+Total Predicted Points: 636.00
+Total Cost: $ 99277 
+
+Team Composition:
+Men: 8 
+Women: 8 
+
+Selected Team:

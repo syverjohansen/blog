@@ -1,0 +1,12 @@
+Tour de Ski Feature Selection Summary
+===================================
+
+Men's Model:
+Number of observations: 540 
+Selected variables: Sprint_Pelo_Pct, Classic_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, Sprint_F_Last_5, FC_Last_5, TdS_Last_5 
+BIC score: -1038.335 
+
+Women's Model:
+Number of observations: 406 
+Selected variables: Distance_C_Pelo_Pct, Sprint_F_Pelo_Pct, Freestyle_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Distance_Last_5, FC_Last_5 
+BIC score: -799.3584 

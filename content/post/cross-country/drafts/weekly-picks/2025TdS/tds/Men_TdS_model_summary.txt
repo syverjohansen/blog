@@ -1,0 +1,19 @@
+Men TdS Models Summary
+============================
+
+
+Top 1 Model:
+Selected variables: Sprint_Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5, FC_Last_5 
+Brier Score: 0.0093 
+
+Top 3 Model:
+Selected variables: Sprint_Pelo_Pct, Distance_Last_5, Sprint_F_Last_5 
+Brier Score: 0.0257 
+
+Top 10 Model:
+Selected variables: Distance_Last_5, FC_Last_5 
+Brier Score: 0.061 
+
+Top 30 Model:
+Selected variables: Sprint_C_Pelo_Pct, Pelo_Pct, Distance_F_Last_5, Sprint_F_Last_5, TdS_Last_5 
+Brier Score: 0.0794 

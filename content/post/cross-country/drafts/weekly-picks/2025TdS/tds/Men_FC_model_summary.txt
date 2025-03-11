@@ -1,0 +1,19 @@
+Men FC Models Summary
+============================
+
+
+Top 1 Model:
+Selected variables: FC_Last_5 
+Brier Score: 0.0164 
+
+Top 3 Model:
+Selected variables: Distance_F_Last_5, FC_Last_5 
+Brier Score: 0.0431 
+
+Top 10 Model:
+Selected variables: Distance_F_Last_5, FC_Last_5 
+Brier Score: 0.0915 
+
+Top 30 Model:
+Selected variables: Distance_F_Last_5, FC_Last_5 
+Brier Score: 0.134 

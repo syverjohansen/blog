@@ -1,0 +1,14 @@
+Final Climb GAM Models Summary
+============================
+
+Men's Model:
+Variables: Distance_F_Last_5, FC_Last_5 
+RMSE: 9.312 
+MAE: 6.552 
+R2: 0.596 
+
+Women's Model:
+Variables: Freestyle_Pelo_Pct, Distance_F_Last_5, FC_Last_5 
+RMSE: 8.118 
+MAE: 6.068 
+R2: 0.703 

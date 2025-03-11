@@ -1,0 +1,23 @@
+
+Family: gaussian 
+Link function: identity 
+
+Formula:
+Points ~ s(Distance_F_Pelo_Pct) + s(Distance_F_Last_5) + s(Sprint_F_Last_5)
+
+Parametric coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   12.044      0.453   26.59   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Approximate significance of smooth terms:
+                         edf Ref.df      F p-value    
+s(Distance_F_Pelo_Pct) 4.090  5.077 10.047 < 2e-16 ***
+s(Distance_F_Last_5)   3.523  4.385 31.036 < 2e-16 ***
+s(Sprint_F_Last_5)     2.073  2.571  5.936 0.00114 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+R-sq.(adj) =  0.485   Deviance explained = 49.4%
+-REML = 2041.4  Scale est. = 110.82    n = 540

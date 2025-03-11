@@ -1,0 +1,1953 @@
+```{r relay-load}
+# Load required libraries
+library(arrow)  # for reading feather files
+library(readxl) # for reading Excel files
+library(tidyverse)
+library(caret)
+library(logger)
+library(xgboost)
+
+# Define file paths
+men_chrono_path <- "~/ski/elo/python/ski/polars/relay/excel365/men_chrono.csv"
+ladies_chrono_path <- "~/ski/elo/python/ski/polars/relay/excel365/ladies_chrono.csv"
+
+
+men_chrono <- read.csv(men_chrono_path)
+ladies_chrono <- read.csv(ladies_chrono_path)
+
+men_chrono %>%
+  filter(Skier == "Johannes Høsflot Klæbo")
+
+log_path <- "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025Trondheim/relay_predictions.log"
+log_appender(appender_file(log_path))
+log_threshold(INFO)
+```
+
+```{r relay-setup}
+men_chrono <- men_chrono 
+print(5)
+# First, handle the Pelo columns and create Pelo_Pct columns
+# Get list of Pelo columns
+pelo_cols <- names(men_chrono)[grep("Pelo$", names(men_chrono))]
+
+# Function to replace NAs with first quartile and create percentages
+create_pelo_pcts <- function(df) {
+  # For each race and each Pelo column
+  df_transformed <- df %>%
+    group_by(Date, Race) %>%
+    mutate(across(
+      all_of(pelo_cols),
+      function(x) {
+        # Replace NAs with first quartile
+        q1 <- quantile(x, 0.25, na.rm = TRUE)
+        x_filled <- replace(x, is.na(x), q1)
+        # Calculate percentage of max
+        x_filled / max(x_filled) * 100
+      },
+      .names = "{.col}_Pct"
+    )) %>%
+    ungroup()
+  
+  return(df_transformed)
+}
+
+# Apply transformations
+men_chrono <- create_pelo_pcts(men_chrono)
+
+#Leg 1
+classic_legs <- men_chrono %>%
+  filter(Distance=="Rel", Leg<3)
+
+classic_legs <- classic_legs %>%
+  filter(Season>2014)
+
+freestyle_legs <- men_chrono %>%
+  filter(Distance=="Rel", Leg>2)
+
+freestyle_legs <- freestyle_legs %>%
+  filter(Season>2014)
+
+classic_df <- men_chrono %>%
+  filter(Distance != "Sprint", Technique == "C") %>%
+        group_by(ID) %>%
+        arrange(Season, Race) %>%
+        mutate(
+            Weighted_Last_5 = sapply(row_number(), function(i) {
+                prev_races <- Place[max(1, i-5):(i-1)]
+                if(length(prev_races) > 0) {
+                    weights <- seq(length(prev_races), 1)
+                    weighted.mean(prev_races, weights, na.rm = TRUE)
+                } else {
+                    NA_real_
+                }
+            })
+        ) %>%
+          mutate(
+            Weighted_Last_5_2 = sapply(row_number(), function(i) {
+                prev_races <- Place[max(1, i-4):(i)]
+                if(length(prev_races) > 0) {
+                    weights <- seq(length(prev_races), 1)
+                    weighted.mean(prev_races, weights, na.rm = TRUE)
+                } else {
+                    NA_real_
+                }
+            })
+        ) %>%
+  filter(Season > 2014)
+
+freestyle_df <- men_chrono %>%
+  filter(Distance != "Sprint", Technique == "F") %>%
+        group_by(ID) %>%
+        arrange(Season, Race) %>%
+        mutate(
+            Weighted_Last_5 = sapply(row_number(), function(i) {
+                prev_races <- Place[max(1, i-5):(i-1)]
+                if(length(prev_races) > 0) {
+                    weights <- seq(length(prev_races), 1)
+                    weighted.mean(prev_races, weights, na.rm = TRUE)
+                } else {
+                    NA_real_
+                }
+            })
+        ) %>%
+          mutate(
+            Weighted_Last_5_2 = sapply(row_number(), function(i) {
+                prev_races <- Place[max(1, i-4):(i)]
+                if(length(prev_races) > 0) {
+                    weights <- seq(length(prev_races), 1)
+                    weighted.mean(prev_races, weights, na.rm = TRUE)
+                } else {
+                    NA_real_
+                }
+            })
+        ) %>%
+  filter(Season > 2014)
+
+classic_df %>%
+  filter(Skier == "Dario Cologna")
+
+
+# For Classic
+classic_combined <- bind_rows(
+  classic_legs,
+  classic_df
+) %>%
+  group_by(ID) %>%
+  arrange(Season, Race) %>%
+  fill(Weighted_Last_5, Weighted_Last_5_2, .direction = "down") %>%
+  filter(Distance == "Rel") %>%
+  group_by(Season, Race) %>%  # Regroup by race for quartile replacement
+  mutate(
+    Weighted_Last_5 = ifelse(
+      is.na(Weighted_Last_5),
+      quantile(Weighted_Last_5, 0.75, na.rm = TRUE),
+      Weighted_Last_5
+    ),
+    Weighted_Last_5_2 = ifelse(
+      is.na(Weighted_Last_5_2), 
+      quantile(Weighted_Last_5_2, 0.75, na.rm = TRUE),
+      Weighted_Last_5_2
+    )
+  ) %>%
+  ungroup()
+  # Keep only relay races
+
+# For Freestyle
+freestyle_combined <- bind_rows(
+  freestyle_legs,
+  freestyle_df
+) %>%
+  group_by(ID) %>%
+  arrange(Season, Race) %>%
+  fill(Weighted_Last_5, Weighted_Last_5_2, .direction = "down") %>%
+  filter(Distance == "Rel") %>%
+  group_by(Season, Race) %>%  # Regroup by race for quartile replacement
+  mutate(
+    Weighted_Last_5 = ifelse(
+      is.na(Weighted_Last_5),
+      quantile(Weighted_Last_5, 0.75, na.rm = TRUE),
+      Weighted_Last_5
+    ),
+    Weighted_Last_5_2 = ifelse(
+      is.na(Weighted_Last_5_2), 
+      quantile(Weighted_Last_5_2, 0.75, na.rm = TRUE),
+      Weighted_Last_5_2
+    )
+  ) %>%
+  ungroup() # Keep only relay races
+
+
+
+
+classic_combined %>%
+  filter(Skier == "Niilo Moilanen") %>%
+  select(Date, Season, Race, Place, Weighted_Last_5, Weighted_Last_5_2)
+
+
+
+# Create dataframes for each leg
+leg_data <- list()
+
+# Legs 1 and 2 (Classic)
+for(i in 1:2) {
+  leg_data[[i]] <- classic_combined %>%
+    filter(Distance == "Rel", Leg == i) %>%
+    mutate(
+      is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+      is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+    )
+}
+
+# Legs 3 and 4 (Freestyle)
+for(i in 3:4) {
+  leg_data[[i]] <- freestyle_combined %>%
+    filter(Distance == "Rel", Leg == i) %>%
+    mutate(
+      is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+      is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+    )
+}
+
+pelo_cols <- names(leg_data[[1]])[grep("Pelo$", names(leg_data[[1]]))]
+pelo_pct_cols <- names(leg_data[[1]])[grep("Pelo_Pct$", names(leg_data[[1]]))]
+
+# Define predictor columns
+predictor_cols <- c(
+   # pelo_cols,           # Original Pelo columns
+    pelo_pct_cols,       # Percentage versions of Pelo columns
+    "Weighted_Last_5"   # Moving average of last 5 races
+    #"Weighted_Last_5_2"  # Alternative moving average calculation
+)
+
+# Remove any NA or invalid column names
+predictor_cols <- predictor_cols[predictor_cols %in% names(leg_data[[1]])]
+
+
+# More efficient control parameters
+# More efficient control parameters
+control <- trainControl(
+    method = "cv",
+    number = 5,            # Keep original 5-fold CV for speed
+    classProbs = TRUE,
+    summaryFunction = defaultSummary,
+    savePredictions = "final"
+)
+
+# Simplified but effective XGBoost parameters
+xgb_grid <- expand.grid(
+    nrounds = c(50, 100),
+    max_depth = c(3, 4),
+    eta = 0.03,
+    gamma = 0.1,
+    colsample_bytree = 0.8,
+    min_child_weight = 1,
+    subsample = 0.8
+)
+
+# Train models for each leg with simplified pipeline
+train_leg_model <- function(leg_data, predictor_cols) {
+    # Reduce number of predictors if too many
+    if(length(predictor_cols) > 10) {
+        # Quick feature importance check
+        initial_model <- xgboost(
+            data = as.matrix(leg_data[, predictor_cols]),
+            label = as.numeric(leg_data$is_podium) - 1,
+            nrounds = 50,
+            max_depth = 3,
+            eta = 0.03,
+            verbose = 0
+        )
+        importance <- xgb.importance(model = initial_model)
+        predictor_cols <- head(importance$Feature, 10)
+    }
+    
+    # Train models with reduced features
+    podium_model <- train(
+        as.formula(paste("is_podium ~", paste(predictor_cols, collapse = "+"))),
+        data = leg_data,
+        method = "xgbTree",
+        trControl = control,
+        tuneGrid = xgb_grid,
+        verbose = FALSE
+    )
+    
+    win_model <- train(
+        as.formula(paste("is_win ~", paste(predictor_cols, collapse = "+"))),
+        data = leg_data,
+        method = "xgbTree",
+        trControl = control,
+        tuneGrid = xgb_grid,
+        verbose = FALSE
+    )
+    
+    return(list(
+        podium = podium_model,
+        win = win_model,
+        features = predictor_cols
+    ))
+}
+
+# Function to get leg-specific predictor columns
+get_leg_predictors <- function(leg) {
+  base_cols <- names(leg_data[[leg]])
+  
+  if(leg <= 2) {
+    # Classic legs (1 and 2)
+    predictors <- c(
+      grep("Distance_Classic.*Pelo_Pct$", base_cols, value = TRUE),
+      grep("^Classic.*Pelo_Pct$", base_cols, value = TRUE),
+      "Distance_Pelo_Pct",
+      "Pelo_Pct",
+      "Weighted_Last_5"
+    )
+  } else if(leg == 3) {
+    # Freestyle leg 3
+    predictors <- c(
+      grep("Distance_Freestyle.*Pelo_Pct$", base_cols, value = TRUE),
+      grep("^Freestyle.*Pelo_Pct$", base_cols, value = TRUE),
+      "Distance_Pelo_Pct",
+      "Pelo_Pct",
+      "Weighted_Last_5"
+    )
+  } else {
+    # Leg 4 - all predictors
+    predictors <- c(
+      grep(".*Pelo_Pct$", base_cols, value = TRUE),
+      "Weighted_Last_5"
+    )
+  }
+  
+  # Remove any NA or invalid column names
+  predictors <- predictors[predictors %in% names(leg_data[[leg]])]
+  
+  return(predictors)
+}
+
+
+# Train models for each leg with specific predictors
+leg_models_efficient <- list()
+for(leg in 1:4) {
+    cat("\nTraining models for Leg", leg, "\n")
+    leg_predictors <- get_leg_predictors(leg)
+    cat("Using predictors:\n")
+    print(leg_predictors)
+    
+    leg_models_efficient[[leg]] <- train_leg_model(leg_data[[leg]], leg_predictors)
+    
+    # Print basic diagnostics
+    cat("\nTop features for podium prediction:\n")
+    print(varImp(leg_models_efficient[[leg]]$podium)$importance[1:5, ])
+    
+    # Simple overfitting check
+    train_pred <- predict(leg_models_efficient[[leg]]$podium, leg_data[[leg]])
+    train_acc <- mean(train_pred == leg_data[[leg]]$is_podium)
+    cv_acc <- max(leg_models_efficient[[leg]]$podium$results$Accuracy)
+    
+    cat("\nTraining accuracy:", round(train_acc, 3))
+    cat("\nCV accuracy:", round(cv_acc, 3))
+    cat("\nOverfit gap:", round(train_acc - cv_acc, 3), "\n")
+}
+
+leg_models <- leg_models_efficient
+
+
+```
+
+
+```{r current-scores}
+# First get all skiers who competed in 2025
+current_skiers <- men_chrono %>%
+  filter(Season == 2025) %>%
+  select(ID, Skier, Nation) %>%
+  distinct()
+
+# Get latest Pelo_Pct values for these skiers
+latest_pelo <- men_chrono %>%
+  filter(ID %in% current_skiers$ID) %>%
+  group_by(ID) %>%
+  filter(City=="Summer", Season==2025) %>%
+#  arrange(desc(Season), desc(Race)) %>%
+  dplyr::slice(1) %>%
+  select(ID, ends_with("Pelo_Pct")) %>%
+  ungroup()
+
+# Get latest classic Weighted_Last_5 for these skiers
+latest_classic <- classic_df %>%
+  filter(ID %in% current_skiers$ID) %>%
+  group_by(ID) %>%
+  arrange(desc(Season), desc(Race)) %>%
+  dplyr::slice(1) %>%
+  select(ID, Weighted_Last_5_2) %>%
+  rename(Classic_Last_5 = Weighted_Last_5_2) %>%
+  ungroup()
+
+# Get latest freestyle Weighted_Last_5 for these skiers
+latest_freestyle <- freestyle_df %>%
+  filter(ID %in% current_skiers$ID) %>%
+  group_by(ID) %>%
+  arrange(desc(Season), desc(Race)) %>%
+  dplyr::slice(1) %>%
+  select(ID, Weighted_Last_5_2) %>%
+  rename(Freestyle_Last_5 = Weighted_Last_5_2) %>%
+  ungroup()
+
+# Combine all data
+current_df <- current_skiers %>%
+  left_join(latest_pelo, by = "ID") %>%
+  left_join(latest_classic, by = "ID") %>%
+  left_join(latest_freestyle, by = "ID")
+
+# Replace NAs with third quartile values in current_df
+current_df <- current_df %>%
+  mutate(
+    Classic_Last_5 = if_else(
+      is.na(Classic_Last_5),
+      quantile(Classic_Last_5, 0.75, na.rm = TRUE),
+      Classic_Last_5
+    ),
+    Freestyle_Last_5 = if_else(
+      is.na(Freestyle_Last_5),
+      quantile(Freestyle_Last_5, 0.75, na.rm = TRUE),
+      Freestyle_Last_5
+    )
+  )
+
+# Function to get predictions for a leg
+get_leg_predictions <- function(leg_number, data) {
+  # Select appropriate Last_5 column based on leg
+  if(leg_number <= 2) {
+    data$Weighted_Last_5 <- data$Classic_Last_5
+  } else {
+    data$Weighted_Last_5 <- data$Freestyle_Last_5
+  }
+  
+  # Get model predictions
+  podium_probs <- predict(leg_models[[leg_number]]$podium, data, type = "prob")[,"Yes"]
+  win_probs <- predict(leg_models[[leg_number]]$win, data, type = "prob")[,"Yes"]
+  
+  return(data.frame(
+    ID = data$ID,
+    Skier = data$Skier,
+    Nation = data$Nation,
+    Podium_Prob = podium_probs,
+    Win_Prob = win_probs
+  ))
+}
+
+leg_models[[1]]$win
+
+# Get predictions for each leg
+leg_rankings <- list()
+for(leg in 1:4) {
+  leg_rankings[[leg]] <- get_leg_predictions(leg, current_df) %>%
+    arrange(desc(Podium_Prob)) %>%
+    mutate(
+      Podium_Rank = row_number(),
+      Win_Rank = rank(-Win_Prob)
+    )
+  
+  cat("\nLeg", leg, "Top 10 by Podium Probability:\n")
+  print(leg_rankings[[leg]] %>% 
+        select(Skier, Nation, Podium_Prob, Win_Prob) %>% 
+        head(100))
+}
+
+
+
+
+
+```
+
+```{r optimizing-teams}
+major_nations <- c("Norway", "USA", "Finland", "Sweden", "Germany", "France", "Italy", "Switzerland")
+# Function to get optimal teams for a nation
+get_optimal_teams <- function(nation, leg_rankings, optimize_for = c("podium", "win")) {
+  optimize_for <- match.arg(optimize_for)
+  prob_col <- if(optimize_for == "podium") "Podium_Prob" else "Win_Prob"
+  
+  # Initialize team
+  selected_skiers <- character(4)
+  used_skiers <- character(0)
+  
+  # For each leg
+  for(leg in 1:4) {
+    # Get available skiers for this nation and leg
+    available_skiers <- leg_rankings[[leg]] %>%
+      filter(
+        Nation == nation,
+        !Skier %in% used_skiers
+      ) %>%
+      arrange(desc(!!sym(prob_col)))
+    
+    if(nrow(available_skiers) > 0) {
+      # Select best available skier
+      selected_skiers[leg] <- available_skiers$Skier[1]
+      used_skiers <- c(used_skiers, selected_skiers[leg])
+    } else {
+      selected_skiers[leg] <- "NO ELIGIBLE SKIER"
+    }
+  }
+  
+  # Create team summary
+  team_summary <- data.frame(
+    Nation = nation,
+    Leg = 1:4,
+    Skier = selected_skiers
+  )
+  
+  # Add probabilities for each leg
+  team_probs <- numeric(4)
+  for(leg in 1:4) {
+    if(selected_skiers[leg] != "NO ELIGIBLE SKIER") {
+      leg_data <- leg_rankings[[leg]] %>%
+        filter(Skier == selected_skiers[leg])
+      team_probs[leg] <- leg_data[[prob_col]]
+    } else {
+      team_probs[leg] <- 0
+    }
+  }
+  
+  team_summary$Probability <- team_probs
+  
+  return(team_summary)
+}
+
+# Get optimal teams for all major nations
+podium_teams <- list()
+winning_teams <- list()
+
+cat("\n=== OPTIMAL TEAMS FOR PODIUM PROBABILITY ===\n")
+for(nation in major_nations) {
+  podium_teams[[nation]] <- get_optimal_teams(nation, leg_rankings, "podium")
+  cat(sprintf("\n%s Optimal Podium Team:\n", nation))
+  print(podium_teams[[nation]] %>%
+        mutate(
+          Probability = sprintf("%.1f%%", Probability * 100)
+        ))
+}
+
+cat("\n=== OPTIMAL TEAMS FOR WINNING PROBABILITY ===\n")
+for(nation in major_nations) {
+  winning_teams[[nation]] <- get_optimal_teams(nation, leg_rankings, "win")
+  cat(sprintf("\n%s Optimal Winning Team:\n", nation))
+  print(winning_teams[[nation]] %>%
+        mutate(
+          Probability = sprintf("%.1f%%", Probability * 100)
+        ))
+}
+
+# Calculate team strength metrics
+calculate_team_metrics <- function(team_data) {
+  avg_prob <- mean(team_data$Probability)
+  min_prob <- min(team_data$Probability)
+  
+  return(c(
+    average_probability = avg_prob,
+    minimum_probability = min_prob,
+    team_score = avg_prob * min_prob  # Simple composite score
+  ))
+}
+
+# Compare team strengths
+team_comparisons <- data.frame(
+  Nation = major_nations,
+  Podium_Score = sapply(major_nations, function(n) {
+    calculate_team_metrics(podium_teams[[n]])[3]
+  }),
+  Win_Score = sapply(major_nations, function(n) {
+    calculate_team_metrics(winning_teams[[n]])[3]
+  })
+) %>%
+  arrange(desc(Podium_Score))
+
+cat("\n=== TEAM STRENGTH RANKINGS ===\n")
+print(team_comparisons %>%
+      mutate(
+        Podium_Score = sprintf("%.3f", Podium_Score),
+        Win_Score = sprintf("%.3f", Win_Score)
+      ))
+
+```
+
+
+```{r paa}
+# Define major nations
+major_nations <- c("Norway", "USA", "Finland", "Sweden", "Germany", "France", "Italy", "Switzerland")
+
+# Function to calculate benchmarks for major nations only
+calculate_benchmarks <- function(leg_rankings) {
+ major_nation_data <- leg_rankings %>%
+   filter(Nation %in% major_nations)
+ 
+ # Average level: median probability among major nations
+ avg_podium_prob <- median(major_nation_data$Podium_Prob)
+ avg_win_prob <- median(major_nation_data$Win_Prob)
+ 
+ # Replacement level: 25th percentile probability among major nations
+ replacement_podium_prob <- quantile(major_nation_data$Podium_Prob, 0.25)
+ replacement_win_prob <- quantile(major_nation_data$Win_Prob, 0.25)
+ 
+ return(list(
+   avg_podium = avg_podium_prob,
+   avg_win = avg_win_prob,
+   replacement_podium = replacement_podium_prob,
+   replacement_win = replacement_win_prob
+ ))
+}
+
+# Calculate PAA and PAR for each leg
+for(leg in 1:4) {
+ # Get benchmarks from major nations only
+ benchmarks <- calculate_benchmarks(leg_rankings[[leg]])
+ 
+ # Add PAA and PAR calculations for all skiers
+ leg_rankings[[leg]] <- leg_rankings[[leg]] %>%
+   mutate(
+     Podium_PAA = Podium_Prob - benchmarks$avg_podium,
+     Win_PAA = Win_Prob - benchmarks$avg_win,
+     Podium_PAR = Podium_Prob - benchmarks$replacement_podium,
+     Win_PAR = Win_Prob - benchmarks$replacement_win
+   ) %>%
+   arrange(desc(Podium_PAR))
+ 
+ # Print results
+ cat("\nLeg", leg, "Benchmarks (calculated from major nations only):\n")
+ cat("Average Podium Prob:", round(benchmarks$avg_podium, 3), "\n")
+ cat("Replacement Podium Prob:", round(benchmarks$replacement_podium, 3), "\n")
+ 
+ cat("\nTop 10 by Podium PAR:\n")
+ print(leg_rankings[[leg]] %>%
+   select(Skier, Nation, Podium_Prob, Podium_PAA, Podium_PAR) %>%
+   head(10))
+ 
+ # Also show stats just for major nations
+ cat("\nTop 10 from major nations by Podium PAR:\n")
+ print(leg_rankings[[leg]] %>%
+   filter(Nation %in% major_nations) %>%
+   select(Skier, Nation, Podium_Prob, Podium_PAA, Podium_PAR) %>%
+   head(10))
+}
+```
+
+
+```{r skier-independence}
+# First get our relay data with all the right columns named properly
+historical_relays <- bind_rows(
+  # Classic legs
+  classic_combined %>%
+    filter(Season >= 2014, Leg <= 2) %>%
+    rename(
+      Classic_Last_5 = Weighted_Last_5,
+      Classic_Last_5_2 = Weighted_Last_5_2
+    ) %>%
+    mutate(
+      Freestyle_Last_5 = NA,
+      Freestyle_Last_5_2 = NA
+    ),
+  
+  # Freestyle legs
+  freestyle_combined %>%
+    filter(Season >= 2014, Leg > 2) %>%
+    rename(
+      Freestyle_Last_5 = Weighted_Last_5,
+      Freestyle_Last_5_2 = Weighted_Last_5_2
+    ) %>%
+    mutate(
+      Classic_Last_5 = NA,
+      Classic_Last_5_2 = NA
+    )
+)
+
+# Get individual predictions for each skier in each relay
+historical_relays <- historical_relays %>%
+  group_by(Season, Race, ID, Leg) %>%
+  mutate(
+    Weighted_Last_5 = if_else(Leg <= 2, Classic_Last_5, Freestyle_Last_5),
+    predicted_prob = case_when(
+      Leg == 1 ~ predict(leg_models[[1]]$podium, cur_data(), type = "prob")[,"Yes"],
+      Leg == 2 ~ predict(leg_models[[2]]$podium, cur_data(), type = "prob")[,"Yes"],
+      Leg == 3 ~ predict(leg_models[[3]]$podium, cur_data(), type = "prob")[,"Yes"],
+      Leg == 4 ~ predict(leg_models[[4]]$podium, cur_data(), type = "prob")[,"Yes"]
+    )
+  ) %>%
+  ungroup()
+
+# Create team-level dataset with individual leg probabilities and proper factors
+team_results <- historical_relays %>%
+  # First get complete teams (all 4 legs)
+  group_by(Season, Race, Place) %>%
+  filter(n_distinct(Leg) == 4) %>%
+  summarize(
+    Nation = first(Nation),
+    leg1_prob = first(predicted_prob[Leg == 1]),
+    leg2_prob = first(predicted_prob[Leg == 2]),
+    leg3_prob = first(predicted_prob[Leg == 3]),
+    leg4_prob = first(predicted_prob[Leg == 4]),
+    is_podium = factor(if_else(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+    is_win = factor(if_else(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+  )
+
+team_results <- team_results[!duplicated(team_results), ]
+
+# Let's look at what we've got
+print("Sample of team results:")
+print(historical_relays %>% filter(Season==2023))
+print(team_results)
+
+team_results
+ 
+
+
+# Let's also check the correlation between leg probabilities and team results
+print("Correlations with podium finish:")
+cor(team_results %>% 
+    mutate(is_podium = as.numeric(as.character(is_podium))) %>%
+    select(contains("prob"), is_podium))
+
+
+
+```
+```{r temp-test}
+# Create test cases with different leg probabilities
+test_cases <- data.frame(
+    leg1_prob = c(0.1, 0.9, 0.5),
+    leg2_prob = c(0.5, 0.5, 0.5),
+    leg3_prob = c(0.5, 0.5, 0.5),
+    leg4_prob = c(0.5, 0.5, 0.5)
+)
+
+# Get predictions
+print("Predictions for different leg1 values:")
+predict(team_podium_model, newdata = test_cases, type = "prob")
+
+# Let's also look at our training data
+print("\nRange of leg probabilities in training data:")
+summary(team_results[c("leg1_prob", "leg2_prob", "leg3_prob", "leg4_prob")])
+
+print("\nActual podium results vs predictions in training:")
+training_preds <- predict(team_podium_model, team_results, type = "prob")
+head(data.frame(
+    Actual = team_results$is_podium,
+    Predicted = training_preds[,"Yes"]
+))
+```
+
+
+```{r step-2-team-model}
+library(caret)
+
+# Set up cross-validation control
+control <- trainControl(
+    method = "cv",
+    number = 5,
+    classProbs = TRUE,
+    summaryFunction = defaultSummary
+)
+
+# Train team podium model
+team_podium_model <- train(
+    as.formula("factor(is_podium) ~ leg1_prob + leg2_prob + leg3_prob + leg4_prob"),
+    data = team_results,
+    method = "xgbTree",
+    trControl = control,
+    tuneLength = 5
+)
+
+# Train team win model
+team_win_model <- train(
+    as.formula("factor(is_win) ~ leg1_prob + leg2_prob + leg3_prob + leg4_prob"),
+    data = team_results,
+    method = "xgbTree",
+    trControl = control,
+    tuneLength = 5
+)
+
+# Look at leg importance
+print("Feature importance for podium model:")
+varImp(team_podium_model)
+
+print("Feature importance for win model:")
+varImp(team_win_model)
+
+# Let's also look at model performance
+print("Podium model performance:")
+print(team_podium_model)
+
+print("Win model performance:")
+print(team_win_model)
+```
+
+```{r step-3-team-contribution}
+library(logger)
+# First get median leg probabilities
+leg_medians <- team_results %>%
+  summarize(
+    leg1_median = median(leg1_prob),
+    leg2_median = median(leg2_prob),
+    leg3_median = median(leg3_prob),
+    leg4_median = median(leg4_prob)
+  )
+
+
+# Function to predict team probability
+predict_team_prob <- function(leg_num, skier_prob) {
+  test_case <- data.frame(
+    leg1_prob = leg_medians$leg1_median,
+    leg2_prob = leg_medians$leg2_median,
+    leg3_prob = leg_medians$leg3_median,
+    leg4_prob = leg_medians$leg4_median
+  )
+  test_case[[paste0("leg", leg_num, "_prob")]] <- skier_prob
+  predict(team_podium_model, newdata = test_case, type = "prob")[1,"Yes"]
+}
+
+# Get average probabilities for each skier
+skier_values <- historical_relays %>%
+  group_by(ID, Skier, Nation, Leg) %>%
+  summarize(
+    individual_prob = mean(predicted_prob, na.rm = TRUE),
+    n_races = n(),
+    .groups = 'drop'
+  )
+
+# Calculate PAR for all skiers
+results <- data.frame()
+for(leg in 1:4) {
+  leg_data <- skier_values %>% filter(Leg == leg)
+  replacement_level <- quantile(leg_data$individual_prob, 0.25, na.rm = TRUE)
+  
+  # Process one skier at a time
+  for(i in 1:nrow(leg_data)) {
+    row <- leg_data[i,]
+    skier_team_prob <- predict_team_prob(leg, row$individual_prob)
+    log_info("{row$Skier}: {row$individual_prob},  {skier_team_prob}")
+    replacement_team_prob <- predict_team_prob(leg, replacement_level)
+    par_value <- skier_team_prob - replacement_team_prob
+    
+    results <- rbind(results, data.frame(
+      ID = row$ID,
+      Skier = row$Skier,
+      Nation = row$Nation,
+      Leg = leg,
+      n_races = row$n_races,
+      individual_prob = row$individual_prob,
+      team_prob = skier_team_prob,
+      replacement_team_prob = replacement_team_prob,
+      PAR = par_value
+    ))
+  }
+}
+
+# Show top 10 for each leg
+for(leg in 1:4) {
+  cat("\nTop 10 skiers for Leg", leg, "by PAR:\n")
+  print(results %>%
+    filter(Leg == leg) %>%
+    select(Skier, Nation, individual_prob, PAR, n_races) %>%
+    arrange(desc(PAR)) %>%
+    head(10))
+}
+
+
+```
+
+```{r weighted-team}
+# Extract weights from varImp and ensure they're aligned with correct legs
+importance_df <- varImp(team_podium_model)$importance
+leg_weights <- numeric(4)
+
+# Assign weights to correct legs based on variable names
+leg_weights[1] <- importance_df["leg1_prob", "Overall"]
+leg_weights[2] <- importance_df["leg2_prob", "Overall"]
+leg_weights[3] <- importance_df["leg3_prob", "Overall"]
+leg_weights[4] <- importance_df["leg4_prob", "Overall"]
+
+# Normalize weights to sum to 1
+leg_weights_normalized <- leg_weights / sum(leg_weights)
+
+cat("Normalized leg weights:\n")
+for(i in 1:4) {
+  cat(sprintf("Leg %d: %.3f\n", i, leg_weights_normalized[i]))
+}
+
+# Updated function with fixed leg assignments
+get_weighted_optimal_teams <- function(nation, leg_rankings, optimize_for = c("podium", "win"), leg_weights = leg_weights_normalized) {
+  optimize_for <- match.arg(optimize_for)
+  prob_col <- if(optimize_for == "podium") "Podium_Prob" else "Win_Prob"
+  
+  # Initialize team
+  selected_skiers <- character(4)
+  used_skiers <- character(0)
+  
+  # Select skiers for each leg in order (1 to 4)
+  for(leg in 1:4) {
+    # Get available skiers for this nation and leg
+    available_skiers <- leg_rankings[[leg]] %>%
+      filter(
+        Nation == nation,
+        !Skier %in% used_skiers
+      ) %>%
+      mutate(
+        Weighted_Prob = !!sym(prob_col) * leg_weights[leg]
+      ) %>%
+      arrange(desc(Weighted_Prob))
+    
+    if(nrow(available_skiers) > 0) {
+      selected_skiers[leg] <- available_skiers$Skier[1]
+      used_skiers <- c(used_skiers, selected_skiers[leg])
+    } else {
+      selected_skiers[leg] <- "NO ELIGIBLE SKIER"
+    }
+  }
+  
+  # Create team summary
+  team_summary <- data.frame(
+    Nation = nation,
+    Leg = 1:4,
+    Skier = selected_skiers,
+    Weight = leg_weights
+  )
+  
+  # Add probabilities for each leg
+  team_probs <- numeric(4)
+  for(leg in 1:4) {
+    if(selected_skiers[leg] != "NO ELIGIBLE SKIER") {
+      leg_data <- leg_rankings[[leg]] %>%
+        filter(Skier == selected_skiers[leg])
+      team_probs[leg] <- leg_data[[prob_col]]
+    } else {
+      team_probs[leg] <- 0
+    }
+  }
+  
+  team_summary$Probability <- team_probs
+  team_summary$Weighted_Probability <- team_probs * leg_weights
+  
+  return(team_summary)
+}
+
+# Get optimal teams using fixed weights
+cat("\n=== OPTIMAL TEAMS WITH ALIGNED LEG WEIGHTS ===\n")
+weighted_podium_teams <- list()
+for(nation in major_nations) {
+  weighted_podium_teams[[nation]] <- get_weighted_optimal_teams(
+    nation, 
+    leg_rankings, 
+    "podium"
+  )
+  
+  cat(sprintf("\n%s Optimal Team:\n", nation))
+  print(weighted_podium_teams[[nation]] %>%
+        mutate(
+          Probability = sprintf("%.1f%%", Probability * 100),
+          Weighted_Probability = sprintf("%.1f%%", Weighted_Probability * 100)
+        ))
+}
+
+# Compare weighted team strengths
+weighted_comparisons <- data.frame(
+  Nation = major_nations,
+  Weighted_Score = sapply(major_nations, function(n) {
+    sum(weighted_podium_teams[[n]]$Weighted_Probability)
+  })
+) %>%
+  arrange(desc(Weighted_Score))
+
+cat("\n=== TEAM RANKINGS BY WEIGHTED PROBABILITY ===\n")
+print(weighted_comparisons %>%
+      mutate(
+        Weighted_Score = sprintf("%.3f", Weighted_Score)
+      ))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r gam-approach}
+men_chrono <- men_chrono 
+print(5)
+# First, handle the Pelo columns and create Pelo_Pct columns
+# Get list of Pelo columns
+pelo_cols <- names(men_chrono)[grep("Pelo$", names(men_chrono))]
+
+# Function to replace NAs with first quartile and create percentages
+create_pelo_pcts <- function(df) {
+  # For each race and each Pelo column
+  df_transformed <- df %>%
+    group_by(Date, Race) %>%
+    mutate(across(
+      all_of(pelo_cols),
+      function(x) {
+        # Replace NAs with first quartile
+        q1 <- quantile(x, 0.25, na.rm = TRUE)
+        x_filled <- replace(x, is.na(x), q1)
+        # Calculate percentage of max
+        x_filled / max(x_filled) * 100
+      },
+      .names = "{.col}_Pct"
+    )) %>%
+    ungroup()
+  
+  return(df_transformed)
+}
+
+# Apply transformations
+men_chrono <- create_pelo_pcts(men_chrono)
+
+#Leg 1
+classic_legs <- men_chrono %>%
+  filter(Distance=="Rel", Leg<3)
+
+classic_legs <- classic_legs %>%
+  filter(Season>2014)
+
+freestyle_legs <- men_chrono %>%
+  filter(Distance=="Rel", Leg>2)
+
+freestyle_legs <- freestyle_legs %>%
+  filter(Season>2014)
+
+classic_df <- men_chrono %>%
+  filter(Distance != "Sprint", Technique == "C") %>%
+        group_by(ID) %>%
+        arrange(Season, Race) %>%
+        mutate(
+            Weighted_Last_5 = sapply(row_number(), function(i) {
+                prev_races <- Place[max(1, i-5):(i-1)]
+                if(length(prev_races) > 0) {
+                    weights <- seq(length(prev_races), 1)
+                    weighted.mean(prev_races, weights, na.rm = TRUE)
+                } else {
+                    NA_real_
+                }
+            })
+        ) %>%
+          mutate(
+            Weighted_Last_5_2 = sapply(row_number(), function(i) {
+                prev_races <- Place[max(1, i-4):(i)]
+                if(length(prev_races) > 0) {
+                    weights <- seq(length(prev_races), 1)
+                    weighted.mean(prev_races, weights, na.rm = TRUE)
+                } else {
+                    NA_real_
+                }
+            })
+        ) %>%
+  filter(Season > 2014)
+
+freestyle_df <- men_chrono %>%
+  filter(Distance != "Sprint", Technique == "F") %>%
+        group_by(ID) %>%
+        arrange(Season, Race) %>%
+        mutate(
+            Weighted_Last_5 = sapply(row_number(), function(i) {
+                prev_races <- Place[max(1, i-5):(i-1)]
+                if(length(prev_races) > 0) {
+                    weights <- seq(length(prev_races), 1)
+                    weighted.mean(prev_races, weights, na.rm = TRUE)
+                } else {
+                    NA_real_
+                }
+            })
+        ) %>%
+          mutate(
+            Weighted_Last_5_2 = sapply(row_number(), function(i) {
+                prev_races <- Place[max(1, i-4):(i)]
+                if(length(prev_races) > 0) {
+                    weights <- seq(length(prev_races), 1)
+                    weighted.mean(prev_races, weights, na.rm = TRUE)
+                } else {
+                    NA_real_
+                }
+            })
+        ) %>%
+  filter(Season > 2014)
+
+classic_df %>%
+  filter(Skier == "Dario Cologna")
+
+
+# For Classic
+classic_combined <- bind_rows(
+  classic_legs,
+  classic_df
+) %>%
+  group_by(ID) %>%
+  arrange(Season, Race) %>%
+  fill(Weighted_Last_5, Weighted_Last_5_2, .direction = "down") %>%
+  filter(Distance == "Rel") %>%
+  group_by(Season, Race) %>%  # Regroup by race for quartile replacement
+  mutate(
+    Weighted_Last_5 = ifelse(
+      is.na(Weighted_Last_5),
+      quantile(Weighted_Last_5, 0.75, na.rm = TRUE),
+      Weighted_Last_5
+    ),
+    Weighted_Last_5_2 = ifelse(
+      is.na(Weighted_Last_5_2), 
+      quantile(Weighted_Last_5_2, 0.75, na.rm = TRUE),
+      Weighted_Last_5_2
+    )
+  ) %>%
+  ungroup()
+  # Keep only relay races
+
+major_nations <- c("Norway", "USA", "Finland", "Sweden", "Germany", "France", "Italy", "Switzerland", "Canada")
+
+classic_combined <- classic_combined %>% filter(Nation %in% major_nations)
+
+# For Freestyle
+freestyle_combined <- bind_rows(
+  freestyle_legs,
+  freestyle_df
+) %>%
+  group_by(ID) %>%
+  arrange(Season, Race) %>%
+  fill(Weighted_Last_5, Weighted_Last_5_2, .direction = "down") %>%
+  filter(Distance == "Rel") %>%
+  group_by(Season, Race) %>%  # Regroup by race for quartile replacement
+  mutate(
+    Weighted_Last_5 = ifelse(
+      is.na(Weighted_Last_5),
+      quantile(Weighted_Last_5, 0.75, na.rm = TRUE),
+      Weighted_Last_5
+    ),
+    Weighted_Last_5_2 = ifelse(
+      is.na(Weighted_Last_5_2), 
+      quantile(Weighted_Last_5_2, 0.75, na.rm = TRUE),
+      Weighted_Last_5_2
+    )
+  ) %>%
+  ungroup() # Keep only relay races
+
+freestyle_combined <- freestyle_combined %>% filter(Nation %in% major_nations)
+
+
+classic_combined %>%
+  filter(Skier == "Niilo Moilanen") %>%
+  select(Date, Season, Race, Place, Weighted_Last_5, Weighted_Last_5_2)
+
+
+
+# Create dataframes for each leg
+leg_data <- list()
+
+# Legs 1 and 2 (Classic)
+for(i in 1:2) {
+  leg_data[[i]] <- classic_combined %>%
+    filter(Distance == "Rel", Leg == i) %>%
+    mutate(
+      is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+      is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+    )
+}
+
+# Legs 3 and 4 (Freestyle)
+for(i in 3:4) {
+  leg_data[[i]] <- freestyle_combined %>%
+    filter(Distance == "Rel", Leg == i) %>%
+    mutate(
+      is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+      is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+    )
+}
+
+pelo_cols <- names(leg_data[[1]])[grep("Pelo$", names(leg_data[[1]]))]
+pelo_pct_cols <- names(leg_data[[1]])[grep("Pelo_Pct$", names(leg_data[[1]]))]
+
+# Define predictor columns
+predictor_cols <- c(
+   # pelo_cols,           # Original Pelo columns
+    pelo_pct_cols,       # Percentage versions of Pelo columns
+    "Weighted_Last_5"   # Moving average of last 5 races
+    #"Weighted_Last_5_2"  # Alternative moving average calculation
+)
+
+# Remove any NA or invalid column names
+predictor_cols <- predictor_cols[predictor_cols %in% names(leg_data[[1]])]
+
+
+library(mgcv)
+library(leaps)
+
+# Function to get leg-specific predictor columns with exact specifications
+get_leg_predictors <- function(leg) {
+  if(leg <= 2) {
+    # Classic legs (1 and 2)
+    predictors <- c(
+      #"Pelo_Pct",
+      "Distance_Pelo_Pct",
+      "Distance_Classic_Pelo_Pct",
+      #"Classic_Pelo_Pct",
+      "Weighted_Last_5"
+    )
+  } else if(leg == 3) {
+    # Freestyle leg 3
+    predictors <- c(
+      #"Pelo_Pct",
+      "Distance_Pelo_Pct",
+      "Distance_Freestyle_Pelo_Pct",
+      #"Freestyle_Pelo_Pct",
+      "Weighted_Last_5"
+    )
+  } else {
+    # Leg 4
+    predictors <- c(
+      #"Pelo_Pct",
+      "Distance_Pelo_Pct",
+      "Sprint_Pelo_Pct",
+      "Distance_Freestyle_Pelo_Pct",
+      "Sprint_Freestyle_Pelo_Pct",
+      "Freestyle_Pelo_Pct",
+      "Weighted_Last_5"
+    )
+  }
+  
+  # Remove any predictors that don't exist in the data
+  predictors <- predictors[predictors %in% names(leg_data[[leg]])]
+  
+  # Warn about any missing predictors
+  missing <- setdiff(predictors, names(leg_data[[leg]]))
+  if(length(missing) > 0) {
+    warning(sprintf("Leg %d: Missing predictors: %s", leg, paste(missing, collapse=", ")))
+  }
+  
+  return(predictors)
+}
+
+# Function for exhaustive feature selection using BIC
+select_features_bic <- function(data, response, predictors, family = binomial()) {
+  # Prepare model matrix
+  model_data <- data[, c(response, predictors)]
+  model_data <- na.omit(model_data)
+  
+  # Run exhaustive search
+  regsubsets_out <- regsubsets(as.formula(paste(response, "~", paste(predictors, collapse = "+"))),
+                              data = model_data,
+                              nvmax = length(predictors),
+                              method = "exhaustive")
+  
+  # Get BIC for all models
+  n <- nrow(model_data)
+  rss <- summary(regsubsets_out)$rss
+  p <- 1:length(predictors)
+  bic <- n * log(rss/n) + log(n) * p
+  
+  # Get best model
+  best_model <- which.min(bic)
+  selected_vars <- summary(regsubsets_out)$which[best_model, ]
+  
+  # Return selected predictor names
+  return(predictors[selected_vars[-1]]) # Remove intercept column
+}
+
+# Modified training function using GAMs
+train_leg_model_gam <- function(leg_data, predictor_cols) {
+    # First do feature selection for podium prediction
+    selected_features_podium <- select_features_bic(
+        leg_data,
+        "is_podium",
+        predictor_cols
+    )
+    
+    # Feature selection for win prediction
+    selected_features_win <- select_features_bic(
+        leg_data,
+        "is_win",
+        predictor_cols
+    )
+    
+    cat("\nSelected features for podium prediction:\n")
+    print(selected_features_podium)
+    cat("\nSelected features for win prediction:\n")
+    print(selected_features_win)
+    
+    # Train GAMs with selected features
+    podium_formula <- as.formula(paste("is_podium ~",
+        paste(sapply(selected_features_podium, function(x) paste("s(", x, ")")), collapse = " + ")))
+    
+    win_formula <- as.formula(paste("is_win ~",
+        paste(sapply(selected_features_win, function(x) paste("s(", x, ")")), collapse = " + ")))
+    
+    podium_model <- gam(podium_formula,
+                       family = binomial,
+                       data = leg_data,
+                       method = "REML")
+    
+    win_model <- gam(win_formula,
+                    family = binomial,
+                    data = leg_data,
+                    method = "REML")
+    
+    # Cross-validation for performance assessment
+    cv_folds <- 5
+    n <- nrow(leg_data)
+    fold_size <- floor(n/cv_folds)
+    
+    cv_results_podium <- numeric(cv_folds)
+    cv_results_win <- numeric(cv_folds)
+    
+    for(i in 1:cv_folds) {
+        test_idx <- ((i-1)*fold_size + 1):(i*fold_size)
+        if(i == cv_folds) test_idx <- ((i-1)*fold_size + 1):n
+        
+        # Podium CV
+        train_gam <- gam(podium_formula,
+                        family = binomial,
+                        data = leg_data[-test_idx,],
+                        method = "REML")
+        preds <- predict(train_gam, leg_data[test_idx,], type = "response")
+        cv_results_podium[i] <- mean((preds > 0.5) == (leg_data$is_podium[test_idx] == "Yes"))
+        
+        # Win CV
+        train_gam <- gam(win_formula,
+                        family = binomial,
+                        data = leg_data[-test_idx,],
+                        method = "REML")
+        preds <- predict(train_gam, leg_data[test_idx,], type = "response")
+        cv_results_win[i] <- mean((preds > 0.5) == (leg_data$is_win[test_idx] == "Yes"))
+    }
+    
+    return(list(
+        podium = podium_model,
+        win = win_model,
+        features_podium = selected_features_podium,
+        features_win = selected_features_win,
+        cv_accuracy_podium = mean(cv_results_podium),
+        cv_accuracy_win = mean(cv_results_win)
+    ))
+}
+
+# Train models for each leg
+leg_models_gam <- list()
+for(leg in 1:4) {
+    cat("\nTraining models for Leg", leg, "\n")
+    leg_predictors <- get_leg_predictors(leg)
+    cat("Available predictors:\n")
+    print(leg_predictors)
+    
+    leg_models_gam[[leg]] <- train_leg_model_gam(leg_data[[leg]], leg_predictors)
+    
+    # Print diagnostics
+    cat("\nCross-validation accuracy for podium prediction:", 
+        round(leg_models_gam[[leg]]$cv_accuracy_podium, 3))
+    cat("\nCross-validation accuracy for win prediction:", 
+        round(leg_models_gam[[leg]]$cv_accuracy_win, 3))
+    
+    # Print model summaries
+    cat("\n\nPodium model summary:\n")
+    print(summary(leg_models_gam[[leg]]$podium))
+    cat("\nWin model summary:\n")
+    print(summary(leg_models_gam[[leg]]$win))
+}
+
+leg_models <- leg_models_gam
+
+```
+
+```{r gam-current}
+# First get all skiers who competed in 2025
+current_skiers <- men_chrono %>%
+  filter(Season == 2025) %>%
+  select(ID, Skier, Nation) %>%
+  distinct()
+
+# Get latest Pelo_Pct values for these skiers
+latest_pelo <- men_chrono %>%
+  filter(ID %in% current_skiers$ID) %>%
+  group_by(ID) %>%
+  filter(City=="Summer", Season==2025) %>%
+#  arrange(desc(Season), desc(Race)) %>%
+  dplyr::slice(1) %>%
+  select(ID, ends_with("Pelo_Pct")) %>%
+  ungroup()
+
+# Get latest classic Weighted_Last_5 for these skiers
+latest_classic <- classic_df %>%
+  filter(ID %in% current_skiers$ID) %>%
+  group_by(ID) %>%
+  arrange(desc(Season), desc(Race)) %>%
+  dplyr::slice(1) %>%
+  select(ID, Weighted_Last_5_2) %>%
+  rename(Classic_Last_5 = Weighted_Last_5_2) %>%
+  ungroup()
+
+# Get latest freestyle Weighted_Last_5 for these skiers
+latest_freestyle <- freestyle_df %>%
+  filter(ID %in% current_skiers$ID) %>%
+  group_by(ID) %>%
+  arrange(desc(Season), desc(Race)) %>%
+  dplyr::slice(1) %>%
+  select(ID, Weighted_Last_5_2) %>%
+  rename(Freestyle_Last_5 = Weighted_Last_5_2) %>%
+  ungroup()
+
+# Combine all data
+current_df <- current_skiers %>%
+  left_join(latest_pelo, by = "ID") %>%
+  left_join(latest_classic, by = "ID") %>%
+  left_join(latest_freestyle, by = "ID")
+
+# Replace NAs with third quartile values in current_df
+current_df <- current_df %>%
+  mutate(
+    Classic_Last_5 = if_else(
+      is.na(Classic_Last_5),
+      quantile(Classic_Last_5, 0.75, na.rm = TRUE),
+      Classic_Last_5
+    ),
+    Freestyle_Last_5 = if_else(
+      is.na(Freestyle_Last_5),
+      quantile(Freestyle_Last_5, 0.75, na.rm = TRUE),
+      Freestyle_Last_5
+    )
+  )
+
+# Modified function to get predictions from GAM models
+get_leg_predictions <- function(leg_number, data) {
+  # Select appropriate Last_5 column based on leg
+  if(leg_number <= 2) {
+    data$Weighted_Last_5 <- data$Classic_Last_5
+  } else {
+    data$Weighted_Last_5 <- data$Freestyle_Last_5
+  }
+  
+  # Get model predictions using GAM's predict function
+  podium_probs <- predict(leg_models[[leg_number]]$podium, 
+                         newdata = data, 
+                         type = "response")
+  
+  win_probs <- predict(leg_models[[leg_number]]$win, 
+                      newdata = data, 
+                      type = "response")
+  
+  return(data.frame(
+    ID = data$ID,
+    Skier = data$Skier,
+    Nation = data$Nation,
+    Podium_Prob = podium_probs,
+    Win_Prob = win_probs
+  ))
+}
+
+# Get predictions for each leg
+leg_rankings <- list()
+for(leg in 1:4) {
+  # Create temporary data frame with only the needed predictors for this leg
+  pred_data <- current_df
+  
+  # Make sure we have all required columns that were selected during feature selection
+  required_cols_podium <- leg_models[[leg]]$features_podium
+  required_cols_win <- leg_models[[leg]]$features_win
+  
+  # Check if any required columns are missing
+  missing_cols <- setdiff(
+    unique(c(required_cols_podium, required_cols_win)),
+    names(pred_data)
+  )
+  
+  if(length(missing_cols) > 0) {
+    warning(sprintf("Leg %d: Missing columns: %s", 
+                   leg, 
+                   paste(missing_cols, collapse = ", ")))
+  }
+  
+  leg_rankings[[leg]] <- get_leg_predictions(leg, pred_data) %>%
+    arrange(desc(Podium_Prob)) %>%
+    mutate(
+      Podium_Rank = row_number(),
+      Win_Rank = rank(-Win_Prob)
+    )
+  
+  cat("\nLeg", leg, "Top 10 by Podium Probability:\n")
+  print(leg_rankings[[leg]] %>% 
+        select(Skier, Nation, Podium_Prob, Win_Prob) %>% 
+        head(100))
+}
+
+# Print model summaries for diagnostics
+for(leg in 1:4) {
+  cat(sprintf("\n=== Leg %d Model Summary ===\n", leg))
+  cat("\nPodium Model:\n")
+  print(summary(leg_models[[leg]]$podium))
+  cat("\nWin Model:\n")
+  print(summary(leg_models[[leg]]$win))
+}
+```
+
+```{r gam-team}
+major_nations <- c("Norway", "USA", "Finland", "Sweden", "Germany", "France", "Italy", "Switzerland")
+# Function to get optimal teams for a nation
+get_optimal_teams <- function(nation, leg_rankings, optimize_for = c("podium", "win")) {
+  optimize_for <- match.arg(optimize_for)
+  prob_col <- if(optimize_for == "podium") "Podium_Prob" else "Win_Prob"
+  
+  # Initialize team
+  selected_skiers <- character(4)
+  used_skiers <- character(0)
+  
+  # For each leg
+  for(leg in 1:4) {
+    # Get available skiers for this nation and leg
+    available_skiers <- leg_rankings[[leg]] %>%
+      filter(
+        Nation == nation,
+        !Skier %in% used_skiers
+      ) %>%
+      arrange(desc(!!sym(prob_col)))
+    
+    if(nrow(available_skiers) > 0) {
+      # Select best available skier
+      selected_skiers[leg] <- available_skiers$Skier[1]
+      used_skiers <- c(used_skiers, selected_skiers[leg])
+    } else {
+      selected_skiers[leg] <- "NO ELIGIBLE SKIER"
+    }
+  }
+  
+  # Create team summary
+  team_summary <- data.frame(
+    Nation = nation,
+    Leg = 1:4,
+    Skier = selected_skiers
+  )
+  
+  # Add probabilities for each leg
+  team_probs <- numeric(4)
+  for(leg in 1:4) {
+    if(selected_skiers[leg] != "NO ELIGIBLE SKIER") {
+      leg_data <- leg_rankings[[leg]] %>%
+        filter(Skier == selected_skiers[leg])
+      team_probs[leg] <- leg_data[[prob_col]]
+    } else {
+      team_probs[leg] <- 0
+    }
+  }
+  
+  team_summary$Probability <- team_probs
+  
+  return(team_summary)
+}
+
+# Get optimal teams for all major nations
+podium_teams <- list()
+winning_teams <- list()
+
+cat("\n=== OPTIMAL TEAMS FOR PODIUM PROBABILITY ===\n")
+for(nation in major_nations) {
+  podium_teams[[nation]] <- get_optimal_teams(nation, leg_rankings, "podium")
+  cat(sprintf("\n%s Optimal Podium Team:\n", nation))
+  print(podium_teams[[nation]] %>%
+        mutate(
+          Probability = sprintf("%.1f%%", Probability * 100)
+        ))
+}
+
+cat("\n=== OPTIMAL TEAMS FOR WINNING PROBABILITY ===\n")
+for(nation in major_nations) {
+  winning_teams[[nation]] <- get_optimal_teams(nation, leg_rankings, "win")
+  cat(sprintf("\n%s Optimal Winning Team:\n", nation))
+  print(winning_teams[[nation]] %>%
+        mutate(
+          Probability = sprintf("%.1f%%", Probability * 100)
+        ))
+}
+
+# Calculate team strength metrics
+calculate_team_metrics <- function(team_data) {
+  avg_prob <- mean(team_data$Probability)
+  min_prob <- min(team_data$Probability)
+  
+  return(c(
+    average_probability = avg_prob,
+    minimum_probability = min_prob,
+    team_score = avg_prob * min_prob  # Simple composite score
+  ))
+}
+
+# Compare team strengths
+team_comparisons <- data.frame(
+  Nation = major_nations,
+  Podium_Score = sapply(major_nations, function(n) {
+    calculate_team_metrics(podium_teams[[n]])[3]
+  }),
+  Win_Score = sapply(major_nations, function(n) {
+    calculate_team_metrics(winning_teams[[n]])[3]
+  })
+) %>%
+  arrange(desc(Podium_Score))
+
+cat("\n=== TEAM STRENGTH RANKINGS ===\n")
+print(team_comparisons %>%
+      mutate(
+        Podium_Score = sprintf("%.3f", Podium_Score),
+        Win_Score = sprintf("%.3f", Win_Score)
+      ))
+
+```
+```{r gam-ndependence}
+
+# First get our relay data with all the right columns named properly
+historical_relays <- bind_rows(
+  # Classic legs
+  classic_combined %>%
+    filter(Season >= 2014, Leg <= 2) %>%
+    rename(
+      Classic_Last_5 = Weighted_Last_5,
+      Classic_Last_5_2 = Weighted_Last_5_2
+    ) %>%
+    mutate(
+      Freestyle_Last_5 = NA,
+      Freestyle_Last_5_2 = NA
+    ),
+  
+  # Freestyle legs
+  freestyle_combined %>%
+    filter(Season >= 2014, Leg > 2) %>%
+    rename(
+      Freestyle_Last_5 = Weighted_Last_5,
+      Freestyle_Last_5_2 = Weighted_Last_5_2
+    ) %>%
+    mutate(
+      Classic_Last_5 = NA,
+      Classic_Last_5_2 = NA
+    )
+)
+
+# Get individual predictions for each skier in each relay using GAM models
+historical_relays <- historical_relays %>%
+  group_by(Season, Race, ID, Leg) %>%
+  mutate(
+    Weighted_Last_5 = if_else(Leg <= 2, Classic_Last_5, Freestyle_Last_5),
+    predicted_prob = case_when(
+      Leg == 1 ~ predict(leg_models[[1]]$podium, cur_data(), type = "response"),
+      Leg == 2 ~ predict(leg_models[[2]]$podium, cur_data(), type = "response"),
+      Leg == 3 ~ predict(leg_models[[3]]$podium, cur_data(), type = "response"),
+      Leg == 4 ~ predict(leg_models[[4]]$podium, cur_data(), type = "response")
+    )
+  ) %>%
+  ungroup()
+
+# Create team-level dataset with individual leg probabilities and proper factors
+team_results <- historical_relays %>%
+  # First get complete teams (all 4 legs)
+  group_by(Season, Race, Place) %>%
+  filter(n_distinct(Leg) == 4) %>%
+  summarize(
+    Nation = first(Nation),
+    leg1_prob = first(predicted_prob[Leg == 1]),
+    leg2_prob = first(predicted_prob[Leg == 2]),
+    leg3_prob = first(predicted_prob[Leg == 3]),
+    leg4_prob = first(predicted_prob[Leg == 4]),
+    is_podium = factor(if_else(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+    is_win = factor(if_else(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+  )
+
+# Remove any duplicates
+team_results <- team_results[!duplicated(team_results), ]
+
+# Print diagnostic information
+print("Sample of historical relays:")
+print(historical_relays %>% filter(Season==2023))
+
+print("\nSample of team results:")
+print(team_results)
+
+# Check correlations with GAM predictions
+print("\nCorrelations with podium finish:")
+cor_matrix <- cor(team_results %>% 
+    mutate(is_podium = as.numeric(as.character(is_podium))) %>%
+    select(contains("prob"), is_podium))
+print(cor_matrix)
+
+# Additional diagnostics for GAM predictions
+print("\nSummary statistics of leg probabilities:")
+summary(team_results %>% select(contains("prob")))
+
+# Check for any extreme or unreasonable predictions
+print("\nNumber of probabilities outside [0,1] range (should be 0):")
+sapply(team_results %>% select(contains("prob")), function(x) sum(x < 0 | x > 1))
+
+
+```
+
+
+```{r finding_weights}
+library(mgcv)
+
+# Train team podium model using GAM directly
+team_podium_model <- gam(
+    factor(is_podium) ~ s(leg1_prob) + s(leg2_prob) + s(leg3_prob) + s(leg4_prob),
+    family = binomial,
+    data = team_results,
+    method = "REML"
+)
+
+# Train team win model using GAM directly
+team_win_model <- gam(
+    factor(is_win) ~ s(leg1_prob) + s(leg2_prob) + s(leg3_prob) + s(leg4_prob),
+    family = binomial,
+    data = team_results,
+    method = "REML"
+)
+
+# Function to calculate variable importance based on chi-square statistics
+gam_importance <- function(model) {
+    # Get model summary
+    sum_mod <- summary(model)
+    
+    # Extract chi-square statistics
+    chi_sq <- sum_mod$chi.sq
+    
+    # Calculate relative importance
+    importance <- chi_sq / sum(chi_sq) * 100
+    
+    # Create importance data frame
+    importance_df <- data.frame(
+        Overall = importance,
+        row.names = row.names(sum_mod$s.table)
+    )
+    
+    return(importance_df)
+}
+
+# Print feature importance
+print("Feature importance for podium model:")
+print(gam_importance(team_podium_model))
+print("\nFeature importance for win model:")
+print(gam_importance(team_win_model))
+
+# Print model summaries
+print("\nPodium model summary:")
+print(summary(team_podium_model))
+print("\nWin model summary:")
+print(summary(team_win_model))
+
+# Cross-validation function for GAMs
+cv_gam <- function(model, data, k=5) {
+    # Create fold indices
+    n <- nrow(data)
+    folds <- sample(rep(1:k, length.out = n))
+    
+    # Store predictions
+    cv_preds <- numeric(n)
+    
+    # Perform k-fold CV
+    for(i in 1:k) {
+        # Split data
+        train_data <- data[folds != i, ]
+        test_data <- data[folds == i, ]
+        
+        # Fit model
+        temp_model <- gam(formula(model), family = binomial, 
+                         data = train_data, method = "REML")
+        
+        # Make predictions
+        cv_preds[folds == i] <- predict(temp_model, test_data, type = "response")
+    }
+    
+    # Calculate metrics
+    actual <- as.numeric(data$is_podium) - 1
+    accuracy <- mean((cv_preds > 0.5) == actual)
+    auc <- suppressMessages(pROC::roc(actual, cv_preds)$auc)
+    
+    return(list(
+        accuracy = accuracy,
+        auc = auc,
+        predictions = cv_preds
+    ))
+}
+
+# Perform cross-validation
+# print("\nCross-validation results:")
+# cv_results_podium <- cv_gam(team_podium_model, team_results)
+# print("Podium model CV accuracy:", cv_results_podium$accuracy)
+# print("Podium model CV AUC:", cv_results_podium$auc)
+# 
+# cv_results_win <- cv_gam(team_win_model, team_results)
+# print("Win model CV accuracy:", cv_results_win$accuracy)
+# print("Win model CV AUC:", cv_results_win$auc)
+# 
+# # Plot smooth terms for visual inspection
+# par(mfrow = c(2,2))
+# plot(team_podium_model, pages = 1, main = "Podium Model - Smooth Terms")
+# par(mfrow = c(2,2))
+# plot(team_win_model, pages = 1, main = "Win Model - Smooth Terms")
+# par(mfrow = c(1,1))
+```
+
+
+```{r weighted_gam}
+# Function to calculate team score
+calculate_team_score <- function(skiers, leg_rankings, leg_weights, prob_col = "Podium_Prob") {
+  total_score <- 0
+  for(leg in 1:4) {
+    if(skiers[leg] != "NO ELIGIBLE SKIER") {
+      prob <- leg_rankings[[leg]] %>%
+        filter(Skier == skiers[leg]) %>%
+        pull(!!sym(prob_col))
+      total_score <- total_score + (prob * leg_weights[leg])
+    }
+  }
+  return(total_score)
+}
+
+# Updated function to find optimal team with limited candidates
+get_weighted_optimal_teams <- function(nation, leg_rankings, optimize_for = c("podium", "win"), 
+                                     leg_weights = leg_weights_normalized, max_candidates = 6) {
+  optimize_for <- match.arg(optimize_for)
+  prob_col <- if(optimize_for == "podium") "Podium_Prob" else "Win_Prob"
+  
+  # Get top candidates for each leg
+  available_skiers <- list()
+  for(leg in 1:4) {
+    available_skiers[[leg]] <- leg_rankings[[leg]] %>%
+      filter(Nation == nation) %>%
+      arrange(desc(!!sym(prob_col))) %>%
+      head(max_candidates) %>%  # Only keep top candidates
+      pull(Skier)
+  }
+  
+  # Initialize variables for best team
+  best_score <- -Inf
+  best_team <- rep("NO ELIGIBLE SKIER", 4)
+  
+  # Try combinations with limited candidates
+  for(s1 in available_skiers[[1]]) {
+    for(s2 in available_skiers[[2]]) {
+      if(s2 == s1) next
+      for(s3 in available_skiers[[3]]) {
+        if(s3 == s1 || s3 == s2) next
+        for(s4 in available_skiers[[4]]) {
+          if(s4 == s1 || s4 == s2 || s4 == s3) next
+          
+          # Calculate score for this combination
+          current_team <- c(s1, s2, s3, s4)
+          score <- calculate_team_score(current_team, leg_rankings, leg_weights, prob_col)
+          
+          if(score > best_score) {
+            best_score <- score
+            best_team <- current_team
+          }
+        }
+      }
+    }
+  }
+  
+  # Create team summary
+  team_summary <- data.frame(
+    Nation = nation,
+    Leg = 1:4,
+    Skier = best_team,
+    Weight = leg_weights
+  )
+  
+  # Add probabilities for each leg
+  team_probs <- numeric(4)
+  for(leg in 1:4) {
+    if(best_team[leg] != "NO ELIGIBLE SKIER") {
+      leg_data <- leg_rankings[[leg]] %>%
+        filter(Skier == best_team[leg])
+      team_probs[leg] <- leg_data[[prob_col]]
+    } else {
+      team_probs[leg] <- 0
+    }
+  }
+  
+  team_summary$Probability <- team_probs
+  team_summary$Weighted_Probability <- team_probs * leg_weights
+  
+  return(team_summary)
+}
+
+# Extract weights from GAM importance
+importance_df <- gam_importance(team_podium_model)
+leg_weights <- numeric(4)
+
+# Assign weights directly from GAM importance
+leg_weights[1] <- importance_df["s(leg1_prob)", "Overall"]  # 6.322322
+leg_weights[2] <- importance_df["s(leg2_prob)", "Overall"]  # 23.365422
+leg_weights[3] <- importance_df["s(leg3_prob)", "Overall"]  # 10.013667
+leg_weights[4] <- importance_df["s(leg4_prob)", "Overall"]  # 60.298589
+
+# Normalize weights to sum to 1
+leg_weights_normalized <- leg_weights / sum(leg_weights)
+
+cat("Normalized GAM-based leg weights:\n")
+for(i in 1:4) {
+  cat(sprintf("Leg %d: %.3f\n", i, leg_weights_normalized[i]))
+}
+
+# Get optimal teams using GAM-derived weights
+cat("\n=== OPTIMAL TEAMS WITH GAM WEIGHTS (TOP 6 CANDIDATES) ===\n")
+weighted_podium_teams <- list()
+for(nation in major_nations) {
+  weighted_podium_teams[[nation]] <- get_weighted_optimal_teams(
+    nation, 
+    leg_rankings, 
+    "podium",
+    leg_weights = leg_weights_normalized,
+    max_candidates = 6
+  )
+  
+  cat(sprintf("\n%s Optimal Team:\n", nation))
+  print(weighted_podium_teams[[nation]] %>%
+        mutate(
+          Probability = sprintf("%.1f%%", Probability * 100),
+          Weighted_Probability = sprintf("%.1f%%", Weighted_Probability * 100)
+        ))
+  
+  # Print total weighted score
+  total_score <- sum(weighted_podium_teams[[nation]]$Weighted_Probability)
+  cat(sprintf("\nTotal Weighted Score: %.3f\n", total_score))
+}
+
+# Compare weighted team strengths
+weighted_comparisons <- data.frame(
+  Nation = major_nations,
+  Weighted_Score = sapply(major_nations, function(n) {
+    sum(weighted_podium_teams[[n]]$Weighted_Probability)
+  })
+) %>%
+  arrange(desc(Weighted_Score))
+
+cat("\n=== TEAM RANKINGS BY WEIGHTED PROBABILITY ===\n")
+print(weighted_comparisons %>%
+      mutate(
+        Weighted_Score = sprintf("%.3f", Weighted_Score)
+      ))
+```
+
+0.3656866*1+0.1066828*1+0.5276305*1
+

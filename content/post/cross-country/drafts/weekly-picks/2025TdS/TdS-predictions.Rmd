@@ -1,0 +1,2888 @@
+```{r ingest}
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(arrow)
+library(AER)
+library(ggplot2)
+library(effects)
+library(segmented)
+
+M_chrono <- arrow::read_feather('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/men_merged.feather')
+L_chrono <- arrow::read_feather('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/ladies_merged.feather')
+
+M_chrono <- M_chrono %>% filter(Distance != "Ts", Distance != "Rel")
+L_chrono <- L_chrono %>% filter(Distance != "Ts", Distance != "Rel")
+
+# Step Two: Create a column called WC Points that maps place to world cup points from a list
+wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
+stage_points <- c(50, 47, 44, 41, 38, 35, 32, 30, 28, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+tds_points <- c(300, 285, 270, 255, 240, 216, 207, 198, 189, 180, 174, 168, 162, 156, 150, 144, 138, 132, 126, 120, 114, 108, 102, 96, 90, 84, 78, 72, 66, 60, 57, 54, 51, 48, 45, 42, 39, 36, 33, 30, 27, 24, 21, 18, 15, 12, 9, 6, 3)
+
+# Function to safely fetch points based on Place
+get_points <- function(place, points_list) {
+  if (place >= 1 && place <= length(points_list)) {
+    return(points_list[place])
+  }
+  return(0)
+}
+
+# Apply points logic based on Event and Distance
+men_df <- M_chrono %>%
+  mutate(Points = case_when(
+    City == "Tour de Ski" ~ map_int(Place, ~ get_points(.x, tds_points)),
+    TRUE ~ map_int(Place, ~ get_points(.x, stage_points))
+  ))
+
+# Apply points logic based on Event and Distance
+ladies_df <- L_chrono %>%
+  mutate(Points = case_when(
+    City == "Tour de Ski" ~ map_int(Place, ~ get_points(.x, tds_points)),
+    TRUE ~ map_int(Place, ~ get_points(.x, stage_points))
+  ))
+
+# Sort the df by Date, Race, and Place
+men_df <- men_df %>%
+  arrange(Date, Race, Place)
+
+# Sort the df by Date, Race, and Place
+ladies_df <- ladies_df %>%
+  arrange(Date, Race, Place)
+
+men_df <- men_df %>%
+  group_by(Season) %>%                                    # Group by Season
+  mutate(Num_Races = max(Race)) %>%                      # Get the maximum Race number for each Season
+  mutate(Period = case_when(
+    Num_Races <= 5 ~ 1,
+    Num_Races <= 10 ~ 2,
+    Num_Races <= 15 ~ 3,
+    Num_Races <= 20 ~ 4,
+    Num_Races <= 25 ~ 5,
+    TRUE ~ ceiling((Race / (Num_Races / 5)))             # For more than 25 races, divide into 5 equal parts
+  ))
+
+ladies_df <- ladies_df %>%
+  group_by(Season) %>%                                    # Group by Season
+  mutate(Num_Races = max(Race)) %>%                      # Get the maximum Race number for each Season
+  mutate(Period = case_when(
+    Num_Races <= 5 ~ 1,
+    Num_Races <= 10 ~ 2,
+    Num_Races <= 15 ~ 3,
+    Num_Races <= 20 ~ 4,
+    Num_Races <= 25 ~ 5,
+    TRUE ~ ceiling((Race / (Num_Races / 5)))             # For more than 25 races, divide into 5 equal parts
+  ))
+
+# Function to calculate weighted average
+calc_weighted_last_5 <- function(places) {
+  if(length(places) > 0) {
+    weights <- seq(length(places), 1)
+    return(weighted.mean(places, weights, na.rm = TRUE))
+  } else {
+    return(NA_real_)
+  }
+}
+
+# Process dataframe function
+process_dataframe <- function(df) {
+  df %>%
+    group_by(ID) %>%
+    arrange(Date) %>%
+    mutate(
+      # Sprint Classic
+      Sprint_C_Last_5 = sapply(row_number(), function(i) {
+        # Get all previous races up to current index
+        all_prev_races <- Points[1:(i-1)]
+        all_prev_dist <- Distance[1:(i-1)]
+        all_prev_tech <- Technique[1:(i-1)]
+        
+        # Filter for sprint classic races
+        filtered_idx <- which(all_prev_dist == "Sprint" & all_prev_tech == "C")
+        filtered_points <- all_prev_races[filtered_idx]
+        
+        # Take last 5 of these races
+        if(length(filtered_points) > 0) {
+          recent_points <- tail(filtered_points, 5)
+          calc_weighted_last_5(recent_points)
+        } else {
+          NA_real_
+        }
+      }),
+      
+      Sprint_C_Last_5_2 = sapply(row_number(), function(i) {
+        # Get all races up to and including current index
+        all_races <- Points[1:i]
+        all_dist <- Distance[1:i]
+        all_tech <- Technique[1:i]
+        
+        # Filter for sprint classic races
+        filtered_idx <- which(all_dist == "Sprint" & all_tech == "C")
+        filtered_points <- all_races[filtered_idx]
+        
+        # Take last 5 of these races
+        if(length(filtered_points) > 0) {
+          recent_points <- tail(filtered_points, 5)
+          calc_weighted_last_5(recent_points)
+        } else {
+          NA_real_
+        }
+      }),
+      
+      # Distance Classic
+      Distance_C_Last_5 = sapply(row_number(), function(i) {
+        all_prev_races <- Points[1:(i-1)]
+        all_prev_dist <- Distance[1:(i-1)]
+        all_prev_tech <- Technique[1:(i-1)]
+        
+        filtered_idx <- which(all_prev_dist != "Sprint" & all_prev_tech == "C")
+        filtered_points <- all_prev_races[filtered_idx]
+        
+        if(length(filtered_points) > 0) {
+          recent_points <- tail(filtered_points, 5)
+          calc_weighted_last_5(recent_points)
+        } else {
+          NA_real_
+        }
+      }),
+      
+      Distance_C_Last_5_2 = sapply(row_number(), function(i) {
+        all_races <- Points[1:i]
+        all_dist <- Distance[1:i]
+        all_tech <- Technique[1:i]
+        
+        filtered_idx <- which(all_dist != "Sprint" & all_tech == "C")
+        filtered_points <- all_races[filtered_idx]
+        
+        if(length(filtered_points) > 0) {
+          recent_points <- tail(filtered_points, 5)
+          calc_weighted_last_5(recent_points)
+        } else {
+          NA_real_
+        }
+      }),
+      
+      # Sprint Freestyle
+      Sprint_F_Last_5 = sapply(row_number(), function(i) {
+        all_prev_races <- Points[1:(i-1)]
+        all_prev_dist <- Distance[1:(i-1)]
+        all_prev_tech <- Technique[1:(i-1)]
+        
+        filtered_idx <- which(all_prev_dist == "Sprint" & all_prev_tech == "F")
+        filtered_points <- all_prev_races[filtered_idx]
+        
+        if(length(filtered_points) > 0) {
+          recent_points <- tail(filtered_points, 5)
+          calc_weighted_last_5(recent_points)
+        } else {
+          NA_real_
+        }
+      }),
+      
+      Sprint_F_Last_5_2 = sapply(row_number(), function(i) {
+        all_races <- Points[1:i]
+        all_dist <- Distance[1:i]
+        all_tech <- Technique[1:i]
+        
+        filtered_idx <- which(all_dist == "Sprint" & all_tech == "F")
+        filtered_points <- all_races[filtered_idx]
+        
+        if(length(filtered_points) > 0) {
+          recent_points <- tail(filtered_points, 5)
+          calc_weighted_last_5(recent_points)
+        } else {
+          NA_real_
+        }
+      }),
+      
+      # Distance Freestyle
+      Distance_F_Last_5 = sapply(row_number(), function(i) {
+        all_prev_races <- Points[1:(i-1)]
+        all_prev_dist <- Distance[1:(i-1)]
+        all_prev_tech <- Technique[1:(i-1)]
+        
+        filtered_idx <- which(all_prev_dist != "Sprint" & all_prev_tech == "F")
+        filtered_points <- all_prev_races[filtered_idx]
+        
+        if(length(filtered_points) > 0) {
+          recent_points <- tail(filtered_points, 5)
+          calc_weighted_last_5(recent_points)
+        } else {
+          NA_real_
+        }
+      }),
+      
+      Distance_F_Last_5_2 = sapply(row_number(), function(i) {
+        all_races <- Points[1:i]
+        all_dist <- Distance[1:i]
+        all_tech <- Technique[1:i]
+        
+        filtered_idx <- which(all_dist != "Sprint" & all_tech == "F")
+        filtered_points <- all_races[filtered_idx]
+        
+        if(length(filtered_points) > 0) {
+          recent_points <- tail(filtered_points, 5)
+          calc_weighted_last_5(recent_points)
+        } else {
+          NA_real_
+        }
+      }),
+      
+      # All Distance
+      Distance_Last_5 = sapply(row_number(), function(i) {
+        all_prev_races <- Points[1:(i-1)]
+        all_prev_dist <- Distance[1:(i-1)]
+        
+        filtered_idx <- which(all_prev_dist != "Sprint")
+        filtered_points <- all_prev_races[filtered_idx]
+        
+        if(length(filtered_points) > 0) {
+          recent_points <- tail(filtered_points, 5)
+          calc_weighted_last_5(recent_points)
+        } else {
+          NA_real_
+        }
+      }),
+      
+      Distance_Last_5_2 = sapply(row_number(), function(i) {
+        all_races <- Points[1:i]
+        all_dist <- Distance[1:i]
+        
+        filtered_idx <- which(all_dist != "Sprint")
+        filtered_points <- all_races[filtered_idx]
+        
+        if(length(filtered_points) > 0) {
+          recent_points <- tail(filtered_points, 5)
+          calc_weighted_last_5(recent_points)
+        } else {
+          NA_real_
+        }
+      })
+    ) %>%
+    ungroup() %>%
+    # Forward fill NAs
+    group_by(ID) %>%
+    arrange(Date) %>%
+    mutate(
+      across(
+        c(Sprint_C_Last_5, Sprint_F_Last_5, Distance_C_Last_5, 
+          Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5_2, 
+          Sprint_F_Last_5_2, Distance_C_Last_5_2, 
+          Distance_F_Last_5_2, Distance_Last_5_2),
+        ~ zoo::na.locf(.x, na.rm = FALSE)  # Forward fill within each group
+      )
+    ) %>%
+    ungroup()
+}
+
+# Apply to both datasets
+men_df <- process_dataframe(men_df)
+ladies_df <- process_dataframe(ladies_df)
+
+men_df %>% 
+  filter(Skier == "Johannes Høsflot Klæbo", Distance!="Sprint", Technique=="C") %>%
+  dplyr::select(Skier, Season, Race, Points, Distance_C_Last_5, Distance_C_Last_5_2) %>%
+  arrange(Season, Race)
+
+
+replace_na_with_q3 <- function(df) {
+  df %>%
+    group_by(Season, Race) %>%
+    mutate(
+      across(
+        c(Sprint_C_Last_5, Sprint_F_Last_5, Distance_C_Last_5, 
+          Distance_F_Last_5, Distance_Last_5, Sprint_C_Last_5_2, Sprint_F_Last_5_2, Distance_C_Last_5_2, 
+          Distance_F_Last_5_2, Distance_Last_5_2),
+        ~ if_else(is.na(.), quantile(Place, 0.25, na.rm = TRUE), .)
+      )
+    ) %>%
+    ungroup()
+}
+
+men_df <- replace_na_with_q3(men_df)
+ladies_df <- replace_na_with_q3(ladies_df)
+
+# Calculate historical TdS performance
+men_df <- men_df %>%
+  group_by(ID) %>%
+  arrange(Date) %>%
+  mutate(
+    TdS_Historical = sapply(row_number(), function(i) {
+      # Get all previous TdS races before this row
+      prev_races <- Points[1:(i-1)]
+      prev_city <- City[1:(i-1)]
+      
+      # Filter for TdS races
+      tds_idx <- which(prev_city == "Tour de Ski")
+      tds_points <- prev_races[tds_idx]
+      
+      # Take last 3 if available
+      if(length(tds_points) > 0) {
+        recent_points <- tail(tds_points, 3)
+        paste(recent_points, collapse=",")  # Store as comma-separated string
+      } else {
+        NA_character_
+      }
+    })
+  ) %>%
+  ungroup()
+
+# Do the same for ladies
+ladies_df <- ladies_df %>%
+  group_by(ID) %>%
+  arrange(Date) %>%
+  mutate(
+    TdS_Historical = sapply(row_number(), function(i) {
+      prev_races <- Points[1:(i-1)]
+      prev_city <- City[1:(i-1)]
+      
+      tds_idx <- which(prev_city == "Tour de Ski")
+      tds_points <- prev_races[tds_idx]
+      
+      if(length(tds_points) > 0) {
+        recent_points <- tail(tds_points, 3)
+        paste(recent_points, collapse=",")
+      } else {
+        NA_character_
+      }
+    })
+  ) %>%
+  ungroup()
+
+# Step Three: Filter for the last five years
+men_df <- men_df %>%
+  filter(Season >= 2014, Event %in% c("World Cup", "Nordic Opening", "Tour de Ski", "Olympic Winter Games", "World Championship", "World Cup Final", "Ski Tour Canada")) %>%
+  group_by(ID, Season) %>%
+  mutate(Cumulative_Points = cumsum(Points)) %>%
+  ungroup()
+
+# Step Three: Filter for the last five years
+ladies_df <- ladies_df %>%
+  filter(Season >= 2014, Event %in% c("World Cup", "Nordic Opening", "Tour de Ski", "Olympic Winter Games", "World Championship", "World Cup Final", "Ski Tour Canada")) %>%
+  group_by(ID, Season) %>%
+  mutate(Cumulative_Points = cumsum(Points)) %>%
+  ungroup()
+
+# Function to replace NAs with the first quartile within each group
+replace_na_with_quartile <- function(x) {
+  quartile_1 <- quantile(x, 0.25, na.rm = TRUE)  # Calculate the first quartile, ignoring NAs
+  ifelse(is.na(x), quartile_1, x)  # Replace NAs with the first quartile
+}
+
+# Apply this logic to each of the specified columns and then perform the percentage calculations
+men_df <- men_df %>%
+  group_by(Season, Race) %>%
+  mutate(
+    Distance_Pelo = replace_na_with_quartile(Distance_Pelo),
+    Distance_C_Pelo = replace_na_with_quartile(Distance_C_Pelo),
+    Distance_F_Pelo = replace_na_with_quartile(Distance_F_Pelo),
+    Pelo = replace_na_with_quartile(Pelo),
+    Sprint_Pelo = replace_na_with_quartile(Sprint_Pelo),
+    Sprint_C_Pelo = replace_na_with_quartile(Sprint_C_Pelo),
+    Sprint_F_Pelo = replace_na_with_quartile(Sprint_F_Pelo),
+    Freestyle_Pelo = replace_na_with_quartile(Freestyle_Pelo),
+    Classic_Pelo = replace_na_with_quartile(Classic_Pelo)
+  ) %>%
+  # Now calculate the percentages
+  mutate(
+    Distance_Pelo_Pct = Distance_Pelo / max(Distance_Pelo),
+    Distance_C_Pelo_Pct = Distance_C_Pelo / max(Distance_C_Pelo),
+    Distance_F_Pelo_Pct = Distance_F_Pelo / max(Distance_F_Pelo),
+    Pelo_Pct = Pelo / max(Pelo),
+    Sprint_Pelo_Pct = Sprint_Pelo / max(Sprint_Pelo),
+    Sprint_C_Pelo_Pct = Sprint_C_Pelo / max(Sprint_C_Pelo),
+    Sprint_F_Pelo_Pct = Sprint_F_Pelo / max(Sprint_F_Pelo),
+    Freestyle_Pelo_Pct = Freestyle_Pelo / max(Freestyle_Pelo),
+    Classic_Pelo_Pct = Classic_Pelo / max(Classic_Pelo)
+  ) %>%
+  ungroup()
+men_df <- men_df %>%
+  filter(! Distance %in% c("Ts", "Rel"))
+
+
+ladies_df <- ladies_df %>%
+  group_by(Season, Race) %>%
+  mutate(
+    Distance_Pelo = replace_na_with_quartile(Distance_Pelo),
+    Distance_C_Pelo = replace_na_with_quartile(Distance_C_Pelo),
+    Distance_F_Pelo = replace_na_with_quartile(Distance_F_Pelo),
+    Pelo = replace_na_with_quartile(Pelo),
+    Sprint_Pelo = replace_na_with_quartile(Sprint_Pelo),
+    Sprint_C_Pelo = replace_na_with_quartile(Sprint_C_Pelo),
+    Sprint_F_Pelo = replace_na_with_quartile(Sprint_F_Pelo),
+    Freestyle_Pelo = replace_na_with_quartile(Freestyle_Pelo),
+    Classic_Pelo = replace_na_with_quartile(Classic_Pelo)
+  ) %>%
+  # Now calculate the percentages
+  mutate(
+    Distance_Pelo_Pct = Distance_Pelo / max(Distance_Pelo),
+    Distance_C_Pelo_Pct = Distance_C_Pelo / max(Distance_C_Pelo),
+    Distance_F_Pelo_Pct = Distance_F_Pelo / max(Distance_F_Pelo),
+    Pelo_Pct = Pelo / max(Pelo),
+    Sprint_Pelo_Pct = Sprint_Pelo / max(Sprint_Pelo),
+    Sprint_C_Pelo_Pct = Sprint_C_Pelo / max(Sprint_C_Pelo),
+    Sprint_F_Pelo_Pct = Sprint_F_Pelo / max(Sprint_F_Pelo),
+    Freestyle_Pelo_Pct = Freestyle_Pelo / max(Freestyle_Pelo),
+    Classic_Pelo_Pct = Classic_Pelo / max(Classic_Pelo)
+  ) %>%
+  ungroup()
+ladies_df <- ladies_df %>%
+  filter(! Distance %in% c("Ts", "Rel"))
+
+men_df <- men_df %>%
+  mutate(
+    Final_Climb = case_when(
+      City == "Val di Fiemme" & 
+      Event == "Tour de Ski" & 
+      `Average Grade` > 5 ~ TRUE &
+        Season>=2014,
+      
+      TRUE ~ FALSE
+    )
+  )
+
+ladies_df <- ladies_df %>%
+  mutate(
+    Final_Climb = case_when(
+      City == "Val di Fiemme" & 
+      Event == "Tour de Ski" & 
+      `Average Grade` > 5 ~ TRUE &
+        Season>=2014,
+      TRUE ~ FALSE
+    )
+  )
+
+
+men_df %>% 
+  filter(Skier == "Johannes Høsflot Klæbo", Distance!="Sprint", Technique=="C") %>%
+  dplyr::select(Skier, Season, Race, Points, Distance, Technique, TdS_Historical) %>%
+  arrange(Season, Race)
+```
+
+men_df %>% filter(Skier == "Johannes Høsflot Klæbo") %>% dplyr::select(Skier, Distance_F_Last_5, Place, Distance, Technique)
+1. Data Preprocessing and Correlation Analysis
+  Identify all Pelo_Pct and Last_5 variables
+  Perform correlation analysis using varclus
+  Create visualization of correlation clusters
+  Based on results, either select representative variables or create composite scores
+  Verify the final set of potential predictors
+
+
+2 Final Climb Model Development
+  Extract historical final climb data
+  For each skier:
+    Get last 3 actual performances (if available)
+    Create bootstrap samples of final climb data
+    Fit GAM models on bootstrap samples using selected/composite predictors
+    Generate predictions with uncertainty estimates
+  Validate model performance
+  Create weighted averages combining actual and predicted results
+
+
+3. TdS Historical Performance Model
+  Similar process to final climb model:
+    Extract historical TdS data
+    Get last 3 actual performances per skier
+    Bootstrap and GAM modeling
+    Generate predictions with uncertainty
+  Include final climb weighted averages as predictors
+  Create weighted averages combining actual and predicted results
+  
+
+4. Final TdS Prediction Model
+  Combine all engineered features:
+    Selected/composite Pelo metrics
+    Final climb weighted averages
+    TdS historical weighted averages
+    Other Last_5 metrics
+  Perform feature selection using stability selection
+  Fit final GAM model with selected features
+  Generate predictions with confidence intervals
+  Validate model performance
+
+5. Model Evaluation and Refinement
+  Cross-validation assessment
+  Compare different feature selection approaches (BIC vs stability selection)
+  Sensitivity analysis of key parameters
+  Performance metrics and visualizations
+
+6. Documentation and Results Analysis
+  Document variable importance
+  Analyze prediction intervals
+  Identify key performance factors
+  Visualize results and model insights
+  
+```{r step1-core-anal}
+# Load required libraries
+library(Hmisc)
+library(corrplot)
+library(reshape2)
+library(ggplot2)
+library(logger)
+
+# Set up logging
+log_dir <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS"
+dir.create(log_dir, recursive = TRUE, showWarnings = FALSE)
+
+# Configure logger
+log_appender(appender_file(file.path(log_dir, "correlation_analysis.log")))
+log_threshold(DEBUG)
+
+# Log start of analysis
+log_info("Starting correlation analysis")
+
+# Save analysis code directly
+analysis_code <- '
+# Load required libraries
+library(Hmisc)
+library(corrplot)
+library(reshape2)
+library(ggplot2)
+library(logger)
+
+# Identify potential predictor columns
+pelo_cols <- names(men_df)[grep("Pelo_Pct$", names(men_df))]
+last_5_cols <- names(men_df)[grep("Last_5", names(men_df))]
+
+# Create predictor dataframe
+predictors_df <- men_df[c(pelo_cols, last_5_cols)]
+
+# Compute correlation matrix
+cor_matrix <- cor(predictors_df, use = "pairwise.complete.obs")
+
+# Perform variable clustering
+var_clusters <- varclus(as.matrix(predictors_df))
+
+# Create correlation plot
+# Save cluster information and analysis
+'
+
+writeLines(analysis_code, file.path(log_dir, "correlation_analysis.R"))
+
+log_info("Identifying potential predictor columns")
+# Identify all our potential predictor columns
+pelo_cols <- names(men_df)[grep("Pelo_Pct$", names(men_df))]
+last_5_cols <- names(men_df)[grep("Last_5", names(men_df))]
+
+log_info("Creating predictor dataframe")
+log_debug(paste("Number of Pelo columns:", length(pelo_cols)))
+log_debug(paste("Number of Last 5 columns:", length(last_5_cols)))
+
+# Create a dataframe with just our potential predictors
+predictors_df <- men_df[c(pelo_cols, last_5_cols)]
+
+# Compute correlation matrix
+log_info("Computing correlation matrix")
+cor_matrix <- cor(predictors_df, use = "pairwise.complete.obs")
+
+# Save correlation matrix
+write.csv(cor_matrix, 
+          file.path(log_dir, "correlation_matrix.csv"))
+
+# Perform variable clustering
+log_info("Performing variable clustering")
+var_clusters <- varclus(as.matrix(predictors_df))
+
+# Save cluster plot
+png(file.path(log_dir, "correlation_plot.png"), 
+    width = 1200, height = 1200, res = 150)
+corrplot(cor_matrix, 
+         method = "color",
+         type = "upper",
+         order = "hclust",
+         addCoef.col = "black",
+         tl.col = "black",
+         tl.srt = 45,
+         number.cex = 0.7)
+dev.off()
+
+# Save cluster information
+log_info("Analyzing cluster information")
+sink(file.path(log_dir, "cluster_info.txt"))
+print(var_clusters)
+sink()
+
+# Identify highly correlated groups (r > 0.7)
+log_info("Identifying highly correlated variable pairs")
+high_cor_pairs <- which(abs(cor_matrix) > 0.7 & cor_matrix < 1, arr.ind = TRUE)
+high_cor_pairs <- as.data.frame(high_cor_pairs)
+high_cor_pairs$correlation <- cor_matrix[cbind(high_cor_pairs$row, high_cor_pairs$col)]
+high_cor_pairs$var1 <- rownames(cor_matrix)[high_cor_pairs$row]
+high_cor_pairs$var2 <- colnames(cor_matrix)[high_cor_pairs$col]
+
+# Sort by absolute correlation
+high_cor_pairs <- high_cor_pairs[order(-abs(high_cor_pairs$correlation)), ]
+
+# Save highly correlated pairs
+write.csv(high_cor_pairs, 
+          file.path(log_dir, "high_correlation_pairs.csv"))
+
+log_info("Creating correlation groups")
+# Create correlation groups
+correlation_groups <- list()
+processed_vars <- character(0)
+
+for(i in 1:nrow(high_cor_pairs)) {
+    var1 <- high_cor_pairs$var1[i]
+    var2 <- high_cor_pairs$var2[i]
+    
+    # Skip if both variables are already processed
+    if(var1 %in% processed_vars && var2 %in% processed_vars) next
+    
+    # Find existing group
+    existing_group <- NULL
+    for(j in seq_along(correlation_groups)) {
+        if(var1 %in% correlation_groups[[j]] || var2 %in% correlation_groups[[j]]) {
+            existing_group <- j
+            break
+        }
+    }
+    
+    if(is.null(existing_group)) {
+        # Create new group
+        correlation_groups[[length(correlation_groups) + 1]] <- c(var1, var2)
+    } else {
+        # Add to existing group
+        correlation_groups[[existing_group]] <- unique(c(correlation_groups[[existing_group]], var1, var2))
+    }
+    
+    processed_vars <- unique(c(processed_vars, var1, var2))
+}
+
+# Save correlation groups
+log_info("Saving correlation groups")
+sink(file.path(log_dir, "correlation_groups.txt"))
+cat("Correlation groups:\n")
+for(i in seq_along(correlation_groups)) {
+    cat("\nGroup", i, ":\n")
+    print(correlation_groups[[i]])
+}
+sink()
+
+# Create summary of analysis
+log_info("Creating analysis summary")
+sink(file.path(log_dir, "analysis_summary.txt"))
+cat("Correlation Analysis Summary\n")
+cat("==========================\n\n")
+cat("Number of predictors analyzed:", ncol(predictors_df), "\n")
+cat("Number of Pelo metrics:", length(pelo_cols), "\n")
+cat("Number of Last 5 metrics:", length(last_5_cols), "\n")
+cat("\nNumber of highly correlated pairs (|r| > 0.7):", nrow(high_cor_pairs), "\n")
+cat("Number of correlation groups identified:", length(correlation_groups), "\n")
+sink()
+
+log_info("Analysis complete")
+```
+
+```{r feature-sets}
+# Function to create enhanced feature sets with ratios
+create_enhanced_feature_sets <- function(df) {
+  # Add ratio features
+  # Add ratio features with safety checks
+  #df <- df %>%
+    # mutate(
+    #   # Pelo ratios - avoid division by zero
+    #   Distance_Sprint_Pelo_Ratio = ifelse(Sprint_Pelo_Pct > 0, 
+    #                                     Distance_Pelo_Pct / Sprint_Pelo_Pct, 
+    #                                     NA),
+    #   DistanceF_SprintF_Pelo_Ratio = ifelse(Sprint_F_Pelo_Pct > 0,
+    #                                       Distance_F_Pelo_Pct / Sprint_F_Pelo_Pct,
+    #                                       NA),
+    #   # Last 5 ratios - avoid division by zero
+    #   Distance_Sprint_Last5_Ratio = ifelse(Sprint_F_Last_5 > 0,
+    #                                      Distance_Last_5 / Sprint_F_Last_5,
+    #                                      NA),
+    #   DistanceF_SprintF_Last5_Ratio = ifelse(Sprint_F_Last_5 > 0,
+    #                                        Distance_F_Last_5 / Sprint_F_Last_5,
+    #                                        NA)
+    # )
+  
+  # Final Climb features with ratios
+  final_climb_features <- c(
+    # Original features
+    "Distance_F_Pelo_Pct",
+    "Freestyle_Pelo_Pct",
+    "Sprint_F_Pelo_Pct",
+    "Sprint_Pelo_Pct",
+    "Distance_F_Last_5",
+    "Sprint_F_Last_5"
+    # New ratio features
+    #"DistanceF_SprintF_Pelo_Ratio",
+    #"DistanceF_SprintF_Last5_Ratio"
+  )
+  
+  # Tour de Ski features with ratios
+  tds_features <- c(
+    # Original Pelo metrics
+    "Distance_C_Pelo_Pct",
+    "Distance_F_Pelo_Pct",
+    "Distance_Pelo_Pct",
+    "Sprint_C_Pelo_Pct",
+    "Sprint_F_Pelo_Pct",
+    "Sprint_Pelo_Pct",
+    "Classic_Pelo_Pct",
+    "Freestyle_Pelo_Pct",
+    "Pelo_Pct",
+    # Original Last 5 metrics
+    "Distance_C_Last_5",
+    "Distance_F_Last_5",
+    "Distance_Last_5",
+    "Sprint_C_Last_5",
+    "Sprint_F_Last_5",
+    "TdS_Historical"
+    # New ratio features
+    # "Distance_Sprint_Pelo_Ratio",
+    # "DistanceF_SprintF_Pelo_Ratio",
+    # "Distance_Sprint_Last5_Ratio",
+    # "DistanceF_SprintF_Last5_Ratio"
+  )
+  
+  # Create the datasets
+  final_climb_df <- df %>%
+    filter(Final_Climb == TRUE) %>%
+    dplyr::select(all_of(final_climb_features), 
+           Points, ID, Season, Race, Date)
+  
+  tds_df <- df %>%
+    filter(City == "Tour de Ski") %>%
+    dplyr::select(all_of(tds_features), 
+           Points, ID, Season, Race, Date)
+  
+  # Return both datasets in a list
+  return(list(
+    final_climb = final_climb_df,
+    tds = tds_df
+  ))
+}
+
+# Create enhanced feature sets for both men and women
+men_features <- create_enhanced_feature_sets(men_df)
+ladies_features <- create_enhanced_feature_sets(ladies_df)
+
+# Function to create and save correlation plot with ratios
+create_enhanced_cor_plot <- function(df, title, filename) {
+  pred_cols <- names(df)[!names(df) %in% c("ID", "Season", "Race", "Date", "Points")]
+  cor_matrix <- cor(df[pred_cols], use = "pairwise.complete.obs")
+  
+  png(file.path(log_dir, filename), width = 1200, height = 1200, res = 150)
+  corrplot(cor_matrix, 
+           method = "color",
+           type = "upper",
+           order = "hclust",
+           addCoef.col = "black",
+           tl.col = "black",
+           tl.srt = 45,
+           title = title,
+           number.cex = 0.7)
+  dev.off()
+  
+  return(cor_matrix)
+}
+
+# Create correlation plots for each model and gender with new ratios
+men_fc_cor <- create_enhanced_cor_plot(men_features$final_climb, 
+                                     "Men's Final Climb Feature Correlations (with Ratios)",
+                                     "men_final_climb_correlations_ratio.png")
+# men_tds_cor <- create_enhanced_cor_plot(men_features$tds,
+#                                       "Men's Tour de Ski Feature Correlations (with Ratios)",
+#                                       "men_tds_correlations_ratio.png")
+ladies_fc_cor <- create_enhanced_cor_plot(ladies_features$final_climb,
+                                        "Women's Final Climb Feature Correlations (with Ratios)",
+                                        "ladies_final_climb_correlations_ratio.png")
+# ladies_tds_cor <- create_enhanced_cor_plot(ladies_features$tds,
+#                                          "Women's Tour de Ski Feature Correlations (with Ratios)",
+#                                          "ladies_tds_correlations_ratio.png")
+
+# Print basic statistics about the ratios
+print("Summary of Distance-Sprint Ratios:")
+summary(men_features$final_climb$DistanceF_SprintF_Pelo_Ratio)
+```
+
+```{r step-3-final-climb}
+library(leaps)
+library(mgcv)
+library(dplyr)
+library(logger)
+
+men_features$final_climb %>% filter(ID == 3)
+
+# Set up logging
+log_dir <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/final_climb"
+dir.create(log_dir, recursive = TRUE, showWarnings = FALSE)
+log_appender(appender_file(file.path(log_dir, "final_climb_model.log")))
+
+# Function to perform feature selection for Final Climb
+select_final_climb_features <- function(data, outcome = "Points") {
+  # Get predictor columns
+  pred_cols <- c("Distance_F_Pelo_Pct",
+                 "Freestyle_Pelo_Pct",
+                 "Sprint_F_Pelo_Pct",
+                 "Sprint_Pelo_Pct",
+                 "Distance_F_Last_5",
+                 "Sprint_F_Last_5")
+  
+  log_info(paste("Starting Final Climb feature selection with", length(pred_cols), "predictors"))
+  log_info(paste("Predictors:", paste(pred_cols, collapse=", ")))
+  
+  # Create formula for regsubsets
+  formula_str <- paste(outcome, "~", paste(pred_cols, collapse = " + "))
+  
+  # Perform exhaustive search
+  subset_search <- regsubsets(as.formula(formula_str),
+                            data = data,
+                            nvmax = length(pred_cols),
+                            method = "exhaustive",
+                            really.big = TRUE)
+  
+  # Get BIC for all models
+  subset_summary <- summary(subset_search)
+  bic_scores <- subset_summary$bic
+  
+  # Find best model by BIC
+  best_model_idx <- which.min(bic_scores)
+  best_vars <- subset_summary$which[best_model_idx, ]
+  selected_vars <- names(best_vars)[best_vars][-1]  # Remove intercept
+  
+  # Log results
+  log_info(paste("Best model selected with", length(selected_vars), "variables"))
+  log_info(paste("Selected variables:", paste(selected_vars, collapse=", ")))
+  log_info(paste("BIC score:", min(bic_scores)))
+  
+  # Create BIC plot
+  png(file.path(log_dir, paste0("bic_plot_", deparse(substitute(data)), ".png")))
+  plot(1:length(bic_scores), bic_scores,
+       type = "b",
+       xlab = "Number of Variables",
+       ylab = "BIC",
+       main = "BIC vs Number of Variables")
+  abline(v = best_model_idx, col = "red", lty = 2)
+  dev.off()
+  
+  # Create variable importance plot
+  var_importance <- colSums(subset_summary$which)[-1]
+  png(file.path(log_dir, paste0("importance_plot_", deparse(substitute(data)), ".png")))
+  barplot(sort(var_importance, decreasing = TRUE),
+          main = "Variable Importance",
+          las = 2,
+          ylab = "Number of times selected in models")
+  dev.off()
+  
+  return(list(
+    selected_vars = selected_vars,
+    bic_scores = bic_scores,
+    full_summary = subset_summary,
+    best_model_idx = best_model_idx,
+    var_importance = var_importance
+  ))
+}
+
+# Perform feature selection for men and women
+log_info("Starting men's Final Climb feature selection")
+men_fc_selection <- select_final_climb_features(men_features$final_climb)
+
+log_info("Starting women's Final Climb feature selection")
+ladies_fc_selection <- select_final_climb_features(ladies_features$final_climb)
+
+# Create summary report
+sink(file.path(log_dir, "final_climb_selection_summary.txt"))
+cat("Final Climb Feature Selection Summary\n")
+cat("===================================\n\n")
+
+cat("Men's Model:\n")
+cat("Number of observations:", nrow(men_features$final_climb), "\n")
+cat("Selected variables:", paste(men_fc_selection$selected_vars, collapse=", "), "\n")
+cat("BIC score:", min(men_fc_selection$bic_scores), "\n\n")
+
+cat("Women's Model:\n")
+cat("Number of observations:", nrow(ladies_features$final_climb), "\n")
+cat("Selected variables:", paste(ladies_fc_selection$selected_vars, collapse=", "), "\n")
+cat("BIC score:", min(ladies_fc_selection$bic_scores), "\n")
+sink()
+
+# Print basic check of results
+print("Feature Selection Complete. Results saved in:")
+print(log_dir)
+
+```
+
+```{r GAM-climb}
+# Load required libraries
+library(mgcv)
+library(dplyr)
+library(ggplot2)
+library(logger)
+
+# Set up logging
+log_dir <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/final_climb"
+log_appender(appender_file(file.path(log_dir, "final_climb_gam.log")))
+
+# Function to fit and validate GAM model
+fit_validate_gam <- function(data, selected_vars, gender = "men") {
+    log_info(paste("Fitting GAM model for", gender))
+    
+    # Create formula for GAM
+    formula_str <- paste("Points ~",
+                        paste(paste0("s(", selected_vars, ")"),
+                        collapse = " + "))
+    
+    # Fit GAM model
+    model <- gam(as.formula(formula_str),
+                 data = data,
+                 method = "REML")
+    
+    # Model summary
+    summary_text <- capture.output(summary(model))
+    writeLines(summary_text, 
+              file.path(log_dir, paste0(gender, "_gam_summary.txt")))
+    
+    # Generate predictions and calculate metrics
+    predictions <- predict(model, newdata = data)
+    residuals <- data$Points - predictions
+    rmse <- sqrt(mean(residuals^2))
+    mae <- mean(abs(residuals))
+    r2 <- cor(predictions, data$Points)^2
+    
+    # Create diagnostic plots
+    png(file.path(log_dir, paste0(gender, "_gam_diagnostics.png")),
+        width = 1200, height = 800)
+    par(mfrow = c(2, 2))
+    gam.check(model)
+    dev.off()
+    
+    # Create partial effects plots
+    for(var in selected_vars) {
+        png(file.path(log_dir, paste0(gender, "_effect_", var, ".png")))
+        plot(model, select = which(selected_vars == var))
+        title(main = paste("Partial effect of", var))
+        dev.off()
+    }
+    
+    # Create predicted vs actual plot
+    png(file.path(log_dir, paste0(gender, "_predicted_vs_actual.png")))
+    plot(data$Points, predictions,
+         xlab = "Actual Points",
+         ylab = "Predicted Points",
+         main = "Predicted vs Actual Points")
+    abline(0, 1, col = "red")
+    dev.off()
+    
+    # Save model performance metrics
+    metrics <- data.frame(
+        RMSE = rmse,
+        MAE = mae,
+        R2 = r2
+    )
+    write.csv(metrics,
+              file.path(log_dir, paste0(gender, "_model_metrics.csv")))
+    
+    # Log performance metrics
+    log_info(paste("Model metrics for", gender))
+    log_info(paste("RMSE:", round(rmse, 3)))
+    log_info(paste("MAE:", round(mae, 3)))
+    log_info(paste("R2:", round(r2, 3)))
+    
+    return(list(
+        model = model,
+        predictions = predictions,
+        residuals = residuals,
+        metrics = metrics
+    ))
+}
+
+# Fit men's model
+men_gam <- fit_validate_gam(
+    data = men_features$final_climb,
+    selected_vars = men_fc_selection$selected_vars,
+    gender = "men"
+)
+
+# Fit women's model
+ladies_gam <- fit_validate_gam(
+    data = ladies_features$final_climb,
+    selected_vars = ladies_fc_selection$selected_vars,
+    gender = "women"
+)
+
+# Save models for later use
+saveRDS(men_gam$model, file.path(log_dir, "men_final_climb_gam.rds"))
+saveRDS(ladies_gam$model, file.path(log_dir, "women_final_climb_gam.rds"))
+
+# Create overall summary
+sink(file.path(log_dir, "gam_models_summary.txt"))
+cat("Final Climb GAM Models Summary\n")
+cat("============================\n\n")
+
+cat("Men's Model:\n")
+cat("Variables:", paste(names(men_gam$model$coefficients)[-1], collapse=", "), "\n")
+cat("RMSE:", round(men_gam$metrics$RMSE, 3), "\n")
+cat("MAE:", round(men_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(men_gam$metrics$R2, 3), "\n\n")
+
+cat("Women's Model:\n")
+cat("Variables:", paste(names(ladies_gam$model$coefficients)[-1], collapse=", "), "\n")
+cat("RMSE:", round(ladies_gam$metrics$RMSE, 3), "\n")
+cat("MAE:", round(ladies_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(ladies_gam$metrics$R2, 3), "\n")
+sink()
+```
+
+```{r fc-history}
+get_fc_history <- function(skier_id, current_date, gender = "M") {
+    n_required = 5  # Total number we need
+    
+    # Select appropriate data and model
+    if(gender == "M") {
+        data <- men_features$final_climb
+        model <- readRDS(file.path(log_dir, "men_final_climb_gam.rds"))
+    } else {
+        data <- ladies_features$final_climb
+        model <- readRDS(file.path(log_dir, "women_final_climb_gam.rds"))
+    }
+    
+    # Get actual results up to current_date, sorted by most recent
+    real_results <- data %>%
+        filter(ID == skier_id, Date < current_date) %>%
+        arrange(desc(Date)) %>%
+        slice_head(n = 3) %>%
+        pull(Points)
+    
+    if(skier_id==5164){
+        print(paste("Current date:", current_date))
+        print(paste("Number of real results:", length(real_results)))
+        print("Real results:")
+        print(real_results)
+    }
+    
+    # Calculate how many predictions we need
+    n_to_generate <- n_required - length(real_results)
+    
+    # If we need predictions
+    if(n_to_generate > 0) {
+        # Get latest data for prediction (before current_date)
+        latest_data <- data %>%
+            filter(ID == skier_id, Date <= current_date) %>%
+            arrange(desc(Date)) %>%
+            slice_head(n = 1)
+        
+        # Get prediction from GAM model
+        pred <- predict(model, newdata = latest_data, se.fit = TRUE)
+        pred_value <- pred$fit
+        pred_se <- pred$se.fit
+        
+        # Generate predictions
+        generated_results <- numeric(n_to_generate)
+        for(i in 1:n_to_generate) {
+            new_score <- rnorm(1, pred_value, pred_se)
+            generated_results[i] <- pmax(pmin(round(new_score), 100), 0)
+        }
+        
+        # Combine actual and generated results
+        all_results <- c(real_results, generated_results)
+    } else {
+        # If we have enough real results, just use those
+        all_results <- real_results[1:n_required]
+    }
+    
+    if(skier_id==5164){
+        print("Final results:")
+        print(all_results)
+    }
+    
+    return(all_results)
+}
+
+
+calculate_fc_history <- function(gender = "M") {
+    # Get appropriate dataset and sort chronologically
+    data <- if(gender == "M") men_features$final_climb else ladies_features$final_climb
+    data <- data %>% arrange(Date)
+    
+    # Process each row chronologically, but only once per race
+    results <- data %>%
+        group_by(ID, Season, Race) %>%  # Group by ID, Season, and Race
+        dplyr::slice(1) %>%  # Take first row of each group
+        group_by(ID) %>%  # Now group by ID for chronological processing
+        arrange(Date) %>%
+        mutate(
+            FC_Last_5 = sapply(row_number(), function(i) {
+                current_date <- Date[i]  # Get date of current row
+                
+                # Get previous results for this skier
+                prev_results <- Points[1:(i-1)]
+                
+                # How many actual results do we have?
+                n_actual <- min(length(prev_results), 3)
+                actual_results <- if(n_actual > 0) tail(prev_results, n_actual) else numeric(0)
+                
+                # Need to generate 5-n_actual predictions
+                n_to_generate <- 5 - n_actual
+                
+                # Get predictions if needed
+                if(n_to_generate > 0) {
+                    generated_results <- get_fc_history(ID[i], current_date, gender = gender)
+                    all_results <- c(actual_results, generated_results[1:n_to_generate])
+                } else {
+                    all_results <- actual_results[1:5]
+                }
+                
+                # Calculate weighted average
+                weights <- seq(5, 1)
+                weighted.mean(all_results, weights)
+            }),
+              FC_Last_5_2 = sapply(row_number(), function(i) {
+                current_date <- Date[i]  # Get date of current row
+                
+                # Get previous results for this skier
+                prev_results <- Points[1:(i)]
+                
+                # How many actual results do we have?
+                n_actual <- min(length(prev_results), 3)
+                actual_results <- if(n_actual > 0) tail(prev_results, n_actual) else numeric(0)
+                
+                # Need to generate 5-n_actual predictions
+                n_to_generate <- 5 - n_actual
+                
+                # Get predictions if needed
+                if(n_to_generate > 0) {
+                    generated_results <- get_fc_history(ID[i], current_date, gender = gender)
+                    all_results <- c(actual_results, generated_results[1:n_to_generate])
+                } else {
+                    all_results <- actual_results[1:5]
+                }
+                
+                # Calculate weighted average
+                weights <- seq(5, 1)
+                weighted.mean(all_results, weights)
+            })
+            
+
+        ) %>%
+        ungroup()
+    
+    return(results)
+}
+
+# Calculate history for both genders
+log_info("Calculating Final Climb history for men")
+men_fc_history <- calculate_fc_history("M")
+saveRDS(men_fc_history, file.path(log_dir, "men_fc_history.rds"))
+
+men_fc_history %>% filter(ID==5164)
+
+log_info("Calculating Final Climb history for women")
+ladies_fc_history <- calculate_fc_history("F")
+saveRDS(ladies_fc_history, file.path(log_dir, "ladies_fc_history.rds"))
+
+# Create summary statistics
+create_history_summary <- function(history_data, gender) {
+    summary_stats <- summary(history_data$FC_Last_5)
+    png(file.path(log_dir, paste0(gender, "_fc_history_dist.png")))
+    hist(history_data$FC_Last_5, 
+         main = paste(gender, "Final Climb History Distribution"),
+         xlab = "Weighted Average Points")
+    dev.off()
+    return(summary_stats)
+}
+
+men_summary <- create_history_summary(men_fc_history, "Men")
+ladies_summary <- create_history_summary(ladies_fc_history, "Women")
+
+men_fc_history
+# Save summaries
+sink(file.path(log_dir, "fc_history_summary.txt"))
+cat("Final Climb History Summary\n")
+cat("=========================\n\n")
+cat("Men's History:\n")
+print(men_summary)
+cat("\nWomen's History:\n")
+print(ladies_summary)
+sink()
+men_features2 = men_features
+ladies_features2 = ladies_features
+men_features$final_climb %>% filter(ID==5164)
+men_features$tds %>% filter(ID==5164)
+```
+
+```{r TdS-setup}
+men_features = men_features2
+ladies_features = ladies_features2
+# First check if FC_Last_5 exists in tds features
+names(men_features$tds)  # check what columns exist before join
+names(men_fc_history)
+
+names(ladies_features$tds)
+
+
+# Set up logging for TdS analysis
+tds_log_dir <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/tds"
+dir.create(tds_log_dir, recursive = TRUE, showWarnings = FALSE)
+log_appender(appender_file(file.path(tds_log_dir, "tds_feature_selection.log")))
+
+# Function to perform feature selection for TdS
+select_tds_features <- function(data, outcome = "Points", gender = "men") {
+    log_info(paste("Starting Tour de Ski feature selection for", gender))
+    
+    # Get predictor columns (excluding ID, Season, Race, Date, Points)
+    pred_cols <- names(data)[!names(data) %in% c("ID", "Season", "Race", "Date", "Points", "TdS_Historical", "FC_Race", "FC_Last_5_2")]
+    
+    log_info(paste("Number of potential predictors:", length(pred_cols)))
+    log_info(paste("Predictors:", paste(pred_cols, collapse=", ")))
+    
+    # Create formula for regsubsets
+    formula_str <- paste(outcome, "~", paste(pred_cols, collapse = " + "))
+    
+    # Perform exhaustive search
+    subset_search <- regsubsets(as.formula(formula_str),
+                            data = data,
+                            nvmax = length(pred_cols),
+                            method = "exhaustive",
+                            really.big = TRUE)
+    
+    # Get BIC for all models
+    subset_summary <- summary(subset_search)
+    bic_scores <- subset_summary$bic
+    
+    # Find best model by BIC
+    best_model_idx <- which.min(bic_scores)
+    best_vars <- subset_summary$which[best_model_idx, ]
+    selected_vars <- names(best_vars)[best_vars][-1]  # Remove intercept
+    
+    # Log results
+    log_info(paste("Best model selected with", length(selected_vars), "variables"))
+    log_info(paste("Selected variables:", paste(selected_vars, collapse=", ")))
+    log_info(paste("BIC score:", min(bic_scores)))
+    
+    # Create BIC plot
+    png(file.path(tds_log_dir, paste0(gender, "_bic_plot.png")))
+    plot(1:length(bic_scores), bic_scores,
+         type = "b",
+         xlab = "Number of Variables",
+         ylab = "BIC",
+         main = paste(gender, "- BIC vs Number of Variables"))
+    abline(v = best_model_idx, col = "red", lty = 2)
+    dev.off()
+    
+    # Create variable importance plot
+    var_importance <- colSums(subset_summary$which)[-1]
+    png(file.path(tds_log_dir, paste0(gender, "_importance_plot.png")))
+    barplot(sort(var_importance, decreasing = TRUE),
+            main = paste(gender, "- Variable Importance"),
+            las = 2,
+            ylab = "Number of times selected in models")
+    dev.off()
+    
+    return(list(
+        selected_vars = selected_vars,
+        bic_scores = bic_scores,
+        full_summary = subset_summary,
+        best_model_idx = best_model_idx,
+        var_importance = var_importance
+    ))
+}
+
+# Add Final Climb history to TdS features
+log_info("Adding Final Climb history to TdS features")
+
+# First, let's see what columns we have in each dataset
+print("FC History columns:")
+print(names(men_fc_history))
+print("TdS columns before join:")
+print(names(men_features$tds))
+
+
+men_fc_history %>% filter(ID==5164)
+men_features$tds %>% filter(ID==5164)
+
+# Create FC history with just ID and FC_Last_5, ensuring one value per skier/race
+# Create FC history with just necessary columns
+# Create FC history with Race renamed
+men_fc_history_clean <- men_fc_history %>%
+    dplyr::select(ID, Season, Race, FC_Last_5, FC_Last_5_2) %>%
+    rename(FC_Race = Race)  # Rename Race to FC_Race
+
+men_fc_history_clean %>% filter(ID==5164)
+
+ladies_fc_history_clean <- ladies_fc_history %>%
+    dplyr::select(ID, Season, Race, FC_Last_5, FC_Last_5_2) %>%
+    rename(FC_Race = Race)
+
+# Check a specific skier in both dataframes
+
+
+# Join on ID, Season, and Race
+men_features$tds <- men_features$tds %>%
+    left_join(men_fc_history_clean, 
+              by = c("ID", "Season"))
+
+ladies_features$tds <- ladies_features$tds %>%
+    left_join(ladies_fc_history_clean, 
+              by = c("ID", "Season"))
+
+# First, let's see what columns we have in each dataset
+print("FC History columns:")
+print(names(men_fc_history))
+print("TdS columns after join:")
+print(names(men_features$tds))
+
+# Perform feature selection
+men_tds_selection <- select_tds_features(men_features$tds, gender = "men")
+ladies_tds_selection <- select_tds_features(ladies_features$tds, gender = "women")
+
+# Create summary report
+sink(file.path(tds_log_dir, "tds_feature_selection_summary.txt"))
+cat("Tour de Ski Feature Selection Summary\n")
+cat("===================================\n\n")
+
+cat("Men's Model:\n")
+cat("Number of observations:", nrow(men_features$tds), "\n")
+cat("Selected variables:", paste(men_tds_selection$selected_vars, collapse=", "), "\n")
+cat("BIC score:", min(men_tds_selection$bic_scores), "\n\n")
+
+cat("Women's Model:\n")
+cat("Number of observations:", nrow(ladies_features$tds), "\n")
+cat("Selected variables:", paste(ladies_tds_selection$selected_vars, collapse=", "), "\n")
+cat("BIC score:", min(ladies_tds_selection$bic_scores), "\n")
+sink()
+
+# Save selections for future use
+saveRDS(men_tds_selection, file.path(tds_log_dir, "men_tds_selection.rds"))
+saveRDS(ladies_tds_selection, file.path(tds_log_dir, "ladies_tds_selection.rds"))
+
+log_info("TdS feature selection complete")
+men_features$tds %>% filter(ID==5164)
+```
+
+```{r tds-gam0}
+# Load required libraries if not already loaded
+library(mgcv)
+library(dplyr)
+library(ggplot2)
+library(logger)
+
+# Function to fit and validate TdS GAM model
+fit_validate_tds_gam <- function(data, selected_vars, gender = "men") {
+    log_info(paste("Fitting TdS GAM model for", gender))
+    log_info(paste("Using variables:", paste(selected_vars, collapse=", ")))
+    
+    # Create formula for GAM
+    formula_str <- paste("Points ~",
+                        paste(paste0("s(", selected_vars, ")"),
+                        collapse = " + "))
+    
+    # Fit GAM model
+    model <- gam(as.formula(formula_str),
+                 data = data,
+                 method = "REML")
+    
+    # Model summary
+    summary_text <- capture.output(summary(model))
+    writeLines(summary_text, 
+              file.path(tds_log_dir, paste0(gender, "_tds_gam_summary.txt")))
+    
+    # Generate predictions and calculate metrics
+    predictions <- predict(model, newdata = data)
+    residuals <- data$Points - predictions
+    rmse <- sqrt(mean(residuals^2))
+    mae <- mean(abs(residuals))
+    r2 <- cor(predictions, data$Points)^2
+    
+    # Create diagnostic plots
+    png(file.path(tds_log_dir, paste0(gender, "_tds_gam_diagnostics.png")),
+        width = 1200, height = 800)
+    par(mfrow = c(2, 2))
+    gam.check(model)
+    dev.off()
+    
+    # Create partial effects plots for each variable
+    for(var in selected_vars) {
+        png(file.path(tds_log_dir, paste0(gender, "_tds_effect_", var, ".png")))
+        plot(model, select = which(selected_vars == var))
+        title(main = paste("TdS Partial effect of", var))
+        dev.off()
+    }
+    
+    # Create predicted vs actual plot
+    png(file.path(tds_log_dir, paste0(gender, "_tds_predicted_vs_actual.png")))
+    plot(data$Points, predictions,
+         xlab = "Actual Points",
+         ylab = "Predicted Points",
+         main = "TdS Predicted vs Actual Points")
+    abline(0, 1, col = "red")
+    dev.off()
+    
+    # Save model performance metrics
+    metrics <- data.frame(
+        RMSE = rmse,
+        MAE = mae,
+        R2 = r2
+    )
+    write.csv(metrics,
+              file.path(tds_log_dir, paste0(gender, "_tds_model_metrics.csv")))
+    
+    # Log performance metrics
+    log_info(paste("TdS Model metrics for", gender))
+    log_info(paste("RMSE:", round(rmse, 3)))
+    log_info(paste("MAE:", round(mae, 3)))
+    log_info(paste("R2:", round(r2, 3)))
+    
+    return(list(
+        model = model,
+        predictions = predictions,
+        residuals = residuals,
+        metrics = metrics
+    ))
+}
+
+# Fit men's TdS model
+men_tds_gam <- fit_validate_tds_gam(
+    data = men_features$tds,
+    selected_vars = men_tds_selection$selected_vars,
+    gender = "men"
+)
+
+# Fit women's TdS model
+ladies_tds_gam <- fit_validate_tds_gam(
+    data = ladies_features$tds,
+    selected_vars = ladies_tds_selection$selected_vars,
+    gender = "women"
+)
+
+# Save models for later use
+saveRDS(men_tds_gam$model, file.path(tds_log_dir, "men_tds_gam0.rds"))
+saveRDS(ladies_tds_gam$model, file.path(tds_log_dir, "women_tds_gam0.rds"))
+
+# Create overall summary
+sink(file.path(tds_log_dir, "tds_gam_models_summary.txt"))
+cat("Tour de Ski GAM Models Summary\n")
+cat("============================\n\n")
+
+cat("Men's Model:\n")
+cat("Variables:", paste(men_tds_selection$selected_vars, collapse=", "), "\n")
+cat("RMSE:", round(men_tds_gam$metrics$RMSE, 3), "\n")
+cat("MAE:", round(men_tds_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(men_tds_gam$metrics$R2, 3), "\n\n")
+
+cat("Women's Model:\n")
+cat("Variables:", paste(ladies_tds_selection$selected_vars, collapse=", "), "\n")
+cat("RMSE:", round(ladies_tds_gam$metrics$MAE, 3), "\n")
+cat("MAE:", round(ladies_tds_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(ladies_tds_gam$metrics$R2, 3), "\n")
+sink()
+```
+
+```{r tds-history}
+# Function to get TdS history for a skier
+get_tds_history <- function(skier_id, current_date, include_current = FALSE, gender = "M") {
+    n_required = 5  # Total number we need
+    
+    # Select appropriate data and model
+    if(gender == "M") {
+        data <- men_features$tds
+        model <- readRDS(file.path(tds_log_dir, "men_tds_gam0.rds"))
+    } else {
+        data <- ladies_features$tds
+        model <- readRDS(file.path(tds_log_dir, "women_tds_gam0.rds"))
+    }
+    
+    # Get current row's data (for Points if needed)
+    current_row <- data %>%
+        filter(ID == skier_id, Date == current_date) %>%
+        slice_head(n = 1)
+    
+    # Get the TdS_Historical record up to current_date
+    historical_string <- data %>%
+        filter(ID == skier_id, Date <= current_date) %>%
+        arrange(desc(Date)) %>%
+        slice_head(n = 1) %>%
+        pull(TdS_Historical)
+    
+    
+    # Parse historical results if they exist
+    # Parse historical results if they exist
+    if(length(historical_string) > 0 && !is.na(historical_string)) {
+        historical_results <- as.numeric(strsplit(historical_string, ",")[[1]])
+        # Reverse historical results so most recent is first
+        historical_results <- rev(historical_results)
+        
+        if(include_current) {
+            # For Last_5_2: use last two historical results and current Points
+            real_results <- c(current_row$Points, head(historical_results, 2))
+        } else {
+            # For Last_5: use all three historical results
+            real_results <- historical_results
+        }
+    } else {
+        real_results <- if(include_current) c(current_row$Points) else numeric(0)
+    }
+    
+    if(skier_id==5164){
+      print(paste("Historical String:",historical_string))
+        print(paste("Current date:", current_date))
+        print(paste("Include current:", include_current))
+        print(paste("Number of historical results:", length(real_results)))
+        print("Historical/actual results:")
+        print(real_results)
+    }
+    
+    # Calculate how many predictions we need
+    n_to_generate <- n_required - length(real_results)
+    
+    # If we need predictions
+    if(n_to_generate > 0) {
+        # Get latest data for prediction
+        latest_data <- data %>%
+            filter(ID == skier_id, Date <= current_date) %>%
+            arrange(desc(Date)) %>%
+            slice_head(n = 1)
+        
+        # Get prediction from GAM model
+        pred <- predict(model, newdata = latest_data, se.fit = TRUE)
+        pred_value <- pred$fit
+        pred_se <- pred$se.fit
+        
+        # Generate predictions
+        generated_results <- numeric(n_to_generate)
+        for(i in 1:n_to_generate) {
+            new_score <- rnorm(1, pred_value, pred_se)
+            generated_results[i] <- pmax(pmin(round(new_score), 300), 0)
+        }
+        
+        # Combine actual and generated results
+        all_results <- c(real_results, generated_results)
+    } else {
+        all_results <- real_results[1:n_required]
+    }
+    
+    if(skier_id==5164){
+        print("Final results:")
+        print(all_results)
+    }
+    
+    return(all_results)
+}
+
+# Update calculate_tds_history to use the modified function
+calculate_tds_history <- function(gender = "M") {
+    # Get appropriate dataset and sort chronologically
+    data <- if(gender == "M") men_features$tds else ladies_features$tds
+    data <- data %>% arrange(Date)
+    
+    # Process each row chronologically
+    results <- data %>%
+        group_by(ID) %>%
+        arrange(Date) %>%
+        mutate(
+            TdS_Last_5 = sapply(row_number(), function(i) {
+                current_date <- Date[i]
+                history <- get_tds_history(ID[i], current_date, include_current = FALSE, gender = gender)
+                weights <- seq(5, 1)  # Higher weight for more recent results
+                weighted.mean(history, weights)
+            }),
+            TdS_Last_5_2 = sapply(row_number(), function(i) {
+                current_date <- Date[i]
+                history <- get_tds_history(ID[i], current_date, include_current = TRUE, gender = gender)
+                weights <- seq(5, 1)  # Higher weight for more recent results
+                weighted.mean(history, weights)
+            })
+        ) %>%
+        ungroup()
+    
+    return(results)
+}
+
+men_features$tds %>% filter(ID==5164)
+# Calculate history for both genders
+log_info("Calculating TdS history for men")
+men_tds_history <- calculate_tds_history("M")
+print(men_tds_history)
+saveRDS(men_tds_history, file.path(tds_log_dir, "men_tds_history.rds"))
+men_tds_history %>% filter(ID==5164)
+
+log_info("Calculating TdS history for women")
+ladies_tds_history <- calculate_tds_history("F")
+saveRDS(ladies_tds_history, file.path(tds_log_dir, "ladies_tds_history.rds"))
+
+# Create summary statistics
+create_history_summary <- function(history_data, gender) {
+    summary_stats <- summary(history_data$TdS_Last_5)
+    png(file.path(tds_log_dir, paste0(gender, "_tds_history_dist.png")))
+    hist(history_data$TdS_Last_5, 
+         main = paste(gender, "TdS History Distribution"),
+         xlab = "Weighted Average Points")
+    dev.off()
+    return(summary_stats)
+}
+
+men_summary <- create_history_summary(men_tds_history, "Men")
+ladies_summary <- create_history_summary(ladies_tds_history, "Women")
+
+# Save summaries
+sink(file.path(tds_log_dir, "tds_history_summary.txt"))
+cat("Tour de Ski History Summary\n")
+cat("=========================\n\n")
+cat("Men's History:\n")
+print(men_summary)
+cat("\nWomen's History:\n")
+print(ladies_summary)
+sink()
+```
+
+```{r tds-feat-sel}
+# Function to perform feature selection for TdS
+select_tds_features <- function(data, outcome = "Points", gender = "men", max_vars = 100) {
+    log_info(paste("Starting Tour de Ski feature selection for", gender))
+    
+    # Get predictor columns (excluding non-predictors and TdS_Historical since we now have the processed versions)
+    pred_cols <- names(data)[!names(data) %in% c("ID", "Season", "Race", "Date", "Points", 
+                                                "TdS_Historical", "FC_Race", "TdS_Last_5_2", "FC_Last_5_2")]
+    
+    log_info(paste("Number of potential predictors:", length(pred_cols)))
+    log_info(paste("Predictors:", paste(pred_cols, collapse=", ")))
+    
+    # Create formula for regsubsets
+    formula_str <- paste(outcome, "~", paste(pred_cols, collapse = " + "))
+    
+    # Perform exhaustive search with limited nvmax
+    subset_search <- regsubsets(as.formula(formula_str),
+                            data = data,
+                            nvmax = max_vars,
+                            method = "exhaustive",
+                            really.big = TRUE)
+    
+    # Get BIC for all models
+    subset_summary <- summary(subset_search)
+    bic_scores <- subset_summary$bic
+    
+    # Find best model by BIC
+    best_model_idx <- which.min(bic_scores)
+    best_vars <- subset_summary$which[best_model_idx, ]
+    selected_vars <- names(best_vars)[best_vars][-1]  # Remove intercept
+    
+    # Log results
+    log_info(paste("Best model selected with", length(selected_vars), "variables"))
+    log_info(paste("Selected variables:", paste(selected_vars, collapse=", ")))
+    log_info(paste("BIC score:", min(bic_scores)))
+    
+    return(list(
+        selected_vars = selected_vars,
+        bic_scores = bic_scores,
+        full_summary = subset_summary,
+        best_model_idx = best_model_idx,
+        var_importance = colSums(subset_summary$which)[-1]
+    ))
+}
+
+# Perform feature selection for men and women
+men_tds_selection <- select_tds_features(men_tds_history, gender = "men")
+men_tds_selection$selected_vars
+ladies_tds_selection <- select_tds_features(ladies_tds_history, gender = "women")
+
+# Create summary report
+sink(file.path(tds_log_dir, "tds_feature_selection_summary.txt"))
+cat("Tour de Ski Feature Selection Summary\n")
+cat("===================================\n\n")
+
+cat("Men's Model:\n")
+cat("Number of observations:", nrow(men_tds_history), "\n")
+cat("Selected variables:", paste(men_tds_selection$selected_vars, collapse=", "), "\n")
+cat("BIC score:", min(men_tds_selection$bic_scores), "\n\n")
+
+cat("Women's Model:\n")
+cat("Number of observations:", nrow(ladies_tds_history), "\n")
+cat("Selected variables:", paste(ladies_tds_selection$selected_vars, collapse=", "), "\n")
+cat("BIC score:", min(ladies_tds_selection$bic_scores), "\n")
+sink()
+```
+
+
+```{r tds-gam1}
+# Function to fit and validate GAM model
+fit_validate_gam <- function(data, selected_vars, gender = "men") {
+    log_info(paste("Fitting TdS GAM model for", gender))
+    log_info(paste("Using variables:", paste(selected_vars, collapse=", ")))
+    
+    # Create formula for GAM
+    formula_str <- paste("Points ~",
+                        paste(paste0("s(", selected_vars, ")"),
+                        collapse = " + "))
+    
+    # Fit GAM model
+    model <- gam(as.formula(formula_str),
+                 data = data,
+                 method = "REML")
+    
+    # Model summary
+    summary_text <- capture.output(summary(model))
+    writeLines(summary_text, 
+              file.path(tds_log_dir, paste0(gender, "_tds_gam_summary.txt")))
+    
+    # Generate predictions and calculate metrics
+    predictions <- predict(model, newdata = data)
+    residuals <- data$Points - predictions
+    rmse <- sqrt(mean(residuals^2))
+    mae <- mean(abs(residuals))
+    r2 <- cor(predictions, data$Points)^2
+    
+    # Create diagnostic plots
+    png(file.path(tds_log_dir, paste0(gender, "_tds_gam_diagnostics.png")),
+        width = 1200, height = 800)
+    par(mfrow = c(2, 2))
+    gam.check(model)
+    dev.off()
+    
+    # Create partial effects plots
+    for(var in selected_vars) {
+        png(file.path(tds_log_dir, paste0(gender, "_tds_effect_", var, ".png")))
+        plot(model, select = which(selected_vars == var))
+        title(main = paste("TdS Partial effect of", var))
+        dev.off()
+    }
+    
+    # Create predicted vs actual plot
+    png(file.path(tds_log_dir, paste0(gender, "_tds_predicted_vs_actual.png")))
+    plot(data$Points, predictions,
+         xlab = "Actual Points",
+         ylab = "Predicted Points",
+         main = "TdS Predicted vs Actual Points")
+    abline(0, 1, col = "red")
+    dev.off()
+    
+    # Save model performance metrics
+    metrics <- data.frame(
+        RMSE = rmse,
+        MAE = mae,
+        R2 = r2
+    )
+    write.csv(metrics,
+              file.path(tds_log_dir, paste0(gender, "_model_metrics.csv")))
+    
+    # Log performance metrics
+    log_info(paste("TdS Model metrics for", gender))
+    log_info(paste("RMSE:", round(rmse, 3)))
+    log_info(paste("MAE:", round(mae, 3)))
+    log_info(paste("R2:", round(r2, 3)))
+    
+    return(list(
+        model = model,
+        predictions = predictions,
+        residuals = residuals,
+        metrics = metrics
+    ))
+}
+
+# Fit men's model
+men_gam <- fit_validate_gam(
+    data = men_tds_history,
+    selected_vars = men_tds_selection$selected_vars,
+    gender = "men"
+)
+
+# Fit women's model
+ladies_gam <- fit_validate_gam(
+    data = ladies_tds_history,
+    selected_vars = ladies_tds_selection$selected_vars,
+    gender = "women"
+)
+
+# Save models for later use
+saveRDS(men_gam$model, file.path(tds_log_dir, "men_tds_gam1.rds"))
+saveRDS(ladies_gam$model, file.path(tds_log_dir, "women_tds_gam1.rds"))
+
+# Create overall summary
+sink(file.path(tds_log_dir, "tds_gam_models_summary.txt"))
+cat("Tour de Ski GAM Models Summary\n")
+cat("============================\n\n")
+
+cat("Men's Model:\n")
+cat("Variables:", paste(men_tds_selection$selected_vars, collapse=", "), "\n")
+cat("RMSE:", round(men_gam$metrics$RMSE, 3), "\n")
+cat("MAE:", round(men_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(men_gam$metrics$R2, 3), "\n\n")
+
+cat("Women's Model:\n")
+cat("Variables:", paste(ladies_tds_selection$selected_vars, collapse=", "), "\n")
+cat("RMSE:", round(ladies_gam$metrics$RMSE, 3), "\n")
+cat("MAE:", round(ladies_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(ladies_gam$metrics$R2, 3), "\n")
+sink()
+men_df2 = men_df
+ladies_df2 = ladies_df
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r load-startlist}
+
+
+library(stringr)
+library(dplyr)
+
+normalize_tds_predictions <- function(predictions) {
+ tds_points <- c(300,285,270,255,240,216,207,198,189,180,174,168,162,156,150,144,138,132,126,120,114,108,102,96,90,84,78,72,66,60,57,54,51,48,45,42,39,36,33,30,27,24,21,18,15,12,9,6,3)
+ 
+ predictions <- as.numeric(predictions)
+ predictions[is.na(predictions)] <- 0
+ predictions <- pmin(predictions, 300)
+ 
+ target_sum <- sum(tds_points[1:length(predictions)]) 
+ print(target_sum)
+ current_sum <- sum(predictions, na.rm=TRUE)
+ print(current_sum)
+ 
+ if(!is.na(current_sum) && !is.na(target_sum) && current_sum > target_sum) {
+   scaling_factor <- target_sum / current_sum
+   predictions <- predictions * scaling_factor
+ }
+ 
+ return(round(predictions))
+}
+predict_points <- function(startlist, gender = "M") {
+    # Select appropriate model
+    model <- if(gender == "M") {
+        readRDS(file.path(tds_log_dir, "men_tds_gam1.rds"))
+    } else {
+        readRDS(file.path(tds_log_dir, "women_tds_gam1.rds"))
+    }
+    
+    # Generate predictions with standard error
+    pred <- predict(model, newdata = startlist, se.fit = TRUE)
+    predictions <- pred$fit
+    se <- pred$se.fit
+    
+    # Calculate base, safe and upside predictions
+    predictions <- pmax(pmin(round(predictions), 300), 0)
+    safe_predictions <- pmax(pmin(round(predictions - 1.96*se), 300), 0)  # 95% lower bound
+    upside_predictions <- pmax(pmin(round(predictions + 1.96*se), 300), 0)  # 95% upper bound
+    
+    # Normalize all three sets
+    predictions <- normalize_tds_predictions(predictions)
+    safe_predictions <- normalize_tds_predictions(safe_predictions)
+    upside_predictions <- normalize_tds_predictions(upside_predictions)
+    
+    # Add all predictions to startlist
+    startlist$Predicted_Points <- predictions
+    startlist$Safe_Prediction <- safe_predictions
+    startlist$Upside_Prediction <- upside_predictions
+    
+    return(startlist)
+}
+
+calculate_tds_value <- function(skier_id, startlist, gender = "M") {
+    n_required = 5
+    startlist = startlist
+    # Select appropriate data and model
+    if(gender == "M") {
+        data <- men_df
+        model <- readRDS(file.path(tds_log_dir, "men_tds_gam0.rds"))
+    } else {
+        data <- ladies_df
+        model <- readRDS(file.path(tds_log_dir, "women_tds_gam0.rds"))
+    }
+    
+    # First get historical string from most recent TdS race
+    historical_string <- data %>%
+        filter(ID == skier_id, 
+               City == "Tour de Ski") %>%
+        arrange(desc(Date)) %>%
+        dplyr::slice_head(n = 1) %>%
+        pull(TdS_Historical)
+    if(skier_id == 8678){
+      print(historical_string)
+    }
+    # Parse historical results if they exist
+    if(length(historical_string) > 0 && !is.na(historical_string)) {
+        historical_results <- as.numeric(strsplit(historical_string, ",")[[1]])
+        real_results <- rev(historical_results)  # Reverse to get most recent first
+    } else {
+        real_results <- numeric(0)
+    }
+    
+    # Calculate how many predictions we need
+    n_to_generate <- n_required - length(real_results)
+    
+    # If we need predictions
+    if(n_to_generate > 0) {
+        # Get latest data for prediction
+        latest_data <- data %>%
+            filter(ID == skier_id) %>%
+            arrange(desc(Date)) %>%
+            dplyr::slice_head(n = 1)
+        
+        if(nrow(latest_data) > 0) {
+            # Get prediction from GAM model
+            pred <- predict(model, newdata = latest_data, se.fit = TRUE)
+            pred_value <- pred$fit
+            pred_se <- pred$se.fit
+        } else {
+            # If no data available, use model predictions on empty data
+            latest_data <- data %>% dplyr::slice(1) %>% mutate(across(everything(), ~NA))
+            pred <- predict(model, newdata = latest_data, se.fit = TRUE)
+            pred_value <- pred$fit
+            pred_se <- pred$se.fit
+        }
+        
+        # Generate predictions
+        generated_results <- numeric(n_to_generate)
+        for(i in 1:n_to_generate) {
+            new_score <- rnorm(1, pred_value, pred_se)
+            generated_results[i] <- pmax(pmin(round(new_score), 300), 0)
+        }
+        
+        # Combine actual and generated results
+        all_results <- c(real_results, generated_results)
+    } else {
+        all_results <- real_results[1:n_required]
+    }
+    
+    # Calculate weighted average
+    weights <- seq(5, 1)
+    final_value <- weighted.mean(all_results, weights)
+    
+    return(final_value)
+}
+
+calculate_fc_value <- function(skier_id, gender = "M") {
+    n_required = 5
+    
+    # Select appropriate data and model
+    if(gender == "M") {
+        data <- men_df
+        model <- readRDS(file.path(log_dir, "men_final_climb_gam.rds"))
+    } else {
+        data <- ladies_df
+        model <- readRDS(file.path(log_dir, "women_final_climb_gam.rds"))
+    }
+    
+    # Get actual results, sorted by most recent
+    real_results <- data %>%
+        filter(ID == skier_id, City=="Val di Fiemme", Season>2014, `Average Grade` > 5, Event=="Tour de Ski") %>%
+        arrange(desc(Date)) %>%
+        slice_head(n = 3) %>%
+        pull(Points)
+    if(skier_id==8678){
+      print(real_results)
+    }
+    
+    # Calculate how many predictions we need
+    n_to_generate <- n_required - length(real_results)
+    if(skier_id==8678){
+      print(n_to_generate)
+    }
+    
+    # If we need predictions
+    if(n_to_generate > 0) {
+        # Get latest data for prediction
+        latest_data <- data %>%
+            filter(ID == skier_id) %>%
+            arrange(desc(Date)) %>%
+            slice_head(n = 1)
+        if(nrow(latest_data) > 0) {
+            # Get prediction from GAM model
+            pred <- predict(model, newdata = latest_data, se.fit = TRUE)
+
+            pred_value <- pred$fit
+            pred_se <- pred$se.fit
+        } else {
+            # If no data available, use model predictions on empty data
+            latest_data <- data %>% dplyr::slice(1) %>% mutate(across(everything(), ~NA))
+            pred <- predict(model, newdata = latest_data, se.fit = TRUE)
+            pred_value <- pred$fit
+            pred_se <- pred$se.fit
+        }
+        
+        # Generate predictions
+        generated_results <- numeric(n_to_generate)
+        for(i in 1:n_to_generate) {
+            new_score <- rnorm(1, pred_value, pred_se)
+            generated_results[i] <- pmax(pmin(round(new_score), 100), 0)
+        }
+    if(skier_id==8678){
+              print(generated_results)
+            }
+        # Combine actual and generated results
+        all_results <- c(real_results, generated_results)
+    } else {
+        all_results <- real_results[1:n_required]
+    }
+    
+    # Calculate weighted average
+# Calculate weighted average
+weights <- seq(5, 1)
+final_value <- weighted.mean(all_results, weights)
+if(skier_id==8678){
+    print("All results:")
+    print(all_results)
+    print("Weights:")
+    print(weights)
+    print("Final weighted average:")
+    print(final_value)
+}
+return(final_value)
+}
+
+add_last_5_values <- function(startlist, history_df, gender) {
+    # List of Last_5_2 columns we want to transfer
+    last_5_columns <- c("Distance_C_Last_5_2", 
+                       "Distance_F_Last_5_2", 
+                       "Sprint_C_Last_5_2",
+                       "Sprint_F_Last_5_2",
+                       "Distance_Last_5_2")
+    
+    # Get most recent values for each ID
+    recent_values <- history_df %>%
+        group_by(ID) %>%
+        arrange(desc(Date)) %>%
+        dplyr::slice(1) %>%
+        dplyr::select(ID, all_of(last_5_columns))
+    
+    # Join with startlist and rename columns to remove the "_2"
+    startlist %>%
+        left_join(recent_values, by = "ID") %>%
+        rename_with(~str_remove(., "_2"), ends_with("_2"))
+}
+
+convert_elo_to_pelo_pct <- function(startlist) {
+    startlist %>%
+        mutate(
+            # For each Elo column, create corresponding Pelo_Pct
+            across(ends_with("Elo"), 
+                  ~ . / max(., na.rm = TRUE),
+                  # Create new name by replacing Elo with Pelo_Pct
+                  .names = "{str_replace(.col, 'Elo$', 'Pelo_Pct')}")
+        ) %>%
+        # Remove original Elo columns
+        dplyr::select(-ends_with("Elo"))
+}
+
+
+read_startlist <- function(gender) {
+  history_df <- if(gender == "M") men_df else ladies_df
+   path <- sprintf("~/ski/elo/python/ski/polars/excel365/startlist_with_probs_%s.feather", 
+                  if(gender == "M") "men" else "ladies")
+   
+   # Read the file and select specific columns
+   startlist <- read_feather(path) %>%
+       dplyr::select(Skier, ID, Nation, Price, 
+                    matches(".*Elo$"))  # Select columns ending in Elo
+   
+   startlist <- convert_elo_to_pelo_pct(startlist)
+   startlist <- add_last_5_values(startlist, history_df, gender)
+   startlist <- startlist %>% filter(!is.na(ID))
+    startlist <- startlist %>%
+        rowwise() %>%
+        mutate(FC_Last_5 = calculate_fc_value(ID, gender)) %>%
+      
+        ungroup()
+    startlist <- startlist %>% filter(!is.na(Distance_Last_5))
+    
+    startlist <- startlist %>%
+      rowwise() %>%
+      mutate(TdS_Last_5 = calculate_tds_value(ID, startlist, gender)
+             ) %>%
+      ungroup()
+    
+    startlist <- predict_points(startlist, gender)
+   
+   return(startlist)
+}
+men_df = men_df2
+ladies_df = ladies_df2
+men_df <- men_df %>%
+    group_by(ID) %>%
+    arrange(Season, Race) %>%
+    mutate(FC_Last_5 = calculate_fc_value(ID[1], "M")) %>%
+    ungroup()
+
+ladies_df <- ladies_df %>%
+    group_by(ID) %>%
+    arrange(Season, Race) %>%
+    mutate(FC_Last_5 = calculate_fc_value(ID[1], "F")) %>%
+    ungroup()
+
+# Read both startlists
+men_startlist <- read_startlist("M")
+print(men_startlist)
+ladies_startlist <- read_startlist("F")
+print(ladies_startlist)
+# Check what we got
+print("Men's startlist:")
+print(names(men_startlist))
+print("\nLadies startlist:")
+print(names(ladies_startlist))
+
+
+
+# Save models for later use
+saveRDS(men_gam$model, file.path(tds_log_dir, "men_tds_gam1.rds"))
+saveRDS(ladies_gam$model, file.path(tds_log_dir, "women_tds_gam1.rds"))
+
+# Create overall summary
+sink(file.path(tds_log_dir, "tds_gam_models_summary.txt"))
+cat("Tour de Ski GAM Models Summary\n")
+cat("============================\n\n")
+
+cat("Men's Model:\n")
+cat("Variables:", paste(men_tds_selection$selected_vars, collapse=", "), "\n")
+cat("RMSE:", round(men_gam$metrics$RMSE, 3), "\n")
+cat("MAE:", round(men_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(men_gam$metrics$R2, 3), "\n\n")
+
+cat("Women's Model:\n")
+cat("Variables:", paste(ladies_tds_selection$selected_vars, collapse=", "), "\n")
+cat("RMSE:", round(ladies_gam$metrics$RMSE, 3), "\n")
+cat("MAE:", round(ladies_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(ladies_gam$metrics$R2, 3), "\n")
+
+men_startlist %>% filter(ID==5164) %>% dplyr::select(Distance_C_Last_5, FC_Last_5)
+
+# if(sum(men_startlist$Predicted_Points)>sum(tds_points)){
+# 
+# men_startlist$Predicted_Points = (sum(tds_points)/sum(men_startlist$Predicted_Points))*men_startlist$Predicted_Points
+# }
+# Format and save men's data
+men_output <- men_startlist %>%
+  dplyr::select(Skier, Nation, Predicted_Points, Safe_Prediction, Upside_Prediction) %>%
+  rename(
+    `Predicted Points` = Predicted_Points,
+    `Safe Points` = Safe_Prediction,
+    `Upside Points` = Upside_Prediction
+  ) %>%
+  arrange(desc(`Predicted Points`))
+
+library(openxlsx)
+write.xlsx(men_output, 
+          "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/men-points.xlsx")
+
+
+# if(sum(ladies_startlist$Predicted_Points)>sum(tds_points)){
+# 
+# ladies_startlist$Predicted_Points = (sum(tds_points)/sum(ladies_startlist$Predicted_Points))*ladies_startlist$Predicted_Points
+# }
+# Format and save ladies' data
+ladies_output <- ladies_startlist %>%
+  dplyr::select(Skier, Nation, Predicted_Points, Safe_Prediction, Upside_Prediction) %>%
+  rename(
+    `Predicted Points` = Predicted_Points,
+    `Safe Points` = Safe_Prediction,
+    `Upside Points` = Upside_Prediction
+  ) %>%
+  arrange(desc(`Predicted Points`))
+
+
+
+write.xlsx(ladies_output,
+          "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/ladies-points.xlsx")
+
+men_df3 = men_df
+ladies_df3 = ladies_df
+men_fc_history2 = men_fc_history
+men_tds_history2 = men_tds_history
+
+ladies_fc_history2 = ladies_fc_history
+ladies_tds_history2 = ladies_tds_history
+
+sum(tds_points)
+
+```
+
+
+
+
+```{r fc_gam_1}
+# Select Final Climb features
+select_fc_features <- function(data, outcome = "Points", gender = "men", max_vars = 100) {
+    # Get predictor columns
+    pred_cols <- names(data)[!names(data) %in% c("ID", "Season", "Race", "Date", "Points", 
+                                                "FC_Race", "TdS_Last_5_2", "FC_Last_5_2",
+                                                "Place", "Skier")]
+    
+    # Create formula for regsubsets
+    formula_str <- paste(outcome, "~", paste(pred_cols, collapse = " + "))
+    
+    # Perform exhaustive search
+    subset_search <- regsubsets(as.formula(formula_str),
+                            data = data,
+                            nvmax = max_vars,
+                            method = "exhaustive",
+                            really.big = TRUE)
+    
+    # Find best model by BIC
+    subset_summary <- summary(subset_search)
+    best_model_idx <- which.min(subset_summary$bic)
+    selected_vars <- names(subset_summary$which[best_model_idx, ])[subset_summary$which[best_model_idx, ]][-1]
+    
+    return(list(
+        selected_vars = selected_vars,
+        bic_scores = subset_summary$bic,
+        full_summary = subset_summary,
+        best_model_idx = best_model_idx
+    ))
+}
+
+
+men_fc_history2
+# Get Final Climb history
+men_fc_history <- men_fc_history2
+
+ladies_fc_history <- ladies_fc_history2
+
+# Select features
+men_fc_selection <- select_fc_features(men_fc_history, gender = "men")
+ladies_fc_selection <- select_fc_features(ladies_fc_history, gender = "women")
+
+# Fit GAM models
+men_fc_gam <- fit_validate_gam(
+    data = men_fc_history,
+    selected_vars = men_fc_selection$selected_vars,
+    gender = "men"
+)
+
+ladies_fc_gam <- fit_validate_gam(
+    data = ladies_fc_history,
+    selected_vars = ladies_fc_selection$selected_vars,
+    gender = "women"
+)
+
+# Save models
+saveRDS(men_fc_gam$model, file.path(log_dir, "men_final_climb_gam1.rds"))
+saveRDS(ladies_fc_gam$model, file.path(log_dir, "women_final_climb_gam1.rds"))
+
+# Create summary
+sink(file.path(log_dir, "final_climb_gam_summary.txt"))
+cat("Final Climb GAM Models Summary\n")
+cat("============================\n\n")
+
+cat("Men's Model:\n")
+cat("Variables:", paste(men_fc_selection$selected_vars, collapse=", "), "\n")
+cat("RMSE:", round(men_fc_gam$metrics$RMSE, 3), "\n")
+cat("MAE:", round(men_fc_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(men_fc_gam$metrics$R2, 3), "\n\n")
+
+cat("Women's Model:\n")
+cat("Variables:", paste(ladies_fc_selection$selected_vars, collapse=", "), "\n")
+cat("RMSE:", round(ladies_fc_gam$metrics$RMSE, 3), "\n")
+cat("MAE:", round(ladies_fc_gam$metrics$MAE, 3), "\n")
+cat("R2:", round(ladies_fc_gam$metrics$R2, 3), "\n")
+sink()
+```
+
+
+
+```{r final-climb-pred}
+prepare_fc_data <- function(startlist, gender = "M") {
+    startlist <- startlist %>%
+        rename_with(~str_remove(., "\\.x$"), ends_with(".x"))
+    return(startlist)
+}
+
+predict_fc_points <- function(startlist, gender = "M") {
+    model <- if(gender == "M") {
+        readRDS(file.path(log_dir, "men_final_climb_gam1.rds"))
+    } else {
+        readRDS(file.path(log_dir, "women_final_climb_gam1.rds"))
+    }
+    
+    pred <- predict(model, newdata = startlist, se.fit = TRUE)
+    predictions <- pred$fit
+    se <- pred$se.fit
+    
+    startlist$FC_Predicted_Points <- pmax(pmin(round(predictions), 100), 0)
+    startlist$FC_Safe_Prediction <- pmax(pmin(round(predictions - 1.96*se), 100), 0)
+    startlist$FC_Upside_Prediction <- pmax(pmin(round(predictions + 1.96*se), 100), 0)
+    
+    return(startlist)
+}
+
+format_fc_predictions <- function(predictions) {
+    predictions %>%
+        dplyr::select(Skier, Nation, 
+               FC_Predicted_Points, FC_Safe_Prediction, FC_Upside_Prediction) %>%
+        rename(
+            `Predicted Points` = FC_Predicted_Points,
+            `Safe Points` = FC_Safe_Prediction,
+            `Upside Points` = FC_Upside_Prediction
+        ) %>%
+        arrange(desc(`Predicted Points`))
+}
+
+men_fc_startlist <- prepare_fc_data(men_startlist, "M")
+men_fc_predictions <- predict_fc_points(men_fc_startlist, "M")
+
+ladies_fc_startlist <- prepare_fc_data(ladies_startlist, "F")
+ladies_fc_predictions <- predict_fc_points(ladies_fc_startlist, "F")
+
+write.xlsx(format_fc_predictions(men_fc_predictions),
+           "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/men-fc-points.xlsx")
+write.xlsx(format_fc_predictions(ladies_fc_predictions),
+           "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/ladies-fc-points.xlsx")
+
+men_fc_predictions %>% arrange(desc(FC_Predicted_Points))
+```
+
+
+```{r knapsack}
+library(dplyr)
+library(ompr)
+library(ompr.roi)
+library(ROI.plugin.glpk)
+prepare_tds_data <- function(men_startlist, ladies_startlist, prediction_type = "normal") {
+    # Add gender to predictions
+    men_df <- men_startlist %>%
+        mutate(sex = "m")
+    ladies_df <- ladies_startlist %>%
+        mutate(sex = "f")
+    
+    # Choose which prediction column to use
+    points_col <- case_when(
+        prediction_type == "safe" ~ "Safe_Prediction",
+        prediction_type == "upside" ~ "Upside_Prediction",
+        TRUE ~ "Predicted_Points"
+    )
+    
+    # Combine predictions and ensure numeric price
+    combined_df <- bind_rows(men_df, ladies_df) %>%
+        mutate(
+            row_id = row_number(),
+            Price = as.numeric(Price),
+            Points = get(points_col)  # Use selected prediction column
+        )
+    return(combined_df)
+}
+
+optimize_tds_team <- function(fantasy_df) {
+    n <- nrow(fantasy_df)
+    
+    # Create index sets for men and women
+    men_indices <- which(fantasy_df$sex == "m")
+    women_indices <- which(fantasy_df$sex == "f")
+    
+    # Create optimization model
+    model <- MIPModel() %>%
+        # Binary decision variables for each skier
+        add_variable(x[i], i = 1:n, type = "binary") %>%
+        
+        # Objective: maximize predicted points
+        set_objective(sum_expr(fantasy_df$Points[i] * x[i], i = 1:n), "max") %>%
+        
+        # Budget constraint
+        add_constraint(sum_expr(fantasy_df$Price[i] * x[i], i = 1:n) <= 100000) %>%
+        
+        # Team size constraint
+        add_constraint(sum_expr(x[i], i = 1:n) == 16) %>%
+        
+        # Gender constraints
+        add_constraint(sum_expr(x[i], i = men_indices) <= 8) %>%
+        add_constraint(sum_expr(x[i], i = women_indices) <= 8)
+    
+    # Solve the model
+    result <- solve_model(model, with_ROI(solver = "glpk"))
+    
+    # Extract results
+    selected <- get_solution(result, x[i]) %>%
+        filter(value > 0) %>%
+        pull(i)
+    
+    # Create results dataframe
+    selected_team <- fantasy_df[selected, ] %>%
+        arrange(sex, desc(Price))
+    
+    # Print results summary
+    cat("\nOptimized Tour de Ski Fantasy Team:\n")
+    cat(sprintf("Total Predicted Points: %.2f\n", sum(selected_team$Points)))
+    cat("Total Cost: $", sum(selected_team$Price), "\n\n")
+    
+    cat("Team Composition:\n")
+    cat("Men:", sum(selected_team$sex == "m"), "\n")
+    cat("Women:", sum(selected_team$sex == "f"), "\n\n")
+    
+    cat("Selected Team:\n")
+    print(selected_team %>%
+          dplyr::select(Skier, sex, Nation, Price, Points) %>%
+          arrange(sex, desc(Points)))
+    
+    return(selected_team)
+}
+
+# Run all three optimizations
+combined_df_normal <- prepare_tds_data(men_fc_predictions, ladies_fc_predictions, "normal")
+combined_df_safe <- prepare_tds_data(men_fc_predictions, ladies_fc_predictions, "safe")
+combined_df_upside <- prepare_tds_data(men_fc_predictions, ladies_fc_predictions, "upside")
+
+tds_team_normal <- optimize_tds_team(combined_df_normal)
+tds_team_safe <- optimize_tds_team(combined_df_safe)
+tds_team_upside <- optimize_tds_team(combined_df_upside)
+
+# Save all teams to Excel
+write.xlsx(list(
+    "Normal Team" = tds_team_normal %>% 
+        dplyr::select(Skier, sex, Nation, Price, Points) %>%
+        rename(`Predicted Points` = Points),
+    "Safe Team" = tds_team_safe %>% 
+        dplyr::select(Skier, sex, Nation, Price, Points) %>%
+        rename(`Safe Points` = Points),
+    "Upside Team" = tds_team_upside %>% 
+        dplyr::select(Skier, sex, Nation, Price, Points) %>%
+        rename(`Upside Points` = Points)
+),"/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/fantasy-teams.xlsx")
+
+print(tds_team_normal)
+print(tds_team_safe)
+print(tds_team_upside)
+
+
+# Save to Excel with renamed column
+tds_team_output <- tds_team_upside %>% 
+    dplyr::select(Skier, sex, Nation, Price, Points) %>%
+    rename(`Predicted Points` = Points) %>%
+    arrange(sex, desc(`Predicted Points`))
+
+print(tds_team_output)
+
+write.xlsx(tds_team_output, 
+          "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/fantasy-team.xlsx")
+```
+
+
+
+
+```{r brier-odds}
+men_tds_history
+men_fc_history
+
+create_position_model <- function(data, threshold, selected_vars) {
+    # Create binary outcome
+    data$position_achieved <- data$Place <= threshold
+    
+    # Create formula for GAM
+    formula_str <- paste("position_achieved ~",
+                        paste(paste0("s(", selected_vars, ")"),
+                        collapse = " + "))
+    
+    # Fit GAM model
+    model <- gam(as.formula(formula_str),
+                 data = data,
+                 family = binomial,
+                 method = "REML")
+    
+    return(model)
+}
+
+# Function to calculate Brier score
+calculate_brier <- function(actual, predicted) {
+    mean((actual - predicted)^2)
+}
+
+select_features <- function(data, threshold, max_vars = 8) {  # Reduced from 8 to 5
+    # Create binary outcome
+    data$position_achieved <- data$Place <= threshold
+    
+    # Get predictor columns (excluding non-predictors)
+    pred_cols <- names(data)[!names(data) %in% c("ID", "Season", "Race", "Date", 
+                                                "Points", "Place", "position_achieved",
+                                                "TdS_Last_5_2", "FC_Last_5_2", "Skier", "TdS_Historical")]
+    
+    print(paste("Selecting features for threshold", threshold, 
+                "with", length(pred_cols), "potential predictors"))
+    
+    # Create formula for regsubsets
+    formula_str <- paste("position_achieved ~", paste(pred_cols, collapse = " + "))
+    
+    # Use forward selection instead of exhaustive
+    subset_search <- regsubsets(as.formula(formula_str),
+                              data = data,
+                              nvmax = max_vars,
+                              method = "forward",  # Changed from exhaustive to forward
+                              really.big = TRUE)
+    
+    return(subset_search)
+}
+
+# Add Place to Final Climb history
+men_fc_history <- men_fc_history2 %>%
+    left_join(men_df %>% 
+              dplyr::select(ID, Season, Race, Skier, Place),
+              by = c("ID", "Season", "Race"))
+
+ladies_fc_history <- ladies_fc_history2 %>%
+    left_join(ladies_df %>% 
+              dplyr::select(ID, Season, Race, Skier, Place),
+              by = c("ID", "Season", "Race"))
+
+# Add Place to TdS history
+men_tds_history <- men_tds_history2 %>%
+    left_join(men_df %>% 
+              dplyr::select(ID, Season, Race, Skier, Place),
+              by = c("ID", "Season", "Race"))
+
+ladies_tds_history <- ladies_tds_history2 %>%
+    left_join(ladies_df %>% 
+              dplyr::select(ID, Season, Race, Skier, Place),
+              by = c("ID", "Season", "Race"))
+
+# Now let's create our position thresholds
+position_thresholds <- c(1, 3, 10, 30)  # Win, Podium, Top 10, Top 30
+
+# Function for feature selection and model creation
+create_position_models <- function(history_data, thresholds = position_thresholds, max_vars = 8) {
+    models <- list()
+    selected_features <- list()
+    
+    for(threshold in thresholds) {
+        # Feature selection
+        features <- select_features(history_data, threshold, max_vars)
+        print(features)
+        best_model_idx <- which.min(summary(features)$bic)
+        selected_vars <- names(coef(features, best_model_idx))[-1]  # Remove intercept
+        
+        # Create and store model
+        model <- create_position_model(history_data, threshold, selected_vars)
+        
+        models[[paste0("place_", threshold)]] <- model
+        selected_features[[paste0("place_", threshold)]] <- selected_vars
+    }
+    
+    return(list(models = models, selected_features = selected_features))
+}
+
+# Create models for men's Final Climb
+men_fc_models <- create_position_models(men_fc_history)
+
+# Create models for women's Final Climb
+ladies_fc_models <- create_position_models(ladies_fc_history)
+
+# Create models for men's TdS
+men_tds_models <- create_position_models(men_tds_history)
+
+# Create models for women's TdS
+ladies_tds_models <- create_position_models(ladies_tds_history)
+
+# Now let's create a function to apply these models to the startlists
+predict_positions <- function(startlist, models, selected_features) {
+    predictions <- data.frame(
+        Skier = startlist$Skier,
+        ID = startlist$ID
+    )
+    
+    for(threshold in position_thresholds) {
+        model_name <- paste0("place_", threshold)
+        model <- models$models[[model_name]]
+        
+        # Get predictions
+        pred_probs <- predict(model, newdata = startlist, type = "response")
+        predictions[[paste0("prob_top", threshold)]] <- pred_probs
+    }
+    
+    return(predictions)
+}
+
+# Apply models to startlists
+men_fc_predictions <- predict_positions(men_startlist, men_fc_models)
+ladies_fc_predictions <- predict_positions(ladies_startlist, ladies_fc_models)
+men_tds_predictions <- predict_positions(men_startlist, men_tds_models)
+ladies_tds_predictions <- predict_positions(ladies_startlist, ladies_tds_models)
+
+# Function to create summary report
+create_model_summary <- function(models, selected_features, history_data, event_type, gender) {
+    sink(file.path(tds_log_dir, paste0(gender, "_", event_type, "_model_summary.txt")))
+    
+    cat(paste(gender, event_type, "Models Summary\n"))
+    cat("============================\n\n")
+    
+    for(threshold in position_thresholds) {
+        model_name <- paste0("place_", threshold)
+        cat(paste("\nTop", threshold, "Model:\n"))
+        cat("Selected variables:", paste(selected_features[[model_name]], collapse=", "), "\n")
+        
+        # Calculate Brier score on training data
+        actual <- history_data$Place <= threshold
+        predicted <- predict(models$models[[model_name]], type = "response")
+        brier <- calculate_brier(actual, predicted)
+        
+        cat("Brier Score:", round(brier, 4), "\n")
+    }
+    
+    sink()
+}
+
+# Create summaries
+create_model_summary(men_fc_models, men_fc_models$selected_features, men_fc_history, "FC", "Men")
+create_model_summary(ladies_fc_models, ladies_fc_models$selected_features, ladies_fc_history, "FC", "Women")
+create_model_summary(men_tds_models, men_tds_models$selected_features, men_tds_history, "TdS", "Men")
+create_model_summary(ladies_tds_models, ladies_tds_models$selected_features, ladies_tds_history, "TdS", "Women")
+
+men_tds_predictions
+
+library(writexl)
+
+clean_predictions <- function(df) {
+  df %>%
+    dplyr::select(-ID) %>%
+    rename(
+      "Top 1" = prob_top1,
+      "Top 3" = prob_top3,
+      "Top 10" = prob_top10,
+      "Top 30" = prob_top30
+    )
+}
+
+# Clean and combine all predictions
+all_predictions <- list(
+  men_fc = clean_predictions(men_fc_predictions),
+  ladies_fc = clean_predictions(ladies_fc_predictions),
+  men_tds = clean_predictions(men_tds_predictions),
+  ladies_tds = clean_predictions(ladies_tds_predictions)
+)
+
+# Write to Excel
+write_xlsx(all_predictions, "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/TdS_brier_odds.xlsx")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r improved-odds}
+library(xgboost)
+library(caret)
+library(tidyverse)
+create_position_model <- function(data, threshold, selected_vars) {
+    clean_data <- data %>% drop_na(all_of(c(selected_vars, "Place")))
+    
+    train_matrix <- xgb.DMatrix(
+        data = as.matrix(clean_data[, selected_vars]),
+        label = as.numeric(clean_data$Place <= threshold)
+    )
+    
+    params <- list(
+        objective = "binary:logistic",
+        eta = 0.1,
+        max_depth = 4,
+        nthread = parallel::detectCores() - 1
+    )
+    
+    cv_folds <- createFolds(clean_data$Place <= threshold, k = 5)
+    model <- xgb.train(
+        params = params,
+        data = train_matrix,
+        nrounds = 100,
+        verbose = 0
+    )
+    
+    return(model)
+}
+
+create_improved_model <- function(data, threshold, selected_vars) {
+    # Create binary outcome
+    data$position_achieved <- as.numeric(data$Place <= threshold)
+    
+    # Prepare matrix for xgboost
+    train_matrix <- xgb.DMatrix(
+        data = as.matrix(data[, selected_vars]),
+        label = data$position_achieved
+    )
+    
+    # XGBoost parameters
+    params <- list(
+        objective = "binary:logistic",
+        eta = 0.1,
+        max_depth = 4,
+        nthread = parallel::detectCores() - 1
+    )
+    
+    # Train model with cross-validation for calibration
+    cv_folds <- createFolds(data$position_achieved, k = 5)
+    model <- xgb.train(
+        params = params,
+        data = train_matrix,
+        nrounds = 100,
+        verbose = 0
+    )
+    
+    return(model)
+}
+
+create_position_models <- function(history_data, thresholds = position_thresholds, max_vars = 8) {
+    models <- list()
+    selected_features <- list()
+    
+    for(threshold in thresholds) {
+        # Feature selection
+        features <- select_features(history_data, threshold, max_vars)
+        print(features)
+        best_model_idx <- which.min(summary(features)$bic)
+        selected_vars <- names(coef(features, best_model_idx))[-1]  # Remove intercept
+        
+        # Create and store model
+        model <- create_position_model(history_data, threshold, selected_vars)
+        
+        models[[paste0("place_", threshold)]] <- model
+        selected_features[[paste0("place_", threshold)]] <- selected_vars
+    }
+    
+    return(list(models = models, selected_features = selected_features))
+}
+
+select_features <- function(data, threshold, max_vars = 8) {
+    pred_cols <- names(data)[!names(data) %in% c("ID", "Season", "Race", "Date", 
+                                                "Points", "Place", "position_achieved",
+                                                "TdS_Last_5_2", "FC_Last_5_2", "Skier", "TdS_Historical")]
+    
+    # Clean data first
+    clean_data <- data %>%
+        dplyr::select(all_of(c(pred_cols, "Place"))) %>%
+        drop_na()
+    
+    # Create binary outcome after cleaning
+    clean_data$position_achieved <- clean_data$Place <= threshold
+    
+    formula_str <- paste("position_achieved ~", paste(pred_cols, collapse = " + "))
+    
+    subset_search <- regsubsets(as.formula(formula_str),
+                              data = clean_data,
+                              nvmax = max_vars,
+                              method = "forward",
+                              really.big = TRUE)
+    
+    return(subset_search)
+}
+
+predict_positions <- function(startlist, models, selected_features) {
+    predictions <- data.frame(
+        Skier = startlist$Skier,
+        ID = startlist$ID
+    )
+    
+    for(threshold in position_thresholds) {
+        model_name <- paste0("place_", threshold)
+        model <- models$models[[model_name]]
+        
+        # Get predictions based on model type
+        if(inherits(model, "xgb.Booster")) {
+            pred_matrix <- xgb.DMatrix(
+                data = as.matrix(startlist[, selected_features[[model_name]]])
+            )
+            pred_probs <- predict(model, pred_matrix)
+        } else {
+            pred_probs <- predict(model, newdata = startlist, type = "response")
+        }
+        
+        predictions[[paste0("prob_top", threshold)]] <- pred_probs
+    }
+    
+    return(predictions)
+}
+position_thresholds <- c(1, 3, 10, 30)  # Win, Podium, Top 10, Top 30
+
+# Add Place to Final Climb history
+men_fc_history <- men_fc_history2 %>%
+    left_join(men_df %>% 
+              dplyr::select(ID, Season, Race, Skier, Place),
+              by = c("ID", "Season", "Race"))
+
+ladies_fc_history <- ladies_fc_history2 %>%
+    left_join(ladies_df %>% 
+              dplyr::select(ID, Season, Race, Skier, Place),
+              by = c("ID", "Season", "Race"))
+
+# Add Place to TdS history
+men_tds_history <- men_tds_history2 %>%
+    left_join(men_df %>% 
+              dplyr::select(ID, Season, Race, Skier, Place),
+              by = c("ID", "Season", "Race"))
+
+ladies_tds_history <- ladies_tds_history2 %>%
+    left_join(ladies_df %>% 
+              dplyr::select(ID, Season, Race, Skier, Place),
+              by = c("ID", "Season", "Race"))
+
+
+# Create models for each dataset
+# Create models for each dataset
+men_fc_models <- create_position_models(men_fc_history)
+ladies_fc_models <- create_position_models(ladies_fc_history)
+men_tds_models <- create_position_models(men_tds_history)
+ladies_tds_models <- create_position_models(ladies_tds_history)
+
+# Apply models to startlists with selected features
+men_fc_predictions <- predict_positions(men_startlist, men_fc_models, men_fc_models$selected_features)
+ladies_fc_predictions <- predict_positions(ladies_startlist, ladies_fc_models, ladies_fc_models$selected_features)
+men_tds_predictions <- predict_positions(men_startlist, men_tds_models, men_tds_models$selected_features)
+ladies_tds_predictions <- predict_positions(ladies_startlist, ladies_tds_models, ladies_tds_models$selected_features)
+
+library(writexl)
+
+clean_predictions <- function(df) {
+  df %>%
+    dplyr::select(-ID) %>%
+    rename(
+      "Top 1" = prob_top1,
+      "Top 3" = prob_top3,
+      "Top 10" = prob_top10,
+      "Top 30" = prob_top30
+    )
+}
+
+all_predictions <- list(
+  men_fc = clean_predictions(men_fc_predictions),
+  ladies_fc = clean_predictions(ladies_fc_predictions),
+  men_tds = clean_predictions(men_tds_predictions),
+  ladies_tds = clean_predictions(ladies_tds_predictions)
+)
+
+write_xlsx(all_predictions, "/Users/syverjohansen/blog/daehl-e/content/post/drafts/weekly-picks/2025TdS/TdS_XGBoost_odds.xlsx")
+
+head(men_fc_predictions)
+```
+
+
+
+
+
+
+
+
+
