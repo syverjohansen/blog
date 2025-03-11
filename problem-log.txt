@@ -1,0 +1,21 @@
+27SEP
+Right now my main issue is number of files.  These files come from three main sources
+Source 1 is id.json
+Source 2 is id_pct.json
+Source 3 is /id/index.html
+
+I don't think I can chop number three, but I can definitely combine the first two and probably reduce it by around 9000.  The issue will when more skiers join the world cup, i will be a few thousand away.  If I tried to make one big json file of everyone, the issue will be the size of the file will likely be over 25mb.  Another solution would be trying out R2.  It would be good practice to try, but would cost money.
+
+It turns out that I can dynamically create pages for each skier, so no need to make it ahead of time and that I can use methods to query each individual skier with a link, so that their results load.  This can be done in a partial.
+
+
+
+28SEP
+In skier_tables.py, I just need to add the components of pct_tables.py, but add additional columns for the pcts instead of replacing them.  Also need to get rid of the part of generating index files for each skier
+
+Got skier_info working.  Now I just have to be able to create this dynamic page for each skier.  
+
+I don't know if it's possible to do the dynamic page creation using query parameters.  It doesn't seem to recognize query parameters when inputting.
+
+29SEP
+Resolved the graph issue.  The query parameter issue will have to wait until later.  The next thing I will work on is radar charts on the individual page.  The radar chart will have their most recent value for everything and will be by percentage.

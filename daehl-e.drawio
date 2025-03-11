@@ -1,0 +1,157 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36" version="26.0.10">
+  <diagram name="Page-1" id="IvV1RmxwQuxQX_2ZJWTI">
+    <mxGraphModel dx="1269" dy="1155" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="999999" pageHeight="9999999" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="frBr1456pMqaE7amHZvQ-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="frBr1456pMqaE7amHZvQ-1" target="frBr1456pMqaE7amHZvQ-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="frBr1456pMqaE7amHZvQ-1" target="frBr1456pMqaE7amHZvQ-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="frBr1456pMqaE7amHZvQ-1" target="frBr1456pMqaE7amHZvQ-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-1" value="Main Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="40" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-2" value="Previews of previous blog posts.&amp;nbsp; Contains title, date and heading.&amp;nbsp; Nothing more." style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="75" y="150" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-7" value="Menu: About, All Posts, Alpine, Biathlon, Cross Country, Nordic Combined, Ski Jumping, Games" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="290" y="35" width="250" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="frBr1456pMqaE7amHZvQ-10" target="frBr1456pMqaE7amHZvQ-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-10" value="About" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="300" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-11" value="Information about me and what this site is designed to do" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="270" y="300" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="frBr1456pMqaE7amHZvQ-16" target="frBr1456pMqaE7amHZvQ-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-16" value="Games" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="410" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-18" value="List labeled by sports with links to all my Sporcle quizzes from findings" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="270" y="410" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="frBr1456pMqaE7amHZvQ-20" target="frBr1456pMqaE7amHZvQ-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-20" value="Sports" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="75" y="510" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-21" value="Menu options for race results, current elo scores, all time elo scores, athletes, and all time rankings" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="275" y="510" width="135" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-23" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="660" as="sourcePoint" />
+            <mxPoint x="900" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-28" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="frBr1456pMqaE7amHZvQ-24" target="frBr1456pMqaE7amHZvQ-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-24" value="Main Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="690" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-27" value="Code Files: Set-up of page that shows previews, headers" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="50" y="830" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-29" value="config.toml&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Sets a lot of the basic information for the home page including the menu, and number of posts shown&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="225" y="690" width="165" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-30" value="content/post will have all of the posts that show up on the main page." style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="225" y="820" width="195" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-32" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="60" y="960" as="sourcePoint" />
+            <mxPoint x="920" y="960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-33" value="Sports" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1000" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-34" value="" style="childLayout=tableLayout;recursiveResize=0;shadow=0;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="225" y="1000" width="397" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-35" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;dropTarget=0;collapsible=0;recursiveResize=0;expand=0;fontStyle=0;fillColor=none;strokeColor=inherit;" vertex="1" parent="frBr1456pMqaE7amHZvQ-34">
+          <mxGeometry width="397" height="101" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-36" value="Current Elo Scores" style="connectable=0;recursiveResize=0;strokeColor=inherit;fillColor=none;align=center;whiteSpace=wrap;html=1;" vertex="1" parent="frBr1456pMqaE7amHZvQ-35">
+          <mxGeometry width="133" height="101" as="geometry">
+            <mxRectangle width="133" height="101" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-37" value="All Time Elo Scores" style="connectable=0;recursiveResize=0;strokeColor=inherit;fillColor=none;align=center;whiteSpace=wrap;html=1;" vertex="1" parent="frBr1456pMqaE7amHZvQ-35">
+          <mxGeometry x="133" width="132" height="101" as="geometry">
+            <mxRectangle width="132" height="101" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-49" value="Race Archives" style="connectable=0;recursiveResize=0;strokeColor=inherit;fillColor=none;align=center;whiteSpace=wrap;html=1;" vertex="1" parent="frBr1456pMqaE7amHZvQ-35">
+          <mxGeometry x="265" width="132" height="101" as="geometry">
+            <mxRectangle width="132" height="101" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-39" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;dropTarget=0;collapsible=0;recursiveResize=0;expand=0;fontStyle=0;fillColor=none;strokeColor=inherit;" vertex="1" parent="frBr1456pMqaE7amHZvQ-34">
+          <mxGeometry y="101" width="397" height="99" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-40" value="All-time Rankings" style="connectable=0;recursiveResize=0;strokeColor=inherit;fillColor=none;align=center;whiteSpace=wrap;html=1;" vertex="1" parent="frBr1456pMqaE7amHZvQ-39">
+          <mxGeometry width="133" height="99" as="geometry">
+            <mxRectangle width="133" height="99" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-41" value="Athletes" style="connectable=0;recursiveResize=0;strokeColor=inherit;fillColor=none;align=center;whiteSpace=wrap;html=1;" vertex="1" parent="frBr1456pMqaE7amHZvQ-39">
+          <mxGeometry x="133" width="132" height="99" as="geometry">
+            <mxRectangle width="132" height="99" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-50" value="Posts" style="connectable=0;recursiveResize=0;strokeColor=inherit;fillColor=none;align=center;whiteSpace=wrap;html=1;" vertex="1" parent="frBr1456pMqaE7amHZvQ-39">
+          <mxGeometry x="265" width="132" height="99" as="geometry">
+            <mxRectangle width="132" height="99" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-51" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="1280" as="sourcePoint" />
+            <mxPoint x="940" y="1270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-53" value="Games" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1300" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-82" value="Heading: Sport&lt;div&gt;List: Link to Sporcle quizzes for each of the sports&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1390" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-83" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="1490" as="sourcePoint" />
+            <mxPoint x="950" y="1480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-87" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="frBr1456pMqaE7amHZvQ-85" target="frBr1456pMqaE7amHZvQ-86">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-85" value="Current Elo Scores" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-86" value="Keep as is.&amp;nbsp; Rename to daehl-e.com/SPORT/current_elo" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1660" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="frBr1456pMqaE7amHZvQ-88" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="1810" as="sourcePoint" />
+            <mxPoint x="910" y="1800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

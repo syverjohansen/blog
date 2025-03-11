@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="26.0.4">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="541" dy="649" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="RJlls2cIcLqzpiomJGAU-0" value="&lt;div&gt;source /Users/syverjohansen/ski/elo/python/ski/polars/elo_update.sh&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. Call elo_update.sh which calculates all the Elo updates for the given season and the current standings of the World Cup&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="70" y="120" width="390" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RJlls2cIcLqzpiomJGAU-1" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=0.531;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RJlls2cIcLqzpiomJGAU-0" target="RJlls2cIcLqzpiomJGAU-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="310" y="360" as="sourcePoint" />
+            <mxPoint x="277" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RJlls2cIcLqzpiomJGAU-2" value="current_ids.py&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. Grabs the IDs from the current season&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2. Saves to a dict in a JSON file (M_current_ids.json)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="60" y="240" width="411" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="RJlls2cIcLqzpiomJGAU-3" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RJlls2cIcLqzpiomJGAU-2" target="RJlls2cIcLqzpiomJGAU-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="310" y="360" as="sourcePoint" />
+            <mxPoint x="266" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RJlls2cIcLqzpiomJGAU-4" value="elo_tables.py&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1. Reads in the different elo score feathers into dataframes&lt;/div&gt;&lt;div&gt;2. Creates a df with only the current season in it and makes each column a different Pelo value based on the type of elo.&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="60" y="350" width="420" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="RJlls2cIcLqzpiomJGAU-5" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=0.527;exitY=1.025;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RJlls2cIcLqzpiomJGAU-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="200" y="360" as="sourcePoint" />
+            <mxPoint x="280" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RJlls2cIcLqzpiomJGAU-7" value="skier_info.py&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1. Reads in the chrono feathers into polars dfs.&lt;/div&gt;&lt;div&gt;2. For each skier ID in the chrono, get their name, sex, and nation.&amp;nbsp; Create a column for the filepath to their nation&#39;s flag as well.&lt;/div&gt;&lt;div&gt;3. Save to a JSON&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="60" y="500" width="420" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="RJlls2cIcLqzpiomJGAU-8" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=0.521;exitY=1.022;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RJlls2cIcLqzpiomJGAU-7" target="RJlls2cIcLqzpiomJGAU-9">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="630" as="sourcePoint" />
+            <mxPoint x="279" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RJlls2cIcLqzpiomJGAU-9" value="skier_tables.py&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1. Reads in the chrono feather into a polars df.&lt;/div&gt;&lt;div&gt;2. Creates tables for each skier that has both elo and pct_elo columns.&lt;/div&gt;&lt;div&gt;3. Shortens the decimals to 2 digits, adds flag&lt;/div&gt;&lt;div&gt;4. Creates a JSON for each skier.&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="60" y="630" width="430" height="130" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

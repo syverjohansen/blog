@@ -1,0 +1,35 @@
+Files
+-Clean out files and write script to get everything done at once
+
+Website
+-Dynamic querying (need this if I want to do biathlon, alpine, nordic combined)
+-Partials for table building for my Markdown
+
+
+Skier data
+-Skier profiles (Done)
+-Course profiles (Done)
+-Scandinavian Cup/Super Tour evaluations of skill level
+
+Improving numbers
+-How to do elo adjustments correctly
+-How to handle newer skiers
+-Better predictions for Noah Hoffmann fantasy (race predictions done, now just have to do the rest)
+-Predicting podiums and winners
+-Getting 
+-Percentage chance of winning
+--Last 10 in each discipline (3 for TdS)
+--Fill in rest of 10 with predictions from model
+--Create distribution and simulate results
+
+Articles
+-Finish season preview
+--Winner, podium, topp 10
+--Break out star
+-Breakout star for the season.
+-How much does season opener correlate to season success
+-Is peaking a thing?
+-Are some skiers better at certain courses (altitude, etc)
+
+Maintenance:
+-Fix Radar charts

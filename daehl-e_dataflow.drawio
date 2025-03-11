@@ -1,0 +1,798 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36" version="26.0.16">
+  <diagram name="Page-1" id="8qqwAVty5yCcTyCEijJo">
+    <mxGraphModel dx="860" dy="1011" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="999999" pageHeight="9999999" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IEotBIcsbke2vs-tSMAI-14" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Analytics&lt;/span&gt;&lt;/h1&gt;&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); font-size: 12px; font-weight: normal;&quot;&gt;1. Main Page setup&lt;/span&gt;&lt;/h1&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); font-size: 12px; font-weight: normal;&quot;&gt;2. About&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); font-size: 12px; font-weight: normal;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); font-size: 12px; font-weight: normal;&quot;&gt;3. Games table&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); font-size: 12px; font-weight: normal;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;4. Sports table&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;5. Current elo scores&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;6. All-time elo scores&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;7. Race archives&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;8. All-time rankings&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;9. Athletes&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;10. Posts&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;11. Recaps&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;12. Predictions&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="40" y="30" width="320" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-16" value="" style="endArrow=none;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="50" y="410" as="sourcePoint" />
+            <mxPoint x="870" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-21" value="Main Page" style="swimlane;startSize=20;horizontal=1;containerType=tree;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="1" vertex="1">
+          <mxGeometry x="90" y="440" width="630" height="540" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-22" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-21" source="IEotBIcsbke2vs-tSMAI-24" target="IEotBIcsbke2vs-tSMAI-25" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="layouts/index.html&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1. Calls portfolio.html&lt;/div&gt;" treeRoot="1" id="IEotBIcsbke2vs-tSMAI-24">
+          <mxCell style="whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-21" vertex="1">
+            <mxGeometry x="80" y="40" width="120" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-25" value="layouts/partials/portfolio.html&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1. Creates pagination for posts&lt;/div&gt;&lt;div&gt;2. calls posts.html&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-21" vertex="1">
+          <mxGeometry x="40" y="140" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-31" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-21" source="IEotBIcsbke2vs-tSMAI-25" target="IEotBIcsbke2vs-tSMAI-32" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="230" y="540" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-32" value="layouts/partials/posts.html&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1. Creates layout of post content area&lt;/div&gt;&lt;div&gt;2. Calls post_list.html, pagination.html, and sidebar.html&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-21" vertex="1">
+          <mxGeometry x="40" y="240" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-35" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-21" source="IEotBIcsbke2vs-tSMAI-32" target="IEotBIcsbke2vs-tSMAI-36" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="225" y="640" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-36" value="layouts/partials/post_list.html&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1. Shows the title, description, metadata, subtitle, and date of the posts in the main page&lt;br&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-21" vertex="1">
+          <mxGeometry x="40" y="360" width="190" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-37" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-21" source="IEotBIcsbke2vs-tSMAI-32" target="IEotBIcsbke2vs-tSMAI-38" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="225" y="640" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-38" value="layouts/partials/pagination.html&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1. Creates the newer posts and older posts navigation at bottom of post list&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-21" vertex="1">
+          <mxGeometry x="240" y="360" width="190" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-39" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-21" source="IEotBIcsbke2vs-tSMAI-32" target="IEotBIcsbke2vs-tSMAI-40" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="225" y="640" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-40" value="layouts/partials/sidebar.html&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1. Sidebar template that creates the right column of blog layout.&lt;/div&gt;&lt;div&gt;2. About me, featured tags, etc.&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-21" vertex="1">
+          <mxGeometry x="440" y="360" width="190" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-43" value="Current Elo Scores" style="swimlane;startSize=10;horizontal=1;containerType=tree;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="1" vertex="1">
+          <mxGeometry x="80" y="1420" width="1370" height="1410" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-44" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-46" target="IEotBIcsbke2vs-tSMAI-47" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="daehl-e.com/SPORT/current_elo" treeRoot="1" id="IEotBIcsbke2vs-tSMAI-46">
+          <mxCell style="whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+            <mxGeometry x="275" y="40" width="155" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-47" value="default/single.html" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="302.5" y="130" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-49" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-47" target="IEotBIcsbke2vs-tSMAI-50" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="423" y="1100" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-50" value="default/single.html" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="302.5" y="230" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-51" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-50" target="IEotBIcsbke2vs-tSMAI-52" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="423" y="1190" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-52" value="partials/small-table.html" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="302.5" y="330" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-53" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-52" target="IEotBIcsbke2vs-tSMAI-54" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="423" y="1290" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-54" value="static/SPORT/python/excel365/{sex}_chrono_current.json" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="177.5" y="430" width="350" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-55" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-54" target="IEotBIcsbke2vs-tSMAI-56" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="423" y="1390" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-56" value="static/SPORT/python/elo_tables.py" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="177.5" y="530" width="350" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-57" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-56" target="IEotBIcsbke2vs-tSMAI-58" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="423" y="1490" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-58" value="/ski/elo/python/ski/polars/excel365/{sex}_chrono.feather&#39;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="177.5" y="630" width="350" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-61" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-52" target="IEotBIcsbke2vs-tSMAI-62" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="423" y="1290" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-62" value="partials/men-graph.html" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="620" y="430" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-63" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-52" target="IEotBIcsbke2vs-tSMAI-64" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="423" y="1290" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-64" value="partials/ladies-graph.html" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="770" y="430" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-65" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-62" target="IEotBIcsbke2vs-tSMAI-68" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="423" y="1390" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-68" value="SPORT/python/excel365/{sex}_current_ids.json" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="620" y="530" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-71" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-68" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="770" y="540" as="sourcePoint" />
+            <mxPoint x="820" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-72" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-62" target="IEotBIcsbke2vs-tSMAI-73" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="423" y="1390" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-73" value="/python/excel365/{gender}/{skier}.json" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="900" y="530" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-74" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-73" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="770" y="540" as="sourcePoint" />
+            <mxPoint x="820" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-77" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-52" target="IEotBIcsbke2vs-tSMAI-78" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="423" y="1290" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-78" value="/skiers/skier/?id=${row.ID}&amp;amp;gender=${gender}" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="880" y="430" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-81" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-68" target="IEotBIcsbke2vs-tSMAI-82" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="740" y="1490" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-82" value="/ski/elo/python/ski/polars/excel365/{sex}.feather" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="620" y="630" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-83" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-73" target="IEotBIcsbke2vs-tSMAI-84" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="740" y="1490" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-84" value="/python/skier_tables.py" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="900" y="630" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-88" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="IEotBIcsbke2vs-tSMAI-43" target="IEotBIcsbke2vs-tSMAI-58" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="985" y="690" as="sourcePoint" />
+            <mxPoint x="1035" y="640" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="985" y="740" />
+              <mxPoint x="353" y="740" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-89" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;" parent="IEotBIcsbke2vs-tSMAI-43" target="IEotBIcsbke2vs-tSMAI-82" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="527.5" y="670" as="sourcePoint" />
+            <mxPoint x="577.5" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-90" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-82" target="IEotBIcsbke2vs-tSMAI-91" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="815" y="1590" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-91" value="/ski/elo/python/ski/polars/excel365/{sex}.feather" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="620" y="750" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-92" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-91" target="IEotBIcsbke2vs-tSMAI-93" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="815" y="1690" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-93" value="/ski/elo/python/ski/polars/EloDemo.py" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="620" y="850" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-94" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-93" target="IEotBIcsbke2vs-tSMAI-95" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="815" y="1810" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-95" value="ski/elo/python/ski/polars/excel365/{sex}_setup.feather" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="540" y="950" width="410" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-100" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-95" target="IEotBIcsbke2vs-tSMAI-101" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="815" y="1910" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-101" value="ski/elo/python/ski/polars/setup.py" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="540" y="1050" width="410" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-102" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-101" target="IEotBIcsbke2vs-tSMAI-103" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="815" y="2010" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-103" value="ski/elo/python/ski/polars/big_scrape.py" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="177.5" y="1150" width="410" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-104" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="IEotBIcsbke2vs-tSMAI-43" source="IEotBIcsbke2vs-tSMAI-101" target="IEotBIcsbke2vs-tSMAI-105" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="815" y="2010" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEotBIcsbke2vs-tSMAI-105" value="ski/elo/python/ski/polars/update_scrape.py" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="IEotBIcsbke2vs-tSMAI-43" vertex="1">
+          <mxGeometry x="960" y="1150" width="410" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QaUptNIJ3_6_dci6hBGE-2" value="Sports Page" style="swimlane;startSize=20;horizontal=1;containerType=tree;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="1" vertex="1">
+          <mxGeometry x="90" y="1030" width="330" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="QaUptNIJ3_6_dci6hBGE-3" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="QaUptNIJ3_6_dci6hBGE-2" source="QaUptNIJ3_6_dci6hBGE-5" target="QaUptNIJ3_6_dci6hBGE-6" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="daehl-e.com/SPORT" treeRoot="1" id="QaUptNIJ3_6_dci6hBGE-5">
+          <mxCell style="whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="QaUptNIJ3_6_dci6hBGE-2" vertex="1">
+            <mxGeometry x="80" y="40" width="120" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="QaUptNIJ3_6_dci6hBGE-6" value="layouts/SPORT/list.html" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="QaUptNIJ3_6_dci6hBGE-2" vertex="1">
+          <mxGeometry x="20" y="140" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fRlYjz4K-SpdqmimhGeY-1" value="Skier Profiles" style="swimlane;startSize=20;horizontal=1;containerType=tree;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="1" vertex="1">
+          <mxGeometry x="90" y="2870" width="1030" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="fRlYjz4K-SpdqmimhGeY-2" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="fRlYjz4K-SpdqmimhGeY-1" source="fRlYjz4K-SpdqmimhGeY-4" target="fRlYjz4K-SpdqmimhGeY-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="single.html" treeRoot="1" id="fRlYjz4K-SpdqmimhGeY-4">
+          <mxCell style="whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="fRlYjz4K-SpdqmimhGeY-1" vertex="1">
+            <mxGeometry x="430" y="40" width="120" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="fRlYjz4K-SpdqmimhGeY-5" value="partials/SPORT/skier-table.html" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="fRlYjz4K-SpdqmimhGeY-1" vertex="1">
+          <mxGeometry x="440" y="150" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fRlYjz4K-SpdqmimhGeY-7" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="fRlYjz4K-SpdqmimhGeY-1" source="fRlYjz4K-SpdqmimhGeY-5" target="fRlYjz4K-SpdqmimhGeY-8" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="580" y="2970" as="sourcePoint" />
+            <mxPoint x="510" y="3010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fRlYjz4K-SpdqmimhGeY-8" value="/python/cross-country/excel365/{sex}/{id}.json" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="fRlYjz4K-SpdqmimhGeY-1" vertex="1">
+          <mxGeometry x="440" y="250" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="YkCR3OloSnjO10AkR-cG-1" value="Ranks" style="swimlane;startSize=20;horizontal=1;containerType=tree;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="1" vertex="1">
+          <mxGeometry x="50" y="3360" width="850" height="990" as="geometry" />
+        </mxCell>
+        <mxCell id="YkCR3OloSnjO10AkR-cG-2" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="YkCR3OloSnjO10AkR-cG-1" source="YkCR3OloSnjO10AkR-cG-4" target="YkCR3OloSnjO10AkR-cG-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="rank_scrape.py&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1. Reads in ~/ski/elo/python/ski/relay/excel365/men_scrape_update.csv or ladies_scrape_update.csv&lt;/div&gt;&lt;div&gt;2. Webscrapes from&amp;nbsp;https://firstskisport.com/cross-country/ranking.php?y=2025 or&amp;nbsp;https://firstskisport.com/cross-country/ranking.php?y=2025&amp;amp;hva=&amp;amp;g=w from 1982 to 2025 to get World Cup standings for men and women respectively.&lt;/div&gt;&lt;div&gt;3. Merges {scrape}_scrape.csv with the standings scrape.&amp;nbsp; Make sure the standings scrape is Standings in the Events column.&amp;nbsp; The columns that we should have are Date, Country, Event, Distance, Technique, Season, Race, Sex, Place, Skier, Nation, ID, Birthday.&amp;nbsp; The standings scrape should have have Season-05-01 for date, Offseason for City and Country, Standings for Event, 0 for Distance, N/A for Technique.&amp;nbsp; The rest should make sense for the skier&lt;/div&gt;&lt;div&gt;4. Save to ~/ski/ranks/ski/excel365/{sex}_scrape.csv and .feather&lt;/div&gt;" treeRoot="1" id="YkCR3OloSnjO10AkR-cG-4">
+          <mxCell style="whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="YkCR3OloSnjO10AkR-cG-1" vertex="1">
+            <mxGeometry x="170" y="30" width="590" height="180" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="YkCR3OloSnjO10AkR-cG-5" value="rank.py&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1. Reads in ~/ski/ranks/ski/excel365/{sex}_scrape.csv and feather&lt;/div&gt;&lt;div&gt;2. Calculates the Points column.&amp;nbsp; Here is how they should be calculated.&lt;/div&gt;&lt;div&gt;If Event == Olympic Winter Games and Distance!=Rel and Distance !=Ts&lt;/div&gt;&lt;div&gt;80 points for Place==1, 40 for 2, 20 for 3&lt;/div&gt;&lt;div&gt;Elif Event==Olympic Winter Games and Dstance==Rel&lt;/div&gt;&lt;div&gt;20 points for Place==1, 10 for 2, 5 for 3&lt;/div&gt;&lt;div&gt;Elif Event==Olympic Winter Games and Distance==Ts&lt;/div&gt;&lt;div&gt;40 points for Place==1, 20 for 2, 10 for 3&lt;/div&gt;&lt;div&gt;Elif Event==World Championship&lt;/div&gt;&lt;div&gt;40, 20, 10 for non Rel and non Ts&lt;/div&gt;&lt;div&gt;20, 10, 5 for Ts&lt;/div&gt;&lt;div&gt;10, 5, 2.5 for Rel&lt;/div&gt;&lt;div&gt;Elif City==Tour de Ski&lt;/div&gt;&lt;div&gt;20, 10, 5&lt;/div&gt;&lt;div&gt;Else&lt;/div&gt;&lt;div&gt;If Distance!=Rel and Distance!=Ts&lt;/div&gt;&lt;div&gt;8, 4, 4&lt;/div&gt;&lt;div&gt;Elif Rel 2, 1, 1&lt;/div&gt;&lt;div&gt;Elif Ts 4, 2, 2&lt;/div&gt;&lt;div&gt;3. Now group by ID and add up points for each type from above, Olympic Winter Games, World Championships, Tour de Ski, and World Cup.&amp;nbsp;&amp;nbsp;&lt;/div&gt;&lt;div&gt;4. Final columns should be Skier, ID, Olympic Winter Games, World Championships, Tour de Ski, and World Cup, Total, From, To, Age.&amp;nbsp; The From column will be the first Season the skier appears.&amp;nbsp; The To column will be the most recent season the skier appears.&amp;nbsp; Age is going to be Today&#39;s date - Birthday column&lt;/div&gt;&lt;div&gt;5. Sort by Points and create a Rank column that is just the order of that&lt;/div&gt;&lt;div&gt;6. Save to ~/blog/daehl-e/static/python/excel365/{sex}/ranks.json where sex is M or L&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="YkCR3OloSnjO10AkR-cG-1" vertex="1">
+          <mxGeometry x="170" y="240" width="570" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="YkCR3OloSnjO10AkR-cG-7" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="YkCR3OloSnjO10AkR-cG-1" source="YkCR3OloSnjO10AkR-cG-5" target="YkCR3OloSnjO10AkR-cG-8" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="515" y="3570" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YkCR3OloSnjO10AkR-cG-8" value="/blog/daehl-e/layouts/partials/cross-country/rank-table.html&lt;div&gt;&lt;br&gt;&lt;div&gt;1. Reads&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;~/blog/daehl-e/static/python/excel365/{sex}/ranks.json where sex is M or L&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;2. Creates a data table where the columns are from left to right are Skier, Nation, Total, Olympic Winter Games, World Championships, Tour de Ski, World Cup. Then in additional information in the Skier column it will have (From-To) based on that Skier&#39;s ID.&amp;nbsp; Although if the Skier has the highest possible season in the To column, it will just be (Age) where Age is an integer.&amp;nbsp; There will be a ladies table and a men&#39;s table&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;3. The names will appear from&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;SPORT/python/excel365/{sex}_all_ids.json which maps IDs to Skier names.&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;4. Clicking on the names will bring you to&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;/skiers/skier/?id=${row.ID}&amp;amp;gender=${gender}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="YkCR3OloSnjO10AkR-cG-1" vertex="1">
+          <mxGeometry x="170" y="740" width="570" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-1" value="Weekly Predictions" style="swimlane;startSize=20;horizontal=1;containerType=tree;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="1" vertex="1">
+          <mxGeometry x="70" y="4410" width="820" height="540" as="geometry" />
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-2" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="wheczaxAUnzoZYvnwmNw-1" source="wheczaxAUnzoZYvnwmNw-4" target="wheczaxAUnzoZYvnwmNw-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="startlists.csv" treeRoot="1" id="wheczaxAUnzoZYvnwmNw-4">
+          <mxCell style="whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="wheczaxAUnzoZYvnwmNw-1" vertex="1">
+            <mxGeometry x="340" y="50" width="120" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-5" value="weekly-picks.R&lt;div&gt;Predict races/fantasy off startlist and race_schedule&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="wheczaxAUnzoZYvnwmNw-1" vertex="1">
+          <mxGeometry x="340" y="150" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-7" value="race_schedule.csv" style="rounded=0;whiteSpace=wrap;html=1;" parent="wheczaxAUnzoZYvnwmNw-1" vertex="1">
+          <mxGeometry x="500" y="50" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-8" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="wheczaxAUnzoZYvnwmNw-1" source="wheczaxAUnzoZYvnwmNw-5" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="160" as="sourcePoint" />
+            <mxPoint x="550" y="110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-9" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="wheczaxAUnzoZYvnwmNw-1" source="wheczaxAUnzoZYvnwmNw-5" target="wheczaxAUnzoZYvnwmNw-10" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="470" y="4520" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-10" value="weekly-picks.csv in file for that weekend" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="wheczaxAUnzoZYvnwmNw-1" vertex="1">
+          <mxGeometry x="350" y="250" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-11" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="wheczaxAUnzoZYvnwmNw-1" source="wheczaxAUnzoZYvnwmNw-10" target="wheczaxAUnzoZYvnwmNw-12" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="465" y="4630" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-12" value="weekly-picks.csv" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="wheczaxAUnzoZYvnwmNw-1" vertex="1">
+          <mxGeometry x="350" y="350" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-14" value="Course Scraper" style="swimlane;startSize=20;horizontal=1;containerType=tree;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="1" vertex="1">
+          <mxGeometry x="20" y="4990" width="800" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-15" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="wheczaxAUnzoZYvnwmNw-14" source="wheczaxAUnzoZYvnwmNw-17" target="wheczaxAUnzoZYvnwmNw-18" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="couse_scrape.py" treeRoot="1" id="wheczaxAUnzoZYvnwmNw-17">
+          <mxCell style="whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="wheczaxAUnzoZYvnwmNw-14" vertex="1">
+            <mxGeometry x="350" y="30" width="120" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-18" value="pdf_parser.py" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="wheczaxAUnzoZYvnwmNw-14" vertex="1">
+          <mxGeometry x="360" y="140" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-20" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="wheczaxAUnzoZYvnwmNw-14" source="wheczaxAUnzoZYvnwmNw-18" target="wheczaxAUnzoZYvnwmNw-21" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="5080" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-21" value="course_date.py" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="wheczaxAUnzoZYvnwmNw-14" vertex="1">
+          <mxGeometry x="360" y="240" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-22" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;" parent="wheczaxAUnzoZYvnwmNw-14" source="wheczaxAUnzoZYvnwmNw-21" target="wheczaxAUnzoZYvnwmNw-23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="5190" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-23" value="course_chrono_merge.py" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" parent="wheczaxAUnzoZYvnwmNw-14" vertex="1">
+          <mxGeometry x="320" y="340" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wheczaxAUnzoZYvnwmNw-24" value="elevation_chrono_merge.py" style="rounded=0;whiteSpace=wrap;html=1;" parent="wheczaxAUnzoZYvnwmNw-14" vertex="1">
+          <mxGeometry x="580" y="30" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-1" value="Picks Dataflow" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="5550" width="710" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-1" source="Ae6BwDwJuRPSq1hXf33v-2" target="Ae6BwDwJuRPSq1hXf33v-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-2" value="Every day cron job checks to see if there are any races/weekends the next day" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-1">
+          <mxGeometry x="20" y="50" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-1" source="Ae6BwDwJuRPSq1hXf33v-3" target="Ae6BwDwJuRPSq1hXf33v-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-3" value="If there are it runs config.py, startlist-scrape-weekend.py, starlist-scrape-races.py" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-1">
+          <mxGeometry x="265" y="55" width="155" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-1" source="Ae6BwDwJuRPSq1hXf33v-5" target="Ae6BwDwJuRPSq1hXf33v-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-5" value="weekly-picks.R and daily-picks.R are run" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-1">
+          <mxGeometry x="517.5" y="57.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-7" value="Picks .MD files are made with the date as the folder name.&amp;nbsp; weekly is cross country specific, daily for all sports Contain tables from the picks" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-1">
+          <mxGeometry x="506.25" y="160" width="142.5" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-10" value="Recap Dataflow" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="5880" width="770" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-10" source="Ae6BwDwJuRPSq1hXf33v-11" target="Ae6BwDwJuRPSq1hXf33v-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-11" value="Every day cron job checks to see if there was a race today from the races csvs" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-10">
+          <mxGeometry x="20" y="40" width="170" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-10" source="Ae6BwDwJuRPSq1hXf33v-12" target="Ae6BwDwJuRPSq1hXf33v-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-12" value="If there are, it runs the elo update script" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-10">
+          <mxGeometry x="250" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-10" source="Ae6BwDwJuRPSq1hXf33v-14" target="Ae6BwDwJuRPSq1hXf33v-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-14" value="Then it runs the daily-recap script (all relay and regular ones get run)" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-10">
+          <mxGeometry x="450" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-16" value="All of elos and ranks get updated" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-10">
+          <mxGeometry x="650" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-20" value="Weekly Picks" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="6060" width="720" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-24" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-20" source="Ae6BwDwJuRPSq1hXf33v-22" target="Ae6BwDwJuRPSq1hXf33v-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-22" value="startlist_common.py" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-20">
+          <mxGeometry x="10" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-26" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-20" source="Ae6BwDwJuRPSq1hXf33v-23" target="Ae6BwDwJuRPSq1hXf33v-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-23" value="startlist-scrape-weekend.py" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-20">
+          <mxGeometry x="210" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-28" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-20" source="Ae6BwDwJuRPSq1hXf33v-25" target="Ae6BwDwJuRPSq1hXf33v-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-25" value="weekly-picks.R" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-20">
+          <mxGeometry x="400" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-27" value="weekly-picks-md.py" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-20">
+          <mxGeometry x="560" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-29" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;startlist_common.py&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="6300" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-30" value="Defines all the functions used by both startlist-scrape-weekend and startlist-scrape-races.py" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-29">
+          <mxGeometry x="10" y="30" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-35" value="startlist-scrape-weekend.py" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="12" y="6560" width="1828" height="1140" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-39" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-35" source="Ae6BwDwJuRPSq1hXf33v-36" target="Ae6BwDwJuRPSq1hXf33v-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-36" value="imports all functions from startlist_common" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-35">
+          <mxGeometry x="20" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-35" source="Ae6BwDwJuRPSq1hXf33v-38" target="Ae6BwDwJuRPSq1hXf33v-42">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-38" value="Calls process_weekend_races" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-35">
+          <mxGeometry x="220" y="30" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-42" value="process_weekend_races()" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-35">
+          <mxGeometry x="380" y="30" width="1448" height="730" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-43" value="Reads weekends.csv" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-42">
+          <mxGeometry x="7.5" y="40" width="102.5" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-57" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-42" source="Ae6BwDwJuRPSq1hXf33v-44" target="Ae6BwDwJuRPSq1hXf33v-51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-44" value="find_next_race_date(df)" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-42">
+          <mxGeometry x="150" y="30" width="330" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-48" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-44" source="Ae6BwDwJuRPSq1hXf33v-46" target="Ae6BwDwJuRPSq1hXf33v-47">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-46" value="Gets today&#39;s date" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-44">
+          <mxGeometry y="30" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-50" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-44" source="Ae6BwDwJuRPSq1hXf33v-47" target="Ae6BwDwJuRPSq1hXf33v-49">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-47" value="Gets future dates from the df" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-44">
+          <mxGeometry x="110" y="30" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-49" value="Returns next closest future date" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-44">
+          <mxGeometry x="230" y="30" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-45" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1.01;exitY=0.633;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-42" source="Ae6BwDwJuRPSq1hXf33v-43" target="Ae6BwDwJuRPSq1hXf33v-44">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="80" as="sourcePoint" />
+            <mxPoint x="160" y="30" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-62" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-42" source="Ae6BwDwJuRPSq1hXf33v-51" target="Ae6BwDwJuRPSq1hXf33v-59">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-51" value="filter_races_by_date(df, date)" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-42">
+          <mxGeometry x="510" y="30" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-52" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-51">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="50" as="sourcePoint" />
+            <mxPoint x="110" y="50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-58" value="Returns all races with date from previous function" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-51">
+          <mxGeometry x="25" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-66" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-42" source="Ae6BwDwJuRPSq1hXf33v-59" target="Ae6BwDwJuRPSq1hXf33v-63">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-59" value="is_relay_event" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-42">
+          <mxGeometry x="730" y="30" width="170" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-60" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-59">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="50" as="sourcePoint" />
+            <mxPoint x="110" y="50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-61" value="Checks to see if the race in question is a relay" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-59">
+          <mxGeometry x="25" y="30" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-81" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-42" source="Ae6BwDwJuRPSq1hXf33v-63" target="Ae6BwDwJuRPSq1hXf33v-82">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1173" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-63" value="handle_relay_races" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-42">
+          <mxGeometry x="958" y="30" width="430" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-64" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-63">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="50" as="sourcePoint" />
+            <mxPoint x="110" y="50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-70" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-63" source="Ae6BwDwJuRPSq1hXf33v-67" target="Ae6BwDwJuRPSq1hXf33v-69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-67" value="get_relay_type" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-63">
+          <mxGeometry x="10" y="20" width="80" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-68" value="relay, ts, mixed relay, or mixed ts" style="whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-67">
+          <mxGeometry y="25" width="80" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-72" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-63" source="Ae6BwDwJuRPSq1hXf33v-69" target="Ae6BwDwJuRPSq1hXf33v-71">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-69" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;calls the python script for type&lt;/span&gt;" style="whiteSpace=wrap;html=1;fontStyle=1;startSize=23;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-63">
+          <mxGeometry x="110" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-71" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;returns whether it is a success or not&lt;/span&gt;" style="whiteSpace=wrap;html=1;fontStyle=1;startSize=23;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-63">
+          <mxGeometry x="260" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-84" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-42" source="Ae6BwDwJuRPSq1hXf33v-82" target="Ae6BwDwJuRPSq1hXf33v-85">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1230" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-82" value="Filters out all relays not that they have been handled" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-42">
+          <mxGeometry x="1310" y="250" width="113" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-90" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-42" source="Ae6BwDwJuRPSq1hXf33v-85" target="Ae6BwDwJuRPSq1hXf33v-89">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-85" value="sort_races_by_id" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-42">
+          <mxGeometry x="1128" y="240" width="152" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-86" value="Sorts the races for the weekend by id, returns" style="whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-85">
+          <mxGeometry y="25" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-92" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-42" source="Ae6BwDwJuRPSq1hXf33v-89" target="Ae6BwDwJuRPSq1hXf33v-93">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1010" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-89" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;Processes next two races (presumably a men and a ladies)&lt;/span&gt;" style="whiteSpace=wrap;html=1;fontStyle=1;startSize=23;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-42">
+          <mxGeometry x="978" y="265" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-93" value="process_gender_races" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-42">
+          <mxGeometry y="150" width="968" height="580" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-96" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-93" source="Ae6BwDwJuRPSq1hXf33v-94" target="Ae6BwDwJuRPSq1hXf33v-95">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-94" value="Gets the of races for each gender over the weekend, creates prob_columns" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-93">
+          <mxGeometry x="10" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-161" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-93" source="Ae6BwDwJuRPSq1hXf33v-95" target="Ae6BwDwJuRPSq1hXf33v-99">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-95" value="Create weekend startlist for each gender." style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-93">
+          <mxGeometry x="188" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-97" value="create_weekend startlist" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-93">
+          <mxGeometry x="320" y="30" width="648" height="550" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-102" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-97" source="Ae6BwDwJuRPSq1hXf33v-98" target="Ae6BwDwJuRPSq1hXf33v-100">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-98" value="get_fis_startlist" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-97">
+          <mxGeometry x="10" y="30" width="130" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-99" value="Scrapes the url for the startlist, gets names and nation" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-98">
+          <mxGeometry y="20" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-105" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-97" source="Ae6BwDwJuRPSq1hXf33v-100" target="Ae6BwDwJuRPSq1hXf33v-103">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-100" value="get_fantasy_prices" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-97">
+          <mxGeometry x="160" y="30" width="130" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-101" value="Gets the prices from the API and saves them to a dictionary" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-100">
+          <mxGeometry y="20" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-124" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-97" source="Ae6BwDwJuRPSq1hXf33v-103" target="Ae6BwDwJuRPSq1hXf33v-114">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-103" value="get_latest_elo_scores" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-97">
+          <mxGeometry x="308" y="30" width="322" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-107" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-103" source="Ae6BwDwJuRPSq1hXf33v-104" target="Ae6BwDwJuRPSq1hXf33v-106">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-104" value="Reads chrono" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-103">
+          <mxGeometry y="20" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-109" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-103" source="Ae6BwDwJuRPSq1hXf33v-106" target="Ae6BwDwJuRPSq1hXf33v-108">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-106" value="Gets most recent value for each of elo columns" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-103">
+          <mxGeometry x="100" y="20" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-111" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-103" source="Ae6BwDwJuRPSq1hXf33v-108" target="Ae6BwDwJuRPSq1hXf33v-110">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-108" value="Imputes NAs with first quartile" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-103">
+          <mxGeometry x="200" y="20" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-113" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-103" source="Ae6BwDwJuRPSq1hXf33v-110" target="Ae6BwDwJuRPSq1hXf33v-112">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-110" value="Ensures ID, Nation columns there" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-103">
+          <mxGeometry x="200" y="100" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-112" value="Returns startlist" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-103">
+          <mxGeometry x="90" y="100" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-129" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-97" source="Ae6BwDwJuRPSq1hXf33v-114" target="Ae6BwDwJuRPSq1hXf33v-128">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-114" value="get_additional_skiers" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-97">
+          <mxGeometry x="399" y="270" width="140" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-116" value="Reads in additional skiers from config" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-114">
+          <mxGeometry x="30" y="30" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-131" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-97" source="Ae6BwDwJuRPSq1hXf33v-128" target="Ae6BwDwJuRPSq1hXf33v-130">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-128" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;Convert names to match API and FIS, and get their fantasy prices&lt;/span&gt;" style="whiteSpace=wrap;html=1;fontStyle=1;startSize=23;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-97">
+          <mxGeometry x="228" y="285" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-133" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-97" source="Ae6BwDwJuRPSq1hXf33v-130" target="Ae6BwDwJuRPSq1hXf33v-132">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-130" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;Use fuzzy matching to match FIS names with local names&lt;/span&gt;" style="whiteSpace=wrap;html=1;fontStyle=1;startSize=23;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-97">
+          <mxGeometry x="78" y="285" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-132" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;Get quota for nations from the config.&lt;/span&gt;" style="whiteSpace=wrap;html=1;fontStyle=1;startSize=23;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-97">
+          <mxGeometry x="78" y="380" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-165" value="merge_race_dataframes" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-93">
+          <mxGeometry x="10" y="200" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-166" value="Put the consolidated df and the race df together" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-165">
+          <mxGeometry x="13" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-167" value="weekly-picks.R" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="7730" width="1450" height="690" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-170" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-167" source="Ae6BwDwJuRPSq1hXf33v-168" target="Ae6BwDwJuRPSq1hXf33v-169">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-168" value="Read in weekends and get next weekend" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-167">
+          <mxGeometry x="22" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-169" value="Create a mens data frame and a ladies dataframe to get thet distance, technique, MS, elevation, period, and pursuit" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-167">
+          <mxGeometry x="200" y="40" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-171" value="predict_races" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-167">
+          <mxGeometry x="450" y="20" width="1000" height="490" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-175" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-171" source="Ae6BwDwJuRPSq1hXf33v-174" target="Ae6BwDwJuRPSq1hXf33v-176">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-173" value="Read in the chronos and the startlists" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-171">
+          <mxGeometry x="2" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-174" value="For the chronos, go through each of the races over the weekend and make a chrono filtered for distance and technique, add an altitude category" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-171">
+          <mxGeometry x="390" y="80" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-179" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-171" source="Ae6BwDwJuRPSq1hXf33v-176" target="Ae6BwDwJuRPSq1hXf33v-178">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-176" value="Get the relevant pelo_pct column" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-171">
+          <mxGeometry x="570" y="80" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-178" value="Create a new df that filters for just higher performers in Elo" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-171">
+          <mxGeometry x="760" y="90" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-183" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-171" source="Ae6BwDwJuRPSq1hXf33v-180" target="Ae6BwDwJuRPSq1hXf33v-182">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="210" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-180" value="Perform feature selection and fit a model by using best_bic and exhaustive search." style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-171">
+          <mxGeometry x="760" y="200" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-192" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-171" source="Ae6BwDwJuRPSq1hXf33v-182" target="Ae6BwDwJuRPSq1hXf33v-191">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-182" value="Create model using GAM.&amp;nbsp; Do adjustments for altitude, period, mass start" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-171">
+          <mxGeometry x="570" y="200" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-185" value="preprocess_data" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-171">
+          <mxGeometry x="150" y="30" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-186" value="Assign points column, get average for last 10 races, put in the period, filter for last 10 years, get pelo_pct" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-185">
+          <mxGeometry x="10" y="30" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-187" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-171" source="Ae6BwDwJuRPSq1hXf33v-173" target="Ae6BwDwJuRPSq1hXf33v-185">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="310" y="210" as="sourcePoint" />
+            <mxPoint x="360" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-188" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-171" source="Ae6BwDwJuRPSq1hXf33v-185" target="Ae6BwDwJuRPSq1hXf33v-174">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="710" y="210" as="sourcePoint" />
+            <mxPoint x="760" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-189" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-171" source="Ae6BwDwJuRPSq1hXf33v-178" target="Ae6BwDwJuRPSq1hXf33v-180">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="710" y="210" as="sourcePoint" />
+            <mxPoint x="760" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-191" value="Get volatility metrics for each skier." style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-171">
+          <mxGeometry x="400" y="205" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-198" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-171" source="Ae6BwDwJuRPSq1hXf33v-193" target="Ae6BwDwJuRPSq1hXf33v-197">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-193" value="prepare_startlist_date" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-171">
+          <mxGeometry x="210" y="240" width="150" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-196" value="Calculate last elos, weighted points, elo percentages, and replacing NAs" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-193">
+          <mxGeometry x="10" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-195" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-171" source="Ae6BwDwJuRPSq1hXf33v-191" target="Ae6BwDwJuRPSq1hXf33v-193">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="210" as="sourcePoint" />
+            <mxPoint x="350" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-197" value="" style="whiteSpace=wrap;html=1;fontStyle=1;startSize=23;" vertex="1" parent="Ae6BwDwJuRPSq1hXf33v-171">
+          <mxGeometry x="50" y="260" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ae6BwDwJuRPSq1hXf33v-172" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="Ae6BwDwJuRPSq1hXf33v-167" source="Ae6BwDwJuRPSq1hXf33v-169" target="Ae6BwDwJuRPSq1hXf33v-171">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="380" y="230" as="sourcePoint" />
+            <mxPoint x="430" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
