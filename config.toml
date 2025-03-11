@@ -1,0 +1,168 @@
+baseurl = "https://daehl-e.com"  #The url I'm using for my file
+title = "Nordic Numbers" #The one in the top left corner and the middle
+theme = "white"  #The theme that I'm using for my project
+languageCode = "en-us"  #Language for my site
+# Enable comments by entering your Disqus shortname
+preserveTaxonomyNames = true #Preserves original names of taxnomies in content files.
+hasCJKLanguage = false  #For Chinese, Japanese and Korean.   I don't want this
+
+[pagination]
+  pagerSize = 5 #frontpage pagination.  Number of posts on the front page
+
+[services.googleAnalytics]
+  id = ""
+
+[services.disqus]
+  shortname = ""
+
+[outputs] #Output formats for the homepage
+home = ["HTML", "RSS", "Algolia"] #Home page should be rendered in HTML, that an RSS feed should be generated for my home page, and that it should be indexed by Algolia
+
+[params]
+  header_image = "img/daehlie-stride.avif"  #For main image on my site
+  SEOTitle = "daehl-e | Nordic Numbers Blog"  #For what's displayed in search engine results
+  description = "Skiing statistics | Ski statistics" #Description of site for SEO purposes
+  keyword = "skiing, nordic, langrenn, statistics, stats, skiskyting, biathlong, elo" #Keywords relevant to site for SEO
+  slogan = "Come Nord Out"
+  upstreamAttribution = true
+
+  image_404 = "img/404-bg.jpg"
+  title_404 = "You went skiing through the wrong random forest"
+  omit_categories = false
+
+  # leancloud storage for page view counter
+  page_view_counter = false 
+  leancloud_app_id = ""
+  leancloud_app_key = ""
+
+  # algolia site search
+  algolia_search = true
+  algolia_appId = ""
+  algolia_indexName = ""
+  algolia_apiKey = ""
+
+  # Sidebar settings
+  sidebar_about_description = "Bored Data Scientist in Washington DC.  Perenniel American Birkebeiner skier, and devout club runner"
+  sidebar_avatar = "img/headshot.jpg"      # use absolute URL, seeing it's used in both `/` and `/about/`
+
+  featured_tags = false #Enables featured tags on the site
+  featured_condition_size = 1 #How many posts required for a tag to be featured
+
+  #Look at getting other analytics and comment section
+  # Baidu Analytics
+  ba_track_id = "" #Configures Baidu analytics tracking id
+  
+  # We need a proxy to access Disqus api in China
+  # Follow https://github.com/zhaohuabing/disqus-php-api to set up your own disqus proxy
+  disqus_proxy = ""
+  disqus_site = ""
+
+  # Twikoo comments
+  # Follow https://twikoo.js.org/ to set up your own env_id
+  twikoo_env_id = ""
+
+  #Enable wechat pay & alipay to allow readers send reward money if they like the articles 
+  reward = false 
+  # reward_guide = "如果这篇文章对你有用,请随意打赏" 
+
+  friends = true #Links to friends blogs or websites
+  bookmarks = false #Disables bookmarks. If true, params.social has the info below
+  about_me = true #Includes the about me section
+
+  # Include any custom CSS and/or JS files, url or relative to /static folder
+  #custom_css = ["css/lightbox.css", "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css", "css/main.css"]
+  #custom_js = ["js/lightbox.js", "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js", "js/main.js"]
+
+  [params.social]
+  rss            = true 
+  email          = "syverjohansen@gmail.com"
+  #facebook      = "full profile url in facebook"
+  #googleplus    = "full profile url in googleplus"
+  #twitter       = "full profile url in twitter"
+  #linkedin       = "https://www.linkedin.com/in/yourlinkedinid"
+  #stackoverflow  = "https://stackoverflow.com/users/yourstackoverflowid"
+  #instagram     = "full profile url in instagram"
+  github         = "https://github.com/syverjohansen"
+  strava         = "https://www.strava.com/athletes/31287581"
+  #wechat         = "your wechat qr code image"
+  #medium        = "full profile url in medium"
+  #slack         = "full workspace url in slack"
+  #pinterest     = "full profile url in pinterest"
+  #reddit        = "full profile url in reddit"
+  #gitlab        = "full profile url in gitlab"
+  #mastodon      = "full profile url in mastodon"
+  #keybase       = "full profile url in keybase"
+  #xing          = "https://www.xing.com/profile/yourxingid"
+  #git           = "full profile url for git user"
+  
+  #The links for freidns
+  [[params.friend_link]]
+  #title = "Linda的博客"
+  #href =  "https://zhaozhihan.com"
+
+  #The links for bookmarks
+  [[params.bookmark_link]] 
+  title =  "Martin Fowler"
+  href =  "https://martinfowler.com"
+  [[params.bookmark_link]]
+  title = "ServiceMesher"
+  href =  "http://www.servicemesher.com"
+  [[params.bookmark_link]]
+  title =  "Pxhere"
+  href = "https://pxhere.com"
+  [[params.bookmark_link]]
+  title = "unsplash"
+  href = "https://unsplash.com"
+  
+  #For custom menu items for site's navigation.  Edits the top row on the site
+  #Curiously, not all the menu items are up top there.
+[[params.addtional_menus]]
+title = "About"
+href = "/about/"
+
+[[params.addtional_menus]]
+title = "Alpine"
+href = "/alpine/"
+
+[[params.addtional_menus]]
+title = "Biathlon"
+href = "/biathlon/"
+
+[[params.addtional_menus]]
+title = "Cross Country"
+href = "/cross-country/"
+
+[[params.addtional_menus]]
+title = "Nordic Combined"
+href = "/nordic-combined/"
+
+[[params.addtional_menus]]
+title = "Ski Jumping"
+href = "/ski-jumping/"
+
+[[params.addtional_menus]]
+title = "Games"
+href = "/games/"
+
+
+
+[outputFormats.Algolia] #Configures an output format for generating a JSON file suitable for Algolia search indexing
+baseName = "algolia"
+isPlainText = true
+mediaType = "application/json"
+notAlternative = true
+
+[params.algolia]
+vars = ["title", "summary", "date", "publishdate", "expirydate", "permalink"] #Which page variables should be included in the Algolia JSON output
+params = ["categories", "tags"]  #Whichparameters should be included in the Algolia JSON output
+
+[markup]
+  [markup.tableOfContents]
+    endLevel = 2 #Heading level at which the table of contents should start
+    startLevel = 1 #The heading level at which the table of contents should end
+  [markup.highlight] 
+    style = "dracula" #Syntax highlighting in code blocks
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
