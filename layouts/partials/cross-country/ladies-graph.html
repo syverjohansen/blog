@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ladies Chart.js Data Visualization</title>
+    <style>
+        .container {
+            margin: 20px;
+        }
+
+        #ladies-chart-container {
+            width: 100%;
+            height: 400px;
+        }
+
+        .ladies-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <input type="text" id="ladies-search-box" placeholder="Search for a skier..." />
+        <div id="ladies-menu" class="ladies-list"></div>
+        
+        <div>
+            <label>
+                <input type="radio" name="ladies-x-axis" value="Date" checked> Date
+                <input type="radio" name="ladies-x-axis" value="Exp"> Exp
+            </label>
+            <label>
+                <input type="radio" name="ladies-y-axis" value="Total" checked> Total
+                <input type="radio" name="ladies-y-axis" value="Pct"> Pct
+            </label>
+        </div>
+
+        <!-- Distance Type Selection -->
+        <div>
+            <label>
+                <input type="radio" name="ladies-distance-type" value="Overall" checked> Overall
+                <input type="radio" name="ladies-distance-type" value="Distance"> Distance
+                <input type="radio" name="ladies-distance-type" value="Sprint"> Sprint
+            </label>
+        </div>
+
+        <!-- Technique Type Selection -->
+        <div>
+            <label>
+                <input type="radio" name="ladies-technique-type" value="Overall" checked> Overall
+                <input type="radio" name="ladies-technique-type" value="Classic"> Classic
+                <input type="radio" name="ladies-technique-type" value="Freestyle"> Freestyle
+            </label>
+        </div>
+        <button id="ladies-generate-chart">Generate Chart</button>
+
+        <div id="ladies-chart-container">
+            <canvas id="ladiesChart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let ladiesChartInstance = null;
+        const selectedLadiesSkiers = new Set();
+        let ladiesSkiersMap = {}; // Store ID to name mapping
+
+        // Fetch ladies IDs and names from L_current_ids.json
+        fetch('/python/cross-country/excel365/L_current_ids.json')
+            .then(response => response.json())
+            .then(data => {
+                ladiesSkiersMap = Object.fromEntries(Object.entries(data)); // Create a map of ladies ID to name
+
+                const ladiesMenu = document.getElementById('ladies-menu');
+                const ladiesSearchBox = document.getElementById('ladies-search-box');
+                const ladiesGenerateChartButton = document.getElementById('ladies-generate-chart');
+
+                const ladiesSkiersData = Object.entries(data);
+
+                const renderLadiesSkiers = (filter = "") => {
+                    ladiesMenu.innerHTML = "";
+                    const selected = ladiesSkiersData.filter(([id]) => selectedLadiesSkiers.has(id));
+                    const unselected = ladiesSkiersData.filter(([id, name]) => !selectedLadiesSkiers.has(id) && name.toLowerCase().includes(filter.toLowerCase()));
+
+                    // Render selected ladies first
+                    selected.forEach(([id, name]) => {
+                        const label = document.createElement('label');
+                        label.innerHTML = `<input type="checkbox" class="ladies-checkbox" value="${id}" checked> ${name}`;
+                        ladiesMenu.appendChild(label);
+                    });
+
+                    // Render filtered unselected ladies
+                    unselected.forEach(([id, name]) => {
+                        const label = document.createElement('label');
+                        label.innerHTML = `<input type="checkbox" class="ladies-checkbox" value="${id}"> ${name}`;
+                        ladiesMenu.appendChild(label);
+                    });
+                };
+
+                // Initial render with all ladies
+                renderLadiesSkiers();
+
+                ladiesSearchBox.addEventListener('input', (event) => {
+                    renderLadiesSkiers(event.target.value);
+                });
+
+                ladiesMenu.addEventListener('change', (event) => {
+                    if (event.target.classList.contains('ladies-checkbox')) {
+                        const ladiesId = event.target.value;
+                        if (event.target.checked) {
+                            selectedLadiesSkiers.add(ladiesId);
+                        } else {
+                            selectedLadiesSkiers.delete(ladiesId);
+                        }
+                    }
+                });
+
+                ladiesGenerateChartButton.addEventListener('click', () => {
+                    generateLadiesChart();
+                });
+            })
+            .catch(error => console.error('Error loading ladies list:', error));
+
+        function generateLadiesChart() {
+            const selectedSkiers = Array.from(document.querySelectorAll('.ladies-checkbox:checked')).map(cb => cb.value);
+            const xAxis = document.querySelector('input[name="ladies-x-axis"]:checked').value;
+            const yAxis = document.querySelector('input[name="ladies-y-axis"]:checked').value;
+            const distanceType = document.querySelector('input[name="ladies-distance-type"]:checked').value;
+            const techniqueType = document.querySelector('input[name="ladies-technique-type"]:checked').value;
+
+            // Determine the correct Elo field based on selected distanceType and techniqueType
+            let eloType;
+            if (distanceType === "Overall" && techniqueType === "Overall") {
+                eloType = "Elo";
+            } else if (distanceType === "Distance" && techniqueType === "Overall") {
+                eloType = "Distance_Elo";
+            } else if (distanceType === "Distance" && techniqueType === "Classic") {
+                eloType = "Distance_C_Elo";
+            } else if (distanceType === "Distance" && techniqueType === "Freestyle") {
+                eloType = "Distance_F_Elo";
+            } else if (distanceType === "Sprint" && techniqueType === "Overall") {
+                eloType = "Sprint_Elo";
+            } else if (distanceType === "Sprint" && techniqueType === "Classic") {
+                eloType = "Sprint_C_Elo";
+            } else if (distanceType === "Sprint" && techniqueType === "Freestyle") {
+                eloType = "Sprint_F_Elo";
+            } else if (distanceType === "Overall" && techniqueType === "Classic") {
+                eloType = "Classic_Elo";
+            } else if (distanceType === "Overall" && techniqueType === "Freestyle") {
+                eloType = "Freestyle_Elo";
+            }
+
+            const fetchLadiesData = async (ladies) => {
+               // const fileSuffix = (yAxis === 'Pct') ? '_pct' : '';
+                const response = await fetch(`/python/cross-country/excel365/L/${ladies}.json`);
+                const json = await response.json();
+                console.log('Fetched data for ladies skier:', ladies, 'File:', `${ladies}.json`, json);
+                return json;
+            };
+
+            Promise.all(selectedSkiers.map(fetchLadiesData))
+                .then(data => {
+                    const allData = data.flatMap(d => {
+                        if (Array.isArray(d)) {
+                            // Handle case where d is an array
+                            return d.map(entry => {
+                                const isPct = (yAxis === 'Pct');
+                                const eloValue = isPct ? (entry[`${eloType}_Pct`] ?? null) : entry[eloType];
+                                return {
+                                    Date: entry.Date,
+                                    Exp: entry.Exp,
+                                    Elo: eloValue,
+                                    ID: entry.ID
+                                };
+                            });
+                        } else {
+                            // Handle case where d is an object
+                            return Object.values(d).map(entry => {
+                                const isPct = (yAxis === 'Pct');
+                                const eloValue = isPct ? (entry[`${eloType}_Pct`] ?? null) : entry[eloType];
+                                return {
+                                    Date: entry.Date,
+                                    Exp: entry.Exp,
+                                    Elo: eloValue,
+                                    ID: entry.ID
+                                };
+                            });
+                        }
+                    });
+
+                    console.log('All constructed data:', allData);
+                    let labels;
+                    if (xAxis === "Date") {
+                        const allDates = Array.from(new Set(allData.map(entry => entry.Date)));
+                        labels = allDates.sort((a, b) => new Date(a) - new Date(b));
+                    } else {
+                        labels = Array.from(new Set(allData.map(entry => entry[xAxis]))).sort((a, b) => a - b);
+                    }
+
+                    const yAxisMapping = {
+                        'Total': 'Elo',
+                        'Pct': 'Elo'
+                    };
+
+                    const datasets = selectedSkiers.map(ladies => {
+                        const ladiesName = ladiesSkiersMap[ladies] || ladies; // Use ladies name for label, fallback to ID if name not found
+                        const filteredData = allData.filter(entry => entry.ID === parseInt(ladies));
+
+                        const dataPoints = labels.map(label => {
+                            const entries = filteredData.filter(entry => entry[xAxis] === label);
+                            const yAxisValues = entries.map(entry => entry[yAxisMapping[yAxis]] || null);
+                            return yAxisValues[0] !== undefined ? yAxisValues[0] : null;
+                        });
+
+                        const smoothedDataPoints = applyLadiesRollingAverage(dataPoints, 5);
+
+                        return {
+                            label: ladiesName,
+                            data: smoothedDataPoints,
+                            borderColor: getRandomLadiesColor(),
+                            fill: false
+                        };
+                    });
+
+                    function applyLadiesRollingAverage(data, windowSize) {
+                        let result = [];
+                        for (let i = 0; i < data.length; i++) {
+                            let window = data.slice(Math.max(0, i - windowSize + 1), i + 1);
+                            let validValues = window.filter(value => value !== null);
+                            let avg = validValues.length > 0
+                                ? validValues.reduce((sum, value) => sum + value, 0) / validValues.length
+                                : null;
+                            result.push(avg);
+                        }
+                        return result;
+                    }
+
+                    const ctx = document.getElementById('ladiesChart').getContext('2d');
+
+                    if (ladiesChartInstance) {
+                        ladiesChartInstance.destroy();
+                    }
+
+                    ladiesChartInstance = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: datasets
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    title: { display: true, text: xAxis },
+                                    ticks: { autoSkip: true }
+                                },
+                                y: {
+                                    title: { display: true, text: yAxis },
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching data for chart:', error));
+        }
+
+        function getRandomLadiesColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+
+</body>
+
+</html>

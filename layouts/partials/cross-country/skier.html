@@ -1,0 +1,34 @@
+{{ define "header" }}
+<header class="intro-header" style="background-image: url('{{ .Site.Params.header_image | relURL }}')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                    <h1 id="skierTitle">Skier Profile</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<script>
+    async function updateHeader() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const gender = urlParams.get('gender')?.toUpperCase();
+        const id = urlParams.get('id');
+
+        const response = await fetch(`/python/excel365/${gender}/skier_info.json`);
+        const skierInfo = await response.json();
+        const skier = skierInfo.find(s => s.id.toString() === id);
+        
+        if (skier) {
+            document.querySelector('.intro-header').style.backgroundImage = `url(${skier.image})`;
+            document.getElementById('skierTitle').textContent = `Skier Profile for ${skier.skier}`;
+        }
+    }
+    updateHeader();
+</script>
+{{ end }}
+
+{{ define "main" }}
+    {{ partial "skier-table.html" . }}
+{{ end }}

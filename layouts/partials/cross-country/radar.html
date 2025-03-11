@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Chart Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<canvas id="radarChart" width="400" height="400"></canvas>
+
+<script>
+    // Function to create the radar chart with the data
+    function createRadarChart(data) {
+        const mostRecentEntry = data[data.length - 1];
+
+        const radarData = {
+            Elo_Pct: mostRecentEntry.Elo_Pct,
+            Distance_Elo_Pct: mostRecentEntry.Distance_Elo_Pct,
+            Distance_C_Elo_Pct: mostRecentEntry.Distance_C_Elo_Pct,
+            Distance_F_Elo_Pct: mostRecentEntry.Distance_F_Elo_Pct,
+            Sprint_Elo_Pct: mostRecentEntry.Sprint_Elo_Pct,
+            Sprint_C_Elo_Pct: mostRecentEntry.Sprint_C_Elo_Pct,
+            Sprint_F_Elo_Pct: mostRecentEntry.Sprint_F_Elo_Pct,
+            Classic_Elo_Pct: mostRecentEntry.Classic_Elo_Pct,
+            Freestyle_Elo_Pct: mostRecentEntry.Freestyle_Elo_Pct
+        };
+
+        const radarLabels = [
+            "Elo Pct", "Distance Elo Pct", "Distance C Elo Pct",
+            "Distance F Elo Pct", "Sprint Elo Pct", "Sprint C Elo Pct",
+            "Sprint F Elo Pct", "Classic Elo Pct", "Freestyle Elo Pct"
+        ];
+
+        const radarValues = [
+            radarData.Elo_Pct,
+            radarData.Distance_Elo_Pct,
+            radarData.Distance_C_Elo_Pct,
+            radarData.Distance_F_Elo_Pct,
+            radarData.Sprint_Elo_Pct,
+            radarData.Sprint_C_Elo_Pct,
+            radarData.Sprint_F_Elo_Pct,
+            radarData.Classic_Elo_Pct,
+            radarData.Freestyle_Elo_Pct
+        ];
+
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        return new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: radarLabels,
+                datasets: [{
+                    label: 'Most Recent Elo Percentiles',
+                    data: radarValues,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: false
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }
+            }
+        });
+    }
+
+    // Function to attempt fetching JSON with error handling
+    async function fetchWithFallback() {
+        /*const urlParts = window.location.pathname.split('/');
+        const sex = urlParts[urlParts.length - 3];
+        const id = urlParts[urlParts.length - 2];*/
+        const urlParams = new URLSearchParams(window.location.search);
+        const gender = urlParams.get('gender')?.toUpperCase();
+        const id = urlParams.get('id');
+
+        console.log('Initial Sex:', gender);
+        console.log('ID:', id);
+
+        // Try the original case first
+        try {
+            const response = await fetch(`/python/cross-country/excel365/${gender}/${id}.json`);
+            if (!response.ok) throw new Error('First attempt failed');
+            const data = await response.json();
+            return createRadarChart(data);
+        } catch (error) {
+            console.log('First attempt failed, trying alternate case...');
+            
+            // Try the opposite case
+            const alternateSex = sex === 'l' ? 'L' : sex === 'L' ? 'l' : null;
+            if (!alternateSex) {
+                console.error('Invalid sex parameter in URL');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/python/cross-country/excel365/${alternateSex}/${id}.json`);
+                if (!response.ok) throw new Error('Both attempts failed');
+                const data = await response.json();
+                return createRadarChart(data);
+            } catch (error) {
+                console.error('Failed to load data with both cases:', error);
+            }
+        }
+    }
+
+    // Initialize the chart with error handling
+    fetchWithFallback();
+</script>
+
+</body>
+</html>
