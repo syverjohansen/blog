@@ -4507,3 +4507,497 @@ INFO [2024-12-23 22:10:53] Running women's simulation 470
 INFO [2024-12-23 22:10:56] Running women's simulation 480
 INFO [2024-12-23 22:10:59] Running women's simulation 490
 INFO [2024-12-23 22:11:03] Running women's simulation 500
+INFO [2025-03-19 08:14:57] Starting men's season simulation
+INFO [2025-03-19 08:14:57] Starting season simulation with 500 iterations
+INFO [2025-03-19 08:14:57] Number of skiers: 60
+INFO [2025-03-19 08:14:57] World Cup races remaining: Distance: 0, Distance_C: 1, Distance_F: 0, Sprint_C: 0, Sprint_F: 2
+INFO [2025-03-19 08:14:57] Stage races remaining: Distance: 0, Distance_C: 0, Distance_F: 0, Sprint_C: 0, Sprint_F: 0
+INFO [2025-03-19 08:14:57] TdS races remaining: 0
+INFO [2025-03-19 08:14:57] Number of male skiers: 30
+INFO [2025-03-19 08:14:57] Current men's standings loaded. Top 5:
+INFO [2025-03-19 08:14:57] Johannes Høsflot Klæbo: 1803
+INFO [2025-03-19 08:14:57] Edvin Anger: 1515
+INFO [2025-03-19 08:14:57] Harald Østberg Amundsen: 1339
+INFO [2025-03-19 08:14:57] Hugo Lapalus: 1324
+INFO [2025-03-19 08:14:57] Simen Hegstad Krüger: 1289
+INFO [2025-03-19 08:14:58] Running men's simulation 10
+INFO [2025-03-19 08:14:58] Running men's simulation 20
+INFO [2025-03-19 08:14:59] Running men's simulation 30
+INFO [2025-03-19 08:14:59] Running men's simulation 40
+INFO [2025-03-19 08:15:00] Running men's simulation 50
+INFO [2025-03-19 08:15:01] Running men's simulation 60
+INFO [2025-03-19 08:15:01] Running men's simulation 70
+INFO [2025-03-19 08:15:01] Running men's simulation 80
+INFO [2025-03-19 08:15:02] Running men's simulation 90
+INFO [2025-03-19 08:15:02] Running men's simulation 100
+INFO [2025-03-19 08:15:03] Running men's simulation 110
+INFO [2025-03-19 08:15:03] Running men's simulation 120
+INFO [2025-03-19 08:15:04] Running men's simulation 130
+INFO [2025-03-19 08:15:04] Running men's simulation 140
+INFO [2025-03-19 08:15:04] Running men's simulation 150
+INFO [2025-03-19 08:15:05] Running men's simulation 160
+INFO [2025-03-19 08:15:05] Running men's simulation 170
+INFO [2025-03-19 08:15:06] Running men's simulation 180
+INFO [2025-03-19 08:15:06] Running men's simulation 190
+INFO [2025-03-19 08:15:06] Running men's simulation 200
+INFO [2025-03-19 08:15:07] Running men's simulation 210
+INFO [2025-03-19 08:15:07] Running men's simulation 220
+INFO [2025-03-19 08:15:08] Running men's simulation 230
+INFO [2025-03-19 08:15:08] Running men's simulation 240
+INFO [2025-03-19 08:15:08] Running men's simulation 250
+INFO [2025-03-19 08:15:09] Running men's simulation 260
+INFO [2025-03-19 08:15:09] Running men's simulation 270
+INFO [2025-03-19 08:15:10] Running men's simulation 280
+INFO [2025-03-19 08:15:10] Running men's simulation 290
+INFO [2025-03-19 08:15:11] Running men's simulation 300
+INFO [2025-03-19 08:15:11] Running men's simulation 310
+INFO [2025-03-19 08:15:11] Running men's simulation 320
+INFO [2025-03-19 08:15:12] Running men's simulation 330
+INFO [2025-03-19 08:15:12] Running men's simulation 340
+INFO [2025-03-19 08:15:12] Running men's simulation 350
+INFO [2025-03-19 08:15:13] Running men's simulation 360
+INFO [2025-03-19 08:15:13] Running men's simulation 370
+INFO [2025-03-19 08:15:14] Running men's simulation 380
+INFO [2025-03-19 08:15:14] Running men's simulation 390
+INFO [2025-03-19 08:15:14] Running men's simulation 400
+INFO [2025-03-19 08:15:15] Running men's simulation 410
+INFO [2025-03-19 08:15:15] Running men's simulation 420
+INFO [2025-03-19 08:15:16] Running men's simulation 430
+INFO [2025-03-19 08:15:16] Running men's simulation 440
+INFO [2025-03-19 08:15:16] Running men's simulation 450
+INFO [2025-03-19 08:15:17] Running men's simulation 460
+INFO [2025-03-19 08:15:17] Running men's simulation 470
+INFO [2025-03-19 08:15:18] Running men's simulation 480
+INFO [2025-03-19 08:15:18] Running men's simulation 490
+INFO [2025-03-19 08:15:18] Running men's simulation 500
+INFO [2025-03-19 08:17:58] Starting women's season simulation
+INFO [2025-03-19 08:17:58] Starting season simulation with 500 iterations
+INFO [2025-03-19 08:17:58] Number of skiers: 60
+INFO [2025-03-19 08:17:58] World Cup races remaining: Distance: 0, Distance_C: 1, Distance_F: 0, Sprint_C: 0, Sprint_F: 2
+INFO [2025-03-19 08:17:58] Stage races remaining: Distance: 0, Distance_C: 0, Distance_F: 0, Sprint_C: 0, Sprint_F: 0
+INFO [2025-03-19 08:17:58] TdS races remaining: 0
+INFO [2025-03-19 08:17:58] Number of female skiers: 30
+INFO [2025-03-19 08:17:59] Current women's standings loaded. Top 5:
+INFO [2025-03-19 08:17:59] Jessie Diggins: 2071
+INFO [2025-03-19 08:17:59] Victoria Carl: 1641
+INFO [2025-03-19 08:17:59] Astrid Øyre Slind: 1515
+INFO [2025-03-19 08:17:59] Kerttu Niskanen: 1510
+INFO [2025-03-19 08:17:59] Therese Johaug: 1245
+INFO [2025-03-19 08:17:59] Running women's simulation 10
+INFO [2025-03-19 08:18:00] Running women's simulation 20
+INFO [2025-03-19 08:18:00] Running women's simulation 30
+INFO [2025-03-19 08:18:00] Running women's simulation 40
+INFO [2025-03-19 08:18:01] Running women's simulation 50
+INFO [2025-03-19 08:18:01] Running women's simulation 60
+INFO [2025-03-19 08:18:02] Running women's simulation 70
+INFO [2025-03-19 08:18:02] Running women's simulation 80
+INFO [2025-03-19 08:18:03] Running women's simulation 90
+INFO [2025-03-19 08:18:03] Running women's simulation 100
+INFO [2025-03-19 08:18:04] Running women's simulation 110
+INFO [2025-03-19 08:18:04] Running women's simulation 120
+INFO [2025-03-19 08:18:05] Running women's simulation 130
+INFO [2025-03-19 08:18:05] Running women's simulation 140
+INFO [2025-03-19 08:18:06] Running women's simulation 150
+INFO [2025-03-19 08:18:06] Running women's simulation 160
+INFO [2025-03-19 08:18:07] Running women's simulation 170
+INFO [2025-03-19 08:18:07] Running women's simulation 180
+INFO [2025-03-19 08:18:08] Running women's simulation 190
+INFO [2025-03-19 08:18:08] Running women's simulation 200
+INFO [2025-03-19 08:18:09] Running women's simulation 210
+INFO [2025-03-19 08:18:09] Running women's simulation 220
+INFO [2025-03-19 08:18:09] Running women's simulation 230
+INFO [2025-03-19 08:18:10] Running women's simulation 240
+INFO [2025-03-19 08:18:10] Running women's simulation 250
+INFO [2025-03-19 08:18:11] Running women's simulation 260
+INFO [2025-03-19 08:18:11] Running women's simulation 270
+INFO [2025-03-19 08:18:12] Running women's simulation 280
+INFO [2025-03-19 08:18:12] Running women's simulation 290
+INFO [2025-03-19 08:18:13] Running women's simulation 300
+INFO [2025-03-19 08:18:13] Running women's simulation 310
+INFO [2025-03-19 08:18:14] Running women's simulation 320
+INFO [2025-03-19 08:18:14] Running women's simulation 330
+INFO [2025-03-19 08:18:15] Running women's simulation 340
+INFO [2025-03-19 08:18:15] Running women's simulation 350
+INFO [2025-03-19 08:18:16] Running women's simulation 360
+INFO [2025-03-19 08:18:16] Running women's simulation 370
+INFO [2025-03-19 08:18:17] Running women's simulation 380
+INFO [2025-03-19 08:18:17] Running women's simulation 390
+INFO [2025-03-19 08:18:17] Running women's simulation 400
+INFO [2025-03-19 08:18:18] Running women's simulation 410
+INFO [2025-03-19 08:18:18] Running women's simulation 420
+INFO [2025-03-19 08:18:19] Running women's simulation 430
+INFO [2025-03-19 08:18:19] Running women's simulation 440
+INFO [2025-03-19 08:18:20] Running women's simulation 450
+INFO [2025-03-19 08:18:20] Running women's simulation 460
+INFO [2025-03-19 08:18:21] Running women's simulation 470
+INFO [2025-03-19 08:18:21] Running women's simulation 480
+INFO [2025-03-19 08:18:22] Running women's simulation 490
+INFO [2025-03-19 08:18:22] Running women's simulation 500
+INFO [2025-03-19 21:29:20] Starting men's season simulation
+INFO [2025-03-19 21:29:20] Starting season simulation with 500 iterations
+INFO [2025-03-19 21:29:20] Number of skiers: 60
+INFO [2025-03-19 21:29:20] World Cup races remaining: Distance: 0, Distance_C: 1, Distance_F: 0, Sprint_C: 0, Sprint_F: 2
+INFO [2025-03-19 21:29:20] Stage races remaining: Distance: 0, Distance_C: 0, Distance_F: 0, Sprint_C: 0, Sprint_F: 0
+INFO [2025-03-19 21:29:20] TdS races remaining: 0
+INFO [2025-03-19 21:29:20] Number of male skiers: 30
+INFO [2025-03-19 21:29:20] Current men's standings loaded. Top 5:
+INFO [2025-03-19 21:29:20] Johannes Høsflot Klæbo: 1803
+INFO [2025-03-19 21:29:20] Edvin Anger: 1515
+INFO [2025-03-19 21:29:20] Harald Østberg Amundsen: 1339
+INFO [2025-03-19 21:29:20] Hugo Lapalus: 1324
+INFO [2025-03-19 21:29:20] Simen Hegstad Krüger: 1289
+INFO [2025-03-19 21:29:20] Running men's simulation 10
+INFO [2025-03-19 21:29:21] Running men's simulation 20
+INFO [2025-03-19 21:29:22] Running men's simulation 30
+INFO [2025-03-19 21:29:23] Running men's simulation 40
+INFO [2025-03-19 21:29:23] Running men's simulation 50
+INFO [2025-03-19 21:29:24] Running men's simulation 60
+INFO [2025-03-19 21:29:25] Running men's simulation 70
+INFO [2025-03-19 21:29:26] Running men's simulation 80
+INFO [2025-03-19 21:29:27] Running men's simulation 90
+INFO [2025-03-19 21:29:28] Running men's simulation 100
+INFO [2025-03-19 21:29:28] Running men's simulation 110
+INFO [2025-03-19 21:29:29] Running men's simulation 120
+INFO [2025-03-19 21:29:30] Running men's simulation 130
+INFO [2025-03-19 21:29:31] Running men's simulation 140
+INFO [2025-03-19 21:29:31] Running men's simulation 150
+INFO [2025-03-19 21:29:32] Running men's simulation 160
+INFO [2025-03-19 21:29:33] Running men's simulation 170
+INFO [2025-03-19 21:29:34] Running men's simulation 180
+INFO [2025-03-19 21:29:34] Running men's simulation 190
+INFO [2025-03-19 21:29:35] Running men's simulation 200
+INFO [2025-03-19 21:29:36] Running men's simulation 210
+INFO [2025-03-19 21:29:37] Running men's simulation 220
+INFO [2025-03-19 21:29:37] Running men's simulation 230
+INFO [2025-03-19 21:29:38] Running men's simulation 240
+INFO [2025-03-19 21:29:39] Running men's simulation 250
+INFO [2025-03-19 21:29:40] Running men's simulation 260
+INFO [2025-03-19 21:29:40] Running men's simulation 270
+INFO [2025-03-19 21:29:41] Running men's simulation 280
+INFO [2025-03-19 21:29:42] Running men's simulation 290
+INFO [2025-03-19 21:29:43] Running men's simulation 300
+INFO [2025-03-19 21:29:43] Running men's simulation 310
+INFO [2025-03-19 21:29:44] Running men's simulation 320
+INFO [2025-03-19 21:29:45] Running men's simulation 330
+INFO [2025-03-19 21:30:19] Starting men's season simulation
+INFO [2025-03-19 21:30:19] Starting season simulation with 500 iterations
+INFO [2025-03-19 21:30:19] Number of skiers: 60
+INFO [2025-03-19 21:30:19] World Cup races remaining: Distance: 0, Distance_C: 1, Distance_F: 0, Sprint_C: 0, Sprint_F: 2
+INFO [2025-03-19 21:30:19] Stage races remaining: Distance: 0, Distance_C: 0, Distance_F: 0, Sprint_C: 0, Sprint_F: 0
+INFO [2025-03-19 21:30:19] TdS races remaining: 0
+INFO [2025-03-19 21:30:19] Number of male skiers: 30
+INFO [2025-03-19 21:30:19] Current men's standings loaded. Top 5:
+INFO [2025-03-19 21:30:19] Johannes Høsflot Klæbo: 1803
+INFO [2025-03-19 21:30:19] Edvin Anger: 1515
+INFO [2025-03-19 21:30:19] Harald Østberg Amundsen: 1339
+INFO [2025-03-19 21:30:19] Hugo Lapalus: 1324
+INFO [2025-03-19 21:30:19] Simen Hegstad Krüger: 1289
+INFO [2025-03-19 21:30:20] Running men's simulation 10
+INFO [2025-03-19 21:30:20] Running men's simulation 20
+INFO [2025-03-19 21:30:21] Running men's simulation 30
+INFO [2025-03-19 21:30:21] Running men's simulation 40
+INFO [2025-03-19 21:30:22] Running men's simulation 50
+INFO [2025-03-19 21:30:22] Running men's simulation 60
+INFO [2025-03-19 21:30:23] Running men's simulation 70
+INFO [2025-03-19 21:30:23] Running men's simulation 80
+INFO [2025-03-19 21:30:23] Running men's simulation 90
+INFO [2025-03-19 21:30:24] Running men's simulation 100
+INFO [2025-03-19 21:30:24] Running men's simulation 110
+INFO [2025-03-19 21:30:25] Running men's simulation 120
+INFO [2025-03-19 21:30:25] Running men's simulation 130
+INFO [2025-03-19 21:30:26] Running men's simulation 140
+INFO [2025-03-19 21:30:26] Running men's simulation 150
+INFO [2025-03-19 21:30:26] Running men's simulation 160
+INFO [2025-03-19 21:30:27] Running men's simulation 170
+INFO [2025-03-19 21:30:27] Running men's simulation 180
+INFO [2025-03-19 21:30:28] Running men's simulation 190
+INFO [2025-03-19 21:30:28] Running men's simulation 200
+INFO [2025-03-19 21:30:29] Running men's simulation 210
+INFO [2025-03-19 21:30:29] Running men's simulation 220
+INFO [2025-03-19 21:30:29] Running men's simulation 230
+INFO [2025-03-19 21:30:30] Running men's simulation 240
+INFO [2025-03-19 21:30:30] Running men's simulation 250
+INFO [2025-03-19 21:30:31] Running men's simulation 260
+INFO [2025-03-19 21:30:31] Running men's simulation 270
+INFO [2025-03-19 21:30:32] Running men's simulation 280
+INFO [2025-03-19 21:30:32] Running men's simulation 290
+INFO [2025-03-19 21:30:33] Running men's simulation 300
+INFO [2025-03-19 21:30:33] Running men's simulation 310
+INFO [2025-03-19 21:30:33] Running men's simulation 320
+INFO [2025-03-19 21:30:34] Running men's simulation 330
+INFO [2025-03-19 21:30:34] Running men's simulation 340
+INFO [2025-03-19 21:30:35] Running men's simulation 350
+INFO [2025-03-19 21:30:35] Running men's simulation 360
+INFO [2025-03-19 21:30:36] Running men's simulation 370
+INFO [2025-03-19 21:30:36] Running men's simulation 380
+INFO [2025-03-19 21:30:36] Running men's simulation 390
+INFO [2025-03-19 21:30:37] Running men's simulation 400
+INFO [2025-03-19 21:30:37] Running men's simulation 410
+INFO [2025-03-19 21:30:38] Running men's simulation 420
+INFO [2025-03-19 21:30:38] Running men's simulation 430
+INFO [2025-03-19 21:30:39] Running men's simulation 440
+INFO [2025-03-19 21:30:39] Running men's simulation 450
+INFO [2025-03-19 21:30:39] Running men's simulation 460
+INFO [2025-03-19 21:30:40] Running men's simulation 470
+INFO [2025-03-19 21:30:40] Running men's simulation 480
+INFO [2025-03-19 21:30:41] Running men's simulation 490
+INFO [2025-03-19 21:30:41] Running men's simulation 500
+INFO [2025-03-19 21:32:05] Starting men's season simulation
+INFO [2025-03-19 21:32:05] Starting season simulation with 500 iterations
+INFO [2025-03-19 21:32:05] Number of skiers: 60
+INFO [2025-03-19 21:32:05] World Cup races remaining: Distance: 0, Distance_C: 1, Distance_F: 0, Sprint_C: 0, Sprint_F: 2
+INFO [2025-03-19 21:32:05] Stage races remaining: Distance: 0, Distance_C: 0, Distance_F: 0, Sprint_C: 0, Sprint_F: 0
+INFO [2025-03-19 21:32:05] TdS races remaining: 0
+INFO [2025-03-19 21:32:05] Number of male skiers: 30
+INFO [2025-03-19 21:32:05] Current men's standings loaded. Top 5:
+INFO [2025-03-19 21:32:05] Johannes Høsflot Klæbo: 1803
+INFO [2025-03-19 21:32:05] Edvin Anger: 1515
+INFO [2025-03-19 21:32:05] Harald Østberg Amundsen: 1339
+INFO [2025-03-19 21:32:05] Hugo Lapalus: 1324
+INFO [2025-03-19 21:32:05] Simen Hegstad Krüger: 1289
+INFO [2025-03-19 21:32:06] Running men's simulation 10
+INFO [2025-03-19 21:32:06] Running men's simulation 20
+INFO [2025-03-19 21:32:07] Running men's simulation 30
+INFO [2025-03-19 21:32:07] Running men's simulation 40
+INFO [2025-03-19 21:32:08] Running men's simulation 50
+INFO [2025-03-19 21:32:08] Running men's simulation 60
+INFO [2025-03-19 21:32:08] Running men's simulation 70
+INFO [2025-03-19 21:32:09] Running men's simulation 80
+INFO [2025-03-19 21:32:09] Running men's simulation 90
+INFO [2025-03-19 21:32:10] Running men's simulation 100
+INFO [2025-03-19 21:32:10] Running men's simulation 110
+INFO [2025-03-19 21:32:11] Running men's simulation 120
+INFO [2025-03-19 21:32:11] Running men's simulation 130
+INFO [2025-03-19 21:32:12] Running men's simulation 140
+INFO [2025-03-19 21:32:12] Running men's simulation 150
+INFO [2025-03-19 21:32:12] Running men's simulation 160
+INFO [2025-03-19 21:32:13] Running men's simulation 170
+INFO [2025-03-19 21:32:13] Running men's simulation 180
+INFO [2025-03-19 21:32:14] Running men's simulation 190
+INFO [2025-03-19 21:32:14] Running men's simulation 200
+INFO [2025-03-19 21:32:15] Running men's simulation 210
+INFO [2025-03-19 21:32:15] Running men's simulation 220
+INFO [2025-03-19 21:32:16] Running men's simulation 230
+INFO [2025-03-19 21:32:16] Running men's simulation 240
+INFO [2025-03-19 21:32:17] Running men's simulation 250
+INFO [2025-03-19 21:32:17] Running men's simulation 260
+INFO [2025-03-19 21:32:17] Running men's simulation 270
+INFO [2025-03-19 21:32:18] Running men's simulation 280
+INFO [2025-03-19 21:32:18] Running men's simulation 290
+INFO [2025-03-19 21:32:19] Running men's simulation 300
+INFO [2025-03-19 21:32:19] Running men's simulation 310
+INFO [2025-03-19 21:32:20] Running men's simulation 320
+INFO [2025-03-19 21:32:20] Running men's simulation 330
+INFO [2025-03-19 21:32:20] Running men's simulation 340
+INFO [2025-03-19 21:32:21] Running men's simulation 350
+INFO [2025-03-19 21:32:21] Running men's simulation 360
+INFO [2025-03-19 21:32:22] Running men's simulation 370
+INFO [2025-03-19 21:32:22] Running men's simulation 380
+INFO [2025-03-19 21:32:23] Running men's simulation 390
+INFO [2025-03-19 21:32:23] Running men's simulation 400
+INFO [2025-03-19 21:32:23] Running men's simulation 410
+INFO [2025-03-19 21:32:24] Running men's simulation 420
+INFO [2025-03-19 21:32:24] Running men's simulation 430
+INFO [2025-03-19 21:32:25] Running men's simulation 440
+INFO [2025-03-19 21:32:25] Running men's simulation 450
+INFO [2025-03-19 21:32:26] Running men's simulation 460
+INFO [2025-03-19 21:32:26] Running men's simulation 470
+INFO [2025-03-19 21:32:27] Running men's simulation 480
+INFO [2025-03-19 21:32:27] Running men's simulation 490
+INFO [2025-03-19 21:32:27] Running men's simulation 500
+INFO [2025-03-19 21:32:27] Starting women's season simulation
+INFO [2025-03-19 21:32:27] Starting season simulation with 500 iterations
+INFO [2025-03-19 21:32:27] Number of skiers: 60
+INFO [2025-03-19 21:32:27] World Cup races remaining: Distance: 0, Distance_C: 1, Distance_F: 0, Sprint_C: 0, Sprint_F: 2
+INFO [2025-03-19 21:32:27] Stage races remaining: Distance: 0, Distance_C: 0, Distance_F: 0, Sprint_C: 0, Sprint_F: 0
+INFO [2025-03-19 21:32:27] TdS races remaining: 0
+INFO [2025-03-19 21:32:27] Number of female skiers: 30
+INFO [2025-03-19 21:32:27] Current women's standings loaded. Top 5:
+INFO [2025-03-19 21:32:27] Jessie Diggins: 2071
+INFO [2025-03-19 21:32:27] Victoria Carl: 1641
+INFO [2025-03-19 21:32:27] Astrid Øyre Slind: 1515
+INFO [2025-03-19 21:32:27] Kerttu Niskanen: 1510
+INFO [2025-03-19 21:32:27] Therese Johaug: 1245
+INFO [2025-03-19 21:32:28] Running women's simulation 10
+INFO [2025-03-19 21:32:28] Running women's simulation 20
+INFO [2025-03-19 21:32:29] Running women's simulation 30
+INFO [2025-03-19 21:32:29] Running women's simulation 40
+INFO [2025-03-19 21:32:30] Running women's simulation 50
+INFO [2025-03-19 21:32:30] Running women's simulation 60
+INFO [2025-03-19 21:32:31] Running women's simulation 70
+INFO [2025-03-19 21:32:31] Running women's simulation 80
+INFO [2025-03-19 21:32:31] Running women's simulation 90
+INFO [2025-03-19 21:32:32] Running women's simulation 100
+INFO [2025-03-19 21:32:32] Running women's simulation 110
+INFO [2025-03-19 21:32:33] Running women's simulation 120
+INFO [2025-03-19 21:32:33] Running women's simulation 130
+INFO [2025-03-19 21:32:34] Running women's simulation 140
+INFO [2025-03-19 21:32:34] Running women's simulation 150
+INFO [2025-03-19 21:32:35] Running women's simulation 160
+INFO [2025-03-19 21:32:35] Running women's simulation 170
+INFO [2025-03-19 21:32:36] Running women's simulation 180
+INFO [2025-03-19 21:32:36] Running women's simulation 190
+INFO [2025-03-19 21:32:36] Running women's simulation 200
+INFO [2025-03-19 21:32:37] Running women's simulation 210
+INFO [2025-03-19 21:32:37] Running women's simulation 220
+INFO [2025-03-19 21:32:38] Running women's simulation 230
+INFO [2025-03-19 21:32:38] Running women's simulation 240
+INFO [2025-03-19 21:32:39] Running women's simulation 250
+INFO [2025-03-19 21:32:39] Running women's simulation 260
+INFO [2025-03-19 21:32:40] Running women's simulation 270
+INFO [2025-03-19 21:32:40] Running women's simulation 280
+INFO [2025-03-19 21:32:40] Running women's simulation 290
+INFO [2025-03-19 21:32:41] Running women's simulation 300
+INFO [2025-03-19 21:32:41] Running women's simulation 310
+INFO [2025-03-19 21:32:42] Running women's simulation 320
+INFO [2025-03-19 21:32:42] Running women's simulation 330
+INFO [2025-03-19 21:32:43] Running women's simulation 340
+INFO [2025-03-19 21:32:43] Running women's simulation 350
+INFO [2025-03-19 21:32:44] Running women's simulation 360
+INFO [2025-03-19 21:32:44] Running women's simulation 370
+INFO [2025-03-19 21:32:44] Running women's simulation 380
+INFO [2025-03-19 21:32:45] Running women's simulation 390
+INFO [2025-03-19 21:32:45] Running women's simulation 400
+INFO [2025-03-19 21:32:46] Running women's simulation 410
+INFO [2025-03-19 21:32:46] Running women's simulation 420
+INFO [2025-03-19 21:32:47] Running women's simulation 430
+INFO [2025-03-19 21:32:54] Starting men's season simulation
+INFO [2025-03-19 21:32:54] Starting season simulation with 10 iterations
+INFO [2025-03-19 21:32:54] Number of skiers: 60
+INFO [2025-03-19 21:32:54] World Cup races remaining: Distance: 0, Distance_C: 1, Distance_F: 0, Sprint_C: 0, Sprint_F: 2
+INFO [2025-03-19 21:32:54] Stage races remaining: Distance: 0, Distance_C: 0, Distance_F: 0, Sprint_C: 0, Sprint_F: 0
+INFO [2025-03-19 21:32:54] TdS races remaining: 0
+INFO [2025-03-19 21:32:54] Number of male skiers: 30
+INFO [2025-03-19 21:32:54] Current men's standings loaded. Top 5:
+INFO [2025-03-19 21:32:54] Johannes Høsflot Klæbo: 1803
+INFO [2025-03-19 21:32:54] Edvin Anger: 1515
+INFO [2025-03-19 21:32:54] Harald Østberg Amundsen: 1339
+INFO [2025-03-19 21:32:54] Hugo Lapalus: 1324
+INFO [2025-03-19 21:32:54] Simen Hegstad Krüger: 1289
+INFO [2025-03-19 21:32:54] Running men's simulation 10
+INFO [2025-03-19 21:50:04] Starting men's season simulation
+INFO [2025-03-19 21:50:04] Starting season simulation with 500 iterations
+INFO [2025-03-19 21:50:04] Number of skiers: 60
+INFO [2025-03-19 21:50:04] World Cup races remaining: Distance: 0, Distance_C: 1, Distance_F: 0, Sprint_C: 0, Sprint_F: 2
+INFO [2025-03-19 21:50:04] Stage races remaining: Distance: 0, Distance_C: 0, Distance_F: 0, Sprint_C: 0, Sprint_F: 0
+INFO [2025-03-19 21:50:04] TdS races remaining: 0
+INFO [2025-03-19 21:50:04] Number of male skiers: 30
+INFO [2025-03-19 21:50:04] Current men's standings loaded. Top 5:
+INFO [2025-03-19 21:50:04] Johannes Høsflot Klæbo: 1803
+INFO [2025-03-19 21:50:04] Edvin Anger: 1515
+INFO [2025-03-19 21:50:04] Harald Østberg Amundsen: 1339
+INFO [2025-03-19 21:50:04] Hugo Lapalus: 1324
+INFO [2025-03-19 21:50:04] Simen Hegstad Krüger: 1289
+INFO [2025-03-19 21:50:05] Running men's simulation 10
+INFO [2025-03-19 21:50:05] Running men's simulation 20
+INFO [2025-03-19 21:50:06] Running men's simulation 30
+INFO [2025-03-19 21:50:06] Running men's simulation 40
+INFO [2025-03-19 21:50:07] Running men's simulation 50
+INFO [2025-03-19 21:50:07] Running men's simulation 60
+INFO [2025-03-19 21:50:07] Running men's simulation 70
+INFO [2025-03-19 21:50:08] Running men's simulation 80
+INFO [2025-03-19 21:50:08] Running men's simulation 90
+INFO [2025-03-19 21:50:09] Running men's simulation 100
+INFO [2025-03-19 21:50:09] Running men's simulation 110
+INFO [2025-03-19 21:50:10] Running men's simulation 120
+INFO [2025-03-19 21:50:10] Running men's simulation 130
+INFO [2025-03-19 21:50:11] Running men's simulation 140
+INFO [2025-03-19 21:50:11] Running men's simulation 150
+INFO [2025-03-19 21:50:12] Running men's simulation 160
+INFO [2025-03-19 21:50:12] Running men's simulation 170
+INFO [2025-03-19 21:50:12] Running men's simulation 180
+INFO [2025-03-19 21:50:13] Running men's simulation 190
+INFO [2025-03-19 21:50:13] Running men's simulation 200
+INFO [2025-03-19 21:50:14] Running men's simulation 210
+INFO [2025-03-19 21:50:14] Running men's simulation 220
+INFO [2025-03-19 21:50:15] Running men's simulation 230
+INFO [2025-03-19 21:50:15] Running men's simulation 240
+INFO [2025-03-19 21:50:15] Running men's simulation 250
+INFO [2025-03-19 21:50:16] Running men's simulation 260
+INFO [2025-03-19 21:50:16] Running men's simulation 270
+INFO [2025-03-19 21:50:17] Running men's simulation 280
+INFO [2025-03-19 21:50:17] Running men's simulation 290
+INFO [2025-03-19 21:50:18] Running men's simulation 300
+INFO [2025-03-19 21:50:18] Running men's simulation 310
+INFO [2025-03-19 21:50:18] Running men's simulation 320
+INFO [2025-03-19 21:50:19] Running men's simulation 330
+INFO [2025-03-19 21:50:19] Running men's simulation 340
+INFO [2025-03-19 21:50:20] Running men's simulation 350
+INFO [2025-03-19 21:50:20] Running men's simulation 360
+INFO [2025-03-19 21:50:21] Running men's simulation 370
+INFO [2025-03-19 21:50:21] Running men's simulation 380
+INFO [2025-03-19 21:50:21] Running men's simulation 390
+INFO [2025-03-19 21:50:22] Running men's simulation 400
+INFO [2025-03-19 21:50:22] Running men's simulation 410
+INFO [2025-03-19 21:50:23] Running men's simulation 420
+INFO [2025-03-19 21:50:23] Running men's simulation 430
+INFO [2025-03-19 21:50:24] Running men's simulation 440
+INFO [2025-03-19 21:50:24] Running men's simulation 450
+INFO [2025-03-19 21:50:24] Running men's simulation 460
+INFO [2025-03-19 21:50:25] Running men's simulation 470
+INFO [2025-03-19 21:50:25] Running men's simulation 480
+INFO [2025-03-19 21:50:26] Running men's simulation 490
+INFO [2025-03-19 21:50:26] Running men's simulation 500
+INFO [2025-03-19 21:50:26] Starting women's season simulation
+INFO [2025-03-19 21:50:26] Starting season simulation with 500 iterations
+INFO [2025-03-19 21:50:26] Number of skiers: 60
+INFO [2025-03-19 21:50:26] World Cup races remaining: Distance: 0, Distance_C: 1, Distance_F: 0, Sprint_C: 0, Sprint_F: 2
+INFO [2025-03-19 21:50:26] Stage races remaining: Distance: 0, Distance_C: 0, Distance_F: 0, Sprint_C: 0, Sprint_F: 0
+INFO [2025-03-19 21:50:26] TdS races remaining: 0
+INFO [2025-03-19 21:50:26] Number of female skiers: 30
+INFO [2025-03-19 21:50:26] Current women's standings loaded. Top 5:
+INFO [2025-03-19 21:50:26] Jessie Diggins: 2071
+INFO [2025-03-19 21:50:26] Victoria Carl: 1641
+INFO [2025-03-19 21:50:26] Astrid Øyre Slind: 1515
+INFO [2025-03-19 21:50:26] Kerttu Niskanen: 1510
+INFO [2025-03-19 21:50:26] Therese Johaug: 1245
+INFO [2025-03-19 21:50:26] Running women's simulation 10
+INFO [2025-03-19 21:50:27] Running women's simulation 20
+INFO [2025-03-19 21:50:27] Running women's simulation 30
+INFO [2025-03-19 21:50:28] Running women's simulation 40
+INFO [2025-03-19 21:50:28] Running women's simulation 50
+INFO [2025-03-19 21:50:29] Running women's simulation 60
+INFO [2025-03-19 21:50:29] Running women's simulation 70
+INFO [2025-03-19 21:50:30] Running women's simulation 80
+INFO [2025-03-19 21:50:30] Running women's simulation 90
+INFO [2025-03-19 21:50:31] Running women's simulation 100
+INFO [2025-03-19 21:50:31] Running women's simulation 110
+INFO [2025-03-19 21:50:31] Running women's simulation 120
+INFO [2025-03-19 21:50:32] Running women's simulation 130
+INFO [2025-03-19 21:50:32] Running women's simulation 140
+INFO [2025-03-19 21:50:33] Running women's simulation 150
+INFO [2025-03-19 21:50:33] Running women's simulation 160
+INFO [2025-03-19 21:50:34] Running women's simulation 170
+INFO [2025-03-19 21:50:34] Running women's simulation 180
+INFO [2025-03-19 21:50:34] Running women's simulation 190
+INFO [2025-03-19 21:50:35] Running women's simulation 200
+INFO [2025-03-19 21:50:35] Running women's simulation 210
+INFO [2025-03-19 21:50:36] Running women's simulation 220
+INFO [2025-03-19 21:50:36] Running women's simulation 230
+INFO [2025-03-19 21:50:37] Running women's simulation 240
+INFO [2025-03-19 21:50:37] Running women's simulation 250
+INFO [2025-03-19 21:50:38] Running women's simulation 260
+INFO [2025-03-19 21:50:38] Running women's simulation 270
+INFO [2025-03-19 21:50:39] Running women's simulation 280
+INFO [2025-03-19 21:50:39] Running women's simulation 290
+INFO [2025-03-19 21:50:40] Running women's simulation 300
+INFO [2025-03-19 21:50:40] Running women's simulation 310
+INFO [2025-03-19 21:50:40] Running women's simulation 320
+INFO [2025-03-19 21:50:41] Running women's simulation 330
+INFO [2025-03-19 21:50:41] Running women's simulation 340
+INFO [2025-03-19 21:50:42] Running women's simulation 350
+INFO [2025-03-19 21:50:42] Running women's simulation 360
+INFO [2025-03-19 21:50:43] Running women's simulation 370
+INFO [2025-03-19 21:50:43] Running women's simulation 380
+INFO [2025-03-19 21:50:44] Running women's simulation 390
+INFO [2025-03-19 21:50:44] Running women's simulation 400
+INFO [2025-03-19 21:50:45] Running women's simulation 410
+INFO [2025-03-19 21:50:45] Running women's simulation 420
+INFO [2025-03-19 21:50:45] Running women's simulation 430
+INFO [2025-03-19 21:50:46] Running women's simulation 440
+INFO [2025-03-19 21:50:46] Running women's simulation 450
+INFO [2025-03-19 21:50:47] Running women's simulation 460
+INFO [2025-03-19 21:50:47] Running women's simulation 470
+INFO [2025-03-19 21:50:48] Running women's simulation 480
+INFO [2025-03-19 21:50:48] Running women's simulation 490
+INFO [2025-03-19 21:50:48] Running women's simulation 500

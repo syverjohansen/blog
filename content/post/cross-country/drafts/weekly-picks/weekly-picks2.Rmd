@@ -88,8 +88,7 @@ ladies_races <- next_weekend_races %>%
   select(Distance, Technique, MS, Elevation, Period, Pursuit) %>%
   rename(distance = Distance, technique = Technique, 
          ms = MS, altitude = Elevation, period = Period)
-print(men_races)
-print(ladies_races)
+
 log_info(paste("Found", nrow(men_races), "men's races and", nrow(ladies_races), "ladies races"))
 ```
 
@@ -172,12 +171,16 @@ calculate_race_probabilities <- function() {
       pull(Date)
     
     # Use 2020-01-01 or skier's first race, whichever is later
+# Calculate date from 5 years ago
+    five_years_ago <- Sys.Date() - (5 * 365)
+      
+    # Use 5 years ago or skier's first race, whichever is later
     start_date <- if(length(skier_first_race) == 0) {
-      as.Date("2020-01-01")
+      five_years_ago
     } else {
-      max(as.Date("2020-01-01"), as.Date(skier_first_race))
+      max(five_years_ago, as.Date(skier_first_race))
     }
-    
+    log_debug(paste("Using start date:", format(start_date, "%Y-%m-%d"), "for skier:", skier))
     # First get all matching races since start_date
     all_races <- chronos %>%
       filter(
@@ -213,7 +216,7 @@ calculate_race_probabilities <- function() {
         }
       ) %>%
       distinct(Date, City)
-    print(skier_races)
+
     total_races <- nrow(all_races)
 
     if(total_races == 0) {
@@ -316,34 +319,71 @@ calculate_race_probabilities <- function() {
   }
   
   # Process men's and ladies' race probabilities
-  process_gender_probabilities <- function(startlist, chronos, races) {
-    # For Race 1, keep probabilities as they are in the startlist
-    # Make sure Race1_Prob exists
+process_gender_probabilities <- function(startlist, chronos, races) {
+  # Check if we have FIS startlist (at least one skier has In_FIS_List=True)
+  has_fis_startlist <- FALSE
+  if("In_FIS_List" %in% names(startlist)) {
+    has_fis_startlist <- any(startlist$In_FIS_List, na.rm = TRUE)
+  }
+  
+  # Handle Race1_Prob based on FIS startlist existence
+  if(has_fis_startlist) {
+    log_info("FIS startlist exists (at least one In_FIS_List=True), keeping existing Race1_Prob values")
+    # Keep existing Race1_Prob if it exists, otherwise set based on In_FIS_List
     if(!"Race1_Prob" %in% names(startlist)) {
-      log_info("Race1_Prob missing, checking if In_FIS_List exists")
-      if("In_FIS_List" %in% names(startlist)) {
-        startlist$Race1_Prob <- ifelse(startlist$In_FIS_List, 1, 0)
-      } else {
-        log_warn("Neither Race1_Prob nor In_FIS_List found, defaulting to 1")
-        startlist$Race1_Prob <- 1
-      }
+      startlist$Race1_Prob <- ifelse(startlist$In_FIS_List, 1, 0)
     }
-    
-    # Only proceed if there are more races
-    if(nrow(races) <= 1 && sum(startlist$Race1_Prob)>0) {
-      log_info("Only one race found, no need to calculate additional probabilities")
-      return(startlist)
-    }
-    
-    # For each race after race 1
+  } else {
+    log_info("No FIS startlist (all In_FIS_List=False), will calculate Race1_Prob")
+    # Race1_Prob will be calculated like other races below
+  }
+  
+  # Handle Config_Nation and In_Config status for all races
+# Handle Config_Nation and In_Config status for all races
+if("Config_Nation" %in% names(startlist) && "In_Config" %in% names(startlist)) {
+  # First ensure both columns are logical type
+  if(!is.logical(startlist$Config_Nation)) {
+    startlist$Config_Nation <- as.logical(startlist$Config_Nation)
+  }
+  if(!is.logical(startlist$In_Config)) {
+    startlist$In_Config <- as.logical(startlist$In_Config)
+  }
+  
+  # Now use the logical columns
+  config_non_included <- which(startlist$Config_Nation & !startlist$In_Config)
+  if(length(config_non_included) > 0) {
+    # For these skiers, ensure all race probability columns are set to 0
     for(i in 1:nrow(races)) {
       race_prob_col <- paste0("Race", i, "_Prob")
-
-      
-      # Create the column if it doesn't exist
-      if(!(race_prob_col %in% names(startlist))) {
-        startlist[[race_prob_col]] <- NA_real_
+      if(race_prob_col %in% names(startlist)) {
+        startlist[config_non_included, race_prob_col] <- 0
+      } else {
+        # Create column if it doesn't exist
+        startlist[[race_prob_col]] <- NA
+        startlist[config_non_included, race_prob_col] <- 0
       }
+    }
+    log_info(paste("Set race probabilities to 0 for", length(config_non_included), 
+                  "skiers from config nations not in configuration"))
+  }
+}
+  
+  # Process each race
+  for(i in 1:nrow(races)) {
+    race_prob_col <- paste0("Race", i, "_Prob")
+    
+    # Skip Race1_Prob if we have a FIS startlist and it's already set
+    if(race_prob_col == "Race1_Prob" && has_fis_startlist && race_prob_col %in% names(startlist)) {
+      log_info("Using existing Race1_Prob from FIS startlist, skipping calculation")
+      next
+    }
+    
+    # Create the column if it doesn't exist
+    if(!(race_prob_col %in% names(startlist))) {
+      startlist[[race_prob_col]] <- NA_real_
+    }
+    
+    # Rest of the existing processing by nation logic...
       
       # Process by nation
       nations <- unique(startlist$Nation)
@@ -469,15 +509,12 @@ calculate_race_probabilities <- function() {
   cat("\nSample of Men's Race Probabilities:\n")
   print(men_startlist_with_probs %>% 
     select(Skier, Nation, Config_Nation, contains("Race")) %>% 
-    arrange(Nation) %>% 
-    head(10))
+    arrange(Nation) )
     
   cat("\nSample of Ladies' Race Probabilities:\n")
   print(ladies_startlist_with_probs %>% 
     select(Skier, Nation, Config_Nation, contains("Race")) %>% 
-    arrange(Nation) %>% 
-    head(10))
-  
+    arrange(Nation) )
   return(list(
     men = men_startlist_with_probs,
     ladies = ladies_startlist_with_probs
@@ -806,13 +843,45 @@ get_points <- function(place, points_list) {
 
 
 preprocess_data <- function(df) {
-    # First calculate points using ALL historical data
+    # Load weekends data to determine points systems for historical races
+    weekends_data <- read.csv("~/ski/elo/python/ski/polars/excel365/weekends.csv", 
+                             stringsAsFactors = FALSE) %>%
+      mutate(Date = as.Date(Date, format="%m/%d/%y"))
+    
+    # Determine points system based on next race weekend
+    # Find the next race after today
+    current_date <- Sys.Date()
+    next_weekend <- weekends_data %>%
+      filter(Date > current_date) %>%
+      arrange(Date) %>%
+      slice(1)
+    
+    # Check if the next race is a stage race
+    is_stage_weekend <- !is.na(next_weekend$Stage) && next_weekend$Stage == 1
+    
+    # Select the appropriate points system for ALL races
+    global_points_system <- if(is_stage_weekend) {
+      log_info("Using STAGE points system for upcoming weekend")
+      stage_points
+    } else {
+      log_info("Using WORLD CUP points system for upcoming weekend") 
+      wc_points
+    }
+    
+    # First calculate points using historical data but with the GLOBAL points system
     df_with_points <- df %>%
-        # Add points
-        mutate(Points = map_int(Place, ~ get_points(.x, wc_points))) %>%
+        # Add points based on the global points system determined by next weekend
+        mutate(
+          Points = mapply(function(place) {
+            if (place >= 1 && place <= length(global_points_system)) {
+              return(global_points_system[place])
+            }
+            return(0)
+          }, Place)
+        ) %>%
         # Sort
         arrange(Season, Race, Place)
-    print(unique(df$Distance))
+    #print(unique(df$Distance))
     
     # Calculate weighted previous points separately for each race type/technique combination
     df_with_points <- df_with_points %>%
@@ -861,7 +930,7 @@ preprocess_data <- function(df) {
         ungroup() %>%
         # Filter relevant races and add cumulative points
         filter(
-            Season > 2014,
+            Season >= max(Season-10),
             Event %in% c("World Cup", "Nordic Opening", "Tour de Ski", 
                         "Olympic Winter Games", "World Championship", 
                         "World Cup Final", "Ski Tour Canada")
@@ -1102,6 +1171,40 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
       # Apply scaling factor to adjust the probabilities
       scaling_factor <- target_sum / current_sum
       normalized[[prob_col]] <- normalized[[prob_col]] * scaling_factor
+      
+      # Cap individual probabilities at 100%
+      over_hundred <- which(normalized[[prob_col]] > 100)
+      if(length(over_hundred) > 0) {
+        log_info(sprintf("  Capping %d skiers with >100%% probability for %s", 
+                         length(over_hundred), prob_col))
+        
+        # Calculate excess probability that needs to be redistributed
+        excess <- sum(normalized[[prob_col]][over_hundred] - 100)
+        
+        # Cap values at 100%
+        normalized[[prob_col]][over_hundred] <- 100
+        
+        # Redistribute the excess to other skiers proportionally
+        under_hundred <- which(normalized[[prob_col]] < 100)
+        if(length(under_hundred) > 0 && excess > 0) {
+          # Get current sum of under-100 probabilities
+          under_sum <- sum(normalized[[prob_col]][under_hundred])
+          
+          # Calculate scaling factor for redistribution
+          if(under_sum > 0) {
+            redistrib_factor <- (under_sum + excess) / under_sum
+            normalized[[prob_col]][under_hundred] <- normalized[[prob_col]][under_hundred] * redistrib_factor
+            
+            # Recursively cap again if needed (unlikely but possible)
+            if(any(normalized[[prob_col]][under_hundred] > 100)) {
+              log_info("  Recursive capping needed after redistribution")
+              # This is a simplification - in practice you might want a more robust approach
+              normalized[[prob_col]][normalized[[prob_col]] > 100] <- 100
+            }
+          }
+        }
+      }
+      
       log_info(sprintf("  %s normalization: applied scaling factor of %.4f", 
                        prob_col, scaling_factor))
     } else {
@@ -1109,6 +1212,13 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
       # This is a fallback that should rarely be needed
       log_warn(paste("Zero sum for", prob_col, "- distributing evenly"))
       normalized[[prob_col]] <- target_sum / nrow(normalized)
+    }
+    
+    # Final check to ensure we're close to the target sum
+    final_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
+    if(abs(final_sum - target_sum) > 1) {  # Allow for small rounding differences
+      log_warn(sprintf("  %s sum after capping: %.2f%% (target: %.2f%%)", 
+                       prob_col, final_sum, target_sum))
     }
   }
   
@@ -1163,7 +1273,17 @@ predict_races <- function(gender) {
     
     # Get race probability column name for this race
     race_prob_col <- paste0("Race", i, "_Prob")
-    
+    race_info <- next_weekend_races %>%
+    filter(Sex == ifelse(gender == "men", "M", "L")) %>%
+    slice(i)
+  
+  # Check if this is a stage race
+  is_stage_race <- !is.null(race_info$Stage) && race_info$Stage == 1
+  
+  # Use the appropriate points system
+  points_system <- if(is_stage_race) stage_points else wc_points
+  
+  log_info(paste("Using", if(is_stage_race) "stage points" else "World Cup points", "for this race"))
     # Debug: Check if this race probability column exists in startlist
     if(race_prob_col %in% names(startlist)) {
       log_info(paste("Race probability column", race_prob_col, "exists in startlist"))
@@ -1579,7 +1699,7 @@ tryCatch({
   
   # Create a clean subset of prediction data with only required variables
   prediction_subset <- startlist_prepared
-  
+  #print(startlist_prepared)
   # Explicitly check for each variable
   for(var in model_vars) {
     if(!(var %in% names(prediction_subset))) {
@@ -1644,6 +1764,36 @@ tryCatch({
   
   # Store predictions
   position_preds[[paste0(prob_col, "_base")]] <- base_predictions
+  # Place this code right after you store base_predictions but before applying adjustments
+
+# Create a dataframe to store base predictions
+base_pred_df <- data.frame(
+  Skier = position_preds$Skier,
+  Nation = position_preds$Nation,
+  BaseProbability = base_predictions * 100  # Convert to percentage
+)
+
+# If we have adjustments available for this threshold
+if(adj_name %in% names(position_adjustments)) {
+  # Get the adjustments
+  pos_adj <- position_adjustments[[adj_name]]
+  
+  # Join adjustments with base predictions
+  adjustment_df <- base_pred_df %>%
+    left_join(pos_adj, by = "Skier") %>%
+    mutate(
+      Altitude = replace_na(altitude_effect, 0) * 100,
+      Period = replace_na(period_effect, 0) * 100,
+      MassStart = replace_na(ms_effect, 0) * 100,
+      TotalAdjustment = Altitude + Period + MassStart,
+      FinalProbability = pmin(pmax(BaseProbability + TotalAdjustment, 0), 100)
+    ) %>%
+    arrange(desc(BaseProbability))
+  
+  # Print header and data
+  cat(paste("\n\n=== Top", threshold, "Position Probabilities and Adjustments ===\n"))
+  print(adjustment_df)
+}
   
   # Apply adjustments if available
   if(adj_name %in% names(position_adjustments)) {
@@ -1722,7 +1872,7 @@ tryCatch({
           head(3) %>%
           select(Skier, Nation, !!sym(prob_col))
         log_info("  Top 3 skiers for this threshold:")
-        print(top_skiers)
+        #print(top_skiers)
       }
     }
     
@@ -1745,7 +1895,7 @@ tryCatch({
       ) %>%
       arrange(desc(sum_prob))
     
-    print(prob_summary %>% head(5))
+    #print(prob_summary %>% head(5))
     
     # Prepare startlist points predictions (original functionality)
     race_dfs[[i]] <- startlist_prepared %>%
@@ -1812,14 +1962,17 @@ tryCatch({
                    prediction_volatility, volatility_ratio, confidence_factor,
                    Final_Prediction, Safe_Prediction, Upside_Prediction,
                    race_prob_col)
+    print(race_dfs[[i]])
     
     # Apply pursuit handling if needed
     if(races$Pursuit[i] == 1) {
       # Get startlist points
       startlist_points <- startlist %>%
         mutate(
+          # Use the appropriate points system based on the Stage flag
           startlist_points = case_when(
-            row_number() <= length(stage_points) ~ stage_points[row_number()],
+            row_number() <= length(if(is_stage_race) stage_points else wc_points) ~ 
+              (if(is_stage_race) stage_points else wc_points)[row_number()],
             TRUE ~ 0
           )
         ) %>%
@@ -2072,19 +2225,7 @@ run_integrated_predictions_workflow <- function() {
   # Display sample results
   log_info("Prediction workflow complete")
   
-  cat("\nSample of Men's Position Probabilities:\n")
-  print(men_results$position_predictions %>% 
-        filter(Race == 1) %>% 
-        arrange(desc(prob_top1)) %>% 
-        select(Skier, Nation, prob_top1, prob_top3, prob_top10) %>% 
-        head(5))
-        
-  cat("\nSample of Ladies' Position Probabilities:\n")
-  print(ladies_results$position_predictions %>% 
-        filter(Race == 1) %>% 
-        arrange(desc(prob_top1)) %>% 
-        select(Skier, Nation, prob_top1, prob_top3, prob_top10) %>% 
-        head(5))
+
   
   # Return results
   return(list(
@@ -2118,35 +2259,6 @@ ladies_startlist <- prob_results$ladies
 log_info("Running integrated predictions workflow")
 integrated_results <- run_integrated_predictions_workflow()
 
-# Display top results for points and positions
-# Points predictions
-cat("\nTop 10 Men's Points Predictions:\n")
-print(head(integrated_results$men$post_predictions, 10))
-
-cat("\nTop 10 Ladies' Points Predictions:\n")
-print(head(integrated_results$ladies$post_predictions, 10))
-
-# Position predictions
-cat("\nTop 5 Men's Win Contenders for Race 1:\n")
-print(integrated_results$men$position_predictions %>% 
-      filter(Race == 1) %>% 
-      arrange(desc(prob_top1)) %>% 
-      select(Skier, Nation, prob_top1) %>% 
-      head(5))
-
-cat("\nTop 5 Ladies' Win Contenders for Race 1:\n")
-print(integrated_results$ladies$position_predictions %>% 
-      filter(Race == 1) %>% 
-      arrange(desc(prob_top1)) %>% 
-      select(Skier, Nation, prob_top1) %>% 
-      head(5))
-
-cat("\nTop 5 Men's Podium Contenders for Race 1:\n")
-print(integrated_results$men$position_predictions %>% 
-      filter(Race == 1) %>% 
-      arrange(desc(prob_top3)) %>% 
-      select(Skier, Nation, prob_top3) %>% 
-      head(5))
 
 # Display race probability impact on fantasy picks
 cat("\nRace Probability Impact on Top Fantasy Picks:\n")
@@ -2161,8 +2273,6 @@ top_skiers_probs <- integrated_results$men$full_predictions %>%
   select(Skier, Nation, contains("Race1_Prob"), contains("Race2_Prob"), Total_Points) %>%
   arrange(desc(Total_Points))
 
-print(top_skiers_probs %>% head(5))
-
 # Show comparison of optimized teams
 cat("\nComparison of Different Optimization Strategies:\n")
 cat("Normal Team Total Points:", sum(integrated_results$fantasy$normal_team$Points), "\n")
@@ -2172,170 +2282,6 @@ cat("Upside Team Total Points:", sum(integrated_results$fantasy$upside_team$Poin
 
 
 
-
-
-
-
-
-
-
-
-
-
-```{r summary}
-# Generate a summary of the entire process including position probabilities
-summary_results <- function(integrated_results) {
-  # Extracting components
-  men_results <- integrated_results$men
-  ladies_results <- integrated_results$ladies
-  fantasy_results <- integrated_results$fantasy
-  
-  # Count total skiers
-  men_count <- nrow(men_results$full_predictions)
-  ladies_count <- nrow(ladies_results$full_predictions)
-  
-  # Calculate race 2 probability statistics
-  men_race2_mean <- mean(men_results$full_predictions$Race2_Probability, na.rm = TRUE)
-  men_race2_median <- median(men_results$full_predictions$Race2_Probability, na.rm = TRUE)
-  ladies_race2_mean <- mean(ladies_results$full_predictions$Race2_Probability, na.rm = TRUE)
-  ladies_race2_median <- median(ladies_results$full_predictions$Race2_Probability, na.rm = TRUE)
-  
-  # Calculate weighted point impact
-  men_race1_points <- sum(men_results$full_predictions$Race1_Points, na.rm = TRUE)
-  men_race2_points <- sum(men_results$full_predictions$Race2_Points, na.rm = TRUE)
-  ladies_race1_points <- sum(ladies_results$full_predictions$Race1_Points, na.rm = TRUE)
-  ladies_race2_points <- sum(ladies_results$full_predictions$Race2_Points, na.rm = TRUE)
-  
-  # Get top win probability for each gender
-  men_top_win <- men_results$position_predictions %>%
-    filter(Race == 1) %>%
-    arrange(desc(prob_top1)) %>%
-    slice(1)
-  
-  ladies_top_win <- ladies_results$position_predictions %>%
-    filter(Race == 1) %>%
-    arrange(desc(prob_top1)) %>%
-    slice(1)
-  
-  # Display summary
-  cat("=============================================================\n")
-  cat("           WEEKLY PREDICTIONS SUMMARY REPORT                 \n")
-  cat("=============================================================\n\n")
-  
-  cat("Race Weekend:", format(next_weekend_date, "%B %d, %Y"), "\n")
-  cat("Total races: Men =", nrow(men_races), "| Ladies =", nrow(ladies_races), "\n\n")
-  
-  cat("SKIER STATISTICS:\n")
-  cat("Men's startlist size:", men_count, "skiers\n")
-  cat("Ladies' startlist size:", ladies_count, "skiers\n\n")
-  
-  cat("RACE PROBABILITY STATISTICS:\n")
-  cat("Men's Race2 participation probability: Mean =", round(men_race2_mean, 2), "| Median =", round(men_race2_median, 2), "\n")
-  cat("Ladies' Race2 participation probability: Mean =", round(ladies_race2_mean, 2), "| Median =", round(ladies_race2_median, 2), "\n\n")
-  
-  cat("POINTS DISTRIBUTION:\n")
-  cat("Men's Race1 total points:", round(men_race1_points), "\n")
-  cat("Men's Race2 total points:", round(men_race2_points), "\n")
-  cat("Ladies' Race1 total points:", round(ladies_race1_points), "\n")
-  cat("Ladies' Race2 total points:", round(ladies_race2_points), "\n\n")
-  
-  cat("POSITION PROBABILITY HIGHLIGHTS:\n")
-  cat("Top men's win probability:", men_top_win$Skier, "(", men_top_win$Nation, ") -", men_top_win$prob_top1, "%\n")
-  cat("Top ladies' win probability:", ladies_top_win$Skier, "(", ladies_top_win$Nation, ") -", ladies_top_win$prob_top1, "%\n\n")
-  
-  cat("FANTASY TEAM STATISTICS:\n")
-  cat("Normal team predicted points:", round(sum(fantasy_results$normal_team$Points), 1), "\n")
-  cat("Safe team predicted points:", round(sum(fantasy_results$safe_team$Points), 1), "\n")
-  cat("Upside team predicted points:", round(sum(fantasy_results$upside_team$Points), 1), "\n\n")
-  
-  cat("TOP FANTASY PICKS (Normal team):\n")
-  print(fantasy_results$normal_team %>% head(5))
-  
-  cat("\n=============================================================\n")
-  cat("Weekly predictions process complete. Results saved to:\n")
-  cat(paste0("/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", 
-            format(next_weekend_date, "%Y%m%d"), "/\n"))
-  cat("=============================================================\n")
-}
-
-# Generate summary with position probabilities
-summary_results(integrated_results)
-```
-
-```{r summary-with-positions}
-# Generate a summary of the entire process including position probabilities
-summary_results <- function(men_results, ladies_results, fantasy_results, top_contenders) {
-  # Count total skiers
-  men_count <- nrow(men_results$full_predictions)
-  ladies_count <- nrow(ladies_results$full_predictions)
-  
-  # Calculate race 2 probability statistics
-  men_race2_mean <- mean(men_results$full_predictions$Race2_Probability, na.rm = TRUE)
-  men_race2_median <- median(men_results$full_predictions$Race2_Probability, na.rm = TRUE)
-  ladies_race2_mean <- mean(ladies_results$full_predictions$Race2_Probability, na.rm = TRUE)
-  ladies_race2_median <- median(ladies_results$full_predictions$Race2_Probability, na.rm = TRUE)
-  
-  # Calculate weighted point impact
-  men_race1_points <- sum(men_results$full_predictions$Race1_Points, na.rm = TRUE)
-  men_race2_points <- sum(men_results$full_predictions$Race2_Points, na.rm = TRUE)
-  ladies_race1_points <- sum(ladies_results$full_predictions$Race1_Points, na.rm = TRUE)
-  ladies_race2_points <- sum(ladies_results$full_predictions$Race2_Points, na.rm = TRUE)
-  
-  # Get top win probability for each gender
-  men_top_win <- men_results$position_predictions %>%
-    filter(Race == 1) %>%
-    arrange(desc(prob_top1)) %>%
-    slice(1)
-  
-  ladies_top_win <- ladies_results$position_predictions %>%
-    filter(Race == 1) %>%
-    arrange(desc(prob_top1)) %>%
-    slice(1)
-  
-  # Display summary
-  cat("=============================================================\n")
-  cat("           WEEKLY PREDICTIONS SUMMARY REPORT                 \n")
-  cat("=============================================================\n\n")
-  
-  cat("Race Weekend:", format(next_weekend_date, "%B %d, %Y"), "\n")
-  cat("Total races: Men =", nrow(men_races), "| Ladies =", nrow(ladies_races), "\n\n")
-  
-  cat("SKIER STATISTICS:\n")
-  cat("Men's startlist size:", men_count, "skiers\n")
-  cat("Ladies' startlist size:", ladies_count, "skiers\n\n")
-  
-  cat("RACE PROBABILITY STATISTICS:\n")
-  cat("Men's Race2 participation probability: Mean =", round(men_race2_mean, 2), "| Median =", round(men_race2_median, 2), "\n")
-  cat("Ladies' Race2 participation probability: Mean =", round(ladies_race2_mean, 2), "| Median =", round(ladies_race2_median, 2), "\n\n")
-  
-  cat("POINTS DISTRIBUTION:\n")
-  cat("Men's Race1 total points:", round(men_race1_points), "\n")
-  cat("Men's Race2 total points:", round(men_race2_points), "\n")
-  cat("Ladies' Race1 total points:", round(ladies_race1_points), "\n")
-  cat("Ladies' Race2 total points:", round(ladies_race2_points), "\n\n")
-  
-  cat("POSITION PROBABILITY HIGHLIGHTS:\n")
-  cat("Top men's win probability:", men_top_win$Skier, "(", men_top_win$Nation, ") -", men_top_win$prob_top1, "%\n")
-  cat("Top ladies' win probability:", ladies_top_win$Skier, "(", ladies_top_win$Nation, ") -", ladies_top_win$prob_top1, "%\n\n")
-  
-  cat("FANTASY TEAM STATISTICS:\n")
-  cat("Normal team predicted points:", round(sum(fantasy_results$normal_team$Points), 1), "\n")
-  cat("Safe team predicted points:", round(sum(fantasy_results$safe_team$Points), 1), "\n")
-  cat("Upside team predicted points:", round(sum(fantasy_results$upside_team$Points), 1), "\n\n")
-  
-  cat("TOP FANTASY PICKS (Normal team):\n")
-  print(fantasy_results$normal_team %>% head(5))
-  
-  cat("\n=============================================================\n")
-  cat("Weekly predictions process complete. Results saved to:\n")
-  cat(paste0("/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", 
-            format(next_weekend_date, "%Y%m%d"), "/\n"))
-  cat("=============================================================\n")
-}
-
-# Generate summary with position probabilities
-summary_results(men_results, ladies_results, fantasy_results, top_contenders)
-```
 
 
 

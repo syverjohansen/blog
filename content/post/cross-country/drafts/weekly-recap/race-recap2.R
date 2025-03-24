@@ -2,392 +2,173 @@
 library(arrow)  # for reading feather files
 library(readxl) # for reading Excel files
 library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(openxlsx)
+library(writexl)
+library(logger)
+library(mgcv)     # for GAM models
+library(leaps)    # for feature selection
+library(lubridate) # for date handling
 
 # Define file paths
 men_chrono_path <- "~/ski/elo/python/ski/polars/excel365/men_chrono_elevation.csv"
 ladies_chrono_path <- "~/ski/elo/python/ski/polars/excel365/ladies_chrono_elevation.csv"
-men_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/men-points.xlsx"
-ladies_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/ladies-points.xlsx"
+races_path <- "~/ski/elo/python/ski/polars/excel365/races.csv"
+base_dir <- "~/blog/daehl-e"
+
+
+# Function to get the current date in GMT formatted as YYYYMMDD
+get_gmt_date_formatted <- function() {
+  format(as.POSIXct(Sys.time(), tz = "GMT"), "%Y%m%d")
+}
+
+# Define the base output directory function that uses the GMT date
+get_output_dir <- function() {
+  date_str <- get_gmt_date_formatted()
+  file.path("~/blog/daehl-e/content/post/cross-country/drafts/weekly-recap", date_str)
+}
+
 
 # Read the feather files
 men_chrono <- read.csv(men_chrono_path)
 
 ladies_chrono <- read.csv(ladies_chrono_path)
 
-# Read the Excel files
-men_points <- read_xlsx(men_points_path)
-ladies_points <- read_xlsx(ladies_points_path)
+
 
 # Create a list to store all dataframes
 ski_data <- list(
   men_chrono = men_chrono,
-  ladies_chrono = ladies_chrono,
-  men_points = men_points,
-  ladies_points = ladies_points
+  ladies_chrono = ladies_chrono
 )
 
 # Print the dimensions of each dataframe to verify loading
 lapply(ski_data, dim)
 
-library(dplyr)
-library(ggplot2)
-library(openxlsx)
-# Filter and sort men's data
-men_2025 <- men_chrono %>%
-  filter(Season == 2025, City != "Summer") %>% 
-  #filter(Season == 2025) %>% 
-  arrange(Season, Race, Place)
+#----------------------------------------------
+# NEW SECTION: Weekly Elo Changes
+#----------------------------------------------
 
-men_before <- men_chrono %>%
-  filter(Season < 2025 | (Season == 2025 & Race < 4 & City!="Summer")) %>%
-  arrange(Season, Date, Race, Place)
-
-men_end <- men_chrono %>%
-  #filter(Season == 2025, City != "Summer") %>% 
-  filter(Season == 2025) %>% 
-  arrange(Season, Race, Place)
-
-
-# Filter and sort ladies' data
-ladies_2025 <- ladies_chrono %>%
-  filter(Season == 2025, City != "Summer") %>% 
-  #filter(Season == 2025) %>% 
-  arrange(Season, Race, Place)
-
-ladies_end <- ladies_chrono %>%
-  #filter(Season == 2025, City != "Summer") %>% 
-  filter(Season == 2025) %>% 
-  arrange(Season, Race, Place)
-
-ladies_before <- ladies_chrono %>%
-  filter(Season < 2025 | (Season == 2025 & Race < 4 & City!="Summer")) %>%
-  arrange(Season, Date, Race, Place)
-
-# Define World Cup points vector
-wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
-
-library(dplyr)
-library(ggplot2)
-library(openxlsx)
-
-# Define World Cup points vector
-wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
-
-analyze_race <- function(race_type, race_num, race_part, season, city, base_dir) {
-  # Filter season data without City filter
-  men_season <- men_chrono %>%
-    filter(Season == season) %>%
-    arrange(Season, Race, Place)
+# Function to generate weekly Elo change report
+# Update in the generate_weekly_elo_change function
+generate_weekly_elo_change <- function(chrono_data, gender, base_dir) {
+  # Get current date
+  current_date <- Sys.Date()
   
-  ladies_season <- ladies_chrono %>%
-    filter(Season == season) %>%
-    arrange(Season, Race, Place)
+  # Get date from one week ago
+  one_week_ago <- current_date - 7
   
-  # Helper function to create race-specific dataframe
-  create_race_df <- function(data, points_data, pelo_col, elo_col) {
-    race_df <- data %>%
-      filter(Race == race_num) %>%
-      mutate(Points = case_when(
-        Place > 0 & Place <= length(wc_points) ~ wc_points[Place],
-        TRUE ~ 0
-      )) %>%
-      dplyr::select(Skier, Nation, Points, !!sym(paste0(pelo_col)), !!sym(paste0(elo_col))) %>%
-      left_join(
-        points_data %>% 
-          dplyr::select(Skier, !!paste0("Race", race_part, "_Points")), 
-        by = "Skier"
-      ) %>%
-      rename(Predicted_Points = !!paste0("Race", race_part, "_Points")) %>%
-      mutate(
-        Predicted_Points = as.numeric(Predicted_Points),
-        Points_Difference = Points - as.double(Predicted_Points),
-        Elo_Difference = !!sym(paste0(elo_col)) - !!sym(paste0(pelo_col))
-      ) %>%
-      dplyr::select(
-        Skier, 
-        Nation, 
-        !!sym(paste0(pelo_col)), 
-        !!sym(paste0(elo_col)),
-        Elo_Difference, 
-        Predicted_Points, 
-        Points,
-        Points_Difference
-      )
+  # Get unique skiers for the current season (using max Season in the data)
+  max_season <- max(chrono_data$Season)
+  current_skiers <- chrono_data %>%
+    filter(Season == max_season) %>%
+    distinct(Skier, ID) %>%
+    pull(ID)
+  
+  # Filter data for these skiers
+  skier_data <- chrono_data %>%
+    filter(ID %in% current_skiers)
+  
+  # Create dataframe to store Elo changes
+  elo_changes <- data.frame(
+    Skier = character(),
+    ID = character(),
+    Nation = character(),
+    Current_Elo = numeric(),
+    Previous_Week_Elo = numeric(),
+    Elo_Change = numeric(),
+    stringsAsFactors = FALSE
+  )
+  
+  # Process each skier
+  for (skier_id in current_skiers) {
+    # Get skier data
+    sk_data <- skier_data %>%
+      filter(ID == skier_id) %>%
+      arrange(Date)
     
-    # Rename columns
-    colnames(race_df) <- c("Skier", "Nation", "Before Elo", "After Elo", 
-                           "Elo Difference", "Predicted Points", "Points", 
-                           "Points Difference")
-    
-    return(race_df)
+    if (nrow(sk_data) > 0) {
+      # Get the skier name and nation
+      skier_name <- sk_data$Skier[1]
+      skier_nation <- sk_data$Nation[1]
+      
+      # Get most recent date
+      most_recent <- sk_data %>%
+        filter(!is.na(Date)) %>%
+        arrange(desc(Date)) %>%
+        dplyr::slice(1)
+      
+      # Get date from previous week or earlier
+      previous_week <- sk_data %>%
+        filter(!is.na(Date), Date <= one_week_ago) %>%
+        arrange(desc(Date)) %>%
+        dplyr::slice(1)
+      
+      # Process only the overall Elo column
+      elo_col <- "Elo"
+      
+      # Check if we have both current and previous data
+      if (nrow(most_recent) > 0 && nrow(previous_week) > 0) {
+        current_elo <- most_recent[[elo_col]]
+        previous_elo <- previous_week[[elo_col]]
+        
+        # Skip if either Elo is NA
+        if (!is.na(current_elo) && !is.na(previous_elo)) {
+          # Calculate Elo change
+          elo_change <- current_elo - previous_elo
+          
+          # Only add if Elo change is not zero
+          if (elo_change != 0) {
+            # Add to dataframe
+            elo_changes <- rbind(elo_changes, data.frame(
+              Skier = skier_name,
+              ID = skier_id,
+              Nation = skier_nation,
+              Current_Elo = current_elo,
+              Previous_Week_Elo = previous_elo,
+              Elo_Change = elo_change,
+              stringsAsFactors = FALSE
+            ))
+          }
+        }
+      }
+    }
   }
   
-  # Helper function to create plots
-  create_plot <- function(data, gender, race_part, base_dir) {
-    max_diff <- data %>% slice_max(`Points Difference`, n = 3)
-    min_diff <- data %>% slice_min(`Points Difference`, n = 3)
-    
-    p <- ggplot(data, aes(x = `Predicted Points`, y = Points)) +
-      geom_point() +
-      geom_point(data = max_diff, color = "green", size = 3) +
-      geom_text(data = max_diff, aes(label = Skier), vjust = -1) +
-      geom_point(data = min_diff, color = "red", size = 3) +
-      geom_text(data = min_diff, aes(label = Skier), vjust = -1) +
-      geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
-      scale_x_continuous(limits = c(0, 100), breaks = c(25, 50, 75, 100)) +
-      labs(title = "Predicted vs Actual Points",
-           x = "Predicted Points",
-           y = "Actual Points") +
-      theme_minimal()
-    
-    filename <- file.path(base_dir, "static/img/weekly-recap", 
-                          paste0(season, city),
-                          paste0(gender, "_race", race_part, ".png"))
-    ggsave(filename, plot = p, width = 10, height = 8, dpi = 300)
-  }
+  # Create weekly output directory with GMT date
+  week_dir <- get_output_dir()
+  dir.create(week_dir, recursive = TRUE, showWarnings = FALSE)
   
-  # Helper function to get performance stats
-  get_performance_stats <- function(data) {
-    # Calculate error metrics
-    rmse <- sqrt(mean((data$Points - data$`Predicted Points`)^2, na.rm = TRUE))
-    mae <- mean(abs(data$Points - data$`Predicted Points`), na.rm = TRUE)
-    mse <- mean((data$Points - data$`Predicted Points`)^2, na.rm = TRUE)
-    
-    # Top 3 overperformers
-    top_over <- data %>%
-      arrange(desc(`Points Difference`)) %>%
-      dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
-      head(3)
-    
-    # Top 3 underperformers
-    top_under <- data %>%
-      arrange(`Points Difference`) %>%
-      dplyr::select(Skier, Points, `Predicted Points`, `Points Difference`) %>%
-      head(3)
-    
-    # Add error metrics to the output
-    print(paste("RMSE:", round(rmse, 2)))
-    print(paste("MAE:", round(mae, 2)))
-    print(paste("MSE:", round(mse, 2)))
-    
-    return(list(
-      overperformers = top_over, 
-      underperformers = top_under,
-      metrics = list(
-        rmse = rmse,
-        mae = mae,
-        mse = mse
-      )
-    ))
-  }
-  
-  # Create directories if they don't exist
-  dir.create(file.path(base_dir, "static/img/weekly-recap", paste0(season, city)), 
-             recursive = TRUE, showWarnings = FALSE)
-  dir.create(file.path(base_dir, "content/post/drafts/weekly-recap", paste0(season, city)), 
-             recursive = TRUE, showWarnings = FALSE)
-  
-  # Determine Elo columns based on race type
-  pelo_col <- paste0(race_type, "_Pelo")
-  elo_col <- paste0(race_type, "_Elo")
-  
-  # Create race dataframes
-  men_race <- create_race_df(men_season, men_points, pelo_col, elo_col)
-  ladies_race <- create_race_df(ladies_season, ladies_points, pelo_col, elo_col)
-  
-  # Create plots
-  create_plot(men_race, "men", race_part, base_dir)
-  create_plot(ladies_race, "ladies", race_part, base_dir)
-  
-  # Get performance stats
-  men_stats <- get_performance_stats(men_race)
-  ladies_stats <- get_performance_stats(ladies_race)
+  # Sort by Elo change (descending)
+  elo_changes <- elo_changes %>%
+    arrange(desc(Elo_Change))
   
   # Save to Excel
-  write.xlsx(men_race, 
-             file.path(base_dir, "content/post/drafts/weekly-recap", 
-                       paste0(season, city), 
-                       paste0("men_race", race_part, ".xlsx")))
-  write.xlsx(ladies_race, 
-             file.path(base_dir, "content/post/drafts/weekly-recap", 
-                       paste0(season, city), 
-                       paste0("ladies_race", race_part, ".xlsx")))
+  file_path <- file.path(week_dir, paste0(gender, "_elo_change.xlsx"))
+  write_xlsx(elo_changes, file_path)
   
-  return(list(
-    men = list(data = men_race, stats = men_stats),
-    ladies = list(data = ladies_race, stats = ladies_stats)
-  ))
+  # Create a top gainers/losers summary
+  top_gainers <- elo_changes %>%
+    arrange(desc(Elo_Change)) %>%
+    head(10)
+  
+  top_losers <- elo_changes %>%
+    arrange(Elo_Change) %>%
+    head(10)
+  
+  # Save top gainers/losers
+  write_xlsx(top_gainers, file.path(week_dir, paste0(gender, "_top_gainers.xlsx")))
+  write_xlsx(top_losers, file.path(week_dir, paste0(gender, "_top_losers.xlsx")))
+  
+  # Return the full dataframe
+  return(elo_changes)
 }
 
-analyze_weekend <- function(season, city, base_dir) {
-  create_weekend_df <- function(data, points_data, before_data) {
-    weekend_df <- data %>%
-      filter(Race %in% c(4, 5, 6)) %>%
-      mutate(Points = case_when(
-        Place > 0 & Place <= length(wc_points) ~ wc_points[Place],
-        TRUE ~ 0
-      )) %>%
-      dplyr::select(Skier, Nation, Race, Points, Elo) %>%
-      group_by(Skier, Race) %>%
-      left_join(
-        before_data %>%
-          group_by(Skier) %>%
-          slice_tail(n = 1) %>%
-          dplyr::select(Skier, Before_Elo = Elo),
-        by = "Skier"
-      ) %>%
-      left_join(
-        points_data %>%
-          dplyr::select(Skier, Predicted_Points = Total_Points) %>%
-          mutate(Predicted_Points = as.numeric(Predicted_Points)),
-        by = "Skier"
-      ) %>%
-      group_by(Skier) %>%
-      mutate(Total_Points = cumsum(Points)) %>%
-      slice_tail(n = 1) %>%
-      ungroup() %>%
-      mutate(
-        After_Elo = Elo,
-        Elo_Difference = After_Elo - Before_Elo,
-        Points_Difference = Total_Points - Predicted_Points
-      ) %>%
-      dplyr::select(
-        Skier, Nation, 
-        `Before Elo` = Before_Elo, 
-        `After Elo` = After_Elo, 
-        `Elo Difference` = Elo_Difference,
-        `Predicted Points` = Predicted_Points, 
-        `Total Points` = Total_Points, 
-        `Points Difference` = Points_Difference
-      ) %>%
-      arrange(-`Total Points`)
-    
-    return(weekend_df)
-  }
-  
-  create_weekend_plot <- function(data, gender, base_dir) {
-    max_diff <- data %>% 
-      slice_max(`Points Difference`, n = 3)
-    
-    min_diff <- data %>%
-      slice_min(`Points Difference`, n = 3)
-    
-    p <- ggplot(data, aes(x = `Predicted Points`, y = `Total Points`)) +
-      geom_point() +
-      geom_point(data = max_diff, color = "green", size = 3) +
-      geom_text(data = max_diff, aes(label = Skier), vjust = -1) +
-      geom_point(data = min_diff, color = "red", size = 3) +
-      geom_text(data = min_diff, aes(label = Skier), vjust = -1) +
-      geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
-      scale_x_continuous(breaks = c(75, 100, 150, 300)) +
-      labs(title = "Predicted vs Actual Points",
-           x = "Predicted Points",
-           y = "Actual Points") +
-      theme_minimal()
-    
-    filename <- file.path(base_dir, "static/img/weekly-recap", 
-                          paste0(season, city),
-                          paste0(gender, "_weekend.png"))
-    ggsave(filename, plot = p, width = 10, height = 8, dpi = 300)
-  }
-  
-  # Create directories if they don't exist
-  dir.create(file.path(base_dir, "static/img/weekly-recap", paste0(season, city)), 
-             recursive = TRUE, showWarnings = FALSE)
-  dir.create(file.path(base_dir, "content/post/drafts/weekly-recap", paste0(season, city)), 
-             recursive = TRUE, showWarnings = FALSE)
-  
-  # Filter data
-  men_season <- men_chrono %>%
-    filter(Season == season) %>%
-    arrange(Season, Race, Place)
-  
-  ladies_season <- ladies_chrono %>%
-    filter(Season == season) %>%
-    arrange(Season, Race, Place)
-  
-  # Create weekend dataframes
-  men_weekend <- create_weekend_df(men_season, men_points, men_before)
-  ladies_weekend <- create_weekend_df(ladies_season, ladies_points, ladies_before)
-  
-  # Create plots
-  create_weekend_plot(men_weekend, "men", base_dir)
-  create_weekend_plot(ladies_weekend, "ladies", base_dir)
-  
-  # Save to Excel
-  write.xlsx(men_weekend, 
-             file.path(base_dir, "content/post/drafts/weekly-recap", 
-                       paste0(season, city), 
-                       "men_weekend.xlsx"))
-  write.xlsx(ladies_weekend, 
-             file.path(base_dir, "content/post/drafts/weekly-recap", 
-                       paste0(season, city), 
-                       "ladies_weekend.xlsx"))
-  
-  return(list(men = men_weekend, ladies = ladies_weekend))
-}
-base_dir <- "~/blog/daehl-e"
+# Generate weekly Elo change reports
+men_elo_changes <- generate_weekly_elo_change(men_chrono, "men", base_dir)
+women_elo_changes <- generate_weekly_elo_change(ladies_chrono, "women", base_dir)
 
-# Analyze individual races
-race1_results <- analyze_race("Sprint_F", 8, 1, 2025, "Davos", base_dir)
-race2_results <- analyze_race("Distance_C", 9,  2, 2025, "Davos", base_dir)
-
-
-# Analyze weekend results
-weekend_results <- analyze_weekend(2025, "Davos", base_dir)
-weekend_results
-
-# Print metrics for Race 1
-print("Men's Sprint:")
-print(race1_results$men$stats$metrics)
-print("\nLadies' Distance C:")
-print(race1_results$ladies$stats$metrics)
-
-print("\nMen's Sprint C:")
-print(race2_results$men$stats$metrics)
-print("\nLadies' Sprint C:")
-print(race2_results$ladies$stats$metrics)
-
-# print("\nMen's Distance F:")
-# print(race3_results$men$stats$metrics)
-# print("\nLadies' Distance F:")
-# print(race3_results$ladies$stats$metrics)
-
-
-# Men's combined metrics across all races
-men_all_races <- rbind(
-  race1_results$men$data,
-  race2_results$men$data
-  # race3_results$men$data
-)
-
-men_combined_rmse <- sqrt(mean((men_all_races$Points - men_all_races$`Predicted Points`)^2, na.rm = TRUE))
-men_combined_mae <- mean(abs(men_all_races$Points - men_all_races$`Predicted Points`), na.rm = TRUE)
-men_combined_mse <- mean((men_all_races$Points - men_all_races$`Predicted Points`)^2, na.rm = TRUE)
-
-# Ladies' combined metrics across all races
-ladies_all_races <- rbind(
-  race1_results$ladies$data,
-  race2_results$ladies$data
-  #race3_results$ladies$data
-)
-
-ladies_combined_rmse <- sqrt(mean((ladies_all_races$Points - ladies_all_races$`Predicted Points`)^2, na.rm = TRUE))
-ladies_combined_mae <- mean(abs(ladies_all_races$Points - ladies_all_races$`Predicted Points`), na.rm = TRUE)
-ladies_combined_mse <- mean((ladies_all_races$Points - ladies_all_races$`Predicted Points`)^2, na.rm = TRUE)
-
-print("Men's Combined Metrics:")
-print(paste("RMSE:", round(men_combined_rmse, 2)))
-print(paste("MAE:", round(men_combined_mae, 2)))
-print(paste("MSE:", round(men_combined_mse, 2)))
-
-print("\nLadies' Combined Metrics:")
-print(paste("RMSE:", round(ladies_combined_rmse, 2)))
-print(paste("MAE:", round(ladies_combined_mae, 2)))
-print(paste("MSE:", round(ladies_combined_mse, 2)))
-library(dplyr)
-library(mgcv)
-library(leaps)
 
 # Points system setup
 wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
@@ -414,6 +195,7 @@ replace_na_with_quartile <- function(x) {
 }
 
 # Create points conversion function that handles all three point systems
+
 create_points_columns <- function(df) {
   df %>%
     mutate(
@@ -433,7 +215,7 @@ calculate_weighted_average <- function(df) {
         prev_races <- Points[max(1, i-5):(i-1)]
         if(length(prev_races) > 0) {
           # Create weights (most recent gets highest weight)
-          weights <- seq(length(prev_races), 1)
+          weights <- seq(1,length(prev_races))
           # Calculate weighted mean
           weighted.mean(prev_races, weights, na.rm = TRUE)
         } else {
@@ -454,7 +236,7 @@ calculate_weighted_average2 <- function(df) {
         prev_races <- Points[max(1, i-4):(i)]
         if(length(prev_races) > 0) {
           # Create weights (most recent gets highest weight)
-          weights <- seq(length(prev_races), 1)
+          weights <- seq(1,length(prev_races))
           # Calculate weighted mean
           weighted.mean(prev_races, weights, na.rm = TRUE)
         } else {
@@ -468,6 +250,7 @@ calculate_weighted_average2 <- function(df) {
 
 # Modified version of weighted average calculation specifically for TDS
 calculate_weighted_average_tds <- function(df) {
+
   df %>%
     group_by(ID) %>%
     arrange(Season, Race) %>%
@@ -476,7 +259,7 @@ calculate_weighted_average_tds <- function(df) {
         # Use TdS_Points instead of Points
         prev_races <- TdS_Points[max(1, i-3):(i-1)]
         if(length(prev_races) > 0) {
-          weights <- seq(length(prev_races), 1)
+          weights <- seq(1,length(prev_races))
           weighted.mean(prev_races, weights, na.rm = TRUE)
         } else {
           NA_real_
@@ -495,7 +278,7 @@ calculate_weighted_average2_tds <- function(df) {
         # Use TdS_Points instead of Points
         prev_races <- TdS_Points[max(1, i-2):(i)]
         if(length(prev_races) > 0) {
-          weights <- seq(length(prev_races), 1)
+          weights <- seq(1,length(prev_races))
           weighted.mean(prev_races, weights, na.rm = TRUE)
         } else {
           NA_real_
@@ -612,8 +395,8 @@ generate_race_predictions <- function(chrono_data, race_type, points_type = "wc"
     train_df <- chrono_data %>%
         filter(
             City != "Summer",
-            City!="Tour de Ski",
-            #Season > 2014,
+            City!="Tour De Ski",
+            #Season > max(Season)-11,
             eval(parse(text = conditions$distance_filter)),
             eval(parse(text = conditions$technique_filter))
         ) %>%
@@ -624,7 +407,7 @@ generate_race_predictions <- function(chrono_data, race_type, points_type = "wc"
             Weighted_Last_5 = sapply(row_number(), function(i) {
                 prev_races <- get(points_col)[max(1, i-5):(i-1)]
                 if(length(prev_races) > 0) {
-                    weights <- seq(length(prev_races), 1)
+                    weights <- seq(1,length(prev_races))
                     weighted.mean(prev_races, weights, na.rm = TRUE)
                 } else {
                     NA_real_
@@ -635,7 +418,7 @@ generate_race_predictions <- function(chrono_data, race_type, points_type = "wc"
             Weighted_Last_5_2 = sapply(row_number(), function(i) {
                 prev_races <- get(points_col)[max(1, i-4):(i-0)]
                 if(length(prev_races) > 0) {
-                    weights <- seq(length(prev_races), 1)
+                    weights <- seq(1,length(prev_races))
                     weighted.mean(prev_races, weights, na.rm = TRUE)
                 } else {
                     NA_real_
@@ -643,10 +426,11 @@ generate_race_predictions <- function(chrono_data, race_type, points_type = "wc"
             })
         ) %>%
         ungroup()
+    #print(train_df %>% filter(Skier == "Johannes Høsflot Klæbo") %>% select(Season, Race, Points, Weighted_Last_5, Weighted_Last_5_2))
 
   train_df <- train_df %>%
     filter(
-      Season > 2014
+      Season > max(Season)-11
     ) %>%
       create_pelo_percentages() %>%
   filter(!!sym(pelo_pct_mapping[[race_type]]) > 0.75)
@@ -659,7 +443,7 @@ generate_race_predictions <- function(chrono_data, race_type, points_type = "wc"
   test_df <- chrono_data %>%
     filter(
       City == "Summer",
-      Season == 2025
+      Season == max(Season)
     )
   
   # Update Elo columns
@@ -670,7 +454,7 @@ generate_race_predictions <- function(chrono_data, race_type, points_type = "wc"
     mutate(across(
       all_of(elo_cols),
       ~ case_when(
-        Season == 2025 ~ get(gsub("Elo$", "Pelo", cur_column())),
+        Season == max(Season) ~ get(gsub("Elo$", "Pelo", cur_column())),
         TRUE ~ .
       ),
       .names = "{.col}"
@@ -743,11 +527,14 @@ generate_race_predictions <- function(chrono_data, race_type, points_type = "wc"
 
 # Create separate function for TDS predictions
 generate_tds_predictions <- function(chrono_data, gender) {
+  print(chrono_data %>%
+          filter(City == "Tour De Ski"))
+  
     # Process TDS training data
       train_df <- chrono_data %>%
           filter(
-              City == "Tour de Ski",
-              #Season > 2014
+              City == "Tour De Ski",
+              #Season > max(Season)-11
           ) %>%
           create_points_columns() %>%
           # Store original Points column
@@ -758,7 +545,8 @@ generate_tds_predictions <- function(chrono_data, gender) {
           calculate_weighted_average2_tds() %>%
           create_pelo_percentages() %>%
           filter(Pelo_Pct > 0.75) %>%
-          filter(Season > 2014)
+          filter(Season > max(Season)-11)
+    print(train_df)
       
       # Build TDS-specific model using TdS_Points as response
       model_results <- select_gam_features(train_df %>% 
@@ -768,7 +556,7 @@ generate_tds_predictions <- function(chrono_data, gender) {
   test_df <- chrono_data %>%
     filter(
       City == "Summer",
-      Season == 2025
+      Season == max(Season)
     )
   
   # Update Elo columns
@@ -779,7 +567,7 @@ generate_tds_predictions <- function(chrono_data, gender) {
     mutate(across(
       all_of(elo_cols),
       ~ case_when(
-        Season == 2025 ~ get(gsub("Elo$", "Pelo", cur_column())),
+        Season == max(Season) ~ get(gsub("Elo$", "Pelo", cur_column())),
         TRUE ~ .
       ),
       .names = "{.col}"
@@ -871,12 +659,12 @@ for(race_type in race_types) {
 }
 
 # TDS predictions for both genders
-cat("\nProcessing Men's Tour de Ski...\n")
+cat("\nProcessing Men's Tour De Ski...\n")
 mens_tds_results <- generate_tds_predictions(men_chrono, "M")
 all_predictions[["M_TDS"]] <- mens_tds_results$predictions
 all_models[["M_TDS"]] <- mens_tds_results$model
 
-cat("\nProcessing Women's Tour de Ski...\n")
+cat("\nProcessing Women's Tour De Ski...\n")
 womens_tds_results <- generate_tds_predictions(ladies_chrono, "F")
 all_predictions[["F_TDS"]] <- womens_tds_results$predictions
 all_models[["F_TDS"]] <- womens_tds_results$model
@@ -984,13 +772,13 @@ get_race_history <- function(skier_id, race_type, predictions_list, points_type 
                 race_type == "Sprint_C" ~ Distance == "Sprint" & Technique == "C",
                 race_type == "Sprint_F" ~ Distance == "Sprint" & Technique == "F",
                 race_type == "Distance" ~ Distance != "Sprint",
-                race_type == "TDS" ~ City == "Tour de Ski",
+                race_type == "TDS" ~ City == "Tour De Ski",
                 TRUE ~ FALSE
             ),
-            Season > 2014
+            Season > max(Season)-11
         ) %>%
         arrange(desc(Date)) %>%
-        slice_head(n = n_required) %>%
+        dplyr::slice_head(n = n_required) %>%
         pull(!!sym(points_col))
     
 
@@ -1056,8 +844,8 @@ get_race_history <- function(skier_id, race_type, predictions_list, points_type 
     return(all_results)
 
 }
-standings_df <- read_feather("~/ski/elo/python/ski/polars/excel365/men_standings.feather")
-ladies_standings_df <- read_feather("~/ski/elo/python/ski/polars/excel365/ladies_standings.feather")
+standings_df <- read_csv("~/ski/elo/python/ski/polars/excel365/men_standings.csv")
+ladies_standings_df <- read_csv("~/ski/elo/python/ski/polars/excel365/ladies_standings.csv")
 
 
 
@@ -1161,7 +949,7 @@ library(logger)
 library(dplyr)
 library(arrow)
 library(writexl)
-gc()
+#gc()
 # Get current loaded packages
 loaded_packages <- (.packages())
 
@@ -1179,18 +967,18 @@ rm(temp_histories)
 
 
 # Load standings for both genders
-standings_df <- read_feather("~/ski/elo/python/ski/polars/excel365/men_standings.feather")
-ladies_standings_df <- read_feather("~/ski/elo/python/ski/polars/excel365/ladies_standings.feather")
+standings_df <- read_csv("~/ski/elo/python/ski/polars/excel365/men_standings.csv")
+ladies_standings_df <- read_csv("~/ski/elo/python/ski/polars/excel365/ladies_standings.csv")
 
 # Set up logging
-log_file <- "~/blog/daehl-e/content/post/drafts/weekly-recap/simulation_log.txt"
+log_file <- "~/blog/daehl-e/content/post/cross-country/drafts/weekly-recap/simulation_log.txt"
 log_appender(appender_file(log_file))
 
 create_race_distribution <- function(race_results, n_simulations = 1, max_points = 100) {
     points <- race_results$Points
     weights <- race_results$Weight
     n_actual_races <- length(points)
-    
+    #gc()
     # If very few points, use simple method
     if (n_actual_races < 2) {
         #log_info("Using simple method - too few points")
@@ -1302,26 +1090,96 @@ fake_data <- data.frame(
     Weight = seq(5, 1)
 )
 simulated_points <- create_race_distribution(fake_data, n_simulations = 1)
-log_info("{simulated_points}")
 
-# Define remaining races
-remaining_races <- list(
+
+calculate_remaining_races <- function(races_file) {
+  # Read races file
+  races <- read.csv(races_file, stringsAsFactors = FALSE)
+  
+  # Convert dates to Date objects
+  races$Date <- mdy(races$Date)
+  
+  # Get today's date in GMT
+  today <- Sys.Date()
+  
+  # Filter for remaining races (today or after)
+  remaining <- races %>%
+    filter(Date >= today)
+  
+  # Use only male races to avoid double counting
+  male_races <- remaining %>%
+    filter(Sex == "M")
+  
+  # Initialize counts
+  counts <- list(
     WC = list(
-        Distance = 0,
-        Distance_C = 4,
-        Distance_F = 4,
-        Sprint_C = 3,
-        Sprint_F = 3
+      Distance = 0,
+      Distance_C = 0,
+      Distance_F = 0,
+      Sprint_C = 0,
+      Sprint_F = 0
     ),
     Stage = list(
-        Distance = 1,
-        Distance_C = 2,
-        Distance_F = 2,
-        Sprint_C = 1,
-        Sprint_F = 1
+      Distance = 0,
+      Distance_C = 0,
+      Distance_F = 0,
+      Sprint_C = 0,
+      Sprint_F = 0
     ),
-    TDS = 1
-)
+    TDS = 0
+  )
+  
+  # Count each race type
+  for (i in 1:nrow(male_races)) {
+    race <- male_races[i, ]
+    
+    # Check if it's distance or sprint
+    is_distance <- !race$Distance %in% c("Sprint", "Rel", "Ts")
+    is_sprint <- race$Distance == "Sprint"
+    
+    # World Cup races
+    if (race$Stage == 0) {
+      if (is_distance && race$Technique == "") {
+        counts$WC$Distance <- counts$WC$Distance + 1
+      } else if (is_distance && race$Technique == "C") {
+        counts$WC$Distance_C <- counts$WC$Distance_C + 1
+      } else if (is_distance && race$Technique == "F") {
+        counts$WC$Distance_F <- counts$WC$Distance_F + 1
+      } else if (is_sprint && race$Technique == "C") {
+        counts$WC$Sprint_C <- counts$WC$Sprint_C + 1
+      } else if (is_sprint && race$Technique == "F") {
+        counts$WC$Sprint_F <- counts$WC$Sprint_F + 1
+      }
+    }
+    
+    # Stage races
+    if (race$Stage == 1) {
+      if (is_distance && race$Technique == "") {
+        counts$Stage$Distance <- counts$Stage$Distance + 1
+      } else if (is_distance && race$Technique == "C") {
+        counts$Stage$Distance_C <- counts$Stage$Distance_C + 1
+      } else if (is_distance && race$Technique == "F") {
+        counts$Stage$Distance_F <- counts$Stage$Distance_F + 1
+      } else if (is_sprint && race$Technique == "C") {
+        counts$Stage$Sprint_C <- counts$Stage$Sprint_C + 1
+      } else if (is_sprint && race$Technique == "F") {
+        counts$Stage$Sprint_F <- counts$Stage$Sprint_F + 1
+      }
+    }
+    
+    # TDS final climb
+    if (race$Final_Climb == 1) {
+      counts$TDS <- counts$TDS + 1
+    }
+  }
+  
+  return(counts)
+}
+
+# Calculate remaining races dynamically
+races_path <- "~/ski/elo/python/ski/polars/excel365/races.csv"
+remaining_races <- calculate_remaining_races(races_path)
+print(remaining_races)
 
 # Function to simulate a single race for all skiers
 simulate_race <- function(histories, race_type, points_type = "wc") {
@@ -1456,7 +1314,7 @@ simulate_season <- function(histories, standings_df, gender="M", n_simulations =
             }
             }
         }
-        # Simulate Tour de Ski
+        # Simulate Tour De Ski
         if(remaining_races$TDS > 0) {
             tds_results <- sapply(all_skiers, function(skier) {
                 history <- gender_histories[[skier]][["TDS"]]
@@ -1508,77 +1366,68 @@ simulate_season <- function(histories, standings_df, gender="M", n_simulations =
 
 library(writexl)
 # Modified create_standings_summary function to handle both genders
-create_standings_summary_by_gender <- function(simulation_results, standings_df, gender) {
-    # Create base summary
-    summary <- create_standings_summary(simulation_results, standings_df)
+create_standings_summary <- function(simulation_results, standings_df, gender) {
+  # First replace any NaN values with 0
+  simulation_results[is.nan(simulation_results)] <- 0
+  
+  # Calculate ranks for all simulations at once
+  ranks_per_sim <- t(apply(-simulation_results, 1, rank))
+  
+  # Get current standings
+  current_standings <- standings_df %>%
+    filter(Skier %in% colnames(simulation_results)) %>%
+    dplyr::select(Skier, Points) %>%
+    arrange(desc(Points))
+  
+  # Calculate summary statistics
+  simulation_summary <- data.frame(
+    Skier = colnames(simulation_results),
     
-    # Add gender column
-    summary$Gender <- gender
+    # Basic statistics
+    Simulated_Standings = colMeans(simulation_results, na.rm = TRUE),
+    Low_Range = apply(simulation_results, 2, min, na.rm = TRUE),
+    High_Range = apply(simulation_results, 2, max, na.rm = TRUE),
     
-    return(summary)
+    # Win percentage (finishing first)
+    Win_Pct = apply(ranks_per_sim, 2, function(x) mean(x == 1, na.rm = TRUE) * 100),
+    
+    # Top N percentages
+    Top3_Pct = apply(ranks_per_sim, 2, function(x) mean(x <= 3, na.rm = TRUE) * 100),
+    Top5_Pct = apply(ranks_per_sim, 2, function(x) mean(x <= 5, na.rm = TRUE) * 100),
+    Top10_Pct = apply(ranks_per_sim, 2, function(x) mean(x <= 10, na.rm = TRUE) * 100)
+  )
+  
+  # Create final table with clean formatting
+  final_table <- current_standings %>%
+    left_join(simulation_summary, by = "Skier") %>%
+    arrange(desc(Simulated_Standings)) %>%
+    rename(
+      "Current Standings" = Points,
+      "Simulated Standings" = Simulated_Standings,
+      "Low Range" = Low_Range,
+      "High Range" = High_Range,
+      "Win%" = Win_Pct,
+      "Top 3%" = Top3_Pct,
+      "Top 5%" = Top5_Pct,
+      "Top 10%" = Top10_Pct
+    ) %>%
+    mutate(
+      across(c("Current Standings", "Simulated Standings", "Low Range", "High Range"),
+             ~round(as.numeric(.), 1)),
+      across(c("Win%", "Top 3%", "Top 5%", "Top 10%"),
+             ~round(as.numeric(.), 2))
+    )
+  
+  # Create GMT date-based directory if it doesn't exist
+  output_dir <- get_output_dir()
+  dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  
+  # Save to Excel
+  write_xlsx(final_table, file.path(output_dir, paste0(gender, "_standings_predictions.xlsx")))
+  
+  return(final_table)
 }
 
-# Create enhanced summary function with fixes
-create_standings_summary <- function(simulation_results, standings_df, gender) {
-    # First replace any NaN values with 0
-    simulation_results[is.nan(simulation_results)] <- 0
-    
-    # Calculate ranks for all simulations at once
-    ranks_per_sim <- t(apply(-simulation_results, 1, rank))
-    
-    # Get current standings
-    current_standings <- standings_df %>%
-        filter(Skier %in% colnames(simulation_results)) %>%
-        dplyr::select(Skier, Points) %>%
-        arrange(desc(Points))
-    
-    # Calculate summary statistics
-    simulation_summary <- data.frame(
-        Skier = colnames(simulation_results),
-        
-        # Basic statistics
-        Simulated_Standings = colMeans(simulation_results, na.rm = TRUE),
-        Low_Range = apply(simulation_results, 2, min, na.rm = TRUE),
-        High_Range = apply(simulation_results, 2, max, na.rm = TRUE),
-        
-        # Win percentage (finishing first)
-        Win_Pct = apply(ranks_per_sim, 2, function(x) mean(x == 1, na.rm = TRUE) * 100),
-        
-        # Top N percentages
-        Top3_Pct = apply(ranks_per_sim, 2, function(x) mean(x <= 3, na.rm = TRUE) * 100),
-        Top5_Pct = apply(ranks_per_sim, 2, function(x) mean(x <= 5, na.rm = TRUE) * 100),
-        Top10_Pct = apply(ranks_per_sim, 2, function(x) mean(x <= 10, na.rm = TRUE) * 100)
-    )
-    
-    # Create final table with clean formatting
-    final_table <- current_standings %>%
-        left_join(simulation_summary, by = "Skier") %>%
-        arrange(desc(Simulated_Standings)) %>%
-        rename(
-            "Current Standings" = Points,
-            "Simulated Standings" = Simulated_Standings,
-            "Low Range" = Low_Range,
-            "High Range" = High_Range,
-            "Win%" = Win_Pct,
-            "Top 3%" = Top3_Pct,
-            "Top 5%" = Top5_Pct,
-            "Top 10%" = Top10_Pct
-        ) %>%
-        mutate(
-            across(c("Current Standings", "Simulated Standings", "Low Range", "High Range"),
-                  ~round(as.numeric(.), 1)),
-            across(c("Win%", "Top 3%", "Top 5%", "Top 10%"),
-                  ~round(as.numeric(.), 2))
-        )
-    # Create directory if it doesn't exist
-dir.create("~/blog/daehl-e/content/post/drafts/weekly-recap/2025Davos", 
-           recursive = TRUE,  # This creates parent directories if needed
-           showWarnings = FALSE)  # Don't warn if directory already exists
-    # Save to Excel
-    write_xlsx(final_table, "~/blog/daehl-e/content/post/drafts/weekly-recap/2025Davos/standings_predictions.xlsx")
-    
-    return(final_table)
-}
 
 
 # Run simulations for both genders
@@ -1586,62 +1435,64 @@ men_sims <- simulate_season(all_histories_clean, standings_df, "M", 500)
 women_sims <- simulate_season(all_histories_clean, ladies_standings_df, "F", 500)
 
 # Create summaries for both genders
-men_summary <- create_standings_summary_by_gender(men_sims$simulation_results, standings_df, "M")
-women_summary <- create_standings_summary_by_gender(women_sims$simulation_results, ladies_standings_df, "F")
+men_summary <- create_standings_summary(men_sims$simulation_results, standings_df, "M")
+women_summary <- create_standings_summary(women_sims$simulation_results, ladies_standings_df, "F")
 
 # Save separate Excel files for each gender
-write_xlsx(men_summary, "~/blog/daehl-e/content/post/drafts/weekly-recap/2025Davos/mens_standings_predictions.xlsx")
-write_xlsx(women_summary, "~/blog/daehl-e/content/post/drafts/weekly-recap/2025Davos/womens_standings_predictions.xlsx")
+output_dir = get_output_dir()
+# Instead of hardcoded paths:
+write_xlsx(men_summary, file.path(output_dir, "men_standings_predictions.xlsx"))
+write_xlsx(women_summary, file.path(output_dir, "ladies_standings_predictions.xlsx"))
 
 # Create combined markdown summary
-summary_file <- "~/blog/daehl-e/content/post/drafts/weekly-recap/simulation_summary.md"
-writeLines(
-    c("---",
-      "title: 'Cross-Country Skiing Season Simulation Results'",
-      "date: '2024-12-07'",
-      "---",
-      "",
-      "## Men's Results",
-      "",
-      "### Top 10 Current Standings (Men)",
-      paste(1:10, ". ", head(men_summary$Skier, 10), 
-            " (", round(head(men_summary$`Current Standings`, 10)), " points)",
-            sep=""),
-      "",
-      "### Projected Final Top 10 (Men)",
-      paste(1:10, ". ", head(men_summary$Skier, 10),
-            " (", round(head(men_summary$`Simulated Standings`, 10)), " points, ",
-            sprintf("%.1f%%", head(men_summary$`Win%`, 10)), " win probability)",
-            sep=""),
-      "",
-      "## Women's Results",
-      "",
-      "### Top 10 Current Standings (Women)",
-      paste(1:10, ". ", head(women_summary$Skier, 10), 
-            " (", round(head(women_summary$`Current Standings`, 10)), " points)",
-            sep=""),
-      "",
-      "### Projected Final Top 10 (Women)",
-      paste(1:10, ". ", head(women_summary$Skier, 10),
-            " (", round(head(women_summary$`Simulated Standings`, 10)), " points, ",
-            sprintf("%.1f%%", head(women_summary$`Win%`, 10)), " win probability)",
-            sep="")),
-    summary_file
-)
-
-# Function to print debug info for both genders
-print_skier_debug_by_gender <- function(skier, histories, gender) {
-    cat("\nDebugging", if(gender=="M") "Male" else "Female", "skier:", skier, "\n")
-    if(skier %in% names(histories)) {
-        cat("Available race types:\n")
-        print(names(histories[[skier]]))
-        
-        cat("\nSample of race histories:\n")
-        for(race_type in names(histories[[skier]])) {
-            cat("\n", race_type, ":\n")
-            print(histories[[skier]][[race_type]])
-        }
-    } else {
-        cat("Skier not found in histories\n")
-    }
-}
+# summary_file <- "~/blog/daehl-e/content/post/drafts/weekly-recap/simulation_summary.md"
+# writeLines(
+#     c("---",
+#       "title: 'Cross-Country Skiing Season Simulation Results'",
+#       "date: '2024-12-07'",
+#       "---",
+#       "",
+#       "## Men's Results",
+#       "",
+#       "### Top 10 Current Standings (Men)",
+#       paste(1:10, ". ", head(men_summary$Skier, 10), 
+#             " (", round(head(men_summary$`Current Standings`, 10)), " points)",
+#             sep=""),
+#       "",
+#       "### Projected Final Top 10 (Men)",
+#       paste(1:10, ". ", head(men_summary$Skier, 10),
+#             " (", round(head(men_summary$`Simulated Standings`, 10)), " points, ",
+#             sprintf("%.1f%%", head(men_summary$`Win%`, 10)), " win probability)",
+#             sep=""),
+#       "",
+#       "## Women's Results",
+#       "",
+#       "### Top 10 Current Standings (Women)",
+#       paste(1:10, ". ", head(women_summary$Skier, 10), 
+#             " (", round(head(women_summary$`Current Standings`, 10)), " points)",
+#             sep=""),
+#       "",
+#       "### Projected Final Top 10 (Women)",
+#       paste(1:10, ". ", head(women_summary$Skier, 10),
+#             " (", round(head(women_summary$`Simulated Standings`, 10)), " points, ",
+#             sprintf("%.1f%%", head(women_summary$`Win%`, 10)), " win probability)",
+#             sep="")),
+#     summary_file
+# )
+# 
+# # Function to print debug info for both genders
+# print_skier_debug_by_gender <- function(skier, histories, gender) {
+#     cat("\nDebugging", if(gender=="M") "Male" else "Female", "skier:", skier, "\n")
+#     if(skier %in% names(histories)) {
+#         cat("Available race types:\n")
+#         print(names(histories[[skier]]))
+#         
+#         cat("\nSample of race histories:\n")
+#         for(race_type in names(histories[[skier]])) {
+#             cat("\n", race_type, ":\n")
+#             print(histories[[skier]][[race_type]])
+#         }
+#     } else {
+#         cat("Skier not found in histories\n")
+#     }
+# }
