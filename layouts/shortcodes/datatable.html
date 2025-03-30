@@ -7,6 +7,22 @@
 {{ $headers := index $data "headers" }}
 {{ $rows := index $data "rows" }}
 
+<!-- Check if ID column exists and find its index -->
+{{ $idColumnIndex := -1 }}
+{{ range $index, $header := $headers }}
+    {{ if eq (lower $header) "id" }}
+        {{ $idColumnIndex = $index }}
+    {{ end }}
+{{ end }}
+
+<!-- Check if Sex column exists and find its index -->
+{{ $sexColumnIndex := -1 }}
+{{ range $index, $header := $headers }}
+    {{ if eq (lower $header) "sex" }}
+        {{ $sexColumnIndex = $index }}
+    {{ end }}
+{{ end }}
+
 <!-- Include DataTables CSS and JS (only if not already loaded) -->
 {{ if not (.Page.Scratch.Get "datatableLoaded") }}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css">
@@ -34,8 +50,8 @@
             <tbody>
                 {{ range $rows }}
                     <tr>
-                        {{ range . }}
-                            <td>{{ . }}</td>
+                        {{ range $cellIndex, $cellValue := . }}
+                            <td>{{ $cellValue }}</td>
                         {{ end }}
                     </tr>
                 {{ end }}
@@ -48,23 +64,59 @@
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof jQuery !== 'undefined' && typeof jQuery.fn.DataTable !== 'undefined') {
         var tableId = '#datatable-{{ anchorize (.Get 0) }}';
+        var idColumnIndex = {{ $idColumnIndex }};
+        var sexColumnIndex = {{ $sexColumnIndex }};
+
         if (!$.fn.DataTable.isDataTable(tableId)) {
-            $(tableId).DataTable({
+            var dataTable = $(tableId).DataTable({
                 pageLength: 10,
                 scrollX: true,
                 scrollCollapse: true,
                 fixedColumns: {
                     left: 1
                 },
-                columnDefs: [{
-                    targets: '_all',
-                    render: function(data, type, row) {
-                        if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
-                            return parseFloat(data).toFixed(2);
+                columnDefs: [
+                    // Hide ID column if it exists
+                    {
+                        targets: idColumnIndex,
+                        visible: false
+                    },
+                    // Format numeric values
+                    {
+                        targets: '_all',
+                        render: function(data, type, row) {
+                            if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                                return parseFloat(data).toFixed(2);
+                            }
+                            return data;
                         }
-                        return data;
+                    },
+                    // Add links to first column
+                    {
+                        targets: 0,
+                        render: function(data, type, row) {
+                            if (type === 'display' && idColumnIndex >= 0) {
+                                var id = row[idColumnIndex];
+                                var gender = 'L'; // Default to Ladies
+
+                                // If Sex column exists, use it to determine gender
+                                if (sexColumnIndex >= 0) {
+                                    var sex = row[sexColumnIndex];
+                                    gender = (sex === 'M') ? 'M' : 'L';
+                                } else {
+                                    // Check if table name contains men/ladies to determine gender
+                                    var tableName = '{{ lower (.Get 0) }}';
+                                    if (tableName.includes('men') || tableName.includes('m_')) {
+                                        gender = 'M';
+                                    }
+                                }
+
+                                return '<a href="/cross-country/skiers/skier/?id=' + id + '&gender=' + gender + '">' + data + '</a>';
+                            }
+                            return data;
+                        }
                     }
-                }],
+                ],
                 order: [],
                 language: {
                     search: "Search:",

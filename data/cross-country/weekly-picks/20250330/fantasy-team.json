@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      14457,
+      124.408328918914
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      4352,
+      111.219352886133
+    ],
+    [
+      "Kerttu Niskanen",
+      37,
+      "L",
+      "Finland",
+      5787,
+      96.9637640242632
+    ],
+    [
+      "Katerina Janatova",
+      3198,
+      "L",
+      "Czechia",
+      2445,
+      96.114581512524
+    ],
+    [
+      "Victoria Carl",
+      1489,
+      "L",
+      "Germany",
+      9438,
+      93.2322948990993
+    ],
+    [
+      "Jasmi Joensuu",
+      1675,
+      "L",
+      "Finland",
+      4440,
+      84.0346556279383
+    ],
+    [
+      "Coletta Rydzek",
+      3254,
+      "L",
+      "Germany",
+      1187,
+      83.7929978898701
+    ],
+    [
+      "Julia Kern",
+      1846,
+      "L",
+      "USA",
+      1824,
+      78.1469272896256
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      17908,
+      147.394539129373
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "M",
+      "Italy",
+      8691,
+      120.428825396415
+    ],
+    [
+      "Erik Valnes",
+      5923,
+      "M",
+      "Norway",
+      8548,
+      105.593114633402
+    ],
+    [
+      "Edvin Anger",
+      14039,
+      "M",
+      "Sweden",
+      7818,
+      95.7135809952316
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      "M",
+      "USA",
+      5734,
+      90.9885313872
+    ],
+    [
+      "Michal Novak",
+      3655,
+      "M",
+      "Czechia",
+      1386,
+      80.2668324974804
+    ],
+    [
+      "Jules Chappaz",
+      12181,
+      "M",
+      "France",
+      1370,
+      73.1181924061709
+    ],
+    [
+      "Richard Jouve",
+      2768,
+      "M",
+      "France",
+      2052,
+      71.5424905467788
+    ]
+  ]
+}

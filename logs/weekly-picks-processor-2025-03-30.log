@@ -1,0 +1,1304 @@
+[2025-03-30 00:56:21 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 00:56:21 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 00:56:21 UTC] No folder found for today's date (20250330)
+[2025-03-30 00:56:21 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 00:57:52 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 00:57:52 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 00:57:52 UTC] No folder found for today's date (20250330)
+[2025-03-30 00:57:52 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 00:58:24 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 00:58:24 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 00:58:24 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 00:58:24 UTC] Running: cd /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330 && python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py
+Usage: python excel_to_json.py input.xlsx output_directory
+[2025-03-30 00:58:25 UTC] ✗ Failed: cd /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330 && python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py
+[2025-03-30 01:01:08 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:01:08 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:01:08 UTC] No folder found for today's date (20250330)
+[2025-03-30 01:01:09 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:01:12 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:01:12 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:01:12 UTC] No folder found for today's date (20250330)
+[2025-03-30 01:01:12 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:01:23 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:01:23 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:01:23 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:01:23 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:01:23 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Team.json
+[2025-03-30 01:01:23 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:23 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:01:23 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Team.json
+[2025-03-30 01:01:24 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:24 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:01:24 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Team.json
+[2025-03-30 01:01:24 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:24 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:01:24 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:01:24 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:24 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:01:24 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:01:24 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:24 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:01:24 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:01:25 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:25 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:01:25 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:01:25 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:25 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:01:25 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:01:25 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:25 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:01:25 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:01:25 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:25 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:01:25 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:01:26 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:26 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:01:26 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:01:26 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:26 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:01:26 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:01:26 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:26 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:01:26 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:01:26 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:01:26 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:01:26 UTC] Added section for Sheet_1
+[2025-03-30 01:01:26 UTC] Added section for Team
+[2025-03-30 01:01:26 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:01:26 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:03:07 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:03:07 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:03:07 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:03:07 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:03:07 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Team.json
+[2025-03-30 01:03:08 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:08 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:03:08 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Team.json
+[2025-03-30 01:03:08 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:08 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:03:08 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Team.json
+[2025-03-30 01:03:08 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:08 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:03:08 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:08 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:08 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:03:08 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:09 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:09 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:03:09 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:09 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:09 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:03:09 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:09 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:09 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:03:09 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:09 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:09 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:03:09 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:10 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:10 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:03:10 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:10 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:10 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:03:10 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:10 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:10 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:03:10 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:10 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:10 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:03:10 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:10 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:10 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:03:10 UTC] Added section for Sheet_1
+[2025-03-30 01:03:10 UTC] Added section for Team
+[2025-03-30 01:03:10 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:03:11 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:03:49 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:03:49 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:03:49 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:03:49 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:03:49 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Team.json
+[2025-03-30 01:03:50 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:50 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:03:50 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Team.json
+[2025-03-30 01:03:50 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:50 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:03:50 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Team.json
+[2025-03-30 01:03:50 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:50 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:03:50 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:50 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:50 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:03:50 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:50 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:50 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:03:50 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:51 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:51 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:03:51 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:51 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:51 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:03:51 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:51 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:51 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:03:51 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:51 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:51 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:03:51 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:52 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:52 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:03:52 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:52 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:52 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:03:52 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:52 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:52 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:03:52 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/Sheet_1.json
+[2025-03-30 01:03:52 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:03:52 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:03:52 UTC] Added section for Sheet_1
+[2025-03-30 01:03:52 UTC] Added section for Team
+[2025-03-30 01:03:52 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:03:52 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:07:20 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:07:20 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:07:20 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:07:20 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:07:20 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_mixed_relay_team.json
+[2025-03-30 01:07:20 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:20 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:07:20 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_relay_team.json
+[2025-03-30 01:07:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:21 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:07:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_team_sprint_team.json
+[2025-03-30 01:07:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:21 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:07:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_points.json
+[2025-03-30 01:07:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:21 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:07:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_probabilities.json
+[2025-03-30 01:07:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:21 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:07:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_points.json
+[2025-03-30 01:07:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:22 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:07:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_probabilities.json
+[2025-03-30 01:07:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:22 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:07:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_points.json
+[2025-03-30 01:07:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:22 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:07:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_probabilities.json
+[2025-03-30 01:07:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:22 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:07:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_points.json
+[2025-03-30 01:07:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:22 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:07:23 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_probabilities.json
+[2025-03-30 01:07:23 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:23 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:07:23 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_points.json
+[2025-03-30 01:07:23 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:23 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:07:23 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_probabilities.json
+[2025-03-30 01:07:23 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:07:23 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:07:23 UTC] Added section for Sheet_1 with title: 1
+[2025-03-30 01:07:23 UTC] Added section for Team with title: Team
+[2025-03-30 01:07:23 UTC] Added section for fantasy_mixed_relay_team with title: team
+[2025-03-30 01:07:23 UTC] Added section for fantasy_relay_team with title: team
+[2025-03-30 01:07:23 UTC] Added section for fantasy_team_sprint_team with title: team
+[2025-03-30 01:07:23 UTC] Added section for ladies_relay_points with title: points
+[2025-03-30 01:07:23 UTC] Added section for ladies_relay_probabilities with title: probabilities
+[2025-03-30 01:07:23 UTC] Added section for ladies_team_sprint_points with title: points
+[2025-03-30 01:07:23 UTC] Added section for ladies_team_sprint_probabilities with title: probabilities
+[2025-03-30 01:07:23 UTC] Added section for men_relay_points with title: points
+[2025-03-30 01:07:23 UTC] Added section for men_relay_probabilities with title: probabilities
+[2025-03-30 01:07:23 UTC] Added section for men_team_sprint_points with title: points
+[2025-03-30 01:07:23 UTC] Added section for men_team_sprint_probabilities with title: probabilities
+[2025-03-30 01:07:23 UTC] Added section for mixed_relay_points with title: points
+[2025-03-30 01:07:23 UTC] Added section for mixed_relay_probabilities with title: probabilities
+[2025-03-30 01:07:23 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:07:23 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:11:08 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:11:08 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:11:08 UTC] No folder found for today's date (20250330)
+[2025-03-30 01:11:08 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:11:23 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:11:23 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:11:23 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:11:23 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:11:23 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_mixed_relay_team.json
+[2025-03-30 01:11:24 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:24 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:11:24 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_relay_team.json
+[2025-03-30 01:11:24 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:24 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:11:24 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_team_sprint_team.json
+[2025-03-30 01:11:24 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:24 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:11:24 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_points.json
+[2025-03-30 01:11:25 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:25 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:11:25 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_probabilities.json
+[2025-03-30 01:11:25 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:25 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:11:25 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_points.json
+[2025-03-30 01:11:25 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:25 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:11:25 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_probabilities.json
+[2025-03-30 01:11:25 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:25 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:11:25 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_points.json
+[2025-03-30 01:11:25 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:25 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:11:25 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_probabilities.json
+[2025-03-30 01:11:26 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:26 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:11:26 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_points.json
+[2025-03-30 01:11:26 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:26 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:11:26 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_probabilities.json
+[2025-03-30 01:11:26 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:26 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:11:26 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_points.json
+[2025-03-30 01:11:26 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:26 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:11:26 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_probabilities.json
+[2025-03-30 01:11:27 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:11:27 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:11:27 UTC] Added section for Sheet_1 with title: 1
+[2025-03-30 01:11:27 UTC] Added section for Team with title: Team
+[2025-03-30 01:11:27 UTC] Added section for fantasy_mixed_relay_team with title: team
+[2025-03-30 01:11:27 UTC] Added section for fantasy_relay_team with title: team
+[2025-03-30 01:11:27 UTC] Added section for fantasy_team_sprint_team with title: team
+[2025-03-30 01:11:27 UTC] Added section for ladies_relay_points with title: points
+[2025-03-30 01:11:27 UTC] Added section for ladies_relay_probabilities with title: probabilities
+[2025-03-30 01:11:27 UTC] Added section for ladies_team_sprint_points with title: points
+[2025-03-30 01:11:27 UTC] Added section for ladies_team_sprint_probabilities with title: probabilities
+[2025-03-30 01:11:27 UTC] Added section for men_relay_points with title: points
+[2025-03-30 01:11:27 UTC] Added section for men_relay_probabilities with title: probabilities
+[2025-03-30 01:11:27 UTC] Added section for men_team_sprint_points with title: points
+[2025-03-30 01:11:27 UTC] Added section for men_team_sprint_probabilities with title: probabilities
+[2025-03-30 01:11:27 UTC] Added section for mixed_relay_points with title: points
+[2025-03-30 01:11:27 UTC] Added section for mixed_relay_probabilities with title: probabilities
+[2025-03-30 01:11:27 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:11:27 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:14:27 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:14:27 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:14:27 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:14:27 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:14:27 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_mixed_relay_team.json
+[2025-03-30 01:14:27 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:27 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:14:27 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_relay_team.json
+[2025-03-30 01:14:28 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:28 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:14:28 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_team_sprint_team.json
+[2025-03-30 01:14:28 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:28 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:14:28 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_points.json
+[2025-03-30 01:14:28 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:28 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:14:28 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_probabilities.json
+[2025-03-30 01:14:28 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:28 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:14:28 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_points.json
+[2025-03-30 01:14:29 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:29 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:14:29 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_probabilities.json
+[2025-03-30 01:14:29 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:29 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:14:29 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_points.json
+[2025-03-30 01:14:29 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:29 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:14:29 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_probabilities.json
+[2025-03-30 01:14:29 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:29 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:14:29 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_points.json
+[2025-03-30 01:14:30 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:30 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:14:30 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_probabilities.json
+[2025-03-30 01:14:30 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:30 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:14:30 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_points.json
+[2025-03-30 01:14:30 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:30 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:14:30 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_probabilities.json
+[2025-03-30 01:14:30 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:14:30 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:14:30 UTC] Added section for Sheet_1 with title: 1
+[2025-03-30 01:14:30 UTC] Added section for Team with title: Team
+[2025-03-30 01:14:30 UTC] Added section for fantasy_mixed_relay_team with title: Team
+[2025-03-30 01:14:30 UTC] Added section for fantasy_relay_team with title: Team
+[2025-03-30 01:14:30 UTC] Added section for fantasy_team_sprint_team with title: Team
+[2025-03-30 01:14:30 UTC] Added section for ladies_relay_points with title: Points
+[2025-03-30 01:14:30 UTC] Added section for ladies_relay_probabilities with title: Probabilities
+[2025-03-30 01:14:30 UTC] Added section for ladies_team_sprint_points with title: Points
+[2025-03-30 01:14:30 UTC] Added section for ladies_team_sprint_probabilities with title: Probabilities
+[2025-03-30 01:14:30 UTC] Added section for men_relay_points with title: Points
+[2025-03-30 01:14:30 UTC] Added section for men_relay_probabilities with title: Probabilities
+[2025-03-30 01:14:30 UTC] Added section for men_team_sprint_points with title: Points
+[2025-03-30 01:14:30 UTC] Added section for men_team_sprint_probabilities with title: Probabilities
+[2025-03-30 01:14:30 UTC] Added section for mixed_relay_points with title: Points
+[2025-03-30 01:14:30 UTC] Added section for mixed_relay_probabilities with title: Probabilities
+[2025-03-30 01:14:30 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:14:30 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:15:20 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:15:20 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:15:20 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:15:20 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:15:20 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_mixed_relay_team.json
+[2025-03-30 01:15:20 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:20 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:15:20 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_relay_team.json
+[2025-03-30 01:15:20 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:20 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:15:20 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_team_sprint_team.json
+[2025-03-30 01:15:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:21 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:15:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_points.json
+[2025-03-30 01:15:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:21 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:15:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_probabilities.json
+[2025-03-30 01:15:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:21 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:15:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_points.json
+[2025-03-30 01:15:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:21 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:15:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_probabilities.json
+[2025-03-30 01:15:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:22 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:15:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_points.json
+[2025-03-30 01:15:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:22 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:15:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_probabilities.json
+[2025-03-30 01:15:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:22 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:15:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_points.json
+[2025-03-30 01:15:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:22 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:15:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_probabilities.json
+[2025-03-30 01:15:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:22 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:15:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_points.json
+[2025-03-30 01:15:23 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:23 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:15:23 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_probabilities.json
+[2025-03-30 01:15:23 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:15:23 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:15:23 UTC] Added section for Sheet_1 with title: 1
+[2025-03-30 01:15:23 UTC] Added section for Team with title: Team
+[2025-03-30 01:15:23 UTC] Added section for fantasy_mixed_relay_team with title: Team
+[2025-03-30 01:15:23 UTC] Added section for fantasy_relay_team with title: Team
+[2025-03-30 01:15:23 UTC] Added section for fantasy_team_sprint_team with title: Team
+[2025-03-30 01:15:23 UTC] Added section for ladies_relay_points with title: Points
+[2025-03-30 01:15:23 UTC] Added section for ladies_relay_probabilities with title: Probabilities
+[2025-03-30 01:15:23 UTC] Added section for ladies_team_sprint_points with title: Points
+[2025-03-30 01:15:23 UTC] Added section for ladies_team_sprint_probabilities with title: Probabilities
+[2025-03-30 01:15:23 UTC] Added section for men_relay_points with title: Points
+[2025-03-30 01:15:23 UTC] Added section for men_relay_probabilities with title: Probabilities
+[2025-03-30 01:15:23 UTC] Added section for men_team_sprint_points with title: Points
+[2025-03-30 01:15:23 UTC] Added section for men_team_sprint_probabilities with title: Probabilities
+[2025-03-30 01:15:23 UTC] Added section for mixed_relay_points with title: Points
+[2025-03-30 01:15:23 UTC] Added section for mixed_relay_probabilities with title: Probabilities
+[2025-03-30 01:15:23 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:15:23 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:16:19 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:16:19 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:16:19 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:16:19 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:16:19 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_mixed_relay_team.json
+[2025-03-30 01:16:19 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:19 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:16:19 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_relay_team.json
+[2025-03-30 01:16:19 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:19 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:16:19 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_team_sprint_team.json
+[2025-03-30 01:16:19 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:19 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:16:19 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_points.json
+[2025-03-30 01:16:20 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:20 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:16:20 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_probabilities.json
+[2025-03-30 01:16:20 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:20 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:16:20 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_points.json
+[2025-03-30 01:16:20 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:20 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:16:20 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_probabilities.json
+[2025-03-30 01:16:20 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:20 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:16:20 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_points.json
+[2025-03-30 01:16:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:21 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:16:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_probabilities.json
+[2025-03-30 01:16:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:21 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:16:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_points.json
+[2025-03-30 01:16:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:21 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:16:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_probabilities.json
+[2025-03-30 01:16:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:21 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:16:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_points.json
+[2025-03-30 01:16:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:22 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:16:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_probabilities.json
+[2025-03-30 01:16:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:16:22 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:16:22 UTC] Added section for Sheet_1 with title: Men Team Sprint Probabilities
+[2025-03-30 01:16:22 UTC] Added section for Team with title: Team
+[2025-03-30 01:16:22 UTC] Added section for fantasy_mixed_relay_team with title: Fantasy Mixed Relay Team
+[2025-03-30 01:16:22 UTC] Added section for fantasy_relay_team with title: Fantasy Relay Team
+[2025-03-30 01:16:22 UTC] Added section for fantasy_team_sprint_team with title: Fantasy Team Sprint Team
+[2025-03-30 01:16:22 UTC] Added section for ladies_relay_points with title: Ladies Relay Points
+[2025-03-30 01:16:22 UTC] Added section for ladies_relay_probabilities with title: Ladies Relay Probabilities
+[2025-03-30 01:16:22 UTC] Added section for ladies_team_sprint_points with title: Ladies Team Sprint Points
+[2025-03-30 01:16:22 UTC] Added section for ladies_team_sprint_probabilities with title: Ladies Team Sprint Probabilities
+[2025-03-30 01:16:22 UTC] Added section for men_relay_points with title: Men Relay Points
+[2025-03-30 01:16:22 UTC] Added section for men_relay_probabilities with title: Men Relay Probabilities
+[2025-03-30 01:16:22 UTC] Added section for men_team_sprint_points with title: Men Team Sprint Points
+[2025-03-30 01:16:22 UTC] Added section for men_team_sprint_probabilities with title: Men Team Sprint Probabilities
+[2025-03-30 01:16:22 UTC] Added section for mixed_relay_points with title: Mixed Relay Points
+[2025-03-30 01:16:22 UTC] Added section for mixed_relay_probabilities with title: Mixed Relay Probabilities
+[2025-03-30 01:16:22 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:16:22 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:24:02 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:24:02 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:24:02 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:24:02 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:24:02 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Nation', 'Price']... (total: 8)
+- Rows: 12 entries
+- First row example: ['NORWAY I', 'NORWAY', 20624]...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_mixed_relay_team.json
+[2025-03-30 01:24:02 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:02 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:24:02 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Gender', 'Price']... (total: 4)
+- Rows: 11 entries
+- First row example: ['NORWAY I', 'men', 25915]...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_relay_team.json
+[2025-03-30 01:24:03 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:03 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:24:03 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Nation', 'Gender']... (total: 5)
+- Rows: 12 entries
+- First row example: ['NORWAY I', 'NORWAY', 'men']...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_team_sprint_team.json
+[2025-03-30 01:24:03 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:03 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:24:03 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Jonna Sundling', 'Frida Karlsson']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_points.json
+[2025-03-30 01:24:03 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:03 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:24:03 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 47 entries
+- First row example: ['NORWAY I', 'Astrid Øyre Slind', 'Therese Johaug']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_probabilities.json
+[2025-03-30 01:24:03 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:03 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:24:03 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 4)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Linn Svahn', 'Jonna Sundling']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_points.json
+[2025-03-30 01:24:04 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:04 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:24:04 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 7)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Linn Svahn', 'Jonna Sundling']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_probabilities.json
+[2025-03-30 01:24:04 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:04 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:24:04 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 24 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Martin Løwstrøm Nyenget']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_points.json
+[2025-03-30 01:24:04 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:04 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:24:04 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 24 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Martin Løwstrøm Nyenget']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_probabilities.json
+[2025-03-30 01:24:04 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:04 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:24:04 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 4)
+- Rows: 31 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Johannes Høsflot Klæbo']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_points.json
+[2025-03-30 01:24:05 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:05 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:24:05 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 7)
+- Rows: 31 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Johannes Høsflot Klæbo']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_probabilities.json
+[2025-03-30 01:24:05 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:05 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:24:05 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 19 entries
+- First row example: ['NORWAY I', 'Pål Golberg', 'Nora Sanness']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_points.json
+[2025-03-30 01:24:05 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:05 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:24:05 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 19 entries
+- First row example: ['NORWAY I', 'Pål Golberg', 'Nora Sanness']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_probabilities.json
+[2025-03-30 01:24:05 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:24:05 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:24:05 UTC] Added section for Sheet_1 with title: Men Team Sprint Probabilities
+[2025-03-30 01:24:05 UTC] Added section for Team with title: Team
+[2025-03-30 01:24:05 UTC] Added section for fantasy_mixed_relay_team with title: Fantasy Mixed Relay Team
+[2025-03-30 01:24:05 UTC] Added section for fantasy_relay_team with title: Fantasy Relay Team
+[2025-03-30 01:24:05 UTC] Added section for fantasy_team_sprint_team with title: Fantasy Team Sprint Team
+[2025-03-30 01:24:05 UTC] Added section for ladies_relay_points with title: Ladies Relay Points
+[2025-03-30 01:24:05 UTC] Added section for ladies_relay_probabilities with title: Ladies Relay Probabilities
+[2025-03-30 01:24:05 UTC] Added section for ladies_team_sprint_points with title: Ladies Team Sprint Points
+[2025-03-30 01:24:05 UTC] Added section for ladies_team_sprint_probabilities with title: Ladies Team Sprint Probabilities
+[2025-03-30 01:24:05 UTC] Added section for men_relay_points with title: Men Relay Points
+[2025-03-30 01:24:05 UTC] Added section for men_relay_probabilities with title: Men Relay Probabilities
+[2025-03-30 01:24:05 UTC] Added section for men_team_sprint_points with title: Men Team Sprint Points
+[2025-03-30 01:24:05 UTC] Added section for men_team_sprint_probabilities with title: Men Team Sprint Probabilities
+[2025-03-30 01:24:05 UTC] Added section for mixed_relay_points with title: Mixed Relay Points
+[2025-03-30 01:24:05 UTC] Added section for mixed_relay_probabilities with title: Mixed Relay Probabilities
+[2025-03-30 01:24:05 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:24:05 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:26:20 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:26:20 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:26:20 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:26:20 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:26:20 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Nation', 'Price']... (total: 8)
+- Rows: 12 entries
+- First row example: ['NORWAY I', 'NORWAY', 20624]...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_mixed_relay_team.json
+[2025-03-30 01:26:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:21 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:26:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Gender', 'Price']... (total: 4)
+- Rows: 11 entries
+- First row example: ['NORWAY I', 'men', 25915]...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_relay_team.json
+[2025-03-30 01:26:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:21 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:26:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Nation', 'Gender']... (total: 5)
+- Rows: 12 entries
+- First row example: ['NORWAY I', 'NORWAY', 'men']...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_team_sprint_team.json
+[2025-03-30 01:26:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:21 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:26:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Jonna Sundling', 'Frida Karlsson']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_points.json
+[2025-03-30 01:26:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:21 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:26:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 47 entries
+- First row example: ['NORWAY I', 'Astrid Øyre Slind', 'Therese Johaug']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_probabilities.json
+[2025-03-30 01:26:21 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:21 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:26:21 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 4)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Linn Svahn', 'Jonna Sundling']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_points.json
+[2025-03-30 01:26:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:22 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:26:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 7)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Linn Svahn', 'Jonna Sundling']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_probabilities.json
+[2025-03-30 01:26:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:22 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:26:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 24 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Martin Løwstrøm Nyenget']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_points.json
+[2025-03-30 01:26:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:22 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:26:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 24 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Martin Løwstrøm Nyenget']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_probabilities.json
+[2025-03-30 01:26:22 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:22 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:26:22 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 4)
+- Rows: 31 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Johannes Høsflot Klæbo']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_points.json
+[2025-03-30 01:26:23 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:23 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:26:23 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 7)
+- Rows: 31 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Johannes Høsflot Klæbo']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_probabilities.json
+[2025-03-30 01:26:23 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:23 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:26:23 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 19 entries
+- First row example: ['NORWAY I', 'Pål Golberg', 'Nora Sanness']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_points.json
+[2025-03-30 01:26:23 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:23 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:26:23 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 19 entries
+- First row example: ['NORWAY I', 'Pål Golberg', 'Nora Sanness']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_probabilities.json
+[2025-03-30 01:26:23 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:26:23 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:26:23 UTC] Added section for Sheet_1 with title: Men Team Sprint Probabilities
+[2025-03-30 01:26:23 UTC] Added section for Team with title: Team
+[2025-03-30 01:26:23 UTC] Added section for fantasy_mixed_relay_team with title: Fantasy Mixed Relay Team
+[2025-03-30 01:26:23 UTC] Added section for fantasy_relay_team with title: Fantasy Relay Team
+[2025-03-30 01:26:23 UTC] Added section for fantasy_team_sprint_team with title: Fantasy Team Sprint Team
+[2025-03-30 01:26:23 UTC] Added section for ladies_relay_points with title: Ladies Relay Points
+[2025-03-30 01:26:23 UTC] Added section for ladies_relay_probabilities with title: Ladies Relay Probabilities
+[2025-03-30 01:26:23 UTC] Added section for ladies_team_sprint_points with title: Ladies Team Sprint Points
+[2025-03-30 01:26:23 UTC] Added section for ladies_team_sprint_probabilities with title: Ladies Team Sprint Probabilities
+[2025-03-30 01:26:23 UTC] Added section for men_relay_points with title: Men Relay Points
+[2025-03-30 01:26:23 UTC] Added section for men_relay_probabilities with title: Men Relay Probabilities
+[2025-03-30 01:26:23 UTC] Added section for men_team_sprint_points with title: Men Team Sprint Points
+[2025-03-30 01:26:24 UTC] Added section for men_team_sprint_probabilities with title: Men Team Sprint Probabilities
+[2025-03-30 01:26:24 UTC] Added section for mixed_relay_points with title: Mixed Relay Points
+[2025-03-30 01:26:24 UTC] Added section for mixed_relay_probabilities with title: Mixed Relay Probabilities
+[2025-03-30 01:26:24 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:26:24 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:32:12 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:32:12 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:32:12 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:32:12 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:32:12 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Nation', 'Price']... (total: 8)
+- Rows: 12 entries
+- First row example: ['NORWAY I', 'NORWAY', 20624]...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_mixed_relay_team.json
+[2025-03-30 01:32:13 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:13 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:32:13 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Gender', 'Price']... (total: 4)
+- Rows: 11 entries
+- First row example: ['NORWAY I', 'men', 25915]...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_relay_team.json
+[2025-03-30 01:32:13 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:13 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:32:13 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Nation', 'Gender']... (total: 5)
+- Rows: 12 entries
+- First row example: ['NORWAY I', 'NORWAY', 'men']...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_team_sprint_team.json
+[2025-03-30 01:32:13 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:13 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:32:13 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Jonna Sundling', 'Frida Karlsson']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_points.json
+[2025-03-30 01:32:13 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:13 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:32:13 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 47 entries
+- First row example: ['NORWAY I', 'Astrid Øyre Slind', 'Therese Johaug']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_probabilities.json
+[2025-03-30 01:32:14 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:14 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:32:14 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 4)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Linn Svahn', 'Jonna Sundling']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_points.json
+[2025-03-30 01:32:14 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:14 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:32:14 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 7)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Linn Svahn', 'Jonna Sundling']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_probabilities.json
+[2025-03-30 01:32:14 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:14 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:32:14 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 24 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Martin Løwstrøm Nyenget']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_points.json
+[2025-03-30 01:32:14 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:14 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:32:14 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 24 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Martin Løwstrøm Nyenget']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_probabilities.json
+[2025-03-30 01:32:15 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:15 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:32:15 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 4)
+- Rows: 31 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Johannes Høsflot Klæbo']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_points.json
+[2025-03-30 01:32:15 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:15 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:32:15 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 7)
+- Rows: 31 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Johannes Høsflot Klæbo']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_probabilities.json
+[2025-03-30 01:32:15 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:15 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:32:15 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 19 entries
+- First row example: ['NORWAY I', 'Pål Golberg', 'Nora Sanness']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_points.json
+[2025-03-30 01:32:15 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:15 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:32:15 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 19 entries
+- First row example: ['NORWAY I', 'Pål Golberg', 'Nora Sanness']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_probabilities.json
+[2025-03-30 01:32:16 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:32:16 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:32:16 UTC] Added section for fantasy_mixed_relay_team with title: Fantasy Mixed Relay Team
+[2025-03-30 01:32:16 UTC] Added section for fantasy_relay_team with title: Fantasy Relay Team
+[2025-03-30 01:32:16 UTC] Added section for fantasy_team_sprint_team with title: Fantasy Team Sprint Team
+[2025-03-30 01:32:16 UTC] Added section for ladies_relay_points with title: Ladies Relay Points
+[2025-03-30 01:32:16 UTC] Added section for ladies_relay_probabilities with title: Ladies Relay Probabilities
+[2025-03-30 01:32:16 UTC] Added section for ladies_team_sprint_points with title: Ladies Team Sprint Points
+[2025-03-30 01:32:16 UTC] Added section for ladies_team_sprint_probabilities with title: Ladies Team Sprint Probabilities
+[2025-03-30 01:32:16 UTC] Added section for men_relay_points with title: Men Relay Points
+[2025-03-30 01:32:16 UTC] Added section for men_relay_probabilities with title: Men Relay Probabilities
+[2025-03-30 01:32:16 UTC] Added section for men_team_sprint_points with title: Men Team Sprint Points
+[2025-03-30 01:32:16 UTC] Added section for men_team_sprint_probabilities with title: Men Team Sprint Probabilities
+[2025-03-30 01:32:16 UTC] Added section for mixed_relay_points with title: Mixed Relay Points
+[2025-03-30 01:32:16 UTC] Added section for mixed_relay_probabilities with title: Mixed Relay Probabilities
+[2025-03-30 01:32:16 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:32:16 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 01:51:08 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 01:51:08 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 01:51:08 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 01:51:08 UTC] Processing Excel file: fantasy-team.xlsx
+[2025-03-30 01:51:08 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy-team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Skier', 'ID', 'Sex']... (total: 6)
+- Rows: 16 entries
+- First row example: ['Jessie Diggins', 131, 'L']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy-team.json
+[2025-03-30 01:51:09 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy-team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:09 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 01:51:09 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Nation', 'Price']... (total: 8)
+- Rows: 12 entries
+- First row example: ['NORWAY I', 'NORWAY', 20624]...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_mixed_relay_team.json
+[2025-03-30 01:51:09 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:09 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 01:51:09 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Gender', 'Price']... (total: 4)
+- Rows: 11 entries
+- First row example: ['NORWAY I', 'men', 25915]...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_relay_team.json
+[2025-03-30 01:51:09 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:09 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 01:51:09 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Nation', 'Gender']... (total: 5)
+- Rows: 12 entries
+- First row example: ['NORWAY I', 'NORWAY', 'men']...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_team_sprint_team.json
+[2025-03-30 01:51:10 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:10 UTC] Processing Excel file: ladies-points.xlsx
+[2025-03-30 01:51:10 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies-points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 9)
+- Rows: 255 entries
+- First row example: ['Jessie Diggins', 131, 'USA']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies-points.json
+[2025-03-30 01:51:10 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies-points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:10 UTC] Processing Excel file: ladies_position_probabilities.xlsx
+[2025-03-30 01:51:10 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_position_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Ladies Race 1':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 10)
+- Rows: 255 entries
+- First row example: ['Nadine Fähndrich', 1590, 'Switzerland']...
+Created JSON file for worksheet 'Ladies Race 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_position_probabilities_Ladies_Race_1.json
+Data structure for 'Ladies Race 2':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 10)
+- Rows: 255 entries
+- First row example: ['Therese Johaug', 4, 'Norway']...
+Created JSON file for worksheet 'Ladies Race 2': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_position_probabilities_Ladies_Race_2.json
+[2025-03-30 01:51:10 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_position_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:10 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 01:51:10 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Jonna Sundling', 'Frida Karlsson']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_points.json
+[2025-03-30 01:51:10 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:10 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 01:51:10 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 47 entries
+- First row example: ['NORWAY I', 'Astrid Øyre Slind', 'Therese Johaug']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_probabilities.json
+[2025-03-30 01:51:11 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:11 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 01:51:11 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 4)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Linn Svahn', 'Jonna Sundling']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_points.json
+[2025-03-30 01:51:11 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:11 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 01:51:11 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 7)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Linn Svahn', 'Jonna Sundling']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_probabilities.json
+[2025-03-30 01:51:11 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:11 UTC] Processing Excel file: men-points.xlsx
+[2025-03-30 01:51:11 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men-points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 9)
+- Rows: 385 entries
+- First row example: ['Johannes Høsflot Klæbo', 5164.0, 'Norway']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men-points.json
+[2025-03-30 01:51:11 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men-points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:11 UTC] Processing Excel file: men_position_probabilities.xlsx
+[2025-03-30 01:51:11 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_position_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Men Race 1':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 10)
+- Rows: 379 entries
+- First row example: ['Johannes Høsflot Klæbo', 5164.0, 'Norway']...
+Created JSON file for worksheet 'Men Race 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_position_probabilities_Men_Race_1.json
+Data structure for 'Men Race 2':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 10)
+- Rows: 379 entries
+- First row example: ['Johannes Høsflot Klæbo', 5164.0, 'Norway']...
+Created JSON file for worksheet 'Men Race 2': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_position_probabilities_Men_Race_2.json
+[2025-03-30 01:51:12 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_position_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:12 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 01:51:12 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 24 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Martin Løwstrøm Nyenget']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_points.json
+[2025-03-30 01:51:12 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:12 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 01:51:12 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 24 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Martin Løwstrøm Nyenget']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_probabilities.json
+[2025-03-30 01:51:12 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:12 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 01:51:12 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 4)
+- Rows: 31 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Johannes Høsflot Klæbo']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_points.json
+[2025-03-30 01:51:12 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:12 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 01:51:12 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 7)
+- Rows: 31 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Johannes Høsflot Klæbo']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_probabilities.json
+[2025-03-30 01:51:12 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:12 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 01:51:12 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 19 entries
+- First row example: ['NORWAY I', 'Pål Golberg', 'Nora Sanness']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_points.json
+[2025-03-30 01:51:13 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:13 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 01:51:13 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 19 entries
+- First row example: ['NORWAY I', 'Pål Golberg', 'Nora Sanness']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_probabilities.json
+[2025-03-30 01:51:13 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 01:51:13 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:51:13 UTC] Added section for fantasy-team with title: Fantasy-team
+[2025-03-30 01:51:13 UTC] Added section for fantasy_mixed_relay_team with title: Fantasy Mixed Relay Team
+[2025-03-30 01:51:13 UTC] Added section for fantasy_relay_team with title: Fantasy Relay Team
+[2025-03-30 01:51:13 UTC] Added section for fantasy_team_sprint_team with title: Fantasy Team Sprint Team
+[2025-03-30 01:51:13 UTC] Added section for ladies-points with title: Ladies-points
+[2025-03-30 01:51:13 UTC] Added section for ladies_position_probabilities_Ladies_Race_1 with title: Ladies Position Probabilities Ladies Race 1
+[2025-03-30 01:51:13 UTC] Added section for ladies_position_probabilities_Ladies_Race_2 with title: Ladies Position Probabilities Ladies Race 2
+[2025-03-30 01:51:13 UTC] Added section for ladies_relay_points with title: Ladies Relay Points
+[2025-03-30 01:51:13 UTC] Added section for ladies_relay_probabilities with title: Ladies Relay Probabilities
+[2025-03-30 01:51:13 UTC] Added section for ladies_team_sprint_points with title: Ladies Team Sprint Points
+[2025-03-30 01:51:13 UTC] Added section for ladies_team_sprint_probabilities with title: Ladies Team Sprint Probabilities
+[2025-03-30 01:51:13 UTC] Added section for men-points with title: Men-points
+[2025-03-30 01:51:13 UTC] Added section for men_position_probabilities_Men_Race_1 with title: Men Position Probabilities Men Race 1
+[2025-03-30 01:51:13 UTC] Added section for men_position_probabilities_Men_Race_2 with title: Men Position Probabilities Men Race 2
+[2025-03-30 01:51:13 UTC] Added section for men_relay_points with title: Men Relay Points
+[2025-03-30 01:51:13 UTC] Added section for men_relay_probabilities with title: Men Relay Probabilities
+[2025-03-30 01:51:13 UTC] Added section for men_team_sprint_points with title: Men Team Sprint Points
+[2025-03-30 01:51:13 UTC] Added section for men_team_sprint_probabilities with title: Men Team Sprint Probabilities
+[2025-03-30 01:51:13 UTC] Added section for mixed_relay_points with title: Mixed Relay Points
+[2025-03-30 01:51:13 UTC] Added section for mixed_relay_probabilities with title: Mixed Relay Probabilities
+[2025-03-30 01:51:13 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 01:51:13 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====
+[2025-03-30 14:22:12 UTC] ===== STARTING WEEKLY PICKS PROCESSING =====
+[2025-03-30 14:22:12 UTC] Looking for folder with today's date: 20250330
+[2025-03-30 14:22:12 UTC] Found folder for today: /Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330
+[2025-03-30 14:22:12 UTC] Processing Excel file: fantasy-team.xlsx
+[2025-03-30 14:22:12 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy-team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Skier', 'ID', 'Sex']... (total: 6)
+- Rows: 16 entries
+- First row example: ['Jessie Diggins', 131, 'L']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy-team.json
+[2025-03-30 14:22:13 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy-team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:13 UTC] Processing Excel file: fantasy_mixed_relay_team.xlsx
+[2025-03-30 14:22:13 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Nation', 'Price']... (total: 8)
+- Rows: 12 entries
+- First row example: ['NORWAY I', 'NORWAY', 20624]...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_mixed_relay_team.json
+[2025-03-30 14:22:13 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_mixed_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:13 UTC] Processing Excel file: fantasy_relay_team.xlsx
+[2025-03-30 14:22:13 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Gender', 'Price']... (total: 4)
+- Rows: 11 entries
+- First row example: ['NORWAY I', 'men', 25915]...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_relay_team.json
+[2025-03-30 14:22:13 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_relay_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:13 UTC] Processing Excel file: fantasy_team_sprint_team.xlsx
+[2025-03-30 14:22:13 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Team':
+- Headers: ['Team_Name', 'Nation', 'Gender']... (total: 5)
+- Rows: 12 entries
+- First row example: ['NORWAY I', 'NORWAY', 'men']...
+Created JSON file for worksheet 'Team': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/fantasy_team_sprint_team.json
+[2025-03-30 14:22:14 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/fantasy_team_sprint_team.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:14 UTC] Processing Excel file: ladies-points.xlsx
+[2025-03-30 14:22:14 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies-points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 9)
+- Rows: 255 entries
+- First row example: ['Jessie Diggins', 131, 'USA']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies-points.json
+[2025-03-30 14:22:14 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies-points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:14 UTC] Processing Excel file: ladies_position_probabilities.xlsx
+[2025-03-30 14:22:14 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_position_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Ladies Race 1':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 10)
+- Rows: 255 entries
+- First row example: ['Nadine Fähndrich', 1590, 'Switzerland']...
+Created JSON file for worksheet 'Ladies Race 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_position_probabilities_Ladies_Race_1.json
+Data structure for 'Ladies Race 2':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 10)
+- Rows: 255 entries
+- First row example: ['Therese Johaug', 4, 'Norway']...
+Created JSON file for worksheet 'Ladies Race 2': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_position_probabilities_Ladies_Race_2.json
+[2025-03-30 14:22:14 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_position_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:14 UTC] Processing Excel file: ladies_relay_points.xlsx
+[2025-03-30 14:22:14 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Jonna Sundling', 'Frida Karlsson']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_points.json
+[2025-03-30 14:22:14 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:14 UTC] Processing Excel file: ladies_relay_probabilities.xlsx
+[2025-03-30 14:22:14 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 47 entries
+- First row example: ['NORWAY I', 'Astrid Øyre Slind', 'Therese Johaug']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_relay_probabilities.json
+[2025-03-30 14:22:15 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:15 UTC] Processing Excel file: ladies_team_sprint_points.xlsx
+[2025-03-30 14:22:15 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 4)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Linn Svahn', 'Jonna Sundling']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_points.json
+[2025-03-30 14:22:15 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:15 UTC] Processing Excel file: ladies_team_sprint_probabilities.xlsx
+[2025-03-30 14:22:15 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 7)
+- Rows: 47 entries
+- First row example: ['SWEDEN I', 'Linn Svahn', 'Jonna Sundling']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/ladies_team_sprint_probabilities.json
+[2025-03-30 14:22:15 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/ladies_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:15 UTC] Processing Excel file: men-points.xlsx
+[2025-03-30 14:22:15 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men-points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 9)
+- Rows: 385 entries
+- First row example: ['Johannes Høsflot Klæbo', 5164.0, 'Norway']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men-points.json
+[2025-03-30 14:22:15 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men-points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:15 UTC] Processing Excel file: men_position_probabilities.xlsx
+[2025-03-30 14:22:15 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_position_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Men Race 1':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 10)
+- Rows: 379 entries
+- First row example: ['Johannes Høsflot Klæbo', 5164.0, 'Norway']...
+Created JSON file for worksheet 'Men Race 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_position_probabilities_Men_Race_1.json
+Data structure for 'Men Race 2':
+- Headers: ['Skier', 'ID', 'Nation']... (total: 10)
+- Rows: 379 entries
+- First row example: ['Johannes Høsflot Klæbo', 5164.0, 'Norway']...
+Created JSON file for worksheet 'Men Race 2': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_position_probabilities_Men_Race_2.json
+[2025-03-30 14:22:16 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_position_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:16 UTC] Processing Excel file: men_relay_points.xlsx
+[2025-03-30 14:22:16 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 24 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Martin Løwstrøm Nyenget']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_points.json
+[2025-03-30 14:22:16 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:16 UTC] Processing Excel file: men_relay_probabilities.xlsx
+[2025-03-30 14:22:16 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 24 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Martin Løwstrøm Nyenget']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_relay_probabilities.json
+[2025-03-30 14:22:16 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:16 UTC] Processing Excel file: men_team_sprint_points.xlsx
+[2025-03-30 14:22:16 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 4)
+- Rows: 31 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Johannes Høsflot Klæbo']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_points.json
+[2025-03-30 14:22:16 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:16 UTC] Processing Excel file: men_team_sprint_probabilities.xlsx
+[2025-03-30 14:22:16 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 7)
+- Rows: 31 entries
+- First row example: ['NORWAY I', 'Erik Valnes', 'Johannes Høsflot Klæbo']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/men_team_sprint_probabilities.json
+[2025-03-30 14:22:17 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/men_team_sprint_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:17 UTC] Processing Excel file: mixed_relay_points.xlsx
+[2025-03-30 14:22:17 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 6)
+- Rows: 19 entries
+- First row example: ['NORWAY I', 'Pål Golberg', 'Nora Sanness']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_points.json
+[2025-03-30 14:22:17 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_points.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:17 UTC] Processing Excel file: mixed_relay_probabilities.xlsx
+[2025-03-30 14:22:17 UTC] Running: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+Data structure for 'Sheet 1':
+- Headers: ['Team_Name', 'Member_1', 'Member_2']... (total: 9)
+- Rows: 19 entries
+- First row example: ['NORWAY I', 'Pål Golberg', 'Nora Sanness']...
+Created JSON file for worksheet 'Sheet 1': /Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330/mixed_relay_probabilities.json
+[2025-03-30 14:22:17 UTC] ✓ Successfully completed: python3 /Users/syverjohansen/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/20250330/mixed_relay_probabilities.xlsx" "/Users/syverjohansen/blog/daehl-e/data/cross-country/weekly-picks/20250330"
+[2025-03-30 14:22:17 UTC] Creating markdown file: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 14:22:17 UTC] Added section for fantasy-team with title: Fantasy-team
+[2025-03-30 14:22:17 UTC] Added section for fantasy_mixed_relay_team with title: Fantasy Mixed Relay Team
+[2025-03-30 14:22:17 UTC] Added section for fantasy_relay_team with title: Fantasy Relay Team
+[2025-03-30 14:22:17 UTC] Added section for fantasy_team_sprint_team with title: Fantasy Team Sprint Team
+[2025-03-30 14:22:17 UTC] Added section for ladies-points with title: Ladies-points
+[2025-03-30 14:22:17 UTC] Added section for ladies_position_probabilities_Ladies_Race_1 with title: Ladies Position Probabilities Ladies Race 1
+[2025-03-30 14:22:17 UTC] Added section for ladies_position_probabilities_Ladies_Race_2 with title: Ladies Position Probabilities Ladies Race 2
+[2025-03-30 14:22:17 UTC] Added section for ladies_relay_points with title: Ladies Relay Points
+[2025-03-30 14:22:17 UTC] Added section for ladies_relay_probabilities with title: Ladies Relay Probabilities
+[2025-03-30 14:22:17 UTC] Added section for ladies_team_sprint_points with title: Ladies Team Sprint Points
+[2025-03-30 14:22:17 UTC] Added section for ladies_team_sprint_probabilities with title: Ladies Team Sprint Probabilities
+[2025-03-30 14:22:17 UTC] Added section for men-points with title: Men-points
+[2025-03-30 14:22:17 UTC] Added section for men_position_probabilities_Men_Race_1 with title: Men Position Probabilities Men Race 1
+[2025-03-30 14:22:17 UTC] Added section for men_position_probabilities_Men_Race_2 with title: Men Position Probabilities Men Race 2
+[2025-03-30 14:22:17 UTC] Added section for men_relay_points with title: Men Relay Points
+[2025-03-30 14:22:17 UTC] Added section for men_relay_probabilities with title: Men Relay Probabilities
+[2025-03-30 14:22:17 UTC] Added section for men_team_sprint_points with title: Men Team Sprint Points
+[2025-03-30 14:22:17 UTC] Added section for men_team_sprint_probabilities with title: Men Team Sprint Probabilities
+[2025-03-30 14:22:17 UTC] Added section for mixed_relay_points with title: Mixed Relay Points
+[2025-03-30 14:22:17 UTC] Added section for mixed_relay_probabilities with title: Mixed Relay Probabilities
+[2025-03-30 14:22:17 UTC] Markdown file created successfully: /Users/syverjohansen/blog/daehl-e/content/post/weekly-picks/20250330.md
+[2025-03-30 14:22:17 UTC] ===== WEEKLY PICKS PROCESSING COMPLETED =====

@@ -1,0 +1,280 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Team_Name",
+    "Member_1",
+    "Member_2",
+    "Member_3",
+    "Member_4",
+    "Win_Prob",
+    "Podium_Prob",
+    "Top5_Prob",
+    "Top10_Prob"
+  ],
+  "rows": [
+    [
+      "NORWAY I",
+      "Erik Valnes",
+      "Martin Løwstrøm Nyenget",
+      "Harald Østberg Amundsen",
+      "Johannes Høsflot Klæbo",
+      "0.803748761493272",
+      "1.0",
+      "1.0",
+      "0.954031870611839"
+    ],
+    [
+      "SWEDEN I",
+      "Truls Gisselman",
+      "William Poromaa",
+      "Jens Burman",
+      "Edvin Anger",
+      "0.0971163942063241",
+      "0.430575547920872",
+      "0.631082242616613",
+      "0.849747181842142"
+    ],
+    [
+      "FRANCE I",
+      "Remi Bourdin",
+      "Hugo Lapalus",
+      "Jules Lapierre",
+      "Mathis Desloges",
+      "0.0320969757272936",
+      "0.256808456469349",
+      "0.598512429779242",
+      "0.877019915754103"
+    ],
+    [
+      "ITALY I",
+      "Giovanni Ticco",
+      "Federico Pellegrino",
+      "Davide Graz",
+      "Simone Dapra",
+      "0.0202927487651779",
+      "0.226751343531686",
+      "0.412971564860625",
+      "0.771586861094052"
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Michal Novak",
+      "Adam Fellner",
+      "Matyas Bauer",
+      "Jiri Tuz",
+      "0.01367949544539",
+      "0.185300573994175",
+      "0.241201791222562",
+      "0.433132443268273"
+    ],
+    [
+      "FINLAND I",
+      "Niko Anttola",
+      "Ristomatti Hakola",
+      "Remi Lindholm",
+      "Lauri Vuorinen",
+      "0.0087227662962182",
+      "0.171713650172435",
+      "0.350464889782835",
+      "0.782767186767606"
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "James Clinton Schoonmaker",
+      "Zak Ketterson",
+      "Kevin Bolger",
+      "Ben Ogden",
+      "0.00565867597371121",
+      "0.139455377131224",
+      "0.24845547545026",
+      "0.618721840997009"
+    ],
+    [
+      "SWITZERLAND I",
+      "Cyril Fähndrich",
+      "Jonas Baumann",
+      "Jason Rüesch",
+      "Valerio Grond",
+      "0.00351913515418037",
+      "0.130433545285747",
+      "0.254781322255832",
+      "0.684722095661438"
+    ],
+    [
+      "GERMANY I",
+      "Florian Notz",
+      "Albert Kuchler",
+      "Friedrich Moch",
+      "Janosch Brugger",
+      "0.00729125228184506",
+      "0.116868790102581",
+      "0.360324940797743",
+      "0.769611098664281"
+    ],
+    [
+      "JAPAN I",
+      "Ryo Hirose",
+      "Naoto Baba",
+      "Daito Yamazaki",
+      "Haruki Yamashita",
+      "0.00173212326250874",
+      "0.0693893678481067",
+      "0.114803460758734",
+      "0.44419492857334"
+    ],
+    [
+      "GREAT BRITAIN I",
+      "Gabriel Gledhill",
+      "Andrew Musgrave",
+      "Andrew Young",
+      "James Clugnet",
+      "0.00302735372629493",
+      "0.0675742750934968",
+      "0.158224387760003",
+      "0.486617330427366"
+    ],
+    [
+      "CANADA I",
+      "Xavier McKeever",
+      "Antoine Cyr",
+      "Max Hollmann",
+      "Olivier Leveille",
+      "0.00156084735800561",
+      "0.05394236737873",
+      "0.192597093154232",
+      "0.616391063575779"
+    ],
+    [
+      "AUSTRIA I",
+      "Benjamin Moser",
+      "Michael Föttinger",
+      "Tobias Ganner",
+      "Alexander Brandner",
+      "0.00049467115608131",
+      "0.0193201643926513",
+      "0.0652006433380706",
+      "0.29898031842419"
+    ],
+    [
+      "SLOVENIA I",
+      "Miha Simenc",
+      "Valeriy Gontar",
+      "Miha Licef",
+      "Vili Crv",
+      "0.000249643110142265",
+      "0.0184302159145406",
+      "0.0542196371717124",
+      "0.250457594174443"
+    ],
+    [
+      "ESTONIA I",
+      "Ralf Kivil",
+      "Christopher Kalev",
+      "Martin Himma",
+      "Henri Roos",
+      "0.000193454297042738",
+      "0.0141392019859739",
+      "0.0470421244936957",
+      "0.229947587833905"
+    ],
+    [
+      "KAZAKHSTAN I",
+      "Yernar Nursbekov",
+      "Vitaliy Pukhkalo",
+      "Olzhas Klimin",
+      "Vladislav Kovalyov",
+      "8.56821085892705e-05",
+      "0.0125339482573572",
+      "0.0339028196490339",
+      "0.157419590505629"
+    ],
+    [
+      "POLAND I",
+      "Piotr Jarecki",
+      "Maciej Starega",
+      "Sebastian Bryja",
+      "Kamil Bury",
+      "8.01201079775058e-05",
+      "0.0107324202472308",
+      "0.0378639779061934",
+      "0.142061076588795"
+    ],
+    [
+      "BRAZIL I",
+      "Manex Silva",
+      "Victor Santos",
+      "Guilherme Pereira Santos",
+      "Rhaick Bomfim",
+      "0.000141609524831607",
+      "0.0104035794286863",
+      "0.0287676293252148",
+      "0.182139360593727"
+    ],
+    [
+      "UKRAINE I",
+      "Oleksandr Lisohor",
+      "Ruslan Denysenko",
+      "Dmytro Drahun",
+      "Denys Muhotinov",
+      "5.59301377645939e-05",
+      "0.00789991720880683",
+      "0.0233621651982832",
+      "0.118403577844702"
+    ],
+    [
+      "LITHUANIA I",
+      "Tautvydas Strolia",
+      "Modestas Vaiciulis",
+      "Matas Grazys",
+      "Daujotas JONIKAS",
+      "0.000151646147684959",
+      "0.00679304288978976",
+      "0.0206699518071837",
+      "0.116256701696889"
+    ],
+    [
+      "LATVIA I",
+      "Raimo Vigants",
+      "Lauris Kaparkalejs",
+      "Jekabs Skolnieks",
+      "Silvestrs Svauksts",
+      "7.41939591462425e-05",
+      "0.00627878622947064",
+      "0.0224259051397251",
+      "0.0993351623692707"
+    ],
+    [
+      "AUSTRALIA I",
+      "Seve De Campo",
+      "Lars Young Vik",
+      "Bentley Walker-Broose",
+      "Fedele De Campo",
+      "2.35429146179062e-05",
+      "0.00565791852018941",
+      "0.0169696772167123",
+      "0.0643878763377297"
+    ],
+    [
+      "CROATIA I",
+      "Marko Skender",
+      "Matija STIMAC",
+      "Boris STEFANCIC",
+      "Ivano PELKO",
+      "2.40648537095219e-06",
+      "0.0020138735700105",
+      "0.00743009778631068",
+      "0.0238387117787819"
+    ],
+    [
+      "SLOVAKIA I",
+      "Jachym CENEK",
+      "Michal ADAMOV",
+      "Jan ADAMOV",
+      "Matej Horniak",
+      "5.70360528965104e-07",
+      "0.000990964223299748",
+      "0.00497162159513377",
+      "0.0282286246147067"
+    ]
+  ]
+}

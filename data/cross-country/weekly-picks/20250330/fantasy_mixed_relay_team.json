@@ -1,0 +1,135 @@
+{
+  "sheet_name": "Team",
+  "headers": [
+    "Team_Name",
+    "Nation",
+    "Price",
+    "Expected_Points",
+    "Member_1",
+    "Member_2",
+    "Member_3",
+    "Member_4"
+  ],
+  "rows": [
+    [
+      "NORWAY I",
+      "NORWAY",
+      20624,
+      114.68246627636,
+      "Pål Golberg",
+      "Nora Sanness",
+      "Iver Tildheim Andersen",
+      "Kristin Austgulen Fosnæs"
+    ],
+    [
+      "SWEDEN I",
+      "SWEDEN",
+      18981,
+      99.0284229771059,
+      "Jens Burman",
+      "Emma Ribom",
+      "Edvin Anger",
+      "Moa Ilar"
+    ],
+    [
+      "FINLAND I",
+      "FINLAND",
+      13960,
+      89.4646314655536,
+      "Iivo Niskanen",
+      "Jasmi Joensuu",
+      "Remi Lindholm",
+      "Vilma Ryytty"
+    ],
+    [
+      "AUSTRIA I",
+      "AUSTRIA",
+      3002,
+      84.1177493004665,
+      "Mika Vermeulen",
+      "Teresa Stadlober",
+      "Benjamin Moser",
+      "Katharina Brudermann"
+    ],
+    [
+      "SWEDEN II",
+      "SWEDEN",
+      6178,
+      78.5944601110461,
+      "Calle Halfvarsson",
+      "Moa Lundgren",
+      "Gustaf Berglund",
+      "Maja Dahlqvist"
+    ],
+    [
+      "NORWAY II",
+      "NORWAY",
+      7561,
+      75.9712038159364,
+      "Martin Kirkeberg Mørk",
+      "Johanne Hauge Harviken",
+      "Andreas Fjorden Ree",
+      "Anne Kjersti Kalvå"
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "UNITED STATES OF AMERICA",
+      14293,
+      67.2826294073741,
+      "Zanden McMullen",
+      "Julia Kern",
+      "Ben Ogden",
+      "Sophia Laukli"
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "CZECH REPUBLIC",
+      7211,
+      53.7463482858845,
+      "Michal Novak",
+      "Katerina Janatova",
+      "Matyas Bauer",
+      "Barbora Havlickova"
+    ],
+    [
+      "SWITZERLAND II",
+      "SWITZERLAND",
+      2958,
+      48.7274510715246,
+      "Cyril Fähndrich",
+      "Nadja Kälin",
+      "Valerio Grond",
+      "Marina Kälin"
+    ],
+    [
+      "CANADA II",
+      "CANADA",
+      2068,
+      24.1439115410551,
+      "Remi Drolet",
+      "Alison Mackie",
+      "Thomas Stephen",
+      "Sonjaa Schmidt"
+    ],
+    [
+      "KAZAKHSTAN I",
+      "KAZAKHSTAN",
+      895,
+      15.4300339596036,
+      "Yernur Bexultan",
+      "Yelizaveta Tolmachyova",
+      "Didar Kassenov",
+      "Laura Kinybaeyeva"
+    ],
+    [
+      "AUSTRALIA I",
+      "AUSTRALIA",
+      895,
+      11.1878156444462,
+      "Hugo Hinckfuss",
+      "Tuva Bygrave",
+      "Seve De Campo",
+      "Rosie Fordham"
+    ]
+  ]
+}

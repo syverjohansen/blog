@@ -1,0 +1,225 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Team_Name",
+    "Member_1",
+    "Member_2",
+    "Member_3",
+    "Member_4",
+    "Win_Prob",
+    "Podium_Prob",
+    "Top5_Prob",
+    "Top10_Prob"
+  ],
+  "rows": [
+    [
+      "NORWAY I",
+      "Pål Golberg",
+      "Nora Sanness",
+      "Iver Tildheim Andersen",
+      "Kristin Austgulen Fosnæs",
+      "0.246845791468346",
+      "0.516441662064562",
+      "0.713469778087677",
+      "0.850305543728016"
+    ],
+    [
+      "SWEDEN I",
+      "Jens Burman",
+      "Emma Ribom",
+      "Edvin Anger",
+      "Moa Ilar",
+      "0.126044868998988",
+      "0.394919958845293",
+      "0.61420030261173",
+      "0.849176638578334"
+    ],
+    [
+      "AUSTRIA I",
+      "Mika Vermeulen",
+      "Teresa Stadlober",
+      "Benjamin Moser",
+      "Katharina Brudermann",
+      "0.207336449342572",
+      "0.353718840127247",
+      "0.468427616528875",
+      "0.644866262616256"
+    ],
+    [
+      "FINLAND I",
+      "Iivo Niskanen",
+      "Jasmi Joensuu",
+      "Remi Lindholm",
+      "Vilma Ryytty",
+      "0.201169715379366",
+      "0.290653181099012",
+      "0.47766913285569",
+      "0.771314860783113"
+    ],
+    [
+      "NORWAY II",
+      "Martin Kirkeberg Mørk",
+      "Johanne Hauge Harviken",
+      "Andreas Fjorden Ree",
+      "Anne Kjersti Kalvå",
+      "0.0649839960771827",
+      "0.274099777567867",
+      "0.487903388177705",
+      "0.691031903772037"
+    ],
+    [
+      "SWEDEN II",
+      "Calle Halfvarsson",
+      "Moa Lundgren",
+      "Gustaf Berglund",
+      "Maja Dahlqvist",
+      "0.0374427182712945",
+      "0.266202529227149",
+      "0.466301805262416",
+      "0.772221135264288"
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "Zanden McMullen",
+      "Julia Kern",
+      "Ben Ogden",
+      "Sophia Laukli",
+      "0.033606804398801",
+      "0.19505196070057",
+      "0.339339015642829",
+      "0.710387478949958"
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Michal Novak",
+      "Katerina Janatova",
+      "Matyas Bauer",
+      "Barbora Havlickova",
+      "0.038723249337875",
+      "0.192919114315431",
+      "0.283348356636188",
+      "0.528809645754717"
+    ],
+    [
+      "SWITZERLAND I",
+      "Jonas Baumann",
+      "Anja Weber",
+      "Jason Rüesch",
+      "Nadine Fähndrich",
+      "0.017783096358256",
+      "0.161546297483828",
+      "0.338978531783206",
+      "0.707460465022407"
+    ],
+    [
+      "SWITZERLAND II",
+      "Cyril Fähndrich",
+      "Nadja Kälin",
+      "Valerio Grond",
+      "Marina Kälin",
+      "0.0091085874548611",
+      "0.113537945421218",
+      "0.192891608848031",
+      "0.573074292285413"
+    ],
+    [
+      "CANADA I",
+      "Antoine Cyr",
+      "Kathrine Stewart-Jones",
+      "Olivier Leveille",
+      "Liliane Gagnon",
+      "0.00812160080175061",
+      "0.0835571671885257",
+      "0.209844432698549",
+      "0.63804781064905"
+    ],
+    [
+      "ITALY I",
+      "Martino Carollo",
+      "Martina di Centa",
+      "Paolo Ventura",
+      "Maria Gismondi",
+      "0.00293132057202935",
+      "0.0401847376217673",
+      "0.11248808248382",
+      "0.52775234144911"
+    ],
+    [
+      "GERMANY I",
+      "Lucas Bögl",
+      "Katherine Sauerbrey",
+      "Jan Stoelben",
+      "Anna-Maria Dietze",
+      "0.00169430618264324",
+      "0.0298872506004744",
+      "0.0827688570474735",
+      "0.375623712051791"
+    ],
+    [
+      "UNITED STATES OF AMERICA II",
+      "Luke Jager",
+      "Kendall Kramer",
+      "James Clinton Schoonmaker",
+      "Sammy Smith",
+      "0.00161532110191599",
+      "0.0278332994449661",
+      "0.0551150462264775",
+      "0.279100250783167"
+    ],
+    [
+      "SLOVENIA I",
+      "Nejc Stern",
+      "Anja Mandeljc",
+      "Miha Licef",
+      "Eva Urevc",
+      "0.00111863194045724",
+      "0.0201126775412513",
+      "0.0460371670361593",
+      "0.287100782047171"
+    ],
+    [
+      "CANADA II",
+      "Remi Drolet",
+      "Alison Mackie",
+      "Thomas Stephen",
+      "Sonjaa Schmidt",
+      "0.000744914581112854",
+      "0.0188105943999541",
+      "0.053546898295513",
+      "0.331448070123404"
+    ],
+    [
+      "KAZAKHSTAN I",
+      "Yernur Bexultan",
+      "Yelizaveta Tolmachyova",
+      "Didar Kassenov",
+      "Laura Kinybaeyeva",
+      "0.000471816065466448",
+      "0.0100055055822944",
+      "0.0248210745512331",
+      "0.218328149549681"
+    ],
+    [
+      "AUSTRALIA I",
+      "Hugo Hinckfuss",
+      "Tuva Bygrave",
+      "Seve De Campo",
+      "Rosie Fordham",
+      "0.000151161208503479",
+      "0.00635020197633861",
+      "0.0207273126756153",
+      "0.156824690973636"
+    ],
+    [
+      "UKRAINE I",
+      "Oleksandr Lisohor",
+      "Anastasiia Nikon",
+      "Dmytro Drahun",
+      "Viktoriya Olekh",
+      "0.000105650458578715",
+      "0.00416729879225064",
+      "0.0121215925508121",
+      "0.0871259656184498"
+    ]
+  ]
+}

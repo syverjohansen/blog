@@ -8,6 +8,9 @@ def excel_sheets_to_json(excel_file, output_dir):
     os.makedirs(output_dir, exist_ok=True)
     excel = pd.ExcelFile(excel_file)
     
+    # Get the base filename without extension for use in JSON file naming
+    base_filename = os.path.splitext(os.path.basename(excel_file))[0]
+    
     def clean_percentage(val):
         if pd.isna(val) or val == "NA%":
             return "0.0%"
@@ -34,6 +37,9 @@ def excel_sheets_to_json(excel_file, output_dir):
             return ""
         return obj
     
+    # Check if we have a single sheet or multiple sheets
+    has_multiple_sheets = len(excel.sheet_names) > 1
+    
     for sheet_name in excel.sheet_names:
         df = pd.read_excel(excel_file, sheet_name=sheet_name)
         
@@ -56,8 +62,23 @@ def excel_sheets_to_json(excel_file, output_dir):
             "rows": [[convert_to_native(cell) for cell in row] for row in df.values.tolist()]
         }
         
-        safe_sheet_name = "".join(c if c.isalnum() else "_" for c in sheet_name)
-        output_file = os.path.join(output_dir, f"{safe_sheet_name}.json")
+        # Determine output filename based on number of sheets
+        if has_multiple_sheets:
+            # For multiple sheets, use file_name_sheetname.json format
+            safe_sheet_name = "".join(c if c.isalnum() else "_" for c in sheet_name)
+            output_filename = f"{base_filename}_{safe_sheet_name}.json"
+        else:
+            # For single sheet, just use file_name.json
+            output_filename = f"{base_filename}.json"
+            
+        # Print data structure for debugging
+        print(f"Data structure for '{sheet_name}':")
+        print(f"- Headers: {data['headers'][:3]}... (total: {len(data['headers'])})")
+        print(f"- Rows: {len(data['rows'])} entries")
+        if len(data['rows']) > 0:
+            print(f"- First row example: {data['rows'][0][:3]}...")
+            
+        output_file = os.path.join(output_dir, output_filename)
         
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)

@@ -1,0 +1,96 @@
+{
+  "sheet_name": "Team",
+  "headers": [
+    "Team_Name",
+    "Nation",
+    "Gender",
+    "Price",
+    "Expected_Points"
+  ],
+  "rows": [
+    [
+      "NORWAY I",
+      "NORWAY",
+      "men",
+      25915,
+      200.0
+    ],
+    [
+      "GERMANY I",
+      "Germany",
+      "ladies",
+      15142,
+      119.523679228802
+    ],
+    [
+      "SWEDEN I",
+      "SWEDEN",
+      "men",
+      12594,
+      105.333659194479
+    ],
+    [
+      "FINLAND I",
+      "Finland",
+      "ladies",
+      13782,
+      104.623897903025
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "UNITED STATES OF AMERICA",
+      "men",
+      10756,
+      80.6310644384106
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Czechia",
+      "ladies",
+      9084,
+      67.8100994266529
+    ],
+    [
+      "ITALY I",
+      "Italy",
+      "ladies",
+      6214,
+      65.8350205773956
+    ],
+    [
+      "AUSTRIA I",
+      "AUSTRIA",
+      "men",
+      3683,
+      28.079064199761
+    ],
+    [
+      "LATVIA I",
+      "Latvia",
+      "ladies",
+      1016,
+      13.7237193372155
+    ],
+    [
+      "PEOPLES REPUBLIC OF CHINA I",
+      "PEOPLES REPUBLIC OF CHINA",
+      "men",
+      1120,
+      11.3485713398034
+    ],
+    [
+      "GREECE I",
+      "Greece",
+      "ladies",
+      422,
+      5.84860547654568
+    ],
+    [
+      "TURKEY I",
+      "TURKEY",
+      "men",
+      216,
+      2.59366940716042
+    ]
+  ]
+}

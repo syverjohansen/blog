@@ -158,8 +158,8 @@ generate_weekly_elo_change <- function(chrono_data, gender, base_dir) {
     head(10)
   
   # Save top gainers/losers
-  write_xlsx(top_gainers, file.path(week_dir, paste0(gender, "_top_gainers.xlsx")))
-  write_xlsx(top_losers, file.path(week_dir, paste0(gender, "_top_losers.xlsx")))
+  #write_xlsx(top_gainers, file.path(week_dir, paste0(gender, "_top_gainers.xlsx")))
+  #write_xlsx(top_losers, file.path(week_dir, paste0(gender, "_top_losers.xlsx")))
   
   # Return the full dataframe
   return(elo_changes)
@@ -954,16 +954,16 @@ library(writexl)
 loaded_packages <- (.packages())
 
 # Store histories
-temp_histories <- all_histories_clean
+#temp_histories <- all_histories_clean
 
 # Clear everything EXCEPT temp_histories
-rm(list = setdiff(ls(), "temp_histories"))
+#rm(list = setdiff(ls(), "temp_histories"))
 
 # Restore our saved object
-all_histories_clean <- temp_histories
+#all_histories_clean <- temp_histories
 
 # Remove our temporary variable
-rm(temp_histories)
+#rm(temp_histories)
 
 
 # Load standings for both genders
@@ -1129,6 +1129,9 @@ calculate_remaining_races <- function(races_file) {
     TDS = 0
   )
   
+  if(length(male_races[,1])==0){
+    return(counts)
+  }
   # Count each race type
   for (i in 1:nrow(male_races)) {
     race <- male_races[i, ]
@@ -1423,7 +1426,7 @@ create_standings_summary <- function(simulation_results, standings_df, gender) {
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
   
   # Save to Excel
-  write_xlsx(final_table, file.path(output_dir, paste0(gender, "_standings_predictions.xlsx")))
+  #write_xlsx(final_table, file.path(output_dir, paste0(gender, "_standings_predictions.xlsx")))
   
   return(final_table)
 }
@@ -1444,55 +1447,3 @@ output_dir = get_output_dir()
 write_xlsx(men_summary, file.path(output_dir, "men_standings_predictions.xlsx"))
 write_xlsx(women_summary, file.path(output_dir, "ladies_standings_predictions.xlsx"))
 
-# Create combined markdown summary
-# summary_file <- "~/blog/daehl-e/content/post/drafts/weekly-recap/simulation_summary.md"
-# writeLines(
-#     c("---",
-#       "title: 'Cross-Country Skiing Season Simulation Results'",
-#       "date: '2024-12-07'",
-#       "---",
-#       "",
-#       "## Men's Results",
-#       "",
-#       "### Top 10 Current Standings (Men)",
-#       paste(1:10, ". ", head(men_summary$Skier, 10), 
-#             " (", round(head(men_summary$`Current Standings`, 10)), " points)",
-#             sep=""),
-#       "",
-#       "### Projected Final Top 10 (Men)",
-#       paste(1:10, ". ", head(men_summary$Skier, 10),
-#             " (", round(head(men_summary$`Simulated Standings`, 10)), " points, ",
-#             sprintf("%.1f%%", head(men_summary$`Win%`, 10)), " win probability)",
-#             sep=""),
-#       "",
-#       "## Women's Results",
-#       "",
-#       "### Top 10 Current Standings (Women)",
-#       paste(1:10, ". ", head(women_summary$Skier, 10), 
-#             " (", round(head(women_summary$`Current Standings`, 10)), " points)",
-#             sep=""),
-#       "",
-#       "### Projected Final Top 10 (Women)",
-#       paste(1:10, ". ", head(women_summary$Skier, 10),
-#             " (", round(head(women_summary$`Simulated Standings`, 10)), " points, ",
-#             sprintf("%.1f%%", head(women_summary$`Win%`, 10)), " win probability)",
-#             sep="")),
-#     summary_file
-# )
-# 
-# # Function to print debug info for both genders
-# print_skier_debug_by_gender <- function(skier, histories, gender) {
-#     cat("\nDebugging", if(gender=="M") "Male" else "Female", "skier:", skier, "\n")
-#     if(skier %in% names(histories)) {
-#         cat("Available race types:\n")
-#         print(names(histories[[skier]]))
-#         
-#         cat("\nSample of race histories:\n")
-#         for(race_type in names(histories[[skier]])) {
-#             cat("\n", race_type, ":\n")
-#             print(histories[[skier]][[race_type]])
-#         }
-#     } else {
-#         cat("Skier not found in histories\n")
-#     }
-# }

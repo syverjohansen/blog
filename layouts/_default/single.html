@@ -123,7 +123,7 @@
     (findRE "^https://daehl-e.com/cross-country/skiers/.+$" $permalink)
     (findRE "^http://localhost:1313/cross-country/skiers/.+$" $permalink) 
 }}
-    {{ partial "cross-country/skier-table.html" . }}
+    {{ partial "cross-country/skier.html" . }}
 {{ else if or (eq .Permalink "https://daehl-e.com/cross-country/athletes/") (eq .Permalink "http://localhost:1313/cross-country/athletes/") }}
     {{ partial "cross-country/athletes-list.html" . }}
 {{ end }}

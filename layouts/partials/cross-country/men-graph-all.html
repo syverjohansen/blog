@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chart.js Data Visualization</title>
+    <title>Men's Chart.js Data Visualization (All-Time)</title>
     <style>
         .container {
             margin: 20px;
@@ -21,6 +21,13 @@
             border: 1px solid #ddd;
             padding: 10px;
             margin-bottom: 20px;
+        }
+        
+        #loading-indicator {
+            display: none;
+            text-align: center;
+            margin: 10px 0;
+            font-style: italic;
         }
     </style>
 </head>
@@ -39,6 +46,8 @@
                 <input type="radio" name="y-axis" value="Total" checked> Total
                 <input type="radio" name="y-axis" value="Pct"> Pct
             </label>
+        </div>
+        
         <!-- Distance Type Selection -->
         <div>
             <label>
@@ -56,20 +65,24 @@
                 <input type="radio" name="technique-type" value="Freestyle"> Freestyle
             </label>
         </div>
-            <button id="generate-chart">Generate Chart</button>
-        </div>
+        
+        <button id="generate-chart">Generate Chart</button>
+        
+        <div id="loading-indicator">Loading skier data...</div>
+        
         <div id="chart-container">
             <canvas id="myChart"></canvas>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-     <script>
+    <script>
         let myChart = null;
         const selectedSkiers = new Set();
         let skierMap = {}; // Store ID to name mapping
+        let skierLookupData = []; // Store skier lookup data
 
-        // Fetch skier IDs and names from L_current_ids.json
+        // Fetch skier IDs and names from M_all_ids.json
         fetch('/python/cross-country/excel365/M_all_ids.json')
             .then(response => response.json())
             .then(data => {
@@ -122,15 +135,81 @@
                 generateChartButton.addEventListener('click', () => {
                     generateChart();
                 });
+                
+                // Also fetch skier lookup data for grouping info
+                return fetch('/python/cross-country/excel365/M_skiers_lookup.json');
             })
-            .catch(error => console.error('Error loading skier list:', error));
+            .then(response => response.json())
+            .then(lookupData => {
+                skierLookupData = lookupData;
+            })
+            .catch(error => console.error('Error loading skier data:', error));
 
-        function generateChart() {
+        // Function to load data for a skier from the grouped files
+        async function fetchSkierData(skierId) {
+            // Find skier in lookup data to get the group
+            const skierInfo = skierLookupData.find(s => s.id === parseInt(skierId));
+            
+            if (!skierInfo) {
+                console.error(`Skier with ID ${skierId} not found in lookup data`);
+                return null;
+            }
+            
+            // Calculate group range
+            const groupStart = parseInt(skierInfo.group);
+            const groupEnd = groupStart + 999;
+            
+            // Fetch group data
+            try {
+                const response = await fetch(`/python/cross-country/excel365/M/skiers_${groupStart}_${groupEnd}.json`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch group data: ${response.status}`);
+                }
+                
+                const groupData = await response.json();
+                
+                // Extract this skier's data
+                const skierData = groupData[skierId];
+                
+                if (!skierData) {
+                    console.error(`No data found for skier ID ${skierId} in group data`);
+                    return null;
+                }
+                
+                // Transform data into array of objects
+                const result = [];
+                const keys = Object.keys(skierData);
+                const rowCount = skierData[keys[0]].length;
+                
+                for (let i = 0; i < rowCount; i++) {
+                    const rowObj = {};
+                    keys.forEach(key => {
+                        rowObj[key] = skierData[key][i];
+                    });
+                    result.push(rowObj);
+                }
+                
+                return result;
+            } catch (error) {
+                console.error(`Error fetching data for skier ${skierId}:`, error);
+                return null;
+            }
+        }
+
+        async function generateChart() {
             const selectedSkiers = Array.from(document.querySelectorAll('.skier-checkbox:checked')).map(cb => cb.value);
+            if (selectedSkiers.length === 0) {
+                alert('Please select at least one skier');
+                return;
+            }
+            
             const xAxis = document.querySelector('input[name="x-axis"]:checked').value;
             const yAxis = document.querySelector('input[name="y-axis"]:checked').value;
             const distanceType = document.querySelector('input[name="distance-type"]:checked').value;
             const techniqueType = document.querySelector('input[name="technique-type"]:checked').value;
+
+            // Show loading indicator
+            document.getElementById('loading-indicator').style.display = 'block';
 
             // Determine the correct Elo field based on selected distanceType and techniqueType
             let eloType;
@@ -154,124 +233,113 @@
                 eloType = "Freestyle_Elo";
             }
 
-        const fetchData = async (skier) => {
-            //const fileSuffix = (yAxis === 'Pct') ? '_pct' : '';
-            const response = await fetch(`/python/cross-country/excel365/M/${skier}.json`);
-            const json = await response.json();
-            console.log('Fetched data for skier:', skier, 'File:', `${skier}.json`, json);
-            return json;
-        };
-
-
-            Promise.all(selectedSkiers.map(fetchData))
-                .then(data => {
-                    const allData = data.flatMap(d => {
-                    if (Array.isArray(d)) {
-                        console.log("This is an array")
-                    // Handle case where d is an array
-                    return d.map(entry => {
+            try {
+                // Fetch data for each selected skier
+                const skiersData = await Promise.all(selectedSkiers.map(fetchSkierData));
+                
+                // Process the data
+                const allData = [];
+                skiersData.forEach((skierData, index) => {
+                    if (!skierData) return;
+                    
+                    const skierId = selectedSkiers[index];
+                    skierData.forEach(entry => {
                         const isPct = (yAxis === 'Pct');
                         const eloValue = isPct ? (entry[`${eloType}_Pct`] ?? null) : entry[eloType];
-                        return {
+                        
+                        allData.push({
                             Date: entry.Date,
                             Exp: entry.Exp,
                             Elo: eloValue,
-                            ID: entry.ID
-                        };
+                            ID: skierId
+                        });
                     });
+                });
+
+                // Generate labels
+                let labels;
+                if (xAxis === "Date") {
+                    const allDates = Array.from(new Set(allData.map(entry => entry.Date)));
+                    labels = allDates.sort((a, b) => new Date(a) - new Date(b));
                 } else {
-                    console.log("This is not an array")
-                    // Handle case where d is an object
-                    return Object.values(d).map(entry => {
-                        const isPct = (yAxis === 'Pct');
-                        const eloValue = isPct ? (entry[`${eloType}_Pct`] ?? null) : entry[eloType];
-                        return {
-                            Date: entry.Date,
-                            Exp: entry.Exp,
-                            Elo: eloValue,
-                            ID: entry.ID                           
-                        };
-                        });
-                    }
+                    labels = Array.from(new Set(allData.map(entry => entry[xAxis]))).sort((a, b) => a - b);
+                }
+
+                const yAxisMapping = {
+                    'Total': 'Elo',
+                    'Pct': 'Elo'
+                };
+
+                // Create datasets for the chart
+                const datasets = selectedSkiers.map(skier => {
+                    if (!skierMap[skier]) return null;
+                    
+                    const skierName = skierMap[skier];
+                    const filteredData = allData.filter(entry => entry.ID === skier);
+
+                    const dataPoints = labels.map(label => {
+                        const entries = filteredData.filter(entry => entry[xAxis] === label);
+                        const yAxisValues = entries.map(entry => entry[yAxisMapping[yAxis]] || null);
+                        return yAxisValues[0] !== undefined ? yAxisValues[0] : null;
                     });
 
-                    console.log('All constructed data:', allData);
-                    let labels;
-                    if (xAxis === "Date") {
-                        const allDates = Array.from(new Set(allData.map(entry => entry.Date)));
-                        labels = allDates.sort((a, b) => new Date(a) - new Date(b));
-                    } else {
-                        labels = Array.from(new Set(allData.map(entry => entry[xAxis]))).sort((a, b) => a - b);
-                    }
+                    const smoothedDataPoints = applyRollingAverage(dataPoints, 5);
 
-                    const yAxisMapping = {
-                        'Total': 'Elo',
-                        'Pct': 'Elo'
+                    return {
+                        label: skierName,
+                        data: smoothedDataPoints,
+                        borderColor: getRandomColor(),
+                        fill: false
                     };
+                }).filter(dataset => dataset !== null);
 
-                    const datasets = selectedSkiers.map(skier => {
-                        const skierName = skierMap[skier] || skier;  // Use skier name for label, fallback to ID if name not found
-                        const filteredData = allData.filter(entry => entry.ID === parseInt(skier));
+                // Create/update the chart
+                const ctx = document.getElementById('myChart').getContext('2d');
 
-                        const dataPoints = labels.map(label => {
-                            const entries = filteredData.filter(entry => entry[xAxis] === label);
-                            
-                            const yAxisValues = entries.map(entry => entry[yAxisMapping[yAxis]] || null);
-                            return yAxisValues[0] !== undefined ? yAxisValues[0] : null;
-                        });
+                if (myChart) {
+                    myChart.destroy();
+                }
 
-                        const smoothedDataPoints = applyRollingAverage(dataPoints, 5);
-
-                        return {
-                            label: skierName,  // Use skier name here
-                            data: smoothedDataPoints,
-                            borderColor: getRandomColor(),
-                            fill: false
-                        };
-                    });
-
-                    function applyRollingAverage(data, windowSize) {
-                        let result = [];
-                        for (let i = 0; i < data.length; i++) {
-                            let window = data.slice(Math.max(0, i - windowSize + 1), i + 1);
-                            let validValues = window.filter(value => value !== null);
-                            let avg = validValues.length > 0
-                                ? validValues.reduce((sum, value) => sum + value, 0) / validValues.length
-                                : null;
-                            result.push(avg);
-                        }
-                        return result;
-                    }
-
-                    const ctx = document.getElementById('myChart').getContext('2d');
-
-                    if (myChart) {
-                        myChart.destroy();
-                    }
-
-                    myChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: datasets
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                x: {
-                                    title: { display: true, text: xAxis },
-                                    ticks: { autoSkip: true }
-                                },
-                                y: {
-                                    title: { display: true, text: yAxis },
-                                    beginAtZero: true
-                                }
+                myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: { display: true, text: xAxis },
+                                ticks: { autoSkip: true }
+                            },
+                            y: {
+                                title: { display: true, text: yAxis },
+                                beginAtZero: true
                             }
                         }
-                    });
-                })
-                .catch(error => console.error('Error fetching data for chart:', error));
+                    }
+                });
+            } catch (error) {
+                console.error('Error generating chart:', error);
+                alert('Error generating chart. Please try again.');
+            } finally {
+                document.getElementById('loading-indicator').style.display = 'none';
+            }
+        }
+
+        function applyRollingAverage(data, windowSize) {
+            let result = [];
+            for (let i = 0; i < data.length; i++) {
+                let window = data.slice(Math.max(0, i - windowSize + 1), i + 1);
+                let validValues = window.filter(value => value !== null);
+                let avg = validValues.length > 0
+                    ? validValues.reduce((sum, value) => sum + value, 0) / validValues.length
+                    : null;
+                result.push(avg);
+            }
+            return result;
         }
 
         function getRandomColor() {

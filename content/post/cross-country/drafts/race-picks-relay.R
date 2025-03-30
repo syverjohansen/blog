@@ -1,0 +1,1265 @@
+# Race Day Relay Predictions
+library(dplyr)
+library(tidyr)
+library(openxlsx)
+library(lubridate)
+library(logger)
+library(ROI)
+library(ROI.plugin.glpk)
+library(ompr)
+library(ompr.roi)
+library(caret)
+
+# Set up logging
+log_dir <- "~/ski/elo/python/ski/polars/excel365/race-predictions"
+if (!dir.exists(log_dir)) {
+  dir.create(log_dir, recursive = TRUE)
+}
+
+log_file <- file.path(log_dir, paste0("relay_predictions_", format(Sys.Date(), "%Y%m%d"), ".log"))
+log_appender(appender_file(log_file))
+log_threshold(INFO)
+log_info("Starting relay race day predictions process")
+
+# Define points system
+relay_points <- c(200, 160, 120, 100, 90, 80, 72, 64, 58, 52, 48, 44, 40, 36, 
+                  32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2)
+
+# Function to find today's date
+get_today_date <- function() {
+  current_utc_date <- as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d")
+  return(current_utc_date)
+}
+
+# Function to replace NAs with first quartile values
+replace_na_with_quartile <- function(x) {
+  if (all(is.na(x))) {
+    return(rep(0, length(x)))
+  }
+  q1 <- quantile(x, 0.25, na.rm = TRUE)
+  ifelse(is.na(x), q1, x)
+}
+
+# Function to load races.csv and find relay races for today
+load_today_relay_races <- function() {
+  log_info("Loading race data for today")
+  
+  # Read in the race schedule
+  races_path <- "~/ski/elo/python/ski/polars/excel365/races.csv"
+  races <- read.csv(races_path, stringsAsFactors = FALSE) %>%
+    mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+  
+  # Find today's date
+  today <- get_today_date()
+  log_info(paste("Today's date:", today))
+  
+  # Filter for today's races
+  today_races <- races %>%
+    filter(Date == today)
+  
+  # Filter to only relay races
+  relay_races <- today_races %>%
+    filter(Distance == "Rel")
+  
+  if (nrow(relay_races) == 0) {
+    log_info("No relay races found today")
+    return(NULL)
+  }
+  
+  # Split into men and ladies races
+  men_races <- relay_races %>%
+    filter(Sex == "M")
+  
+  ladies_races <- relay_races %>%
+    filter(Sex == "L")
+  
+  log_info(paste("Found", nrow(men_races), "men's relay races and", 
+                 nrow(ladies_races), "ladies' relay races"))
+  
+  return(list(
+    men = men_races,
+    ladies = ladies_races,
+    race_date = today
+  ))
+}
+
+# Function to load chrono files and create separate dataframes for relays and individual races
+load_chrono_data <- function() {
+  log_info("Loading chrono data")
+  
+  # Define file paths
+  men_chrono_path <- "~/ski/elo/python/ski/polars/relay/excel365/men_chrono.csv"
+  ladies_chrono_path <- "~/ski/elo/python/ski/polars/relay/excel365/ladies_chrono.csv"
+  
+  # Load data
+  men_chrono <- read.csv(men_chrono_path, stringsAsFactors = FALSE) %>%
+    mutate(Date = as.Date(Date))
+  
+  ladies_chrono <- read.csv(ladies_chrono_path, stringsAsFactors = FALSE) %>%
+    mutate(Date = as.Date(Date))
+  
+  log_info(paste("Loaded men's chrono with", nrow(men_chrono), "rows and", 
+                 ncol(men_chrono), "columns"))
+  log_info(paste("Loaded ladies' chrono with", nrow(ladies_chrono), "rows and", 
+                 ncol(ladies_chrono), "columns"))
+  
+  # Create separate dataframes for relays and individual races
+  men_relays <- men_chrono %>% 
+    filter(Distance == "Rel")
+  
+  men_individuals <- men_chrono %>% 
+    filter(Distance != "Rel" & Distance != "Ts")
+  
+  ladies_relays <- ladies_chrono %>% 
+    filter(Distance == "Rel")
+  
+  ladies_individuals <- ladies_chrono %>% 
+    filter(Distance != "Rel" & Distance != "Ts")
+  
+  log_info(paste("Created men's relay df with", nrow(men_relays), "rows"))
+  log_info(paste("Created men's individual df with", nrow(men_individuals), "rows"))
+  log_info(paste("Created ladies' relay df with", nrow(ladies_relays), "rows"))
+  log_info(paste("Created ladies' individual df with", nrow(ladies_individuals), "rows"))
+  
+  return(list(
+    men_chrono = men_chrono,
+    men_relays = men_relays,
+    men_individuals = men_individuals,
+    ladies_chrono = ladies_chrono,
+    ladies_relays = ladies_relays,
+    ladies_individuals = ladies_individuals
+  ))
+}
+
+# Function to add points to race results
+add_points_to_results <- function(df, is_relay = FALSE) {
+  df %>%
+    mutate(Points = mapply(function(place) {
+      if (place >= 1 && place <= length(relay_points)) {
+        return(relay_points[place])
+      }
+      return(0)
+    }, Place))
+}
+
+# Function to calculate Pelo percentages
+create_pelo_pcts <- function(df) {
+  # Define pelo_cols inside the function
+  pelo_cols <- names(df)[grep("Pelo$", names(df))]
+  
+  # Check if any Pelo columns were found
+  if(length(pelo_cols) == 0) {
+    log_warn("No Pelo columns found in data")
+    return(df)  # Return original data if no Pelo columns
+  }
+  
+  # For each race and each Pelo column
+  df_transformed <- df %>%
+    group_by(Date, Race) %>%
+    mutate(across(
+      all_of(pelo_cols),
+      function(x) {
+        # Replace NAs with first quartile
+        q1 <- quantile(x, 0.25, na.rm = TRUE)
+        x_filled <- replace(x, is.na(x), q1)
+        # Calculate percentage of max
+        x_filled / max(x_filled) * 100
+      },
+      .names = "{.col}_Pct"
+    )) %>%
+    ungroup()
+  
+  return(df_transformed)
+}
+
+# Function to process data for classic and freestyle races
+process_discipline_data <- function(df_individuals, min_season = NULL) {
+  # Set min_season to 11 years ago from max season if not provided
+  if(is.null(min_season)) {
+    min_season = max(df_individuals$Season) - 11
+  }
+  
+  # First add points
+  df_with_points <- add_points_to_results(df_individuals, is_relay = FALSE)
+  
+  # Process classic races
+  classic_df <- df_with_points %>%
+    filter(Distance != "Sprint", Technique == "C") %>%
+    group_by(ID) %>%
+    arrange(Season, Race) %>%
+    mutate(
+      # Calculate weighted average of previous 5 races
+      Weighted_Last_5 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-5):(i-1)]
+        if (length(prev_races) > 0) {
+          weights <- seq(1, length(prev_races))
+          weighted.mean(prev_races, weights, na.rm = TRUE)
+        } else {
+          0
+        }
+      })
+    ) %>%
+    filter(Season > min_season) %>%
+    ungroup()
+  
+  # Process freestyle races
+  freestyle_df <- df_with_points %>%
+    filter(Distance != "Sprint", Technique == "F") %>%
+    group_by(ID) %>%
+    arrange(Season, Race) %>%
+    mutate(
+      # Calculate weighted average of previous 5 races
+      Weighted_Last_5 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-5):(i-1)]
+        if (length(prev_races) > 0) {
+          weights <- seq(1, length(prev_races))
+          weighted.mean(prev_races, weights, na.rm = TRUE)
+        } else {
+          0
+        }
+      })
+    ) %>%
+    filter(Season > min_season) %>%
+    ungroup()
+  
+  return(list(
+    classic = classic_df,
+    freestyle = freestyle_df
+  ))
+}
+
+# Function to process relay data with classic and freestyle legs
+process_relay_data <- function(df_relays, classic_df, freestyle_df, min_season = NULL) {
+  # Set min_season to 11 years ago from max season if not provided
+  if(is.null(min_season)) {
+    min_season = max(classic_df$Season) - 11
+  }
+  
+  # Add points to relay results
+  relay_with_points <- add_points_to_results(df_relays, is_relay = TRUE)
+  
+  # Process classic legs (1-2)
+  classic_legs <- relay_with_points %>%
+    filter(Distance == "Rel", Leg < 3, Season > min_season)
+  
+  # Process freestyle legs (3-4)
+  freestyle_legs <- relay_with_points %>%
+    filter(Distance == "Rel", Leg > 2, Season > min_season)
+  
+  # Combine classic legs with classic individual data
+  classic_combined <- bind_rows(
+    classic_legs,
+    classic_df
+  ) %>%
+    group_by(ID) %>%
+    arrange(Season, Race) %>%
+    fill(Weighted_Last_5, .direction = "down") %>%
+    filter(Distance == "Rel") %>%
+    group_by(Season, Race) %>%  # Regroup by race for quartile replacement
+    mutate(
+      Weighted_Last_5 = ifelse(
+        is.na(Weighted_Last_5),
+        quantile(Weighted_Last_5, 0.25, na.rm = TRUE),
+        Weighted_Last_5
+      )
+    ) %>%
+    ungroup()
+  
+  # Combine freestyle legs with freestyle individual data
+  freestyle_combined <- bind_rows(
+    freestyle_legs,
+    freestyle_df
+  ) %>%
+    group_by(ID) %>%
+    arrange(Season, Race) %>%
+    fill(Weighted_Last_5, .direction = "down") %>%
+    filter(Distance == "Rel") %>%
+    group_by(Season, Race) %>%  # Regroup by race for quartile replacement
+    mutate(
+      Weighted_Last_5 = ifelse(
+        is.na(Weighted_Last_5),
+        quantile(Weighted_Last_5, 0.25, na.rm = TRUE),
+        Weighted_Last_5
+      )
+    ) %>%
+    ungroup()
+  
+  return(list(
+    classic_legs = classic_combined,
+    freestyle_legs = freestyle_combined
+  ))
+}
+
+# Function to prepare leg-specific datasets
+prepare_leg_data <- function(classic_legs, freestyle_legs) {
+  # Create datasets for each leg
+  leg_data <- list()
+  
+  # Legs 1 and 2 (Classic)
+  for(i in 1:2) {
+    leg_data[[i]] <- classic_legs %>%
+      filter(Leg == i) %>%
+      mutate(
+        is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+        is_top5 = factor(ifelse(Place <= 5, "Yes", "No"), levels = c("No", "Yes")),
+        is_top10 = factor(ifelse(Place <= 10, "Yes", "No"), levels = c("No", "Yes")),
+        is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+      )
+  }
+  
+  # Legs 3 and 4 (Freestyle)
+  for(i in 3:4) {
+    leg_data[[i]] <- freestyle_legs %>%
+      filter(Leg == i) %>%
+      mutate(
+        is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+        is_top5 = factor(ifelse(Place <= 5, "Yes", "No"), levels = c("No", "Yes")),
+        is_top10 = factor(ifelse(Place <= 10, "Yes", "No"), levels = c("No", "Yes")),
+        is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+      )
+  }
+  return(leg_data)
+}
+
+# Function to get leg-specific predictor columns
+get_leg_predictors <- function(leg, leg_data) {
+  # Get column names from the leg data
+  base_cols <- names(leg_data[[leg]])
+  
+  # Define predictors based on leg
+  if(leg <= 2) {
+    # Classic legs (1 and 2)
+    predictors <- c(
+      grep("Distance_C.*Pelo_Pct$", base_cols, value = TRUE),
+      grep("Classic.*Pelo_Pct$", base_cols, value = TRUE),
+      "Distance_Pelo_Pct",
+      "Pelo_Pct",
+      "Weighted_Last_5"
+    )
+  } else if (leg == 3) {
+    # Freestyle legs (3)
+    predictors <- c(
+      grep("Distance_F.*Pelo_Pct$", base_cols, value = TRUE),
+      grep("Freestyle.*Pelo_Pct$", base_cols, value = TRUE),
+      "Distance_Pelo_Pct",
+      "Pelo_Pct",
+      "Weighted_Last_5"
+    )
+  } else if (leg == 4) {
+    # Anchor leg (often with sprint finish)
+    predictors <- c(
+      grep("Distance_F.*Pelo_Pct$", base_cols, value = TRUE),
+      grep("Freestyle.*Pelo_Pct$", base_cols, value = TRUE),
+      "Distance_Pelo_Pct",
+      "Sprint_Pelo_Pct",
+      "Pelo_Pct",
+      "Weighted_Last_5"
+    )
+  }
+  
+  # Remove any NA or invalid column names
+  predictors <- predictors[predictors %in% names(leg_data[[leg]])]
+  
+  return(predictors)
+}
+
+# Function to extract feature importance safely
+safe_importance <- function(model) {
+  tryCatch({
+    # Try to get importance directly from XGBoost model
+    if ("finalModel" %in% names(model) && inherits(model$finalModel, "xgb.Booster")) {
+      # Direct XGBoost importance
+      imp_matrix <- xgb.importance(feature_names = model$xNames, model = model$finalModel)
+      if (nrow(imp_matrix) > 0) {
+        return(data.frame(
+          Overall = imp_matrix$Gain,
+          row.names = imp_matrix$Feature
+        ))
+      }
+    }
+    
+    # Fall back to caret's varImp if direct method fails
+    imp <- varImp(model)
+    if (is.list(imp) && "importance" %in% names(imp)) {
+      return(imp$importance)
+    } else {
+      # If all fails, return equal importance
+      equal_imp <- data.frame(
+        Overall = rep(1, length(model$xNames)),
+        row.names = model$xNames
+      )
+      return(equal_imp)
+    }
+  }, error = function(e) {
+    log_warn(paste("Error extracting feature importance:", e$message))
+    # Return equal weights if extraction fails
+    equal_imp <- data.frame(
+      Overall = rep(1, length(model$xNames)),
+      row.names = model$xNames
+    )
+    return(equal_imp)
+  })
+}
+
+# Function to train models for each leg
+train_leg_models <- function(leg_data) {
+  # Set up control parameters for cross-validation
+  control <- trainControl(
+    method = "cv",
+    number = 5,
+    classProbs = TRUE,
+    summaryFunction = defaultSummary,
+    savePredictions = "final"
+  )
+  
+  # Function to safely train a model with fallbacks
+  train_model_safe <- function(formula, data, method = "glm", target_name) {
+    log_info(paste("Training", target_name, "model using", method))
+    
+    if (method == "xgbTree") {
+      # Try XGBoost first
+      tryCatch({
+        xgb_grid <- expand.grid(
+          nrounds = c(50, 100),
+          max_depth = c(3, 4),
+          eta = 0.03,
+          gamma = 0.1,
+          colsample_bytree = 0.8,
+          min_child_weight = 1,
+          subsample = 0.8
+        )
+        
+        model <- train(
+          formula,
+          data = data,
+          method = "xgbTree",
+          trControl = control,
+          tuneGrid = xgb_grid,
+          verbose = FALSE
+        )
+        return(model)
+      }, error = function(e) {
+        log_warn(paste("XGBoost training failed:", e$message, "- falling back to glm"))
+        # Fall back to GLM
+        tryCatch({
+          model <- train(
+            formula,
+            data = data,
+            method = "glm",
+            family = "binomial",
+            trControl = control
+          )
+          return(model)
+        }, error = function(e2) {
+          log_warn(paste("GLM training also failed:", e2$message, "- using basic glm"))
+          # Direct GLM as last resort
+          model <- glm(formula, data = data, family = binomial)
+          # Wrap in a caret-compatible structure
+          result <- list(
+            finalModel = model,
+            xNames = attr(terms(model), "term.labels"),
+            method = "glm.basic"
+          )
+          class(result) <- "train"
+          return(result)
+        })
+      })
+    } else {
+      # Try GLM directly
+      tryCatch({
+        model <- train(
+          formula,
+          data = data,
+          method = "glm",
+          family = "binomial",
+          trControl = control
+        )
+        return(model)
+      }, error = function(e) {
+        log_warn(paste("GLM training failed:", e$message, "- using basic glm"))
+        # Direct GLM as last resort
+        model <- glm(formula, data = data, family = binomial)
+        # Wrap in a caret-compatible structure
+        result <- list(
+          finalModel = model,
+          xNames = attr(terms(model), "term.labels"),
+          method = "glm.basic"
+        )
+        class(result) <- "train"
+        return(result)
+      })
+    }
+  }
+  
+  # Train models for each leg
+  leg_models <- list()
+  for(leg in 1:4) {
+    log_info(paste("Training models for Leg", leg))
+    
+    leg_predictors <- get_leg_predictors(leg, leg_data)
+    log_info(paste("Using predictors:", paste(leg_predictors, collapse = ", ")))
+    
+    # Skip if no predictors or data
+    if(length(leg_predictors) == 0 || nrow(leg_data[[leg]]) == 0) {
+      log_warn(paste("Not enough data or predictors for Leg", leg))
+      leg_models[[leg]] <- list(
+        podium = NULL,
+        win = NULL,
+        top5 = NULL,
+        top10 = NULL,
+        features = leg_predictors
+      )
+      next
+    }
+    
+    # Choose model type based on data size
+    method <- ifelse(nrow(leg_data[[leg]]) < 500, "glm", "xgbTree")
+    
+    # Create formulas
+    podium_formula <- as.formula(paste("is_podium ~", paste(leg_predictors, collapse = "+")))
+    win_formula <- as.formula(paste("is_win ~", paste(leg_predictors, collapse = "+")))
+    top5_formula <- as.formula(paste("is_top5 ~", paste(leg_predictors, collapse = "+")))
+    top10_formula <- as.formula(paste("is_top10 ~", paste(leg_predictors, collapse = "+")))
+    
+    # Train models
+    podium_model <- train_model_safe(podium_formula, leg_data[[leg]], method, "podium")
+    win_model <- train_model_safe(win_formula, leg_data[[leg]], method, "win")
+    top5_model <- train_model_safe(top5_formula, leg_data[[leg]], method, "top5")
+    top10_model <- train_model_safe(top10_formula, leg_data[[leg]], method, "top10")
+    
+    # Store models
+    leg_models[[leg]] <- list(
+      podium = podium_model,
+      win = win_model,
+      top5 = top5_model,
+      top10 = top10_model,
+      features = leg_predictors
+    )
+    
+    # Print feature importance safely
+    log_info(paste("Top features for Leg", leg, "podium prediction:"))
+    importance <- safe_importance(podium_model)
+    if(!is.null(importance) && nrow(importance) > 0) {
+      # Sort by importance and print top 5
+      importance <- importance[order(importance$Overall, decreasing = TRUE), , drop = FALSE]
+      print(head(importance, 5))
+    } else {
+      log_info("No feature importance available")
+    }
+  }
+  
+  return(leg_models)
+}
+
+# Function to load current relay startlists
+load_relay_startlists <- function(gender) {
+  gender_prefix <- ifelse(gender == "men", "men", "ladies")
+  
+  # Define file paths
+  teams_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_relay_races_teams_%s.csv", gender_prefix)
+  individuals_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_relay_races_individuals_%s.csv", gender_prefix)
+
+  # Load data
+  teams <- read.csv(teams_path, stringsAsFactors = FALSE)
+  individuals <- read.csv(individuals_path, stringsAsFactors = FALSE)
+
+  # Set Sex column consistently
+  if(gender == "men") {
+    teams$Sex = "M"
+    individuals$Sex = "M"
+  } else {
+    teams$Sex = "L"
+    individuals$Sex = "L"    
+  }
+  
+  log_info(paste("Loaded", gender_prefix, "relay teams startlist with", nrow(teams), "rows"))
+  log_info(paste("Loaded", gender_prefix, "relay individuals startlist with", nrow(individuals), "rows"))
+  
+  return(list(
+    teams = teams,
+    individuals = individuals
+  ))
+}
+
+# Function to check if startlist has valid FIS entries
+has_valid_fis_entries <- function(individuals_df) {
+  if ("In_FIS_List" %in% names(individuals_df)) {
+    return(any(individuals_df$In_FIS_List, na.rm = TRUE))
+  }
+  return(FALSE)
+}
+
+# Function to prepare current skier data for prediction
+prepare_current_skiers <- function(chrono_data, current_season, gender = "men") {
+  log_info(paste("Preparing current", gender, "skier data"))
+  
+  # Use the appropriate gender data
+  gender_prefix <- ifelse(gender == "men", "men", "ladies")
+  chrono_gender <- chrono_data[[paste0(gender_prefix, "_chrono")]]
+  classic_df <- chrono_data$processed[[gender_prefix]]$classic
+  freestyle_df <- chrono_data$processed[[gender_prefix]]$freestyle
+  
+  # Get all skiers from current season
+  current_skiers <- chrono_gender %>%
+    filter(Season == current_season) %>%
+    select(Skier, ID, Nation, Sex) %>%
+    distinct()
+  
+  # Get latest Elo values for these skiers
+  latest_elo <- chrono_gender %>%
+    filter(ID %in% current_skiers$ID) %>%
+    group_by(ID) %>%
+    arrange(desc(Season), desc(Race)) %>%
+    dplyr::slice(1) %>%
+    select(ID, ends_with("Elo")) %>%
+    ungroup()
+  
+  # Recalculate Weighted_Last_5 for classic races
+  classic_last5 <- classic_df %>%
+    filter(ID %in% current_skiers$ID) %>%
+    group_by(ID) %>%
+    arrange(Date, Season, Race) %>%
+    mutate(
+      # Calculate weighted average of previous races including current
+      Classic_Last_5 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-4):i]  # Include current row
+        if (length(prev_races) > 0) {
+          weights <- seq(1, length(prev_races))
+          weighted.mean(prev_races, weights, na.rm = TRUE)
+        } else {
+          0
+        }
+      })
+    ) %>%
+    arrange(desc(Date), desc(Season), desc(Race)) %>% 
+    dplyr::slice(1) %>%
+    select(ID, Classic_Last_5) %>%
+    ungroup()
+  
+  # Recalculate Weighted_Last_5 for freestyle races
+  freestyle_last5 <- freestyle_df %>%
+    filter(ID %in% current_skiers$ID) %>%
+    group_by(ID) %>%
+    arrange(Date, Season, Race) %>%
+    mutate(
+      # Calculate weighted average of previous races including current
+      Freestyle_Last_5 = sapply(row_number(), function(i) {
+        prev_races <- Points[max(1, i-4):i]  # Include current row
+        if (length(prev_races) > 0) {
+          weights <- seq(1, length(prev_races))
+          weighted.mean(prev_races, weights, na.rm = TRUE)
+        } else {
+          0
+        }
+      })
+    ) %>%
+    arrange(desc(Date), desc(Season), desc(Race)) %>% 
+    dplyr::slice(1) %>%
+    select(ID, Freestyle_Last_5) %>%
+    ungroup()
+  
+  # Combine all data
+  current_df <- current_skiers %>%
+    left_join(latest_elo, by = "ID") %>%
+    left_join(classic_last5, by = "ID") %>%
+    left_join(freestyle_last5, by = "ID")
+  
+  # Replace NAs with quartile values
+  for(col in names(current_df)) {
+    if(is.numeric(current_df[[col]]) && any(is.na(current_df[[col]]))) {
+      q1 <- quantile(current_df[[col]], 0.25, na.rm = TRUE)
+      if(is.na(q1)) q1 <- 0  # Default to 0 if quartile calculation fails
+      
+      current_df[[col]] <- ifelse(is.na(current_df[[col]]), q1, current_df[[col]])
+      log_info(paste("Replaced NAs in", col, "with first quartile:", q1))
+    }
+  }
+  
+  # Calculate Pelo_Pct values directly from Elo columns
+  elo_cols <- names(current_df)[grepl("Elo$", names(current_df))]
+  
+  if(length(elo_cols) > 0) {
+    for(col in elo_cols) {
+      max_val <- max(current_df[[col]], na.rm = TRUE)
+      if(max_val > 0) {
+        # Create Pelo_Pct name but calculate from Elo values
+        pct_col <- paste0(gsub("Elo", "Pelo", col), "_Pct")
+        current_df[[pct_col]] <- (current_df[[col]] / max_val) * 100
+        log_info(paste("Created", pct_col, "from", col, "with max value:", max_val))
+      }
+    }
+  }
+  
+  # Log summary of prepared data
+  log_info(paste("Prepared data for", nrow(current_df), gender, "skiers with", 
+                 ncol(current_df), "features"))
+  
+  return(current_df)
+}
+
+# Function to get leg predictions
+get_leg_predictions <- function(leg_number, skier_data, leg_models) {
+  # Select appropriate Last_5 column based on leg
+  if(leg_number <= 2) {
+    skier_data$Weighted_Last_5 <- skier_data$Classic_Last_5
+  } else {
+    skier_data$Weighted_Last_5 <- skier_data$Freestyle_Last_5
+  }
+  
+  # Make sure we have the right predictors for this model
+  required_predictors <- leg_models[[leg_number]]$features
+  
+  # Check if we have all required predictors
+  missing_predictors <- setdiff(required_predictors, names(skier_data))
+  if(length(missing_predictors) > 0) {
+    log_warn(paste("Missing predictors for leg", leg_number, ":", 
+                   paste(missing_predictors, collapse=", ")))
+    
+    # Initialize missing predictors with 0 or appropriate default values
+    for(pred in missing_predictors) {
+      skier_data[[pred]] <- 0
+    }
+  }
+  # Create prediction data with only the columns needed for prediction
+  pred_data <- skier_data
+
+  
+  # Handle NAs in prediction data
+  for(col in names(pred_data)) {
+    if(is.numeric(pred_data[[col]]) && any(is.na(pred_data[[col]]))) {
+      # Replace NAs with first quartile (or 0 if all NA)
+      q1_val <- quantile(pred_data[[col]], 0.25, na.rm = TRUE)
+      if(is.na(q1_val)) q1_val <- 0
+      pred_data[[col]][is.na(pred_data[[col]])] <- q1_val
+      
+      # Log the imputation
+      log_info(paste("Imputed NAs in column", col, "with first quartile value:", q1_val))
+    }
+  }
+  
+  # Get predictions safely
+  safe_predict <- function(model, data, type = "prob") {
+    if(is.null(model)) return(rep(0, nrow(data)))
+    
+    # Get needed variables more safely
+    vars_needed <- tryCatch({
+      if(inherits(model, "train")) {
+        # For caret train objects
+        if(!is.null(model$finalModel) && is.list(model$finalModel)) {
+          # Extract from finalModel if available
+          if(inherits(model$finalModel, "glm")) {
+            names(model$finalModel$coefficients)[-1]  # Remove intercept
+          } else if(!is.null(model$xNames)) {
+            model$xNames  # Use xNames if available
+          } else {
+            character(0)  # Empty if nothing found
+          }
+        } else if(!is.null(model$xNames)) {
+          model$xNames
+        } else {
+          character(0)
+        }
+      } else if(inherits(model, "glm")) {
+        # For direct glm models
+        names(model$coefficients)[-1]  # Remove intercept
+      } else {
+        # Default empty
+        character(0)
+      }
+    }, error = function(e) {
+      log_warn(paste("Error getting model variables:", e$message))
+      character(0)  # Return empty on error
+    })
+    
+    # Ensure data has all required predictors for the model
+    for(var in vars_needed) {
+      if(!(var %in% names(data))) {
+        data[[var]] <- 0
+      }
+    }
+    
+    tryCatch({
+      probs <- predict(model, newdata = data, type = type)
+      if(is.data.frame(probs) && "Yes" %in% names(probs)) {
+        return(pmin(probs[,"Yes"], 1))  # Cap at 1
+      } else if(is.numeric(probs)) {
+        return(pmin(probs, 1))  # Cap at 1
+      } else {
+        return(rep(0.25, nrow(data)))
+      }
+    }, error = function(e) {
+      log_warn(paste("Prediction error:", e$message))
+      return(rep(0.25, nrow(data)))
+    })
+  }
+  
+  # Get predictions for each outcome
+  win_probs <- safe_predict(leg_models[[leg_number]]$win, pred_data)
+  podium_probs <- safe_predict(leg_models[[leg_number]]$podium, pred_data)
+  top5_probs <- safe_predict(leg_models[[leg_number]]$top5, pred_data)
+  top10_probs <- safe_predict(leg_models[[leg_number]]$top10, pred_data)
+  
+  # Make sure all vectors are the same length as the data
+  if(length(win_probs) != nrow(pred_data)) {
+    log_warn(paste("Size mismatch in win_probs:", length(win_probs), "vs", nrow(pred_data)))
+    win_probs <- rep(win_probs[1], nrow(pred_data))
+  }
+  if(length(podium_probs) != nrow(pred_data)) {
+    log_warn(paste("Size mismatch in podium_probs:", length(podium_probs), "vs", nrow(pred_data)))
+    podium_probs <- rep(podium_probs[1], nrow(pred_data))
+  }
+  if(length(top5_probs) != nrow(pred_data)) {
+    log_warn(paste("Size mismatch in top5_probs:", length(top5_probs), "vs", nrow(pred_data)))
+    top5_probs <- rep(top5_probs[1], nrow(pred_data))
+  }
+  if(length(top10_probs) != nrow(pred_data)) {
+    log_warn(paste("Size mismatch in top10_probs:", length(top10_probs), "vs", nrow(pred_data)))
+    top10_probs <- rep(top10_probs[1], nrow(pred_data))
+  }
+
+  # Create results dataframe
+  return(data.frame(
+    ID = pred_data$ID,
+    Skier = pred_data$Skier,
+    Nation = pred_data$Nation,
+    Sex = pred_data$Sex,
+    Leg = leg_number,
+    Win_Prob = win_probs,
+    Podium_Prob = podium_probs,
+    Top5_Prob = top5_probs,
+    Top10_Prob = top10_probs
+  ))
+}
+
+# Function to get leg predictions with FIS startlist
+get_leg_predictions_with_startlist <- function(current_skiers, leg_models, startlist_individuals) {
+  # Create a list to store predictions for each leg
+  leg_predictions <- list()
+
+  # Process each leg
+  for(leg in 1:4) {
+    # Filter the startlist to get skiers for this leg
+    leg_skiers <- startlist_individuals %>%
+      filter(Team_Position == leg) %>%
+      select(ID, Skier, Nation, Team_Name)
+    # Filter current_skiers to only include those in this leg's startlist
+    leg_data <- current_skiers %>%
+      filter(ID %in% leg_skiers$ID) %>%
+      # Add Team information from startlist
+      left_join(
+        leg_skiers %>% select(ID, Team_Name),
+        by = "ID"
+      )
+
+    # Make predictions for this specific leg
+    leg_predictions[[leg]] <- get_leg_predictions(leg, leg_data, leg_models)
+  }
+  
+  return(leg_predictions)
+}
+
+# Function to calculate leg importance from historical data
+calculate_leg_importance <- function(leg_models) {
+  # Default weights with emphasis on later legs
+  default_weights <- c(0.2, 0.2, 0.25, 0.35)  # Slight emphasis on later legs
+  
+  # For race day predictions, we just use default weights
+  log_info("Using default leg importance weights for relay race day")
+  
+  return(default_weights)
+}
+
+# Function to generate team predictions using individual leg probabilities
+generate_team_predictions <- function(teams_df, individual_predictions, leg_models) {
+  # Find all the exact Member_N columns
+  member_cols <- c()
+  for(i in 1:4) {
+    name_col <- paste0("Member_", i)
+    
+    if(name_col %in% names(teams_df)) {
+      member_cols <- c(member_cols, name_col)
+    }
+  }
+  
+  # Initialize results dataframe with the exact member columns
+  team_predictions <- teams_df %>%
+    select(Team_Name, Nation, Team_Rank, Price, Is_Present, all_of(member_cols)) %>%
+    mutate(
+      Podium_Prob = 0,
+      Win_Prob = 0,
+      Top5_Prob = 0,
+      Top10_Prob = 0,
+      Expected_Points = 0
+    )
+  
+  # Calculate leg importance weights
+  leg_importance <- calculate_leg_importance(leg_models)
+  
+  log_info(paste("Leg importance weights:", 
+                 paste(sprintf("Leg %d: %.2f", 1:4, leg_importance), collapse=", ")))
+  
+  # For each team, calculate probabilities based on their members
+  for(i in 1:nrow(team_predictions)) {
+    team_name <- team_predictions$Team_Name[i]
+    
+    # Extract team members
+    members <- c()
+    for(leg in 1:4) {
+      member_col <- paste0("Member_", leg)
+      if(member_col %in% names(teams_df)) {
+        members[leg] <- teams_df[[member_col]][i]
+      }
+    }
+    
+    # Get predictions for each member
+    member_probs <- list(
+      Podium = numeric(4),
+      Win = numeric(4),
+      Top5 = numeric(4),
+      Top10 = numeric(4)
+    )
+    
+    for(leg in 1:4) {
+      if(!is.na(members[leg]) && members[leg] != "") {
+        # Access the specific leg's dataframe and then filter
+        if(!is.null(individual_predictions[[leg]])) {
+          skier_pred <- individual_predictions[[leg]] %>%
+            filter(Skier == members[leg])
+          
+          if(nrow(skier_pred) > 0) {
+            # Store probabilities safely
+            member_probs$Podium[leg] <- skier_pred$Podium_Prob[1]
+            member_probs$Win[leg] <- skier_pred$Win_Prob[1]
+            member_probs$Top5[leg] <- skier_pred$Top5_Prob[1]
+            member_probs$Top10[leg] <- skier_pred$Top10_Prob[1]
+          }
+        }
+      }
+    }
+    
+    # Calculate weighted probabilities
+    if(sum(member_probs$Podium > 0) > 0) {  # Only if we have any valid probabilities
+      # Calculate weighted probabilities using leg importance
+      weighted_podium <- sum(member_probs$Podium * leg_importance)
+      weighted_win <- sum(member_probs$Win * leg_importance)
+      weighted_top5 <- sum(member_probs$Top5 * leg_importance)
+      weighted_top10 <- sum(member_probs$Top10 * leg_importance)
+      
+      # Cap at 1
+      team_predictions$Podium_Prob[i] <- min(weighted_podium, 1)
+      team_predictions$Win_Prob[i] <- min(weighted_win, 1)
+      team_predictions$Top5_Prob[i] <- min(weighted_top5, 1)
+      team_predictions$Top10_Prob[i] <- min(weighted_top10, 1)
+      
+      # Calculate expected points based on probabilities
+      team_predictions$Expected_Points[i] <- 
+        team_predictions$Win_Prob[i] * relay_points[1] +
+        (team_predictions$Podium_Prob[i] - team_predictions$Win_Prob[i]) * mean(relay_points[2:3]) +
+        (team_predictions$Top5_Prob[i] - team_predictions$Podium_Prob[i]) * mean(relay_points[4:5]) +
+        (team_predictions$Top10_Prob[i] - team_predictions$Top5_Prob[i]) * mean(relay_points[6:10])
+    }
+  }
+  
+  return(team_predictions)
+}
+
+# Function to cap probability values at 1
+cap_probabilities <- function(team_predictions) {
+  # Probability columns to process
+  prob_cols <- c("Win_Prob", "Podium_Prob", "Top5_Prob", "Top10_Prob")
+  
+  # Cap each probability column at 1
+  for(prob_col in prob_cols) {
+    if(prob_col %in% names(team_predictions)) {
+      # Cap values at 1
+      team_predictions[[prob_col]] <- pmin(team_predictions[[prob_col]], 1)
+      
+      # Log any modifications
+      capped_count <- sum(team_predictions[[prob_col]] == 1)
+      if(capped_count > 0) {
+        log_info(paste("Capped", capped_count, "values at 1 for", prob_col))
+      }
+    }
+  }
+  
+  return(team_predictions)
+}
+
+# Function to normalize probabilities in team predictions
+normalize_probabilities <- function(team_predictions) {
+  # Define normalization targets
+  targets <- list(
+    Win_Prob = 1,      # Win probability sums to 1
+    Podium_Prob = 3,   # Podium probability sums to 3
+    Top5_Prob = 5,     # Top5 probability sums to 5
+    Top10_Prob = 10    # Top10 probability sums to 10
+  )
+  
+  # For each probability column, normalize to the target sum
+  for(prob_col in names(targets)) {
+    if(prob_col %in% names(team_predictions)) {
+      # Get current sum
+      current_sum <- sum(team_predictions[[prob_col]], na.rm = TRUE)
+      
+      # Skip if current sum is 0 (to avoid division by zero)
+      if(current_sum > 0) {
+        # Apply normalization factor
+        target_sum <- targets[[prob_col]]
+        normalization_factor <- target_sum / current_sum
+        
+        # Normalize probabilities
+        team_predictions[[prob_col]] <- team_predictions[[prob_col]] * normalization_factor
+        
+        # Log the normalization
+        log_info(paste("Normalized", prob_col, "from sum of", round(current_sum, 2), 
+                       "to", round(sum(team_predictions[[prob_col]], na.rm = TRUE), 2)))
+      }
+    }
+  }
+  
+  # Cap all probability values at 1
+  team_predictions <- cap_probabilities(team_predictions)
+  
+  return(team_predictions)
+}
+
+# Function to save prediction results to Excel files
+save_prediction_results <- function(team_predictions, race_date, gender, output_dir = NULL) {
+  # Create formatted date string
+  date_str <- format(race_date, "%Y%m%d")
+  
+  # Set default output directory if not provided
+  if(is.null(output_dir)) {
+    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", date_str)
+  }
+  
+  # Create directory if it doesn't exist
+  if(!dir.exists(output_dir)) {
+    dir.create(output_dir, recursive = TRUE)
+  }
+  
+  # Check if member columns exist
+  has_members <- any(grepl("^Member_", names(team_predictions)))
+  
+  # Create points dataframe with correct columns
+  if(has_members) {
+    # Include member columns in the original selection to maintain row correspondence
+    points_df <- team_predictions %>%
+      select(Team_Name, starts_with("Member_"), Expected_Points) %>%
+      arrange(desc(Expected_Points))
+  } else {
+    points_df <- team_predictions %>%
+      select(Team_Name, Expected_Points) %>%
+      arrange(desc(Expected_Points))
+  }
+  
+  # Create probability dataframe with correct columns
+  if(has_members) {
+    # Include member columns in the original selection to maintain row correspondence
+    prob_df <- team_predictions %>%
+      select(Team_Name, starts_with("Member_"), Win_Prob, Podium_Prob, Top5_Prob, Top10_Prob) %>%
+      arrange(desc(Podium_Prob))
+  } else {
+    prob_df <- team_predictions %>%
+      select(Team_Name, Win_Prob, Podium_Prob, Top5_Prob, Top10_Prob) %>%
+      arrange(desc(Podium_Prob))
+  }
+  
+  # Save points results
+  points_file <- file.path(output_dir, paste0(ifelse(gender == "men", "men", "ladies"), "_relay_points.xlsx"))
+  write.xlsx(points_df, points_file)
+  log_info(paste("Saved points predictions to", points_file))
+  
+  # Save probability results
+  prob_file <- file.path(output_dir, paste0(ifelse(gender == "men", "men", "ladies"), "_relay_probabilities.xlsx"))
+  write.xlsx(prob_df, prob_file)
+  log_info(paste("Saved probability predictions to", prob_file))
+  
+  # Return file paths
+  return(list(
+    points_file = points_file,
+    prob_file = prob_file
+  ))
+}
+
+# Main function to run relay predictions
+run_relay_predictions <- function() {
+  # Step 1: Find today's races
+  race_info <- load_today_relay_races()
+  if(is.null(race_info)) {
+    log_info("No relay races found today. Exiting.")
+    return(NULL)
+  }
+  
+  # Step 2: Load chrono data
+  chrono_data <- load_chrono_data()
+  
+  # Step 3: Process data with Pelo percentages
+  chrono_data$men_chrono <- create_pelo_pcts(chrono_data$men_chrono)
+  chrono_data$ladies_chrono <- create_pelo_pcts(chrono_data$ladies_chrono)
+  chrono_data$men_relays <- create_pelo_pcts(chrono_data$men_relays)
+  chrono_data$ladies_relays <- create_pelo_pcts(chrono_data$ladies_relays)
+  chrono_data$men_individuals <- create_pelo_pcts(chrono_data$men_individuals)
+  chrono_data$ladies_individuals <- create_pelo_pcts(chrono_data$ladies_individuals)
+  
+  # Step 4: Process classic and freestyle data
+  men_discipline <- process_discipline_data(chrono_data$men_individuals)
+  ladies_discipline <- process_discipline_data(chrono_data$ladies_individuals)
+  
+  # Add processed data to chrono_data
+  chrono_data$processed <- list(
+    men = men_discipline,
+    ladies = ladies_discipline
+  )
+  
+  # Step 5: Process relay data
+  men_relay_processed <- process_relay_data(
+    chrono_data$men_relays,
+    men_discipline$classic,
+    men_discipline$freestyle
+  )
+  
+  ladies_relay_processed <- process_relay_data(
+    chrono_data$ladies_relays,
+    ladies_discipline$classic,
+    ladies_discipline$freestyle
+  )
+  
+  # Step 6: Prepare leg data and train models
+  men_leg_data <- prepare_leg_data(
+    men_relay_processed$classic_legs,
+    men_relay_processed$freestyle_legs
+  )
+  
+  ladies_leg_data <- prepare_leg_data(
+    ladies_relay_processed$classic_legs,
+    ladies_relay_processed$freestyle_legs
+  )
+  
+  # Train leg models
+  men_leg_models <- train_leg_models(men_leg_data)
+  ladies_leg_models <- train_leg_models(ladies_leg_data)
+  
+  # Get current season
+  current_season <- max(chrono_data$men_chrono$Season, na.rm = TRUE)
+  
+  # Process for men if there are men's races
+  men_team_predictions <- NULL
+  if(nrow(race_info$men) > 0) {
+    log_info("Processing men's relay predictions")
+    
+    # Load men's startlists
+    men_startlists <- load_relay_startlists("men")
+    # Check if startlists have valid FIS entries
+    men_has_fis <- has_valid_fis_entries(men_startlists$individuals)
+    
+    # Prepare current skier data
+    men_current <- prepare_current_skiers(chrono_data, current_season)
+
+    
+    # Get leg predictions for all current skiers
+    if(men_has_fis) {
+      log_info("Using FIS startlist for men's leg predictions")
+      men_leg_predictions <- get_leg_predictions_with_startlist(
+        men_current,
+        men_leg_models,
+        men_startlists$individuals
+      )
+    } else {
+      log_info("No FIS startlist, predicting for all skiers in all legs")
+      men_leg_predictions <- list()
+      for(leg in 1:4) {
+        men_leg_predictions[[leg]] <- get_leg_predictions(leg, men_current, men_leg_models)
+      }
+    }
+    
+    # Generate team predictions
+    if(men_has_fis) {
+      log_info("Using FIS startlist for men")
+      men_team_predictions <- generate_team_predictions(men_startlists$teams, men_leg_predictions, men_leg_models)
+      
+      # Normalize probabilities
+      log_info("Normalizing men's team probabilities")
+      men_team_predictions <- normalize_probabilities(men_team_predictions)
+      
+      # Final capping of probabilities
+      log_info("Final capping of men's probabilities")
+      men_team_predictions <- cap_probabilities(men_team_predictions)
+    } else {
+      log_info("No valid FIS startlist for men, skipping team predictions")
+    }
+  }
+  
+  # Process for ladies if there are ladies' races
+  ladies_team_predictions <- NULL
+  if(nrow(race_info$ladies) > 0) {
+    log_info("Processing ladies' relay predictions")
+    
+    # Load ladies' startlists
+    ladies_startlists <- load_relay_startlists("ladies")
+    print(ladies_startlists)
+    
+    # Check if startlists have valid FIS entries
+    ladies_has_fis <- has_valid_fis_entries(ladies_startlists$individuals)
+    
+    # Prepare current skier data
+    ladies_current <- prepare_current_skiers(chrono_data, current_season, "ladies")
+    
+    # Get leg predictions for all current skiers
+    if(ladies_has_fis) {
+      log_info("Using FIS startlist for ladies' leg predictions")
+      ladies_leg_predictions <- get_leg_predictions_with_startlist(
+        ladies_current,
+        ladies_leg_models,
+        ladies_startlists$individuals
+      )
+    } else {
+      log_info("No FIS startlist, predicting for all skiers in all legs")
+      ladies_leg_predictions <- list()
+      for(leg in 1:4) {
+        ladies_leg_predictions[[leg]] <- get_leg_predictions(leg, ladies_current, ladies_leg_models)
+      }
+    }
+    
+    # Generate team predictions
+    if(ladies_has_fis) {
+      log_info("Using FIS startlist for ladies")
+      ladies_team_predictions <- generate_team_predictions(ladies_startlists$teams, ladies_leg_predictions, ladies_leg_models)
+      
+      # Normalize probabilities
+      log_info("Normalizing ladies' team probabilities")
+      ladies_team_predictions <- normalize_probabilities(ladies_team_predictions)
+      
+      # Final capping of probabilities
+      log_info("Final capping of ladies' probabilities")
+      ladies_team_predictions <- cap_probabilities(ladies_team_predictions)
+    } else {
+      log_info("No valid FIS startlist for ladies, skipping team predictions")
+    }
+  }
+  
+  # Save results
+  output_files <- c()
+  if(!is.null(men_team_predictions)) {
+    men_files <- save_prediction_results(men_team_predictions, race_info$race_date, "men")
+    output_files <- c(output_files, men_files)
+  }
+  
+  if(!is.null(ladies_team_predictions)) {
+    ladies_files <- save_prediction_results(ladies_team_predictions, race_info$race_date, "ladies")
+    output_files <- c(output_files, ladies_files)
+  }
+  
+  log_info("Relay race day predictions completed successfully")
+  
+  return(list(
+    men_predictions = men_team_predictions,
+    ladies_predictions = ladies_team_predictions,
+    race_date = race_info$race_date,
+    output_files = output_files
+  ))
+}
+
+# Run the predictions
+results <- run_relay_predictions()
+  # Create prediction data with

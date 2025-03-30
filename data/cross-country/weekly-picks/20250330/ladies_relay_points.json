@@ -1,0 +1,389 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Team_Name",
+    "Member_1",
+    "Member_2",
+    "Member_3",
+    "Member_4",
+    "Expected_Points"
+  ],
+  "rows": [
+    [
+      "SWEDEN I",
+      "Jonna Sundling",
+      "Frida Karlsson",
+      "Moa Ilar",
+      "Ebba Andersson",
+      161.822036615383
+    ],
+    [
+      "NORWAY I",
+      "Astrid Øyre Slind",
+      "Therese Johaug",
+      "Kristin Austgulen Fosnæs",
+      "Heidi Weng",
+      155.701095529244
+    ],
+    [
+      "FINLAND I",
+      "Jasmi Joensuu",
+      "Johanna Matintalo",
+      "Kerttu Niskanen",
+      "Krista Pärmäkoski",
+      126.251948744781
+    ],
+    [
+      "GERMANY I",
+      "Katharina Hennig",
+      "Laura Gimmler",
+      "Victoria Carl",
+      "Pia Fink",
+      115.695930464463
+    ],
+    [
+      "SWITZERLAND I",
+      "Nadine Fähndrich",
+      "Nadja Kälin",
+      "Anja Weber",
+      "Alina Meier",
+      94.7797310402554
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "Jessie Diggins",
+      "Rosie Brennan",
+      "Julia Kern",
+      "Sophia Laukli",
+      79.818918429488
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Katerina Janatova",
+      "Tereza Beranova",
+      "Barbora Havlickova",
+      "Barbora Antosova",
+      79.6633128882462
+    ],
+    [
+      "AUSTRIA I",
+      "Magdalena Scherz",
+      "Lisa Achleitner",
+      "Katharina Brudermann",
+      "Teresa Stadlober",
+      75.3252193376288
+    ],
+    [
+      "ITALY I",
+      "Caterina Ganz",
+      "Cristina Pittin",
+      "Anna Comarella",
+      "Federica Cassol",
+      74.1827542919186
+    ],
+    [
+      "FRANCE I",
+      "Lena Quintin",
+      "Delphine Claudel",
+      "Juliette Ducordeau",
+      "Flora Dolci",
+      55.8545460210971
+    ],
+    [
+      "CANADA I",
+      "Liliane Gagnon",
+      "Alison Mackie",
+      "Kathrine Stewart-Jones",
+      "Sonjaa Schmidt",
+      37.5092508305929
+    ],
+    [
+      "ESTONIA I",
+      "Kaidy Kaasiku",
+      "Keidy Kaasiku",
+      "Teiloora Ojaste",
+      "Mariel Merlii Pulles",
+      27.9741787920397
+    ],
+    [
+      "POLAND I",
+      "Izabela Marcisz",
+      "Andzelika Szyszka",
+      "Aleksandra Kolodziej",
+      "Monika Skinder",
+      23.7765139636463
+    ],
+    [
+      "JAPAN I",
+      "Chika Honda",
+      "Chika Kobayashi",
+      "Masae Tsuchiya",
+      "Shiori Yokohama",
+      22.5200334313061
+    ],
+    [
+      "SLOVENIA I",
+      "Anja Mandeljc",
+      "Eva Urevc",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      19.6109790441172
+    ],
+    [
+      "Hungary I",
+      "Larissza Vanda Bere",
+      "Sara Ponya",
+      "Evelin Vivien Laczko",
+      "NO ELIGIBLE SKIER",
+      18.6211728108644
+    ],
+    [
+      "Andorra I",
+      "Gina del Rio",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      18.268784426691
+    ],
+    [
+      "Bosnia&Herzegovina I",
+      "Teodora Delipara",
+      "NO ELIGIBLE SKIER",
+      "Sara Plakalovic",
+      "Melika Jazic",
+      17.8084499013134
+    ],
+    [
+      "KAZAKHSTAN I",
+      "Nadezhda Stepashkina",
+      "Laura Kinybaeyeva",
+      "Yelizaveta Tolmachyova",
+      "Angelina Shuryga",
+      14.7537914333748
+    ],
+    [
+      "PEOPLES REPUBLIC OF CHINA I",
+      "Honglian Meng",
+      "Dinigeer Yilamujiang",
+      "Lingshuang Chen",
+      "Bayani Jialin",
+      14.1862199371337
+    ],
+    [
+      "MONGOLIA I",
+      "Ariunbold Tumur",
+      "Nomin-Erdene Barsnyam",
+      "Ariuntungalag Enkhbayar",
+      "Enkhtuul Ariunsanaa",
+      12.0392913597755
+    ],
+    [
+      "CROATIA I",
+      "Leona Garac",
+      "Tena Hadzic",
+      "Ema Sobol",
+      "NO ELIGIBLE SKIER",
+      10.512058149107
+    ],
+    [
+      "LATVIA I",
+      "Linda Kaparkaleja",
+      "Adriana Suminska",
+      "Patricijia Eiduka",
+      "Samanta Krampe",
+      9.8294757179205
+    ],
+    [
+      "GREECE I",
+      "Konstantina Charalampidou",
+      "Nefeli Tita",
+      "Maria Dimitra Tsiarka",
+      "NO ELIGIBLE SKIER",
+      9.3486771081902
+    ],
+    [
+      "AUSTRALIA I",
+      "Phoebe Cridland",
+      "Ellen Søhol Lie",
+      "Rosie Fordham",
+      "Tuva Bygrave",
+      7.24130729718788
+    ],
+    [
+      "Iran I",
+      "Farnoosh Shemshaki",
+      "Samaneh Beyrami Baher",
+      "Atefah Salehi",
+      "Sahel Tir",
+      4.4287655307515
+    ],
+    [
+      "BRAZIL I",
+      "Bruna Moura",
+      "Mirlene Picin",
+      "Eduarda Ribera",
+      "Jaqueline Mourao",
+      4.02018726356085
+    ],
+    [
+      "ARGENTINA I",
+      "Nahiara Diaz Gonzalez",
+      "NO ELIGIBLE SKIER",
+      "Agustina Groetzner",
+      "NO ELIGIBLE SKIER",
+      3.40556494938639
+    ],
+    [
+      "TURKEY I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Rabia Akyol",
+      "NO ELIGIBLE SKIER",
+      3.16688046102583
+    ],
+    [
+      "Chile I",
+      "NO ELIGIBLE SKIER",
+      "Martina Flores",
+      "Estefania Belen Fuentes",
+      "NO ELIGIBLE SKIER",
+      3.09929077405658
+    ],
+    [
+      "Romania I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Delia Ioana Reit",
+      "NO ELIGIBLE SKIER",
+      3.08815284785997
+    ],
+    [
+      "Mexico I",
+      "NO ELIGIBLE SKIER",
+      "Regina Martinez Lorenzo",
+      "Karla Schleske",
+      "NO ELIGIBLE SKIER",
+      3.05694436755175
+    ],
+    [
+      "India I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Bhavani Thekkada Nanjunda",
+      "NO ELIGIBLE SKIER",
+      2.9676751497457
+    ],
+    [
+      "Malaysia I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Khadihaj Ismail",
+      "NO ELIGIBLE SKIER",
+      2.92484098575331
+    ],
+    [
+      "Haiti I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Celine Marti",
+      "NO ELIGIBLE SKIER",
+      2.91421344739307
+    ],
+    [
+      "Taiwan I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Sophia Tsu Velicer",
+      "NO ELIGIBLE SKIER",
+      2.68038831438496
+    ],
+    [
+      "SLOVAKIA I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Maria Danielova",
+      "NO ELIGIBLE SKIER",
+      2.40793887041812
+    ],
+    [
+      "LITHUANIA I",
+      "Ieva Dainyte",
+      "NO ELIGIBLE SKIER",
+      "Egle Savickaite",
+      "NO ELIGIBLE SKIER",
+      1.26748742098299
+    ],
+    [
+      "ICELAND I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Kristrun Gudnadottir",
+      "NO ELIGIBLE SKIER",
+      1.05080668291082
+    ],
+    [
+      "SERBIA I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Anja Ilic",
+      "NO ELIGIBLE SKIER",
+      0.755348004487586
+    ],
+    [
+      "Armenia I",
+      "Katya Galstyan",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      0.606004615077579
+    ],
+    [
+      "UKRAINE I",
+      "Viktoriya Olekh",
+      "Sofiia Shkatula",
+      "Yelizaveta Nopriienko",
+      "Anastasiia Nikon",
+      0.428314645156765
+    ],
+    [
+      "Lebanon I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Jeanne Darc Tawk",
+      "NO ELIGIBLE SKIER",
+      0.40126776821181
+    ],
+    [
+      "NORTH MACEDONIA I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Ana Cvetanovska",
+      "NO ELIGIBLE SKIER",
+      0.337402519689738
+    ],
+    [
+      "Bulgaria I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Kalina Nedyalkova",
+      "NO ELIGIBLE SKIER",
+      0.259570017877941
+    ],
+    [
+      "KOREA I",
+      "NO ELIGIBLE SKIER",
+      "Eui Jin Lee",
+      "Da-Som Han",
+      "NO ELIGIBLE SKIER",
+      0.179777902248498
+    ],
+    [
+      "Liechtenstein I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Nina Riedener",
+      "NO ELIGIBLE SKIER",
+      0.145586401903514
+    ]
+  ]
+}
