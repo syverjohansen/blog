@@ -39,7 +39,7 @@ RACE_SPORTS=("alpine" "biathlon" "nordic-combined" "skijump" "ski")
 HUGO_SPORTS=("alpine" "biathlon" "cross-country" "nordic-combined" "skijump")
 
 # Files to update in Hugo site
-HUGO_FILES=("current_ids.py" "all_ids.py" "all_time_elo.py" "races.py" "ranks.py" "elo_tables.py" "skier_info.py" "skier_tables.py")
+HUGO_FILES=("current_ids.py" "all_ids.py" "all_time_elo.py" "races.py" "ranks.py" "elo_tables.py" "skier_info.py" "skier_tables.py" "head2head.py")
 
 # Function to check if there were races yesterday for a sport
 check_races_yesterday() {

@@ -19,6 +19,7 @@ hasCJKLanguage = false  #For Chinese, Japanese and Korean.   I don't want this
 home = ["HTML", "RSS", "Algolia"] #Home page should be rendered in HTML, that an RSS feed should be generated for my home page, and that it should be indexed by Algolia
 
 [params]
+  summaryLength=0
   header_image = "img/daehlie-stride.avif"  #For main image on my site
   SEOTitle = "daehl-e | Nordic Numbers Blog"  #For what's displayed in search engine results
   description = "Skiing statistics | Ski statistics" #Description of site for SEO purposes
