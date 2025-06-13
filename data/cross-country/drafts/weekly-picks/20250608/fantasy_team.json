@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      14457,
+      266.978119126338
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "L",
+      "Norway",
+      9371,
+      233.170535903637
+    ],
+    [
+      "Katerina Janatova",
+      3198,
+      "L",
+      "Czechia",
+      2445,
+      183.801933127905
+    ],
+    [
+      "Teresa Stadlober",
+      529,
+      "L",
+      "Austria",
+      5411,
+      178.8142489995
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      4352,
+      172.918064222866
+    ],
+    [
+      "Lotta Udnes Weng",
+      1671,
+      "L",
+      "Norway",
+      3026,
+      168.695192442847
+    ],
+    [
+      "Julia Kern",
+      1846,
+      "L",
+      "USA",
+      1824,
+      140.279309506474
+    ],
+    [
+      "Anne Kjersti Kalvå",
+      1498,
+      "L",
+      "Norway",
+      845,
+      123.864784781315
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      17908,
+      338.659336152888
+    ],
+    [
+      "Martin Løwstrøm Nyenget",
+      2295,
+      "M",
+      "Norway",
+      10461,
+      214.970844370498
+    ],
+    [
+      "Mika Vermeulen",
+      12673,
+      "M",
+      "Austria",
+      6638,
+      193.059076703059
+    ],
+    [
+      "Pål Golberg",
+      88,
+      "M",
+      "Norway",
+      5570,
+      187.350942238021
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      "M",
+      "USA",
+      5734,
+      178.673275245273
+    ],
+    [
+      "Michal Novak",
+      3655,
+      "M",
+      "Czechia",
+      1386,
+      173.046513464348
+    ],
+    [
+      "Andreas Fjorden Ree",
+      8678,
+      "M",
+      "Norway",
+      5501,
+      167.865423069902
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "M",
+      "France",
+      4982,
+      160.642416648249
+    ]
+  ]
+}

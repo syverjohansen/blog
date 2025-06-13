@@ -1,0 +1,236 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Team_Name",
+    "Member_1",
+    "Member_2",
+    "Member_3",
+    "Member_4",
+    "Win_Prob",
+    "Podium_Prob",
+    "Top5_Prob",
+    "Top10_Prob"
+  ],
+  "rows": [
+    [
+      "SWEDEN I",
+      "Emma Ribom",
+      "Frida Karlsson",
+      "Ebba Andersson",
+      "Jonna Sundling",
+      "0.478985635616489",
+      "0.761538558534368",
+      "1.0",
+      "1.0"
+    ],
+    [
+      "NORWAY I",
+      "Heidi Weng",
+      "Astrid Øyre Slind",
+      "Therese Johaug",
+      "Kristin Austgulen Fosnæs",
+      "0.410757011413447",
+      "0.74125247884582",
+      "0.963439132085822",
+      "1.0"
+    ],
+    [
+      "FINLAND I",
+      "Johanna Matintalo",
+      "Kerttu Niskanen",
+      "Krista Pärmäkoski",
+      "Jasmi Joensuu",
+      "0.00573063935335627",
+      "0.452783198512286",
+      "1.0",
+      "1.0"
+    ],
+    [
+      "GERMANY I",
+      "Pia Fink",
+      "Katharina Hennig",
+      "Helen Hoffmann",
+      "Victoria Carl",
+      "0.00975706821215613",
+      "0.38619333275149",
+      "0.73262030636113",
+      "0.976298515018537"
+    ],
+    [
+      "SWITZERLAND I",
+      "Anja Weber",
+      "Nadja Kälin",
+      "Marina Kälin",
+      "Nadine Fähndrich",
+      "0.0130961448827174",
+      "0.200613652293917",
+      "0.465661834475266",
+      "1.0"
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Katerina Janatova",
+      "Anna Marie Jaklova",
+      "Barbora Havlickova",
+      "Anna Milerska",
+      "0.0204263546275428",
+      "0.169639851589818",
+      "0.20161332070619",
+      "0.660533867607769"
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "Rosie Brennan",
+      "Julia Kern",
+      "Sophia Laukli",
+      "Jessie Diggins",
+      "0.0544142700695298",
+      "0.141941277522615",
+      "0.350681804624206",
+      "1.0"
+    ],
+    [
+      "ITALY I",
+      "Anna Comarella",
+      "Caterina Ganz",
+      "Maria Gismondi",
+      "Martina di Centa",
+      "0.0045439235311737",
+      "0.0611672877988449",
+      "0.160252361371336",
+      "0.83887962433534"
+    ],
+    [
+      "CANADA I",
+      "Alison Mackie",
+      "Kathrine Stewart-Jones",
+      "Liliane Gagnon",
+      "Sonjaa Schmidt",
+      "0.000720759568877658",
+      "0.0247739298304015",
+      "0.051333444990275",
+      "0.759673086238219"
+    ],
+    [
+      "ESTONIA I",
+      "Kaidy Kaasiku",
+      "Keidy Kaasiku",
+      "Mariel Merlii Pulles",
+      "Teesi Tuul",
+      "0.000892983264197208",
+      "0.0224059526265018",
+      "0.0146376747456806",
+      "0.204194210181847"
+    ],
+    [
+      "JAPAN I",
+      "Chika Honda",
+      "Masae Tsuchiya",
+      "Chika Kobayashi",
+      "Shiori Yokohama",
+      "0.000254238805999811",
+      "0.007479597235922",
+      "0.0110023965330777",
+      "0.504614276862816"
+    ],
+    [
+      "CROATIA I",
+      "Tena Hadzic",
+      "Leona Garac",
+      "Ema Sobol",
+      "Nives BARICEVAC",
+      "5.42460137373737e-05",
+      "0.0057474164624307",
+      "0.00434514359244902",
+      "0.0875985593877295"
+    ],
+    [
+      "PEOPLES REPUBLIC OF CHINA I",
+      "Honglian Meng",
+      "Lingshuang Chen",
+      "Bayani Jialin",
+      "Dinigeer Yilamujiang",
+      "0.000124366238278306",
+      "0.0046721157262786",
+      "0.00287876523197644",
+      "0.166300545344905"
+    ],
+    [
+      "MONGOLIA I",
+      "Ariuntungalag Enkhbayar",
+      "Enkhtuul Ariunsanaa",
+      "Ariunbold Tumur",
+      "Nomin-Erdene Barsnyam",
+      "0.0",
+      "0.00371987834295093",
+      "0.0028282040984216",
+      "0.248650059514236"
+    ],
+    [
+      "AUSTRALIA I",
+      "Tuva Bygrave",
+      "Ellen Søhol Lie",
+      "Rosie Fordham",
+      "Phoebe Cridland",
+      "0.0",
+      "0.00358670990990018",
+      "0.00340517107149299",
+      "0.153800183934326"
+    ],
+    [
+      "LATVIA I",
+      "Kitija Auzina",
+      "Adriana Suminska",
+      "Samanta Krampe",
+      "Linda Kaparkaleja",
+      "3.43716069861461e-05",
+      "0.00287852997194032",
+      "0.00252520336081617",
+      "0.055049742020665"
+    ],
+    [
+      "BRAZIL I",
+      "Eduarda Ribera",
+      "Jaqueline Mourao",
+      "Bruna Moura",
+      "Mirlene Picin",
+      "0.000117519226819728",
+      "0.00259139122541523",
+      "0.000596319341784358",
+      "0.0268058691296891"
+    ],
+    [
+      "KAZAKHSTAN I",
+      "Kseniya Shalygina",
+      "Angelina Shuryga",
+      "Nadezhda Stepashkina",
+      "Darya Ryazhko",
+      "6.36283873430071e-05",
+      "0.00245165125044669",
+      "0.000915280139868132",
+      "0.0570744828918115"
+    ],
+    [
+      "UKRAINE I",
+      "Anastasiia Nikon",
+      "Sofiia Shkatula",
+      "Yelizaveta Nopriienko",
+      "Viktoriya Olekh",
+      "0.0",
+      "0.00238982403563041",
+      "0.000793687941741599",
+      "0.008053851186776"
+    ],
+    [
+      "LITHUANIA I",
+      "Ieva Dainyte",
+      "Kornelija SUKOVAITE",
+      "Egle Savickaite",
+      "Greta Gabriele KILBAUSKAITE",
+      "2.68391813482008e-05",
+      "0.00217336553302315",
+      "0.00042321620080391",
+      "0.0200456559959398"
+    ]
+  ]
+}

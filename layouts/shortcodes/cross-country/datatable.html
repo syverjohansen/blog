@@ -1,3 +1,4 @@
+{{ $context := . }}
 {{ $dataPath := split (.Get 0) "/" }}
 {{ $data := .Site.Data }}
 {{ range $dataPath }}
@@ -38,7 +39,7 @@
 
 <!-- Full-width table to ensure all columns are visible -->
 <div class="datatables-container">
-    <table id="datatable-{{ anchorize (.Get 0) }}" class="display nowrap" style="width:100%">
+    <table id="datatable-{{ anchorize ($context.Get 0) }}" class="display nowrap" style="width:100%">
         <thead>
             <tr>
                 {{ range $index, $header := $headers }}
@@ -64,7 +65,7 @@
                                             {{ $gender = "M" }}
                                         {{ end }}
                                     {{ else }}
-                                        {{ $tableName := lower $.Get 0 }}
+                                        {{ $tableName := lower ($context.Get 0) }}
                                         {{ if or (in $tableName "men") (in $tableName "m_") }}
                                             {{ $gender = "M" }}
                                         {{ end }}
@@ -86,7 +87,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof jQuery !== 'undefined' && typeof jQuery.fn.DataTable !== 'undefined') {
-        var tableId = '#datatable-{{ anchorize (.Get 0) }}';
+        var tableId = '#datatable-{{ anchorize ($context.Get 0) }}';
         
         if (!$.fn.DataTable.isDataTable(tableId)) {
             var dataTable = $(tableId).DataTable({
@@ -98,18 +99,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     left: 1
                 },
                 columnDefs: [
-                    // Format numeric values
+                    // Set sort sequence for all columns to descending first
+                    {
+                        targets: '_all',
+                        orderSequence: ['desc', 'asc']
+                    },
+                    // Format numeric values for display
                     {
                         targets: '_all',
                         render: function(data, type, row) {
-                            if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
+                            if (type === 'display' && !isNaN(data) && data !== null && data !== '' && data.toString().indexOf('.') !== -1) {
                                 return parseFloat(data).toFixed(2);
                             }
                             return data;
                         }
                     }
                 ],
-                order: [],
+                order: [], // No initial sorting
                 language: {
                     search: "Search:",
                     paginate: {
@@ -174,6 +180,39 @@ table.dataTable thead th {
     background-color: #f2f2f2;
     border-bottom: 2px solid #ddd;
     padding: 8px !important;
+    cursor: pointer;
+    position: relative;
+}
+
+table.dataTable thead th:hover {
+    background-color: #e8e8e8;
+}
+
+/* Add sort indicators */
+table.dataTable thead th.sorting:after,
+table.dataTable thead th.sorting_asc:after,
+table.dataTable thead th.sorting_desc:after {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #666;
+}
+
+table.dataTable thead th.sorting:after {
+    content: "⇕";
+}
+
+table.dataTable thead th.sorting_desc:after {
+    content: "↓";
+    color: #333;
+}
+
+table.dataTable thead th.sorting_asc:after {
+    content: "↑";
+    color: #333;
 }
 
 table.dataTable tbody td {

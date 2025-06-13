@@ -38,7 +38,7 @@
             <thead></thead>
             <tbody></tbody>
         </table>
-        {{ partial "ladies-graph.html" . }}
+        {{ partial "alpine/ladies-graph.html" . }}
     </div>
 
     <div class="container-fluid">
@@ -48,7 +48,7 @@
             <thead></thead>
             <tbody></tbody>
         </table>
-        {{ partial "men-graph.html" . }}
+        {{ partial "alpine/men-graph.html" . }}
     </div>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -64,7 +64,7 @@
                             data: key,
                             title: key.charAt(0).toUpperCase() + key.slice(1),
                             render: function(data, type, row) {
-                                return `<a href="/skiers/skier/?id=${row.ID}&gender=${gender}" target="_blank">${data}</a>`;
+                                return `<a href="/alpine/skiers/skier/?id=${row.ID}&gender=${gender}" target="_blank">${data}</a>`;
                             }
                         };
                     }
@@ -91,8 +91,8 @@
                 console.error(`Failed to load JSON data for ${gender}`);
             });
         }
-        initializeTable('#dataTableL_chrono', '{{ "python/excel365/L_chrono_current.json" | relURL }}', 'L');
-        initializeTable('#dataTableM_chrono', '{{ "python/excel365/M_chrono_current.json" | relURL }}?t=' + new Date().getTime(), 'M');
+        initializeTable('#dataTableL_chrono', '{{ "python/alpine/excel365/L_chrono_current.json" | relURL }}', 'L');
+        initializeTable('#dataTableM_chrono', '{{ "python/alpine/excel365/M_chrono_current.json" | relURL }}?t=' + new Date().getTime(), 'M');
     });
     </script>
 </body>

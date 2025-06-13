@@ -1,0 +1,165 @@
+<div class="text-center mb-16">
+    <h1 class="text-5xl font-bold mb-4">Cross-Country Race Archives</h1>
+    <div class="w-24 h-1 bg-red-600 mx-auto"></div>
+</div>
+
+<div id="yearsContainer" class="max-w-6xl mx-auto">
+    <div id="yearsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+    <div id="pagination" class="flex justify-center gap-2 mt-6"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Fetch both data files
+                const [ladiesResponse, mensResponse] = await Promise.all([
+                    fetch('/python/alpine/excel365/L/seasons.json'),
+                    fetch('/python/alpine/excel365/M/seasons.json')
+                ]);
+
+                if (!ladiesResponse.ok || !mensResponse.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const ladiesData = await ladiesResponse.json();
+                console.log(ladiesData)
+                const mensData = await mensResponse.json();
+                console.log(mensData)
+
+                // Get all unique seasons from both datasets
+                const allSeasons = [...new Set([
+                    ...ladiesData.map(s => s.season),
+                    ...mensData.map(s => s.season)
+                ])].sort((a, b) => b - a); // Sort descending
+
+                // Combine the data
+                const combinedSeasons = allSeasons.map(season => {
+                    const ladiesSeason = ladiesData.find(s => s.season === season);
+                    const mensSeason = mensData.find(s => s.season === season);
+
+                    // Subtract 1 from race_count to account for Race 0
+                    const ladiesRaceCount = ladiesSeason ? Math.max(0, ladiesSeason.race_count) : 0;
+                    const mensRaceCount = mensSeason ? Math.max(0, mensSeason.race_count) : 0;
+
+                    return {
+                        season: season,
+                        ladiesRaces: ladiesRaceCount,
+                        mensRaces: mensRaceCount,
+                        ladiesWinner: ladiesSeason ? ladiesSeason.winner : null,
+                        mensWinner: mensSeason ? mensSeason.winner : null
+                    };
+                });
+
+                displaySeasons(combinedSeasons);
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('yearsGrid').innerHTML = `
+                    <div class="col-span-full bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4">
+                        <p>Error loading race data. Please try again later.</p>
+                    </div>
+                `;
+            }
+        });
+
+        function displaySeasons(seasons) {
+            const container = document.getElementById('yearsGrid');
+            const pagination = document.getElementById('pagination');
+            const yearsPerPage = 20;
+            let currentPage = 1;
+
+            // Calculate total pages
+            const totalPages = Math.ceil(seasons.length / yearsPerPage);
+
+            function renderPage(page) {
+                // Clear existing content
+                container.innerHTML = '';
+
+                // Calculate slice range for current page
+                const startIdx = (page - 1) * yearsPerPage;
+                const endIdx = Math.min(startIdx + yearsPerPage, seasons.length);
+                const pageSeasons = seasons.slice(startIdx, endIdx);
+
+                // Create year cards
+                pageSeasons.forEach(season => {
+                    const totalRaces = season.ladiesRaces + season.mensRaces;
+                    const hasLadiesData = season.ladiesRaces > 0;
+                    const hasMensData = season.mensRaces > 0;
+
+                    console.log(`Rendering season ${season.season}:`, {
+                        ladiesRaces: season.ladiesRaces,
+                        hasLadiesData,
+                        ladiesWinner: season.ladiesWinner,
+                        mensRaces: season.mensRaces,
+                        hasMensData,
+                        mensWinner: season.mensWinner
+                    });
+
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-lg shadow-md p-8 h-full border border-gray-200 hover:shadow-xl transition-shadow duration-300';
+                    card.innerHTML = `
+                        <h2 class="text-2xl font-bold text-gray-800 mb-3">${season.season} Season</h2>
+                        <div class="text-gray-600 mb-4">
+                            <p class="mb-4">${totalRaces} races total</p>
+                            <div class="space-y-3">
+                                ${hasLadiesData ? `
+                                <div>
+                                    <h3 class="font-semibold text-gray-700">Ladies Winner (${season.ladiesRaces} races)</h3>
+                                    ${season.ladiesWinner ? 
+                                        `<p>${season.ladiesWinner.name}<br><span class="text-gray-500">${season.ladiesWinner.nation}</span></p>` : 
+                                        '<p class="italic text-gray-400">No winner data available</p>'
+                                    }
+                                </div>
+                                ` : ''}
+                                ${hasMensData ? `
+                                <div>
+                                    <h3 class="font-semibold text-gray-700">Men's Winner (${season.mensRaces} races)</h3>
+                                    ${season.mensWinner ? 
+                                        `<p>${season.mensWinner.name}<br><span class="text-gray-500">${season.mensWinner.nation}</span></p>` : 
+                                        '<p class="italic text-gray-400">No winner data available</p>'
+                                    }
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <a href="/alpine/races/season/?year=${season.season}" class="text-blue-600 hover:text-blue-800">
+                            View Races
+                        </a>
+                    `;
+                    container.appendChild(card);
+                });
+
+                // Update pagination
+                updatePagination(page);
+            }
+
+            function updatePagination(page) {
+                pagination.innerHTML = '';
+
+                // Previous button
+                if (page > 1) {
+                    const prevButton = document.createElement('button');
+                    prevButton.className = 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600';
+                    prevButton.textContent = 'Previous';
+                    prevButton.onclick = () => renderPage(page - 1);
+                    pagination.appendChild(prevButton);
+                }
+
+                // Page indicator
+                const pageIndicator = document.createElement('span');
+                pageIndicator.className = 'px-4 py-2 text-gray-700';
+                pageIndicator.textContent = `Page ${page} of ${totalPages}`;
+                pagination.appendChild(pageIndicator);
+
+                // Next button
+                if (page < totalPages) {
+                    const nextButton = document.createElement('button');
+                    nextButton.className = 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600';
+                    nextButton.textContent = 'Next';
+                    nextButton.onclick = () => renderPage(page + 1);
+                    pagination.appendChild(nextButton);
+                }
+            }
+
+            // Initial render
+            renderPage(1);
+        }
+    </script>
+</div>

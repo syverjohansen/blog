@@ -124,6 +124,8 @@ href = "/about/"
 title = "Alpine"
 href = "/alpine/"
 
+
+
 [[params.addtional_menus]]
 title = "Biathlon"
 href = "/biathlon/"
@@ -132,13 +134,15 @@ href = "/biathlon/"
 title = "Cross Country"
 href = "/cross-country/"
 
+
+
 [[params.addtional_menus]]
 title = "Nordic Combined"
 href = "/nordic-combined/"
 
 [[params.addtional_menus]]
 title = "Ski Jumping"
-href = "/ski-jumping/"
+href = "/skijump/"
 
 [[params.addtional_menus]]
 title = "Games"

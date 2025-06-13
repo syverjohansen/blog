@@ -1,0 +1,92 @@
+/* Fixed sidebar catalog styling */
+.sidebar-container.catalog-container {
+  position: fixed;
+  right: 0;
+  top: 80px; /* Keep it below the navigation */
+  width: 250px;
+  height: calc(100% - 80px - 20px); /* Adjust height based on top offset */
+  overflow-y: auto;
+  background-color: #fff; /* Light background for the sidebar */
+  padding: 20px;
+  border-left: 1px solid #ddd;
+  z-index: 100;
+  margin-bottom: 20px;
+}
+
+/* Add margin to the main content container to prevent overlap */
+.post-container {
+  margin-right: 270px; /* Match the width of the sidebar plus some spacing */
+  /* Remove any background color that might have been added */
+  background-color: transparent;
+}
+
+/* Style improvements for the catalog items */
+.side-catalog .catalog-body {
+  padding-left: 0;
+  list-style: none;
+}
+
+.side-catalog .catalog-body li {
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.side-catalog .catalog-body li a {
+  color: #777;
+  transition: color 0.3s;
+}
+
+.side-catalog .catalog-body li a:hover {
+  color: #337ab7;
+  text-decoration: none;
+}
+
+/* Add a small indicator to the active item */
+.side-catalog .catalog-body li.active a {
+  color: #337ab7;
+  font-weight: 600;
+}
+
+.side-catalog .catalog-body li.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.4rem;
+  height: 0.8rem;
+  width: 2px;
+  background-color: #337ab7;
+}
+
+/* Make headings more prominent - without changing background colors */
+.post-container h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.post-container h3 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 1.8rem;
+  margin-bottom: 1.2rem;
+}
+
+/* Add some extra emphasis to sport headings */
+.post-container h2:first-of-type {
+  font-size: 2.8rem;
+  color: inherit; /* Use the default text color instead of setting a specific color */
+  border-bottom: 2px solid #eaecef;
+  padding-bottom: 0.5rem;
+}
+
+/* Make sure we're not affecting the main body background */
+body {
+  background-color: transparent !important;
+}
+
+/* Make sure other containers aren't affected */
+.container, .container-fluid, .row, .col-lg-8, .col-lg-offset-2, .col-md-10, .col-md-offset-1 {
+  background-color: transparent;
+}

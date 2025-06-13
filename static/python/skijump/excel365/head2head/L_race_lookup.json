@@ -1,0 +1,2178 @@
+{
+  "2009_1": {
+    "season": 2009,
+    "race": 1,
+    "date": "2009-02-20",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Normal"
+  },
+  "2011_1": {
+    "season": 2011,
+    "race": 1,
+    "date": "2011-02-25",
+    "city": "Midtstubakken",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2012_1": {
+    "season": 2012,
+    "race": 1,
+    "date": "2011-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2012_2": {
+    "season": 2012,
+    "race": 2,
+    "date": "2012-01-07",
+    "city": "Hinterzarten",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2012_3": {
+    "season": 2012,
+    "race": 3,
+    "date": "2012-01-08",
+    "city": "Hinterzarten",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2012_4": {
+    "season": 2012,
+    "race": 4,
+    "date": "2012-01-14",
+    "city": "Predazzo",
+    "country": "Italy",
+    "event": "Normal"
+  },
+  "2012_5": {
+    "season": 2012,
+    "race": 5,
+    "date": "2012-01-15",
+    "city": "Predazzo",
+    "country": "Italy",
+    "event": "Normal"
+  },
+  "2012_6": {
+    "season": 2012,
+    "race": 6,
+    "date": "2012-02-04",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2012_7": {
+    "season": 2012,
+    "race": 7,
+    "date": "2012-02-05",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2012_8": {
+    "season": 2012,
+    "race": 8,
+    "date": "2012-02-11",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2012_9": {
+    "season": 2012,
+    "race": 9,
+    "date": "2012-02-12",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2012_10": {
+    "season": 2012,
+    "race": 10,
+    "date": "2012-03-03",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2012_11": {
+    "season": 2012,
+    "race": 11,
+    "date": "2012-03-03",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2012_12": {
+    "season": 2012,
+    "race": 12,
+    "date": "2012-03-04",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2012_13": {
+    "season": 2012,
+    "race": 13,
+    "date": "2012-03-09",
+    "city": "Midtstubakken",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2013_1": {
+    "season": 2013,
+    "race": 1,
+    "date": "2012-11-24",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2013_2": {
+    "season": 2013,
+    "race": 2,
+    "date": "2012-12-08",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2013_3": {
+    "season": 2013,
+    "race": 3,
+    "date": "2012-12-09",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2013_4": {
+    "season": 2013,
+    "race": 4,
+    "date": "2012-12-14",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2013_5": {
+    "season": 2013,
+    "race": 5,
+    "date": "2013-01-05",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2013_6": {
+    "season": 2013,
+    "race": 6,
+    "date": "2013-01-06",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2013_7": {
+    "season": 2013,
+    "race": 7,
+    "date": "2013-01-12",
+    "city": "Hinterzarten",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2013_8": {
+    "season": 2013,
+    "race": 8,
+    "date": "2013-01-13",
+    "city": "Hinterzarten",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2013_9": {
+    "season": 2013,
+    "race": 9,
+    "date": "2013-02-02",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2013_10": {
+    "season": 2013,
+    "race": 10,
+    "date": "2013-02-03",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2013_11": {
+    "season": 2013,
+    "race": 11,
+    "date": "2013-02-10",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2013_12": {
+    "season": 2013,
+    "race": 12,
+    "date": "2013-02-10",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2013_13": {
+    "season": 2013,
+    "race": 13,
+    "date": "2013-02-16",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2013_14": {
+    "season": 2013,
+    "race": 14,
+    "date": "2013-02-17",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2013_15": {
+    "season": 2013,
+    "race": 15,
+    "date": "2013-02-22",
+    "city": "Predazzo",
+    "country": "Italy",
+    "event": "Normal"
+  },
+  "2013_16": {
+    "season": 2013,
+    "race": 16,
+    "date": "2013-03-15",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2013_17": {
+    "season": 2013,
+    "race": 17,
+    "date": "2013-03-17",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2014_1": {
+    "season": 2014,
+    "race": 1,
+    "date": "2013-12-07",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2014_2": {
+    "season": 2014,
+    "race": 2,
+    "date": "2013-12-21",
+    "city": "Hinterzarten",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2014_3": {
+    "season": 2014,
+    "race": 3,
+    "date": "2013-12-22",
+    "city": "Hinterzarten",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2014_4": {
+    "season": 2014,
+    "race": 4,
+    "date": "2014-01-03",
+    "city": "Chaikovsky",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2014_5": {
+    "season": 2014,
+    "race": 5,
+    "date": "2014-01-04",
+    "city": "Chaikovsky",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2014_6": {
+    "season": 2014,
+    "race": 6,
+    "date": "2014-01-11",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2014_7": {
+    "season": 2014,
+    "race": 7,
+    "date": "2014-01-12",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2014_8": {
+    "season": 2014,
+    "race": 8,
+    "date": "2014-01-18",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2014_9": {
+    "season": 2014,
+    "race": 9,
+    "date": "2014-01-19",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2014_10": {
+    "season": 2014,
+    "race": 10,
+    "date": "2014-01-25",
+    "city": "Planica",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2014_11": {
+    "season": 2014,
+    "race": 11,
+    "date": "2014-01-26",
+    "city": "Planica",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2014_12": {
+    "season": 2014,
+    "race": 12,
+    "date": "2014-02-01",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2014_13": {
+    "season": 2014,
+    "race": 13,
+    "date": "2014-02-02",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2014_14": {
+    "season": 2014,
+    "race": 14,
+    "date": "2014-02-11",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2014_15": {
+    "season": 2014,
+    "race": 15,
+    "date": "2014-03-01",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2014_16": {
+    "season": 2014,
+    "race": 16,
+    "date": "2014-03-02",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2014_17": {
+    "season": 2014,
+    "race": 17,
+    "date": "2014-03-08",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2014_18": {
+    "season": 2014,
+    "race": 18,
+    "date": "2014-03-15",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Normal"
+  },
+  "2014_19": {
+    "season": 2014,
+    "race": 19,
+    "date": "2014-03-22",
+    "city": "Planica",
+    "country": "Slovenia",
+    "event": "Large"
+  },
+  "2015_1": {
+    "season": 2015,
+    "race": 1,
+    "date": "2014-12-05",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2015_2": {
+    "season": 2015,
+    "race": 2,
+    "date": "2015-01-10",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2015_3": {
+    "season": 2015,
+    "race": 3,
+    "date": "2015-01-11",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2015_4": {
+    "season": 2015,
+    "race": 4,
+    "date": "2015-01-18",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2015_5": {
+    "season": 2015,
+    "race": 5,
+    "date": "2015-01-24",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2015_6": {
+    "season": 2015,
+    "race": 6,
+    "date": "2015-01-25",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2015_7": {
+    "season": 2015,
+    "race": 7,
+    "date": "2015-01-31",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2015_8": {
+    "season": 2015,
+    "race": 8,
+    "date": "2015-02-01",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2015_9": {
+    "season": 2015,
+    "race": 9,
+    "date": "2015-02-07",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2015_10": {
+    "season": 2015,
+    "race": 10,
+    "date": "2015-02-08",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2015_11": {
+    "season": 2015,
+    "race": 11,
+    "date": "2015-02-14",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2015_12": {
+    "season": 2015,
+    "race": 12,
+    "date": "2015-02-15",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2015_13": {
+    "season": 2015,
+    "race": 13,
+    "date": "2015-02-19",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Normal"
+  },
+  "2015_14": {
+    "season": 2015,
+    "race": 14,
+    "date": "2015-03-13",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2016_1": {
+    "season": 2016,
+    "race": 1,
+    "date": "2015-12-04",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2016_2": {
+    "season": 2016,
+    "race": 2,
+    "date": "2015-12-12",
+    "city": "Nizhny Tagil",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2016_3": {
+    "season": 2016,
+    "race": 3,
+    "date": "2015-12-13",
+    "city": "Nizhny Tagil",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2016_4": {
+    "season": 2016,
+    "race": 4,
+    "date": "2016-01-16",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2016_5": {
+    "season": 2016,
+    "race": 5,
+    "date": "2016-01-17",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2016_6": {
+    "season": 2016,
+    "race": 6,
+    "date": "2016-01-22",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2016_7": {
+    "season": 2016,
+    "race": 7,
+    "date": "2016-01-23",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2016_8": {
+    "season": 2016,
+    "race": 8,
+    "date": "2016-01-30",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2016_9": {
+    "season": 2016,
+    "race": 9,
+    "date": "2016-01-31",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2016_10": {
+    "season": 2016,
+    "race": 10,
+    "date": "2016-02-04",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2016_11": {
+    "season": 2016,
+    "race": 11,
+    "date": "2016-02-06",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2016_12": {
+    "season": 2016,
+    "race": 12,
+    "date": "2016-02-07",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2016_13": {
+    "season": 2016,
+    "race": 13,
+    "date": "2016-02-13",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2016_14": {
+    "season": 2016,
+    "race": 14,
+    "date": "2016-02-14",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2016_15": {
+    "season": 2016,
+    "race": 15,
+    "date": "2016-02-19",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Normal"
+  },
+  "2016_16": {
+    "season": 2016,
+    "race": 16,
+    "date": "2016-02-27",
+    "city": "Almaty",
+    "country": "Kazakhstan",
+    "event": "Normal"
+  },
+  "2016_17": {
+    "season": 2016,
+    "race": 17,
+    "date": "2016-02-28",
+    "city": "Almaty",
+    "country": "Kazakhstan",
+    "event": "Normal"
+  },
+  "2017_1": {
+    "season": 2017,
+    "race": 1,
+    "date": "2016-12-02",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2017_2": {
+    "season": 2017,
+    "race": 2,
+    "date": "2016-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2017_3": {
+    "season": 2017,
+    "race": 3,
+    "date": "2016-12-10",
+    "city": "Nizhny Tagil",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2017_4": {
+    "season": 2017,
+    "race": 4,
+    "date": "2016-12-11",
+    "city": "Nizhny Tagil",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2017_5": {
+    "season": 2017,
+    "race": 5,
+    "date": "2017-01-07",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2017_6": {
+    "season": 2017,
+    "race": 6,
+    "date": "2017-01-08",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2017_7": {
+    "season": 2017,
+    "race": 7,
+    "date": "2017-01-14",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2017_8": {
+    "season": 2017,
+    "race": 8,
+    "date": "2017-01-15",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2017_9": {
+    "season": 2017,
+    "race": 9,
+    "date": "2017-01-20",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2017_10": {
+    "season": 2017,
+    "race": 10,
+    "date": "2017-01-21",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2017_11": {
+    "season": 2017,
+    "race": 11,
+    "date": "2017-01-28",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2017_12": {
+    "season": 2017,
+    "race": 12,
+    "date": "2017-01-29",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2017_13": {
+    "season": 2017,
+    "race": 13,
+    "date": "2017-02-04",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2017_14": {
+    "season": 2017,
+    "race": 14,
+    "date": "2017-02-05",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2017_15": {
+    "season": 2017,
+    "race": 15,
+    "date": "2017-02-11",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2017_16": {
+    "season": 2017,
+    "race": 16,
+    "date": "2017-02-12",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2017_17": {
+    "season": 2017,
+    "race": 17,
+    "date": "2017-02-15",
+    "city": "PyeongChang",
+    "country": "South Korea",
+    "event": "Normal"
+  },
+  "2017_18": {
+    "season": 2017,
+    "race": 18,
+    "date": "2017-02-16",
+    "city": "PyeongChang",
+    "country": "South Korea",
+    "event": "Normal"
+  },
+  "2017_19": {
+    "season": 2017,
+    "race": 19,
+    "date": "2017-02-24",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Normal"
+  },
+  "2017_20": {
+    "season": 2017,
+    "race": 20,
+    "date": "2017-03-12",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2018_1": {
+    "season": 2018,
+    "race": 1,
+    "date": "2017-12-01",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2018_2": {
+    "season": 2018,
+    "race": 2,
+    "date": "2017-12-02",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2018_3": {
+    "season": 2018,
+    "race": 3,
+    "date": "2017-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2018_5": {
+    "season": 2018,
+    "race": 5,
+    "date": "2017-12-17",
+    "city": "Hinterzarten",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2018_6": {
+    "season": 2018,
+    "race": 6,
+    "date": "2018-01-13",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2018_7": {
+    "season": 2018,
+    "race": 7,
+    "date": "2018-01-14",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2018_8": {
+    "season": 2018,
+    "race": 8,
+    "date": "2018-01-19",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2018_10": {
+    "season": 2018,
+    "race": 10,
+    "date": "2018-01-21",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2018_11": {
+    "season": 2018,
+    "race": 11,
+    "date": "2018-01-27",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2018_12": {
+    "season": 2018,
+    "race": 12,
+    "date": "2018-01-28",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2018_13": {
+    "season": 2018,
+    "race": 13,
+    "date": "2018-02-12",
+    "city": "PyeongChang",
+    "country": "South Korea",
+    "event": "Normal"
+  },
+  "2018_14": {
+    "season": 2018,
+    "race": 14,
+    "date": "2018-03-03",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2018_15": {
+    "season": 2018,
+    "race": 15,
+    "date": "2018-03-04",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2018_16": {
+    "season": 2018,
+    "race": 16,
+    "date": "2018-03-11",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2018_17": {
+    "season": 2018,
+    "race": 17,
+    "date": "2018-03-24",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2018_18": {
+    "season": 2018,
+    "race": 18,
+    "date": "2018-03-25",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2019_1": {
+    "season": 2019,
+    "race": 1,
+    "date": "2018-11-30",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2019_2": {
+    "season": 2019,
+    "race": 2,
+    "date": "2018-12-01",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2019_3": {
+    "season": 2019,
+    "race": 3,
+    "date": "2018-12-02",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2019_4": {
+    "season": 2019,
+    "race": 4,
+    "date": "2018-12-15",
+    "city": "Pr\u00e9manon",
+    "country": "France",
+    "event": "Normal"
+  },
+  "2019_5": {
+    "season": 2019,
+    "race": 5,
+    "date": "2018-12-16",
+    "city": "Pr\u00e9manon",
+    "country": "France",
+    "event": "Normal"
+  },
+  "2019_6": {
+    "season": 2019,
+    "race": 6,
+    "date": "2019-01-12",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Large"
+  },
+  "2019_7": {
+    "season": 2019,
+    "race": 7,
+    "date": "2019-01-13",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Large"
+  },
+  "2019_8": {
+    "season": 2019,
+    "race": 8,
+    "date": "2019-01-18",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2019_10": {
+    "season": 2019,
+    "race": 10,
+    "date": "2019-01-20",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2019_11": {
+    "season": 2019,
+    "race": 11,
+    "date": "2019-01-26",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2019_12": {
+    "season": 2019,
+    "race": 12,
+    "date": "2019-01-27",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2019_13": {
+    "season": 2019,
+    "race": 13,
+    "date": "2019-02-02",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2019_14": {
+    "season": 2019,
+    "race": 14,
+    "date": "2019-02-03",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2019_15": {
+    "season": 2019,
+    "race": 15,
+    "date": "2019-02-08",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2019_17": {
+    "season": 2019,
+    "race": 17,
+    "date": "2019-02-10",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2019_18": {
+    "season": 2019,
+    "race": 18,
+    "date": "2019-02-16",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2019_19": {
+    "season": 2019,
+    "race": 19,
+    "date": "2019-02-17",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2019_21": {
+    "season": 2019,
+    "race": 21,
+    "date": "2019-02-27",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2019_22": {
+    "season": 2019,
+    "race": 22,
+    "date": "2019-03-10",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2019_23": {
+    "season": 2019,
+    "race": 23,
+    "date": "2019-03-12",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2019_24": {
+    "season": 2019,
+    "race": 24,
+    "date": "2019-03-14",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2019_25": {
+    "season": 2019,
+    "race": 25,
+    "date": "2019-03-16",
+    "city": "Nizhny Tagil",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2019_26": {
+    "season": 2019,
+    "race": 26,
+    "date": "2019-03-17",
+    "city": "Nizhny Tagil",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2019_27": {
+    "season": 2019,
+    "race": 27,
+    "date": "2019-03-23",
+    "city": "Chaikovsky",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2019_28": {
+    "season": 2019,
+    "race": 28,
+    "date": "2019-03-24",
+    "city": "Chaikovsky",
+    "country": "Russia",
+    "event": "Large"
+  },
+  "2020_1": {
+    "season": 2020,
+    "race": 1,
+    "date": "2019-12-07",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2020_2": {
+    "season": 2020,
+    "race": 2,
+    "date": "2019-12-08",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2020_3": {
+    "season": 2020,
+    "race": 3,
+    "date": "2019-12-14",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2020_4": {
+    "season": 2020,
+    "race": 4,
+    "date": "2020-01-11",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Large"
+  },
+  "2020_5": {
+    "season": 2020,
+    "race": 5,
+    "date": "2020-01-12",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Large"
+  },
+  "2020_6": {
+    "season": 2020,
+    "race": 6,
+    "date": "2020-01-17",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2020_8": {
+    "season": 2020,
+    "race": 8,
+    "date": "2020-01-19",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2020_9": {
+    "season": 2020,
+    "race": 9,
+    "date": "2020-01-25",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2020_10": {
+    "season": 2020,
+    "race": 10,
+    "date": "2020-01-26",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2020_11": {
+    "season": 2020,
+    "race": 11,
+    "date": "2020-02-01",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2020_12": {
+    "season": 2020,
+    "race": 12,
+    "date": "2020-02-02",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2020_13": {
+    "season": 2020,
+    "race": 13,
+    "date": "2020-02-08",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2020_14": {
+    "season": 2020,
+    "race": 14,
+    "date": "2020-02-09",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2020_16": {
+    "season": 2020,
+    "race": 16,
+    "date": "2020-02-23",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2020_17": {
+    "season": 2020,
+    "race": 17,
+    "date": "2020-03-09",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2020_18": {
+    "season": 2020,
+    "race": 18,
+    "date": "2020-03-10",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2021_1": {
+    "season": 2021,
+    "race": 1,
+    "date": "2020-12-18",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2021_3": {
+    "season": 2021,
+    "race": 3,
+    "date": "2021-01-24",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2021_4": {
+    "season": 2021,
+    "race": 4,
+    "date": "2021-01-30",
+    "city": "Titisee-Neustadt",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2021_5": {
+    "season": 2021,
+    "race": 5,
+    "date": "2021-01-31",
+    "city": "Titisee-Neustadt",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2021_6": {
+    "season": 2021,
+    "race": 6,
+    "date": "2021-02-05",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2021_7": {
+    "season": 2021,
+    "race": 7,
+    "date": "2021-02-06",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2021_8": {
+    "season": 2021,
+    "race": 8,
+    "date": "2021-02-07",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2021_9": {
+    "season": 2021,
+    "race": 9,
+    "date": "2021-02-18",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2021_10": {
+    "season": 2021,
+    "race": 10,
+    "date": "2021-02-19",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2021_11": {
+    "season": 2021,
+    "race": 11,
+    "date": "2021-02-25",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2021_13": {
+    "season": 2021,
+    "race": 13,
+    "date": "2021-03-03",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2021_14": {
+    "season": 2021,
+    "race": 14,
+    "date": "2021-03-20",
+    "city": "Nizhny Tagil",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2021_15": {
+    "season": 2021,
+    "race": 15,
+    "date": "2021-03-21",
+    "city": "Nizhny Tagil",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2021_16": {
+    "season": 2021,
+    "race": 16,
+    "date": "2021-03-26",
+    "city": "Chaikovsky",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2021_18": {
+    "season": 2021,
+    "race": 18,
+    "date": "2021-03-28",
+    "city": "Chaikovsky",
+    "country": "Russia",
+    "event": "Large"
+  },
+  "2022_1": {
+    "season": 2022,
+    "race": 1,
+    "date": "2021-11-26",
+    "city": "Nizhny Tagil",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2022_2": {
+    "season": 2022,
+    "race": 2,
+    "date": "2021-11-27",
+    "city": "Nizhny Tagil",
+    "country": "Russia",
+    "event": "Normal"
+  },
+  "2022_3": {
+    "season": 2022,
+    "race": 3,
+    "date": "2021-12-04",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2022_4": {
+    "season": 2022,
+    "race": 4,
+    "date": "2021-12-05",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2022_5": {
+    "season": 2022,
+    "race": 5,
+    "date": "2021-12-10",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2022_6": {
+    "season": 2022,
+    "race": 6,
+    "date": "2021-12-11",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2022_7": {
+    "season": 2022,
+    "race": 7,
+    "date": "2021-12-17",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2022_8": {
+    "season": 2022,
+    "race": 8,
+    "date": "2021-12-31",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2022_9": {
+    "season": 2022,
+    "race": 9,
+    "date": "2022-01-01",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2022_10": {
+    "season": 2022,
+    "race": 10,
+    "date": "2022-01-29",
+    "city": "Willingen",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2022_11": {
+    "season": 2022,
+    "race": 11,
+    "date": "2022-01-30",
+    "city": "Willingen",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2022_12": {
+    "season": 2022,
+    "race": 12,
+    "date": "2022-02-05",
+    "city": "Taizicheng",
+    "country": "China",
+    "event": "Normal"
+  },
+  "2022_14": {
+    "season": 2022,
+    "race": 14,
+    "date": "2022-02-26",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2022_15": {
+    "season": 2022,
+    "race": 15,
+    "date": "2022-02-27",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2022_16": {
+    "season": 2022,
+    "race": 16,
+    "date": "2022-03-02",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2022_17": {
+    "season": 2022,
+    "race": 17,
+    "date": "2022-03-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2022_18": {
+    "season": 2022,
+    "race": 18,
+    "date": "2022-03-05",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2022_19": {
+    "season": 2022,
+    "race": 19,
+    "date": "2022-03-06",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2022_20": {
+    "season": 2022,
+    "race": 20,
+    "date": "2022-03-12",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2022_21": {
+    "season": 2022,
+    "race": 21,
+    "date": "2022-03-13",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Normal"
+  },
+  "2023_1": {
+    "season": 2023,
+    "race": 1,
+    "date": "2022-11-05",
+    "city": "Wisla",
+    "country": "Poland",
+    "event": "Large"
+  },
+  "2023_2": {
+    "season": 2023,
+    "race": 2,
+    "date": "2022-11-06",
+    "city": "Wisla",
+    "country": "Poland",
+    "event": "Large"
+  },
+  "2023_3": {
+    "season": 2023,
+    "race": 3,
+    "date": "2022-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2023_4": {
+    "season": 2023,
+    "race": 4,
+    "date": "2022-12-04",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2023_5": {
+    "season": 2023,
+    "race": 5,
+    "date": "2022-12-11",
+    "city": "Titisee-Neustadt",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2023_6": {
+    "season": 2023,
+    "race": 6,
+    "date": "2022-12-28",
+    "city": "Villach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2023_7": {
+    "season": 2023,
+    "race": 7,
+    "date": "2022-12-29",
+    "city": "Villach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2023_8": {
+    "season": 2023,
+    "race": 8,
+    "date": "2022-12-31",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2023_9": {
+    "season": 2023,
+    "race": 9,
+    "date": "2023-01-01",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2023_10": {
+    "season": 2023,
+    "race": 10,
+    "date": "2023-01-07",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Large"
+  },
+  "2023_11": {
+    "season": 2023,
+    "race": 11,
+    "date": "2023-01-08",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Large"
+  },
+  "2023_12": {
+    "season": 2023,
+    "race": 12,
+    "date": "2023-01-13",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2023_14": {
+    "season": 2023,
+    "race": 14,
+    "date": "2023-01-15",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2023_15": {
+    "season": 2023,
+    "race": 15,
+    "date": "2023-01-28",
+    "city": "Hinterzarten",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2023_16": {
+    "season": 2023,
+    "race": 16,
+    "date": "2023-01-29",
+    "city": "Hinterzarten",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2023_17": {
+    "season": 2023,
+    "race": 17,
+    "date": "2023-02-04",
+    "city": "Willingen",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2023_18": {
+    "season": 2023,
+    "race": 18,
+    "date": "2023-02-05",
+    "city": "Willingen",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2023_19": {
+    "season": 2023,
+    "race": 19,
+    "date": "2023-02-10",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2023_20": {
+    "season": 2023,
+    "race": 20,
+    "date": "2023-02-11",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2023_21": {
+    "season": 2023,
+    "race": 21,
+    "date": "2023-02-17",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2023_22": {
+    "season": 2023,
+    "race": 22,
+    "date": "2023-02-18",
+    "city": "Rasnov",
+    "country": "Romania",
+    "event": "Normal"
+  },
+  "2023_23": {
+    "season": 2023,
+    "race": 23,
+    "date": "2023-02-23",
+    "city": "Planica",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2023_25": {
+    "season": 2023,
+    "race": 25,
+    "date": "2023-03-01",
+    "city": "Planica",
+    "country": "Slovenia",
+    "event": "Large"
+  },
+  "2023_26": {
+    "season": 2023,
+    "race": 26,
+    "date": "2023-03-11",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2023_27": {
+    "season": 2023,
+    "race": 27,
+    "date": "2023-03-12",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2023_28": {
+    "season": 2023,
+    "race": 28,
+    "date": "2023-03-13",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2023_29": {
+    "season": 2023,
+    "race": 29,
+    "date": "2023-03-15",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2023_30": {
+    "season": 2023,
+    "race": 30,
+    "date": "2023-03-24",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Large"
+  },
+  "2024_1": {
+    "season": 2024,
+    "race": 1,
+    "date": "2023-12-02",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2024_2": {
+    "season": 2024,
+    "race": 2,
+    "date": "2023-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2024_3": {
+    "season": 2024,
+    "race": 3,
+    "date": "2023-12-15",
+    "city": "Engelberg",
+    "country": "Switzerland",
+    "event": "Large"
+  },
+  "2024_4": {
+    "season": 2024,
+    "race": 4,
+    "date": "2023-12-16",
+    "city": "Engelberg",
+    "country": "Switzerland",
+    "event": "Large"
+  },
+  "2024_5": {
+    "season": 2024,
+    "race": 5,
+    "date": "2023-12-30",
+    "city": "Garmisch",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2024_6": {
+    "season": 2024,
+    "race": 6,
+    "date": "2024-01-01",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2024_7": {
+    "season": 2024,
+    "race": 7,
+    "date": "2024-01-03",
+    "city": "Villach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2024_8": {
+    "season": 2024,
+    "race": 8,
+    "date": "2024-01-04",
+    "city": "Villach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2024_9": {
+    "season": 2024,
+    "race": 9,
+    "date": "2024-01-13",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Large"
+  },
+  "2024_10": {
+    "season": 2024,
+    "race": 10,
+    "date": "2024-01-14",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Large"
+  },
+  "2024_11": {
+    "season": 2024,
+    "race": 11,
+    "date": "2024-01-19",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2024_13": {
+    "season": 2024,
+    "race": 13,
+    "date": "2024-01-27",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2024_14": {
+    "season": 2024,
+    "race": 14,
+    "date": "2024-01-28",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2024_15": {
+    "season": 2024,
+    "race": 15,
+    "date": "2024-02-03",
+    "city": "Willingen",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2024_16": {
+    "season": 2024,
+    "race": 16,
+    "date": "2024-02-04",
+    "city": "Willingen",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2024_17": {
+    "season": 2024,
+    "race": 17,
+    "date": "2024-02-24",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2024_18": {
+    "season": 2024,
+    "race": 18,
+    "date": "2024-02-25",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2024_19": {
+    "season": 2024,
+    "race": 19,
+    "date": "2024-03-01",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Large"
+  },
+  "2024_20": {
+    "season": 2024,
+    "race": 20,
+    "date": "2024-03-09",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2024_21": {
+    "season": 2024,
+    "race": 21,
+    "date": "2024-03-10",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2024_22": {
+    "season": 2024,
+    "race": 22,
+    "date": "2024-03-12",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2024_23": {
+    "season": 2024,
+    "race": 23,
+    "date": "2024-03-13",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2024_24": {
+    "season": 2024,
+    "race": 24,
+    "date": "2024-03-17",
+    "city": "Vikersund",
+    "country": "Norway",
+    "event": "Flying"
+  },
+  "2024_25": {
+    "season": 2024,
+    "race": 25,
+    "date": "2024-03-21",
+    "city": "Planica",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2025_1": {
+    "season": 2025,
+    "race": 1,
+    "date": "2024-11-23",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2025_2": {
+    "season": 2025,
+    "race": 2,
+    "date": "2024-11-24",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2025_3": {
+    "season": 2025,
+    "race": 3,
+    "date": "2024-12-14",
+    "city": "Taizicheng",
+    "country": "China",
+    "event": "Normal"
+  },
+  "2025_4": {
+    "season": 2025,
+    "race": 4,
+    "date": "2024-12-15",
+    "city": "Taizicheng",
+    "country": "China",
+    "event": "Normal"
+  },
+  "2025_5": {
+    "season": 2025,
+    "race": 5,
+    "date": "2024-12-21",
+    "city": "Engelberg",
+    "country": "Switzerland",
+    "event": "Large"
+  },
+  "2025_6": {
+    "season": 2025,
+    "race": 6,
+    "date": "2024-12-31",
+    "city": "Garmisch",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2025_7": {
+    "season": 2025,
+    "race": 7,
+    "date": "2025-01-01",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2025_8": {
+    "season": 2025,
+    "race": 8,
+    "date": "2025-01-05",
+    "city": "Villach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2025_9": {
+    "season": 2025,
+    "race": 9,
+    "date": "2025-01-06",
+    "city": "Villach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2025_10": {
+    "season": 2025,
+    "race": 10,
+    "date": "2025-01-18",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Large"
+  },
+  "2025_11": {
+    "season": 2025,
+    "race": 11,
+    "date": "2025-01-19",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Large"
+  },
+  "2025_12": {
+    "season": 2025,
+    "race": 12,
+    "date": "2025-01-24",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2025_14": {
+    "season": 2025,
+    "race": 14,
+    "date": "2025-01-26",
+    "city": "Zao",
+    "country": "Japan",
+    "event": "Normal"
+  },
+  "2025_15": {
+    "season": 2025,
+    "race": 15,
+    "date": "2025-02-01",
+    "city": "Willingen",
+    "country": "Germany",
+    "event": "Large"
+  },
+  "2025_16": {
+    "season": 2025,
+    "race": 16,
+    "date": "2025-02-07",
+    "city": "Lake Placid",
+    "country": "USA",
+    "event": "Large"
+  },
+  "2025_17": {
+    "season": 2025,
+    "race": 17,
+    "date": "2025-02-08",
+    "city": "Lake Placid",
+    "country": "USA",
+    "event": "Large"
+  },
+  "2025_18": {
+    "season": 2025,
+    "race": 18,
+    "date": "2025-02-15",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2025_19": {
+    "season": 2025,
+    "race": 19,
+    "date": "2025-02-16",
+    "city": "Ljubno",
+    "country": "Slovenia",
+    "event": "Normal"
+  },
+  "2025_20": {
+    "season": 2025,
+    "race": 20,
+    "date": "2025-02-22",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2025_21": {
+    "season": 2025,
+    "race": 21,
+    "date": "2025-02-23",
+    "city": "Hinzenbach",
+    "country": "Austria",
+    "event": "Normal"
+  },
+  "2025_22": {
+    "season": 2025,
+    "race": 22,
+    "date": "2025-02-28",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Normal"
+  },
+  "2025_24": {
+    "season": 2025,
+    "race": 24,
+    "date": "2025-03-07",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2025_25": {
+    "season": 2025,
+    "race": 25,
+    "date": "2025-03-13",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Large"
+  },
+  "2025_26": {
+    "season": 2025,
+    "race": 26,
+    "date": "2025-03-15",
+    "city": "Vikersund",
+    "country": "Norway",
+    "event": "Flying"
+  },
+  "2025_27": {
+    "season": 2025,
+    "race": 27,
+    "date": "2025-03-20",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Large"
+  },
+  "2025_28": {
+    "season": 2025,
+    "race": 28,
+    "date": "2025-03-21",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Large"
+  }
+}

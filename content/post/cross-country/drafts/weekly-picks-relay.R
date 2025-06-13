@@ -47,7 +47,7 @@ load_upcoming_races <- function() {
   # Read in the race schedule
   weekends_path <- "~/ski/elo/python/ski/polars/excel365/weekends.csv"
   weekends <- read.csv(weekends_path, stringsAsFactors = FALSE) %>%
-    mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+    mutate(Date = mdy(Date))
   
   # Find tomorrow's date
   tomorrow <- get_tomorrow_date()
@@ -1736,12 +1736,12 @@ save_prediction_results <- function(team_predictions, race_date, gender, output_
   }
   
   # Save points results
-  points_file <- file.path(output_dir, paste0(gender, "_relay_points.xlsx"))
+  points_file <- file.path(output_dir, paste0(gender, "_relay.xlsx"))
   write.xlsx(points_df, points_file)
   log_info(paste("Saved points predictions to", points_file))
   
   # Save probability results
-  prob_file <- file.path(output_dir, paste0(gender, "_relay_probabilities.xlsx"))
+  prob_file <- file.path(output_dir, paste0(gender, "_relay_position_probabilities.xlsx"))
   write.xlsx(prob_df, prob_file)
   log_info(paste("Saved probability predictions to", prob_file))
   

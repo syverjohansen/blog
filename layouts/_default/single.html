@@ -69,68 +69,121 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <!--
-                {{ if not (eq (.Param "showtoc") false) }}
-                <header>
-                    <h2>TOC</h2>
-                </header>
-                {{.TableOfContents}}
-                {{ end }}
-                -->
                 {{ .Content }}
 
-                <!-- Test content -->
-               <!-- <div style="background-color: yellow; padding: 10px; margin-top: 20px;">
-                    <p>This is a test content area to check if single.html is being used.</p>
-                </div>-->
-
+                {{ $permalink := .Permalink }}
                 {{ $sport := .Section }}
-                {{ if or (eq .Permalink "https://daehl-e.com/alpine/elo/") (eq .Permalink "http://localhost:1313/alpine/elo/") }}
+
+                <!-- ELO Rankings Tables -->
+                {{ if or (eq $permalink "https://daehl-e.com/alpine/elo/") (eq $permalink "http://localhost:1313/alpine/elo/") }}
+                    {{ partial "alpine/small-table.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/alpine/all-elo/") (eq $permalink "http://localhost:1313/alpine/all-elo/") }}
+                    {{ partial "alpine/all-table.html" . }}
+
+                {{ else if or (eq $permalink "https://daehl-e.com/biathlon/elo/") (eq $permalink "http://localhost:1313/biathlon/elo/") }}
+                    {{ partial "biathlon/small-table.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/biathlon/all-elo/") (eq $permalink "http://localhost:1313/biathlon/all-elo/") }}
+                    {{ partial "biathlon/all-table.html" . }}
+
+                {{ else if or (eq $permalink "https://daehl-e.com/cross-country/elo/") (eq $permalink "http://localhost:1313/cross-country/elo/") }}
                     {{ partial "cross-country/small-table.html" . }}
-                {{ else if or (eq .Permalink "https://daehl-e.com/alpine/all-elo/") (eq .Permalink "http://localhost:1313/alpine/all-elo/") }}
+                {{ else if or (eq $permalink "https://daehl-e.com/cross-country/all-elo/") (eq $permalink "http://localhost:1313/cross-country/all-elo/") }}
                     {{ partial "cross-country/all-table.html" . }}
-                {{ else if or (eq .Permalink "https://daehl-e.com/biathlon/elo/") (eq .Permalink "http://localhost:1313/biathlon/elo/") }}
-                    {{ partial "cross-country/small-table.html" . }}
-                {{ else if or (eq .Permalink "https://daehl-e.com/biathlon/all-elo/") (eq .Permalink "http://localhost:1313/biathlon/all-elo/") }}
-                    {{ partial "cross-country/all-table.html" . }}
-                {{ else if or (eq .Permalink "https://daehl-e.com/cross-country/elo/") (eq .Permalink "http://localhost:1313/cross-country/elo/") }}
-                    {{ partial "cross-country/small-table.html" . }}
-                {{ else if or (eq .Permalink "https://daehl-e.com/cross-country/all-elo/") (eq .Permalink "http://localhost:1313/cross-country/all-elo/") }}
-                    {{ partial "cross-country/all-table.html" . }}
-                {{ else if or (eq .Permalink "https://daehl-e.com/cross-country/ranks/") (eq .Permalink "http://localhost:1313/cross-country/ranks/") }}
-    {{ partial "cross-country/ranks-table.html" . }}
-                {{ else if or (eq .Permalink "https://daehl-e.com/nordic-combined/elo/") (eq .Permalink "http://localhost:1313/nordic-combined/elo/") }}
-                    {{ partial "cross-country/small-table.html" . }}
-                {{ else if or (eq .Permalink "https://daehl-e.com/nordic-combined/all-elo/") (eq .Permalink "http://localhost:1313/nordic-combined/all-elo/") }}
-                    {{ partial "cross-country/all-table.html" . }}
-                {{ else if or (eq .Permalink "https://daehl-e.com/ski-jumping/elo/") (eq .Permalink "http://localhost:1313/ski-jumping/elo/") }}
-                    {{ partial "cross-country/small-table.html" . }}
-                {{ else if or (eq .Permalink "https://daehl-e.com/ski-jumping/all-elo/") (eq .Permalink "http://localhost:1313/ski-jumping/all-elo/") }}
-                    {{ partial "cross-country/all-table.html" . }}
+
+                {{ else if or (eq $permalink "https://daehl-e.com/nordic-combined/elo/") (eq $permalink "http://localhost:1313/nordic-combined/elo/") }}
+                    {{ partial "nordic-combined/small-table.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/nordic-combined/all-elo/") (eq $permalink "http://localhost:1313/nordic-combined/all-elo/") }}
+                    {{ partial "nordic-combined/all-table.html" . }}
+
+                {{ else if or (eq $permalink "https://daehl-e.com/skijump/elo/") (eq $permalink "http://localhost:1313/skijump/elo/") }}
+                    {{ partial "skijump/small-table.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/skijump/all-elo/") (eq $permalink "http://localhost:1313/skijump/all-elo/") }}
+                    {{ partial "skijump/all-table.html" . }}
                 {{ end }}
 
-                {{ if or (eq .Permalink "https://daehl-e.com/elo/") (eq .Permalink "http://localhost:1313/elo/") }}
-                   {{ partial "cross-country/small-table.html" . }}
-                {{ else if or (eq .Permalink "https://daehl-e.com/all-elo/") (eq .Permalink "http://localhost:1313/all-elo/") }}
-                   {{ partial "cross-country/all-table.html" . }}
+                <!-- Points Rankings Tables -->
+                {{ if or (eq $permalink "https://daehl-e.com/alpine/ranks/") (eq $permalink "http://localhost:1313/alpine/ranks/") }}
+                    {{ partial "alpine/ranks-table.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/biathlon/ranks/") (eq $permalink "http://localhost:1313/biathlon/ranks/") }}
+                    {{ partial "biathlon/ranks-table.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/cross-country/ranks/") (eq $permalink "http://localhost:1313/cross-country/ranks/") }}
+                    {{ partial "cross-country/ranks-table.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/nordic-combined/ranks/") (eq $permalink "http://localhost:1313/nordic-combined/ranks/") }}
+                    {{ partial "nordic-combined/ranks-table.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/skijump/ranks/") (eq $permalink "http://localhost:1313/skijump/ranks/") }}
+                    {{ partial "skijump/ranks-table.html" . }}
                 {{ end }}
 
-{{ $permalink := .Permalink }}
-
-{{ if or 
-    (strings.HasPrefix $permalink "https://daehl-e.com/cross-country/skiers/") 
-    (strings.HasPrefix $permalink "http://localhost:1313/cross-country/skiers/") 
-    (findRE "^https://daehl-e.com/cross-country/skiers/.+$" $permalink)
-    (findRE "^http://localhost:1313/cross-country/skiers/.+$" $permalink) 
-}}
-    {{ partial "cross-country/skier.html" . }}
-{{ else if or (eq .Permalink "https://daehl-e.com/cross-country/athletes/") (eq .Permalink "http://localhost:1313/cross-country/athletes/") }}
-    {{ partial "cross-country/athletes-list.html" . }}
-{{ end }}
+                <!-- Global ELO pages (all sports combined) -->
 
 
+                <!-- Individual Athlete Pages -->
+                {{ if or 
+                    (strings.HasPrefix $permalink "https://daehl-e.com/alpine/skiers/") 
+                    (strings.HasPrefix $permalink "http://localhost:1313/alpine/skiers/") 
+                    (findRE "^https://daehl-e.com/alpine/athletes/.+$" $permalink)
+                    (findRE "^http://localhost:1313/alpine/athletes/.+$" $permalink) 
+                }}
+                    {{ partial "alpine/skier.html" . }}
+                {{ else if or 
+                    (strings.HasPrefix $permalink "https://daehl-e.com/biathlon/athletes/") 
+                    (strings.HasPrefix $permalink "http://localhost:1313/biathlon/athletes/") 
+                    (findRE "^https://daehl-e.com/biathlon/athletes/.+$" $permalink)
+                    (findRE "^http://localhost:1313/biathlon/athletes/.+$" $permalink) 
+                }}
+                    {{ partial "biathlon/skier.html" . }}
+                {{ else if or 
+                    (strings.HasPrefix $permalink "https://daehl-e.com/cross-country/skiers/") 
+                    (strings.HasPrefix $permalink "http://localhost:1313/cross-country/skiers/") 
+                    (strings.HasPrefix $permalink "https://daehl-e.com/cross-country/athletes/") 
+                    (strings.HasPrefix $permalink "http://localhost:1313/cross-country/athletes/") 
+                    (findRE "^https://daehl-e.com/cross-country/(skiers|athletes)/.+$" $permalink)
+                    (findRE "^http://localhost:1313/cross-country/(skiers|athletes)/.+$" $permalink) 
+                }}
+                    {{ partial "cross-country/skier.html" . }}
+                {{ else if or 
+                    (strings.HasPrefix $permalink "https://daehl-e.com/nordic-combined/skiers/") 
+                    (strings.HasPrefix $permalink "http://localhost:1313/nordic-combined/skiers/") 
+                    (findRE "^https://daehl-e.com/nordic-combined/athletes/.+$" $permalink)
+                    (findRE "^http://localhost:1313/nordic-combined/athletes/.+$" $permalink) 
+                }}
+                    {{ partial "nordic-combined/skier.html" . }}
+                {{ else if or 
+                    (strings.HasPrefix $permalink "https://daehl-e.com/skijump/skiers/") 
+                    (strings.HasPrefix $permalink "http://localhost:1313/skijump/skiers/") 
+                    (findRE "^https://daehl-e.com/skijump/athletes/.+$" $permalink)
+                    (findRE "^http://localhost:1313/skijump/athletes/.+$" $permalink) 
+                }}
+                    {{ partial "skijump/skier.html" . }}
+                {{ end }}
 
+                <!-- Athletes List Pages -->
+                {{ if or (eq $permalink "https://daehl-e.com/alpine/athletes/") (eq $permalink "http://localhost:1313/alpine/athletes/") }}
+                    {{ partial "alpine/athletes-list.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/biathlon/athletes/") (eq $permalink "http://localhost:1313/biathlon/athletes/") }}
+                    {{ partial "biathlon/athletes-list.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/cross-country/athletes/") (eq $permalink "http://localhost:1313/cross-country/athletes/") }}
+                    {{ partial "cross-country/athletes-list.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/nordic-combined/athletes/") (eq $permalink "http://localhost:1313/nordic-combined/athletes/") }}
+                    {{ partial "nordic-combined/athletes-list.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/skijump/athletes/") (eq $permalink "http://localhost:1313/skijump/athletes/") }}
+                    {{ partial "skijump/athletes-list.html" . }}
+                {{ end }}
 
+                <!-- Race Archives -->
+                {{ if or (eq $permalink "https://daehl-e.com/alpine/races/") (eq $permalink "http://localhost:1313/alpine/races/") }}
+                    {{ partial "alpine/races-archive.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/biathlon/races/") (eq $permalink "http://localhost:1313/biathlon/races/") }}
+                    {{ partial "biathlon/races-archive.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/cross-country/races/") (eq $permalink "http://localhost:1313/cross-country/races/") }}
+                    {{ partial "cross-country/races-archive.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/nordic-combined/races/") (eq $permalink "http://localhost:1313/nordic-combined/races/") }}
+                    {{ partial "nordic-combined/races-archive.html" . }}
+                {{ else if or (eq $permalink "https://daehl-e.com/skijump/races/") (eq $permalink "http://localhost:1313/skijump/races/") }}
+                    {{ partial "skijump/races-archive.html" . }}
+                {{ end }}
+
+                <!-- Navigation between posts -->
                 {{ if or (.PrevInSection) (.NextInSection) }}
                 <hr>
                 <ul class="pager">
@@ -154,21 +207,13 @@
 
             <!-- Side Catalog Container -->
             {{ if not (eq (.Param "showtoc") false) }}
-            <div class="
-                col-lg-2 col-lg-offset-0
-                visible-lg-block
-                sidebar-container
-                catalog-container">
+            <div class="sidebar-container catalog-container">
                 <div class="side-catalog">
-                    <hr class="hidden-sm hidden-xs">
                     <h5>
                         <a class="catalog-toggle" href="#">CATALOG</a>
                     </h5>
                     <ul class="catalog-body">
-                        <li><a href="#Ladies">Ladies</a></li>
-                        <li><a href="#L_Distance">Distance Elo</a></li>
-                        <li><a href="#L_Distance_C">Distance Classic Elo</a></li>
-                        <li><a href="#L_Distance_F">Distance Freestyle Elo</a></li>
+                        <!-- Dynamic catalog items will be inserted here by JavaScript -->
                     </ul>
                 </div>
             </div>

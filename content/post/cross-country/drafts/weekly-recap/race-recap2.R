@@ -426,7 +426,6 @@ generate_race_predictions <- function(chrono_data, race_type, points_type = "wc"
             })
         ) %>%
         ungroup()
-    #print(train_df %>% filter(Skier == "Johannes Høsflot Klæbo") %>% select(Season, Race, Points, Weighted_Last_5, Weighted_Last_5_2))
 
   train_df <- train_df %>%
     filter(
@@ -645,17 +644,20 @@ for(race_type in race_types) {
   all_models[[paste0("M_Stage_", race_type)]] <- results$model
 }
 
+print(all_predictions)
+
+
 # Generate predictions for women
 for(race_type in race_types) {
   cat("\nProcessing Women's WC", race_type, "...\n")
-  results <- generate_race_predictions(ladies_chrono, race_type, "wc", "F")
-  all_predictions[[paste0("F_WC_", race_type)]] <- results$predictions
-  all_models[[paste0("F_WC_", race_type)]] <- results$model
+  results <- generate_race_predictions(ladies_chrono, race_type, "wc", "L")
+  all_predictions[[paste0("L_WC_", race_type)]] <- results$predictions
+  all_models[[paste0("L_WC_", race_type)]] <- results$model
   
   cat("\nProcessing Women's Stage", race_type, "...\n")
-  results <- generate_race_predictions(ladies_chrono, race_type, "stage", "F")
-  all_predictions[[paste0("F_Stage_", race_type)]] <- results$predictions
-  all_models[[paste0("F_Stage_", race_type)]] <- results$model
+  results <- generate_race_predictions(ladies_chrono, race_type, "stage", "L")
+  all_predictions[[paste0("L_Stage_", race_type)]] <- results$predictions
+  all_models[[paste0("L_Stage_", race_type)]] <- results$model
 }
 
 # TDS predictions for both genders
@@ -664,10 +666,11 @@ mens_tds_results <- generate_tds_predictions(men_chrono, "M")
 all_predictions[["M_TDS"]] <- mens_tds_results$predictions
 all_models[["M_TDS"]] <- mens_tds_results$model
 
+
 cat("\nProcessing Women's Tour De Ski...\n")
-womens_tds_results <- generate_tds_predictions(ladies_chrono, "F")
-all_predictions[["F_TDS"]] <- womens_tds_results$predictions
-all_models[["F_TDS"]] <- womens_tds_results$model
+womens_tds_results <- generate_tds_predictions(ladies_chrono, "L")
+all_predictions[["L_TDS"]] <- womens_tds_results$predictions
+all_models[["L_TDS"]] <- womens_tds_results$model
 
 
 
@@ -748,12 +751,261 @@ create_points_columns <- function(df) {
         )
 }
 
+# Function to calculate race participation probabilities for simulation
+calculate_skier_race_probabilities <- function(chrono_data, skier_name) {
+  log_info("Calculating race probabilities for skier: {skier_name}")
+  
+  # Get skier's first ever race date
+  skier_first_race <- chrono_data %>%
+    filter(Skier == skier_name) %>%
+    arrange(Date) %>%
+    dplyr::slice(1) %>%
+    pull(Date)
+  
+  # Calculate date from 5 years ago
+  five_years_ago <- Sys.Date() - (5 * 365)
+  
+  # Use 5 years ago or skier's first race, whichever is later
+  start_date <- if(length(skier_first_race) == 0) {
+    five_years_ago
+  } else {
+    max(five_years_ago, as.Date(skier_first_race))
+  }
+  
+  # Function to get race probability for a specific race type
+  get_race_type_probability <- function(race_type, technique = NULL) {
+    # Define race filtering logic
+    if(race_type == "TDS") {
+      # For Tour de Ski
+      all_races <- chrono_data %>%
+        filter(
+          City == "Tour De Ski",
+          Date >= start_date
+        ) %>%
+        distinct(Date, Race)  # Count individual TDS stages
+      
+      skier_races <- chrono_data %>%
+        filter(
+          City == "Tour De Ski",
+          Date >= start_date,
+          Skier == skier_name
+        ) %>%
+        distinct(Date, Race)
+      
+    } else if(race_type == "Sprint") {
+      # For Sprint races
+      all_races <- chrono_data %>%
+        filter(
+          Distance == "Sprint",
+          Date >= start_date,
+          City != "Summer",
+          if(!is.null(technique)) Technique == technique else TRUE
+        ) %>%
+        distinct(Date, Race)
+      
+      skier_races <- chrono_data %>%
+        filter(
+          Distance == "Sprint",
+          Date >= start_date,
+          City != "Summer",
+          Skier == skier_name,
+          if(!is.null(technique)) Technique == technique else TRUE
+        ) %>%
+        distinct(Date, Race)
+      
+    } else {
+      # For Distance races
+      all_races <- chrono_data %>%
+        filter(
+          Distance != "Sprint",
+          Date >= start_date,
+          City != "Summer",
+          City != "Tour De Ski",
+          if(!is.null(technique)) Technique == technique else TRUE
+        ) %>%
+        distinct(Date, Race)
+      
+      skier_races <- chrono_data %>%
+        filter(
+          Distance != "Sprint",
+          Date >= start_date,
+          City != "Summer", 
+          City != "Tour De Ski",
+          Skier == skier_name,
+          if(!is.null(technique)) Technique == technique else TRUE
+        ) %>%
+        distinct(Date, Race)
+    }
+    
+    total_races <- nrow(all_races)
+    
+    if(total_races == 0) {
+      return(0.5)  # Default probability if no historical data
+    }
+    
+    races_participated <- nrow(skier_races)
+    prob <- min(1, races_participated / total_races)
+    
+    log_debug("Probability for {skier_name} in {race_type} {technique}: {prob} ({races_participated}/{total_races})")
+    
+    return(prob)
+  }
+  
+  # Calculate probabilities for all race types
+  probabilities <- list(
+    Distance = get_race_type_probability("Distance"),
+    Distance_C = get_race_type_probability("Distance", "C"),
+    Distance_F = get_race_type_probability("Distance", "F"),
+    Sprint_C = get_race_type_probability("Sprint", "C"),
+    Sprint_F = get_race_type_probability("Sprint", "F"),
+    TDS = get_race_type_probability("TDS")
+  )
+  
+  return(probabilities)
+}
+
+create_race_probability_table <- function(men_chrono, ladies_chrono, top_30_men, top_30_women) {
+  log_info("Pre-calculating race probabilities for all skiers")
+  
+  # Function to calculate probabilities for a single skier
+  calculate_single_skier_probabilities <- function(chrono_data, skier_name) {
+    # Get skier's first ever race date
+    skier_first_race <- chrono_data %>%
+      filter(Skier == skier_name) %>%
+      arrange(Date) %>%
+      dplyr::slice(1) %>%
+      pull(Date)
+    
+    # Calculate date from 5 years ago
+    five_years_ago <- Sys.Date() - (5 * 365)
+    
+    # Use 5 years ago or skier's first race, whichever is later
+    start_date <- if(length(skier_first_race) == 0) {
+      five_years_ago
+    } else {
+      max(five_years_ago, as.Date(skier_first_race))
+    }
+    
+    # Function to get race probability for a specific race type
+    get_race_type_probability <- function(race_type, technique = NULL) {
+      if(race_type == "TDS") {
+        # For Tour de Ski
+        all_races <- chrono_data %>%
+          filter(
+            City == "Tour De Ski",
+            Date >= start_date
+          ) %>%
+          distinct(Date, Race)
+        
+        skier_races <- chrono_data %>%
+          filter(
+            City == "Tour De Ski",
+            Date >= start_date,
+            Skier == skier_name
+          ) %>%
+          distinct(Date, Race)
+        
+      } else if(race_type == "Sprint") {
+        # For Sprint races
+        all_races <- chrono_data %>%
+          filter(
+            Distance == "Sprint",
+            Date >= start_date,
+            City != "Summer",
+            if(!is.null(technique)) Technique == technique else TRUE
+          ) %>%
+          distinct(Date, Race)
+        
+        skier_races <- chrono_data %>%
+          filter(
+            Distance == "Sprint",
+            Date >= start_date,
+            City != "Summer",
+            Skier == skier_name,
+            if(!is.null(technique)) Technique == technique else TRUE
+          ) %>%
+          distinct(Date, Race)
+        
+      } else {
+        # For Distance races
+        all_races <- chrono_data %>%
+          filter(
+            Distance != "Sprint",
+            Date >= start_date,
+            City != "Summer",
+            City != "Tour De Ski",
+            if(!is.null(technique)) Technique == technique else TRUE
+          ) %>%
+          distinct(Date, Race)
+        
+        skier_races <- chrono_data %>%
+          filter(
+            Distance != "Sprint",
+            Date >= start_date,
+            City != "Summer", 
+            City != "Tour De Ski",
+            Skier == skier_name,
+            if(!is.null(technique)) Technique == technique else TRUE
+          ) %>%
+          distinct(Date, Race)
+      }
+      
+      total_races <- nrow(all_races)
+      
+      if(total_races == 0) {
+        return(0.5)  # Default probability if no historical data
+      }
+      
+      races_participated <- nrow(skier_races)
+      prob <- min(1, races_participated / total_races)
+      
+      return(prob)
+    }
+    
+    # Calculate probabilities for all race types
+    return(data.frame(
+      Skier = skier_name,
+      Distance = get_race_type_probability("Distance"),
+      Distance_C = get_race_type_probability("Distance", "C"),
+      Distance_F = get_race_type_probability("Distance", "F"),
+      Sprint_C = get_race_type_probability("Sprint", "C"),
+      Sprint_F = get_race_type_probability("Sprint", "F"),
+      TDS = get_race_type_probability("TDS"),
+      stringsAsFactors = FALSE
+    ))
+  }
+  
+  # Calculate for all men
+  men_probabilities <- do.call(rbind, lapply(top_30_men, function(skier) {
+    cat("Calculating probabilities for male skier:", skier, "\n")
+    calculate_single_skier_probabilities(men_chrono, skier)
+  }))
+  men_probabilities$Gender <- "M"
+  
+  # Calculate for all women  
+  women_probabilities <- do.call(rbind, lapply(top_30_women, function(skier) {
+    cat("Calculating probabilities for female skier:", skier, "\n")
+    calculate_single_skier_probabilities(ladies_chrono, skier)
+  }))
+  women_probabilities$Gender <- "L"
+  
+  # Combine into single table
+  all_probabilities <- rbind(men_probabilities, women_probabilities)
+  
+  log_info("Race probability table created with {nrow(all_probabilities)} skiers")
+  
+  # Save to file for future use
+  output_dir <- get_output_dir()
+  write_xlsx(all_probabilities, file.path(output_dir, "race_probabilities.xlsx"))
+  
+  return(all_probabilities)
+}
 get_race_history <- function(skier_id, race_type, predictions_list, points_type = "wc", n_required = 10, gender="M") {
   chrono_data <- if(gender == "M") men_chrono else ladies_chrono
     # First create points columns in men_chrono
     chrono_with_points <- chrono_data %>%
         create_points_columns()
-    
+
     # Select appropriate points column based on type
     points_col <- case_when(
         points_type == "wc" ~ "Points",
@@ -780,13 +1032,13 @@ get_race_history <- function(skier_id, race_type, predictions_list, points_type 
         arrange(desc(Date)) %>%
         dplyr::slice_head(n = n_required) %>%
         pull(!!sym(points_col))
-    
+      
 
     if(race_type=="TDS"){
       n_required = 5
     }
     
-    
+    print(race_type)
     # If we have enough results, return them
     if(length(real_results) >= n_required) {
       print("Met the requirement")
@@ -827,6 +1079,7 @@ get_race_history <- function(skier_id, race_type, predictions_list, points_type 
     }
     
     n_to_generate <- n_required - length(real_results)
+
     generated_results <- numeric(n_to_generate)
     
     max_points <- case_when(
@@ -866,7 +1119,7 @@ top_30_women <- ladies_standings_df %>%
 
 # Create storage for all histories
 all_histories <- list()
-
+print(all_predictions)
 # Process men
 for(skier in top_30_men) {
   cat("\nProcessing male skier:", skier, "\n")
@@ -893,14 +1146,14 @@ for(skier in top_30_women) {
   
   for(race_type in c("Distance", "Distance_C", "Distance_F", "Sprint_C", "Sprint_F")) {
     all_histories[[skier]][[paste0("WC_", race_type)]] <- 
-      get_race_history(skier, race_type, all_predictions, "wc", gender = "F")
+      get_race_history(skier, race_type, all_predictions, "wc", gender = "L")
     
     all_histories[[skier]][[paste0("Stage_", race_type)]] <- 
-      get_race_history(skier, race_type, all_predictions, "stage", gender = "F")
+      get_race_history(skier, race_type, all_predictions, "stage", gender = "L")
   }
   
   all_histories[[skier]][["TDS"]] <- 
-    get_race_history(skier, "TDS", all_predictions, "tds", 3, gender = "F")
+    get_race_history(skier, "TDS", all_predictions, "tds", 3, gender = "L")
 }
 
 # Clean up NAs and NaNs
@@ -914,7 +1167,7 @@ summarize_histories <- function(histories) {
   
   for(skier in names(histories)) {
     # Determine gender based on whether skier is in top_30_men or top_30_women
-    gender <- if(skier %in% top_30_men) "M" else "F"
+    gender <- if(skier %in% top_30_men) "M" else "L"
     
     for(race_type in names(histories[[skier]])) {
       results <- histories[[skier]][[race_type]]
@@ -971,7 +1224,7 @@ standings_df <- read_csv("~/ski/elo/python/ski/polars/excel365/men_standings.csv
 ladies_standings_df <- read_csv("~/ski/elo/python/ski/polars/excel365/ladies_standings.csv")
 
 # Set up logging
-log_file <- "~/blog/daehl-e/content/post/cross-country/drafts/weekly-recap/simulation_log.txt"
+log_file <- "~/blog/daehl-e/content/post/cross-country/drafts/weekly-recap/simulation_log.log"
 log_appender(appender_file(log_file))
 
 create_race_distribution <- function(race_results, n_simulations = 1, max_points = 100) {
@@ -1092,87 +1345,133 @@ fake_data <- data.frame(
 simulated_points <- create_race_distribution(fake_data, n_simulations = 1)
 
 
+# Modified function to calculate remaining races based on UTC time and proper race categorization
+# Corrected function to count unique race types for season simulation
 calculate_remaining_races <- function(races_file) {
   # Read races file
   races <- read.csv(races_file, stringsAsFactors = FALSE)
   
-  # Convert dates to Date objects
-  races$Date <- mdy(races$Date)
+  # Convert dates to Date objects (assuming MM/DD/YYYY format)
+  races$Date <- as.Date(races$Date, format = "%m/%d/%Y")
   
-  # Get today's date in GMT
-  today <- Sys.Date()
+  # Get current date in UTC
+  today_utc <- as.Date(Sys.time(), tz = "UTC")
   
-  # Filter for remaining races (today or after)
+  # Filter for remaining races (today or after) and exclude Mixed sex races
   remaining <- races %>%
-    filter(Date >= today)
+    filter(Date >= today_utc, Sex %in% c("M", "L"))
   
-  # Use only male races to avoid double counting
-  male_races <- remaining %>%
-    filter(Sex == "M")
-  
-  # Initialize counts
+  # Initialize counts for both genders
   counts <- list(
-    WC = list(
-      Distance = 0,
-      Distance_C = 0,
-      Distance_F = 0,
-      Sprint_C = 0,
-      Sprint_F = 0
+    M = list(
+      WC = list(
+        Distance = 0,
+        Distance_C = 0,
+        Distance_F = 0,
+        Sprint_C = 0,
+        Sprint_F = 0
+      ),
+      Stage = list(
+        Distance = 0,
+        Distance_C = 0,
+        Distance_F = 0,
+        Sprint_C = 0,
+        Sprint_F = 0
+      ),
+      TDS = 0
     ),
-    Stage = list(
-      Distance = 0,
-      Distance_C = 0,
-      Distance_F = 0,
-      Sprint_C = 0,
-      Sprint_F = 0
-    ),
-    TDS = 0
+    L = list(
+      WC = list(
+        Distance = 0,
+        Distance_C = 0,
+        Distance_F = 0,
+        Sprint_C = 0,
+        Sprint_F = 0
+      ),
+      Stage = list(
+        Distance = 0,
+        Distance_C = 0,
+        Distance_F = 0,
+        Sprint_C = 0,
+        Sprint_F = 0
+      ),
+      TDS = 0
+    )
   )
   
-  if(length(male_races[,1])==0){
+  if(nrow(remaining) == 0) {
     return(counts)
   }
-  # Count each race type
-  for (i in 1:nrow(male_races)) {
-    race <- male_races[i, ]
+  
+  # Create race type categories for each race
+  remaining_categorized <- remaining %>%
+    # First filter out relay and team sprint races
+    filter(!Distance %in% c("Rel", "Ts")) %>%
+    mutate(
+      # Determine race category
+      is_sprint = (Distance == "Sprint"),
+      is_distance = !is_sprint,  # Individual distance races (20, 10, 50, etc.)
+      is_world_cup = (Stage == 0),
+      is_stage_race = (Stage == 1),
+      is_tds = (!is.na(Final_Climb) & Final_Climb == 1),
+      
+      # Clean technique (handle NAs and empty strings)
+      technique_clean = case_when(
+        is.na(Technique) | Technique == "" ~ "",
+        TRUE ~ Technique
+      ),
+      
+      # Create race type categories
+      race_category = case_when(
+        is_tds ~ "TDS",
+        is_sprint & technique_clean == "C" & is_world_cup ~ "WC_Sprint_C",
+        is_sprint & technique_clean == "F" & is_world_cup ~ "WC_Sprint_F",
+        is_sprint & technique_clean == "C" & is_stage_race ~ "Stage_Sprint_C",
+        is_sprint & technique_clean == "F" & is_stage_race ~ "Stage_Sprint_F",
+        is_distance & technique_clean == "" & is_world_cup ~ "WC_Distance",
+        is_distance & technique_clean == "C" & is_world_cup ~ "WC_Distance_C",
+        is_distance & technique_clean == "F" & is_world_cup ~ "WC_Distance_F",
+        is_distance & technique_clean == "" & is_stage_race ~ "Stage_Distance",
+        is_distance & technique_clean == "C" & is_stage_race ~ "Stage_Distance_C",
+        is_distance & technique_clean == "F" & is_stage_race ~ "Stage_Distance_F",
+        TRUE ~ "Other"
+      )
+    )
+  
+  # Debug: Show categorization
+  cat("Race categorization (excluding Rel/Ts):\n")
+  print(remaining_categorized %>% 
+          select(Sex, Distance, Technique, Stage, Final_Climb, race_category) %>%
+          arrange(Sex, race_category))
+  
+  # Count unique race types by gender
+  for(gender in c("M", "L")) {
+    gender_races <- remaining_categorized %>%
+      filter(Sex == gender)
     
-    # Check if it's distance or sprint
-    is_distance <- !race$Distance %in% c("Sprint", "Rel", "Ts")
-    is_sprint <- race$Distance == "Sprint"
+    # Get unique race categories for this gender
+    unique_categories <- unique(gender_races$race_category)
     
-    # World Cup races
-    if (race$Stage == 0) {
-      if (is_distance && race$Technique == "") {
-        counts$WC$Distance <- counts$WC$Distance + 1
-      } else if (is_distance && race$Technique == "C") {
-        counts$WC$Distance_C <- counts$WC$Distance_C + 1
-      } else if (is_distance && race$Technique == "F") {
-        counts$WC$Distance_F <- counts$WC$Distance_F + 1
-      } else if (is_sprint && race$Technique == "C") {
-        counts$WC$Sprint_C <- counts$WC$Sprint_C + 1
-      } else if (is_sprint && race$Technique == "F") {
-        counts$WC$Sprint_F <- counts$WC$Sprint_F + 1
+    cat("\nUnique race categories for", gender, ":", paste(unique_categories, collapse = ", "), "\n")
+    
+    # Count each category
+    for(category in unique_categories) {
+      category_count <- sum(gender_races$race_category == category)
+      
+      # Map to counts structure
+      if(category == "TDS") {
+        counts[[gender]]$TDS <- counts[[gender]]$TDS + category_count
+      } else if(grepl("^WC_", category)) {
+        race_type <- gsub("^WC_", "", category)
+        if(race_type %in% names(counts[[gender]]$WC)) {
+          counts[[gender]]$WC[[race_type]] <- counts[[gender]]$WC[[race_type]] + category_count
+        }
+      } else if(grepl("^Stage_", category)) {
+        race_type <- gsub("^Stage_", "", category)
+        if(race_type %in% names(counts[[gender]]$Stage)) {
+          counts[[gender]]$Stage[[race_type]] <- counts[[gender]]$Stage[[race_type]] + category_count
+        }
       }
-    }
-    
-    # Stage races
-    if (race$Stage == 1) {
-      if (is_distance && race$Technique == "") {
-        counts$Stage$Distance <- counts$Stage$Distance + 1
-      } else if (is_distance && race$Technique == "C") {
-        counts$Stage$Distance_C <- counts$Stage$Distance_C + 1
-      } else if (is_distance && race$Technique == "F") {
-        counts$Stage$Distance_F <- counts$Stage$Distance_F + 1
-      } else if (is_sprint && race$Technique == "C") {
-        counts$Stage$Sprint_C <- counts$Stage$Sprint_C + 1
-      } else if (is_sprint && race$Technique == "F") {
-        counts$Stage$Sprint_F <- counts$Stage$Sprint_F + 1
-      }
-    }
-    
-    # TDS final climb
-    if (race$Final_Climb == 1) {
-      counts$TDS <- counts$TDS + 1
     }
   }
   
@@ -1181,192 +1480,343 @@ calculate_remaining_races <- function(races_file) {
 
 # Calculate remaining races dynamically
 races_path <- "~/ski/elo/python/ski/polars/excel365/races.csv"
-remaining_races <- calculate_remaining_races(races_path)
-print(remaining_races)
+remaining_races_by_gender <- calculate_remaining_races(races_path)
+print(remaining_races_by_gender)
+
+remaining_races <- remaining_races_by_gender$M
+
 
 # Function to simulate a single race for all skiers
 simulate_race <- function(histories, race_type, points_type = "wc") {
-    #log_info("Simulating {points_type} race of type {race_type}")
-
-    # Set max points based on race type
-    max_points <- if(points_type == "wc") 100 else if(points_type == "stage") 50 else 300
+  #log_info("Simulating {points_type} race of type {race_type}")
+  
+  # Set max points based on race type
+  max_points <- if(points_type == "wc") 100 else if(points_type == "stage") 50 else 300
+  
+  # Get appropriate race histories for each skier
+  race_key <- if(points_type == "tds") {
+    "TDS"  # TDS races have their own key
+  } else {
+    paste0(if(points_type == "wc") "WC_" else "Stage_", race_type)
+  }
+  
+  results <- sapply(names(histories), function(skier) {
+    race_history <- histories[[skier]][[race_key]]
     
-    # Get appropriate race histories for each skier
-    race_key <- paste0(if(points_type == "wc") "WC_" else "Stage_", race_type)
-    
-    
-    results <- sapply(names(histories), function(skier) {
-        race_history <- histories[[skier]][[race_key]]
-        # if(skier=="Gus Schumacher"){
-        #   log_info("Getting races for Gus Schumacher: {race_type}")
-        # }
-        # Check for valid history
-        if(is.null(race_history) || length(race_history) == 0) {
-            log_info("No history for {skier} in {race_key}")
-            return(0)
-        }
-        
-        # Remove any NAs or NaNs from history
-        race_history <- race_history[!is.na(race_history) & !is.nan(race_history)]
-    
-        if(length(race_history) >= 3) {
-            # Create distribution and sample one result
-            fake_data <- data.frame(
-                Points = race_history,
-                Weight = seq(length(race_history), 1)
-            )
-
-            tryCatch({
-
-                simulated_points <- create_race_distribution(fake_data, n_simulations = 1)
-
-                return(simulated_points[1])
-            }, error = function(e) {
-
-            log_info("{skier}'s race_distribution failed")
-            
-                # If distribution creation fails, use simple mean with variation
-                mean_points <- mean(race_history)
-
-                result <- mean_points + rnorm(1, 0, max(5, mean_points * 0.15))
-                return(max(0, min(max_points, round(result))))
-            })
-        } else {
-            log_info("Not enough history for {skier} in {race_key}")
-            mean_points <- mean(race_history)
-            if(is.na(mean_points) || is.nan(mean_points)) {
-                log_info("Invalid mean for {skier} in {race_key}")
-                return(0)
-            }
-            result <- mean_points + rnorm(1, 0, max(5, mean_points * 0.15))
-            return(max(0, min(max_points, round(result))))
-        }
-    })
-    
-    # Final check for any NAs or NaNs
-    results[is.na(results) | is.nan(results)] <- 0
-    return(results)
-}
-
-# Function to simulate entire season
-simulate_season <- function(histories, standings_df, gender="M", n_simulations = 100) {
-    log_info("Starting {if(gender=='M') 'men' else 'women'}'s season simulation")
-    log_info("Starting season simulation with {n_simulations} iterations")
-    log_info("Number of skiers: {length(names(histories))}")
-        # Log race schedule
-    log_info("World Cup races remaining: {paste(names(remaining_races$WC), remaining_races$WC, sep=': ', collapse=', ')}")
-    log_info("Stage races remaining: {paste(names(remaining_races$Stage), remaining_races$Stage, sep=': ', collapse=', ')}")
-    log_info("TdS races remaining: {remaining_races$TDS}")
-
-    # Filter histories for current gender
-    gender_histories <- histories[names(histories) %in% standings_df$Skier]
-    all_skiers <- names(gender_histories)
-    
-    log_info("Number of {if(gender=='M') 'male' else 'female'} skiers: {length(all_skiers)}")
-    
-    # Initialize results matrix
-    season_results <- matrix(0, nrow = n_simulations, ncol = length(all_skiers))
-    colnames(season_results) <- all_skiers
-    # Add current points to all simulations
-    for(skier in all_skiers) {
-        current_points <- standings_df %>%
-            filter(Skier == skier) %>%
-            pull(Points) %>%
-            first()
-        
-        # If skier not in standings, assume 0 points
-        if(length(current_points) == 0) {
-          log_info("{skier} is not not in the standings")
-          current_points <- 0
-        }
-        season_results[, skier] <- current_points
-
-    }    
-    log_info("Current {if(gender=='M') 'men' else 'women'}'s standings loaded. Top 5:")
-    top_5_current <- sort(season_results[1,], decreasing = TRUE)[1:5]
-    for(i in 1:5) {
-        log_info("{names(top_5_current)[i]}: {top_5_current[i]}")
+    # Check for valid history
+    if(is.null(race_history) || length(race_history) == 0) {
+      log_info("No history for {skier} in {race_key}")
+      return(0)
     }
     
-    # Run simulations
-    for(sim in 1:n_simulations) {
-        if(sim %% 10 == 0) {
-          log_info("Running {if(gender=='M') 'men' else 'women'}'s simulation {sim}")
-        }
+    # Remove any NAs or NaNs from history
+    race_history <- race_history[!is.na(race_history) & !is.nan(race_history)]
+    
+    if(length(race_history) >= 3) {
+      # Create distribution and sample one result
+      fake_data <- data.frame(
+        Points = race_history,
+        Weight = seq(length(race_history), 1)
+      )
+      
+      tryCatch({
+        simulated_points <- create_race_distribution(fake_data, n_simulations = 1, max_points = max_points)
+        return(simulated_points[1])
+      }, error = function(e) {
+        log_info("{skier}'s race_distribution failed")
         
-        # Simulate World Cup races
-        for(race_type in names(remaining_races$WC)) {
-          n_races <- remaining_races$WC[[race_type]]
-          if(n_races > 0) {
-                #log_info("Simulating {n_races} World Cup {race_type} races")
-                for(i in 1:n_races) {
-              
-                results <- simulate_race(gender_histories, race_type, "wc")
-                season_results[sim,] <- season_results[sim,] + results
-            }
-          }
-        }
-        # Simulate Stage races
-        for(race_type in names(remaining_races$Stage)) {
-          n_races <- remaining_races$Stage[[race_type]]
-            if(n_races > 0) {
-                #log_info("Simulating {n_races} Stage {race_type} races")
-                for(i in 1:n_races) {
-                results <- simulate_race(gender_histories, race_type, "stage")
-                season_results[sim,] <- season_results[sim,] + results
-            }
-            }
-        }
-        # Simulate Tour De Ski
-        if(remaining_races$TDS > 0) {
-            tds_results <- sapply(all_skiers, function(skier) {
-                history <- gender_histories[[skier]][["TDS"]]
-                if(length(history) >= 3) {
-                    fake_data <- data.frame(
-                        Points = history,
-                        Weight = seq(length(history), 1)
-                    )
-                    simulated_points <- create_race_distribution(fake_data, n_simulations = 1, max_points = 300)
-                    if(skier=="Gus Schumacher"){
-                        log_info("History of Points for Gus Schumacher: {fake_data}")
-                    }
-                    return(simulated_points[1])
-                } else {
-                    mean_points <- mean(history)
-                    result <- mean_points + rnorm(1, 0, mean_points * 0.15)
-                    return(max(0, min(300, round(result))))
-                }
-            })
-            season_results[sim,] <- season_results[sim,] + tds_results
-        }
+        # If distribution creation fails, use simple mean with variation
+        mean_points <- mean(race_history)
+        result <- mean_points + rnorm(1, 0, max(5, mean_points * 0.15))
+        return(max(0, min(max_points, round(result))))
+      })
+    } else {
+      log_info("Not enough history for {skier} in {race_key}")
+      mean_points <- mean(race_history)
+      if(is.na(mean_points) || is.nan(mean_points)) {
+        log_info("Invalid mean for {skier} in {race_key}")
+        return(0)
+      }
+      result <- mean_points + rnorm(1, 0, max(5, mean_points * 0.15))
+      return(max(0, min(max_points, round(result))))
     }
-    
-    # Calculate winning probabilities
-    winners <- apply(season_results, 1, which.max)
-    win_probs <- table(all_skiers[winners]) / n_simulations
-    
-    # Sort by probability
-    win_probs <- sort(win_probs, decreasing = TRUE)
-    # Enhanced summary with point differentials
-    final_points_summary <- data.frame(
-        Skier = all_skiers,
-        Gender = gender,
-        Current_Points = season_results[1,],
-        Mean_Final_Points = colMeans(season_results),
-        Mean_Points_Gained = colMeans(season_results) - season_results[1,],
-        Win_Prob = ifelse(all_skiers %in% names(win_probs), 
-                         win_probs[all_skiers], 0)
-    ) %>%
-        arrange(desc(Mean_Final_Points))
-    
-
-    return(list(
-        probabilities = win_probs,
-        simulation_results = season_results,
-        summary = final_points_summary
-    ))
+  })
+  
+  # Final check for any NAs or NaNs
+  results[is.na(results) | is.nan(results)] <- 0
+  return(results)
 }
 
+simulate_race_with_probability <- function(histories, race_type, points_type = "wc", probability_table) {
+  log_info("Simulating {points_type} race of type {race_type} with pre-computed probabilities")
+  
+  # Set max points based on race type
+  max_points <- if(points_type == "wc") 100 else if(points_type == "stage") 50 else 300
+  
+  # Get appropriate race histories for each skier
+  race_key <- if(points_type == "tds") {
+    "TDS"
+  } else {
+    paste0(if(points_type == "wc") "WC_" else "Stage_", race_type)
+  }
+  
+  # Get the probability column name
+  prob_col <- if(points_type == "tds") "TDS" else race_type
+  
+  results <- sapply(names(histories), function(skier) {
+    # Get participation probability from pre-computed table
+    skier_prob_row <- probability_table[probability_table$Skier == skier, ]
+    
+    if(nrow(skier_prob_row) == 0) {
+      participation_prob <- 0.5  # Default if skier not found
+      log_debug("Skier {skier} not found in probability table, using default 0.5")
+    } else {
+      participation_prob <- skier_prob_row[[prob_col]]
+    }
+    
+    # Randomly determine if skier participates
+    participates <- runif(1) < participation_prob
+    
+    if(!participates) {
+      return(0)  # No points if doesn't participate
+    }
+    
+    # If participates, simulate their performance (same as before)
+    race_history <- histories[[skier]][[race_key]]
+    
+    if(is.null(race_history) || length(race_history) == 0) {
+      return(0)
+    }
+    
+    race_history <- race_history[!is.na(race_history) & !is.nan(race_history)]
+    
+    if(length(race_history) >= 3) {
+      fake_data <- data.frame(
+        Points = race_history,
+        Weight = seq(length(race_history), 1)
+      )
+      
+      tryCatch({
+        simulated_points <- create_race_distribution(fake_data, n_simulations = 1, max_points = max_points)
+        return(simulated_points[1])
+      }, error = function(e) {
+        mean_points <- mean(race_history)
+        result <- mean_points + rnorm(1, 0, max(5, mean_points * 0.15))
+        return(max(0, min(max_points, round(result))))
+      })
+    } else {
+      mean_points <- mean(race_history)
+      if(is.na(mean_points) || is.nan(mean_points)) {
+        return(0)
+      }
+      result <- mean_points + rnorm(1, 0, max(5, mean_points * 0.15))
+      return(max(0, min(max_points, round(result))))
+    }
+  })
+  
+  results[is.na(results) | is.nan(results)] <- 0
+  return(results)
+}
+
+
+# Modified simulate_season function to handle gender-specific race counts
+simulate_season <- function(histories, standings_df, gender="M", n_simulations = 100, remaining_races_by_gender) {
+  print("Simulating Season")
+  log_info("Starting {if(gender=='M') 'men' else 'women'}'s season simulation")
+  log_info("Starting season simulation with {n_simulations} iterations")
+  log_info("Number of skiers: {length(names(histories))}")
+  
+  # Get race counts for this specific gender
+  gender_races <- remaining_races_by_gender[[gender]]
+  
+  # Log race schedule for this gender
+  log_info("{if(gender=='M') 'Men' else 'Women'}'s World Cup races remaining: {paste(names(gender_races$WC), gender_races$WC, sep=': ', collapse=', ')}")
+  log_info("{if(gender=='M') 'Men' else 'Women'}'s Stage races remaining: {paste(names(gender_races$Stage), gender_races$Stage, sep=': ', collapse=', ')}")
+  log_info("{if(gender=='M') 'Men' else 'Women'}'s TdS races remaining: {gender_races$TDS}")
+  
+  # Filter histories for current gender
+  gender_histories <- histories[names(histories) %in% standings_df$Skier]
+  all_skiers <- names(gender_histories)
+  
+  log_info("Number of {if(gender=='M') 'male' else 'female'} skiers: {length(all_skiers)}")
+  
+  # Initialize results matrix
+  season_results <- matrix(0, nrow = n_simulations, ncol = length(all_skiers))
+  colnames(season_results) <- all_skiers
+  
+  # Add current points to all simulations
+  for(skier in all_skiers) {
+    current_points <- standings_df %>%
+      filter(Skier == skier) %>%
+      pull(Points) %>%
+      first()
+    
+    # If skier not in standings, assume 0 points
+    if(length(current_points) == 0) {
+      log_info("{skier} is not in the standings")
+      current_points <- 0
+    }
+    season_results[, skier] <- current_points
+  }    
+  
+  log_info("Current {if(gender=='M') 'men' else 'women'}'s standings loaded. Top 5:")
+  top_5_current <- sort(season_results[1,], decreasing = TRUE)[1:5]
+  for(i in 1:5) {
+    log_info("{names(top_5_current)[i]}: {top_5_current[i]}")
+  }
+  
+  # Run simulations
+  for(sim in 1:n_simulations) {
+    if(sim %% 10 == 0) {
+      log_info("Running {if(gender=='M') 'men' else 'women'}'s simulation {sim}")
+    }
+    
+    # Simulate World Cup races
+    for(race_type in names(gender_races$WC)) {
+      n_races <- gender_races$WC[[race_type]]
+      if(n_races > 0) {
+        for(i in 1:n_races) {
+          results <- simulate_race(gender_histories, race_type, "wc")
+          season_results[sim,] <- season_results[sim,] + results
+        }
+      }
+    }
+    
+    # Simulate Stage races
+    for(race_type in names(gender_races$Stage)) {
+      n_races <- gender_races$Stage[[race_type]]
+      if(n_races > 0) {
+        for(i in 1:n_races) {
+          results <- simulate_race(gender_histories, race_type, "stage")
+          season_results[sim,] <- season_results[sim,] + results
+        }
+      }
+    }
+    
+    # Simulate Tour De Ski
+    if(gender_races$TDS > 0) {
+      for(i in 1:gender_races$TDS) {
+        tds_results <- simulate_race(gender_histories, "TDS", "tds")
+        season_results[sim,] <- season_results[sim,] + tds_results
+      }
+    }
+  }
+  
+  # Calculate winning probabilities
+  winners <- apply(season_results, 1, which.max)
+  win_probs <- table(all_skiers[winners]) / n_simulations
+  
+  # Sort by probability
+  win_probs <- sort(win_probs, decreasing = TRUE)
+  
+  # Enhanced summary with point differentials
+  final_points_summary <- data.frame(
+    Skier = all_skiers,
+    Gender = gender,
+    Current_Points = season_results[1,],
+    Mean_Final_Points = colMeans(season_results),
+    Mean_Points_Gained = colMeans(season_results) - season_results[1,],
+    Win_Prob = ifelse(all_skiers %in% names(win_probs), 
+                      win_probs[all_skiers], 0)
+  ) %>%
+    arrange(desc(Mean_Final_Points))
+  
+  return(list(
+    probabilities = win_probs,
+    simulation_results = season_results,
+    summary = final_points_summary
+  ))
+}
+simulate_season_with_probabilities <- function(histories, standings_df, gender="M", n_simulations = 100, remaining_races_by_gender, probability_table) {
+  print("Simulating Season with Pre-computed Participation Probabilities")
+  log_info("Starting {if(gender=='M') 'men' else 'women'}'s season simulation with pre-computed probabilities")
+  
+  # Filter probability table for current gender
+  gender_probabilities <- probability_table[probability_table$Gender == gender, ]
+  
+  # Get race counts for this specific gender
+  gender_races <- remaining_races_by_gender[[gender]]
+  
+  # Filter histories for current gender
+  gender_histories <- histories[names(histories) %in% standings_df$Skier]
+  all_skiers <- names(gender_histories)
+  
+  # Initialize results matrix
+  season_results <- matrix(0, nrow = n_simulations, ncol = length(all_skiers))
+  colnames(season_results) <- all_skiers
+  
+  # Add current points to all simulations
+  for(skier in all_skiers) {
+    current_points <- standings_df %>%
+      filter(Skier == skier) %>%
+      pull(Points) %>%
+      first()
+    
+    if(length(current_points) == 0) {
+      current_points <- 0
+    }
+    season_results[, skier] <- current_points
+  }
+  
+  # Run simulations
+  for(sim in 1:n_simulations) {
+    if(sim %% 10 == 0) {
+      log_info("Running {if(gender=='M') 'men' else 'women'}'s simulation {sim}")
+    }
+    
+    # Simulate World Cup races
+    for(race_type in names(gender_races$WC)) {
+      n_races <- gender_races$WC[[race_type]]
+      if(n_races > 0) {
+        for(i in 1:n_races) {
+          results <- simulate_race_with_probability(gender_histories, race_type, "wc", gender_probabilities)
+          season_results[sim,] <- season_results[sim,] + results
+        }
+      }
+    }
+    
+    # Simulate Stage races
+    for(race_type in names(gender_races$Stage)) {
+      n_races <- gender_races$Stage[[race_type]]
+      if(n_races > 0) {
+        for(i in 1:n_races) {
+          results <- simulate_race_with_probability(gender_histories, race_type, "stage", gender_probabilities)
+          season_results[sim,] <- season_results[sim,] + results
+        }
+      }
+    }
+    
+    # Simulate Tour De Ski
+    if(gender_races$TDS > 0) {
+      for(i in 1:gender_races$TDS) {
+        tds_results <- simulate_race_with_probability(gender_histories, "TDS", "tds", gender_probabilities)
+        season_results[sim,] <- season_results[sim,] + tds_results
+      }
+    }
+  }
+  
+  # Calculate winning probabilities (same as before)
+  winners <- apply(season_results, 1, which.max)
+  win_probs <- table(all_skiers[winners]) / n_simulations
+  win_probs <- sort(win_probs, decreasing = TRUE)
+  
+  final_points_summary <- data.frame(
+    Skier = all_skiers,
+    Gender = gender,
+    Current_Points = season_results[1,],
+    Mean_Final_Points = colMeans(season_results),
+    Mean_Points_Gained = colMeans(season_results) - season_results[1,],
+    Win_Prob = ifelse(all_skiers %in% names(win_probs), 
+                      win_probs[all_skiers], 0)
+  ) %>%
+    arrange(desc(Mean_Final_Points))
+  
+  return(list(
+    probabilities = win_probs,
+    simulation_results = season_results,
+    summary = final_points_summary
+  ))
+}
 library(writexl)
 # Modified create_standings_summary function to handle both genders
 create_standings_summary <- function(simulation_results, standings_df, gender) {
@@ -1434,12 +1884,33 @@ create_standings_summary <- function(simulation_results, standings_df, gender) {
 
 
 # Run simulations for both genders
-men_sims <- simulate_season(all_histories_clean, standings_df, "M", 500)
-women_sims <- simulate_season(all_histories_clean, ladies_standings_df, "F", 500)
+#men_sims <- simulate_season(all_histories_clean, standings_df, "M", 500, remaining_races_by_gender)
+#women_sims <- simulate_season(all_histories_clean, ladies_standings_df, "L", 500, remaining_races_by_gender)
 
+# Run simulations with participation probabilities
+race_probability_table <- create_race_probability_table(men_chrono, ladies_chrono, top_30_men, top_30_women)
+
+# Step 2: Run simulations using pre-computed probabilities (much faster!)
+men_sims <- simulate_season_with_probabilities(
+  all_histories_clean, 
+  standings_df, 
+  "M", 
+  500, 
+  remaining_races_by_gender, 
+  race_probability_table
+)
+
+women_sims <- simulate_season_with_probabilities(
+  all_histories_clean, 
+  ladies_standings_df, 
+  "L", 
+  500, 
+  remaining_races_by_gender, 
+  race_probability_table
+)
 # Create summaries for both genders
 men_summary <- create_standings_summary(men_sims$simulation_results, standings_df, "M")
-women_summary <- create_standings_summary(women_sims$simulation_results, ladies_standings_df, "F")
+women_summary <- create_standings_summary(women_sims$simulation_results, ladies_standings_df, "L")
 
 # Save separate Excel files for each gender
 output_dir = get_output_dir()

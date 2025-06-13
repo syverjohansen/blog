@@ -1,0 +1,132 @@
+<div class="athletes-container">
+    <div class="search-container mb-4">
+        <input type="text" id="searchBox" class="form-control" placeholder="Search athletes...">
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Women</h3>
+                </div>
+                <div class="card-body">
+                    <div id="womenList" class="athlete-list"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Men</h3>
+                </div>
+                <div class="card-body">
+                    <div id="menList" class="athlete-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .athletes-container {
+            padding: 20px 0;
+        }
+        .athlete-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .athlete-link {
+            display: block;
+            padding: 8px 15px;
+            margin: 2px 0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .athlete-link:hover {
+            background-color: #f8f9fa;
+            color: #007bff;
+        }
+        .search-container {
+            margin-bottom: 30px;
+        }
+        .card {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .card-body {
+            padding: 15px;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let menData = {};
+            let womenData = {};
+
+            // Fetch athletes data
+            Promise.all([
+                fetch('/python/skijump/excel365/M_all_ids.json').then(response => response.json()),
+                fetch('/python/skijump/excel365/L_all_ids.json').then(response => response.json())
+            ]).then(([menJson, womenJson]) => {
+                menData = menJson;
+                womenData = womenJson;
+                renderAthletes();
+            }).catch(error => console.error('Error loading athletes:', error));
+
+            function renderAthletes(searchTerm = '') {
+                const menList = document.getElementById('menList');
+                const womenList = document.getElementById('womenList');
+                
+                // Clear current lists
+                menList.innerHTML = '';
+                womenList.innerHTML = '';
+
+                // Filter and sort men
+                Object.entries(menData)
+                    .filter(([id, name]) => name.toLowerCase().includes(searchTerm.toLowerCase()))
+                    .sort((a, b) => {
+                        // Split names and compare by last name
+                        const aLastName = a[1].split(' ').pop();
+                        const bLastName = b[1].split(' ').pop();
+                        return aLastName.localeCompare(bLastName);
+                    })
+                    .forEach(([id, name]) => {
+                        const link = document.createElement('a');
+                        link.href = `/skijump/skiers/skier/?id=${id}&gender=M`;
+                        link.className = 'athlete-link';
+                        link.textContent = name;
+                        menList.appendChild(link);
+                    });
+
+                // Filter and sort women
+                Object.entries(womenData)
+                    .filter(([id, name]) => name.toLowerCase().includes(searchTerm.toLowerCase()))
+                    .sort((a, b) => {
+                        // Split names and compare by last name
+                        const aLastName = a[1].split(' ').pop();
+                        const bLastName = b[1].split(' ').pop();
+                        return aLastName.localeCompare(bLastName);
+                    })
+                    .forEach(([id, name]) => {
+                        const link = document.createElement('a');
+                        link.href = `/skijump/skiers/skier/?id=${id}&gender=L`;
+                        link.className = 'athlete-link';
+                        link.textContent = name;
+                        womenList.appendChild(link);
+                    });
+            }
+
+            // Add search functionality
+            const searchBox = document.getElementById('searchBox');
+            searchBox.addEventListener('input', (e) => {
+                renderAthletes(e.target.value);
+            });
+        });
+    </script>
+</div>

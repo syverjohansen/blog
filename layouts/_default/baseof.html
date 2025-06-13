@@ -49,7 +49,79 @@ $(document).ready(function() {
         $('#dataTable').DataTable();
     }
     });
+
+// Dynamic Catalog Generation
+// Dynamic Catalog Generation
+$(document).ready(function() {
+  // Only run if the catalog container exists
+  if ($('.catalog-container').length) {
+    // Clear existing hardcoded items
+    $('.catalog-body').empty();
+    
+    // Find all h2 and h3 elements in the post container
+    $('.post-container h2, .post-container h3').each(function() {
+      var heading = $(this);
+      
+      // If the heading doesn't have an ID, create one based on the text
+      if (!heading.attr('id')) {
+        var headingId = heading.text().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+        heading.attr('id', headingId);
+      }
+      
+      // Get heading info
+      var headingId = heading.attr('id');
+      var headingText = heading.text();
+      var headingLevel = heading.prop('tagName').toLowerCase();
+      
+      // Create the list item with appropriate indentation
+      var listItem = $('<li>');
+      if (headingLevel === 'h3') {
+        listItem.css('padding-left', '1.5rem');
+      }
+      
+      // Create the link
+      var link = $('<a>').attr('href', '#' + headingId).text(headingText);
+      listItem.append(link);
+      
+      // Add to the catalog
+      $('.catalog-body').append(listItem);
+    });
+    
+    // Track active section while scrolling
+    $(window).scroll(function() {
+      var scrollPosition = $(window).scrollTop();
+      
+      // Find the current heading
+      $('.post-container h2, .post-container h3').each(function() {
+        var currentHeading = $(this);
+        var sectionTop = currentHeading.offset().top - 100;
+        var sectionId = currentHeading.attr('id');
+        
+        if (scrollPosition >= sectionTop) {
+          // Remove active class from all links
+          $('.catalog-body li').removeClass('active');
+          
+          // Add active class to current section link
+          $('.catalog-body li a[href="#' + sectionId + '"]').parent().addClass('active');
+        }
+      });
+    });
+    
+    // Scroll to section when clicking catalog links (smooth scroll)
+    $('.catalog-body a').click(function(e) {
+      e.preventDefault();
+      var targetId = $(this).attr('href');
+      $('html, body').animate({
+        scrollTop: $(targetId).offset().top - 70
+      }, 500);
+    });
+  }
+});
+
+
 </script>
+
+
 
 </body>
 </html>

@@ -1,0 +1,196 @@
+<div id="yearRaces" class="container">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold" id="yearTitle"></h1>
+            </div>
+
+            <!-- Ladies Races -->
+            <div id="ladies" class="mb-12">
+                <h2 class="text-3xl font-bold mb-6">Ladies Races</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="px-6 py-3 text-left">Race #</th>
+                                <th class="px-6 py-3 text-left">Date</th>
+                                <th class="px-6 py-3 text-left">Location</th>
+                                <th class="px-6 py-3 text-left">Distance</th>
+                                <th class="px-6 py-3 text-left">Technique</th>
+                                <th class="px-6 py-3 text-left">Podium</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ladiesRacesList"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Men's Races -->
+            <div id="mens">
+                <h2 class="text-3xl font-bold mb-6">Men's Races</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="px-6 py-3 text-left">Race #</th>
+                                <th class="px-6 py-3 text-left">Date</th>
+                                <th class="px-6 py-3 text-left">Location</th>
+                                <th class="px-6 py-3 text-left">Distance</th>
+                                <th class="px-6 py-3 text-left">Technique</th>
+                                <th class="px-6 py-3 text-left">Podium</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mensRacesList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side Catalog Container -->
+        <div class="col-lg-2 col-lg-offset-0 visible-lg-block sidebar-container catalog-container">
+            <div class="side-catalog">
+                <hr class="hidden-sm hidden-xs">
+                <h5>
+                    <a class="catalog-toggle" href="#">CATALOG</a>
+                </h5>
+                <ul class="catalog-body">
+                    <li class="h4">
+                        <a class="catalog-toggle" href="#ladies">Ladies Races</a>
+                    </li>
+                    <li class="h4">
+                        <a class="catalog-toggle" href="#mens">Men's Races</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const year = urlParams.get('year');
+        
+        document.getElementById('yearTitle').textContent = `${year} Race Season`;
+
+        // Load ladies races
+        try {
+            const ladiesResponse = await fetch(`/python/alpine/excel365/L/${year}/summary.json`);
+            const ladiesRaces = await ladiesResponse.json();
+            displayRaces(ladiesRaces, 'ladiesRacesList', 'L', year);
+        } catch (error) {
+            console.error('Error loading ladies races:', error);
+            document.getElementById('ladiesRacesList').innerHTML = `
+                <tr><td colspan="6" class="text-center py-4 text-red-600">Error loading ladies races data</td></tr>
+            `;
+        }
+        
+        // Load men's races
+        try {
+            const mensResponse = await fetch(`/python/alpine/excel365/M/${year}/summary.json`);
+            const mensRaces = await mensResponse.json();
+            displayRaces(mensRaces, 'mensRacesList', 'M', year);
+        } catch (error) {
+            console.error('Error loading men\'s races:', error);
+            document.getElementById('mensRacesList').innerHTML = `
+                <tr><td colspan="6" class="text-center py-4 text-red-600">Error loading men's races data</td></tr>
+            `;
+        }
+
+        // Check for section hash and scroll if present
+        if (window.location.hash) {
+            const element = document.querySelector(window.location.hash);
+            if (element) {
+                element.scrollIntoView();
+            }
+        }
+    });
+    
+    function displayRaces(races, elementId, gender, year) {
+        const tableBody = document.getElementById(elementId);
+        
+        if (!races || races.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4">No races found for this season</td></tr>`;
+            return;
+        }
+        
+        races.sort((a, b) => a.race_number - b.race_number);
+        
+        races.forEach(race => {
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-gray-50 cursor-pointer';
+            const section = gender === 'L' ? '#ladies' : '#mens';
+            row.onclick = () => {
+                window.location.href = `/alpine/races/race/?year=${year}&race=${race.race_number}&gender=${gender}&returnTo=${section.substring(1)}`;
+            };
+            
+            // Format podium display
+            const isTeamEvent = race.distance === "Rel" || race.distance === "Ts";
+            const podiumHtml = race.podium.map((skier, index) => {
+                if (!skier) return `<li>N/A</li>`;
+                return isTeamEvent ? 
+                    `<li>${skier.nation}</li>` : 
+                    `<li>${skier.name} (${skier.nation})</li>`;
+            }).join('');
+            
+            row.innerHTML = `
+                <td class="px-6 py-4">${race.race_number}</td>
+                <td class="px-6 py-4">${new Date(race.date).toLocaleDateString()}</td>
+                <td class="px-6 py-4">${race.city}, ${race.country}</td>
+                <td class="px-6 py-4">${race.distance}</td>
+                <td class="px-6 py-4">${race.technique}</td>
+                <td class="px-6 py-4">
+                    <ol class="list-decimal list-inside">
+                        ${podiumHtml}
+                    </ol>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Initialize catalog functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle smooth scrolling for catalog links
+        document.querySelectorAll('.catalog-body a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                    // Update active state
+                    document.querySelectorAll('.catalog-body a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Monitor scroll position to update active catalog item
+        window.addEventListener('scroll', _.throttle(function() {
+            const sections = ['#ladies', '#mens'];
+            const scrollPosition = window.scrollY + 200; // Offset for better activation
+
+            sections.forEach(sectionId => {
+                const section = document.querySelector(sectionId);
+                if (section) {
+                    const sectionTop = section.offsetTop;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    const catalogLink = document.querySelector(`.catalog-body a[href="${sectionId}"]`);
+
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                        document.querySelectorAll('.catalog-body a').forEach(a => a.classList.remove('active'));
+                        catalogLink?.classList.add('active');
+                    }
+                }
+            });
+        }, 100));
+
+        // Check initial position
+        if (window.location.hash) {
+            const targetLink = document.querySelector(`.catalog-body a[href="${window.location.hash}"]`);
+            targetLink?.classList.add('active');
+        }
+    });
+</script>

@@ -409,19 +409,34 @@ def process_balanced_data():
 
     print("All files have been processed and grouped successfully.")
 
-# We need this for the lookup function
+# Complete country code mapping from skier_info.py
 def safe_get_country_code(nation):
     codes = {
-        "Algeria":"alg", "Andorra":"and", "Argentina":"arg", "Armenia":"arm", "Australia":"aus", "Austria":"aut", "Belarus":"blr", "Belgium":"bel", "Bermuda":"ber", "Bolivia":"bol", "Bosnia&Herzegovina":"bih", "Brazil":"bra", "Bulgaria":"bul",
-        "Cameroon":"cmr", "Canada":"can", "Chile":"chi", "China":"chn", "Colombia":"col", "Costa Rica":"crc", "Croatia":"cro", "Czechia":"cze", "Denmark":"den",
-        "Ecuador":"ecu", "Estonia":"est", "Ethiopia":"eth", "Fiji":"fij", "Finland":"fin", "France":"fra",
-        "Germany":"ger", "Great Britain":"gbr", "Greece":"gre", "Guatemala":"gua", "Haiti":"hai", "Honduras":"hon", "Hungary":"hun", 
-        "Iceland":"isl", "India":"ind", "Iran":"iri", "Ireland":"irl", "Israel":"isr", "Italy":"ita", "Japan":"jpn", 
-        "Kazakhstan":"kaz", "Kenya":"ken", "Kyrgyzstan":"kgz", "Latvia":"lat", "Lebanon":"lbn", "Liechtenstein":"lie", "Lithuania":"ltu", "Luxembourg":"lux",
-        "Mexico":"mex", "Moldova":"mda", "Mongolia":"mgl", "Montenegro":"mne", "Morocco":"mar", "Nepal":"nep", "Netherlands":"ned", "New Zealand":"nzl", "Nigeria":"ngr", "North Korea":"prk", "North Macedonia":"mkd", "Norway":"nor",
-        "Pakistan":"pak", "Peru":"per", "Poland":"pol", "Portugal":"por", "Romania":"rou", "Russia":"rus",
-        "San Marino":"smr", "Serbia":"srb", "Slovakia":"svk", "Slovenia":"slo", "South Africa":"rsa", "South Korea":"kor", "Soviet":"urs", "Spain":"esp", "Sweden":"swe", "Switzerland":"sui", "Taiwan":"tpe", "Thailand":"tha", "Togo":"tog", "Tonga":"tga", "Trinidad & Tobago":"tto", "Turkey":"tur",
-        "USA":"usa", "Ukraine":"ukr", "Venezuela":"ven"
+        "Albania": "alb", "Algeria": "alg", "Andorra": "and", "Argentina": "arg", "Armenia": "arm", 
+        "Australia": "aus", "Austria": "aut", "Azerbaijan": "aze", "Belarus": "blr", "Belgium": "bel", 
+        "Bermuda": "ber", "Bolivia": "bol", "Bosnia&Herzegovina": "bih", "Brazil": "bra", "Bulgaria": "bul",
+        "Cameroon": "cmr", "Canada": "can", "Cayman Islands": "cay", "Chile": "chi", "China": "chn", 
+        "Colombia": "col", "Costa Rica": "crc", "Croatia": "cro", "Cyprus": "cyp", "Czechia": "cze", 
+        "Denmark": "den", "East Timor": "tls", "Ecuador": "ecu", "Egypt": "egy", "Eritrea": "eri", 
+        "Estonia": "est", "Eswatini": "swz", "Ethiopia": "eth", "Fiji": "fij", "Finland": "fin", 
+        "FIS": "fis", "France": "fra", "Georgia": "geo", "Germany": "ger", "Ghana": "gha", 
+        "Great Britain": "gbr", "Greece": "gre", "Greenland": "grl", "Grenada": "grn", "Guam": "gum", 
+        "Guatemala": "gua", "Haiti": "hai", "Honduras": "hon", "Hong Kong": "hkg", "Hungary": "hun", 
+        "Iceland": "isl", "India": "ind", "Iran": "iri", "Ireland": "irl", "Israel": "isr", 
+        "Italy": "ita", "Jamaica": "jam", "Japan": "jpn", "Kazakhstan": "kaz", "Kenya": "ken", 
+        "Kosovo": "kos", "Kuwait": "kuw", "Kyrgyzstan": "kgz", "Latvia": "lat", "Lebanon": "lbn", 
+        "Liechtenstein": "lie", "Lithuania": "ltu", "Luxembourg": "lux", "Madagascar": "mad", 
+        "Malaysia": "mas", "Malta": "mlt", "Mexico": "mex", "Moldova": "mda", "Monaco": "mon", 
+        "Mongolia": "mgl", "Montenegro": "mne", "Morocco": "mar", "Nepal": "nep", "Netherlands": "ned", 
+        "New Zealand": "nzl", "Nigeria": "ngr", "North Korea": "prk", "North Macedonia": "mkd", 
+        "Norway": "nor", "Pakistan": "pak", "Peru": "per", "Philippines": "phi", "Poland": "pol", 
+        "Portugal": "por", "Puerto Rico": "pur", "Romania": "rou", "Russia": "rus", "San Marino": "smr", 
+        "Saudi Arabia": "ksa", "Senegal": "sen", "Serbia": "srb", "Singapore": "sgp", "Slovakia": "svk", 
+        "Slovenia": "slo", "South Africa": "rsa", "South Korea": "kor", "Soviet": "urs", "Spain": "esp", 
+        "Sweden": "swe", "Switzerland": "sui", "Taiwan": "tpe", "Tajikistan": "tjk", "Thailand": "tha", 
+        "Togo": "tog", "Tonga": "tga", "Trinidad & Tobago": "tto", "Turkey": "tur", "Ukraine": "ukr", 
+        "Uruguay": "uru", "US Virgin Islands": "isv", "USA": "usa", "Uzbekistan": "uzb", 
+        "Venezuela": "ven", "Yugoslavia": "yug", "Zimbabwe": "zim"
     }
     
     # Handle Series objects

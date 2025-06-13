@@ -1,0 +1,232 @@
+{{ $context := . }}
+{{ $dataPath := split (.Get 0) "/" }}
+{{ $data := .Site.Data }}
+{{ range $dataPath }}
+    {{ $data = index $data . }}
+{{ end }}
+
+{{ $headers := index $data "headers" }}
+{{ $rows := index $data "rows" }}
+
+<!-- Check if ID column exists and find its index -->
+{{ $idColumnIndex := -1 }}
+{{ range $index, $header := $headers }}
+    {{ if eq (lower $header) "id" }}
+        {{ $idColumnIndex = $index }}
+    {{ end }}
+{{ end }}
+
+<!-- Check if Sex column exists and find its index -->
+{{ $sexColumnIndex := -1 }}
+{{ range $index, $header := $headers }}
+    {{ if eq (lower $header) "sex" }}
+        {{ $sexColumnIndex = $index }}
+    {{ end }}
+{{ end }}
+
+<!-- Include DataTables CSS and JS (only if not already loaded) -->
+{{ if not (.Page.Scratch.Get "datatableLoaded") }}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.dataTables.min.css">
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
+{{ .Page.Scratch.Set "datatableLoaded" true }}
+{{ end }}
+
+<!-- Full-width table to ensure all columns are visible -->
+<div class="datatables-container">
+    <table id="datatable-{{ anchorize ($context.Get 0) }}" class="display nowrap" style="width:100%">
+        <thead>
+            <tr>
+                {{ range $index, $header := $headers }}
+                    {{ if not (and (eq $index $idColumnIndex) (ge $idColumnIndex 0)) }}
+                        <th>{{ $header }}</th>
+                    {{ end }}
+                {{ end }}
+            </tr>
+        </thead>
+        <tbody>
+            {{ range $row := $rows }}
+                <tr>
+                    {{ range $cellIndex, $cellValue := $row }}
+                        {{ if not (and (eq $cellIndex $idColumnIndex) (ge $idColumnIndex 0)) }}
+                            {{ if and (eq $cellIndex 0) (ge $idColumnIndex 0) }}
+                                <td>
+                                    {{ $id := index $row $idColumnIndex }}
+                                    {{ $gender := "L" }}
+                                    
+                                    {{ if ge $sexColumnIndex 0 }}
+                                        {{ $sex := index $row $sexColumnIndex }}
+                                        {{ if eq $sex "M" }}
+                                            {{ $gender = "M" }}
+                                        {{ end }}
+                                    {{ else }}
+                                        {{ $tableName := lower ($context.Get 0) }}
+                                        {{ if or (in $tableName "men") (in $tableName "m_") }}
+                                            {{ $gender = "M" }}
+                                        {{ end }}
+                                    {{ end }}
+                                    
+                                    <a href="/nordic-combined/skiers/skier/?id={{ $id }}&gender={{ $gender }}">{{ $cellValue }}</a>
+                                </td>
+                            {{ else }}
+                                <td>{{ $cellValue }}</td>
+                            {{ end }}
+                        {{ end }}
+                    {{ end }}
+                </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof jQuery !== 'undefined' && typeof jQuery.fn.DataTable !== 'undefined') {
+        var tableId = '#datatable-{{ anchorize ($context.Get 0) }}';
+        
+        if (!$.fn.DataTable.isDataTable(tableId)) {
+            var dataTable = $(tableId).DataTable({
+                pageLength: 10,
+                scrollX: true,
+                scrollCollapse: true,
+                autoWidth: false,
+                fixedColumns: {
+                    left: 1
+                },
+                columnDefs: [
+                    // Set sort sequence for all columns to descending first
+                    {
+                        targets: '_all',
+                        orderSequence: ['desc', 'asc']
+                    },
+                    // Format numeric values for display
+                    {
+                        targets: '_all',
+                        render: function(data, type, row) {
+                            if (type === 'display' && !isNaN(data) && data !== null && data !== '' && data.toString().indexOf('.') !== -1) {
+                                return parseFloat(data).toFixed(2);
+                            }
+                            return data;
+                        }
+                    }
+                ],
+                order: [], // No initial sorting
+                language: {
+                    search: "Search:",
+                    paginate: {
+                        next: "Next",
+                        previous: "Previous"
+                    }
+                },
+                initComplete: function() {
+                    var api = this.api();
+                    
+                    // Force column adjustment
+                    setTimeout(function() {
+                        api.columns.adjust();
+                    }, 500);
+                }
+            });
+            
+            // Handle window resize
+            $(window).on('resize', function() {
+                dataTable.columns.adjust();
+            });
+        }
+    } else {
+        console.error('jQuery or DataTables is not loaded');
+    }
+});
+</script>
+
+<style>
+.datatables-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+/* Force the horizontal scrollbar to appear */
+.dataTables_wrapper {
+    width: 100%;
+}
+
+.dataTables_wrapper .dataTables_scroll {
+    clear: both;
+}
+
+.dataTables_wrapper .dataTables_scrollBody {
+    overflow-x: auto !important;
+}
+
+/* Override maximum width for the content container */
+.post-container {
+    max-width: none !important;
+    overflow: visible !important;
+}
+
+.container, .row, .col-lg-8, .col-md-10 {
+    overflow: visible !important;
+}
+
+/* Style for DataTables */
+table.dataTable thead th {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ddd;
+    padding: 8px !important;
+    cursor: pointer;
+    position: relative;
+}
+
+table.dataTable thead th:hover {
+    background-color: #e8e8e8;
+}
+
+/* Add sort indicators */
+table.dataTable thead th.sorting:after,
+table.dataTable thead th.sorting_asc:after,
+table.dataTable thead th.sorting_desc:after {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #666;
+}
+
+table.dataTable thead th.sorting:after {
+    content: "⇕";
+}
+
+table.dataTable thead th.sorting_desc:after {
+    content: "↓";
+    color: #333;
+}
+
+table.dataTable thead th.sorting_asc:after {
+    content: "↑";
+    color: #333;
+}
+
+table.dataTable tbody td {
+    padding: 8px !important;
+}
+
+/* Style for fixed column */
+.dtfc-fixed-left {
+    background-color: white;
+    border-right: 1px solid #ddd;
+}
+
+/* Zebra striping for rows */
+table.dataTable.stripe tbody tr.odd {
+    background-color: #f9f9f9;
+}
+</style>

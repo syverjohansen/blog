@@ -1,0 +1,119 @@
+{{/* layouts/skijump/partials/skier.html */}}
+<script>
+// Function to update the page header with skier information
+function updatePageHeader() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sex = urlParams.get('gender')?.toUpperCase();
+    const id = urlParams.get('id');
+    
+    if (!sex || !id) return;
+    
+    // Get skier info
+    fetch(`/python/skijump/excel365/${sex}/skier_info.json`)
+        .then(response => response.json())
+        .then(skiersList => {
+            const skierInfo = skiersList.find(skier => skier.id === parseInt(id));
+            if (skierInfo) {
+                // Update the main header text
+                const headerTitle = document.querySelector('.intro-header .post-heading h1');
+                if (headerTitle) {
+                    headerTitle.textContent = skierInfo.skier;
+                    console.log("Updated header title to:", skierInfo.skier);
+                }
+                
+                // Remove the date shown on skier profile pages
+                const metaInfo = document.querySelector('.intro-header .post-heading .meta');
+                if (metaInfo) {
+                    metaInfo.style.display = 'none';
+                }
+                
+                // Update page title
+                document.title = `${skierInfo.skier} - Nordic Numbers`;
+            }
+        })
+        .catch(error => {
+            console.error('Failed to update header:', error);
+        });
+}
+
+// Run after a short delay to ensure the page has loaded
+setTimeout(updatePageHeader, 100);
+</script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="skier-header" class="text-center mb-4">
+                <div id="skier-info">
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-s-12 col-md-12 col-lg-12 col xl-12">
+                    {{ partial "partials/skijump/skier-table.html" . }}
+                </div>
+                <div class="col-xs-12 col-s-12 col-md-12 col-lg-12 col xl-12">
+                    {{ partial "partials/skijump/radar.html" . }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Update header with skier info
+    async function updateSkierInfo() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sex = urlParams.get('gender')?.toUpperCase();
+        const id = urlParams.get('id');
+
+        if (!sex || !id) {
+            console.error("Missing gender or ID parameters");
+            document.getElementById('skier-name').textContent = "Missing parameters";
+            return;
+        }
+
+        try {
+            const response = await fetch(`/python/skijump/excel365/${sex}/skier_info.json`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch skier info: ${response.status}`);
+            }
+            
+            const skiersList = await response.json();
+            const skierInfo = skiersList.find(skier => skier.id === parseInt(id));
+            
+            if (!skierInfo) {
+                throw new Error(`Skier with ID ${id} not found`);
+            }
+            
+            // Update the skier name
+           // document.getElementById('skier-name').textContent = skierInfo.skier || "Unknown Skier";
+            //document.getElementById('country-name').textContent = skierInfo.nation || "";
+            
+            // Update the country flag
+           /* if (skierInfo.image) {
+                document.getElementById('country-flag').src = skierInfo.image;
+                document.getElementById('country-flag').style.display = 'inline';
+            } else {
+                document.getElementById('country-flag').style.display = 'none';
+            }*/
+            
+            // Update page title and header image
+            document.title = `${skierInfo.skier} - Skier Profile`;
+            
+            // Set header image
+            const headerElement = document.querySelector('.intro-header');
+            if (headerElement && skierInfo.image) {
+                headerElement.style.backgroundImage = `url(${skierInfo.image})`;
+            }
+            
+        } catch (error) {
+            console.error('Error loading skier info:', error);
+            document.getElementById('skier-name').textContent = "Skier Not Found";
+        }
+    }
+
+    // Run on page load
+    document.addEventListener('DOMContentLoaded', updateSkierInfo);
+</script>

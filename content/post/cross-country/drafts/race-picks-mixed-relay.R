@@ -45,7 +45,7 @@ load_today_mixed_relay_races <- function() {
   # Read in the race schedule
   races_path <- "~/ski/elo/python/ski/polars/excel365/races.csv"
   races <- read.csv(races_path, stringsAsFactors = FALSE) %>%
-    mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+    mutate(Date = mdy(Date))
   
   # Find today's date
   today <- get_today_date()
@@ -843,7 +843,7 @@ get_leg_predictions_with_startlist <- function(current_skiers, leg_models, start
         leg_skiers %>% select(ID, Team_Name),
         by = "ID"
       )
-    print(leg_data)
+
     # Make predictions for this specific leg
     leg_predictions[[leg]] <- get_leg_predictions(leg, leg_data, leg_models)
   }
@@ -879,7 +879,7 @@ generate_team_predictions <- function(teams_df, individual_predictions, leg_mode
       Top10_Prob = 0,
       Expected_Points = 0
     )
-  
+  print(teams_df)
   # Calculate leg importance weights
   leg_importance <- calculate_leg_importance(leg_models)
   
@@ -1059,12 +1059,12 @@ save_prediction_results <- function(team_predictions, race_date, output_dir = NU
   }
   
   # Save points results
-  points_file <- file.path(output_dir, "mixed_relay_points.xlsx")
+  points_file <- file.path(output_dir, "mixed_relay.xlsx")
   write.xlsx(points_df, points_file)
   log_info(paste("Saved points predictions to", points_file))
   
   # Save probability results
-  prob_file <- file.path(output_dir, "mixed_relay_probabilities.xlsx")
+  prob_file <- file.path(output_dir, "mixed_relay_position_probabilities.xlsx")
   write.xlsx(prob_df, prob_file)
   log_info(paste("Saved probability predictions to", prob_file))
   

@@ -1,0 +1,26 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Franziska Preuss",
+      926,
+      1,
+      1278,
+      361
+    ],
+    [
+      "Lou Jeanmonnot",
+      1769,
+      2,
+      1258,
+      341
+    ]
+  ]
+}

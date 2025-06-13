@@ -1,0 +1,33 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Vinzenz Geiger",
+      1182,
+      1,
+      1506,
+      201
+    ],
+    [
+      "Jarl Magnus Riiber",
+      1150,
+      2,
+      1385,
+      80
+    ],
+    [
+      "Johannes Lamparter",
+      1469,
+      3,
+      1317,
+      12
+    ]
+  ]
+}

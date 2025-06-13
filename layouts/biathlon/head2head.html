@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biathlon Head-to-Head Comparison</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .skier-select {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        .skier-option {
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 2px 0;
+        }
+        .skier-option:hover {
+            background-color: #f8f9fa;
+        }
+        .skier-option.selected {
+            background-color: #007bff;
+            color: white;
+        }
+        .search-box {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .comparison-section {
+            display: none;
+        }
+        .stats-table {
+            margin-top: 20px;
+        }
+        .winner {
+            background-color: #d4edda;
+            font-weight: bold;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin-top: 30px;
+        }
+        .filter-controls {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid mt-4">
+        <h1 class="text-center mb-4">Biathlon Head-to-Head Comparison</h1>
+        
+        <!-- Skier Selection -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h3>Select First Skier</h3>
+                <div class="mb-3">
+                    <label class="form-label">Gender:</label>
+                    <select id="gender1" class="form-select">
+                        <option value="M">Men</option>
+                        <option value="L">Ladies</option>
+                    </select>
+                </div>
+                <input type="text" id="search1" class="search-box" placeholder="Search skiers...">
+                <div id="skierList1" class="skier-select"></div>
+                <div id="selected1" class="mt-2">
+                    <strong>Selected: </strong><span id="selectedName1">None</span>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <h3>Select Second Skier</h3>
+                <div class="mb-3">
+                    <label class="form-label">Gender:</label>
+                    <select id="gender2" class="form-select">
+                        <option value="M">Men</option>
+                        <option value="L">Ladies</option>
+                    </select>
+                </div>
+                <input type="text" id="search2" class="search-box" placeholder="Search skiers...">
+                <div id="skierList2" class="skier-select"></div>
+                <div id="selected2" class="mt-2">
+                    <strong>Selected: </strong><span id="selectedName2">None</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mb-4">
+            <button id="compareBtn" class="btn btn-primary btn-lg" disabled>Compare Skiers</button>
+        </div>
+        
+        <div class="loading">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>Analyzing head-to-head matchups...</p>
+        </div>
+        
+        <!-- Comparison Results -->
+        <div id="comparisonResults" class="comparison-section">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="text-center mb-4">
+                        <span id="skier1Name"></span> vs <span id="skier2Name"></span>
+                    </h2>
+                </div>
+            </div>
+            
+            <!-- Summary Stats -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Head-to-Head Summary</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped stats-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th id="skier1Header"></th>
+                                        <th id="skier2Header"></th>
+                                        <th>Total Matchups</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="statsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chart Controls -->
+            <div class="filter-controls">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Event Type:</label>
+                        <select id="eventTypeFilter" class="form-select">
+                            <option value="all">All Events</option>
+                            <option value="sprint">Sprint</option>
+                            <option value="pursuit">Pursuit</option>
+                            <option value="individual">Individual</option>
+                            <option value="mass_start">Mass Start</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">X-Axis:</label>
+                        <select id="xAxisFilter" class="form-select">
+                            <option value="race">Race Number</option>
+                            <option value="date">Date</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Chart Type:</label>
+                        <select id="chartTypeFilter" class="form-select">
+                            <option value="cumulative">Cumulative Win Difference</option>
+                            <option value="rolling">Rolling Average (5 races)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chart -->
+            <div class="chart-container">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class BiathlonHead2HeadComparison {
+            constructor() {
+                this.skierData = { M: {}, L: {} };
+                this.selectedSkiers = { 1: null, 2: null };
+                this.chartInstance = null;
+                this.currentMatchups = [];
+                
+                this.initializeEventListeners();
+                this.loadSkierData();
+            }
+            
+            initializeEventListeners() {
+                // Gender change listeners with auto-sync
+                document.getElementById('gender1').addEventListener('change', (e) => {
+                    const selectedGender = e.target.value;
+                    
+                    // Sync the second gender dropdown to match
+                    document.getElementById('gender2').value = selectedGender;
+                    
+                    // Update both skier lists
+                    this.loadSkierList(1, selectedGender);
+                    this.loadSkierList(2, selectedGender);
+                    
+                    // Clear selections
+                    this.selectedSkiers[1] = null;
+                    this.selectedSkiers[2] = null;
+                    this.updateSelectedDisplay(1);
+                    this.updateSelectedDisplay(2);
+                    this.updateCompareButton();
+                });
+                
+                document.getElementById('gender2').addEventListener('change', (e) => {
+                    const selectedGender = e.target.value;
+                    
+                    // Sync the first gender dropdown to match
+                    document.getElementById('gender1').value = selectedGender;
+                    
+                    // Update both skier lists
+                    this.loadSkierList(1, selectedGender);
+                    this.loadSkierList(2, selectedGender);
+                    
+                    // Clear selections
+                    this.selectedSkiers[1] = null;
+                    this.selectedSkiers[2] = null;
+                    this.updateSelectedDisplay(1);
+                    this.updateSelectedDisplay(2);
+                    this.updateCompareButton();
+                });
+                
+                // Search listeners
+                document.getElementById('search1').addEventListener('input', (e) => {
+                    this.filterSkierList(1, e.target.value);
+                });
+                
+                document.getElementById('search2').addEventListener('input', (e) => {
+                    this.filterSkierList(2, e.target.value);
+                });
+                
+                // Compare button
+                document.getElementById('compareBtn').addEventListener('click', () => {
+                    this.performComparison();
+                });
+                
+                // Chart filter listeners
+                document.getElementById('eventTypeFilter').addEventListener('change', () => {
+                    this.updateChart();
+                });
+                document.getElementById('xAxisFilter').addEventListener('change', () => {
+                    this.updateChart();
+                });
+                document.getElementById('chartTypeFilter').addEventListener('change', () => {
+                    this.updateChart();
+                });
+            }
+            
+            async loadSkierData() {
+                try {
+                    // Load skier names for both genders
+                    const [menResponse, ladiesResponse] = await Promise.all([
+                        fetch('/python/biathlon/excel365/M_all_ids.json'),
+                        fetch('/python/biathlon/excel365/L_all_ids.json')
+                    ]);
+                    
+                    this.skierData.M = await menResponse.json();
+                    this.skierData.L = await ladiesResponse.json();
+                    
+                    // Initialize with men's list for both sides
+                    this.loadSkierList(1, 'M');
+                    this.loadSkierList(2, 'M');
+                } catch (error) {
+                    console.error('Error loading skier data:', error);
+                    alert('Error loading skier data. Please refresh the page.');
+                }
+            }
+
+            parseDate(dateString) {
+                if (!dateString || dateString === 'Unknown' || dateString === 'null') return null;
+                
+                // Handle YYYYMMDD format
+                if (typeof dateString === 'string' && dateString.length === 8 && /^\d{8}$/.test(dateString)) {
+                    const year = parseInt(dateString.substring(0, 4));
+                    const month = parseInt(dateString.substring(4, 6));
+                    const day = parseInt(dateString.substring(6, 8));
+                    
+                    if (year >= 1900 && year <= 2100 && month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+                        return new Date(year, month - 1, day);
+                    }
+                }
+                
+                // Handle YYYY-MM-DD format
+                if (typeof dateString === 'string' && dateString.includes('-')) {
+                    const date = new Date(dateString);
+                    if (!isNaN(date.getTime())) {
+                        return date;
+                    }
+                }
+                
+                console.warn('Could not parse date:', dateString);
+                return null;
+            }
+            
+            loadSkierList(listNumber, gender) {
+                const listElement = document.getElementById(`skierList${listNumber}`);
+                const data = this.skierData[gender];
+                
+                listElement.innerHTML = '';
+                
+                Object.entries(data).forEach(([id, name]) => {
+                    const option = document.createElement('div');
+                    option.className = 'skier-option';
+                    option.textContent = name;
+                    option.dataset.id = id;
+                    option.dataset.name = name;
+                    option.dataset.gender = gender;
+                    
+                    option.addEventListener('click', () => {
+                        this.selectSkier(listNumber, { id, name, gender });
+                    });
+                    
+                    listElement.appendChild(option);
+                });
+            }
+            
+            filterSkierList(listNumber, searchTerm) {
+                const listElement = document.getElementById(`skierList${listNumber}`);
+                const options = listElement.querySelectorAll('.skier-option');
+                
+                options.forEach(option => {
+                    const name = option.textContent.toLowerCase();
+                    if (name.includes(searchTerm.toLowerCase())) {
+                        option.style.display = 'block';
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+            }
+            
+            selectSkier(listNumber, skier) {
+                // Clear previous selection
+                const listElement = document.getElementById(`skierList${listNumber}`);
+                listElement.querySelectorAll('.skier-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                // Select new skier
+                const selectedOption = listElement.querySelector(`[data-id="${skier.id}"]`);
+                if (selectedOption) {
+                    selectedOption.classList.add('selected');
+                }
+                
+                this.selectedSkiers[listNumber] = skier;
+                this.updateSelectedDisplay(listNumber);
+                this.updateCompareButton();
+            }
+            
+            updateSelectedDisplay(listNumber) {
+                const selectedElement = document.getElementById(`selectedName${listNumber}`);
+                const skier = this.selectedSkiers[listNumber];
+                selectedElement.textContent = skier ? skier.name : 'None';
+            }
+            
+            updateCompareButton() {
+                const button = document.getElementById('compareBtn');
+                const canCompare = this.selectedSkiers[1] && this.selectedSkiers[2];
+                button.disabled = !canCompare;
+            }
+            
+            async performComparison() {
+                const skier1 = this.selectedSkiers[1];
+                const skier2 = this.selectedSkiers[2];
+                
+                if (!skier1 || !skier2) return;
+                
+                document.querySelector('.loading').style.display = 'block';
+                document.getElementById('comparisonResults').style.display = 'none';
+                
+                try {
+                    // Load race data for both skiers
+                    const [data1, data2] = await Promise.all([
+                        this.loadSkierRaceData(skier1),
+                        this.loadSkierRaceData(skier2)
+                    ]);
+                    
+                    // Find head-to-head matchups
+                    const matchups = this.findHeadToHeadMatchups(data1, data2, skier1, skier2);
+                    this.currentMatchups = matchups;
+                    
+                    // Display results
+                    this.displayResults(skier1, skier2, matchups);
+                    
+                } catch (error) {
+                    console.error('Error performing comparison:', error);
+                    alert('Error loading race data. Please try again.');
+                } finally {
+                    document.querySelector('.loading').style.display = 'none';
+                }
+            }
+            
+            async loadSkierRaceData(skier) {
+                try {
+                    // Load the processed head-to-head data for the skier's gender
+                    const response = await fetch(`/python/biathlon/excel365/head2head/${skier.gender}_head2head_data.json`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch head-to-head data: ${response.status}`);
+                    }
+                    
+                    const allSkiersData = await response.json();
+                    
+                    // Get this skier's race data
+                    const skierRaceData = allSkiersData[skier.id];
+                    
+                    if (!skierRaceData) {
+                        console.warn(`No race data found for skier ID ${skier.id}`);
+                        return [];
+                    }
+                    
+                    return skierRaceData;
+                    
+                } catch (error) {
+                    console.error('Error loading skier race data:', error);
+                    throw error;
+                }
+            }
+            
+            findHeadToHeadMatchups(data1, data2, skier1, skier2) {
+                const matchups = [];
+                
+                data1.forEach(race1 => {
+                    // Skip if place is null/undefined
+                    if (race1.place === null || race1.place === undefined) return;
+                    
+                    const matchingRace = data2.find(race2 => 
+                        race2.season === race1.season && 
+                        race2.race === race1.race &&
+                        race2.place !== null && 
+                        race2.place !== undefined
+                    );
+                    
+                    if (matchingRace) {
+                        const matchup = {
+                            season: race1.season,
+                            race: race1.race,
+                            date: race1.date,
+                            city: race1.city,
+                            country: race1.country,
+                            event: race1.event,
+                            skier1: {
+                                place: race1.place,
+                                elo: race1.elo,
+                                name: skier1.name
+                            },
+                            skier2: {
+                                place: matchingRace.place,
+                                elo: matchingRace.elo,
+                                name: skier2.name
+                            }
+                        };
+                        
+                        // Determine winner (lower place is better)
+                        matchup.winner = matchup.skier1.place < matchup.skier2.place ? 1 : 
+                                        matchup.skier2.place < matchup.skier1.place ? 2 : 0; // 0 for tie
+                        
+                        matchups.push(matchup);
+                    }
+                });
+                
+                return matchups.sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+            
+            displayResults(skier1, skier2, matchups) {
+                // Update headers
+                document.getElementById('skier1Name').textContent = skier1.name;
+                document.getElementById('skier2Name').textContent = skier2.name;
+                document.getElementById('skier1Header').textContent = skier1.name;
+                document.getElementById('skier2Header').textContent = skier2.name;
+                
+                // Calculate statistics
+                const stats = this.calculateStatistics(matchups);
+                
+                // Display statistics table
+                this.displayStatsTable(stats);
+                
+                // Show results section
+                document.getElementById('comparisonResults').style.display = 'block';
+                
+                // Initialize chart
+                this.updateChart();
+            }
+            
+            calculateStatistics(matchups) {
+                const stats = {
+                    total: { skier1: 0, skier2: 0, total: matchups.length },
+                    sprint: { skier1: 0, skier2: 0, total: 0 },
+                    pursuit: { skier1: 0, skier2: 0, total: 0 },
+                    individual: { skier1: 0, skier2: 0, total: 0 },
+                    mass_start: { skier1: 0, skier2: 0, total: 0 }
+                };
+                
+                matchups.forEach((matchup) => {
+                    if (matchup.winner === 1) stats.total.skier1++;
+                    else if (matchup.winner === 2) stats.total.skier2++;
+                    
+                    // Normalize event name for comparison
+                    const event = String(matchup.event || '').toLowerCase().trim();
+                    
+                    // Determine event type
+                    const isSprint = event === 'sprint' || event.includes('sprint');
+                    const isPursuit = event === 'pursuit' || event.includes('pursuit');
+                    const isIndividual = event === 'individual' || event.includes('individual');
+                    const isMassStart = event === 'mass start' || event === 'mass_start' || event.includes('mass');
+                    
+                    // Helper function to update stats
+                    const updateStats = (category) => {
+                        stats[category].total++;
+                        if (matchup.winner === 1) stats[category].skier1++;
+                        else if (matchup.winner === 2) stats[category].skier2++;
+                    };
+                    
+                    // Update specific event stats
+                    if (isSprint) updateStats('sprint');
+                    if (isPursuit) updateStats('pursuit');
+                    if (isIndividual) updateStats('individual');
+                    if (isMassStart) updateStats('mass_start');
+                });
+                
+                return stats;
+            }
+            
+            displayStatsTable(stats) {
+                const tbody = document.getElementById('statsTableBody');
+                tbody.innerHTML = '';
+                
+                const categories = [
+                    { key: 'total', label: 'Total Head-to-Head' },
+                    { key: 'sprint', label: 'Sprint' },
+                    { key: 'pursuit', label: 'Pursuit' },
+                    { key: 'individual', label: 'Individual' },
+                    { key: 'mass_start', label: 'Mass Start' }
+                ];
+                
+                categories.forEach(category => {
+                    const stat = stats[category.key];
+                    if (stat.total > 0) {
+                        const row = tbody.insertRow();
+                        
+                        const labelCell = row.insertCell();
+                        labelCell.textContent = category.label;
+                        
+                        const skier1Cell = row.insertCell();
+                        skier1Cell.textContent = stat.skier1;
+                        if (stat.skier1 > stat.skier2) skier1Cell.classList.add('winner');
+                        
+                        const skier2Cell = row.insertCell();
+                        skier2Cell.textContent = stat.skier2;
+                        if (stat.skier2 > stat.skier1) skier2Cell.classList.add('winner');
+                        
+                        const totalCell = row.insertCell();
+                        totalCell.textContent = stat.total;
+                    }
+                });
+            }
+            
+            updateChart() {
+                if (this.currentMatchups.length === 0) return;
+                
+                const eventTypeFilter = document.getElementById('eventTypeFilter').value;
+                const xAxisFilter = document.getElementById('xAxisFilter').value;
+                const chartTypeFilter = document.getElementById('chartTypeFilter').value;
+                
+                // Filter matchups based on event type
+                let filteredMatchups = this.filterMatchupsByType(this.currentMatchups, eventTypeFilter);
+                
+                if (filteredMatchups.length === 0) {
+                    // Clear chart if no data
+                    if (this.chartInstance) {
+                        this.chartInstance.destroy();
+                        this.chartInstance = null;
+                    }
+                    return;
+                }
+                
+                // Prepare chart data
+                const chartData = this.prepareChartData(filteredMatchups, xAxisFilter, chartTypeFilter);
+                
+                // Create or update chart
+                this.createChart(chartData, xAxisFilter, chartTypeFilter);
+            }
+            
+            filterMatchupsByType(matchups, eventType) {
+                if (eventType === 'all') return matchups;
+                
+                return matchups.filter(matchup => {
+                    const event = String(matchup.event || '').toLowerCase().trim();
+                    
+                    const isSprint = event === 'sprint' || event.includes('sprint');
+                    const isPursuit = event === 'pursuit' || event.includes('pursuit');
+                    const isIndividual = event === 'individual' || event.includes('individual');
+                    const isMassStart = event === 'mass start' || event === 'mass_start' || event.includes('mass');
+                    
+                    switch (eventType) {
+                        case 'sprint': return isSprint;
+                        case 'pursuit': return isPursuit;
+                        case 'individual': return isIndividual;
+                        case 'mass_start': return isMassStart;
+                        default: return true;
+                    }
+                });
+            }
+            
+            prepareChartData(matchups, xAxis, chartType) {
+                const data = [];
+                let cumulativeDiff = 0;
+                const windowSize = 5;
+                
+                matchups.forEach((matchup, index) => {
+                    const winDiff = matchup.winner === 1 ? 1 : matchup.winner === 2 ? -1 : 0;
+                    cumulativeDiff += winDiff;
+                    
+                    let yValue;
+                    if (chartType === 'cumulative') {
+                        yValue = cumulativeDiff;
+                    } else if (chartType === 'rolling') {
+                        const start = Math.max(0, index - windowSize + 1);
+                        const window = matchups.slice(start, index + 1);
+                        const wins = window.reduce((sum, m) => sum + (m.winner === 1 ? 1 : m.winner === 2 ? -1 : 0), 0);
+                        yValue = wins / window.length;
+                    }
+                    
+                    let xValue;
+                    if (xAxis === 'date') {
+                        xValue = this.parseDate(matchup.date);
+                    } else {
+                        xValue = `S${matchup.season}R${matchup.race}`;
+                    }
+                    
+                    data.push({
+                        x: xValue,
+                        y: yValue,
+                        matchup: matchup
+                    });
+                });
+                
+                return data;
+            }
+            
+            createChart(data, xAxis, chartType) {
+                const ctx = document.getElementById('comparisonChart').getContext('2d');
+                
+                // More robust chart destruction
+                if (this.chartInstance) {
+                    try {
+                        this.chartInstance.destroy();
+                    } catch (error) {
+                        console.warn('Error destroying previous chart:', error);
+                    }
+                    this.chartInstance = null;
+                }
+                
+                // Clear the canvas manually to ensure clean state
+                const canvas = document.getElementById('comparisonChart');
+                canvas.width = canvas.width; // This clears the canvas
+                
+                const skier1Name = this.selectedSkiers[1].name;
+                const skier2Name = this.selectedSkiers[2].name;
+                
+                // Filter out data points with null x values (invalid dates)
+                const validData = data.filter(d => d.x !== null);
+                
+                if (validData.length === 0) {
+                    console.warn('No valid data points for chart');
+                    return;
+                }
+                
+                // For date axis, convert dates properly and don't use time scale (problematic without adapter)
+                if (xAxis === 'date') {
+                    // Convert dates to readable strings for category axis
+                    validData.forEach(point => {
+                        if (point.x instanceof Date) {
+                            point.x = point.x.toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'short', 
+                                day: 'numeric' 
+                            });
+                        } else if (typeof point.x === 'string' && point.x.length === 8) {
+                            // Convert YYYYMMDD to readable format
+                            const year = point.x.substring(0, 4);
+                            const month = point.x.substring(4, 6);
+                            const day = point.x.substring(6, 8);
+                            const date = new Date(year, parseInt(month) - 1, parseInt(day));
+                            point.x = date.toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'short', 
+                                day: 'numeric' 
+                            });
+                        }
+                    });
+                }
+                
+                const chartConfig = {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            label: `${skier1Name} vs ${skier2Name}`,
+                            data: validData,
+                            borderColor: '#007bff',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            fill: true,
+                            tension: 0.2
+                        }, {
+                            label: 'Zero Line',
+                            data: validData.map(d => ({ x: d.x, y: 0 })),
+                            borderColor: '#6c757d',
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        scales: {
+                            x: {
+                                type: 'category', // Always use category to avoid date adapter issues
+                                title: {
+                                    display: true,
+                                    text: xAxis === 'date' ? 'Date' : 'Race'
+                                },
+                                ticks: {
+                                    maxTicksLimit: 10, // Limit number of ticks for readability
+                                    autoSkip: true
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: chartType === 'cumulative' ? 
+                                        `Cumulative Win Difference (+ favors ${skier1Name})` : 
+                                        `Rolling Average Win Rate (+ favors ${skier1Name})`
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                filter: function(tooltipItem) {
+                                    // Only show tooltip if we have matchup data
+                                    return tooltipItem.raw && tooltipItem.raw.matchup;
+                                },
+                                callbacks: {
+                                    title: function(context) {
+                                        const item = Array.isArray(context) ? context[0] : context;
+                                        if (!item || !item.raw || !item.raw.matchup) {
+                                            return '';
+                                        }
+                                        const matchup = item.raw.matchup;
+                                        return `${matchup.city}, ${matchup.country} (${matchup.date})`;
+                                    },
+                                    label: function(context) {
+                                        const item = Array.isArray(context) ? context[0] : context;
+                                        if (!item || !item.raw || !item.raw.matchup) {
+                                            return [];
+                                        }
+                                        
+                                        const matchup = item.raw.matchup;
+                                        return [
+                                            `${matchup.skier1.name}: Place ${matchup.skier1.place}`,
+                                            `${matchup.skier2.name}: Place ${matchup.skier2.place}`,
+                                            `Winner: ${matchup.winner === 1 ? matchup.skier1.name : 
+                                                      matchup.winner === 2 ? matchup.skier2.name : 'Tie'}`,
+                                            `Event: ${matchup.event}`
+                                        ];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+                
+                try {
+                    // Add a small delay to ensure canvas is ready
+                    setTimeout(() => {
+                        try {
+                            this.chartInstance = new Chart(ctx, chartConfig);
+                        } catch (error) {
+                            console.error('Error creating chart after timeout:', error);
+                        }
+                    }, 50);
+                } catch (error) {
+                    console.error('Error creating chart:', error);
+                }
+            }
+        }
+        
+        // Initialize the comparison tool
+        document.addEventListener('DOMContentLoaded', function() {
+            new BiathlonHead2HeadComparison();
+        });
+    </script>
+</body>
+</html>

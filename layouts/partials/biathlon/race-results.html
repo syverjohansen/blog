@@ -1,0 +1,242 @@
+<div id="raceResults">
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold mb-4" id="raceTitle"></h1>
+        <div id="raceInfo" class="text-xl text-gray-600"></div>
+    </div>
+
+    <div id="loading" class="text-center py-8">
+        <p class="text-lg text-gray-600">Loading race results...</p>
+    </div>
+
+    <div id="contentArea" class="hidden">
+        <!-- Leaderboards Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Most Improved -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-bold mb-4">Most Improved</h2>
+                <div id="mostImproved" class="space-y-2"></div>
+            </div>
+
+            <!-- Biggest Drops -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-bold mb-4">Biggest Drops</h2>
+                <div id="biggestDrops" class="space-y-2"></div>
+            </div>
+
+            <!-- Top Countries -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-bold mb-4">Top Countries</h2>
+                <div id="topCountries" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- Results Table -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="px-6 py-3 text-left">Place</th>
+                        <th class="px-6 py-3 text-left">Name</th>
+                        <th class="px-6 py-3 text-left">Nation</th>
+                        <th class="px-6 py-3 text-left">Previous Elo</th>
+                        <th class="px-6 py-3 text-left">New Elo</th>
+                        <th class="px-6 py-3 text-left">Change</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsList"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const year = urlParams.get('year');
+            const raceNumber = urlParams.get('race');
+            const gender = urlParams.get('gender');
+            const returnTo = urlParams.get('returnTo') || '';
+            
+            const genderLabel = gender === 'L' ? 'Ladies' : 'Men';
+            document.getElementById('raceTitle').textContent = `${genderLabel} Race #${raceNumber} (${year})`;
+
+            try {
+                // First, get race info from summary file - using your existing structure
+                const summaryResponse = await fetch(`/python/biathlon/excel365/${gender}/${year}/summary.json`);
+                
+                if (!summaryResponse.ok) {
+                    throw new Error(`Failed to fetch race summary: ${summaryResponse.status}`);
+                }
+                
+                const summaryData = await summaryResponse.json();
+                const raceInfo = summaryData.find(race => race.race_number == raceNumber);
+                
+                if (raceInfo) {
+                    document.getElementById('raceInfo').innerHTML = `
+                        <p>${new Date(raceInfo.date).toLocaleDateString()}</p>
+                        <p>${raceInfo.city}, ${raceInfo.country}</p>
+                        <p>${raceInfo.distance} - ${raceInfo.technique}</p>
+                    `;
+                }
+                
+                // Now get detailed race results - using your existing structure
+                const resultsResponse = await fetch(`/python/biathlon/excel365/${gender}/${year}/race_${raceNumber}.json`);
+                
+                if (!resultsResponse.ok) {
+                    throw new Error(`Failed to fetch race results: ${resultsResponse.status}`);
+                }
+                
+                const resultsData = await resultsResponse.json();
+                
+                // Hide loading and show content
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('contentArea').classList.remove('hidden');
+                
+                // Calculate and display leaderboards
+                displayLeaderboards(resultsData, raceNumber === "0");
+                
+                // Display full results table
+                displayResults(resultsData, gender);
+                
+                // Add back button if returnTo is specified
+                if (returnTo) {
+                    const backButton = document.createElement('div');
+                    backButton.className = 'mt-8 mb-4';
+                    backButton.innerHTML = `
+                        <a href="/biathlon/races/season/?year=${year}#${returnTo}" class="text-blue-600 hover:text-blue-800">
+                            &larr; Back to ${year} Season
+                        </a>
+                    `;
+                    document.getElementById('contentArea').appendChild(backButton);
+                }
+            } catch (error) {
+                console.error('Error loading race data:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4">
+                        <p>Error loading race results: ${error.message}</p>
+                        <p class="mt-2">
+                            <a href="/biathlon/races/season/?year=${year}" class="text-blue-600 hover:text-blue-800">
+                                Back to season overview
+                            </a>
+                        </p>
+                    </div>
+                `;
+            }
+        });
+
+        function displayLeaderboards(results, isRaceZero) {
+            // Most Improved
+            const sortedByImprovement = [...results].sort((a, b) => (b.change) - (a.change));
+            displayTop5('mostImproved', sortedByImprovement.slice(0, 5), result => {
+                const change = result.change.toFixed(1);
+                return `${result.skier} (${result.nation}): +${change}`;
+            });
+
+            // Biggest Drops
+            const sortedByDrop = [...results].sort((a, b) => (a.change) - (b.change));
+            displayTop5('biggestDrops', sortedByDrop.slice(0, 5), result => {
+                const change = result.change.toFixed(1);
+                return `${result.skier} (${result.nation}): ${change}`;
+            });
+
+            // Top Countries
+            const countryStats = calculateCountryStats(results, isRaceZero);
+            const sortedCountries = Object.entries(countryStats)
+                .sort((a, b) => isRaceZero ? 
+                    // For Race 0, higher score (sum of Elos) is better
+                    b[1].score - a[1].score : 
+                    // For other races, lower score (sum of places) is better
+                    a[1].score - b[1].score)
+                .slice(0, 5);
+            
+            displayTop5('topCountries', sortedCountries, ([nation, stats]) => {
+                const score = isRaceZero ? 
+                    `${stats.score.toFixed(1)} pts` : 
+                    `${stats.score} places`;
+                return `${nation}: ${score} (${stats.skiers} skiers)`;
+            });
+        }
+
+        function calculateCountryStats(results, isRaceZero) {
+            const countries = {};
+            
+            // Group results by country
+            results.forEach(result => {
+                if (!countries[result.nation]) {
+                    countries[result.nation] = {
+                        results: [],
+                        score: 0,
+                        skiers: 0
+                    };
+                }
+                countries[result.nation].results.push(result);
+            });
+
+            // Calculate scores for each country
+            for (const country in countries) {
+                // Only process countries with at least 4 skiers
+                if (countries[country].results.length >= 4) {
+                    const sortedResults = countries[country].results.sort((a, b) => {
+                        if (isRaceZero) {
+                            return b.new_elo - a.new_elo; // Higher Elo is better
+                        }
+                        return a.place - b.place; // Lower place is better
+                    }).slice(0, 4); // Take top 4
+
+                    countries[country].skiers = sortedResults.length;
+                    countries[country].score = sortedResults.reduce((sum, result) => {
+                        return sum + (isRaceZero ? result.new_elo : result.place);
+                    }, 0);
+                } else {
+                    // Remove countries with fewer than 4 skiers
+                    delete countries[country];
+                }
+            }
+
+            return countries;
+        }
+
+        function displayTop5(elementId, items, formatFunction) {
+            const container = document.getElementById(elementId);
+            container.innerHTML = items.map((item, index) => `
+                <div class="flex justify-between items-center">
+                    <span class="font-semibold">#${index + 1}</span>
+                    <span class="flex-grow px-4">${formatFunction(item)}</span>
+                </div>
+            `).join('');
+        }
+        
+        function displayResults(results, gender) {
+            const resultsList = document.getElementById('resultsList');
+            
+            if (!results || results.length === 0) {
+                resultsList.innerHTML = `<tr><td colspan="6" class="text-center py-4">No results found for this race</td></tr>`;
+                return;
+            }
+            
+            // Sort by place
+            results.sort((a, b) => a.place - b.place);
+            
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                
+                const changeColor = result.change > 0 ? 'text-green-600' : 'text-red-600';
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4">${result.place}</td>
+                    <td class="px-6 py-4">
+                        <a href="/biathlon/skiers/skier/?id=${result.id}&gender=${gender}" 
+                           class="text-blue-600 hover:text-blue-800">
+                            ${result.skier}
+                        </a>
+                    </td>
+                    <td class="px-6 py-4">${result.nation}</td>
+                    <td class="px-6 py-4">${result.previous_elo.toFixed(1)}</td>
+                    <td class="px-6 py-4">${result.new_elo.toFixed(1)}</td>
+                    <td class="px-6 py-4 ${changeColor}">${result.change.toFixed(1)}</td>
+                `;
+                resultsList.appendChild(row);
+            });
+        }
+    </script>
+</div>

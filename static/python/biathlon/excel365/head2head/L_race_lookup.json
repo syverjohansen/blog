@@ -1,0 +1,7042 @@
+{
+  "1983_1": {
+    "season": 1983,
+    "race": 1,
+    "date": "1983-03-04",
+    "city": "Lappeenranta",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1983_2": {
+    "season": 1983,
+    "race": 2,
+    "date": "1983-03-05",
+    "city": "Lappeenranta",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1984_1": {
+    "season": 1984,
+    "race": 1,
+    "date": "1984-01-06",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1984_2": {
+    "season": 1984,
+    "race": 2,
+    "date": "1984-01-07",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "1984_3": {
+    "season": 1984,
+    "race": 3,
+    "date": "1984-01-19",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1984_4": {
+    "season": 1984,
+    "race": 4,
+    "date": "1984-01-21",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1984_5": {
+    "season": 1984,
+    "race": 5,
+    "date": "1984-02-29",
+    "city": "Chamonix",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1984_6": {
+    "season": 1984,
+    "race": 6,
+    "date": "1984-03-03",
+    "city": "Chamonix",
+    "country": "France",
+    "event": "Sprint"
+  },
+  "1984_8": {
+    "season": 1984,
+    "race": 8,
+    "date": "1984-03-10",
+    "city": "Lygna",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1984_9": {
+    "season": 1984,
+    "race": 9,
+    "date": "1984-03-11",
+    "city": "Lygna",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1985_1": {
+    "season": 1985,
+    "race": 1,
+    "date": "1985-01-09",
+    "city": "Minsk-Raubichi",
+    "country": "Belarus",
+    "event": "Individual"
+  },
+  "1985_2": {
+    "season": 1985,
+    "race": 2,
+    "date": "1985-01-11",
+    "city": "Minsk-Raubichi",
+    "country": "Belarus",
+    "event": "Sprint"
+  },
+  "1985_3": {
+    "season": 1985,
+    "race": 3,
+    "date": "1985-01-26",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1985_4": {
+    "season": 1985,
+    "race": 4,
+    "date": "1985-02-21",
+    "city": "Egg am Etzel",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1985_5": {
+    "season": 1985,
+    "race": 5,
+    "date": "1985-02-23",
+    "city": "Egg am Etzel",
+    "country": "Switzerland",
+    "event": "Sprint"
+  },
+  "1985_7": {
+    "season": 1985,
+    "race": 7,
+    "date": "1985-03-01",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1985_8": {
+    "season": 1985,
+    "race": 8,
+    "date": "1985-03-03",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1986_1": {
+    "season": 1986,
+    "race": 1,
+    "date": "1986-02-14",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1986_2": {
+    "season": 1986,
+    "race": 2,
+    "date": "1986-02-15",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "1987_1": {
+    "season": 1987,
+    "race": 1,
+    "date": "1987-02-25",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1987_2": {
+    "season": 1987,
+    "race": 2,
+    "date": "1987-02-27",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1988_1": {
+    "season": 1988,
+    "race": 1,
+    "date": "1987-12-17",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1988_2": {
+    "season": 1988,
+    "race": 2,
+    "date": "1988-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1988_3": {
+    "season": 1988,
+    "race": 3,
+    "date": "1988-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1988_5": {
+    "season": 1988,
+    "race": 5,
+    "date": "1988-01-28",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1988_6": {
+    "season": 1988,
+    "race": 6,
+    "date": "1988-01-30",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1988_8": {
+    "season": 1988,
+    "race": 8,
+    "date": "1988-02-18",
+    "city": "Chamonix",
+    "country": "France",
+    "event": "Sprint"
+  },
+  "1988_10": {
+    "season": 1988,
+    "race": 10,
+    "date": "1988-02-20",
+    "city": "Chamonix",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1988_11": {
+    "season": 1988,
+    "race": 11,
+    "date": "1988-03-11",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1988_12": {
+    "season": 1988,
+    "race": 12,
+    "date": "1988-03-13",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1988_14": {
+    "season": 1988,
+    "race": 14,
+    "date": "1988-03-15",
+    "city": "Keuruu",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1988_15": {
+    "season": 1988,
+    "race": 15,
+    "date": "1988-03-18",
+    "city": "Jyv\u00e4skyl\u00e4",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1988_16": {
+    "season": 1988,
+    "race": 16,
+    "date": "1988-03-19",
+    "city": "Jyv\u00e4skyl\u00e4",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1989_1": {
+    "season": 1989,
+    "race": 1,
+    "date": "1988-12-15",
+    "city": "Les Saisies",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1989_2": {
+    "season": 1989,
+    "race": 2,
+    "date": "1988-12-17",
+    "city": "Les Saisies",
+    "country": "France",
+    "event": "Sprint"
+  },
+  "1989_3": {
+    "season": 1989,
+    "race": 3,
+    "date": "1988-12-18",
+    "city": "Les Saisies",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1989_4": {
+    "season": 1989,
+    "race": 4,
+    "date": "1989-01-19",
+    "city": "Borovetz",
+    "country": "Bulgaria",
+    "event": "Individual"
+  },
+  "1989_5": {
+    "season": 1989,
+    "race": 5,
+    "date": "1989-01-21",
+    "city": "Borovetz",
+    "country": "Bulgaria",
+    "event": "Sprint"
+  },
+  "1989_7": {
+    "season": 1989,
+    "race": 7,
+    "date": "1989-01-26",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1989_8": {
+    "season": 1989,
+    "race": 8,
+    "date": "1989-01-28",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1989_9": {
+    "season": 1989,
+    "race": 9,
+    "date": "1989-02-07",
+    "city": "Feistritz",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1989_10": {
+    "season": 1989,
+    "race": 10,
+    "date": "1989-02-09",
+    "city": "Feistritz",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1989_11": {
+    "season": 1989,
+    "race": 11,
+    "date": "1989-02-11",
+    "city": "Feistritz",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1989_13": {
+    "season": 1989,
+    "race": 13,
+    "date": "1989-03-02",
+    "city": "H\u00e4meenlinna",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1989_14": {
+    "season": 1989,
+    "race": 14,
+    "date": "1989-03-04",
+    "city": "H\u00e4meenlinna",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1989_15": {
+    "season": 1989,
+    "race": 15,
+    "date": "1989-03-05",
+    "city": "H\u00e4meenlinna",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1989_16": {
+    "season": 1989,
+    "race": 16,
+    "date": "1989-03-09",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1989_17": {
+    "season": 1989,
+    "race": 17,
+    "date": "1989-03-11",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "1989_18": {
+    "season": 1989,
+    "race": 18,
+    "date": "1989-03-16",
+    "city": "Steinkjer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1989_19": {
+    "season": 1989,
+    "race": 19,
+    "date": "1989-03-18",
+    "city": "Steinkjer",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1989_20": {
+    "season": 1989,
+    "race": 20,
+    "date": "1989-03-19",
+    "city": "Steinkjer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1990_1": {
+    "season": 1990,
+    "race": 1,
+    "date": "1989-12-14",
+    "city": "Obertauern",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1990_2": {
+    "season": 1990,
+    "race": 2,
+    "date": "1989-12-16",
+    "city": "Obertauern",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1990_3": {
+    "season": 1990,
+    "race": 3,
+    "date": "1990-01-19",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1990_4": {
+    "season": 1990,
+    "race": 4,
+    "date": "1990-01-20",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1990_6": {
+    "season": 1990,
+    "race": 6,
+    "date": "1990-01-25",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1990_7": {
+    "season": 1990,
+    "race": 7,
+    "date": "1990-01-27",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1990_9": {
+    "season": 1990,
+    "race": 9,
+    "date": "1990-02-01",
+    "city": "Walchsee",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1990_10": {
+    "season": 1990,
+    "race": 10,
+    "date": "1990-02-03",
+    "city": "Walchsee",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1990_12": {
+    "season": 1990,
+    "race": 12,
+    "date": "1990-02-20",
+    "city": "Minsk-Raubichi",
+    "country": "Belarus",
+    "event": "Individual"
+  },
+  "1990_13": {
+    "season": 1990,
+    "race": 13,
+    "date": "1990-03-08",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1990_14": {
+    "season": 1990,
+    "race": 14,
+    "date": "1990-03-10",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1990_16": {
+    "season": 1990,
+    "race": 16,
+    "date": "1990-03-15",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1990_17": {
+    "season": 1990,
+    "race": 17,
+    "date": "1990-03-17",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1990_18": {
+    "season": 1990,
+    "race": 18,
+    "date": "1990-03-18",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1991_1": {
+    "season": 1991,
+    "race": 1,
+    "date": "1990-12-13",
+    "city": "Les Saisies",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1991_2": {
+    "season": 1991,
+    "race": 2,
+    "date": "1990-12-15",
+    "city": "Les Saisies",
+    "country": "France",
+    "event": "Sprint"
+  },
+  "1991_4": {
+    "season": 1991,
+    "race": 4,
+    "date": "1991-01-17",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1991_5": {
+    "season": 1991,
+    "race": 5,
+    "date": "1991-01-19",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1991_6": {
+    "season": 1991,
+    "race": 6,
+    "date": "1991-01-20",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1991_7": {
+    "season": 1991,
+    "race": 7,
+    "date": "1991-01-24",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1991_8": {
+    "season": 1991,
+    "race": 8,
+    "date": "1991-01-26",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1991_10": {
+    "season": 1991,
+    "race": 10,
+    "date": "1991-01-31",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1991_11": {
+    "season": 1991,
+    "race": 11,
+    "date": "1991-02-02",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1991_13": {
+    "season": 1991,
+    "race": 13,
+    "date": "1991-02-19",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1991_14": {
+    "season": 1991,
+    "race": 14,
+    "date": "1991-02-21",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1991_16": {
+    "season": 1991,
+    "race": 16,
+    "date": "1991-02-24",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1991_17": {
+    "season": 1991,
+    "race": 17,
+    "date": "1991-03-07",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1991_18": {
+    "season": 1991,
+    "race": 18,
+    "date": "1991-03-09",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1991_20": {
+    "season": 1991,
+    "race": 20,
+    "date": "1991-03-14",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "1991_21": {
+    "season": 1991,
+    "race": 21,
+    "date": "1991-03-16",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Sprint"
+  },
+  "1991_22": {
+    "season": 1991,
+    "race": 22,
+    "date": "1991-03-17",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "1992_1": {
+    "season": 1992,
+    "race": 1,
+    "date": "1991-12-19",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1992_2": {
+    "season": 1992,
+    "race": 2,
+    "date": "1991-12-21",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1992_3": {
+    "season": 1992,
+    "race": 3,
+    "date": "1992-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1992_4": {
+    "season": 1992,
+    "race": 4,
+    "date": "1992-01-18",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1992_6": {
+    "season": 1992,
+    "race": 6,
+    "date": "1992-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1992_7": {
+    "season": 1992,
+    "race": 7,
+    "date": "1992-01-25",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1992_9": {
+    "season": 1992,
+    "race": 9,
+    "date": "1992-02-11",
+    "city": "Les Saisies",
+    "country": "France",
+    "event": "Sprint"
+  },
+  "1992_11": {
+    "season": 1992,
+    "race": 11,
+    "date": "1992-02-19",
+    "city": "Les Saisies",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1992_12": {
+    "season": 1992,
+    "race": 12,
+    "date": "1992-03-06",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1992_13": {
+    "season": 1992,
+    "race": 13,
+    "date": "1992-03-10",
+    "city": "Fagernes",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1992_14": {
+    "season": 1992,
+    "race": 14,
+    "date": "1992-03-12",
+    "city": "Fagernes",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1992_15": {
+    "season": 1992,
+    "race": 15,
+    "date": "1992-03-14",
+    "city": "Fagernes",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1992_17": {
+    "season": 1992,
+    "race": 17,
+    "date": "1992-03-19",
+    "city": "Novosibirsk",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "1992_18": {
+    "season": 1992,
+    "race": 18,
+    "date": "1992-03-21",
+    "city": "Novosibirsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "1992_19": {
+    "season": 1992,
+    "race": 19,
+    "date": "1992-03-22",
+    "city": "Novosibirsk",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "1993_1": {
+    "season": 1993,
+    "race": 1,
+    "date": "1992-12-17",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "1993_2": {
+    "season": 1993,
+    "race": 2,
+    "date": "1992-12-19",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "1993_4": {
+    "season": 1993,
+    "race": 4,
+    "date": "1993-01-15",
+    "city": "Val Ridanna",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1993_5": {
+    "season": 1993,
+    "race": 5,
+    "date": "1993-01-16",
+    "city": "Val Ridanna",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1993_7": {
+    "season": 1993,
+    "race": 7,
+    "date": "1993-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1993_8": {
+    "season": 1993,
+    "race": 8,
+    "date": "1993-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1993_10": {
+    "season": 1993,
+    "race": 10,
+    "date": "1993-02-09",
+    "city": "Borovetz",
+    "country": "Bulgaria",
+    "event": "Individual"
+  },
+  "1993_11": {
+    "season": 1993,
+    "race": 11,
+    "date": "1993-02-11",
+    "city": "Borovetz",
+    "country": "Bulgaria",
+    "event": "Individual"
+  },
+  "1993_12": {
+    "season": 1993,
+    "race": 12,
+    "date": "1993-02-13",
+    "city": "Borovetz",
+    "country": "Bulgaria",
+    "event": "Sprint"
+  },
+  "1993_14": {
+    "season": 1993,
+    "race": 14,
+    "date": "1993-03-04",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1993_15": {
+    "season": 1993,
+    "race": 15,
+    "date": "1993-03-06",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1993_17": {
+    "season": 1993,
+    "race": 17,
+    "date": "1993-03-11",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1993_18": {
+    "season": 1993,
+    "race": 18,
+    "date": "1993-03-13",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "1993_20": {
+    "season": 1993,
+    "race": 20,
+    "date": "1993-03-18",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1993_21": {
+    "season": 1993,
+    "race": 21,
+    "date": "1993-03-20",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1994_1": {
+    "season": 1994,
+    "race": 1,
+    "date": "1993-12-09",
+    "city": "Bad Gastein",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1994_2": {
+    "season": 1994,
+    "race": 2,
+    "date": "1993-12-11",
+    "city": "Bad Gastein",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1994_4": {
+    "season": 1994,
+    "race": 4,
+    "date": "1993-12-16",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "1994_5": {
+    "season": 1994,
+    "race": 5,
+    "date": "1993-12-18",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "1994_7": {
+    "season": 1994,
+    "race": 7,
+    "date": "1994-01-13",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1994_8": {
+    "season": 1994,
+    "race": 8,
+    "date": "1994-01-15",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1994_10": {
+    "season": 1994,
+    "race": 10,
+    "date": "1994-01-20",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1994_11": {
+    "season": 1994,
+    "race": 11,
+    "date": "1994-01-22",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1994_13": {
+    "season": 1994,
+    "race": 13,
+    "date": "1994-02-18",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1994_14": {
+    "season": 1994,
+    "race": 14,
+    "date": "1994-02-23",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1994_16": {
+    "season": 1994,
+    "race": 16,
+    "date": "1994-03-10",
+    "city": "Hinton",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "1994_17": {
+    "season": 1994,
+    "race": 17,
+    "date": "1994-03-12",
+    "city": "Hinton",
+    "country": "Canada",
+    "event": "Sprint"
+  },
+  "1994_19": {
+    "season": 1994,
+    "race": 19,
+    "date": "1994-03-15",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "1994_20": {
+    "season": 1994,
+    "race": 20,
+    "date": "1994-03-17",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "1994_21": {
+    "season": 1994,
+    "race": 21,
+    "date": "1994-03-19",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Sprint"
+  },
+  "1995_1": {
+    "season": 1995,
+    "race": 1,
+    "date": "1994-12-08",
+    "city": "Bad Gastein",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1995_2": {
+    "season": 1995,
+    "race": 2,
+    "date": "1994-12-10",
+    "city": "Bad Gastein",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1995_4": {
+    "season": 1995,
+    "race": 4,
+    "date": "1994-12-14",
+    "city": "Bad Gastein",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1995_5": {
+    "season": 1995,
+    "race": 5,
+    "date": "1994-12-16",
+    "city": "Bad Gastein",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1995_7": {
+    "season": 1995,
+    "race": 7,
+    "date": "1995-01-19",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1995_8": {
+    "season": 1995,
+    "race": 8,
+    "date": "1995-01-21",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1995_9": {
+    "season": 1995,
+    "race": 9,
+    "date": "1995-01-22",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1995_10": {
+    "season": 1995,
+    "race": 10,
+    "date": "1995-01-26",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1995_11": {
+    "season": 1995,
+    "race": 11,
+    "date": "1995-01-28",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1995_13": {
+    "season": 1995,
+    "race": 13,
+    "date": "1995-02-14",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1995_14": {
+    "season": 1995,
+    "race": 14,
+    "date": "1995-02-16",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1995_15": {
+    "season": 1995,
+    "race": 15,
+    "date": "1995-02-18",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1995_17": {
+    "season": 1995,
+    "race": 17,
+    "date": "1995-03-09",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1995_18": {
+    "season": 1995,
+    "race": 18,
+    "date": "1995-03-11",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1995_20": {
+    "season": 1995,
+    "race": 20,
+    "date": "1995-03-16",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1995_21": {
+    "season": 1995,
+    "race": 21,
+    "date": "1995-03-18",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1996_1": {
+    "season": 1996,
+    "race": 1,
+    "date": "1995-12-07",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1996_2": {
+    "season": 1996,
+    "race": 2,
+    "date": "1995-12-09",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "1996_4": {
+    "season": 1996,
+    "race": 4,
+    "date": "1995-12-14",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1996_5": {
+    "season": 1996,
+    "race": 5,
+    "date": "1995-12-16",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1996_7": {
+    "season": 1996,
+    "race": 7,
+    "date": "1996-01-11",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1996_8": {
+    "season": 1996,
+    "race": 8,
+    "date": "1996-01-13",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1996_10": {
+    "season": 1996,
+    "race": 10,
+    "date": "1996-01-18",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1996_11": {
+    "season": 1996,
+    "race": 11,
+    "date": "1996-01-20",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Sprint"
+  },
+  "1996_13": {
+    "season": 1996,
+    "race": 13,
+    "date": "1996-02-03",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1996_14": {
+    "season": 1996,
+    "race": 14,
+    "date": "1996-02-06",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1996_15": {
+    "season": 1996,
+    "race": 15,
+    "date": "1996-02-08",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1996_17": {
+    "season": 1996,
+    "race": 17,
+    "date": "1996-03-07",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "1996_18": {
+    "season": 1996,
+    "race": 18,
+    "date": "1996-03-09",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "1996_20": {
+    "season": 1996,
+    "race": 20,
+    "date": "1996-03-14",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1996_21": {
+    "season": 1996,
+    "race": 21,
+    "date": "1996-03-16",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1997_1": {
+    "season": 1997,
+    "race": 1,
+    "date": "1996-11-30",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1997_2": {
+    "season": 1997,
+    "race": 2,
+    "date": "1996-12-01",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "1997_3": {
+    "season": 1997,
+    "race": 3,
+    "date": "1996-12-05",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1997_4": {
+    "season": 1997,
+    "race": 4,
+    "date": "1996-12-07",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "1997_6": {
+    "season": 1997,
+    "race": 6,
+    "date": "1996-12-12",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1997_7": {
+    "season": 1997,
+    "race": 7,
+    "date": "1996-12-14",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "1997_9": {
+    "season": 1997,
+    "race": 9,
+    "date": "1997-01-04",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1997_10": {
+    "season": 1997,
+    "race": 10,
+    "date": "1997-01-05",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "1997_11": {
+    "season": 1997,
+    "race": 11,
+    "date": "1997-01-09",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1997_12": {
+    "season": 1997,
+    "race": 12,
+    "date": "1997-01-11",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1997_13": {
+    "season": 1997,
+    "race": 13,
+    "date": "1997-01-12",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1997_14": {
+    "season": 1997,
+    "race": 14,
+    "date": "1997-01-16",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1997_15": {
+    "season": 1997,
+    "race": 15,
+    "date": "1997-01-18",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1997_17": {
+    "season": 1997,
+    "race": 17,
+    "date": "1997-02-01",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Sprint"
+  },
+  "1997_18": {
+    "season": 1997,
+    "race": 18,
+    "date": "1997-02-02",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Pursuit"
+  },
+  "1997_19": {
+    "season": 1997,
+    "race": 19,
+    "date": "1997-02-04",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1997_20": {
+    "season": 1997,
+    "race": 20,
+    "date": "1997-02-06",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1997_22": {
+    "season": 1997,
+    "race": 22,
+    "date": "1997-03-06",
+    "city": "Nozawa Onsen",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "1997_23": {
+    "season": 1997,
+    "race": 23,
+    "date": "1997-03-08",
+    "city": "Nozawa Onsen",
+    "country": "Japan",
+    "event": "Sprint"
+  },
+  "1997_25": {
+    "season": 1997,
+    "race": 25,
+    "date": "1997-03-13",
+    "city": "Novosibirsk",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "1997_26": {
+    "season": 1997,
+    "race": 26,
+    "date": "1997-03-15",
+    "city": "Novosibirsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "1997_27": {
+    "season": 1997,
+    "race": 27,
+    "date": "1997-03-16",
+    "city": "Novosibirsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "1998_1": {
+    "season": 1998,
+    "race": 1,
+    "date": "1997-12-06",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1998_2": {
+    "season": 1998,
+    "race": 2,
+    "date": "1997-12-07",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "1998_3": {
+    "season": 1998,
+    "race": 3,
+    "date": "1997-12-11",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1998_4": {
+    "season": 1998,
+    "race": 4,
+    "date": "1997-12-13",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "1998_6": {
+    "season": 1998,
+    "race": 6,
+    "date": "1997-12-18",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1998_7": {
+    "season": 1998,
+    "race": 7,
+    "date": "1997-12-20",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "1998_9": {
+    "season": 1998,
+    "race": 9,
+    "date": "1998-01-08",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1998_10": {
+    "season": 1998,
+    "race": 10,
+    "date": "1998-01-10",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1998_12": {
+    "season": 1998,
+    "race": 12,
+    "date": "1998-01-15",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1998_13": {
+    "season": 1998,
+    "race": 13,
+    "date": "1998-01-17",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1998_15": {
+    "season": 1998,
+    "race": 15,
+    "date": "1998-02-09",
+    "city": "Nozawa Onsen",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "1998_16": {
+    "season": 1998,
+    "race": 16,
+    "date": "1998-02-15",
+    "city": "Nozawa Onsen",
+    "country": "Japan",
+    "event": "Sprint"
+  },
+  "1998_18": {
+    "season": 1998,
+    "race": 18,
+    "date": "1998-03-03",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "1998_19": {
+    "season": 1998,
+    "race": 19,
+    "date": "1998-03-05",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "1998_20": {
+    "season": 1998,
+    "race": 20,
+    "date": "1998-03-07",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "1998_21": {
+    "season": 1998,
+    "race": 21,
+    "date": "1998-03-08",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "1998_22": {
+    "season": 1998,
+    "race": 22,
+    "date": "1998-03-12",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1998_23": {
+    "season": 1998,
+    "race": 23,
+    "date": "1998-03-14",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1998_24": {
+    "season": 1998,
+    "race": 24,
+    "date": "1998-03-15",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1999_1": {
+    "season": 1999,
+    "race": 1,
+    "date": "1998-12-11",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1999_2": {
+    "season": 1999,
+    "race": 2,
+    "date": "1998-12-12",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "1999_3": {
+    "season": 1999,
+    "race": 3,
+    "date": "1998-12-13",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1999_4": {
+    "season": 1999,
+    "race": 4,
+    "date": "1998-12-16",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1999_6": {
+    "season": 1999,
+    "race": 6,
+    "date": "1998-12-19",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Sprint"
+  },
+  "1999_7": {
+    "season": 1999,
+    "race": 7,
+    "date": "1998-12-20",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Pursuit"
+  },
+  "1999_8": {
+    "season": 1999,
+    "race": 8,
+    "date": "1999-01-08",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1999_9": {
+    "season": 1999,
+    "race": 9,
+    "date": "1999-01-09",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "1999_11": {
+    "season": 1999,
+    "race": 11,
+    "date": "1999-01-13",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "1999_13": {
+    "season": 1999,
+    "race": 13,
+    "date": "1999-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1999_14": {
+    "season": 1999,
+    "race": 14,
+    "date": "1999-01-17",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "1999_15": {
+    "season": 1999,
+    "race": 15,
+    "date": "1999-01-22",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "1999_16": {
+    "season": 1999,
+    "race": 16,
+    "date": "1999-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "1999_18": {
+    "season": 1999,
+    "race": 18,
+    "date": "1999-02-12",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1999_19": {
+    "season": 1999,
+    "race": 19,
+    "date": "1999-02-13",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "1999_21": {
+    "season": 1999,
+    "race": 21,
+    "date": "1999-02-25",
+    "city": "Lake Placid NY",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "1999_22": {
+    "season": 1999,
+    "race": 22,
+    "date": "1999-02-27",
+    "city": "Lake Placid NY",
+    "country": "USA",
+    "event": "Pursuit"
+  },
+  "1999_24": {
+    "season": 1999,
+    "race": 24,
+    "date": "1999-03-05",
+    "city": "Val Cartier",
+    "country": "Canada",
+    "event": "Sprint"
+  },
+  "1999_25": {
+    "season": 1999,
+    "race": 25,
+    "date": "1999-03-06",
+    "city": "Val Cartier",
+    "country": "Canada",
+    "event": "Pursuit"
+  },
+  "1999_26": {
+    "season": 1999,
+    "race": 26,
+    "date": "1999-03-11",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1999_27": {
+    "season": 1999,
+    "race": 27,
+    "date": "1999-03-12",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1999_28": {
+    "season": 1999,
+    "race": 28,
+    "date": "1999-03-13",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "1999_29": {
+    "season": 1999,
+    "race": 29,
+    "date": "1999-03-14",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2000_1": {
+    "season": 2000,
+    "race": 1,
+    "date": "1999-12-03",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2000_2": {
+    "season": 2000,
+    "race": 2,
+    "date": "1999-12-04",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2000_4": {
+    "season": 2000,
+    "race": 4,
+    "date": "1999-12-09",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2000_5": {
+    "season": 2000,
+    "race": 5,
+    "date": "1999-12-10",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2000_7": {
+    "season": 2000,
+    "race": 7,
+    "date": "1999-12-16",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2000_8": {
+    "season": 2000,
+    "race": 8,
+    "date": "1999-12-18",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2000_9": {
+    "season": 2000,
+    "race": 9,
+    "date": "1999-12-19",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2000_10": {
+    "season": 2000,
+    "race": 10,
+    "date": "2000-01-05",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2000_11": {
+    "season": 2000,
+    "race": 11,
+    "date": "2000-01-07",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2000_13": {
+    "season": 2000,
+    "race": 13,
+    "date": "2000-01-12",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2000_15": {
+    "season": 2000,
+    "race": 15,
+    "date": "2000-01-15",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2000_16": {
+    "season": 2000,
+    "race": 16,
+    "date": "2000-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2000_17": {
+    "season": 2000,
+    "race": 17,
+    "date": "2000-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2000_18": {
+    "season": 2000,
+    "race": 18,
+    "date": "2000-01-22",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2000_20": {
+    "season": 2000,
+    "race": 20,
+    "date": "2000-02-12",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2000_21": {
+    "season": 2000,
+    "race": 21,
+    "date": "2000-02-13",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2000_22": {
+    "season": 2000,
+    "race": 22,
+    "date": "2000-02-19",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2000_23": {
+    "season": 2000,
+    "race": 23,
+    "date": "2000-02-20",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2000_24": {
+    "season": 2000,
+    "race": 24,
+    "date": "2000-02-22",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2000_26": {
+    "season": 2000,
+    "race": 26,
+    "date": "2000-02-26",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2000_27": {
+    "season": 2000,
+    "race": 27,
+    "date": "2000-03-09",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2000_29": {
+    "season": 2000,
+    "race": 29,
+    "date": "2000-03-12",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2000_30": {
+    "season": 2000,
+    "race": 30,
+    "date": "2000-03-16",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2000_31": {
+    "season": 2000,
+    "race": 31,
+    "date": "2000-03-18",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2000_32": {
+    "season": 2000,
+    "race": 32,
+    "date": "2000-03-19",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2001_1": {
+    "season": 2001,
+    "race": 1,
+    "date": "2000-11-30",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2001_2": {
+    "season": 2001,
+    "race": 2,
+    "date": "2000-12-01",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2001_4": {
+    "season": 2001,
+    "race": 4,
+    "date": "2000-12-07",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2001_5": {
+    "season": 2001,
+    "race": 5,
+    "date": "2000-12-08",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2001_7": {
+    "season": 2001,
+    "race": 7,
+    "date": "2000-12-14",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2001_8": {
+    "season": 2001,
+    "race": 8,
+    "date": "2000-12-16",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2001_9": {
+    "season": 2001,
+    "race": 9,
+    "date": "2000-12-17",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2001_10": {
+    "season": 2001,
+    "race": 10,
+    "date": "2001-01-05",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2001_11": {
+    "season": 2001,
+    "race": 11,
+    "date": "2001-01-06",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2001_12": {
+    "season": 2001,
+    "race": 12,
+    "date": "2001-01-07",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2001_14": {
+    "season": 2001,
+    "race": 14,
+    "date": "2001-01-13",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2001_15": {
+    "season": 2001,
+    "race": 15,
+    "date": "2001-01-14",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2001_16": {
+    "season": 2001,
+    "race": 16,
+    "date": "2001-01-18",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2001_18": {
+    "season": 2001,
+    "race": 18,
+    "date": "2001-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2001_19": {
+    "season": 2001,
+    "race": 19,
+    "date": "2001-02-03",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2001_20": {
+    "season": 2001,
+    "race": 20,
+    "date": "2001-02-04",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2001_21": {
+    "season": 2001,
+    "race": 21,
+    "date": "2001-02-06",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2001_22": {
+    "season": 2001,
+    "race": 22,
+    "date": "2001-02-09",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2001_24": {
+    "season": 2001,
+    "race": 24,
+    "date": "2001-02-28",
+    "city": "Soldier Hollow UT",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "2001_25": {
+    "season": 2001,
+    "race": 25,
+    "date": "2001-03-02",
+    "city": "Soldier Hollow UT",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2001_26": {
+    "season": 2001,
+    "race": 26,
+    "date": "2001-03-03",
+    "city": "Soldier Hollow UT",
+    "country": "USA",
+    "event": "Pursuit"
+  },
+  "2001_27": {
+    "season": 2001,
+    "race": 27,
+    "date": "2001-03-07",
+    "city": "Lake Placid NY",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2001_28": {
+    "season": 2001,
+    "race": 28,
+    "date": "2001-03-16",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2001_29": {
+    "season": 2001,
+    "race": 29,
+    "date": "2001-03-17",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2001_30": {
+    "season": 2001,
+    "race": 30,
+    "date": "2001-03-18",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2002_1": {
+    "season": 2002,
+    "race": 1,
+    "date": "2001-12-06",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2002_3": {
+    "season": 2002,
+    "race": 3,
+    "date": "2001-12-09",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2002_4": {
+    "season": 2002,
+    "race": 4,
+    "date": "2001-12-12",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2002_6": {
+    "season": 2002,
+    "race": 6,
+    "date": "2001-12-16",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2002_7": {
+    "season": 2002,
+    "race": 7,
+    "date": "2001-12-20",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "2002_8": {
+    "season": 2002,
+    "race": 8,
+    "date": "2001-12-21",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Sprint"
+  },
+  "2002_9": {
+    "season": 2002,
+    "race": 9,
+    "date": "2001-12-22",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Mass Start"
+  },
+  "2002_10": {
+    "season": 2002,
+    "race": 10,
+    "date": "2002-01-10",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2002_11": {
+    "season": 2002,
+    "race": 11,
+    "date": "2002-01-11",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2002_12": {
+    "season": 2002,
+    "race": 12,
+    "date": "2002-01-13",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2002_14": {
+    "season": 2002,
+    "race": 14,
+    "date": "2002-01-19",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2002_15": {
+    "season": 2002,
+    "race": 15,
+    "date": "2002-01-20",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2002_16": {
+    "season": 2002,
+    "race": 16,
+    "date": "2002-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2002_18": {
+    "season": 2002,
+    "race": 18,
+    "date": "2002-01-27",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2002_19": {
+    "season": 2002,
+    "race": 19,
+    "date": "2002-02-11",
+    "city": "Soldier Hollow UT",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "2002_20": {
+    "season": 2002,
+    "race": 20,
+    "date": "2002-02-13",
+    "city": "Soldier Hollow UT",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2002_21": {
+    "season": 2002,
+    "race": 21,
+    "date": "2002-02-16",
+    "city": "Soldier Hollow UT",
+    "country": "USA",
+    "event": "Pursuit"
+  },
+  "2002_23": {
+    "season": 2002,
+    "race": 23,
+    "date": "2002-03-09",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2002_24": {
+    "season": 2002,
+    "race": 24,
+    "date": "2002-03-10",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2002_25": {
+    "season": 2002,
+    "race": 25,
+    "date": "2002-03-14",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2002_27": {
+    "season": 2002,
+    "race": 27,
+    "date": "2002-03-17",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2002_28": {
+    "season": 2002,
+    "race": 28,
+    "date": "2002-03-21",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2002_29": {
+    "season": 2002,
+    "race": 29,
+    "date": "2002-03-23",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2002_30": {
+    "season": 2002,
+    "race": 30,
+    "date": "2002-03-24",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2003_1": {
+    "season": 2003,
+    "race": 1,
+    "date": "2002-12-05",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2003_3": {
+    "season": 2003,
+    "race": 3,
+    "date": "2002-12-08",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2003_5": {
+    "season": 2003,
+    "race": 5,
+    "date": "2002-12-13",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2003_6": {
+    "season": 2003,
+    "race": 6,
+    "date": "2002-12-15",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2003_7": {
+    "season": 2003,
+    "race": 7,
+    "date": "2002-12-19",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Sprint"
+  },
+  "2003_9": {
+    "season": 2003,
+    "race": 9,
+    "date": "2002-12-22",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Pursuit"
+  },
+  "2003_10": {
+    "season": 2003,
+    "race": 10,
+    "date": "2003-01-08",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2003_12": {
+    "season": 2003,
+    "race": 12,
+    "date": "2003-01-12",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2003_14": {
+    "season": 2003,
+    "race": 14,
+    "date": "2003-01-17",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2003_15": {
+    "season": 2003,
+    "race": 15,
+    "date": "2003-01-19",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2003_16": {
+    "season": 2003,
+    "race": 16,
+    "date": "2003-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2003_18": {
+    "season": 2003,
+    "race": 18,
+    "date": "2003-01-26",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2003_19": {
+    "season": 2003,
+    "race": 19,
+    "date": "2003-02-08",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2003_20": {
+    "season": 2003,
+    "race": 20,
+    "date": "2003-02-09",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Mass Start"
+  },
+  "2003_22": {
+    "season": 2003,
+    "race": 22,
+    "date": "2003-02-15",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2003_23": {
+    "season": 2003,
+    "race": 23,
+    "date": "2003-02-16",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2003_24": {
+    "season": 2003,
+    "race": 24,
+    "date": "2003-02-20",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2003_25": {
+    "season": 2003,
+    "race": 25,
+    "date": "2003-02-22",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2003_26": {
+    "season": 2003,
+    "race": 26,
+    "date": "2003-02-23",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2003_27": {
+    "season": 2003,
+    "race": 27,
+    "date": "2003-03-15",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2003_28": {
+    "season": 2003,
+    "race": 28,
+    "date": "2003-03-16",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2003_29": {
+    "season": 2003,
+    "race": 29,
+    "date": "2003-03-18",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "2003_31": {
+    "season": 2003,
+    "race": 31,
+    "date": "2003-03-22",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2004_1": {
+    "season": 2004,
+    "race": 1,
+    "date": "2003-12-04",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2004_3": {
+    "season": 2004,
+    "race": 3,
+    "date": "2003-12-07",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2004_4": {
+    "season": 2004,
+    "race": 4,
+    "date": "2003-12-11",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2004_6": {
+    "season": 2004,
+    "race": 6,
+    "date": "2003-12-14",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2004_7": {
+    "season": 2004,
+    "race": 7,
+    "date": "2003-12-18",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "2004_8": {
+    "season": 2004,
+    "race": 8,
+    "date": "2003-12-20",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Sprint"
+  },
+  "2004_9": {
+    "season": 2004,
+    "race": 9,
+    "date": "2003-12-21",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Pursuit"
+  },
+  "2004_10": {
+    "season": 2004,
+    "race": 10,
+    "date": "2004-01-07",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2004_11": {
+    "season": 2004,
+    "race": 11,
+    "date": "2004-01-09",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2004_12": {
+    "season": 2004,
+    "race": 12,
+    "date": "2004-01-11",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2004_14": {
+    "season": 2004,
+    "race": 14,
+    "date": "2004-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2004_15": {
+    "season": 2004,
+    "race": 15,
+    "date": "2004-01-18",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2004_16": {
+    "season": 2004,
+    "race": 16,
+    "date": "2004-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2004_17": {
+    "season": 2004,
+    "race": 17,
+    "date": "2004-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2004_18": {
+    "season": 2004,
+    "race": 18,
+    "date": "2004-01-25",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2004_19": {
+    "season": 2004,
+    "race": 19,
+    "date": "2004-02-07",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2004_20": {
+    "season": 2004,
+    "race": 20,
+    "date": "2004-02-08",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2004_21": {
+    "season": 2004,
+    "race": 21,
+    "date": "2004-02-10",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2004_23": {
+    "season": 2004,
+    "race": 23,
+    "date": "2004-02-14",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2004_24": {
+    "season": 2004,
+    "race": 24,
+    "date": "2004-02-27",
+    "city": "Lake Placid NY",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2004_25": {
+    "season": 2004,
+    "race": 25,
+    "date": "2004-02-28",
+    "city": "Lake Placid NY",
+    "country": "USA",
+    "event": "Pursuit"
+  },
+  "2004_26": {
+    "season": 2004,
+    "race": 26,
+    "date": "2004-03-03",
+    "city": "Fort Kent ME",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2004_27": {
+    "season": 2004,
+    "race": 27,
+    "date": "2004-03-05",
+    "city": "Fort Kent ME",
+    "country": "USA",
+    "event": "Pursuit"
+  },
+  "2004_28": {
+    "season": 2004,
+    "race": 28,
+    "date": "2004-03-06",
+    "city": "Fort Kent ME",
+    "country": "USA",
+    "event": "Mass Start"
+  },
+  "2004_29": {
+    "season": 2004,
+    "race": 29,
+    "date": "2004-03-11",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2004_30": {
+    "season": 2004,
+    "race": 30,
+    "date": "2004-03-13",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2005_1": {
+    "season": 2005,
+    "race": 1,
+    "date": "2004-12-02",
+    "city": "Beitost\u00f8len",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2005_2": {
+    "season": 2005,
+    "race": 2,
+    "date": "2004-12-04",
+    "city": "Beitost\u00f8len",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2005_4": {
+    "season": 2005,
+    "race": 4,
+    "date": "2004-12-09",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2005_5": {
+    "season": 2005,
+    "race": 5,
+    "date": "2004-12-11",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2005_6": {
+    "season": 2005,
+    "race": 6,
+    "date": "2004-12-12",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2005_7": {
+    "season": 2005,
+    "race": 7,
+    "date": "2004-12-16",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2005_8": {
+    "season": 2005,
+    "race": 8,
+    "date": "2004-12-18",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2005_9": {
+    "season": 2005,
+    "race": 9,
+    "date": "2004-12-19",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Mass Start"
+  },
+  "2005_11": {
+    "season": 2005,
+    "race": 11,
+    "date": "2005-01-08",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2005_12": {
+    "season": 2005,
+    "race": 12,
+    "date": "2005-01-09",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2005_14": {
+    "season": 2005,
+    "race": 14,
+    "date": "2005-01-14",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2005_15": {
+    "season": 2005,
+    "race": 15,
+    "date": "2005-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2005_16": {
+    "season": 2005,
+    "race": 16,
+    "date": "2005-01-20",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2005_17": {
+    "season": 2005,
+    "race": 17,
+    "date": "2005-01-22",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2005_18": {
+    "season": 2005,
+    "race": 18,
+    "date": "2005-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2005_19": {
+    "season": 2005,
+    "race": 19,
+    "date": "2005-02-10",
+    "city": "Pragelato",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2005_20": {
+    "season": 2005,
+    "race": 20,
+    "date": "2005-02-12",
+    "city": "Pragelato",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2005_22": {
+    "season": 2005,
+    "race": 22,
+    "date": "2005-02-17",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2005_23": {
+    "season": 2005,
+    "race": 23,
+    "date": "2005-02-19",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2005_24": {
+    "season": 2005,
+    "race": 24,
+    "date": "2005-02-20",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2005_25": {
+    "season": 2005,
+    "race": 25,
+    "date": "2005-03-05",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2005_26": {
+    "season": 2005,
+    "race": 26,
+    "date": "2005-03-06",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2005_27": {
+    "season": 2005,
+    "race": 27,
+    "date": "2005-03-08",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2005_29": {
+    "season": 2005,
+    "race": 29,
+    "date": "2005-03-13",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Mass Start"
+  },
+  "2005_30": {
+    "season": 2005,
+    "race": 30,
+    "date": "2005-03-16",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2005_31": {
+    "season": 2005,
+    "race": 31,
+    "date": "2005-03-17",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2005_32": {
+    "season": 2005,
+    "race": 32,
+    "date": "2005-03-19",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2006_1": {
+    "season": 2006,
+    "race": 1,
+    "date": "2005-11-26",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2006_2": {
+    "season": 2006,
+    "race": 2,
+    "date": "2005-11-27",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2006_4": {
+    "season": 2006,
+    "race": 4,
+    "date": "2005-12-07",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2006_5": {
+    "season": 2006,
+    "race": 5,
+    "date": "2005-12-09",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2006_7": {
+    "season": 2006,
+    "race": 7,
+    "date": "2005-12-15",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "2006_8": {
+    "season": 2006,
+    "race": 8,
+    "date": "2005-12-17",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Sprint"
+  },
+  "2006_9": {
+    "season": 2006,
+    "race": 9,
+    "date": "2005-12-18",
+    "city": "Brezno-Osrblie",
+    "country": "Slovakia",
+    "event": "Pursuit"
+  },
+  "2006_11": {
+    "season": 2006,
+    "race": 11,
+    "date": "2006-01-07",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2006_12": {
+    "season": 2006,
+    "race": 12,
+    "date": "2006-01-08",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2006_14": {
+    "season": 2006,
+    "race": 14,
+    "date": "2006-01-13",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2006_15": {
+    "season": 2006,
+    "race": 15,
+    "date": "2006-01-15",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2006_16": {
+    "season": 2006,
+    "race": 16,
+    "date": "2006-01-19",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2006_17": {
+    "season": 2006,
+    "race": 17,
+    "date": "2006-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2006_18": {
+    "season": 2006,
+    "race": 18,
+    "date": "2006-01-22",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2006_19": {
+    "season": 2006,
+    "race": 19,
+    "date": "2006-02-13",
+    "city": "Pragelato",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2006_20": {
+    "season": 2006,
+    "race": 20,
+    "date": "2006-02-16",
+    "city": "Pragelato",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2006_21": {
+    "season": 2006,
+    "race": 21,
+    "date": "2006-02-18",
+    "city": "Pragelato",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2006_23": {
+    "season": 2006,
+    "race": 23,
+    "date": "2006-02-25",
+    "city": "Pragelato",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2006_24": {
+    "season": 2006,
+    "race": 24,
+    "date": "2006-03-09",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2006_25": {
+    "season": 2006,
+    "race": 25,
+    "date": "2006-03-11",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2006_26": {
+    "season": 2006,
+    "race": 26,
+    "date": "2006-03-16",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2006_27": {
+    "season": 2006,
+    "race": 27,
+    "date": "2006-03-18",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2006_28": {
+    "season": 2006,
+    "race": 28,
+    "date": "2006-03-19",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Mass Start"
+  },
+  "2006_29": {
+    "season": 2006,
+    "race": 29,
+    "date": "2006-03-23",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2006_30": {
+    "season": 2006,
+    "race": 30,
+    "date": "2006-03-25",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2006_31": {
+    "season": 2006,
+    "race": 31,
+    "date": "2006-03-26",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2007_1": {
+    "season": 2007,
+    "race": 1,
+    "date": "2006-11-29",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2007_2": {
+    "season": 2007,
+    "race": 2,
+    "date": "2006-12-01",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2007_3": {
+    "season": 2007,
+    "race": 3,
+    "date": "2006-12-03",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2007_4": {
+    "season": 2007,
+    "race": 4,
+    "date": "2006-12-08",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2007_5": {
+    "season": 2007,
+    "race": 5,
+    "date": "2006-12-09",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2007_7": {
+    "season": 2007,
+    "race": 7,
+    "date": "2006-12-13",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2007_8": {
+    "season": 2007,
+    "race": 8,
+    "date": "2006-12-15",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2007_11": {
+    "season": 2007,
+    "race": 11,
+    "date": "2007-01-05",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2007_12": {
+    "season": 2007,
+    "race": 12,
+    "date": "2007-01-07",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2007_14": {
+    "season": 2007,
+    "race": 14,
+    "date": "2007-01-12",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2007_15": {
+    "season": 2007,
+    "race": 15,
+    "date": "2007-01-14",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2007_16": {
+    "season": 2007,
+    "race": 16,
+    "date": "2007-01-17",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2007_17": {
+    "season": 2007,
+    "race": 17,
+    "date": "2007-01-19",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2007_18": {
+    "season": 2007,
+    "race": 18,
+    "date": "2007-01-21",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2007_19": {
+    "season": 2007,
+    "race": 19,
+    "date": "2007-02-03",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2007_20": {
+    "season": 2007,
+    "race": 20,
+    "date": "2007-02-04",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2007_21": {
+    "season": 2007,
+    "race": 21,
+    "date": "2007-02-07",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2007_22": {
+    "season": 2007,
+    "race": 22,
+    "date": "2007-02-10",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2007_24": {
+    "season": 2007,
+    "race": 24,
+    "date": "2007-02-28",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2007_25": {
+    "season": 2007,
+    "race": 25,
+    "date": "2007-03-02",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2007_26": {
+    "season": 2007,
+    "race": 26,
+    "date": "2007-03-04",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2007_27": {
+    "season": 2007,
+    "race": 27,
+    "date": "2007-03-08",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2007_28": {
+    "season": 2007,
+    "race": 28,
+    "date": "2007-03-10",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2007_29": {
+    "season": 2007,
+    "race": 29,
+    "date": "2007-03-11",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2007_30": {
+    "season": 2007,
+    "race": 30,
+    "date": "2007-03-15",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2007_31": {
+    "season": 2007,
+    "race": 31,
+    "date": "2007-03-17",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2007_32": {
+    "season": 2007,
+    "race": 32,
+    "date": "2007-03-18",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2008_1": {
+    "season": 2008,
+    "race": 1,
+    "date": "2007-11-29",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2008_2": {
+    "season": 2008,
+    "race": 2,
+    "date": "2007-11-30",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2008_3": {
+    "season": 2008,
+    "race": 3,
+    "date": "2007-12-02",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2008_4": {
+    "season": 2008,
+    "race": 4,
+    "date": "2007-12-07",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2008_5": {
+    "season": 2008,
+    "race": 5,
+    "date": "2007-12-08",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2008_7": {
+    "season": 2008,
+    "race": 7,
+    "date": "2007-12-13",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2008_8": {
+    "season": 2008,
+    "race": 8,
+    "date": "2007-12-15",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2008_11": {
+    "season": 2008,
+    "race": 11,
+    "date": "2008-01-05",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2008_12": {
+    "season": 2008,
+    "race": 12,
+    "date": "2008-01-06",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2008_14": {
+    "season": 2008,
+    "race": 14,
+    "date": "2008-01-11",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2008_15": {
+    "season": 2008,
+    "race": 15,
+    "date": "2008-01-13",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2008_16": {
+    "season": 2008,
+    "race": 16,
+    "date": "2008-01-17",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2008_17": {
+    "season": 2008,
+    "race": 17,
+    "date": "2008-01-19",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2008_18": {
+    "season": 2008,
+    "race": 18,
+    "date": "2008-01-20",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2008_19": {
+    "season": 2008,
+    "race": 19,
+    "date": "2008-02-09",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2008_20": {
+    "season": 2008,
+    "race": 20,
+    "date": "2008-02-10",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2008_21": {
+    "season": 2008,
+    "race": 21,
+    "date": "2008-02-14",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2008_22": {
+    "season": 2008,
+    "race": 22,
+    "date": "2008-02-16",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Mass Start"
+  },
+  "2008_24": {
+    "season": 2008,
+    "race": 24,
+    "date": "2008-02-28",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Sprint"
+  },
+  "2008_25": {
+    "season": 2008,
+    "race": 25,
+    "date": "2008-03-01",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Pursuit"
+  },
+  "2008_26": {
+    "season": 2008,
+    "race": 26,
+    "date": "2008-03-06",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2008_27": {
+    "season": 2008,
+    "race": 27,
+    "date": "2008-03-08",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2008_28": {
+    "season": 2008,
+    "race": 28,
+    "date": "2008-03-09",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2008_29": {
+    "season": 2008,
+    "race": 29,
+    "date": "2008-03-13",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2008_30": {
+    "season": 2008,
+    "race": 30,
+    "date": "2008-03-15",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2008_31": {
+    "season": 2008,
+    "race": 31,
+    "date": "2008-03-16",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2009_1": {
+    "season": 2009,
+    "race": 1,
+    "date": "2008-12-04",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2009_2": {
+    "season": 2009,
+    "race": 2,
+    "date": "2008-12-06",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2009_3": {
+    "season": 2009,
+    "race": 3,
+    "date": "2008-12-07",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2009_4": {
+    "season": 2009,
+    "race": 4,
+    "date": "2008-12-12",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2009_5": {
+    "season": 2009,
+    "race": 5,
+    "date": "2008-12-13",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2009_7": {
+    "season": 2009,
+    "race": 7,
+    "date": "2008-12-18",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2009_8": {
+    "season": 2009,
+    "race": 8,
+    "date": "2008-12-20",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2009_11": {
+    "season": 2009,
+    "race": 11,
+    "date": "2009-01-09",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2009_12": {
+    "season": 2009,
+    "race": 12,
+    "date": "2009-01-11",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2009_14": {
+    "season": 2009,
+    "race": 14,
+    "date": "2009-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2009_15": {
+    "season": 2009,
+    "race": 15,
+    "date": "2009-01-18",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2009_16": {
+    "season": 2009,
+    "race": 16,
+    "date": "2009-01-22",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2009_17": {
+    "season": 2009,
+    "race": 17,
+    "date": "2009-01-24",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2009_18": {
+    "season": 2009,
+    "race": 18,
+    "date": "2009-01-25",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2009_19": {
+    "season": 2009,
+    "race": 19,
+    "date": "2009-02-14",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Sprint"
+  },
+  "2009_20": {
+    "season": 2009,
+    "race": 20,
+    "date": "2009-02-15",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Pursuit"
+  },
+  "2009_21": {
+    "season": 2009,
+    "race": 21,
+    "date": "2009-02-18",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Individual"
+  },
+  "2009_23": {
+    "season": 2009,
+    "race": 23,
+    "date": "2009-02-22",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Mass Start"
+  },
+  "2009_24": {
+    "season": 2009,
+    "race": 24,
+    "date": "2009-03-11",
+    "city": "Whistler",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "2009_25": {
+    "season": 2009,
+    "race": 25,
+    "date": "2009-03-13",
+    "city": "Whistler",
+    "country": "Canada",
+    "event": "Sprint"
+  },
+  "2009_27": {
+    "season": 2009,
+    "race": 27,
+    "date": "2009-03-19",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2009_28": {
+    "season": 2009,
+    "race": 28,
+    "date": "2009-03-21",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2009_29": {
+    "season": 2009,
+    "race": 29,
+    "date": "2009-03-22",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2009_30": {
+    "season": 2009,
+    "race": 30,
+    "date": "2009-03-27",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2009_31": {
+    "season": 2009,
+    "race": 31,
+    "date": "2009-03-28",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2009_32": {
+    "season": 2009,
+    "race": 32,
+    "date": "2009-03-29",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2010_1": {
+    "season": 2010,
+    "race": 1,
+    "date": "2009-12-02",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2010_2": {
+    "season": 2010,
+    "race": 2,
+    "date": "2009-12-05",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2010_4": {
+    "season": 2010,
+    "race": 4,
+    "date": "2009-12-11",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2010_5": {
+    "season": 2010,
+    "race": 5,
+    "date": "2009-12-12",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2010_7": {
+    "season": 2010,
+    "race": 7,
+    "date": "2009-12-17",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2010_8": {
+    "season": 2010,
+    "race": 8,
+    "date": "2009-12-19",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2010_9": {
+    "season": 2010,
+    "race": 9,
+    "date": "2009-12-20",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2010_11": {
+    "season": 2010,
+    "race": 11,
+    "date": "2010-01-08",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2010_12": {
+    "season": 2010,
+    "race": 12,
+    "date": "2010-01-10",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2010_13": {
+    "season": 2010,
+    "race": 13,
+    "date": "2010-01-13",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2010_15": {
+    "season": 2010,
+    "race": 15,
+    "date": "2010-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2010_16": {
+    "season": 2010,
+    "race": 16,
+    "date": "2010-01-20",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2010_17": {
+    "season": 2010,
+    "race": 17,
+    "date": "2010-01-22",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2010_18": {
+    "season": 2010,
+    "race": 18,
+    "date": "2010-01-24",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2010_19": {
+    "season": 2010,
+    "race": 19,
+    "date": "2010-02-13",
+    "city": "Whistler",
+    "country": "Canada",
+    "event": "Sprint"
+  },
+  "2010_20": {
+    "season": 2010,
+    "race": 20,
+    "date": "2010-02-16",
+    "city": "Whistler",
+    "country": "Canada",
+    "event": "Pursuit"
+  },
+  "2010_21": {
+    "season": 2010,
+    "race": 21,
+    "date": "2010-02-18",
+    "city": "Whistler",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "2010_22": {
+    "season": 2010,
+    "race": 22,
+    "date": "2010-02-21",
+    "city": "Whistler",
+    "country": "Canada",
+    "event": "Mass Start"
+  },
+  "2010_24": {
+    "season": 2010,
+    "race": 24,
+    "date": "2010-03-13",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2010_25": {
+    "season": 2010,
+    "race": 25,
+    "date": "2010-03-14",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2010_26": {
+    "season": 2010,
+    "race": 26,
+    "date": "2010-03-18",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2010_27": {
+    "season": 2010,
+    "race": 27,
+    "date": "2010-03-20",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2010_28": {
+    "season": 2010,
+    "race": 28,
+    "date": "2010-03-21",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2010_29": {
+    "season": 2010,
+    "race": 29,
+    "date": "2010-03-25",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2010_30": {
+    "season": 2010,
+    "race": 30,
+    "date": "2010-03-27",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2011_1": {
+    "season": 2011,
+    "race": 1,
+    "date": "2010-12-01",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2011_2": {
+    "season": 2011,
+    "race": 2,
+    "date": "2010-12-03",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2011_3": {
+    "season": 2011,
+    "race": 3,
+    "date": "2010-12-05",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2011_4": {
+    "season": 2011,
+    "race": 4,
+    "date": "2010-12-10",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2011_6": {
+    "season": 2011,
+    "race": 6,
+    "date": "2010-12-12",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2011_7": {
+    "season": 2011,
+    "race": 7,
+    "date": "2010-12-16",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2011_8": {
+    "season": 2011,
+    "race": 8,
+    "date": "2010-12-18",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2011_10": {
+    "season": 2011,
+    "race": 10,
+    "date": "2011-01-08",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2011_11": {
+    "season": 2011,
+    "race": 11,
+    "date": "2011-01-09",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2011_12": {
+    "season": 2011,
+    "race": 12,
+    "date": "2011-01-13",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2011_13": {
+    "season": 2011,
+    "race": 13,
+    "date": "2011-01-15",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2011_14": {
+    "season": 2011,
+    "race": 14,
+    "date": "2011-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2011_15": {
+    "season": 2011,
+    "race": 15,
+    "date": "2011-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2011_17": {
+    "season": 2011,
+    "race": 17,
+    "date": "2011-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2011_18": {
+    "season": 2011,
+    "race": 18,
+    "date": "2011-02-04",
+    "city": "Presque Isle ME",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2011_19": {
+    "season": 2011,
+    "race": 19,
+    "date": "2011-02-06",
+    "city": "Presque Isle ME",
+    "country": "USA",
+    "event": "Pursuit"
+  },
+  "2011_20": {
+    "season": 2011,
+    "race": 20,
+    "date": "2011-02-11",
+    "city": "Fort Kent ME",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2011_21": {
+    "season": 2011,
+    "race": 21,
+    "date": "2011-02-12",
+    "city": "Fort Kent ME",
+    "country": "USA",
+    "event": "Pursuit"
+  },
+  "2011_22": {
+    "season": 2011,
+    "race": 22,
+    "date": "2011-02-13",
+    "city": "Fort Kent ME",
+    "country": "USA",
+    "event": "Mass Start"
+  },
+  "2011_23": {
+    "season": 2011,
+    "race": 23,
+    "date": "2011-03-05",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2011_24": {
+    "season": 2011,
+    "race": 24,
+    "date": "2011-03-06",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2011_25": {
+    "season": 2011,
+    "race": 25,
+    "date": "2011-03-09",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "2011_26": {
+    "season": 2011,
+    "race": 26,
+    "date": "2011-03-12",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2011_28": {
+    "season": 2011,
+    "race": 28,
+    "date": "2011-03-17",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2011_29": {
+    "season": 2011,
+    "race": 29,
+    "date": "2011-03-19",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2011_30": {
+    "season": 2011,
+    "race": 30,
+    "date": "2011-03-20",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2012_1": {
+    "season": 2012,
+    "race": 1,
+    "date": "2011-12-01",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2012_2": {
+    "season": 2012,
+    "race": 2,
+    "date": "2011-12-03",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2012_3": {
+    "season": 2012,
+    "race": 3,
+    "date": "2011-12-04",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2012_4": {
+    "season": 2012,
+    "race": 4,
+    "date": "2011-12-09",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2012_5": {
+    "season": 2012,
+    "race": 5,
+    "date": "2011-12-10",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2012_7": {
+    "season": 2012,
+    "race": 7,
+    "date": "2011-12-16",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2012_8": {
+    "season": 2012,
+    "race": 8,
+    "date": "2011-12-17",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2012_10": {
+    "season": 2012,
+    "race": 10,
+    "date": "2012-01-06",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2012_11": {
+    "season": 2012,
+    "race": 11,
+    "date": "2012-01-08",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2012_12": {
+    "season": 2012,
+    "race": 12,
+    "date": "2012-01-11",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2012_13": {
+    "season": 2012,
+    "race": 13,
+    "date": "2012-01-13",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2012_14": {
+    "season": 2012,
+    "race": 14,
+    "date": "2012-01-15",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Pursuit"
+  },
+  "2012_15": {
+    "season": 2012,
+    "race": 15,
+    "date": "2012-01-19",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2012_17": {
+    "season": 2012,
+    "race": 17,
+    "date": "2012-01-22",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2012_18": {
+    "season": 2012,
+    "race": 18,
+    "date": "2012-02-02",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2012_19": {
+    "season": 2012,
+    "race": 19,
+    "date": "2012-02-04",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2012_20": {
+    "season": 2012,
+    "race": 20,
+    "date": "2012-02-05",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2012_21": {
+    "season": 2012,
+    "race": 21,
+    "date": "2012-02-11",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2012_22": {
+    "season": 2012,
+    "race": 22,
+    "date": "2012-02-12",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2012_23": {
+    "season": 2012,
+    "race": 23,
+    "date": "2012-03-03",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2012_24": {
+    "season": 2012,
+    "race": 24,
+    "date": "2012-03-04",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2012_25": {
+    "season": 2012,
+    "race": 25,
+    "date": "2012-03-07",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2012_27": {
+    "season": 2012,
+    "race": 27,
+    "date": "2012-03-11",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2012_28": {
+    "season": 2012,
+    "race": 28,
+    "date": "2012-03-16",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2012_29": {
+    "season": 2012,
+    "race": 29,
+    "date": "2012-03-17",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2012_30": {
+    "season": 2012,
+    "race": 30,
+    "date": "2012-03-18",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2013_1": {
+    "season": 2013,
+    "race": 1,
+    "date": "2012-11-29",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2013_2": {
+    "season": 2013,
+    "race": 2,
+    "date": "2012-12-01",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2013_3": {
+    "season": 2013,
+    "race": 3,
+    "date": "2012-12-02",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2013_4": {
+    "season": 2013,
+    "race": 4,
+    "date": "2012-12-07",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2013_5": {
+    "season": 2013,
+    "race": 5,
+    "date": "2012-12-08",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2013_7": {
+    "season": 2013,
+    "race": 7,
+    "date": "2012-12-14",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2013_8": {
+    "season": 2013,
+    "race": 8,
+    "date": "2012-12-15",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2013_9": {
+    "season": 2013,
+    "race": 9,
+    "date": "2012-12-16",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2013_11": {
+    "season": 2013,
+    "race": 11,
+    "date": "2013-01-05",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2013_12": {
+    "season": 2013,
+    "race": 12,
+    "date": "2013-01-06",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2013_14": {
+    "season": 2013,
+    "race": 14,
+    "date": "2013-01-11",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2013_15": {
+    "season": 2013,
+    "race": 15,
+    "date": "2013-01-13",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2013_16": {
+    "season": 2013,
+    "race": 16,
+    "date": "2013-01-17",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2013_17": {
+    "season": 2013,
+    "race": 17,
+    "date": "2013-01-19",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2013_19": {
+    "season": 2013,
+    "race": 19,
+    "date": "2013-02-09",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2013_20": {
+    "season": 2013,
+    "race": 20,
+    "date": "2013-02-10",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Pursuit"
+  },
+  "2013_21": {
+    "season": 2013,
+    "race": 21,
+    "date": "2013-02-13",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2013_23": {
+    "season": 2013,
+    "race": 23,
+    "date": "2013-02-17",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Mass Start"
+  },
+  "2013_24": {
+    "season": 2013,
+    "race": 24,
+    "date": "2013-03-01",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2013_25": {
+    "season": 2013,
+    "race": 25,
+    "date": "2013-03-02",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2013_26": {
+    "season": 2013,
+    "race": 26,
+    "date": "2013-03-03",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2013_27": {
+    "season": 2013,
+    "race": 27,
+    "date": "2013-03-07",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "2013_28": {
+    "season": 2013,
+    "race": 28,
+    "date": "2013-03-09",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2013_30": {
+    "season": 2013,
+    "race": 30,
+    "date": "2013-03-14",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2013_31": {
+    "season": 2013,
+    "race": 31,
+    "date": "2013-03-16",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2013_32": {
+    "season": 2013,
+    "race": 32,
+    "date": "2013-03-17",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2014_1": {
+    "season": 2014,
+    "race": 1,
+    "date": "2013-11-28",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2014_2": {
+    "season": 2014,
+    "race": 2,
+    "date": "2013-11-29",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2014_3": {
+    "season": 2014,
+    "race": 3,
+    "date": "2013-12-06",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2014_5": {
+    "season": 2014,
+    "race": 5,
+    "date": "2013-12-08",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2014_7": {
+    "season": 2014,
+    "race": 7,
+    "date": "2013-12-14",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Sprint"
+  },
+  "2014_8": {
+    "season": 2014,
+    "race": 8,
+    "date": "2013-12-15",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Pursuit"
+  },
+  "2014_9": {
+    "season": 2014,
+    "race": 9,
+    "date": "2014-01-03",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2014_10": {
+    "season": 2014,
+    "race": 10,
+    "date": "2014-01-04",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2014_11": {
+    "season": 2014,
+    "race": 11,
+    "date": "2014-01-05",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2014_13": {
+    "season": 2014,
+    "race": 13,
+    "date": "2014-01-10",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2014_14": {
+    "season": 2014,
+    "race": 14,
+    "date": "2014-01-12",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2014_15": {
+    "season": 2014,
+    "race": 15,
+    "date": "2014-01-16",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2014_16": {
+    "season": 2014,
+    "race": 16,
+    "date": "2014-01-18",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2014_17": {
+    "season": 2014,
+    "race": 17,
+    "date": "2014-02-09",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2014_18": {
+    "season": 2014,
+    "race": 18,
+    "date": "2014-02-11",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2014_19": {
+    "season": 2014,
+    "race": 19,
+    "date": "2014-02-14",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "2014_20": {
+    "season": 2014,
+    "race": 20,
+    "date": "2014-02-17",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2014_22": {
+    "season": 2014,
+    "race": 22,
+    "date": "2014-03-06",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2014_23": {
+    "season": 2014,
+    "race": 23,
+    "date": "2014-03-08",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2014_24": {
+    "season": 2014,
+    "race": 24,
+    "date": "2014-03-09",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2014_25": {
+    "season": 2014,
+    "race": 25,
+    "date": "2014-03-13",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2014_26": {
+    "season": 2014,
+    "race": 26,
+    "date": "2014-03-15",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2014_27": {
+    "season": 2014,
+    "race": 27,
+    "date": "2014-03-16",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2014_28": {
+    "season": 2014,
+    "race": 28,
+    "date": "2014-03-20",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2014_29": {
+    "season": 2014,
+    "race": 29,
+    "date": "2014-03-22",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2014_30": {
+    "season": 2014,
+    "race": 30,
+    "date": "2014-03-23",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2015_1": {
+    "season": 2015,
+    "race": 1,
+    "date": "2014-12-04",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2015_2": {
+    "season": 2015,
+    "race": 2,
+    "date": "2014-12-06",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2015_3": {
+    "season": 2015,
+    "race": 3,
+    "date": "2014-12-07",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2015_4": {
+    "season": 2015,
+    "race": 4,
+    "date": "2014-12-12",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2015_6": {
+    "season": 2015,
+    "race": 6,
+    "date": "2014-12-14",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2015_7": {
+    "season": 2015,
+    "race": 7,
+    "date": "2014-12-18",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2015_8": {
+    "season": 2015,
+    "race": 8,
+    "date": "2014-12-20",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2015_9": {
+    "season": 2015,
+    "race": 9,
+    "date": "2014-12-21",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2015_11": {
+    "season": 2015,
+    "race": 11,
+    "date": "2015-01-09",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2015_12": {
+    "season": 2015,
+    "race": 12,
+    "date": "2015-01-11",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2015_14": {
+    "season": 2015,
+    "race": 14,
+    "date": "2015-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2015_15": {
+    "season": 2015,
+    "race": 15,
+    "date": "2015-01-18",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2015_16": {
+    "season": 2015,
+    "race": 16,
+    "date": "2015-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2015_17": {
+    "season": 2015,
+    "race": 17,
+    "date": "2015-01-24",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2015_19": {
+    "season": 2015,
+    "race": 19,
+    "date": "2015-02-07",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2015_20": {
+    "season": 2015,
+    "race": 20,
+    "date": "2015-02-08",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Pursuit"
+  },
+  "2015_21": {
+    "season": 2015,
+    "race": 21,
+    "date": "2015-02-12",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2015_22": {
+    "season": 2015,
+    "race": 22,
+    "date": "2015-02-14",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2015_24": {
+    "season": 2015,
+    "race": 24,
+    "date": "2015-03-07",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2015_25": {
+    "season": 2015,
+    "race": 25,
+    "date": "2015-03-08",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2015_26": {
+    "season": 2015,
+    "race": 26,
+    "date": "2015-03-11",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2015_28": {
+    "season": 2015,
+    "race": 28,
+    "date": "2015-03-15",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Mass Start"
+  },
+  "2015_29": {
+    "season": 2015,
+    "race": 29,
+    "date": "2015-03-20",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2015_30": {
+    "season": 2015,
+    "race": 30,
+    "date": "2015-03-21",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2015_31": {
+    "season": 2015,
+    "race": 31,
+    "date": "2015-03-22",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2016_1": {
+    "season": 2016,
+    "race": 1,
+    "date": "2015-12-03",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2016_2": {
+    "season": 2016,
+    "race": 2,
+    "date": "2015-12-05",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2016_3": {
+    "season": 2016,
+    "race": 3,
+    "date": "2015-12-06",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2016_4": {
+    "season": 2016,
+    "race": 4,
+    "date": "2015-12-11",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2016_5": {
+    "season": 2016,
+    "race": 5,
+    "date": "2015-12-12",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2016_7": {
+    "season": 2016,
+    "race": 7,
+    "date": "2015-12-18",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2016_8": {
+    "season": 2016,
+    "race": 8,
+    "date": "2015-12-19",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2016_9": {
+    "season": 2016,
+    "race": 9,
+    "date": "2015-12-20",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2016_10": {
+    "season": 2016,
+    "race": 10,
+    "date": "2016-01-08",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2016_11": {
+    "season": 2016,
+    "race": 11,
+    "date": "2016-01-09",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2016_12": {
+    "season": 2016,
+    "race": 12,
+    "date": "2016-01-10",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2016_13": {
+    "season": 2016,
+    "race": 13,
+    "date": "2016-01-14",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2016_14": {
+    "season": 2016,
+    "race": 14,
+    "date": "2016-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2016_16": {
+    "season": 2016,
+    "race": 16,
+    "date": "2016-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2016_17": {
+    "season": 2016,
+    "race": 17,
+    "date": "2016-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2016_19": {
+    "season": 2016,
+    "race": 19,
+    "date": "2016-02-05",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Sprint"
+  },
+  "2016_20": {
+    "season": 2016,
+    "race": 20,
+    "date": "2016-02-06",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Mass Start"
+  },
+  "2016_21": {
+    "season": 2016,
+    "race": 21,
+    "date": "2016-02-11",
+    "city": "Presque Isle ME",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2016_22": {
+    "season": 2016,
+    "race": 22,
+    "date": "2016-02-12",
+    "city": "Presque Isle ME",
+    "country": "USA",
+    "event": "Pursuit"
+  },
+  "2016_24": {
+    "season": 2016,
+    "race": 24,
+    "date": "2016-03-05",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2016_25": {
+    "season": 2016,
+    "race": 25,
+    "date": "2016-03-06",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2016_26": {
+    "season": 2016,
+    "race": 26,
+    "date": "2016-03-09",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2016_28": {
+    "season": 2016,
+    "race": 28,
+    "date": "2016-03-13",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2016_29": {
+    "season": 2016,
+    "race": 29,
+    "date": "2016-03-17",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2016_30": {
+    "season": 2016,
+    "race": 30,
+    "date": "2016-03-19",
+    "city": "Khanty-Mansijsk",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2017_1": {
+    "season": 2017,
+    "race": 1,
+    "date": "2016-11-30",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2017_2": {
+    "season": 2017,
+    "race": 2,
+    "date": "2016-12-03",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2017_3": {
+    "season": 2017,
+    "race": 3,
+    "date": "2016-12-04",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2017_4": {
+    "season": 2017,
+    "race": 4,
+    "date": "2016-12-09",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2017_5": {
+    "season": 2017,
+    "race": 5,
+    "date": "2016-12-10",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2017_7": {
+    "season": 2017,
+    "race": 7,
+    "date": "2016-12-16",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2017_8": {
+    "season": 2017,
+    "race": 8,
+    "date": "2016-12-17",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Pursuit"
+  },
+  "2017_9": {
+    "season": 2017,
+    "race": 9,
+    "date": "2016-12-18",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Mass Start"
+  },
+  "2017_10": {
+    "season": 2017,
+    "race": 10,
+    "date": "2017-01-06",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2017_11": {
+    "season": 2017,
+    "race": 11,
+    "date": "2017-01-07",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2017_12": {
+    "season": 2017,
+    "race": 12,
+    "date": "2017-01-08",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2017_14": {
+    "season": 2017,
+    "race": 14,
+    "date": "2017-01-14",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2017_15": {
+    "season": 2017,
+    "race": 15,
+    "date": "2017-01-15",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2017_16": {
+    "season": 2017,
+    "race": 16,
+    "date": "2017-01-19",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2017_17": {
+    "season": 2017,
+    "race": 17,
+    "date": "2017-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2017_19": {
+    "season": 2017,
+    "race": 19,
+    "date": "2017-02-10",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2017_20": {
+    "season": 2017,
+    "race": 20,
+    "date": "2017-02-12",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2017_21": {
+    "season": 2017,
+    "race": 21,
+    "date": "2017-02-15",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2017_23": {
+    "season": 2017,
+    "race": 23,
+    "date": "2017-02-19",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Mass Start"
+  },
+  "2017_24": {
+    "season": 2017,
+    "race": 24,
+    "date": "2017-03-02",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Sprint"
+  },
+  "2017_25": {
+    "season": 2017,
+    "race": 25,
+    "date": "2017-03-04",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Pursuit"
+  },
+  "2017_27": {
+    "season": 2017,
+    "race": 27,
+    "date": "2017-03-10",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2017_28": {
+    "season": 2017,
+    "race": 28,
+    "date": "2017-03-11",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2017_29": {
+    "season": 2017,
+    "race": 29,
+    "date": "2017-03-17",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2017_30": {
+    "season": 2017,
+    "race": 30,
+    "date": "2017-03-18",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2017_31": {
+    "season": 2017,
+    "race": 31,
+    "date": "2017-03-19",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2018_1": {
+    "season": 2018,
+    "race": 1,
+    "date": "2017-11-29",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2018_2": {
+    "season": 2018,
+    "race": 2,
+    "date": "2017-12-01",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2018_3": {
+    "season": 2018,
+    "race": 3,
+    "date": "2017-12-03",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2018_4": {
+    "season": 2018,
+    "race": 4,
+    "date": "2017-12-08",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2018_5": {
+    "season": 2018,
+    "race": 5,
+    "date": "2017-12-09",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2018_7": {
+    "season": 2018,
+    "race": 7,
+    "date": "2017-12-14",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Sprint"
+  },
+  "2018_8": {
+    "season": 2018,
+    "race": 8,
+    "date": "2017-12-16",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Pursuit"
+  },
+  "2018_9": {
+    "season": 2018,
+    "race": 9,
+    "date": "2017-12-17",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Mass Start"
+  },
+  "2018_10": {
+    "season": 2018,
+    "race": 10,
+    "date": "2018-01-04",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2018_11": {
+    "season": 2018,
+    "race": 11,
+    "date": "2018-01-06",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2018_13": {
+    "season": 2018,
+    "race": 13,
+    "date": "2018-01-11",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2018_15": {
+    "season": 2018,
+    "race": 15,
+    "date": "2018-01-14",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2018_16": {
+    "season": 2018,
+    "race": 16,
+    "date": "2018-01-18",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2018_17": {
+    "season": 2018,
+    "race": 17,
+    "date": "2018-01-20",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2018_18": {
+    "season": 2018,
+    "race": 18,
+    "date": "2018-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2018_19": {
+    "season": 2018,
+    "race": 19,
+    "date": "2018-02-10",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Sprint"
+  },
+  "2018_20": {
+    "season": 2018,
+    "race": 20,
+    "date": "2018-02-12",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Pursuit"
+  },
+  "2018_21": {
+    "season": 2018,
+    "race": 21,
+    "date": "2018-02-15",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Individual"
+  },
+  "2018_22": {
+    "season": 2018,
+    "race": 22,
+    "date": "2018-02-17",
+    "city": "Pyeongchang",
+    "country": "South Korea",
+    "event": "Mass Start"
+  },
+  "2018_24": {
+    "season": 2018,
+    "race": 24,
+    "date": "2018-03-09",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2018_25": {
+    "season": 2018,
+    "race": 25,
+    "date": "2018-03-11",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Mass Start"
+  },
+  "2018_26": {
+    "season": 2018,
+    "race": 26,
+    "date": "2018-03-15",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2018_28": {
+    "season": 2018,
+    "race": 28,
+    "date": "2018-03-18",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2018_29": {
+    "season": 2018,
+    "race": 29,
+    "date": "2018-03-23",
+    "city": "Tyumen",
+    "country": "Russia",
+    "event": "Sprint"
+  },
+  "2018_30": {
+    "season": 2018,
+    "race": 30,
+    "date": "2018-03-24",
+    "city": "Tyumen",
+    "country": "Russia",
+    "event": "Pursuit"
+  },
+  "2018_31": {
+    "season": 2018,
+    "race": 31,
+    "date": "2018-03-25",
+    "city": "Tyumen",
+    "country": "Russia",
+    "event": "Mass Start"
+  },
+  "2019_1": {
+    "season": 2019,
+    "race": 1,
+    "date": "2018-12-06",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2019_2": {
+    "season": 2019,
+    "race": 2,
+    "date": "2018-12-08",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2019_3": {
+    "season": 2019,
+    "race": 3,
+    "date": "2018-12-09",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2019_4": {
+    "season": 2019,
+    "race": 4,
+    "date": "2018-12-13",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2019_5": {
+    "season": 2019,
+    "race": 5,
+    "date": "2018-12-15",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2019_7": {
+    "season": 2019,
+    "race": 7,
+    "date": "2018-12-21",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2019_8": {
+    "season": 2019,
+    "race": 8,
+    "date": "2018-12-22",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Pursuit"
+  },
+  "2019_9": {
+    "season": 2019,
+    "race": 9,
+    "date": "2018-12-23",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Mass Start"
+  },
+  "2019_10": {
+    "season": 2019,
+    "race": 10,
+    "date": "2019-01-10",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2019_11": {
+    "season": 2019,
+    "race": 11,
+    "date": "2019-01-12",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2019_13": {
+    "season": 2019,
+    "race": 13,
+    "date": "2019-01-17",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2019_15": {
+    "season": 2019,
+    "race": 15,
+    "date": "2019-01-20",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2019_16": {
+    "season": 2019,
+    "race": 16,
+    "date": "2019-01-24",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2019_17": {
+    "season": 2019,
+    "race": 17,
+    "date": "2019-01-26",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2019_18": {
+    "season": 2019,
+    "race": 18,
+    "date": "2019-01-27",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2019_19": {
+    "season": 2019,
+    "race": 19,
+    "date": "2019-02-07",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "2019_21": {
+    "season": 2019,
+    "race": 21,
+    "date": "2019-02-14",
+    "city": "Soldier Hollow UT",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2019_22": {
+    "season": 2019,
+    "race": 22,
+    "date": "2019-02-16",
+    "city": "Soldier Hollow UT",
+    "country": "USA",
+    "event": "Pursuit"
+  },
+  "2019_23": {
+    "season": 2019,
+    "race": 23,
+    "date": "2019-03-08",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2019_24": {
+    "season": 2019,
+    "race": 24,
+    "date": "2019-03-10",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2019_25": {
+    "season": 2019,
+    "race": 25,
+    "date": "2019-03-12",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2019_27": {
+    "season": 2019,
+    "race": 27,
+    "date": "2019-03-17",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Mass Start"
+  },
+  "2019_28": {
+    "season": 2019,
+    "race": 28,
+    "date": "2019-03-21",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2019_29": {
+    "season": 2019,
+    "race": 29,
+    "date": "2019-03-23",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2019_30": {
+    "season": 2019,
+    "race": 30,
+    "date": "2019-03-24",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2020_1": {
+    "season": 2020,
+    "race": 1,
+    "date": "2019-12-01",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2020_2": {
+    "season": 2020,
+    "race": 2,
+    "date": "2019-12-05",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2020_4": {
+    "season": 2020,
+    "race": 4,
+    "date": "2019-12-13",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2020_6": {
+    "season": 2020,
+    "race": 6,
+    "date": "2019-12-15",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2020_7": {
+    "season": 2020,
+    "race": 7,
+    "date": "2019-12-20",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Sprint"
+  },
+  "2020_8": {
+    "season": 2020,
+    "race": 8,
+    "date": "2019-12-21",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Pursuit"
+  },
+  "2020_9": {
+    "season": 2020,
+    "race": 9,
+    "date": "2019-12-22",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Mass Start"
+  },
+  "2020_10": {
+    "season": 2020,
+    "race": 10,
+    "date": "2020-01-09",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2020_12": {
+    "season": 2020,
+    "race": 12,
+    "date": "2020-01-12",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2020_13": {
+    "season": 2020,
+    "race": 13,
+    "date": "2020-01-15",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2020_15": {
+    "season": 2020,
+    "race": 15,
+    "date": "2020-01-19",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2020_16": {
+    "season": 2020,
+    "race": 16,
+    "date": "2020-01-24",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2020_17": {
+    "season": 2020,
+    "race": 17,
+    "date": "2020-01-26",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2020_18": {
+    "season": 2020,
+    "race": 18,
+    "date": "2020-02-14",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2020_19": {
+    "season": 2020,
+    "race": 19,
+    "date": "2020-02-16",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2020_20": {
+    "season": 2020,
+    "race": 20,
+    "date": "2020-02-18",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2020_22": {
+    "season": 2020,
+    "race": 22,
+    "date": "2020-02-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2020_23": {
+    "season": 2020,
+    "race": 23,
+    "date": "2020-03-05",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2020_25": {
+    "season": 2020,
+    "race": 25,
+    "date": "2020-03-08",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Mass Start"
+  },
+  "2020_26": {
+    "season": 2020,
+    "race": 26,
+    "date": "2020-03-13",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2020_27": {
+    "season": 2020,
+    "race": 27,
+    "date": "2020-03-14",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2021_1": {
+    "season": 2021,
+    "race": 1,
+    "date": "2020-11-28",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2021_2": {
+    "season": 2021,
+    "race": 2,
+    "date": "2020-11-29",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2021_3": {
+    "season": 2021,
+    "race": 3,
+    "date": "2020-12-03",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2021_5": {
+    "season": 2021,
+    "race": 5,
+    "date": "2020-12-06",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2021_6": {
+    "season": 2021,
+    "race": 6,
+    "date": "2020-12-11",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2021_8": {
+    "season": 2021,
+    "race": 8,
+    "date": "2020-12-13",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2021_9": {
+    "season": 2021,
+    "race": 9,
+    "date": "2020-12-18",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2021_10": {
+    "season": 2021,
+    "race": 10,
+    "date": "2020-12-19",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2021_11": {
+    "season": 2021,
+    "race": 11,
+    "date": "2020-12-20",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Mass Start"
+  },
+  "2021_12": {
+    "season": 2021,
+    "race": 12,
+    "date": "2021-01-08",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2021_13": {
+    "season": 2021,
+    "race": 13,
+    "date": "2021-01-09",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2021_14": {
+    "season": 2021,
+    "race": 14,
+    "date": "2021-01-14",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2021_16": {
+    "season": 2021,
+    "race": 16,
+    "date": "2021-01-17",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2021_17": {
+    "season": 2021,
+    "race": 17,
+    "date": "2021-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2021_18": {
+    "season": 2021,
+    "race": 18,
+    "date": "2021-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2021_20": {
+    "season": 2021,
+    "race": 20,
+    "date": "2021-02-13",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2021_21": {
+    "season": 2021,
+    "race": 21,
+    "date": "2021-02-14",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2021_22": {
+    "season": 2021,
+    "race": 22,
+    "date": "2021-02-16",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2021_24": {
+    "season": 2021,
+    "race": 24,
+    "date": "2021-02-21",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2021_26": {
+    "season": 2021,
+    "race": 26,
+    "date": "2021-03-06",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2021_27": {
+    "season": 2021,
+    "race": 27,
+    "date": "2021-03-07",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Pursuit"
+  },
+  "2021_28": {
+    "season": 2021,
+    "race": 28,
+    "date": "2021-03-12",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2021_29": {
+    "season": 2021,
+    "race": 29,
+    "date": "2021-03-13",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Pursuit"
+  },
+  "2021_30": {
+    "season": 2021,
+    "race": 30,
+    "date": "2021-03-19",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2021_31": {
+    "season": 2021,
+    "race": 31,
+    "date": "2021-03-20",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2021_32": {
+    "season": 2021,
+    "race": 32,
+    "date": "2021-03-21",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Mass Start"
+  },
+  "2022_1": {
+    "season": 2022,
+    "race": 1,
+    "date": "2021-11-27",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2022_2": {
+    "season": 2022,
+    "race": 2,
+    "date": "2021-11-28",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2022_3": {
+    "season": 2022,
+    "race": 3,
+    "date": "2021-12-02",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2022_4": {
+    "season": 2022,
+    "race": 4,
+    "date": "2021-12-04",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2022_6": {
+    "season": 2022,
+    "race": 6,
+    "date": "2021-12-10",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2022_8": {
+    "season": 2022,
+    "race": 8,
+    "date": "2021-12-12",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2022_9": {
+    "season": 2022,
+    "race": 9,
+    "date": "2021-12-16",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Sprint"
+  },
+  "2022_10": {
+    "season": 2022,
+    "race": 10,
+    "date": "2021-12-18",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Pursuit"
+  },
+  "2022_11": {
+    "season": 2022,
+    "race": 11,
+    "date": "2021-12-19",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Mass Start"
+  },
+  "2022_12": {
+    "season": 2022,
+    "race": 12,
+    "date": "2022-01-07",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2022_13": {
+    "season": 2022,
+    "race": 13,
+    "date": "2022-01-09",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2022_14": {
+    "season": 2022,
+    "race": 14,
+    "date": "2022-01-12",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2022_16": {
+    "season": 2022,
+    "race": 16,
+    "date": "2022-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2022_17": {
+    "season": 2022,
+    "race": 17,
+    "date": "2022-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2022_19": {
+    "season": 2022,
+    "race": 19,
+    "date": "2022-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2022_20": {
+    "season": 2022,
+    "race": 20,
+    "date": "2022-02-07",
+    "city": "Taizicheng",
+    "country": "China",
+    "event": "Individual"
+  },
+  "2022_21": {
+    "season": 2022,
+    "race": 21,
+    "date": "2022-02-11",
+    "city": "Taizicheng",
+    "country": "China",
+    "event": "Sprint"
+  },
+  "2022_22": {
+    "season": 2022,
+    "race": 22,
+    "date": "2022-02-13",
+    "city": "Taizicheng",
+    "country": "China",
+    "event": "Pursuit"
+  },
+  "2022_24": {
+    "season": 2022,
+    "race": 24,
+    "date": "2022-02-18",
+    "city": "Taizicheng",
+    "country": "China",
+    "event": "Mass Start"
+  },
+  "2022_26": {
+    "season": 2022,
+    "race": 26,
+    "date": "2022-03-05",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2022_27": {
+    "season": 2022,
+    "race": 27,
+    "date": "2022-03-06",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2022_28": {
+    "season": 2022,
+    "race": 28,
+    "date": "2022-03-11",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Sprint"
+  },
+  "2022_29": {
+    "season": 2022,
+    "race": 29,
+    "date": "2022-03-12",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Mass Start"
+  },
+  "2022_30": {
+    "season": 2022,
+    "race": 30,
+    "date": "2022-03-18",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2022_31": {
+    "season": 2022,
+    "race": 31,
+    "date": "2022-03-19",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2022_32": {
+    "season": 2022,
+    "race": 32,
+    "date": "2022-03-20",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2023_1": {
+    "season": 2023,
+    "race": 1,
+    "date": "2022-11-30",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2023_3": {
+    "season": 2023,
+    "race": 3,
+    "date": "2022-12-03",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2023_4": {
+    "season": 2023,
+    "race": 4,
+    "date": "2022-12-04",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Pursuit"
+  },
+  "2023_5": {
+    "season": 2023,
+    "race": 5,
+    "date": "2022-12-08",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2023_6": {
+    "season": 2023,
+    "race": 6,
+    "date": "2022-12-10",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2023_8": {
+    "season": 2023,
+    "race": 8,
+    "date": "2022-12-16",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Sprint"
+  },
+  "2023_9": {
+    "season": 2023,
+    "race": 9,
+    "date": "2022-12-17",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Pursuit"
+  },
+  "2023_10": {
+    "season": 2023,
+    "race": 10,
+    "date": "2022-12-18",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Mass Start"
+  },
+  "2023_11": {
+    "season": 2023,
+    "race": 11,
+    "date": "2023-01-05",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Sprint"
+  },
+  "2023_12": {
+    "season": 2023,
+    "race": 12,
+    "date": "2023-01-07",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Pursuit"
+  },
+  "2023_13": {
+    "season": 2023,
+    "race": 13,
+    "date": "2023-01-12",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2023_15": {
+    "season": 2023,
+    "race": 15,
+    "date": "2023-01-15",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2023_16": {
+    "season": 2023,
+    "race": 16,
+    "date": "2023-01-19",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2023_17": {
+    "season": 2023,
+    "race": 17,
+    "date": "2023-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2023_19": {
+    "season": 2023,
+    "race": 19,
+    "date": "2023-02-10",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2023_20": {
+    "season": 2023,
+    "race": 20,
+    "date": "2023-02-12",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2023_21": {
+    "season": 2023,
+    "race": 21,
+    "date": "2023-02-15",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2023_23": {
+    "season": 2023,
+    "race": 23,
+    "date": "2023-02-19",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2023_24": {
+    "season": 2023,
+    "race": 24,
+    "date": "2023-03-03",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2023_25": {
+    "season": 2023,
+    "race": 25,
+    "date": "2023-03-04",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Pursuit"
+  },
+  "2023_26": {
+    "season": 2023,
+    "race": 26,
+    "date": "2023-03-09",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2023_28": {
+    "season": 2023,
+    "race": 28,
+    "date": "2023-03-12",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Mass Start"
+  },
+  "2023_29": {
+    "season": 2023,
+    "race": 29,
+    "date": "2023-03-18",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2023_30": {
+    "season": 2023,
+    "race": 30,
+    "date": "2023-03-19",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2024_1": {
+    "season": 2024,
+    "race": 1,
+    "date": "2023-11-26",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2024_3": {
+    "season": 2024,
+    "race": 3,
+    "date": "2023-12-01",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "2024_4": {
+    "season": 2024,
+    "race": 4,
+    "date": "2023-12-03",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "event": "Pursuit"
+  },
+  "2024_5": {
+    "season": 2024,
+    "race": 5,
+    "date": "2023-12-08",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2024_6": {
+    "season": 2024,
+    "race": 6,
+    "date": "2023-12-09",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2024_8": {
+    "season": 2024,
+    "race": 8,
+    "date": "2023-12-14",
+    "city": "Lenzerheide",
+    "country": "Switzerland",
+    "event": "Sprint"
+  },
+  "2024_9": {
+    "season": 2024,
+    "race": 9,
+    "date": "2023-12-16",
+    "city": "Lenzerheide",
+    "country": "Switzerland",
+    "event": "Pursuit"
+  },
+  "2024_10": {
+    "season": 2024,
+    "race": 10,
+    "date": "2023-12-17",
+    "city": "Lenzerheide",
+    "country": "Switzerland",
+    "event": "Mass Start"
+  },
+  "2024_11": {
+    "season": 2024,
+    "race": 11,
+    "date": "2024-01-05",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2024_12": {
+    "season": 2024,
+    "race": 12,
+    "date": "2024-01-06",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2024_15": {
+    "season": 2024,
+    "race": 15,
+    "date": "2024-01-12",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2024_16": {
+    "season": 2024,
+    "race": 16,
+    "date": "2024-01-14",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2024_17": {
+    "season": 2024,
+    "race": 17,
+    "date": "2024-01-19",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2024_18": {
+    "season": 2024,
+    "race": 18,
+    "date": "2024-01-21",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2024_19": {
+    "season": 2024,
+    "race": 19,
+    "date": "2024-02-09",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2024_20": {
+    "season": 2024,
+    "race": 20,
+    "date": "2024-02-11",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Pursuit"
+  },
+  "2024_21": {
+    "season": 2024,
+    "race": 21,
+    "date": "2024-02-13",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2024_23": {
+    "season": 2024,
+    "race": 23,
+    "date": "2024-02-18",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Mass Start"
+  },
+  "2024_24": {
+    "season": 2024,
+    "race": 24,
+    "date": "2024-03-01",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2024_25": {
+    "season": 2024,
+    "race": 25,
+    "date": "2024-03-02",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2024_26": {
+    "season": 2024,
+    "race": 26,
+    "date": "2024-03-08",
+    "city": "Soldier Hollow UT",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2024_28": {
+    "season": 2024,
+    "race": 28,
+    "date": "2024-03-10",
+    "city": "Soldier Hollow UT",
+    "country": "USA",
+    "event": "Pursuit"
+  },
+  "2024_29": {
+    "season": 2024,
+    "race": 29,
+    "date": "2024-03-14",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Sprint"
+  },
+  "2024_30": {
+    "season": 2024,
+    "race": 30,
+    "date": "2024-03-16",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Pursuit"
+  },
+  "2024_31": {
+    "season": 2024,
+    "race": 31,
+    "date": "2024-03-17",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Mass Start"
+  },
+  "2025_2": {
+    "season": 2025,
+    "race": 2,
+    "date": "2024-12-04",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2025_3": {
+    "season": 2025,
+    "race": 3,
+    "date": "2024-12-07",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2025_4": {
+    "season": 2025,
+    "race": 4,
+    "date": "2024-12-08",
+    "city": "Kontiolahti",
+    "country": "Finland",
+    "event": "Mass Start"
+  },
+  "2025_5": {
+    "season": 2025,
+    "race": 5,
+    "date": "2024-12-13",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2025_6": {
+    "season": 2025,
+    "race": 6,
+    "date": "2024-12-14",
+    "city": "Hochfilzen",
+    "country": "Austria",
+    "event": "Pursuit"
+  },
+  "2025_8": {
+    "season": 2025,
+    "race": 8,
+    "date": "2024-12-20",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Sprint"
+  },
+  "2025_9": {
+    "season": 2025,
+    "race": 9,
+    "date": "2024-12-21",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Pursuit"
+  },
+  "2025_10": {
+    "season": 2025,
+    "race": 10,
+    "date": "2024-12-22",
+    "city": "Annecy-Le Grand-Bornand",
+    "country": "France",
+    "event": "Mass Start"
+  },
+  "2025_11": {
+    "season": 2025,
+    "race": 11,
+    "date": "2025-01-09",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2025_12": {
+    "season": 2025,
+    "race": 12,
+    "date": "2025-01-11",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Pursuit"
+  },
+  "2025_13": {
+    "season": 2025,
+    "race": 13,
+    "date": "2025-01-16",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2025_15": {
+    "season": 2025,
+    "race": 15,
+    "date": "2025-01-19",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2025_16": {
+    "season": 2025,
+    "race": 16,
+    "date": "2025-01-23",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2025_17": {
+    "season": 2025,
+    "race": 17,
+    "date": "2025-01-25",
+    "city": "Antholz-Anterselva",
+    "country": "Italy",
+    "event": "Pursuit"
+  },
+  "2025_19": {
+    "season": 2025,
+    "race": 19,
+    "date": "2025-02-14",
+    "city": "Lenzerheide",
+    "country": "Switzerland",
+    "event": "Sprint"
+  },
+  "2025_20": {
+    "season": 2025,
+    "race": 20,
+    "date": "2025-02-16",
+    "city": "Lenzerheide",
+    "country": "Switzerland",
+    "event": "Pursuit"
+  },
+  "2025_21": {
+    "season": 2025,
+    "race": 21,
+    "date": "2025-02-18",
+    "city": "Lenzerheide",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "2025_23": {
+    "season": 2025,
+    "race": 23,
+    "date": "2025-02-23",
+    "city": "Lenzerheide",
+    "country": "Switzerland",
+    "event": "Mass Start"
+  },
+  "2025_24": {
+    "season": 2025,
+    "race": 24,
+    "date": "2025-03-07",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2025_25": {
+    "season": 2025,
+    "race": 25,
+    "date": "2025-03-08",
+    "city": "Nove Mesto",
+    "country": "Czechia",
+    "event": "Pursuit"
+  },
+  "2025_27": {
+    "season": 2025,
+    "race": 27,
+    "date": "2025-03-13",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2025_28": {
+    "season": 2025,
+    "race": 28,
+    "date": "2025-03-15",
+    "city": "Pokljuka",
+    "country": "Slovenia",
+    "event": "Mass Start"
+  },
+  "2025_29": {
+    "season": 2025,
+    "race": 29,
+    "date": "2025-03-21",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2025_30": {
+    "season": 2025,
+    "race": 30,
+    "date": "2025-03-22",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Pursuit"
+  },
+  "2025_31": {
+    "season": 2025,
+    "race": 31,
+    "date": "2025-03-23",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Mass Start"
+  }
+}

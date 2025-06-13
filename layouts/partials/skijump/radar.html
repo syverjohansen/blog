@@ -1,0 +1,188 @@
+{{/* layouts/skijump/partials/radar.html */}}
+<div class="card">
+    <div class="card-header">
+        <h4>Performance Radar</h4>
+    </div>
+    <div class="card-body">
+        <canvas id="radarChart" width="400" height="400" style="width: 100%; height: auto;"></canvas>
+        <div id="radar-loading" class="text-center">
+            <p>Waiting for skier data...</p>
+        </div>
+        <div id="radar-error" class="alert alert-danger" style="display:none;">
+            <p id="radar-error-message">Error loading radar chart data.</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Direct initialization function to avoid jQuery dependency
+function initRadarChart() {
+    let radarChart = null;
+    
+    // Function to calculate percentages if they don't exist
+    function calculatePercentages(data) {
+        if (!data || data.length === 0) return data;
+        
+        // Clone the data to avoid modifying the original
+        const processedData = JSON.parse(JSON.stringify(data));
+        
+        // See if the first entry already has percentage columns
+        const firstEntry = processedData[0];
+        const hasPercentages = firstEntry && firstEntry.hasOwnProperty('Elo_Pct');
+        
+        if (hasPercentages) {
+            return processedData;
+        }
+        
+        // Elo columns to process
+        const eloColumns = [
+            "Elo", "Distance_Elo", "Distance_C_Elo", "Distance_F_Elo", 
+            "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo", 
+            "Classic_Elo", "Freestyle_Elo"
+        ];
+        
+        // Process each Elo column
+        eloColumns.forEach(column => {
+            if (!firstEntry || !firstEntry.hasOwnProperty(column)) {
+                return;
+            }
+            
+            // Get all values for this column
+            const values = processedData.map(entry => parseFloat(entry[column]) || 0);
+            
+            // Find max value
+            const maxValue = Math.max(...values);
+            
+            if (maxValue > 0) {
+                // Calculate percentage for each entry
+                processedData.forEach((entry, index) => {
+                    const value = parseFloat(entry[column]) || 0;
+                    entry[`${column}_Pct`] = Math.round((value / maxValue) * 100);
+                });
+            } else {
+                // If no valid values, set all percentages to 0
+                processedData.forEach(entry => {
+                    entry[`${column}_Pct`] = 0;
+                });
+            }
+        });
+        
+        return processedData;
+    }
+    
+    // Function to create the radar chart with the data
+    function createRadarChart(data) {
+        try {
+            // Hide loading message
+            document.getElementById('radar-loading').style.display = 'none';
+            
+            // Calculate percentages if needed
+            const processedData = calculatePercentages(data);
+            
+            // Make sure we have data
+            if (!processedData || processedData.length === 0) {
+                document.getElementById('radar-error').style.display = 'block';
+                document.getElementById('radar-error-message').textContent = 'Error: No data available for radar chart';
+                return;
+            }
+            
+            // Find the most recent entry
+            const mostRecentEntry = processedData[processedData.length - 1];
+            
+            // Check if percentage columns exist
+            const hasPercentages = mostRecentEntry && mostRecentEntry.hasOwnProperty('Elo_Pct');
+            if (!hasPercentages) {
+                document.getElementById('radar-error').style.display = 'block';
+                document.getElementById('radar-error-message').textContent = 'Error: Percentage columns not available';
+                return;
+            }
+
+            const radarLabels = [
+                "Overall", "Distance", "Distance Classic",
+                "Distance Freestyle", "Sprint", "Sprint Classic",
+                "Sprint Freestyle", "Classic", "Freestyle"
+            ];
+
+            const radarValues = [
+                parseFloat(mostRecentEntry.Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Distance_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Distance_C_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Distance_F_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Sprint_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Sprint_C_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Sprint_F_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Classic_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Freestyle_Elo_Pct) || 0
+            ];
+
+            const canvas = document.getElementById('radarChart');
+            if (!canvas) {
+                document.getElementById('radar-error').style.display = 'block';
+                document.getElementById('radar-error-message').textContent = 'Error: Canvas element not found';
+                return;
+            }
+            
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                document.getElementById('radar-error').style.display = 'block';
+                document.getElementById('radar-error-message').textContent = 'Error: Canvas context not available';
+                return;
+            }
+            
+            if (radarChart) {
+                radarChart.destroy();
+            }
+            
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: radarLabels,
+                    datasets: [{
+                        label: 'Most Recent Elo Percentiles',
+                        data: radarValues,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: false
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return Math.round(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            document.getElementById('radar-error').style.display = 'block';
+            document.getElementById('radar-error-message').textContent = 'Error creating chart: ' + error.message;
+        }
+    }
+    
+    // Listen for the skierDataLoaded event from the table component
+    document.addEventListener('skierDataLoaded', function(e) {
+        if (e.detail && e.detail.skierData) {
+            createRadarChart(e.detail.skierData);
+        } else {
+            document.getElementById('radar-error').style.display = 'block';
+            document.getElementById('radar-error-message').textContent = 'Error: Invalid data received from event';
+        }
+    });
+}
+
+// Initialize the radar chart when the DOM is ready
+document.addEventListener('DOMContentLoaded', initRadarChart);
+</script>

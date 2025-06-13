@@ -58,16 +58,18 @@ log_info(paste("Next weekend date:", next_weekend_date))
 # Filter races for just the next weekend
 next_weekend_races <- next_races %>%
   filter(Date == next_weekend_date)
-
+print(next_weekend_races)
 # Create race dataframes for men and ladies
 men_races <- next_weekend_races %>%
   filter(Sex == "M") %>%
+  filter(!Distance %in% c("Rel", "Ts")) %>%  # Exclude relay and team sprint
   dplyr::select(Distance, Technique, MS, Elevation, Period, Pursuit) %>%
   rename(distance = Distance, technique = Technique, 
          ms = MS, altitude = Elevation, period = Period)
 
 ladies_races <- next_weekend_races %>%
   filter(Sex == "L") %>%
+  filter(!Distance %in% c("Rel", "Ts")) %>%  # Exclude relay and team sprint
   dplyr::select(Distance, Technique, MS, Elevation, Period, Pursuit) %>%
   rename(distance = Distance, technique = Technique, 
          ms = MS, altitude = Elevation, period = Period)
@@ -813,18 +815,20 @@ get_points <- function(place, points_list) {
 
 preprocess_data <- function(df) {
     # Load weekends data to determine points systems for historical races
-    weekends_data <- read.csv("~/ski/elo/python/ski/polars/excel365/weekends.csv", 
-                             stringsAsFactors = FALSE) %>%
-      mutate(Date = as.Date(Date, format="%m/%d/%y"))
+  weekends_data <- read.csv("~/ski/elo/python/ski/polars/excel365/weekends.csv", 
+                       stringsAsFactors = FALSE) %>%
+    mutate(Date = mdy(Date)) # This will work for MM/DD/YYYY format (4-digit year)
+  
     
     # Determine points system based on next race weekend
     # Find the next race after today
+    print(weekends_data)
     current_date <- as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d")
     next_weekend <- weekends_data %>%
       filter(Date >= current_date) %>%
       arrange(Date) %>%
       dplyr::slice(1)
-    
+    print(next_weekend)
     # Check if the next race is a stage race
     is_stage_weekend <- !is.na(next_weekend$Stage) && next_weekend$Stage == 1
     
@@ -1051,7 +1055,7 @@ run_fantasy_optimization <- function(men_results, ladies_results, weekend_date) 
   # Save the normal team as the main recommendation
   normal_team %>% 
     rename(`Predicted Points` = Points) %>%
-    write.xlsx(file.path(dir_path, "fantasy-team.xlsx"))
+    write.xlsx(file.path(dir_path, "fantasy_team.xlsx"))
   
   log_info("Fantasy optimization complete")
   
@@ -1967,7 +1971,7 @@ if(adj_name %in% names(position_adjustments)) {
                    Final_Prediction, Safe_Prediction, Upside_Prediction,
                    race_prob_col)
     
-    View(race_dfs[[i]])
+    #View(race_dfs[[i]])
 
     
     # Apply pursuit handling if needed
@@ -2041,7 +2045,7 @@ if(adj_name %in% names(position_adjustments)) {
   }
   
   # Save points predictions to Excel
-  points_file_path <- file.path(dir_path, paste0(ifelse(gender == "men", "men", "ladies"), "-points.xlsx"))
+  points_file_path <- file.path(dir_path, paste0(ifelse(gender == "men", "men", "ladies"), ".xlsx"))
   write.xlsx(post_predictions, file = points_file_path)
   
   log_info(paste("Saved", gender, "points predictions to", points_file_path))

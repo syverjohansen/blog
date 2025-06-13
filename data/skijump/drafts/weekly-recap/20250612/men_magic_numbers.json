@@ -1,0 +1,26 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Daniel Tschofenig",
+      2542,
+      1,
+      1805,
+      201
+    ],
+    [
+      "Jan Hörl",
+      2416,
+      2,
+      1652,
+      48
+    ]
+  ]
+}

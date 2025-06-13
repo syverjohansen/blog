@@ -90,9 +90,13 @@
     <script src="{{ . | absURL }}"></script>
     {{ end }}
 
+    <link rel="stylesheet" href="{{ "css/custom.css" | relURL }}">
+
 </head>
 
 {{ if .Site.Config.Services.GoogleAnalytics.ID }}
 {{ template "_internal/google_analytics.html" . }}
 {{ end }}
+
+
 

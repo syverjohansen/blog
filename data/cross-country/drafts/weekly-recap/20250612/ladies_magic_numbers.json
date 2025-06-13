@@ -1,0 +1,26 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      1,
+      2197,
+      401
+    ],
+    [
+      "Victoria Carl",
+      1489,
+      2,
+      1827,
+      31
+    ]
+  ]
+}

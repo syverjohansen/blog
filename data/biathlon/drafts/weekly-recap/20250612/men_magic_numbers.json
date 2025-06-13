@@ -1,0 +1,26 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Sturla Holm Lægreid",
+      2753,
+      1,
+      1291,
+      361
+    ],
+    [
+      "Johannes Thingnes Bø",
+      908,
+      2,
+      1173,
+      243
+    ]
+  ]
+}

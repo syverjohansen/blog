@@ -1,0 +1,166 @@
+<div class="container-fluid">
+    <div>
+        <h1 id="Ladies">Ladies All-Time Rankings</h1>
+        <table id="dataTableL_ranks" class="display">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 50px;">
+        <h1 id="Men">Men All-Time Rankings</h1>
+        <table id="dataTableM_ranks" class="display">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
+<script>
+$(document).ready(function() {
+    function initializeTable(tableId, jsonUrl, gender) {
+        $.getJSON(jsonUrl, function(data) {
+            // Find max season to determine active skiers
+            let maxSeason = 0;
+            data.forEach(function(row) {
+                if (row.To > maxSeason) {
+                    maxSeason = row.To;
+                }
+            });
+
+            var columns = [
+                {
+                    data: null,
+                    title: 'Rank',
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                },
+                {
+                    data: 'Skier',
+                    title: 'Skier',
+                    render: function(data, type, row) {
+                        const isActive = row.To === maxSeason;
+                        let subtitle = '';
+                        
+                        if (isActive) {
+                            // For active skiers, show age
+                            if (row.Age) {
+                                subtitle = `<span style="font-size:0.85em;color:#666;display:block;">(${row.From}-Present, ${row.Age})</span>`;
+                            }
+                        } else {
+                            // For retired skiers, show years active
+                            subtitle = row.From !== row.To ? 
+                                `<span style="font-size:0.85em;color:#666;display:block;">(${row.From}-${row.To})</span>` : 
+                                `<span style="font-size:0.85em;color:#666;display:block;">(${row.From})</span>`;
+                        }
+                        
+                        return `<a href="/skijump/skiers/skier/?id=${row.ID}&gender=${gender}" ${isActive ? 'style="font-weight:bold;"' : ''}>
+                            ${data}
+                        </a>${subtitle}`;
+                    }
+                },
+                {
+                    data: 'Nation',
+                    title: 'Nation',
+                    render: function(data) {
+                        return data;
+                    }
+                },
+                {
+                    data: 'Olympics',
+                    title: 'Olympics',
+                    render: function(data) {
+                        return data ? data.toFixed(1) : '0';
+                    }
+                },
+                {
+                    data: 'WSC',
+                    title: 'World Champs',
+                    render: function(data) {
+                        return data ? data.toFixed(1) : '0';
+                    }
+                },
+                {
+                    data: 'Tour',
+                    title: 'Tour de Ski',
+                    render: function(data) {
+                        return data ? data.toFixed(1) : '0';
+                    }
+                },
+                {
+                    data: 'WC',
+                    title: 'World Cup',
+                    render: function(data) {
+                        return data ? data.toFixed(1) : '0';
+                    }
+                },
+                {
+                    data: 'Table',
+                    title: 'Standings',
+                    render: function(data) {
+                        return data ? data.toFixed(1) : '0';
+                    }
+                },
+                {
+                    data: 'Total',
+                    title: 'Total',
+                    render: function(data) {
+                        return data ? data.toFixed(1) : '0';
+                    }
+                },
+                {
+                    data: 'ID',
+                    title: 'ID',
+                    visible: false
+                },
+                {
+                    data: 'Age',
+                    title: 'Age',
+                    visible: false
+                },
+                {
+                    data: 'From',
+                    title: 'From',
+                    visible: false
+                },
+                {
+                    data: 'To',
+                    title: 'To',
+                    visible: false
+                }
+            ];
+
+            $(tableId).DataTable({
+                data: data,
+                columns: columns,
+                scrollX: true,
+                scrollCollapse: true,
+                fixedColumns: {leftColumns: 3},  // Updated to include Nation column
+                pageLength: 50,
+                order: [[0, 'asc']], // Sort by Rank column (ascending)
+                orderCellsTop: true,
+                language: {
+                    search: "Filter skiers:"
+                },
+                columnDefs: [
+                    {
+                        // Set default order for numeric columns to be descending
+                        targets: [3, 4, 5, 6, 7, 8, 9], // Olympic, WSC, Tour, WC, Table, Total columns
+                        orderSequence: ['desc', 'asc']
+                    }
+                ]
+            });
+        }).fail(function() {
+            console.error(`Failed to load JSON data for ${gender}`);
+            $(tableId).html('<tr><td colspan="9">Error loading rankings data</td></tr>');
+        });
+    }
+
+    initializeTable('#dataTableL_ranks', '{{ "python/skijump/excel365/L/ranks.json" | relURL }}', 'L');
+    initializeTable('#dataTableM_ranks', '{{ "python/skijump/excel365/M/ranks.json" | relURL }}?t=' + new Date().getTime(), 'M');
+});
+</script>

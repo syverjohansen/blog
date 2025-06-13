@@ -1,39 +1,58 @@
 {{ define "main" }}
 <article class="container mx-auto px-6 py-12">
-    <!-- Page Title -->
-    <header class="text-center mb-16">
-        <h1 class="text-5xl font-bold mb-4">{{ .Title }}</h1>
-        <div class="w-24 h-1 bg-red-600 mx-auto"></div>
-    </header>
+    {{ $currentURL := .RelPermalink }}
+    <!-- Check if this is a special section -->
+    {{ if eq $currentURL "/nordic-combined/races/" }}
+        {{ partial "nordic-combined/races-landing.html" . }}
+    {{ else if eq $currentURL "/nordic-combined/races/season/" }}
+        {{ partial "nordic-combined/year-races.html" . }}
+    {{ else if eq $currentURL "/nordic-combined/races/race/" }}
+        {{ partial "nordic-combined/race-results.html" . }}
+    {{ else if eq $currentURL "/nordic-combined/ranks/" }}
+        <header class="text-center mb-8">
+            <h1 class="text-5xl font-bold mb-4">{{ .Title }}</h1>
+            <div class="w-24 h-1 bg-red-600 mx-auto"></div>
+            <p class="mt-4 text-xl text-gray-600">{{ .Description }}</p>
+        </header>
+        {{ .Content }}
+        {{ partial "nordic-combined/ranks-table.html" . }}
+    {{ else if eq $currentURL "/nordic-combined/skiers/skier/" }}
+        {{ partial "nordic-combined/skier-table.html" . }}
+    {{ else }}
+        <!-- Original list.html content for other pages -->
+        <header class="text-center mb-16">
+            <h1 class="text-5xl font-bold mb-4">{{ .Title }}</h1>
+            <div class="w-24 h-1 bg-red-600 mx-auto"></div>
+        </header>
 
-    <!-- Grid Container -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {{ $sections := dict 
-            "elo" "Current Elo Scores" 
-            "all-elo" "All Time Elo Scores"
-            "races" "Race Archives"
-            "ranks" "All-time Rankings"
-            "athletes" "Athletes"
-            "posts" "Posts"
-        }}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {{ $sections := dict 
+                "elo" "Current Elo Scores" 
+                "all-elo" "All Time Elo Scores"
+                "races" "Race Archives"
+                "ranks" "All-time Rankings"
+                "athletes" "Athletes"
+                "head2head" "Head-to-Head"
+            }}
 
-        {{ $descriptions := dict 
-            "elo" "View current rankings and Elo ratings"
-            "all-elo" "Historical Elo ratings and trends"
-            "races" "Browse past race results and data"
-            "ranks" "Historical rankings and statistics"
-            "athletes" "Detailed athlete profiles and stats"
-            "posts" "Latest news and analysis"
-        }}
+            {{ $descriptions := dict 
+                "elo" "View current rankings and Elo ratings"
+                "all-elo" "Historical Elo ratings and trends"
+                "races" "Browse past race results and data"
+                "ranks" "Historical rankings and statistics"
+                "athletes" "Detailed athlete profiles and stats"
+                "head2head" "Head-to-Head matchups between skiers"
+            }}
 
-        {{ range $path, $title := $sections }}
-            <a href="{{ $.RelPermalink }}{{ $path }}" class="transform transition duration-300 hover:-translate-y-1">
-                <div class="bg-white rounded-lg shadow-md p-8 h-full border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-3">{{ $title }}</h2>
-                    <p class="text-gray-600">{{ index $descriptions $path }}</p>
-                </div>
-            </a>
-        {{ end }}
-    </div>
+            {{ range $path, $title := $sections }}
+                <a href="{{ $.RelPermalink }}{{ $path }}" class="transform transition duration-300 hover:-translate-y-1">
+                    <div class="bg-white rounded-lg shadow-md p-8 h-full border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-3">{{ $title }}</h2>
+                        <p class="text-gray-600">{{ index $descriptions $path }}</p>
+                    </div>
+                </a>
+            {{ end }}
+        </div>
+    {{ end }}
 </article>
 {{ end }}
