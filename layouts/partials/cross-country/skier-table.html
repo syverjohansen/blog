@@ -114,11 +114,41 @@
 
             // Filter the data to only show columns present in the `columnsToShow` array
             const columns = columnsToShow.map(function(key) {
+                let title = key;
+                
+                // Create more readable column titles for cross-country disciplines
+                const titleMap = {
+                    'Distance_Elo': 'Distance',
+                    'Distance_C_Elo': 'Distance Classic',
+                    'Distance_F_Elo': 'Distance Freestyle',
+                    'Sprint_Elo': 'Sprint',
+                    'Sprint_C_Elo': 'Sprint Classic',
+                    'Sprint_F_Elo': 'Sprint Freestyle',
+                    'Classic_Elo': 'Classic Events',
+                    'Freestyle_Elo': 'Freestyle Events',
+                    'Distance_Elo_Pct': 'Distance %',
+                    'Distance_C_Elo_Pct': 'Distance Classic %',
+                    'Distance_F_Elo_Pct': 'Distance Freestyle %',
+                    'Sprint_Elo_Pct': 'Sprint %',
+                    'Sprint_C_Elo_Pct': 'Sprint Classic %',
+                    'Sprint_F_Elo_Pct': 'Sprint Freestyle %',
+                    'Classic_Elo_Pct': 'Classic Events %',
+                    'Freestyle_Elo_Pct': 'Freestyle Events %',
+                    'Elo_Pct': 'Overall %'
+                };
+                
+                if (titleMap[key]) {
+                    title = titleMap[key];
+                } else {
+                    title = key.replace(/_/g, ' ').charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
+                }
+                
                 const columnDef = {
                     data: key,
-                    title: key.replace(/_/g, ' ').charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
+                    title: title,
                     visible: key !== 'ID',
-                    className: key.includes('Elo') ? 'text-right' : ''
+                    className: key.includes('Elo') ? 'text-right' : '',
+                    orderSequence: key.includes('Elo') ? ['desc', 'asc'] : ['asc', 'desc']
                 };
                 
                 // Add render function for Elo columns and Age to remove decimals
@@ -126,7 +156,11 @@
                     columnDef.render = function(data, type, row) {
                         if (type === 'display' || type === 'filter') {
                             // For display and filtering, convert to integer
-                            return data ? Math.round(parseFloat(data)) : data;
+                            if (key.includes('_Pct')) {
+                                return data ? Math.round(parseFloat(data)) + '%' : data;
+                            } else {
+                                return data ? Math.round(parseFloat(data)) : data;
+                            }
                         }
                         // For sorting and other operations, use the original value
                         return data;
@@ -152,7 +186,7 @@
                     scrollY: '400px',
                     scrollCollapse: true,
                     paging: false,
-                    order: [[0, 'asc']] // Sort by date by default
+                    order: [[0, 'desc']] // Sort by date descending (most recent first)
                 });
             } catch (error) {
                 $('#dataTableL').html('<tr><td colspan="12">Error initializing data table</td></tr>');

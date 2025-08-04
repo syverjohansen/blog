@@ -103,8 +103,9 @@ def process_csv(gender, csv_path):
                 "date": str(first_row['Date']),
                 "city": str(first_row['City']),
                 "country": str(first_row['Country']),
-                "hillsize": str(first_row['HillSize']),
+                "event": str(first_row['Event']),
                 "racetype": str(first_row['RaceType']),
+                "hillsize": str(first_row['HillSize']),
                 "podium": podium
             }
             race_summaries.append(summary)

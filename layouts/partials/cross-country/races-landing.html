@@ -30,6 +30,41 @@
                     ...mensData.map(s => s.season)
                 ])].sort((a, b) => b - a); // Sort descending
 
+                // Calculate win counts for each athlete up to each season
+                function calculateWinCounts(ladiesData, mensData) {
+                    const ladiesWinCounts = {};
+                    const mensWinCounts = {};
+                    
+                    // Sort data by season ascending to count chronologically
+                    const ladiesSorted = ladiesData
+                        .filter(season => season.winner && season.winner.name)
+                        .sort((a, b) => a.season - b.season);
+                    
+                    const mensSorted = mensData
+                        .filter(season => season.winner && season.winner.name)
+                        .sort((a, b) => a.season - b.season);
+                    
+                    // Count wins cumulatively for ladies
+                    const ladiesCurrentCounts = {};
+                    ladiesSorted.forEach(season => {
+                        const name = season.winner.name;
+                        ladiesCurrentCounts[name] = (ladiesCurrentCounts[name] || 0) + 1;
+                        ladiesWinCounts[`${name}_${season.season}`] = ladiesCurrentCounts[name];
+                    });
+                    
+                    // Count wins cumulatively for men
+                    const mensCurrentCounts = {};
+                    mensSorted.forEach(season => {
+                        const name = season.winner.name;
+                        mensCurrentCounts[name] = (mensCurrentCounts[name] || 0) + 1;
+                        mensWinCounts[`${name}_${season.season}`] = mensCurrentCounts[name];
+                    });
+                    
+                    return { ladiesWinCounts, mensWinCounts };
+                }
+
+                const { ladiesWinCounts, mensWinCounts } = calculateWinCounts(ladiesData, mensData);
+
                 // Combine the data
                 const combinedSeasons = allSeasons.map(season => {
                     const ladiesSeason = ladiesData.find(s => s.season === season);
@@ -48,7 +83,7 @@
                     };
                 });
 
-                displaySeasons(combinedSeasons);
+                displaySeasons(combinedSeasons, ladiesWinCounts, mensWinCounts);
             } catch (error) {
                 console.error('Error loading data:', error);
                 document.getElementById('yearsGrid').innerHTML = `
@@ -59,7 +94,7 @@
             }
         });
 
-        function displaySeasons(seasons) {
+        function displaySeasons(seasons, ladiesWinCounts, mensWinCounts) {
             const container = document.getElementById('yearsGrid');
             const pagination = document.getElementById('pagination');
             const yearsPerPage = 20;
@@ -103,7 +138,7 @@
                                 <div>
                                     <h3 class="font-semibold text-gray-700">Ladies Winner (${season.ladiesRaces} races)</h3>
                                     ${season.ladiesWinner ? 
-                                        `<p>${season.ladiesWinner.name}<br><span class="text-gray-500">${season.ladiesWinner.nation}</span></p>` : 
+                                        `<p>${season.ladiesWinner.name} (${ladiesWinCounts[`${season.ladiesWinner.name}_${season.season}`] || 1})<br><span class="text-gray-500">${season.ladiesWinner.nation}</span></p>` : 
                                         '<p class="italic text-gray-400">No winner data available</p>'
                                     }
                                 </div>
@@ -112,7 +147,7 @@
                                 <div>
                                     <h3 class="font-semibold text-gray-700">Men's Winner (${season.mensRaces} races)</h3>
                                     ${season.mensWinner ? 
-                                        `<p>${season.mensWinner.name}<br><span class="text-gray-500">${season.mensWinner.nation}</span></p>` : 
+                                        `<p>${season.mensWinner.name} (${mensWinCounts[`${season.mensWinner.name}_${season.season}`] || 1})<br><span class="text-gray-500">${season.mensWinner.nation}</span></p>` : 
                                         '<p class="italic text-gray-400">No winner data available</p>'
                                     }
                                 </div>

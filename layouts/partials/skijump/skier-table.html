@@ -34,18 +34,16 @@
         let table;
         let hasPercentageData = false;
 
-        // Column definitions for Elo Mode
+        // Column definitions for Elo Mode - Ski Jump hill sizes
         const eloColumns = [
-            'Date', 'City', 'Country', 'Distance', 'MS', 'Technique', 'Place', 'Season', 'Race', 'Age', 
-            'Elo', 'Distance_Elo', 'Distance_C_Elo', 'Distance_F_Elo', 'Sprint_Elo', 'Sprint_C_Elo', 'Sprint_F_Elo', 
-            'Classic_Elo', 'Freestyle_Elo'
+            'Date', 'City', 'Country', 'RaceType', 'Place', 'Season', 'Race', 'Age', 
+            'Elo', 'Small_Elo', 'Medium_Elo', 'Normal_Elo', 'Large_Elo', 'Flying_Elo'
         ];
 
-        // Column definitions for Percent of Max Mode
+        // Column definitions for Percent of Max Mode - Ski Jump hill sizes
         const pctColumns = [
-            'Date', 'City', 'Country', 'Distance', 'MS', 'Technique', 'Place', 'Season', 'Race', 'Age', 
-            'Elo_Pct', 'Distance_Elo_Pct', 'Distance_C_Elo_Pct', 'Distance_F_Elo_Pct', 'Sprint_Elo_Pct', 
-            'Sprint_C_Elo_Pct', 'Sprint_F_Elo_Pct', 'Classic_Elo_Pct', 'Freestyle_Elo_Pct'
+            'Date', 'City', 'Country', 'RaceType', 'Place', 'Season', 'Race', 'Age', 
+            'Elo_Pct', 'Small_Elo_Pct', 'Medium_Elo_Pct', 'Normal_Elo_Pct', 'Large_Elo_Pct', 'Flying_Elo_Pct'
         ];
 
         // Function to format data from the structure
@@ -114,11 +112,36 @@
 
             // Filter the data to only show columns present in the `columnsToShow` array
             const columns = columnsToShow.map(function(key) {
+                let title = key;
+                
+                // Create more readable column titles for Ski Jump hill sizes
+                const titleMap = {
+                    'Small_Elo': 'Small Hill',
+                    'Medium_Elo': 'Medium Hill',
+                    'Normal_Elo': 'Normal Hill',
+                    'Large_Elo': 'Large Hill',
+                    'Flying_Elo': 'Flying Hill',
+                    'Small_Elo_Pct': 'Small Hill %',
+                    'Medium_Elo_Pct': 'Medium Hill %',
+                    'Normal_Elo_Pct': 'Normal Hill %',
+                    'Large_Elo_Pct': 'Large Hill %',
+                    'Flying_Elo_Pct': 'Flying Hill %',
+                    'Elo_Pct': 'Overall %',
+                    'RaceType': 'Race Type'
+                };
+                
+                if (titleMap[key]) {
+                    title = titleMap[key];
+                } else {
+                    title = key.replace(/_/g, ' ').charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
+                }
+                
                 const columnDef = {
                     data: key,
-                    title: key.replace(/_/g, ' ').charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
+                    title: title,
                     visible: key !== 'ID',
-                    className: key.includes('Elo') ? 'text-right' : ''
+                    className: key.includes('Elo') ? 'text-right' : '',
+                    orderSequence: key.includes('Elo') ? ['desc', 'asc'] : ['asc', 'desc']
                 };
                 
                 // Add render function for Elo columns and Age to remove decimals
@@ -126,7 +149,11 @@
                     columnDef.render = function(data, type, row) {
                         if (type === 'display' || type === 'filter') {
                             // For display and filtering, convert to integer
-                            return data ? Math.round(parseFloat(data)) : data;
+                            if (key.includes('_Pct')) {
+                                return data ? Math.round(parseFloat(data)) + '%' : data;
+                            } else {
+                                return data ? Math.round(parseFloat(data)) : data;
+                            }
                         }
                         // For sorting and other operations, use the original value
                         return data;
@@ -152,7 +179,7 @@
                     scrollY: '400px',
                     scrollCollapse: true,
                     paging: false,
-                    order: [[0, 'asc']] // Sort by date by default
+                    order: [[0, 'desc']] // Sort by date descending (most recent first)
                 });
             } catch (error) {
                 $('#dataTableL').html('<tr><td colspan="12">Error initializing data table</td></tr>');

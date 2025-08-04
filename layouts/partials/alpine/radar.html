@@ -36,11 +36,10 @@ function initRadarChart() {
             return processedData;
         }
         
-        // Elo columns to process
+        // Alpine Elo columns to process
         const eloColumns = [
-            "Elo", "Distance_Elo", "Distance_C_Elo", "Distance_F_Elo", 
-            "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo", 
-            "Classic_Elo", "Freestyle_Elo"
+            "Elo", "Downhill_Elo", "Super G_Elo", "Giant Slalom_Elo", 
+            "Slalom_Elo", "Combined_Elo", "Tech_Elo", "Speed_Elo"
         ];
         
         // Process each Elo column
@@ -100,21 +99,20 @@ function initRadarChart() {
             }
 
             const radarLabels = [
-                "Overall", "Distance", "Distance Classic",
-                "Distance Freestyle", "Sprint", "Sprint Classic",
-                "Sprint Freestyle", "Classic", "Freestyle"
+                "Overall", "Downhill", "Super-G",
+                "Giant Slalom", "Slalom", "Combined",
+                "Technical Events", "Speed Events"
             ];
 
             const radarValues = [
                 parseFloat(mostRecentEntry.Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_C_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_F_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_C_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_F_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Classic_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Freestyle_Elo_Pct) || 0
+                parseFloat(mostRecentEntry.Downhill_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry["Super G_Elo_Pct"]) || 0,
+                parseFloat(mostRecentEntry["Giant Slalom_Elo_Pct"]) || 0,
+                parseFloat(mostRecentEntry.Slalom_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Combined_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Tech_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Speed_Elo_Pct) || 0
             ];
 
             const canvas = document.getElementById('radarChart');
@@ -142,9 +140,13 @@ function initRadarChart() {
                     datasets: [{
                         label: 'Most Recent Elo Percentiles',
                         data: radarValues,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
+                        backgroundColor: 'rgba(220, 53, 69, 0.2)', // Red theme for alpine
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(220, 53, 69, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(220, 53, 69, 1)'
                     }]
                 },
                 options: {
@@ -153,15 +155,30 @@ function initRadarChart() {
                     scales: {
                         r: {
                             angleLines: {
-                                display: false
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 12
+                                }
                             },
                             suggestedMin: 0,
                             suggestedMax: 100,
                             ticks: {
                                 callback: function(value) {
-                                    return Math.round(value);
-                                }
+                                    return Math.round(value) + '%';
+                                },
+                                stepSize: 20
                             }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
                         }
                     }
                 }

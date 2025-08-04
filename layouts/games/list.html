@@ -1,0 +1,529 @@
+{{ define "header" }}
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header {
+        background-image: url('{{ if .Params.image }}{{ .Params.image | relURL }}{{ else }}{{ .Site.Params.header_image | relURL}}{{ end }}')
+    }
+</style>
+{{ if eq .Params.headerstyle "text" }}
+<header class="intro-header style-text" >
+{{ else }}
+<header class="intro-header" >
+{{ end }}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        {{ range .Params.tags }}
+                        <a class="tag" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" title="{{ . }}">
+                            {{ . }}
+                        </a>
+                        {{ end }}
+                    </div>
+                    <h1>{{ .Title }}</h1>
+                    <h2 class="subheading">{{ .Params.subtitle }}</h2>
+                    <span class="meta">
+                        {{ if .Params.metadata }}
+                            {{ range $index, $element := .Params.metadata }}
+                                {{ if .link }}
+                                    <a href="{{ .link }}">{{ .text }}</a>
+                                {{ else }}
+                                    {{ .text }}
+                                {{ end }}
+                            {{ end }}
+                        {{ end }}    
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{{ end }}
+
+{{ define "main" }}
+<article class="container mx-auto px-6 py-12" id="gamesContent">
+    <!-- Description -->
+    <div class="text-center mb-8">
+        <p class="text-lg text-gray-600">{{ .Description }}</p>
+    </div>
+
+    <!-- Gender Navigation -->
+    <div class="gender-navigation mb-8">
+        <div class="nav-tabs justify-center">
+            <button class="nav-tab active" data-target="ladies" id="ladiesTab">
+                <span class="tab-icon">👩</span>
+                Ladies
+            </button>
+            <button class="nav-tab" data-target="men" id="menTab">
+                <span class="tab-icon">👨</span>
+                Men
+            </button>
+        </div>
+    </div>
+
+    <!-- Ladies Games -->
+    <div id="ladies" class="gender-section visible">
+        <h2 class="text-3xl font-bold text-center mb-8">Ladies Games</h2>
+        <div id="ladiesGames"></div>
+    </div>
+
+    <!-- Men Games -->
+    <div id="men" class="gender-section hidden">
+        <h2 class="text-3xl font-bold text-center mb-8">Men's Games</h2>
+        <div id="menGames"></div>
+    </div>
+</article>
+
+<style>
+.gender-navigation {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.nav-tabs {
+    display: flex;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #6b7280;
+    transition: all 0.2s ease;
+}
+
+.nav-tab:hover {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.nav-tab.active {
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+}
+
+.tab-icon {
+    font-size: 1.2em;
+}
+
+.gender-section {
+    transition: all 0.3s ease;
+}
+
+.gender-section.hidden {
+    display: none;
+}
+
+.gender-section.visible {
+    display: block;
+}
+
+.sport-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid #e5e7eb;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.sport-card:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.sport-header {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.sport-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.quiz-section {
+    padding: 1.5rem;
+}
+
+.quiz-type-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.year-subsection {
+    margin-bottom: 1.5rem;
+}
+
+.year-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+    border-left: 3px solid #2563eb;
+    background: #f8fafc;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+}
+
+.quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.year-subsection .quiz-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.quiz-item {
+    padding: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.quiz-item:hover {
+    border-color: #2563eb;
+    background: #f8fafc;
+    text-decoration: none;
+    color: inherit;
+}
+
+.quiz-item.coming-soon {
+    background: #f9fafb;
+    color: #6b7280;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.quiz-item.coming-soon:hover {
+    border-color: #d1d5db;
+    background: #f9fafb;
+}
+
+.quiz-title {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.quiz-item.coming-soon .quiz-title {
+    color: #6b7280;
+}
+
+.quiz-years {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.coming-soon-badge {
+    display: inline-block;
+    background: #fbbf24;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+    // Load quiz data
+    try {
+        const response = await fetch('/python/sporcle/quizzes.csv');
+        const csvText = await response.text();
+        const quizzes = parseCSV(csvText);
+        
+        // Group quizzes by gender and sport
+        const groupedQuizzes = groupQuizzes(quizzes);
+        
+        // Render games for each gender
+        renderGames(groupedQuizzes.L, 'ladiesGames');
+        renderGames(groupedQuizzes.M, 'menGames');
+        
+    } catch (error) {
+        console.error('Error loading games data:', error);
+        document.getElementById('ladiesGames').innerHTML = '<p class="text-center text-red-600">Error loading games data</p>';
+        document.getElementById('menGames').innerHTML = '<p class="text-center text-red-600">Error loading games data</p>';
+    }
+
+    // Gender navigation functionality
+    function showSection(targetId) {
+        // Hide all sections
+        document.querySelectorAll('.gender-section').forEach(section => {
+            section.classList.remove('visible');
+            section.classList.add('hidden');
+        });
+        
+        // Show target section
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+            targetSection.classList.remove('hidden');
+            targetSection.classList.add('visible');
+        }
+        
+        // Update tab states
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Activate clicked tab
+        const activeTab = document.querySelector(`[data-target="${targetId}"]`);
+        if (activeTab) {
+            activeTab.classList.add('active');
+        }
+    }
+    
+    // Add click handlers to navigation tabs
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            const target = this.getAttribute('data-target');
+            showSection(target);
+            
+            // Update URL hash for deep linking
+            window.history.replaceState(null, null, `#${target}`);
+        });
+    });
+
+    // Check for section hash and show appropriate section
+    if (window.location.hash) {
+        const hashTarget = window.location.hash.substring(1);
+        if (hashTarget === 'ladies' || hashTarget === 'men') {
+            showSection(hashTarget);
+        }
+    }
+});
+
+function parseCSV(csv) {
+    const lines = csv.trim().split('\n');
+    const headers = parseCSVLine(lines[0]);
+    const quizzes = [];
+    
+    for (let i = 1; i < lines.length; i++) {
+        const values = parseCSVLine(lines[i]);
+        const quiz = {};
+        headers.forEach((header, index) => {
+            quiz[header.trim()] = values[index] ? values[index].trim() : '';
+        });
+        quizzes.push(quiz);
+    }
+    
+    return quizzes;
+}
+
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        
+        if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            result.push(current);
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    
+    result.push(current);
+    return result;
+}
+
+function groupQuizzes(quizzes) {
+    const grouped = { L: {}, M: {} };
+    
+    quizzes.forEach(quiz => {
+        const gender = quiz.Sex;
+        const sport = quiz.Sport;
+        
+        if (!grouped[gender][sport]) {
+            grouped[gender][sport] = {
+                'Top-10': [],
+                'Career': [],
+                'Annual': []
+            };
+        }
+        
+        grouped[gender][sport][quiz.Type].push(quiz);
+    });
+    
+    return grouped;
+}
+
+function renderGames(genderData, containerId) {
+    const container = document.getElementById(containerId);
+    let html = '';
+    
+    // Sport order for consistent display
+    const sportOrder = ['Cross Country', 'Alpine', 'Biathlon', 'Nordic Combined', 'Ski Jumping'];
+    
+    sportOrder.forEach(sport => {
+        if (genderData[sport]) {
+            html += `
+                <div class="sport-card">
+                    <div class="sport-header">
+                        <h3 class="sport-title">${sport}</h3>
+                    </div>
+                    <div class="quiz-section">
+                        ${renderQuizType(genderData[sport]['Top-10'], 'Top-10')}
+                        ${renderQuizType(genderData[sport]['Career'], 'Career')}
+                        ${renderQuizType(genderData[sport]['Annual'], 'Annual')}
+                    </div>
+                </div>
+            `;
+        }
+    });
+    
+    container.innerHTML = html;
+}
+
+function renderQuizType(quizzes, type) {
+    if (!quizzes || quizzes.length === 0) return '';
+    
+    let html = `<div class="quiz-type-section">`;
+    
+    if (type === 'Top-10') {
+        html += `<h4 class="quiz-type-title">Top-10 Yearly Elo Rankings</h4>`;
+        html += renderTop10ByYears(quizzes);
+    } else {
+        html += `<h4 class="quiz-type-title">${type}</h4>`;
+        html += `<div class="quiz-grid">`;
+        
+        quizzes.forEach(quiz => {
+            const title = quiz.Title || generateQuizTitle(quiz);
+            const hasUrl = quiz.URL && quiz.URL.trim() !== '';
+            
+            if (hasUrl) {
+                html += `
+                    <a href="${quiz.URL}" target="_blank" class="quiz-item">
+                        <div class="quiz-title">${title}</div>
+                        <div class="quiz-years">${quiz.Years !== 'all' ? quiz.Years : ''}</div>
+                    </a>
+                `;
+            } else {
+                html += `
+                    <div class="quiz-item coming-soon">
+                        <div class="quiz-title">${title}</div>
+                        <div class="quiz-years">${quiz.Years !== 'all' ? quiz.Years : ''}</div>
+                        <div class="coming-soon-badge">Coming Soon</div>
+                    </div>
+                `;
+            }
+        });
+        
+        html += '</div>';
+    }
+    
+    html += '</div>';
+    return html;
+}
+
+function renderTop10ByYears(quizzes) {
+    // Group quizzes by years
+    const yearGroups = {};
+    quizzes.forEach(quiz => {
+        const year = quiz.Years;
+        if (!yearGroups[year]) {
+            yearGroups[year] = [];
+        }
+        yearGroups[year].push(quiz);
+    });
+    
+    // Sort year groups
+    const sortedYears = Object.keys(yearGroups).sort((a, b) => {
+        if (a === 'all') return -1;
+        if (b === 'all') return 1;
+        if (a === 'Pre-1976') return -1;
+        if (b === 'Pre-1976') return 1;
+        if (a === '1976-2000') return -1;
+        if (b === '1976-2000') return 1;
+        return 0;
+    });
+    
+    let html = '';
+    sortedYears.forEach(year => {
+        const displayYear = year === 'all' ? 'All Years' : year;
+        html += `
+            <div class="year-subsection">
+                <h5 class="year-subtitle">${displayYear}</h5>
+                <div class="quiz-grid">
+        `;
+        
+        yearGroups[year].forEach(quiz => {
+            const title = quiz.Title || generateQuizTitle(quiz);
+            const hasUrl = quiz.URL && quiz.URL.trim() !== '';
+            
+            if (hasUrl) {
+                html += `
+                    <a href="${quiz.URL}" target="_blank" class="quiz-item">
+                        <div class="quiz-title">${title}</div>
+                    </a>
+                `;
+            } else {
+                html += `
+                    <div class="quiz-item coming-soon">
+                        <div class="quiz-title">${title}</div>
+                        <div class="coming-soon-badge">Coming Soon</div>
+                    </div>
+                `;
+            }
+        });
+        
+        html += '</div></div>';
+    });
+    
+    return html;
+}
+
+function generateQuizTitle(quiz) {
+    // Format: Type + Subject + "Skiers" + of Years
+    let title = quiz.Type;
+    
+    if (quiz.Subject && quiz.Subject !== 'all') {
+        title += ` ${quiz.Subject}`;
+    }
+    
+    title += ' Skiers';
+    
+    if (quiz.Years && quiz.Years !== 'all') {
+        title += ` of ${quiz.Years}`;
+    }
+    
+    return title;
+}
+</script>
+{{ end }}

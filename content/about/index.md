@@ -6,13 +6,6 @@ multilingual: false  #Not for multiple languages.  Might change if I need it in 
 ## About the Blog
 This is the blog for all things FIS and IBU World Cup statistics!
 
-•	Articles on statistical analysis of skiing
-
-•	Current Elo Scores
-
-•	Podium Prediction Game
-
-•	Forum
 
 ## How it started:
 •	When I was in the Navy stationed on the east coast, I had nothing to do at the start of the pandemic besides work, workout, and spend time on my computer.  We were not allowed to go anywhere including home to visit our families.  The Cross-Country World Cup season had just ended and I had a pretty miserable showing in the Noah Hoffman Fantasy XC league, definitely finishing in the bottom half.

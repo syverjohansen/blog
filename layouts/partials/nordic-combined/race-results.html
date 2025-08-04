@@ -74,8 +74,11 @@
                     document.getElementById('raceInfo').innerHTML = `
                         <p>${new Date(raceInfo.date).toLocaleDateString()}</p>
                         <p>${raceInfo.city}, ${raceInfo.country}</p>
-                        <p>${raceInfo.distance} - ${raceInfo.technique}</p>
+                        <p>${raceInfo.racetype}</p>
                     `;
+                    
+                    // Set background image based on event
+                    setEventBackgroundImage(raceInfo.event);
                 }
                 
                 // Now get detailed race results - using your existing structure
@@ -203,6 +206,24 @@
                     <span class="flex-grow px-4">${formatFunction(item)}</span>
                 </div>
             `).join('');
+        }
+        
+        function setEventBackgroundImage(event) {
+            let backgroundImage = '/img/crystal_globe.png'; // default
+            
+            if (event === 'Olympic Winter Games') {
+                backgroundImage = '/img/olympics.png';
+            } else if (event === 'WSC' || event === 'World Championship') {
+                backgroundImage = '/img/fis.png';
+            } else if (event === 'Tour de Ski') {
+                backgroundImage = '/img/tds.png';
+            }
+            
+            // Update the header background image
+            const header = document.querySelector('.intro-header');
+            if (header) {
+                header.style.backgroundImage = `url('${backgroundImage}')`;
+            }
         }
         
         function displayResults(results, gender) {

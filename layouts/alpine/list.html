@@ -1,3 +1,46 @@
+{{ define "header" }}
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header {
+        background-image: url('{{ if .Params.image }}{{ .Params.image | relURL }}{{ else }}{{ .Site.Params.header_image | relURL}}{{ end }}')
+    }
+</style>
+{{ if eq .Params.headerstyle "text" }}
+<header class="intro-header style-text" >
+{{ else }}
+<header class="intro-header" >
+{{ end }}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        {{ range .Params.tags }}
+                        <a class="tag" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" title="{{ . }}">
+                            {{ . }}
+                        </a>
+                        {{ end }}
+                    </div>
+                    <h1>{{ .Title }}</h1>
+                    <h2 class="subheading">{{ .Params.subtitle }}</h2>
+                    <span class="meta">
+                        {{ if .Params.metadata }}
+                            {{ range $index, $element := .Params.metadata }}
+                                {{ if .link }}
+                                    <a href="{{ .link }}">{{ .text }}</a>
+                                {{ else }}
+                                    {{ .text }}
+                                {{ end }}
+                            {{ end }}
+                        {{ end }}    
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{{ end }}
+
 {{ define "main" }}
 <article class="container mx-auto px-6 py-12">
     {{ $currentURL := .RelPermalink }}
@@ -24,7 +67,6 @@
             <h1 class="text-5xl font-bold mb-4">{{ .Title }}</h1>
             <div class="w-24 h-1 bg-red-600 mx-auto"></div>
         </header>
-
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {{ $sections := dict 
                 "elo" "Current Elo Scores" 
@@ -34,16 +76,14 @@
                 "athletes" "Athletes"
                 "head2head" "Head-to-Head"
             }}
-
             {{ $descriptions := dict 
                 "elo" "View current rankings and Elo ratings"
                 "all-elo" "Historical Elo ratings and trends"
                 "races" "Browse past race results and data"
                 "ranks" "Historical rankings and statistics"
                 "athletes" "Detailed athlete profiles and stats"
-                "head2head" "History of Head-to-Head matchups"
+                "head2head" "Head-to-Head matchups between skiers"
             }}
-
             {{ range $path, $title := $sections }}
                 <a href="{{ $.RelPermalink }}{{ $path }}" class="transform transition duration-300 hover:-translate-y-1">
                     <div class="bg-white rounded-lg shadow-md p-8 h-full border border-gray-200 hover:shadow-xl transition-shadow duration-300">

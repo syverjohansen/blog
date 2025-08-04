@@ -33,7 +33,7 @@
 <body>
     <div class="container-fluid">
         <h1 id="Ladies">Ladies</h1>
-        <h2 id="L_chrono">Elo</h2>
+        <h2 id="L_chrono">Ladies</h2>
         <table id="dataTableL_chrono" class="display">
             <thead></thead>
             <tbody></tbody>
@@ -43,7 +43,7 @@
 
     <div class="container-fluid">
         <h1 id="Men">Men</h1>
-        <h2 id="M_chrono">Elo</h2>
+        <h2 id="M_chrono">Men</h2>
         <table id="dataTableM_chrono" class="display">
             <thead></thead>
             <tbody></tbody>
@@ -66,6 +66,27 @@
                             render: function(data, type, row) {
                                 return `<a href="/alpine/skiers/skier/?id=${row.ID}&gender=${gender}" target="_blank">${data}</a>`;
                             }
+                        };
+                    }
+                    else if (key === 'Pelo' || key.endsWith('_Pelo')) {
+                        // Handle Pelo and _Pelo columns with custom titles
+                        let title;
+                        if (key === 'Pelo') {
+                            title = 'Overall';
+                        } else {
+                            title = key.replace('_Pelo', '');
+                        }
+                        return {
+                            data: key,
+                            title: title,
+                            visible: true,
+                            render: function(data, type, row) {
+                                if (type === 'display' && typeof data === 'number') {
+                                    return data.toFixed(2);
+                                }
+                                return data;
+                            },
+                            orderSequence: ['desc', 'asc']
                         };
                     }
                     return {

@@ -33,7 +33,7 @@
 <body>
     <div class="container-fluid">
         <h1 id="Ladies">Ladies</h1>
-        <h2 id="L_chrono">Elo</h2>
+        <h2 id="L_chrono">Ladies Elo</h2>
         <table id="dataTableL_chrono" class="display">
             <thead></thead>
             <tbody></tbody>
@@ -43,7 +43,7 @@
 
     <div class="container-fluid">
         <h1 id="Men">Men</h1>
-        <h2 id="M_chrono">Elo</h2>
+        <h2 id="M_chrono">Men Elo</h2>
         <table id="dataTableM_chrono" class="display">
             <thead></thead>
             <tbody></tbody>
@@ -65,6 +65,49 @@
                             title: key.charAt(0).toUpperCase() + key.slice(1),
                             render: function(data, type, row) {
                                 return `<a href="/cross-country/skiers/skier/?id=${row.ID}&gender=${gender}" target="_blank">${data}</a>`;
+                            }
+                        };
+                    }
+                    else if (key === 'Pelo' || key.endsWith('_Pelo')) {
+                        // Handle Pelo and _Pelo columns with custom titles
+                        let title;
+                        if (key === 'Pelo') {
+                            title = 'Overall';
+                        } else {
+                            const prefix = key.replace('_Pelo', '');
+                            // Handle special cases for better readability
+                            if (prefix === 'Distance_C') title = 'Distance Classic';
+                            else if (prefix === 'Distance_F') title = 'Distance Freestyle';
+                            else if (prefix === 'Sprint_C') title = 'Sprint Classic';
+                            else if (prefix === 'Sprint_F') title = 'Sprint Freestyle';
+                            else title = prefix;
+                        }
+                        return {
+                            data: key,
+                            title: title,
+                            visible: true,
+                            render: function(data, type, row) {
+                                if (type === 'display' && typeof data === 'number') {
+                                    return data.toFixed(2);
+                                }
+                                return data;
+                            },
+                            orderSequence: ['desc', 'asc']
+                        };
+                    }
+                    else if (key === 'Age') {
+                        return {
+                            data: key,
+                            title: key.charAt(0).toUpperCase() + key.slice(1),
+                            visible: key !== 'ID',
+                            render: function(data, type, row) {
+                                if (type === 'display' && data !== null && data !== undefined) {
+                                    const numValue = parseFloat(data);
+                                    if (!isNaN(numValue)) {
+                                        return numValue.toFixed(2);
+                                    }
+                                }
+                                return data;
                             }
                         };
                     }
@@ -91,8 +134,8 @@
                 console.error(`Failed to load JSON data for ${gender}`);
             });
         }
-        initializeTable('#dataTableL_chrono', '{{ "python/excel365/L_chrono_current.json" | relURL }}', 'L');
-        initializeTable('#dataTableM_chrono', '{{ "python/excel365/M_chrono_current.json" | relURL }}?t=' + new Date().getTime(), 'M');
+        initializeTable('#dataTableL_chrono', '{{ "python/cross-country/excel365/L_chrono_current.json" | relURL }}', 'L');
+        initializeTable('#dataTableM_chrono', '{{ "python/cross-country/excel365/M_chrono_current.json" | relURL }}?t=' + new Date().getTime(), 'M');
     });
     </script>
 </body>

@@ -4,10 +4,24 @@
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="text-center mb-8">
                 <h1 class="text-4xl font-bold" id="yearTitle"></h1>
+                
+                <!-- Gender Navigation Menu -->
+                <div class="gender-navigation mt-6">
+                    <div class="nav-tabs">
+                        <button class="nav-tab active" data-target="ladies" id="ladiesTab">
+                            <span class="tab-icon">👩</span>
+                            Ladies
+                        </button>
+                        <button class="nav-tab" data-target="mens" id="mensTab">
+                            <span class="tab-icon">👨</span>
+                            Men
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Ladies Races -->
-            <div id="ladies" class="mb-12">
+            <div id="ladies" class="race-section visible mb-12">
                 <h2 class="text-3xl font-bold mb-6">Ladies Races</h2>
                 <div class="overflow-x-auto">
                     <table class="min-w-full">
@@ -16,8 +30,8 @@
                                 <th class="px-6 py-3 text-left">Race #</th>
                                 <th class="px-6 py-3 text-left">Date</th>
                                 <th class="px-6 py-3 text-left">Location</th>
-                                <th class="px-6 py-3 text-left">Distance</th>
-                                <th class="px-6 py-3 text-left">Technique</th>
+                                <th class="px-6 py-3 text-left">Event</th>
+                                <th class="px-6 py-3 text-left">RaceType</th>
                                 <th class="px-6 py-3 text-left">Podium</th>
                             </tr>
                         </thead>
@@ -27,7 +41,7 @@
             </div>
 
             <!-- Men's Races -->
-            <div id="mens">
+            <div id="mens" class="race-section hidden">
                 <h2 class="text-3xl font-bold mb-6">Men's Races</h2>
                 <div class="overflow-x-auto">
                     <table class="min-w-full">
@@ -36,8 +50,8 @@
                                 <th class="px-6 py-3 text-left">Race #</th>
                                 <th class="px-6 py-3 text-left">Date</th>
                                 <th class="px-6 py-3 text-left">Location</th>
-                                <th class="px-6 py-3 text-left">Distance</th>
-                                <th class="px-6 py-3 text-left">Technique</th>
+                                <th class="px-6 py-3 text-left">Event</th>
+                                <th class="px-6 py-3 text-left">RaceType</th>
                                 <th class="px-6 py-3 text-left">Podium</th>
                             </tr>
                         </thead>
@@ -56,10 +70,10 @@
                 </h5>
                 <ul class="catalog-body">
                     <li class="h4">
-                        <a class="catalog-toggle" href="#ladies">Ladies Races</a>
+                        <a class="catalog-toggle sidebar-nav-link" href="#ladies" data-target="ladies">Ladies Races</a>
                     </li>
                     <li class="h4">
-                        <a class="catalog-toggle" href="#mens">Men's Races</a>
+                        <a class="catalog-toggle sidebar-nav-link" href="#mens" data-target="mens">Men's Races</a>
                     </li>
                 </ul>
             </div>
@@ -82,7 +96,7 @@
         } catch (error) {
             console.error('Error loading ladies races:', error);
             document.getElementById('ladiesRacesList').innerHTML = `
-                <tr><td colspan="6" class="text-center py-4 text-red-600">Error loading ladies races data</td></tr>
+                <tr><td colspan="5" class="text-center py-4 text-red-600">Error loading ladies races data</td></tr>
             `;
         }
         
@@ -94,15 +108,76 @@
         } catch (error) {
             console.error('Error loading men\'s races:', error);
             document.getElementById('mensRacesList').innerHTML = `
-                <tr><td colspan="6" class="text-center py-4 text-red-600">Error loading men's races data</td></tr>
+                <tr><td colspan="5" class="text-center py-4 text-red-600">Error loading men's races data</td></tr>
             `;
         }
 
-        // Check for section hash and scroll if present
+        // Gender navigation functionality
+        function showSection(targetId) {
+            // Hide all sections
+            document.querySelectorAll('.race-section').forEach(section => {
+                section.classList.remove('visible');
+                section.classList.add('hidden');
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                targetSection.classList.add('visible');
+            }
+            
+            // Update tab states
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Activate clicked tab
+            const activeTab = document.querySelector(`[data-target="${targetId}"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+        }
+        
+        // Add click handlers to navigation tabs
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const target = this.getAttribute('data-target');
+                showSection(target);
+                
+                // Update URL hash for deep linking
+                window.history.replaceState(null, null, `#${target}`);
+            });
+        });
+        
+        // Add click handlers to sidebar navigation links
+        document.querySelectorAll('.sidebar-nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('data-target');
+                showSection(target);
+                
+                // Update URL hash for deep linking
+                window.history.replaceState(null, null, `#${target}`);
+                
+                // Scroll to top of the section smoothly
+                const targetElement = document.getElementById(target);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Check for section hash and show appropriate section
         if (window.location.hash) {
-            const element = document.querySelector(window.location.hash);
-            if (element) {
-                element.scrollIntoView();
+            const hashTarget = window.location.hash.substring(1);
+            if (hashTarget === 'ladies' || hashTarget === 'mens') {
+                showSection(hashTarget);
+            } else {
+                const element = document.querySelector(window.location.hash);
+                if (element) {
+                    element.scrollIntoView();
+                }
             }
         }
     });
@@ -111,7 +186,7 @@
         const tableBody = document.getElementById(elementId);
         
         if (!races || races.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4">No races found for this season</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4">No races found for this season</td></tr>`;
             return;
         }
         
@@ -138,8 +213,8 @@
                 <td class="px-6 py-4">${race.race_number}</td>
                 <td class="px-6 py-4">${new Date(race.date).toLocaleDateString()}</td>
                 <td class="px-6 py-4">${race.city}, ${race.country}</td>
-                <td class="px-6 py-4">${race.distance}</td>
-                <td class="px-6 py-4">${race.technique}</td>
+                <td class="px-6 py-4">${race.event}</td>
+                <td class="px-6 py-4">${race.racetype}</td>
                 <td class="px-6 py-4">
                     <ol class="list-decimal list-inside">
                         ${podiumHtml}

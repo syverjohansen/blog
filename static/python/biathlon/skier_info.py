@@ -78,7 +78,7 @@ for a in range(2):
 	else:
 		sex = 'L'
 		df = L_chrono
-
+	df = df.with_columns(pl.col("ID").cast(pl.Int32))	
 	df = (
     df.group_by("ID")
     .agg([

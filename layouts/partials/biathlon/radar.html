@@ -1,15 +1,15 @@
 {{/* layouts/biathlon/partials/radar.html */}}
 <div class="card">
     <div class="card-header">
-        <h4>Performance Radar</h4>
+        <h4>Biathlon Performance Radar</h4>
     </div>
     <div class="card-body">
-        <canvas id="radarChart" width="400" height="400" style="width: 100%; height: auto;"></canvas>
-        <div id="radar-loading" class="text-center">
-            <p>Waiting for skier data...</p>
+        <canvas id="biathlonRadarChart" width="400" height="400" style="width: 100%; height: auto;"></canvas>
+        <div id="biathlon-radar-loading" class="text-center">
+            <p>Waiting for athlete data...</p>
         </div>
-        <div id="radar-error" class="alert alert-danger" style="display:none;">
-            <p id="radar-error-message">Error loading radar chart data.</p>
+        <div id="biathlon-radar-error" class="alert alert-danger" style="display:none;">
+            <p id="biathlon-radar-error-message">Error loading radar chart data.</p>
         </div>
     </div>
 </div>
@@ -18,11 +18,11 @@
 
 <script>
 // Direct initialization function to avoid jQuery dependency
-function initRadarChart() {
-    let radarChart = null;
+function initBiathlonRadarChart() {
+    let biathlonRadarChart = null;
     
     // Function to calculate percentages if they don't exist
-    function calculatePercentages(data) {
+    function calculateBiathlonPercentages(data) {
         if (!data || data.length === 0) return data;
         
         // Clone the data to avoid modifying the original
@@ -36,11 +36,9 @@ function initRadarChart() {
             return processedData;
         }
         
-        // Elo columns to process
+        // Biathlon Elo columns to process
         const eloColumns = [
-            "Elo", "Distance_Elo", "Distance_C_Elo", "Distance_F_Elo", 
-            "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo", 
-            "Classic_Elo", "Freestyle_Elo"
+            "Elo", "Sprint_Elo", "Pursuit_Elo", "Individual_Elo", "MassStart_Elo"
         ];
         
         // Process each Elo column
@@ -73,78 +71,84 @@ function initRadarChart() {
     }
     
     // Function to create the radar chart with the data
-    function createRadarChart(data) {
+    function createBiathlonRadarChart(data) {
         try {
+            console.log('🎯 Creating biathlon radar chart with data:', data);
+            
             // Hide loading message
-            document.getElementById('radar-loading').style.display = 'none';
+            document.getElementById('biathlon-radar-loading').style.display = 'none';
             
             // Calculate percentages if needed
-            const processedData = calculatePercentages(data);
+            const processedData = calculateBiathlonPercentages(data);
+            console.log('🎯 Processed data for radar:', processedData);
             
             // Make sure we have data
             if (!processedData || processedData.length === 0) {
-                document.getElementById('radar-error').style.display = 'block';
-                document.getElementById('radar-error-message').textContent = 'Error: No data available for radar chart';
+                console.error('🎯 No processed data available');
+                document.getElementById('biathlon-radar-error').style.display = 'block';
+                document.getElementById('biathlon-radar-error-message').textContent = 'Error: No data available for radar chart';
                 return;
             }
             
             // Find the most recent entry
             const mostRecentEntry = processedData[processedData.length - 1];
+            console.log('🎯 Most recent entry:', mostRecentEntry);
             
             // Check if percentage columns exist
             const hasPercentages = mostRecentEntry && mostRecentEntry.hasOwnProperty('Elo_Pct');
+            console.log('🎯 Has percentage columns:', hasPercentages);
+            
             if (!hasPercentages) {
-                document.getElementById('radar-error').style.display = 'block';
-                document.getElementById('radar-error-message').textContent = 'Error: Percentage columns not available';
+                console.error('🎯 Percentage columns not available');
+                document.getElementById('biathlon-radar-error').style.display = 'block';
+                document.getElementById('biathlon-radar-error-message').textContent = 'Error: Percentage columns not available';
                 return;
             }
 
             const radarLabels = [
-                "Overall", "Distance", "Distance Classic",
-                "Distance Freestyle", "Sprint", "Sprint Classic",
-                "Sprint Freestyle", "Classic", "Freestyle"
+                "Overall", "Sprint", "Pursuit", "Individual", "Mass Start"
             ];
 
             const radarValues = [
                 parseFloat(mostRecentEntry.Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_C_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_F_Elo_Pct) || 0,
                 parseFloat(mostRecentEntry.Sprint_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_C_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_F_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Classic_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Freestyle_Elo_Pct) || 0
+                parseFloat(mostRecentEntry.Pursuit_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Individual_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.MassStart_Elo_Pct) || 0
             ];
 
-            const canvas = document.getElementById('radarChart');
+            const canvas = document.getElementById('biathlonRadarChart');
             if (!canvas) {
-                document.getElementById('radar-error').style.display = 'block';
-                document.getElementById('radar-error-message').textContent = 'Error: Canvas element not found';
+                document.getElementById('biathlon-radar-error').style.display = 'block';
+                document.getElementById('biathlon-radar-error-message').textContent = 'Error: Canvas element not found';
                 return;
             }
             
             const ctx = canvas.getContext('2d');
             if (!ctx) {
-                document.getElementById('radar-error').style.display = 'block';
-                document.getElementById('radar-error-message').textContent = 'Error: Canvas context not available';
+                document.getElementById('biathlon-radar-error').style.display = 'block';
+                document.getElementById('biathlon-radar-error-message').textContent = 'Error: Canvas context not available';
                 return;
             }
             
-            if (radarChart) {
-                radarChart.destroy();
+            if (biathlonRadarChart) {
+                biathlonRadarChart.destroy();
             }
             
-            radarChart = new Chart(ctx, {
+            biathlonRadarChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
                     labels: radarLabels,
                     datasets: [{
                         label: 'Most Recent Elo Percentiles',
                         data: radarValues,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)', // Blue theme for biathlon
                         borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
                     }]
                 },
                 options: {
@@ -153,36 +157,65 @@ function initRadarChart() {
                     scales: {
                         r: {
                             angleLines: {
-                                display: false
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 12
+                                }
                             },
                             suggestedMin: 0,
                             suggestedMax: 100,
                             ticks: {
                                 callback: function(value) {
-                                    return Math.round(value);
-                                }
+                                    return Math.round(value) + '%';
+                                },
+                                stepSize: 20
                             }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
                         }
                     }
                 }
             });
         } catch (error) {
-            document.getElementById('radar-error').style.display = 'block';
-            document.getElementById('radar-error-message').textContent = 'Error creating chart: ' + error.message;
+            document.getElementById('biathlon-radar-error').style.display = 'block';
+            document.getElementById('biathlon-radar-error-message').textContent = 'Error creating chart: ' + error.message;
         }
     }
     
     // Listen for the skierDataLoaded event from the table component
     document.addEventListener('skierDataLoaded', function(e) {
+        console.log('🎯 Biathlon radar: Received skierDataLoaded event');
+        console.log('🎯 Event detail:', e.detail);
+        
         if (e.detail && e.detail.skierData) {
-            createRadarChart(e.detail.skierData);
+            console.log('🎯 Processing skier data for radar chart...');
+            console.log('🎯 Skier data length:', e.detail.skierData.length);
+            createBiathlonRadarChart(e.detail.skierData);
         } else {
-            document.getElementById('radar-error').style.display = 'block';
-            document.getElementById('radar-error-message').textContent = 'Error: Invalid data received from event';
+            console.error('🎯 Invalid data received from event:', e.detail);
+            document.getElementById('biathlon-radar-error').style.display = 'block';
+            document.getElementById('biathlon-radar-error-message').textContent = 'Error: Invalid data received from event';
         }
     });
 }
 
 // Initialize the radar chart when the DOM is ready
-document.addEventListener('DOMContentLoaded', initRadarChart);
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎯 Biathlon radar chart DOM loaded, waiting for skier data...');
+    initBiathlonRadarChart();
+});
+
+// Also add debugging to see if the event is being fired
+document.addEventListener('skierDataLoaded', function(e) {
+    console.log('🎯 Biathlon radar received skierDataLoaded event:', e.detail);
+});
 </script>

@@ -114,8 +114,42 @@ $(document).ready(function() {
       $('html, body').animate({
         scrollTop: $(targetId).offset().top - 70
       }, 500);
+      
+      // Close mobile menu after clicking on mobile
+      if (window.innerWidth <= 1200) {
+        $('.sidebar-container.catalog-container').removeClass('expanded');
+      }
     });
   }
+  
+  // Mobile catalog toggle functionality
+  if (window.innerWidth <= 1200) {
+    $('.sidebar-container.catalog-container').click(function(e) {
+      if (!$(this).hasClass('expanded')) {
+        e.preventDefault();
+        $(this).addClass('expanded');
+      }
+    });
+    
+    // Close catalog when clicking outside
+    $(document).click(function(e) {
+      if (!$(e.target).closest('.sidebar-container.catalog-container').length) {
+        $('.sidebar-container.catalog-container').removeClass('expanded');
+      }
+    });
+    
+    // Prevent closing when clicking inside the expanded catalog
+    $('.sidebar-container.catalog-container.expanded').click(function(e) {
+      e.stopPropagation();
+    });
+  }
+  
+  // Handle window resize
+  $(window).resize(function() {
+    if (window.innerWidth > 1200) {
+      $('.sidebar-container.catalog-container').removeClass('expanded');
+    }
+  });
 });
 
 

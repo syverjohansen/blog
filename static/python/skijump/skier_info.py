@@ -87,7 +87,7 @@ for a in range(2):
         pl.col("Nation").last().alias("Nation")  # Get the last Nation for each ID
     ])
 	)
-
+	df = df.with_columns(pl.col("ID").cast(pl.Int32))   
 	print(df)
 	df = df.with_columns(
 		pl.col("Nation").replace_strict(codes)

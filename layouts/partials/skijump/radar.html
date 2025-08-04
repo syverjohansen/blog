@@ -36,11 +36,9 @@ function initRadarChart() {
             return processedData;
         }
         
-        // Elo columns to process
+        // Elo columns to process for Ski Jump
         const eloColumns = [
-            "Elo", "Distance_Elo", "Distance_C_Elo", "Distance_F_Elo", 
-            "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo", 
-            "Classic_Elo", "Freestyle_Elo"
+            "Elo", "Small_Elo", "Medium_Elo", "Normal_Elo", "Large_Elo", "Flying_Elo"
         ];
         
         // Process each Elo column
@@ -100,21 +98,16 @@ function initRadarChart() {
             }
 
             const radarLabels = [
-                "Overall", "Distance", "Distance Classic",
-                "Distance Freestyle", "Sprint", "Sprint Classic",
-                "Sprint Freestyle", "Classic", "Freestyle"
+                "Overall", "Small Hill", "Medium Hill", "Normal Hill", "Large Hill", "Flying Hill"
             ];
 
             const radarValues = [
                 parseFloat(mostRecentEntry.Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_C_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_F_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_C_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_F_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Classic_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Freestyle_Elo_Pct) || 0
+                parseFloat(mostRecentEntry.Small_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Medium_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Normal_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Large_Elo_Pct) || 0,
+                parseFloat(mostRecentEntry.Flying_Elo_Pct) || 0
             ];
 
             const canvas = document.getElementById('radarChart');

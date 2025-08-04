@@ -1,61 +1,181 @@
-/* Fixed sidebar catalog styling */
+/* Enhanced sidebar catalog styling */
 .sidebar-container.catalog-container {
   position: fixed;
-  right: 0;
-  top: 80px; /* Keep it below the navigation */
-  width: 250px;
-  height: calc(100% - 80px - 20px); /* Adjust height based on top offset */
+  right: 20px;
+  top: 100px;
+  width: 280px;
+  max-height: calc(100vh - 140px);
   overflow-y: auto;
-  background-color: #fff; /* Light background for the sidebar */
-  padding: 20px;
-  border-left: 1px solid #ddd;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.95));
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 24px;
   z-index: 100;
-  margin-bottom: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-container.catalog-container:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 /* Add margin to the main content container to prevent overlap */
 .post-container {
-  margin-right: 270px; /* Match the width of the sidebar plus some spacing */
-  /* Remove any background color that might have been added */
+  margin-right: 320px;
   background-color: transparent;
+  transition: margin-right 0.3s ease;
 }
 
-/* Style improvements for the catalog items */
-.side-catalog .catalog-body {
-  padding-left: 0;
-  list-style: none;
-}
-
-.side-catalog .catalog-body li {
-  margin-bottom: 0.5rem;
-  padding-left: 1rem;
+/* Enhanced catalog header */
+.side-catalog h5 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e8f4fd;
   position: relative;
 }
 
+.side-catalog h5::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: linear-gradient(90deg, #3498db, #2980b9);
+  border-radius: 1px;
+}
+
+.side-catalog .catalog-toggle {
+  color: #2c3e50 !important;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: color 0.3s ease;
+}
+
+.side-catalog .catalog-toggle:hover {
+  color: #3498db !important;
+}
+
+/* Enhanced catalog body */
+.side-catalog .catalog-body {
+  padding-left: 0;
+  list-style: none;
+  margin: 0;
+}
+
+.side-catalog .catalog-body li {
+  margin-bottom: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
 .side-catalog .catalog-body li a {
-  color: #777;
-  transition: color 0.3s;
+  display: block;
+  color: #5a6c7d;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  padding: 8px 16px 8px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .side-catalog .catalog-body li a:hover {
-  color: #337ab7;
+  color: #2c3e50;
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.08), rgba(41, 128, 185, 0.05));
+  transform: translateX(4px);
   text-decoration: none;
 }
 
-/* Add a small indicator to the active item */
-.side-catalog .catalog-body li.active a {
-  color: #337ab7;
+/* Visual hierarchy for different heading levels */
+.side-catalog .catalog-body .h1_nav a {
+  font-weight: 700;
+  font-size: 15px;
+  color: #2c3e50;
+  padding-left: 16px;
+}
+
+.side-catalog .catalog-body .h2_nav a {
   font-weight: 600;
+  font-size: 14px;
+  padding-left: 20px;
+  border-left: 2px solid #ecf0f1;
+}
+
+.side-catalog .catalog-body .h3_nav a {
+  font-weight: 500;
+  font-size: 13px;
+  padding-left: 28px;
+  border-left: 2px solid #ecf0f1;
+  opacity: 0.9;
+}
+
+.side-catalog .catalog-body .h4_nav a,
+.side-catalog .catalog-body .h5_nav a,
+.side-catalog .catalog-body .h6_nav a {
+  font-weight: 400;
+  font-size: 12px;
+  padding-left: 36px;
+  border-left: 1px solid #ecf0f1;
+  opacity: 0.8;
+}
+
+/* Enhanced active state */
+.side-catalog .catalog-body li.active {
+  transform: translateX(2px);
+}
+
+.side-catalog .catalog-body li.active a {
+  color: #ffffff;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  font-weight: 600;
+  border-left-color: transparent;
 }
 
 .side-catalog .catalog-body li.active::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 0.4rem;
-  height: 0.8rem;
-  width: 2px;
-  background-color: #337ab7;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 20px;
+  width: 3px;
+  background: linear-gradient(180deg, #3498db, #2980b9);
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+}
+
+/* Smooth scrollbar styling */
+.sidebar-container.catalog-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-container.catalog-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.sidebar-container.catalog-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #bdc3c7, #95a5a6);
+  border-radius: 3px;
+}
+
+.sidebar-container.catalog-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #95a5a6, #7f8c8d);
 }
 
 /* Make headings more prominent - without changing background colors */
@@ -89,4 +209,284 @@ body {
 /* Make sure other containers aren't affected */
 .container, .container-fluid, .row, .col-lg-8, .col-lg-offset-2, .col-md-10, .col-md-offset-1 {
   background-color: transparent;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+  .sidebar-container.catalog-container {
+    width: 260px;
+    right: 15px;
+  }
+  
+  .post-container {
+    margin-right: 290px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .sidebar-container.catalog-container {
+    position: fixed;
+    top: auto;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    max-height: none;
+  }
+  
+  .sidebar-container.catalog-container:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.5);
+  }
+  
+  .sidebar-container.catalog-container.expanded {
+    width: 280px;
+    height: auto;
+    max-height: 60vh;
+    border-radius: 16px;
+    padding: 20px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(248, 249, 250, 0.98));
+    backdrop-filter: blur(15px);
+    overflow-y: auto;
+  }
+  
+  .side-catalog {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .sidebar-container.catalog-container.expanded .side-catalog {
+    display: block;
+    opacity: 1;
+  }
+  
+  .sidebar-container.catalog-container::before {
+    content: "☰";
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar-container.catalog-container.expanded::before {
+    display: none;
+  }
+  
+  .post-container {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar-container.catalog-container {
+    bottom: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+  }
+  
+  .sidebar-container.catalog-container.expanded {
+    width: calc(100vw - 30px);
+    max-width: 320px;
+    right: 15px;
+    bottom: 15px;
+  }
+  
+  .sidebar-container.catalog-container::before {
+    font-size: 18px;
+  }
+}
+
+/* Mobile catalog toggle functionality */
+@media (max-width: 1200px) {
+  .catalog-mobile-toggle {
+    display: block !important;
+  }
+}
+
+/* Override theme styles that conflict with our design */
+.side-catalog.fixed {
+  position: relative !important;
+  top: auto !important;
+}
+
+.side-catalog .catalog-body .active {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+}
+
+.side-catalog .catalog-body .active a {
+  color: #ffffff !important;
+}
+
+/* Ensure proper text truncation for long headings */
+.side-catalog .catalog-body li a {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 24px);
+}
+
+/* Add subtle animation for page load */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sidebar-container.catalog-container {
+  animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+}
+
+/* Add a subtle glow effect for better visibility */
+@media (min-width: 1201px) {
+  .sidebar-container.catalog-container {
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1), 
+      0 2px 8px rgba(0, 0, 0, 0.05),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  
+  .sidebar-container.catalog-container:hover {
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.15), 
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Gender Navigation Menu Styling */
+.gender-navigation {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.nav-tabs {
+  display: flex;
+  background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #6c757d;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-tab:hover {
+  color: #495057;
+  background: rgba(255, 255, 255, 0.6);
+  transform: translateY(-1px);
+}
+
+.nav-tab.active {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  transform: translateY(-2px);
+}
+
+.nav-tab.active:hover {
+  background: linear-gradient(135deg, #2980b9, #1f5582);
+  transform: translateY(-2px);
+}
+
+.tab-icon {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.nav-tab:hover .tab-icon {
+  transform: scale(1.1);
+}
+
+.nav-tab.active .tab-icon {
+  transform: scale(1.15);
+}
+
+/* Race Section Transitions */
+.race-section {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.race-section.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  position: absolute;
+  visibility: hidden;
+}
+
+.race-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  position: relative;
+  visibility: visible;
+}
+
+/* Responsive design for navigation */
+@media (max-width: 768px) {
+  .nav-tabs {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .nav-tab {
+    flex: 1;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+  
+  .tab-icon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-tab {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .tab-icon {
+    display: none;
+  }
 }

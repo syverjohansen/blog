@@ -103,7 +103,7 @@ def process_csv(gender, csv_path):
                 "date": str(first_row['Date']),
                 "city": str(first_row['City']),
                 "country": str(first_row['Country']),
-                "distance": str(first_row['Distance']),
+                "event": str(first_row['Event']),
                 "racetype": str(first_row['RaceType']),
                 "podium": podium
             }
