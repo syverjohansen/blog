@@ -1,0 +1,109 @@
+name: Nordic Numbers Blog Automation
+
+on:
+  schedule:
+    # Run daily at midnight UTC (same as your current cron)
+    - cron: '0 0 * * *'
+  
+  # Allow manual triggering from GitHub UI
+  workflow_dispatch:
+
+jobs:
+  blog-automation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Need full history for git operations
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl wget jq bc
+    
+    - name: Install R and required packages
+      run: |
+        # Install R
+        sudo apt-get install -y r-base r-base-dev
+        
+        # Install required R packages
+        sudo R -e "
+        install.packages(c('dplyr', 'purrr', 'tidyr', 'readr', 'ggplot2', 'openxlsx', 
+                          'moments', 'mgcv', 'glmnet', 'Boruta', 'leaps', 'MASS'), 
+                        repos='https://cran.rstudio.com/')
+        "
+    
+    - name: Set up SSH connection to your Mac
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_PORT: ${{ secrets.SSH_PORT }}
+      run: |
+        # Set up SSH key
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        
+        # Add your Mac to known hosts
+        ssh-keyscan -p $SSH_PORT $SSH_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
+        
+        # Test connection
+        ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "echo 'SSH connection successful'"
+    
+    - name: Run blog automation scripts
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_PORT: ${{ secrets.SSH_PORT }}
+      run: |
+        # Execute the master automation script on your Mac via SSH
+        ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "
+          export TZ=UTC
+          cd ~/blog/daehl-e
+          
+          # Make sure scripts are executable
+          chmod +x *.sh
+          
+          # Run the master automation script
+          ./master_automation.sh
+        "
+    
+    - name: Sync blog updates back to GitHub
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_PORT: ${{ secrets.SSH_PORT }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Pull any changes made on your Mac back to GitHub
+        ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "
+          cd ~/blog/daehl-e
+          
+          # Configure git if not already done
+          git config --global user.email 'github-actions@users.noreply.github.com'
+          git config --global user.name 'GitHub Actions Bot'
+          
+          # Add and commit any new files/changes
+          git add .
+          git diff --staged --quiet || git commit -m 'Automated blog update - $(date -u)'
+          
+          # Push changes back to GitHub
+          git push origin main
+        "
+    
+    - name: Upload logs as artifacts
+      if: always()  # Run even if previous steps failed
+      uses: actions/upload-artifact@v3
+      with:
+        name: automation-logs
+        path: |
+          logs/
+        retention-days: 30

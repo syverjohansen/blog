@@ -1,0 +1,40 @@
+name: Nordic Numbers Blog Automation (Self-Hosted)
+
+on:
+  schedule:
+    # Run daily at midnight UTC
+    - cron: '0 0 * * *'
+  
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  blog-automation:
+    # This will run on your Mac instead of GitHub's servers
+    runs-on: self-hosted
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set timezone to UTC
+      run: export TZ=UTC
+    
+    - name: Run master automation script
+      run: |
+        cd ${{ github.workspace }}
+        chmod +x *.sh
+        ./master_automation.sh
+    
+    - name: Commit and push any changes
+      run: |
+        git config --global user.email "github-actions@users.noreply.github.com"
+        git config --global user.name "GitHub Actions Bot"
+        
+        git add .
+        git diff --staged --quiet || git commit -m "Automated blog update - $(date -u)"
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
