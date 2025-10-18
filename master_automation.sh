@@ -123,22 +123,34 @@ is_in_season() {
     fi
     
     # Add one day to last race date for score_scrape.sh (needs to run day after last race)
-    local last_date_plus_one=$(date -u -j -f "%Y-%m-%d" -v+1d "$last_date_iso" "+%Y-%m-%d" 2>/dev/null)
-    if [[ -z "$last_date_plus_one" ]]; then
-        # Fallback for different date command versions
-        local last_date_epoch=$(date -u -j -f "%Y-%m-%d" "$last_date_iso" "+%s" 2>/dev/null)
-        if [[ -n "$last_date_epoch" ]]; then
-            last_date_plus_one=$(date -u -r $((last_date_epoch + 86400)) "+%Y-%m-%d")
-        else
-            log_message "Error: Could not calculate last date plus one"
-            return 1
+    # Simple date arithmetic for YYYY-MM-DD format
+    local year="${last_date_iso%-*-*}"
+    local month="${last_date_iso#*-}"
+    month="${month%-*}"
+    local day="${last_date_iso##*-}"
+    
+    # Add one day
+    day=$((day + 1))
+    
+    # Handle month overflow (simplified - just add some buffer days)
+    if [[ $day -gt 31 ]]; then
+        day=1
+        month=$((month + 1))
+        if [[ $month -gt 12 ]]; then
+            month=1
+            year=$((year + 1))
         fi
     fi
+    
+    # Format with leading zeros
+    local last_date_plus_one=$(printf "%04d-%02d-%02d" "$year" "$month" "$day")
     
     log_message "Season check: $first_date_iso <= $TODAY_UTC <= $last_date_plus_one"
     
     # Check if today is within the extended season range
-    if [[ "$TODAY_UTC" >= "$first_date_iso" && "$TODAY_UTC" <= "$last_date_plus_one" ]]; then
+    # Use lexicographic comparison for YYYY-MM-DD format (works reliably)
+    if [[ "$TODAY_UTC" > "$first_date_iso" || "$TODAY_UTC" = "$first_date_iso" ]] && \
+       [[ "$TODAY_UTC" < "$last_date_plus_one" || "$TODAY_UTC" = "$last_date_plus_one" ]]; then
         return 0
     else
         return 1
@@ -278,8 +290,14 @@ fi
 IFS='|' read -r season_start season_end <<< "$overall_season"
 log_message "Season period: $season_start to $season_end"
 
-# Check if we're in season
-if ! is_in_season "$(date -j -f "%Y-%m-%d" "$season_start" "+%m/%d/%Y")" "$(date -j -f "%Y-%m-%d" "$season_end" "+%m/%d/%Y")"; then
+# Check if we're in season  
+# Convert YYYY-MM-DD to MM/DD/YYYY format
+season_start_mmdd="${season_start#*-}"
+season_start_mmdd="${season_start_mmdd#*-}/${season_start_mmdd%-*}/${season_start%-*-*}"
+season_end_mmdd="${season_end#*-}"  
+season_end_mmdd="${season_end_mmdd#*-}/${season_end_mmdd%-*}/${season_end%-*-*}"
+
+if ! is_in_season "$season_start_mmdd" "$season_end_mmdd"; then
     log_message "Currently outside of racing season. No scripts will be executed."
     log_message "Next season expected to start around: $season_start"
     exit 0
