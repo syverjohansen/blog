@@ -1,0 +1,1797 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Name",
+    "Nation",
+    "Age",
+    "Current Elo",
+    "Predicted Elo 2026",
+    "Predicted Elo Change"
+  ],
+  "rows": [
+    [
+      "Federica Brignone",
+      "Italy",
+      35.2279260780287,
+      1761,
+      1724,
+      -37
+    ],
+    [
+      "Lara Gut-Behrami",
+      "Switzerland",
+      34.2286105407255,
+      1754,
+      1721,
+      -33
+    ],
+    [
+      "Mikaela Shiffrin",
+      "USA",
+      30.2340862422998,
+      1695,
+      1676,
+      -19
+    ],
+    [
+      "Zrinka Ljutic",
+      "Croatia",
+      21.2347707049966,
+      1623,
+      1660,
+      37
+    ],
+    [
+      "Lara Colturi",
+      "Albania",
+      19.233401779603,
+      1596,
+      1655,
+      59
+    ],
+    [
+      "Sofia Goggia",
+      "Italy",
+      33.2292950034223,
+      1667,
+      1642,
+      -25
+    ],
+    [
+      "Paula Moltzan",
+      "USA",
+      31.233401779603,
+      1649,
+      1630,
+      -19
+    ],
+    [
+      "Camille Rast",
+      "Switzerland",
+      26.2340862422998,
+      1619,
+      1619,
+      0
+    ],
+    [
+      "Sara Hector",
+      "Sweden",
+      33.2347707049966,
+      1631,
+      1608,
+      -23
+    ],
+    [
+      "Cornelia Hütter",
+      "Austria",
+      33.223819301848,
+      1628,
+      1606,
+      -22
+    ],
+    [
+      "Alice Robinson",
+      "New Zealand",
+      24.2217659137577,
+      1580,
+      1594,
+      14
+    ],
+    [
+      "Ester Ledecka",
+      "Czechia",
+      30.1984941820671,
+      1588,
+      1576,
+      -12
+    ],
+    [
+      "Kajsa Vickhoff Lie",
+      "Norway",
+      27.2224503764545,
+      1573,
+      1571,
+      -2
+    ],
+    [
+      "Lena Dürr",
+      "Germany",
+      34.2340862422998,
+      1585,
+      1564,
+      -21
+    ],
+    [
+      "Wendy Holdener",
+      "Switzerland",
+      32.2327173169062,
+      1579,
+      1562,
+      -17
+    ],
+    [
+      "Katharina Liensberger",
+      "Austria",
+      28.2327173169062,
+      1561,
+      1556,
+      -5
+    ],
+    [
+      "Corinne Suter",
+      "Switzerland",
+      31.2224503764545,
+      1564,
+      1551,
+      -13
+    ],
+    [
+      "Lauren Macuga",
+      "USA",
+      23.2279260780287,
+      1516,
+      1540,
+      24
+    ],
+    [
+      "Anna Swenn-Larsson",
+      "Sweden",
+      34.2340862422998,
+      1550,
+      1531,
+      -19
+    ],
+    [
+      "Lindsey Vonn",
+      "USA",
+      41.223819301848,
+      1558,
+      1516,
+      -42
+    ],
+    [
+      "Emma Aicher",
+      "Germany",
+      22.2340862422998,
+      1477,
+      1510,
+      33
+    ],
+    [
+      "Mirjam Puchner",
+      "Austria",
+      33.223819301848,
+      1524,
+      1509,
+      -15
+    ],
+    [
+      "Elena Curtoni",
+      "Italy",
+      34.2231348391513,
+      1523,
+      1506,
+      -17
+    ],
+    [
+      "Marta Bassino",
+      "Italy",
+      29.223819301848,
+      1505,
+      1501,
+      -4
+    ],
+    [
+      "Mina Fürst Holtmann",
+      "Norway",
+      30.2340862422998,
+      1506,
+      1499,
+      -7
+    ],
+    [
+      "Kira Weidle-Winkelmann",
+      "Germany",
+      29.223819301848,
+      1504,
+      1499,
+      -5
+    ],
+    [
+      "Ariane Raedler",
+      "Austria",
+      30.2231348391513,
+      1505,
+      1498,
+      -7
+    ],
+    [
+      "Laura Pirovano",
+      "Italy",
+      28.2217659137577,
+      1498,
+      1497,
+      -1
+    ],
+    [
+      "AJ Hurt",
+      "USA",
+      25.2292950034223,
+      1479,
+      1492,
+      13
+    ],
+    [
+      "Valerie Grenier",
+      "Canada",
+      29.1991786447639,
+      1491,
+      1488,
+      -3
+    ],
+    [
+      "Julia Scheib",
+      "Austria",
+      27.1978097193703,
+      1482,
+      1485,
+      3
+    ],
+    [
+      "Brett Richardson",
+      "Canada",
+      22.1820670773443,
+      1449,
+      1483,
+      34
+    ],
+    [
+      "Neja Dvornik",
+      "Slovenia",
+      24.2327173169062,
+      1462,
+      1482,
+      20
+    ],
+    [
+      "Cornelia Öhlund",
+      "Sweden",
+      20.2327173169062,
+      1419,
+      1471,
+      52
+    ],
+    [
+      "Thea Louise Stjernesund",
+      "Norway",
+      29.2292950034223,
+      1469,
+      1467,
+      -2
+    ],
+    [
+      "Ricarda Haaser",
+      "Austria",
+      32.0684462696783,
+      1467,
+      1458,
+      -9
+    ],
+    [
+      "Melanie Meillard",
+      "Switzerland",
+      27.233401779603,
+      1453,
+      1457,
+      4
+    ],
+    [
+      "Romane Miradoli",
+      "France",
+      31.2224503764545,
+      1461,
+      1454,
+      -7
+    ],
+    [
+      "Breezy Johnson",
+      "USA",
+      29.1991786447639,
+      1451,
+      1450,
+      -1
+    ],
+    [
+      "Ali Nullmeyer",
+      "Canada",
+      27.233401779603,
+      1440,
+      1446,
+      6
+    ],
+    [
+      "Nina O'Brien",
+      "USA",
+      28.227241615332,
+      1443,
+      1445,
+      2
+    ],
+    [
+      "Dzenifera Germane",
+      "Latvia",
+      21.8754277891855,
+      1399,
+      1437,
+      38
+    ],
+    [
+      "Katharina Gallhuber",
+      "Austria",
+      28.1834360027378,
+      1431,
+      1434,
+      3
+    ],
+    [
+      "Ilka Stuhec",
+      "Slovenia",
+      35.1978097193703,
+      1442,
+      1427,
+      -15
+    ],
+    [
+      "Laurence St-Germain",
+      "Canada",
+      31.233401779603,
+      1431,
+      1426,
+      -5
+    ],
+    [
+      "Leona Popovic",
+      "Croatia",
+      27.9151266255989,
+      1422,
+      1426,
+      4
+    ],
+    [
+      "Stephanie Brunner",
+      "Austria",
+      31.2279260780287,
+      1423,
+      1418,
+      -5
+    ],
+    [
+      "Andreja Slokar",
+      "Slovenia",
+      28.2327173169062,
+      1413,
+      1416,
+      3
+    ],
+    [
+      "Laura Gauche",
+      "France",
+      30.1984941820671,
+      1418,
+      1416,
+      -2
+    ],
+    [
+      "Nina Ortlieb",
+      "Austria",
+      29.0513347022587,
+      1415,
+      1416,
+      1
+    ],
+    [
+      "Ana Bucik Jogan",
+      "Slovenia",
+      32.227241615332,
+      1422,
+      1415,
+      -7
+    ],
+    [
+      "Malorie Blanc",
+      "Switzerland",
+      21.1991786447639,
+      1364,
+      1408,
+      44
+    ],
+    [
+      "Katharina Truppe",
+      "Austria",
+      29.1854893908282,
+      1406,
+      1407,
+      1
+    ],
+    [
+      "Martina Peterlini",
+      "Italy",
+      28.1834360027378,
+      1403,
+      1407,
+      4
+    ],
+    [
+      "Marie Lamure",
+      "France",
+      24.1834360027378,
+      1380,
+      1402,
+      22
+    ],
+    [
+      "Katharina Huber",
+      "Austria",
+      30.2340862422998,
+      1399,
+      1398,
+      -1
+    ],
+    [
+      "Joana Hählen",
+      "Switzerland",
+      33.223819301848,
+      1401,
+      1393,
+      -8
+    ],
+    [
+      "Lara Della Mea",
+      "Italy",
+      26.2340862422998,
+      1375,
+      1387,
+      12
+    ],
+    [
+      "Michelle Gisin",
+      "Switzerland",
+      32.2217659137577,
+      1392,
+      1386,
+      -6
+    ],
+    [
+      "Estelle Alphand",
+      "Sweden",
+      30.2286105407255,
+      1387,
+      1386,
+      -1
+    ],
+    [
+      "Katie Hensien",
+      "USA",
+      26.1848049281314,
+      1370,
+      1382,
+      12
+    ],
+    [
+      "Maryna Gasienica Daniel",
+      "Poland",
+      31.2279260780287,
+      1380,
+      1377,
+      -3
+    ],
+    [
+      "Gwyneth Ten Raa",
+      "Luxembourg",
+      20.1177275838467,
+      1316,
+      1369,
+      53
+    ],
+    [
+      "Molly Butler",
+      "Great Britain",
+      19.1184120465435,
+      1306,
+      1368,
+      62
+    ],
+    [
+      "Christina Ager",
+      "Austria",
+      30.1957563312799,
+      1367,
+      1367,
+      0
+    ],
+    [
+      "Martina Dubovska",
+      "Czechia",
+      33.1854893908282,
+      1374,
+      1367,
+      -7
+    ],
+    [
+      "Marta Rossetti",
+      "Italy",
+      26.1848049281314,
+      1353,
+      1365,
+      12
+    ],
+    [
+      "Amelia Smart",
+      "Canada",
+      27.1841204654346,
+      1353,
+      1362,
+      9
+    ],
+    [
+      "Simone Wild",
+      "Switzerland",
+      32.0547570157426,
+      1361,
+      1357,
+      -4
+    ],
+    [
+      "Aline Danioth",
+      "Switzerland",
+      27.1457905544148,
+      1347,
+      1356,
+      9
+    ],
+    [
+      "Clara Direz",
+      "France",
+      30.1984941820671,
+      1355,
+      1355,
+      0
+    ],
+    [
+      "Victoria Olivier",
+      "Austria",
+      21.056810403833,
+      1309,
+      1354,
+      45
+    ],
+    [
+      "Nicol Delago",
+      "Italy",
+      29.1964407939767,
+      1348,
+      1351,
+      3
+    ],
+    [
+      "Chiara Pogneaux",
+      "France",
+      23.1457905544148,
+      1322,
+      1351,
+      29
+    ],
+    [
+      "Elisabeth Kappaurer",
+      "Austria",
+      30.9130732375086,
+      1350,
+      1349,
+      -1
+    ],
+    [
+      "Madeline Sylvester-Davik",
+      "Norway",
+      20.1806981519507,
+      1297,
+      1349,
+      52
+    ],
+    [
+      "Hanna Aronsson Elfman",
+      "Sweden",
+      23.233401779603,
+      1313,
+      1342,
+      29
+    ],
+    [
+      "Eloise Yung Shih King",
+      "Hong Kong",
+      20.1232032854209,
+      1290,
+      1342,
+      52
+    ],
+    [
+      "Victoria Palla",
+      "Great Britain",
+      24.145106091718,
+      1317,
+      1340,
+      23
+    ],
+    [
+      "Sue Piller",
+      "Switzerland",
+      20.1423682409309,
+      1288,
+      1340,
+      52
+    ],
+    [
+      "Elena Riederer",
+      "Austria",
+      20.1396303901437,
+      1287,
+      1339,
+      52
+    ],
+    [
+      "Giselle Gorringe",
+      "Great Britain",
+      22.1190965092402,
+      1302,
+      1338,
+      36
+    ],
+    [
+      "Aruwin Salehhuddin",
+      "Malaysia",
+      21.119780971937,
+      1294,
+      1338,
+      44
+    ],
+    [
+      "Aada Kanto",
+      "Finland",
+      19.8740588637919,
+      1284,
+      1338,
+      54
+    ],
+    [
+      "Roberta Melesi",
+      "Italy",
+      29.223819301848,
+      1334,
+      1337,
+      3
+    ],
+    [
+      "Asja Zenere",
+      "Italy",
+      29.1991786447639,
+      1334,
+      1337,
+      3
+    ],
+    [
+      "Nicole Good",
+      "Switzerland",
+      26.8939082819986,
+      1327,
+      1337,
+      10
+    ],
+    [
+      "Marion Chevrier",
+      "France",
+      24.1834360027378,
+      1311,
+      1334,
+      23
+    ],
+    [
+      "June Brand",
+      "France",
+      19.9890485968515,
+      1280,
+      1333,
+      53
+    ],
+    [
+      "Elisabeth Bocock",
+      "USA",
+      20.1834360027378,
+      1281,
+      1332,
+      51
+    ],
+    [
+      "Delia Durrer",
+      "Switzerland",
+      23.1622176591376,
+      1302,
+      1331,
+      29
+    ],
+    [
+      "Manon Chad",
+      "Lebanon",
+      20.1177275838467,
+      1279,
+      1331,
+      52
+    ],
+    [
+      "Bianca Bakke Westhoff",
+      "Norway",
+      24.9171800136893,
+      1310,
+      1330,
+      20
+    ],
+    [
+      "Taehee Choi",
+      "South Korea",
+      19.8740588637919,
+      1276,
+      1330,
+      54
+    ],
+    [
+      "Melina Gounaris",
+      "Greece",
+      19.1184120465435,
+      1268,
+      1329,
+      61
+    ],
+    [
+      "Magdalena Luczak",
+      "Poland",
+      24.1177275838467,
+      1304,
+      1328,
+      24
+    ],
+    [
+      "Joyce Ten Raa",
+      "Luxembourg",
+      22.1190965092402,
+      1290,
+      1326,
+      36
+    ],
+    [
+      "Matilde Schwencke",
+      "Chile",
+      22.1054072553046,
+      1288,
+      1325,
+      37
+    ],
+    [
+      "Silja Koskinen",
+      "Finland",
+      20.8761122518823,
+      1279,
+      1325,
+      46
+    ],
+    [
+      "Christa Rahme",
+      "Lebanon",
+      20.1177275838467,
+      1273,
+      1325,
+      52
+    ],
+    [
+      "Jana Fritz",
+      "Germany",
+      19.9890485968515,
+      1272,
+      1325,
+      53
+    ],
+    [
+      "Lois Jackson",
+      "Great Britain",
+      24.1177275838467,
+      1301,
+      1324,
+      23
+    ],
+    [
+      "Elisa Platino",
+      "Italy",
+      26.1820670773443,
+      1309,
+      1322,
+      13
+    ],
+    [
+      "Franziska Gritsch",
+      "Austria",
+      28.1834360027378,
+      1315,
+      1321,
+      6
+    ],
+    [
+      "Mia Hunt",
+      "USA",
+      21.9164955509925,
+      1283,
+      1321,
+      38
+    ],
+    [
+      "Caterina Sinigoi",
+      "Italy",
+      22.0123203285421,
+      1284,
+      1321,
+      37
+    ],
+    [
+      "Jordina Caminal Santure",
+      "Spain",
+      22.1054072553046,
+      1282,
+      1319,
+      37
+    ],
+    [
+      "Lili Polanyi",
+      "Hungary",
+      21.1252566735113,
+      1275,
+      1319,
+      44
+    ],
+    [
+      "Atena Kiashemshaki",
+      "Iran",
+      20.1177275838467,
+      1267,
+      1319,
+      52
+    ],
+    [
+      "Anina Zurbriggen",
+      "Switzerland",
+      22.1190965092402,
+      1282,
+      1318,
+      36
+    ],
+    [
+      "Abi Bruce",
+      "Great Britain",
+      25.119780971937,
+      1299,
+      1318,
+      19
+    ],
+    [
+      "Liv Moritz",
+      "USA",
+      21.1471594798084,
+      1273,
+      1317,
+      44
+    ],
+    [
+      "Esma Alic",
+      "Bosnia&Herzegovina",
+      23.1184120465435,
+      1286,
+      1316,
+      30
+    ],
+    [
+      "Alessia Guerinoni",
+      "Italy",
+      23.0554414784394,
+      1285,
+      1315,
+      30
+    ],
+    [
+      "Alice Pazzaglia",
+      "Italy",
+      23.1457905544148,
+      1286,
+      1315,
+      29
+    ],
+    [
+      "Eliane Christen",
+      "Switzerland",
+      26.1848049281314,
+      1300,
+      1313,
+      13
+    ],
+    [
+      "Jacqueline Wiles",
+      "USA",
+      33.1991786447639,
+      1316,
+      1311,
+      -5
+    ],
+    [
+      "Isabella Wright",
+      "USA",
+      28.1587953456537,
+      1304,
+      1311,
+      7
+    ],
+    [
+      "Anuk Brändli",
+      "Switzerland",
+      22.1464750171116,
+      1275,
+      1311,
+      36
+    ],
+    [
+      "Carmen Spielberger",
+      "Austria",
+      23.1622176591376,
+      1281,
+      1310,
+      29
+    ],
+    [
+      "Rebeka Jancova",
+      "Slovakia",
+      22.1190965092402,
+      1274,
+      1310,
+      36
+    ],
+    [
+      "Clarisse Breche",
+      "France",
+      24.0547570157426,
+      1284,
+      1308,
+      24
+    ],
+    [
+      "Debora Timalsina",
+      "Nepal",
+      22.1190965092402,
+      1272,
+      1308,
+      36
+    ],
+    [
+      "Emilia Mondinelli",
+      "Italy",
+      21.1854893908282,
+      1263,
+      1306,
+      43
+    ],
+    [
+      "Lisa Grill",
+      "Austria",
+      24.9719370294319,
+      1286,
+      1305,
+      19
+    ],
+    [
+      "Beatrice Sola",
+      "Italy",
+      21.8945927446954,
+      1267,
+      1305,
+      38
+    ],
+    [
+      "Eren Watanabe",
+      "Japan",
+      22.1245722108145,
+      1270,
+      1305,
+      35
+    ],
+    [
+      "Barbora Novakova",
+      "Czechia",
+      23.0992470910335,
+      1274,
+      1304,
+      30
+    ],
+    [
+      "Priska Ming-Nufer",
+      "Switzerland",
+      33.1991786447639,
+      1307,
+      1303,
+      -4
+    ],
+    [
+      "Clara-Marie Holmer Vorre",
+      "Denmark",
+      22.1848049281314,
+      1268,
+      1303,
+      35
+    ],
+    [
+      "Lisa Nyberg",
+      "Sweden",
+      23.1813826146475,
+      1271,
+      1300,
+      29
+    ],
+    [
+      "Kathrin Stock",
+      "Austria",
+      22.8939082819986,
+      1270,
+      1300,
+      30
+    ],
+    [
+      "llaria Ghisalberti",
+      "Italy",
+      25.1827515400411,
+      1278,
+      1296,
+      18
+    ],
+    [
+      "Kendahl Roufa",
+      "USA",
+      23.0362765229295,
+      1265,
+      1295,
+      30
+    ],
+    [
+      "Leonie Raich",
+      "Austria",
+      20.1834360027378,
+      1244,
+      1295,
+      51
+    ],
+    [
+      "Anja Oplotnik",
+      "Slovenia",
+      23.0362765229295,
+      1264,
+      1294,
+      30
+    ],
+    [
+      "Marte Monsen",
+      "Norway",
+      25.1991786447639,
+      1275,
+      1293,
+      18
+    ],
+    [
+      "Livia Rossi",
+      "Switzerland",
+      24.1587953456537,
+      1270,
+      1293,
+      23
+    ],
+    [
+      "Rosa Pohjolainen",
+      "Finland",
+      21.8754277891855,
+      1255,
+      1292,
+      37
+    ],
+    [
+      "Andrea Ellenberger",
+      "Switzerland",
+      31.8165639972621,
+      1294,
+      1292,
+      -2
+    ],
+    [
+      "Nadine Fest",
+      "Austria",
+      27.1978097193703,
+      1281,
+      1290,
+      9
+    ],
+    [
+      "Jessica Hilzinger",
+      "Germany",
+      28.1834360027378,
+      1284,
+      1290,
+      6
+    ],
+    [
+      "Viktoria Bürgler",
+      "Austria",
+      21.056810403833,
+      1244,
+      1288,
+      44
+    ],
+    [
+      "Valeriya Kovaleva",
+      "Uzbekistan",
+      22.1245722108145,
+      1252,
+      1287,
+      35
+    ],
+    [
+      "Cassidy Gray",
+      "Canada",
+      24.1806981519507,
+      1263,
+      1286,
+      23
+    ],
+    [
+      "Mary Bocock",
+      "USA",
+      22.0506502395619,
+      1250,
+      1286,
+      36
+    ],
+    [
+      "Nadia Delago",
+      "Italy",
+      28.1971252566735,
+      1278,
+      1285,
+      7
+    ],
+    [
+      "Maria Nikoleta Kaltsogianni",
+      "Greece",
+      22.1190965092402,
+      1249,
+      1285,
+      36
+    ],
+    [
+      "Stefanie Grob",
+      "Switzerland",
+      21.1444216290212,
+      1240,
+      1283,
+      43
+    ],
+    [
+      "Elsa Fermbäck",
+      "Sweden",
+      27.0362765229295,
+      1273,
+      1283,
+      10
+    ],
+    [
+      "Janine Mächler",
+      "Switzerland",
+      21.0130047912389,
+      1238,
+      1282,
+      44
+    ],
+    [
+      "Asa Ando",
+      "Japan",
+      29.1854893908282,
+      1278,
+      1282,
+      4
+    ],
+    [
+      "Maja Waroschitz",
+      "Austria",
+      19.0362765229295,
+      1222,
+      1281,
+      59
+    ],
+    [
+      "Magdalena Egger",
+      "Austria",
+      24.1971252566735,
+      1255,
+      1278,
+      23
+    ],
+    [
+      "Hanna Majtenyi",
+      "Hungary",
+      24.1232032854209,
+      1253,
+      1277,
+      24
+    ],
+    [
+      "Madison Hoffman",
+      "Australia",
+      24.9144421629021,
+      1257,
+      1276,
+      19
+    ],
+    [
+      "Moa Boström Mussener",
+      "Sweden",
+      24.1834360027378,
+      1253,
+      1276,
+      23
+    ],
+    [
+      "Selina Egloff",
+      "Switzerland",
+      24.1396303901437,
+      1251,
+      1274,
+      23
+    ],
+    [
+      "Sara Thaler",
+      "Italy",
+      21.0513347022587,
+      1229,
+      1272,
+      43
+    ],
+    [
+      "Zita Toth",
+      "Hungary",
+      23.1184120465435,
+      1242,
+      1271,
+      29
+    ],
+    [
+      "Reece Bell",
+      "Great Britain",
+      24.1834360027378,
+      1246,
+      1269,
+      23
+    ],
+    [
+      "Lois Abouly",
+      "France",
+      24.1615331964408,
+      1244,
+      1267,
+      23
+    ],
+    [
+      "Hilma Lövblom",
+      "Sweden",
+      25.1827515400411,
+      1249,
+      1267,
+      18
+    ],
+    [
+      "Mialitiana Clerc",
+      "Madagascar",
+      24.1232032854209,
+      1242,
+      1265,
+      23
+    ],
+    [
+      "Lena Wechner",
+      "Austria",
+      25.0321697467488,
+      1246,
+      1265,
+      19
+    ],
+    [
+      "Jasmina Suter",
+      "Switzerland",
+      30.0506502395619,
+      1262,
+      1264,
+      2
+    ],
+    [
+      "Celina Haller",
+      "Italy",
+      25.1471594798084,
+      1245,
+      1263,
+      18
+    ],
+    [
+      "Nino Tsiklauri",
+      "Georgia",
+      32.1232032854209,
+      1265,
+      1263,
+      -2
+    ],
+    [
+      "Nikolina Dragljevic",
+      "Bosnia&Herzegovina",
+      22.1245722108145,
+      1227,
+      1262,
+      35
+    ],
+    [
+      "Karen Clement",
+      "France",
+      26.1984941820671,
+      1244,
+      1258,
+      14
+    ],
+    [
+      "Aline Höpli",
+      "Switzerland",
+      24.145106091718,
+      1233,
+      1256,
+      23
+    ],
+    [
+      "Kristin Lysdahl",
+      "Norway",
+      29.1854893908282,
+      1251,
+      1255,
+      4
+    ],
+    [
+      "Delphine Darbellay",
+      "Switzerland",
+      23.1813826146475,
+      1226,
+      1255,
+      29
+    ],
+    [
+      "Noa Szollos",
+      "Israel",
+      22.1190965092402,
+      1219,
+      1254,
+      35
+    ],
+    [
+      "Doriane Escane",
+      "France",
+      26.1848049281314,
+      1241,
+      1254,
+      13
+    ],
+    [
+      "Janine Schmitt",
+      "Switzerland",
+      25.1964407939767,
+      1235,
+      1253,
+      18
+    ],
+    [
+      "Sadaf Savehshemshaki",
+      "Iran",
+      30.1245722108145,
+      1250,
+      1253,
+      3
+    ],
+    [
+      "Olga Paliutkina",
+      "Kyrgyzstan",
+      32.1177275838467,
+      1254,
+      1252,
+      -2
+    ],
+    [
+      "Erika Pykäläinen",
+      "Finland",
+      24.1396303901437,
+      1226,
+      1249,
+      23
+    ],
+    [
+      "Adriana Jelinkova",
+      "Czechia",
+      30.1848049281314,
+      1247,
+      1249,
+      2
+    ],
+    [
+      "Zahra Alizadeh Saveh",
+      "Iran",
+      27.1184120465435,
+      1236,
+      1246,
+      10
+    ],
+    [
+      "Liene Bondare",
+      "Latvia",
+      29.1252566735113,
+      1241,
+      1245,
+      4
+    ],
+    [
+      "Vanina Guerillot",
+      "Portugal",
+      23.0800821355236,
+      1214,
+      1243,
+      29
+    ],
+    [
+      "Miki Ishibashi",
+      "Japan",
+      29.056810403833,
+      1238,
+      1243,
+      5
+    ],
+    [
+      "Natalie Falch",
+      "Austria",
+      21.1854893908282,
+      1201,
+      1242,
+      41
+    ],
+    [
+      "Nika Tomsic",
+      "Slovenia",
+      25.0102669404517,
+      1224,
+      1242,
+      18
+    ],
+    [
+      "Vanessa Kasper",
+      "Switzerland",
+      29.1827515400411,
+      1236,
+      1240,
+      4
+    ],
+    [
+      "Anastasiya Shepilenko",
+      "Ukraine",
+      25.119780971937,
+      1222,
+      1239,
+      17
+    ],
+    [
+      "So-Hui Gim",
+      "South Korea",
+      28.8952772073922,
+      1232,
+      1237,
+      5
+    ],
+    [
+      "Holmfridur Dora Fridgeirsdottir",
+      "Iceland",
+      27.1184120465435,
+      1226,
+      1236,
+      10
+    ],
+    [
+      "Allison Mollin",
+      "USA",
+      21.1991786447639,
+      1194,
+      1235,
+      41
+    ],
+    [
+      "Justine Lamontagne",
+      "Canada",
+      23.1430527036277,
+      1206,
+      1234,
+      28
+    ],
+    [
+      "Nuunu Chemnitz Berthelsen",
+      "Denmark",
+      29.119780971937,
+      1227,
+      1232,
+      5
+    ],
+    [
+      "Kiara Alexander",
+      "Canada",
+      24.145106091718,
+      1208,
+      1231,
+      23
+    ],
+    [
+      "Kiara Derks",
+      "Netherlands",
+      24.1232032854209,
+      1208,
+      1230,
+      22
+    ],
+    [
+      "Camille Cerutti",
+      "France",
+      27.1978097193703,
+      1220,
+      1229,
+      9
+    ],
+    [
+      "Fabiana Dorigo",
+      "Germany",
+      27.1813826146475,
+      1220,
+      1229,
+      9
+    ],
+    [
+      "Vicky Bernardi",
+      "Italy",
+      23.1978097193703,
+      1201,
+      1229,
+      28
+    ],
+    [
+      "Sophie Mathiou",
+      "Italy",
+      23.1430527036277,
+      1195,
+      1223,
+      28
+    ],
+    [
+      "Giorgia Collomb",
+      "Italy",
+      19.2279260780287,
+      1167,
+      1222,
+      55
+    ],
+    [
+      "Elvedina Muzaferija",
+      "Bosnia&Herzegovina",
+      26.1984941820671,
+      1209,
+      1222,
+      13
+    ],
+    [
+      "Stephanie Jenal",
+      "Switzerland",
+      27.047227926078,
+      1211,
+      1221,
+      10
+    ],
+    [
+      "Caitlin McFarlane",
+      "France",
+      23.1813826146475,
+      1191,
+      1219,
+      28
+    ],
+    [
+      "Sarah Bennett",
+      "Canada",
+      23.9123887748118,
+      1195,
+      1219,
+      24
+    ],
+    [
+      "Keely Cashman",
+      "USA",
+      26.1984941820671,
+      1204,
+      1217,
+      13
+    ],
+    [
+      "Lucrezia Lorenzi",
+      "Italy",
+      27.1457905544148,
+      1206,
+      1216,
+      10
+    ],
+    [
+      "Haley Cutler",
+      "USA",
+      28.1642710472279,
+      1207,
+      1214,
+      7
+    ],
+    [
+      "Lisa Hörhager",
+      "Austria",
+      24.1834360027378,
+      1186,
+      1208,
+      22
+    ],
+    [
+      "Sarah Schleper",
+      "USA",
+      46.1190965092402,
+      1242,
+      1204,
+      -38
+    ],
+    [
+      "Aanchal Thakur",
+      "India",
+      29.119780971937,
+      1194,
+      1199,
+      5
+    ],
+    [
+      "Cande Moreno Becerra",
+      "Andorra",
+      25.1991786447639,
+      1181,
+      1198,
+      17
+    ],
+    [
+      "Kim Vanreusel",
+      "Belgium",
+      27.1457905544148,
+      1187,
+      1197,
+      10
+    ],
+    [
+      "Charlotte Lingg",
+      "Liechtenstein",
+      26.1820670773443,
+      1183,
+      1196,
+      13
+    ],
+    [
+      "Tereza Nova",
+      "Czechia",
+      27.047227926078,
+      1185,
+      1195,
+      10
+    ],
+    [
+      "Chisaki Maeda",
+      "Japan",
+      27.1457905544148,
+      1182,
+      1191,
+      9
+    ],
+    [
+      "Nina Astner",
+      "Austria",
+      25.1444216290212,
+      1171,
+      1188,
+      17
+    ],
+    [
+      "Andrine Mårstøl",
+      "Norway",
+      26.1464750171116,
+      1175,
+      1188,
+      13
+    ],
+    [
+      "Francesca Baruzzi Farriol",
+      "Argentina",
+      27.1813826146475,
+      1170,
+      1179,
+      9
+    ],
+    [
+      "Tricia Mangan",
+      "USA",
+      28.1971252566735,
+      1163,
+      1170,
+      7
+    ],
+    [
+      "Lila Lapanja",
+      "USA",
+      31.1457905544148,
+      1166,
+      1167,
+      1
+    ],
+    [
+      "Celine Marti",
+      "Haiti",
+      46.1190965092402,
+      1185,
+      1150,
+      -35
+    ],
+    [
+      "Sabrina Simader",
+      "Kenya",
+      27.1047227926078,
+      1127,
+      1137,
+      10
+    ],
+    [
+      "Greta Small",
+      "Australia",
+      30.0506502395619,
+      1074,
+      1077,
+      3
+    ]
+  ]
+}

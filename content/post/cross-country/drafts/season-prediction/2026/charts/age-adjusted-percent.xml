@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-05T12:00:00.000Z" agent="5.0" version="24.7.17" etag="" type="device">
+  <diagram id="age-adjusted-percent-flow" name="Age Adjusted Percent Section Flow">
+    <mxGraphModel dx="1422" dy="1199" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1427" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="title" value="Age Adjusted Percent Section Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="350" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="start" value="START&#xa;Age-Adjusted Percentage&#xa;Performance Predictions" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="70" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="validate_data" value="Data Validation &amp; Preparation&#xa;• Check age_analysis exists and valid&#xa;• Validate men_pred_data availability&#xa;• Verify data structure integrity&#xa;• Check for null/empty datasets&#xa;• Ensure required columns present" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="160" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="extract_adjustments" value="Extract Age Adjustment Factors&#xa;Dual fallback mechanism:&#xa;• Primary: age_stats with avg_pct_points_change&#xa;• Fallback: additive_stats with ELO conversion&#xa;• Convert ELO points to percentage points (÷1000)&#xa;• Validate extraction success" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="420" y="290" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="join_data" value="Join Age Adjustments with Athlete Data&#xa;• Merge age adjustments by athlete age&#xa;• Handle missing age adjustment data&#xa;• Validate join completeness&#xa;• Report matching statistics&#xa;• Prepare for calculation phase" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="420" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="calculate_predictions" value="Calculate Age-Adjusted Predictions&#xa;Formula: Current_Pct + Age_Adjustment&#xa;• Apply age-specific percentage adjustments&#xa;• Cap results: max(0%, min(100%, result))&#xa;• Handle missing values with defaults&#xa;• Validate calculation results" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="550" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="age_categorization" value="Athlete Age Categorization&#xa;Create age-based groups:&#xa;• Young (≤23 years)&#xa;• Prime (24-27 years)&#xa;• Peak (28-31 years)&#xa;• Mature (32-35 years)&#xa;• Veteran (36+ years)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="680" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="performance_classification" value="Performance Change Classification&#xa;Based on predicted vs current performance:&#xa;• Strong Improvement (&gt;5% increase)&#xa;• Moderate Improvement (2-5% increase)&#xa;• Stable Performance (±2%)&#xa;• Moderate Decline (2-5% decrease)&#xa;• Strong Decline (&gt;5% decrease)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="420" y="810" width="260" height="110" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="top_predictions" value="Display Top 15 Predictions&#xa;• Rank by predicted 2026 performance&#xa;• Show current vs predicted percentages&#xa;• Include age and performance change&#xa;• Highlight notable improvements/declines&#xa;• Format for readability" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="440" y="950" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="age_category_summary" value="Age Category Performance Summary&#xa;• Aggregate predictions by age group&#xa;• Calculate mean predicted performance&#xa;• Identify age-related trends&#xa;• Compare across age categories&#xa;• Statistical validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1080" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="change_analysis" value="Performance Change Analysis&#xa;Identify key patterns:&#xa;• Biggest expected improvers&#xa;• Biggest expected decliners&#xa;• Age-based improvement/decline trends&#xa;• Statistical significance testing&#xa;• Outlier identification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1210" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_storage" value="Store Results for Future Use&#xa;• Save age_adjusted_pct_predictions&#xa;• Store in global environment&#xa;• Ensure data persistence&#xa;• Validate storage success&#xa;• Prepare for downstream analysis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1340" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="error_handling" value="Comprehensive Error Handling&#xa;• tryCatch blocks throughout process&#xa;• Data quality validation checks&#xa;• Warning messages for missing data&#xa;• Graceful failure handling&#xa;• Recovery mechanisms" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1470" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="success" value="✓ AGE-ADJUSTED PERCENT COMPLETE&#xa;2026 performance percentages predicted&#xa;Age-based adjustments applied&#xa;Comprehensive analysis generated&#xa;Results stored for future use" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1600" width="180" height="110" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="start" target="validate_data">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="validate_data" target="extract_adjustments">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="extract_adjustments" target="join_data">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="join_data" target="calculate_predictions">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="calculate_predictions" target="age_categorization">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="age_categorization" target="performance_classification">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="performance_classification" target="top_predictions">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="top_predictions" target="age_category_summary">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="age_category_summary" target="change_analysis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="change_analysis" target="data_storage">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="data_storage" target="error_handling">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="error_handling" target="success">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,2543 @@
+{
+  "sheet_name": "Men_Predictions_2026",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Predicted Percent 2026",
+    "2025 Pct of Max Points",
+    "Current Overall ELO",
+    "Current Tech ELO",
+    "Current Speed ELO"
+  ],
+  "rows": [
+    [
+      "Marco Odermatt",
+      "Switzerland",
+      51.27,
+      46.62,
+      1801,
+      1702,
+      1738
+    ],
+    [
+      "Loic Meillard",
+      "Switzerland",
+      28.43,
+      29.51,
+      1641,
+      1713,
+      1376
+    ],
+    [
+      "Henrik Kristoffersen",
+      "Norway",
+      22.16,
+      30.27,
+      1709,
+      1705,
+      1310
+    ],
+    [
+      "Lucas Pinheiro Braathen",
+      "Brazil",
+      21.14,
+      19.35,
+      1666,
+      1663,
+      1322
+    ],
+    [
+      "Atle Lie McGrath",
+      "Norway",
+      16.36,
+      18.65,
+      1564,
+      1561,
+      1324
+    ],
+    [
+      "Franjo Von Allmen",
+      "Switzerland",
+      15.39,
+      22.59,
+      1584,
+      1253,
+      1576
+    ],
+    [
+      "Timon Haugan",
+      "Norway",
+      15.21,
+      22.27,
+      1625,
+      1621,
+      1242
+    ],
+    [
+      "Clement Noel",
+      "France",
+      14.82,
+      16.73,
+      1512,
+      1511,
+      1242
+    ],
+    [
+      "Vincent Kriechmayr",
+      "Austria",
+      14.21,
+      13.38,
+      1612,
+      1260,
+      1624
+    ],
+    [
+      "Alexander Steen Olsen",
+      "Norway",
+      12.87,
+      12.27,
+      1474,
+      1474,
+      1242
+    ],
+    [
+      "Fabio Gstrein",
+      "Austria",
+      12.76,
+      9.7,
+      1497,
+      1494,
+      1242
+    ],
+    [
+      "Filip Zubcic",
+      "Croatia",
+      12.46,
+      11.41,
+      1516,
+      1515,
+      1240
+    ],
+    [
+      "Stefan Rogentin",
+      "Switzerland",
+      12.2,
+      15.32,
+      1562,
+      1276,
+      1562
+    ],
+    [
+      "Marco Schwarz",
+      "Austria",
+      11.98,
+      6.81,
+      1539,
+      1535,
+      1432
+    ],
+    [
+      "Dominik Paris",
+      "Italy",
+      11.61,
+      14.16,
+      1598,
+      1244,
+      1591
+    ],
+    [
+      "Marcel Hirscher",
+      "Netherlands",
+      11.44,
+      0.22,
+      1653,
+      1664,
+      1392
+    ],
+    [
+      "James Crawford",
+      "Canada",
+      10.97,
+      12.65,
+      1496,
+      1306,
+      1498
+    ],
+    [
+      "Alexis Monney",
+      "Switzerland",
+      10.92,
+      15.68,
+      1527,
+      1300,
+      1525
+    ],
+    [
+      "Raphael Haaser",
+      "Austria",
+      10.46,
+      9.08,
+      1467,
+      1471,
+      1419
+    ],
+    [
+      "Justin Murisier",
+      "Switzerland",
+      9.61,
+      10.78,
+      1489,
+      1380,
+      1498
+    ],
+    [
+      "Manuel Feller",
+      "Austria",
+      9.24,
+      9.35,
+      1546,
+      1545,
+      1242
+    ],
+    [
+      "Miha Hrobat",
+      "Slovenia",
+      9.07,
+      11.89,
+      1505,
+      1262,
+      1498
+    ],
+    [
+      "Tanguy Nef",
+      "Switzerland",
+      8.91,
+      8.89,
+      1498,
+      1495,
+      1242
+    ],
+    [
+      "Alexis Pinturault",
+      "France",
+      8.52,
+      2.0,
+      1485,
+      1522,
+      1420
+    ],
+    [
+      "Mattia Casse",
+      "Italy",
+      8.03,
+      10.32,
+      1525,
+      1220,
+      1517
+    ],
+    [
+      "Nils Allegre",
+      "France",
+      7.81,
+      9.97,
+      1533,
+      1301,
+      1525
+    ],
+    [
+      "River Radamus",
+      "USA",
+      7.41,
+      7.19,
+      1409,
+      1469,
+      1273
+    ],
+    [
+      "Cameron Alexander",
+      "Canada",
+      7.41,
+      9.14,
+      1535,
+      1253,
+      1528
+    ],
+    [
+      "Leo Anguenot",
+      "France",
+      7.25,
+      4.46,
+      1377,
+      1374,
+      1242
+    ],
+    [
+      "Adrian Smiseth Sejersted",
+      "Norway",
+      6.88,
+      7.78,
+      1509,
+      1253,
+      1501
+    ],
+    [
+      "Steven Amiez",
+      "France",
+      6.84,
+      7.46,
+      1479,
+      1476,
+      1242
+    ],
+    [
+      "Thibaut Favrot",
+      "France",
+      6.73,
+      4.78,
+      1522,
+      1516,
+      1242
+    ],
+    [
+      "Stefan Eichberger",
+      "Austria",
+      6.52,
+      7.3,
+      1432,
+      1253,
+      1426
+    ],
+    [
+      "Alex Vinatzer",
+      "Italy",
+      6.51,
+      7.76,
+      1425,
+      1425,
+      1242
+    ],
+    [
+      "Ryan Cochran-Siegle",
+      "USA",
+      6.15,
+      8.0,
+      1506,
+      1335,
+      1498
+    ],
+    [
+      "Linus Strasser",
+      "Germany",
+      6.14,
+      8.76,
+      1571,
+      1568,
+      1296
+    ],
+    [
+      "Fredrik Møller",
+      "Norway",
+      6.14,
+      8.05,
+      1371,
+      1248,
+      1390
+    ],
+    [
+      "Kristoffer Jakobsen",
+      "Sweden",
+      6.07,
+      5.3,
+      1484,
+      1483,
+      1242
+    ],
+    [
+      "Stefan Babinsky",
+      "Austria",
+      6.03,
+      6.27,
+      1446,
+      1287,
+      1446
+    ],
+    [
+      "Albert Popov",
+      "Bulgaria",
+      5.89,
+      6.7,
+      1463,
+      1463,
+      1242
+    ],
+    [
+      "Cyprien Sarrazin",
+      "France",
+      5.81,
+      3.46,
+      1523,
+      1307,
+      1548
+    ],
+    [
+      "Gino Caviezel",
+      "Switzerland",
+      5.55,
+      3.38,
+      1487,
+      1542,
+      1349
+    ],
+    [
+      "Samuel Kolega",
+      "Croatia",
+      5.52,
+      6.41,
+      1452,
+      1451,
+      1242
+    ],
+    [
+      "Zan Kranjec",
+      "Slovenia",
+      5.35,
+      7.49,
+      1576,
+      1572,
+      1242
+    ],
+    [
+      "Patrick Feurstein",
+      "Austria",
+      5.33,
+      5.54,
+      1448,
+      1443,
+      1242
+    ],
+    [
+      "Luca De Aliprandini",
+      "Italy",
+      5.29,
+      6.49,
+      1537,
+      1532,
+      1294
+    ],
+    [
+      "Lukas Feurstein",
+      "Austria",
+      5.23,
+      7.24,
+      1387,
+      1295,
+      1399
+    ],
+    [
+      "Sam Maes",
+      "Belgium",
+      5.16,
+      4.51,
+      1427,
+      1423,
+      1242
+    ],
+    [
+      "Alexander Schmid",
+      "Germany",
+      5.01,
+      1.43,
+      1487,
+      1485,
+      1242
+    ],
+    [
+      "Stefan Brennsteiner",
+      "Austria",
+      4.97,
+      7.68,
+      1575,
+      1571,
+      1242
+    ],
+    [
+      "Joan Verdu Sanchez",
+      "Andorra",
+      4.97,
+      4.43,
+      1457,
+      1452,
+      1273
+    ],
+    [
+      "Daniel Yule",
+      "Switzerland",
+      4.9,
+      6.22,
+      1467,
+      1468,
+      1242
+    ],
+    [
+      "Florian Schieder",
+      "Italy",
+      4.75,
+      3.81,
+      1410,
+      1253,
+      1404
+    ],
+    [
+      "Dave Ryding",
+      "Great Britain",
+      4.69,
+      5.68,
+      1501,
+      1501,
+      1242
+    ],
+    [
+      "Dominik Raschner",
+      "Austria",
+      4.64,
+      3.78,
+      1420,
+      1418,
+      1242
+    ],
+    [
+      "Thomas Tumler",
+      "Switzerland",
+      4.63,
+      8.08,
+      1552,
+      1548,
+      1287
+    ],
+    [
+      "Benjamin Ritchie",
+      "USA",
+      4.51,
+      4.81,
+      1405,
+      1403,
+      1242
+    ],
+    [
+      "Giovanni Franzoni",
+      "Italy",
+      4.44,
+      5.05,
+      1310,
+      1215,
+      1325
+    ],
+    [
+      "Elian Lehto",
+      "Finland",
+      4.29,
+      2.62,
+      1362,
+      1253,
+      1356
+    ],
+    [
+      "Armand Marchant",
+      "Belgium",
+      4.29,
+      4.14,
+      1421,
+      1420,
+      1242
+    ],
+    [
+      "Daniel Hemetsberger",
+      "Austria",
+      4.26,
+      6.05,
+      1454,
+      1253,
+      1447
+    ],
+    [
+      "Paco Rassat",
+      "France",
+      4.08,
+      3.57,
+      1378,
+      1375,
+      1242
+    ],
+    [
+      "Lars Rösti",
+      "Switzerland",
+      4.02,
+      3.54,
+      1338,
+      1253,
+      1333
+    ],
+    [
+      "Johannes Strolz",
+      "Austria",
+      4.02,
+      3.27,
+      1439,
+      1452,
+      1269
+    ],
+    [
+      "Bryce Bennett",
+      "USA",
+      3.94,
+      5.14,
+      1382,
+      1253,
+      1375
+    ],
+    [
+      "Luca Aerni",
+      "Switzerland",
+      3.37,
+      5.24,
+      1415,
+      1415,
+      1242
+    ],
+    [
+      "Jan Zabystran",
+      "Czechia",
+      3.34,
+      3.86,
+      1325,
+      1280,
+      1310
+    ],
+    [
+      "Adrian Pertl",
+      "Austria",
+      3.13,
+      2.35,
+      1400,
+      1401,
+      1242
+    ],
+    [
+      "Tobias Kastlunger",
+      "Italy",
+      2.83,
+      1.65,
+      1217,
+      1217,
+      1242
+    ],
+    [
+      "Filippo Della Vite",
+      "Italy",
+      2.79,
+      1.3,
+      1397,
+      1396,
+      1242
+    ],
+    [
+      "Victor Muffat-Jeandet",
+      "France",
+      2.79,
+      4.7,
+      1387,
+      1385,
+      1325
+    ],
+    [
+      "Eduard Hallberg",
+      "Finland",
+      2.75,
+      1.51,
+      1282,
+      1283,
+      1242
+    ],
+    [
+      "Michael Matt",
+      "Austria",
+      2.65,
+      3.35,
+      1413,
+      1413,
+      1242
+    ],
+    [
+      "Anton Grammel",
+      "Germany",
+      2.64,
+      2.89,
+      1322,
+      1318,
+      1242
+    ],
+    [
+      "Tormis Laine",
+      "Estonia",
+      2.57,
+      1.92,
+      1278,
+      1279,
+      1242
+    ],
+    [
+      "Marco Kohler",
+      "Switzerland",
+      2.56,
+      1.84,
+      1292,
+      1253,
+      1287
+    ],
+    [
+      "Blaise Giezendanner",
+      "France",
+      2.5,
+      2.41,
+      1384,
+      1253,
+      1378
+    ],
+    [
+      "Marc Rochat",
+      "Switzerland",
+      2.35,
+      1.92,
+      1454,
+      1455,
+      1242
+    ],
+    [
+      "Maxence Muzaton",
+      "France",
+      2.33,
+      2.84,
+      1350,
+      1253,
+      1346
+    ],
+    [
+      "Otmar Striedinger",
+      "Austria",
+      2.29,
+      2.41,
+      1364,
+      1253,
+      1358
+    ],
+    [
+      "Billy Major",
+      "Great Britain",
+      2.27,
+      1.49,
+      1347,
+      1347,
+      1242
+    ],
+    [
+      "Istok Rodes",
+      "Croatia",
+      2.23,
+      1.68,
+      1336,
+      1336,
+      1256
+    ],
+    [
+      "Joshua Sturm",
+      "Austria",
+      2.15,
+      0.84,
+      1201,
+      1203,
+      1242
+    ],
+    [
+      "Jared Goldberg",
+      "USA",
+      2.14,
+      4.14,
+      1330,
+      1314,
+      1323
+    ],
+    [
+      "Tommaso Sala",
+      "Italy",
+      2.1,
+      0.0,
+      1395,
+      1397,
+      1242
+    ],
+    [
+      "Jeffrey Read",
+      "Canada",
+      2.07,
+      1.22,
+      1342,
+      1253,
+      1336
+    ],
+    [
+      "Simon Jocher",
+      "Germany",
+      1.93,
+      0.59,
+      1360,
+      1253,
+      1356
+    ],
+    [
+      "Fabian Gratz",
+      "Germany",
+      1.92,
+      1.16,
+      1338,
+      1333,
+      1242
+    ],
+    [
+      "Louis Muhlen-Schulte",
+      "Australia",
+      1.89,
+      0.0,
+      1163,
+      1163,
+      1242
+    ],
+    [
+      "Arnaud Boisset",
+      "Switzerland",
+      1.81,
+      0.11,
+      1381,
+      1253,
+      1376
+    ],
+    [
+      "Brodie Seger",
+      "Canada",
+      1.72,
+      2.35,
+      1291,
+      1295,
+      1284
+    ],
+    [
+      "Nejc Naralocnik",
+      "Slovenia",
+      1.62,
+      1.57,
+      1257,
+      1253,
+      1253
+    ],
+    [
+      "Christof Innerhofer",
+      "Italy",
+      1.6,
+      2.97,
+      1355,
+      1238,
+      1348
+    ],
+    [
+      "Luis Vogt",
+      "Germany",
+      1.56,
+      1.24,
+      1223,
+      1253,
+      1220
+    ],
+    [
+      "Alban Elezi Cannaferina",
+      "France",
+      1.56,
+      0.86,
+      1329,
+      1328,
+      1242
+    ],
+    [
+      "Adrien Theaux",
+      "France",
+      1.55,
+      2.35,
+      1352,
+      1210,
+      1346
+    ],
+    [
+      "Jett Seymour",
+      "USA",
+      1.53,
+      1.46,
+      1305,
+      1305,
+      1242
+    ],
+    [
+      "Felix Hacker",
+      "Austria",
+      1.49,
+      0.76,
+      1298,
+      1253,
+      1297
+    ],
+    [
+      "Felix Monsen",
+      "Sweden",
+      1.44,
+      1.76,
+      1311,
+      1253,
+      1307
+    ],
+    [
+      "Florian Loriot",
+      "France",
+      1.44,
+      1.32,
+      1202,
+      1253,
+      1196
+    ],
+    [
+      "Kyle Negomir",
+      "USA",
+      1.39,
+      1.32,
+      1248,
+      1297,
+      1242
+    ],
+    [
+      "Laurie Taylor",
+      "Great Britain",
+      1.37,
+      1.59,
+      1274,
+      1275,
+      1242
+    ],
+    [
+      "Daniel Danklmaier",
+      "Austria",
+      1.35,
+      0.78,
+      1357,
+      1253,
+      1349
+    ],
+    [
+      "Fabian Ax Swartz",
+      "Sweden",
+      1.34,
+      1.16,
+      1260,
+      1260,
+      1242
+    ],
+    [
+      "Ramon Zenhäusern",
+      "Switzerland",
+      1.33,
+      1.54,
+      1393,
+      1397,
+      1242
+    ],
+    [
+      "AJ Ginnis",
+      "Greece",
+      1.32,
+      0.32,
+      1384,
+      1383,
+      1242
+    ],
+    [
+      "Nils Alphand",
+      "France",
+      1.29,
+      1.11,
+      1288,
+      1253,
+      1284
+    ],
+    [
+      "Sam Morse",
+      "USA",
+      1.26,
+      1.08,
+      1292,
+      1253,
+      1287
+    ],
+    [
+      "Simon Fournier",
+      "Canada",
+      1.24,
+      0.0,
+      1140,
+      1142,
+      1242
+    ],
+    [
+      "Matthieu Bailet",
+      "France",
+      1.23,
+      1.35,
+      1269,
+      1253,
+      1263
+    ],
+    [
+      "Romed Baumann",
+      "Germany",
+      1.23,
+      3.0,
+      1352,
+      1263,
+      1345
+    ],
+    [
+      "Andreas Ploier",
+      "Austria",
+      1.21,
+      1.03,
+      1286,
+      1253,
+      1281
+    ],
+    [
+      "William Hansson",
+      "Sweden",
+      1.19,
+      0.59,
+      1261,
+      1261,
+      1242
+    ],
+    [
+      "Nicolo Molteni",
+      "Italy",
+      1.18,
+      1.11,
+      1222,
+      1253,
+      1217
+    ],
+    [
+      "Livio Hiltbrand",
+      "Switzerland",
+      1.15,
+      0.59,
+      1283,
+      1253,
+      1281
+    ],
+    [
+      "Liam Wallace",
+      "Canada",
+      1.03,
+      0.0,
+      1176,
+      1173,
+      1242
+    ],
+    [
+      "Barnabas Szollos",
+      "Israel",
+      0.96,
+      0.0,
+      1122,
+      1247,
+      1119
+    ],
+    [
+      "Jonas Stockinger",
+      "Germany",
+      0.88,
+      1.0,
+      1299,
+      1298,
+      1242
+    ],
+    [
+      "Stefan Rieser",
+      "Austria",
+      0.88,
+      0.65,
+      1258,
+      1253,
+      1255
+    ],
+    [
+      "Asher Jordan",
+      "Canada",
+      0.85,
+      0.0,
+      1233,
+      1231,
+      1242
+    ],
+    [
+      "Seigo Kato",
+      "Japan",
+      0.84,
+      0.0,
+      1178,
+      1178,
+      1242
+    ],
+    [
+      "Benjamin Jacques Alliod",
+      "Italy",
+      0.82,
+      0.49,
+      1220,
+      1253,
+      1215
+    ],
+    [
+      "Riley Seger",
+      "Canada",
+      0.8,
+      0.43,
+      1207,
+      1235,
+      1219
+    ],
+    [
+      "Bridger Gile",
+      "USA",
+      0.8,
+      0.19,
+      1208,
+      1209,
+      1242
+    ],
+    [
+      "Vincent Wieser",
+      "Austria",
+      0.77,
+      0.43,
+      1245,
+      1253,
+      1242
+    ],
+    [
+      "Rok Aznoh",
+      "Slovenia",
+      0.77,
+      0.0,
+      1178,
+      1269,
+      1187
+    ],
+    [
+      "Fadri Janutin",
+      "Switzerland",
+      0.76,
+      0.49,
+      1302,
+      1301,
+      1242
+    ],
+    [
+      "Hayata Wakatsuki",
+      "Japan",
+      0.76,
+      0.0,
+      1186,
+      1187,
+      1242
+    ],
+    [
+      "Isaiah Nelson",
+      "USA",
+      0.73,
+      0.0,
+      1215,
+      1228,
+      1262
+    ],
+    [
+      "Sandro Zurbrügg",
+      "Switzerland",
+      0.71,
+      0.0,
+      1204,
+      1205,
+      1242
+    ],
+    [
+      "Rasmus Bakkevig",
+      "Norway",
+      0.71,
+      0.38,
+      1320,
+      1319,
+      1242
+    ],
+    [
+      "Oscar Andreas Sandvik",
+      "Norway",
+      0.71,
+      0.43,
+      1297,
+      1297,
+      1242
+    ],
+    [
+      "Hugo Desgrippes",
+      "France",
+      0.69,
+      0.35,
+      1217,
+      1220,
+      1242
+    ],
+    [
+      "Denni Xhepa",
+      "Albania",
+      0.66,
+      0.0,
+      1307,
+      1307,
+      1242
+    ],
+    [
+      "Jack Smith",
+      "USA",
+      0.65,
+      0.0,
+      1176,
+      1253,
+      1173
+    ],
+    [
+      "Loevan Parand",
+      "France",
+      0.62,
+      0.32,
+      1242,
+      1239,
+      1242
+    ],
+    [
+      "Guerlain Favre",
+      "France",
+      0.62,
+      0.0,
+      1225,
+      1227,
+      1242
+    ],
+    [
+      "Albert Ortega",
+      "Spain",
+      0.61,
+      0.0,
+      1218,
+      1218,
+      1277
+    ],
+    [
+      "Kalin Zlatkov",
+      "Bulgaria",
+      0.61,
+      0.0,
+      1275,
+      1277,
+      1242
+    ],
+    [
+      "Taras Filiak",
+      "Ukraine",
+      0.6,
+      0.0,
+      1279,
+      1253,
+      1279
+    ],
+    [
+      "Adam Hofstedt",
+      "Sweden",
+      0.57,
+      0.0,
+      1269,
+      1270,
+      1242
+    ],
+    [
+      "Corrado Barbera",
+      "Italy",
+      0.57,
+      0.0,
+      1191,
+      1195,
+      1242
+    ],
+    [
+      "Jan Koula",
+      "Czechia",
+      0.57,
+      0.0,
+      1270,
+      1253,
+      1270
+    ],
+    [
+      "Fabian Himmelsbach",
+      "Germany",
+      0.57,
+      0.0,
+      1183,
+      1185,
+      1242
+    ],
+    [
+      "Cooper Puckett",
+      "USA",
+      0.57,
+      0.0,
+      1248,
+      1249,
+      1242
+    ],
+    [
+      "Max Perathoner",
+      "Italy",
+      0.56,
+      0.0,
+      1284,
+      1253,
+      1282
+    ],
+    [
+      "Tiziano Gravier",
+      "Argentina",
+      0.56,
+      0.0,
+      1209,
+      1266,
+      1219
+    ],
+    [
+      "Noel Zwischenbrugger",
+      "Austria",
+      0.55,
+      0.49,
+      1289,
+      1289,
+      1242
+    ],
+    [
+      "Kyle Alexander",
+      "Canada",
+      0.55,
+      0.0,
+      1165,
+      1253,
+      1162
+    ],
+    [
+      "Andrej Drukarov",
+      "Lithuania",
+      0.53,
+      0.0,
+      1255,
+      1254,
+      1278
+    ],
+    [
+      "Owen Vinter",
+      "Great Britain",
+      0.53,
+      0.0,
+      1273,
+      1253,
+      1272
+    ],
+    [
+      "Hugh McAdam",
+      "Australia",
+      0.51,
+      0.0,
+      1263,
+      1263,
+      1242
+    ],
+    [
+      "Diego Orecchioni",
+      "France",
+      0.51,
+      0.27,
+      1268,
+      1267,
+      1242
+    ],
+    [
+      "Matteo Franzoso",
+      "Italy",
+      0.51,
+      0.03,
+      1184,
+      1253,
+      1181
+    ],
+    [
+      "Jesper Pohjolainen",
+      "Finland",
+      0.5,
+      0.0,
+      1204,
+      1207,
+      1242
+    ],
+    [
+      "Maksym Mariichyn",
+      "Ukraine",
+      0.5,
+      0.0,
+      1276,
+      1253,
+      1276
+    ],
+    [
+      "Raphael Lessard",
+      "Canada",
+      0.5,
+      0.0,
+      1262,
+      1253,
+      1261
+    ],
+    [
+      "Manuel Traninger",
+      "Austria",
+      0.49,
+      0.3,
+      1216,
+      1253,
+      1213
+    ],
+    [
+      "Charles Gamel Seigneur",
+      "France",
+      0.49,
+      0.0,
+      1259,
+      1253,
+      1258
+    ],
+    [
+      "Antoine Azzolin",
+      "France",
+      0.49,
+      0.22,
+      1278,
+      1279,
+      1242
+    ],
+    [
+      "Tomas Barata",
+      "Spain",
+      0.49,
+      0.0,
+      1295,
+      1295,
+      1242
+    ],
+    [
+      "Lauris Opmanis",
+      "Latvia",
+      0.48,
+      0.0,
+      1258,
+      1253,
+      1258
+    ],
+    [
+      "Marco Abbruzzese",
+      "Italy",
+      0.47,
+      0.0,
+      1250,
+      1253,
+      1249
+    ],
+    [
+      "Eirik Hystad Solberg",
+      "Norway",
+      0.47,
+      0.22,
+      1213,
+      1215,
+      1242
+    ],
+    [
+      "Calum Langmuir",
+      "Great Britain",
+      0.47,
+      0.0,
+      1289,
+      1297,
+      1290
+    ],
+    [
+      "Richardson Viano",
+      "Haiti",
+      0.47,
+      0.0,
+      1277,
+      1278,
+      1242
+    ],
+    [
+      "Tvrtko Ljutic",
+      "Croatia",
+      0.47,
+      0.0,
+      1234,
+      1234,
+      1242
+    ],
+    [
+      "Andreas Zampa",
+      "Slovakia",
+      0.47,
+      0.35,
+      1220,
+      1219,
+      1157
+    ],
+    [
+      "Simen Sellæg",
+      "Norway",
+      0.46,
+      0.0,
+      1215,
+      1253,
+      1213
+    ],
+    [
+      "Halvor Hilde Gunleiksrud",
+      "Norway",
+      0.46,
+      0.0,
+      1255,
+      1257,
+      1242
+    ],
+    [
+      "Balint Ury",
+      "Hungary",
+      0.45,
+      0.0,
+      1286,
+      1286,
+      1242
+    ],
+    [
+      "Gustav Wissting",
+      "Sweden",
+      0.44,
+      0.32,
+      1259,
+      1260,
+      1242
+    ],
+    [
+      "Matthieu Osch",
+      "Luxembourg",
+      0.43,
+      0.0,
+      1259,
+      1260,
+      1242
+    ],
+    [
+      "Gregorio Bernardi",
+      "Italy",
+      0.42,
+      0.0,
+      1271,
+      1253,
+      1270
+    ],
+    [
+      "Jaakko Tapanainen",
+      "Finland",
+      0.42,
+      0.0,
+      1236,
+      1253,
+      1237
+    ],
+    [
+      "Alessio Miggiano",
+      "Switzerland",
+      0.41,
+      0.0,
+      1256,
+      1253,
+      1255
+    ],
+    [
+      "Leo Ducros",
+      "France",
+      0.41,
+      0.0,
+      1243,
+      1253,
+      1242
+    ],
+    [
+      "Patryk Forejtek",
+      "Czechia",
+      0.4,
+      0.0,
+      1282,
+      1253,
+      1282
+    ],
+    [
+      "Takayuki Koyama",
+      "Japan",
+      0.4,
+      0.0,
+      1251,
+      1253,
+      1242
+    ],
+    [
+      "Flavio Vitale",
+      "France",
+      0.39,
+      0.54,
+      1281,
+      1281,
+      1242
+    ],
+    [
+      "Tommaso Saccardi",
+      "Italy",
+      0.39,
+      0.0,
+      1246,
+      1248,
+      1242
+    ],
+    [
+      "Mikkel Remsøy",
+      "Norway",
+      0.38,
+      0.0,
+      1251,
+      1252,
+      1242
+    ],
+    [
+      "Alexandru Stefan Stefanescu",
+      "Romania",
+      0.38,
+      0.0,
+      1281,
+      1282,
+      1242
+    ],
+    [
+      "Theodor Brækken",
+      "Norway",
+      0.38,
+      0.32,
+      1233,
+      1236,
+      1242
+    ],
+    [
+      "Reto Mächler",
+      "Switzerland",
+      0.37,
+      0.0,
+      1280,
+      1281,
+      1242
+    ],
+    [
+      "Maximilian Schwarz",
+      "Germany",
+      0.37,
+      0.0,
+      1233,
+      1253,
+      1233
+    ],
+    [
+      "Emil Pettersson",
+      "Sweden",
+      0.37,
+      0.0,
+      1263,
+      1265,
+      1242
+    ],
+    [
+      "Gael Zulauf",
+      "Switzerland",
+      0.37,
+      0.0,
+      1257,
+      1253,
+      1256
+    ],
+    [
+      "Marinus Sennhofer",
+      "Germany",
+      0.36,
+      0.0,
+      1287,
+      1287,
+      1242
+    ],
+    [
+      "Baptiste Sambuis",
+      "France",
+      0.36,
+      0.0,
+      1282,
+      1282,
+      1242
+    ],
+    [
+      "Auguste Aulnette",
+      "France",
+      0.35,
+      0.0,
+      1284,
+      1284,
+      1242
+    ],
+    [
+      "Marco Pfiffner",
+      "Liechtenstein",
+      0.35,
+      0.11,
+      1139,
+      1275,
+      1134
+    ],
+    [
+      "Roman Tsybelenko",
+      "Ukraine",
+      0.34,
+      0.0,
+      1260,
+      1253,
+      1260
+    ],
+    [
+      "Yiannos Kouyoumdijan",
+      "Cyprus",
+      0.34,
+      0.0,
+      1236,
+      1237,
+      1242
+    ],
+    [
+      "Aingeru Garay",
+      "Spain",
+      0.33,
+      0.0,
+      1189,
+      1193,
+      1242
+    ],
+    [
+      "Faiz Basha",
+      "Singapore",
+      0.33,
+      0.0,
+      1267,
+      1268,
+      1242
+    ],
+    [
+      "Jacob Schramm",
+      "Germany",
+      0.32,
+      0.0,
+      1235,
+      1253,
+      1233
+    ],
+    [
+      "Jesse Kertesz-Knight",
+      "Canada",
+      0.31,
+      0.0,
+      1290,
+      1291,
+      1242
+    ],
+    [
+      "Mackenson Florindo",
+      "Haiti",
+      0.31,
+      0.0,
+      1268,
+      1269,
+      1242
+    ],
+    [
+      "Jurre Jeurissen",
+      "Netherlands",
+      0.31,
+      0.0,
+      1275,
+      1276,
+      1242
+    ],
+    [
+      "Christian Borgnaes",
+      "Denmark",
+      0.3,
+      0.0,
+      1249,
+      1246,
+      1287
+    ],
+    [
+      "Gleb Mosesov",
+      "Armenia",
+      0.29,
+      0.0,
+      1289,
+      1289,
+      1242
+    ],
+    [
+      "Nicolas Quintero",
+      "Argentina",
+      0.28,
+      0.0,
+      1280,
+      1253,
+      1280
+    ],
+    [
+      "Christophe Torrent",
+      "Switzerland",
+      0.28,
+      0.0,
+      1257,
+      1253,
+      1257
+    ],
+    [
+      "Camden Palmquist",
+      "USA",
+      0.28,
+      0.0,
+      1286,
+      1287,
+      1242
+    ],
+    [
+      "Juhan Luik",
+      "Estonia",
+      0.27,
+      0.0,
+      1184,
+      1253,
+      1182
+    ],
+    [
+      "Yohei Koyama",
+      "Japan",
+      0.27,
+      0.0,
+      1196,
+      1201,
+      1242
+    ],
+    [
+      "Kaspar Kindem",
+      "Norway",
+      0.27,
+      0.0,
+      1270,
+      1271,
+      1242
+    ],
+    [
+      "Tamas Trunk",
+      "Hungary",
+      0.27,
+      0.0,
+      1279,
+      1279,
+      1242
+    ],
+    [
+      "Erik Arvidsson",
+      "USA",
+      0.27,
+      0.22,
+      1278,
+      1253,
+      1267
+    ],
+    [
+      "Matteo Canins",
+      "Italy",
+      0.27,
+      0.0,
+      1225,
+      1226,
+      1242
+    ],
+    [
+      "Luke Winters",
+      "USA",
+      0.26,
+      0.0,
+      1188,
+      1195,
+      1242
+    ],
+    [
+      "Simon Talacci",
+      "Italy",
+      0.26,
+      0.03,
+      1274,
+      1274,
+      1242
+    ],
+    [
+      "Hans Grahl-Madsen",
+      "Norway",
+      0.25,
+      0.0,
+      1244,
+      1246,
+      1242
+    ],
+    [
+      "Anze Gartner",
+      "Slovenia",
+      0.24,
+      0.0,
+      1274,
+      1274,
+      1242
+    ],
+    [
+      "Luka Buchukuri",
+      "Georgia",
+      0.23,
+      0.0,
+      1263,
+      1264,
+      1242
+    ],
+    [
+      "Declan McCormack",
+      "Canada",
+      0.23,
+      0.0,
+      1283,
+      1284,
+      1242
+    ],
+    [
+      "Ken Caillot",
+      "France",
+      0.22,
+      0.0,
+      1212,
+      1253,
+      1209
+    ],
+    [
+      "Matthias Iten",
+      "Switzerland",
+      0.22,
+      0.0,
+      1282,
+      1283,
+      1242
+    ],
+    [
+      "Medet Nazarov",
+      "Uzbekistan",
+      0.22,
+      0.0,
+      1289,
+      1289,
+      1242
+    ],
+    [
+      "Alex Rius Gimenez",
+      "Andorra",
+      0.22,
+      0.0,
+      1300,
+      1300,
+      1242
+    ],
+    [
+      "Pietro Zazzi",
+      "Italy",
+      0.21,
+      0.65,
+      1261,
+      1253,
+      1257
+    ],
+    [
+      "Patrick Kenney",
+      "USA",
+      0.2,
+      0.49,
+      1287,
+      1284,
+      1242
+    ],
+    [
+      "Lenz Hächler",
+      "Switzerland",
+      0.2,
+      0.03,
+      1304,
+      1304,
+      1242
+    ],
+    [
+      "Alessandro Cantele Fink",
+      "Mexico",
+      0.2,
+      0.0,
+      1266,
+      1267,
+      1242
+    ],
+    [
+      "VIktor Petkov",
+      "North Macedonia",
+      0.19,
+      0.0,
+      1267,
+      1268,
+      1242
+    ],
+    [
+      "Adam Novacek",
+      "Slovakia",
+      0.19,
+      0.0,
+      1299,
+      1299,
+      1242
+    ],
+    [
+      "Dino Terzic",
+      "Bosnia&Herzegovina",
+      0.18,
+      0.0,
+      1274,
+      1275,
+      1242
+    ],
+    [
+      "Tijan Marovt",
+      "Slovenia",
+      0.18,
+      0.0,
+      1218,
+      1220,
+      1242
+    ],
+    [
+      "Jesper Wahlqvist",
+      "Norway",
+      0.18,
+      0.08,
+      1285,
+      1285,
+      1242
+    ],
+    [
+      "Raphael Riederer",
+      "Austria",
+      0.16,
+      0.0,
+      1279,
+      1280,
+      1242
+    ],
+    [
+      "Piotr Habdas",
+      "Poland",
+      0.15,
+      0.0,
+      1254,
+      1253,
+      1242
+    ],
+    [
+      "Teo Zampa",
+      "Slovakia",
+      0.15,
+      0.0,
+      1298,
+      1298,
+      1242
+    ],
+    [
+      "Konstantin Stoilov",
+      "Bulgaria",
+      0.13,
+      0.0,
+      1280,
+      1283,
+      1242
+    ],
+    [
+      "Drin Kokaj",
+      "Kosovo",
+      0.13,
+      0.0,
+      1276,
+      1277,
+      1242
+    ],
+    [
+      "Josua Mettler",
+      "Switzerland",
+      0.13,
+      0.19,
+      1255,
+      1281,
+      1248
+    ],
+    [
+      "Alec Jackson",
+      "New Zealand",
+      0.12,
+      0.0,
+      1276,
+      1277,
+      1242
+    ],
+    [
+      "Troy Samuel Chang",
+      "Taiwan",
+      0.12,
+      0.0,
+      1287,
+      1288,
+      1242
+    ],
+    [
+      "Matej Prielozny",
+      "Slovakia",
+      0.11,
+      0.0,
+      1234,
+      1253,
+      1244
+    ],
+    [
+      "Livio Simonet",
+      "Switzerland",
+      0.11,
+      0.11,
+      1275,
+      1275,
+      1242
+    ],
+    [
+      "Stefano Pizzato",
+      "Italy",
+      0.09,
+      0.0,
+      1280,
+      1280,
+      1242
+    ],
+    [
+      "Ryder Sarchett",
+      "USA",
+      0.07,
+      0.0,
+      1281,
+      1282,
+      1242
+    ],
+    [
+      "Mattias Roenngren",
+      "Sweden",
+      0.07,
+      0.05,
+      1197,
+      1199,
+      1282
+    ],
+    [
+      "Sam Alphand",
+      "France",
+      0.06,
+      0.0,
+      1248,
+      1253,
+      1249
+    ],
+    [
+      "Sam Hadley",
+      "New Zealand",
+      0.04,
+      0.0,
+      1293,
+      1293,
+      1242
+    ],
+    [
+      "William Petanjko",
+      "Croatia",
+      0.04,
+      0.0,
+      1287,
+      1288,
+      1242
+    ],
+    [
+      "Ryoma Katayama",
+      "Japan",
+      0.03,
+      0.0,
+      1286,
+      1286,
+      1242
+    ],
+    [
+      "Simon Maurberger",
+      "Italy",
+      0.02,
+      0.27,
+      1198,
+      1201,
+      1273
+    ],
+    [
+      "Cormac Comerford",
+      "Ireland",
+      0.02,
+      0.0,
+      1250,
+      1251,
+      1242
+    ],
+    [
+      "Casper Dyrbye Naested",
+      "Denmark",
+      0.01,
+      0.0,
+      1273,
+      1274,
+      1242
+    ],
+    [
+      "Jeong-Woo Shin",
+      "South Korea",
+      0.0,
+      0.0,
+      1296,
+      1296,
+      1242
+    ],
+    [
+      "Shintaro Sato",
+      "Japan",
+      0.0,
+      0.0,
+      1261,
+      1261,
+      1242
+    ],
+    [
+      "Noel von Grünigen",
+      "Switzerland",
+      -0.03,
+      0.19,
+      1209,
+      1211,
+      1242
+    ],
+    [
+      "Giovanni Ongaro",
+      "Brazil",
+      -0.04,
+      0.0,
+      1294,
+      1294,
+      1242
+    ],
+    [
+      "Jack Irving",
+      "Great Britain",
+      -0.06,
+      0.0,
+      1301,
+      1301,
+      1242
+    ],
+    [
+      "Aleix Aubert Serracanta",
+      "Spain",
+      -0.06,
+      0.0,
+      1302,
+      1301,
+      1242
+    ],
+    [
+      "Martin Cater",
+      "Slovenia",
+      -0.08,
+      1.41,
+      1241,
+      1265,
+      1237
+    ],
+    [
+      "Giovanni Borsotti",
+      "Italy",
+      -0.09,
+      1.0,
+      1346,
+      1374,
+      1239
+    ],
+    [
+      "Elvis Opmanis",
+      "Latvia",
+      -0.1,
+      0.0,
+      1212,
+      1274,
+      1233
+    ],
+    [
+      "Dmytro Shepiuk",
+      "Ukraine",
+      -0.15,
+      0.0,
+      1290,
+      1290,
+      1242
+    ],
+    [
+      "Sebastian Holzmann",
+      "Germany",
+      -0.19,
+      0.0,
+      1326,
+      1329,
+      1242
+    ],
+    [
+      "Joaquim Salarich",
+      "Spain",
+      -0.23,
+      0.43,
+      1228,
+      1232,
+      1242
+    ],
+    [
+      "Mathieu Neumuller",
+      "Madagascar",
+      -0.27,
+      0.0,
+      1219,
+      1220,
+      1242
+    ],
+    [
+      "Juan Del Campo",
+      "Spain",
+      -0.33,
+      0.0,
+      1181,
+      1184,
+      1242
+    ],
+    [
+      "Henrik Von Appen",
+      "Chile",
+      -0.39,
+      0.22,
+      1210,
+      1287,
+      1207
+    ],
+    [
+      "Tommy Ford",
+      "USA",
+      -0.41,
+      0.65,
+      1407,
+      1402,
+      1225
+    ],
+    [
+      "Hannes Zingerle",
+      "Italy",
+      -0.42,
+      0.19,
+      1296,
+      1294,
+      1242
+    ],
+    [
+      "Anton Tremmel",
+      "Germany",
+      -0.43,
+      0.24,
+      1289,
+      1292,
+      1242
+    ],
+    [
+      "Michal Jasiczek",
+      "Poland",
+      -0.56,
+      0.0,
+      1239,
+      1238,
+      1242
+    ],
+    [
+      "Richard Leitgeb",
+      "Austria",
+      -0.58,
+      0.0,
+      1206,
+      1208,
+      1242
+    ],
+    [
+      "Mathieu Faivre",
+      "France",
+      -0.58,
+      0.0,
+      1254,
+      1262,
+      1275
+    ],
+    [
+      "Roy-Alexander Steudle",
+      "Great Britain",
+      -0.66,
+      0.0,
+      1157,
+      1253,
+      1159
+    ],
+    [
+      "Krystof Kryzl",
+      "Czechia",
+      -0.71,
+      0.0,
+      1164,
+      1166,
+      1231
+    ],
+    [
+      "Matej Vidovic",
+      "Croatia",
+      -0.91,
+      0.0,
+      1256,
+      1258,
+      1242
+    ],
+    [
+      "Erik Read",
+      "Canada",
+      -1.04,
+      0.57,
+      1284,
+      1283,
+      1254
+    ],
+    [
+      "Christopher Neumayer",
+      "Austria",
+      -1.25,
+      0.27,
+      1273,
+      1294,
+      1273
+    ],
+    [
+      "Adam Zampa",
+      "Slovakia",
+      -1.26,
+      0.0,
+      1212,
+      1212,
+      1219
+    ],
+    [
+      "Wiliam St-Germain",
+      "Canada",
+      -1.48,
+      0.0,
+      1272,
+      1273,
+      1242
+    ],
+    [
+      "Wiley Maple",
+      "USA",
+      -1.54,
+      0.32,
+      1192,
+      1253,
+      1189
+    ],
+    [
+      "Arif Mohd Khan",
+      "India",
+      -2.34,
+      0.0,
+      1237,
+      1238,
+      1242
+    ],
+    [
+      "Dong-Hyun Jung",
+      "South Korea",
+      -2.57,
+      0.0,
+      1270,
+      1272,
+      1242
+    ]
+  ]
+}

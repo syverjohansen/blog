@@ -1,0 +1,405 @@
+### Age-Adjusted GAM Models for 2026 Season
+
+```{r age-adjusted-gam-models}
+# Age-Adjusted GAM Models using both Additive and Multiplicative ELO Adjustments
+# This creates separate GAM models for season predictions and odds using age-adjusted ELO values
+
+print("=== AGE-ADJUSTED GAM MODELS FOR 2026 PREDICTIONS ===")
+
+# Function to apply age adjustments to current skier data
+apply_age_adjustments <- function(current_data, age_stats, adjustment_type = "additive") {
+  
+  current_data %>%
+    mutate(Age = as.integer(floor(Age))) %>%  # Ensure Age is integer
+    left_join(age_stats, by = "Age") %>%
+    mutate(
+      # Apply adjustments based on type
+      if (adjustment_type == "additive") {
+        # ADDITIVE adjustments (add/subtract points)
+        Adjusted_Pelo = Pelo + coalesce(pelo_add, 0),
+        Adjusted_Distance = Distance_Pelo + coalesce(distance_add, 0),
+        Adjusted_Distance_C = Distance_C_Pelo + coalesce(distance_c_add, 0),
+        Adjusted_Distance_F = Distance_F_Pelo + coalesce(distance_f_add, 0),
+        Adjusted_Sprint = Sprint_Pelo + coalesce(sprint_add, 0),
+        Adjusted_Sprint_C = Sprint_C_Pelo + coalesce(sprint_c_add, 0),
+        Adjusted_Sprint_F = Sprint_F_Pelo + coalesce(sprint_f_add, 0),
+        Adjusted_Classic = Classic_Pelo + coalesce(classic_add, 0),
+        Adjusted_Freestyle = Freestyle_Pelo + coalesce(freestyle_add, 0)
+      } else {
+        # MULTIPLICATIVE adjustments (multiply by factors)
+        Adjusted_Pelo = Pelo * coalesce(pelo_mult, 1),
+        Adjusted_Distance = Distance_Pelo * coalesce(distance_mult, 1),
+        Adjusted_Distance_C = Distance_C_Pelo * coalesce(distance_c_mult, 1),
+        Adjusted_Distance_F = Distance_F_Pelo * coalesce(distance_f_mult, 1),
+        Adjusted_Sprint = Sprint_Pelo * coalesce(sprint_mult, 1),
+        Adjusted_Sprint_C = Sprint_C_Pelo * coalesce(sprint_c_mult, 1),
+        Adjusted_Sprint_F = Sprint_F_Pelo * coalesce(sprint_f_mult, 1),
+        Adjusted_Classic = Classic_Pelo * coalesce(classic_mult, 1),
+        Adjusted_Freestyle = Freestyle_Pelo * coalesce(freestyle_mult, 1)
+      },
+      
+      # Map adjusted values to Prev_* names for GAM prediction
+      Prev_Pelo = Adjusted_Pelo,
+      Prev_Distance = Adjusted_Distance,
+      Prev_Distance_C = Adjusted_Distance_C,
+      Prev_Distance_F = Adjusted_Distance_F,
+      Prev_Sprint = Adjusted_Sprint,
+      Prev_Sprint_C = Adjusted_Sprint_C,
+      Prev_Sprint_F = Adjusted_Sprint_F,
+      Prev_C = Adjusted_Classic,
+      Prev_F = Adjusted_Freestyle,
+      Prev_Pct_of_Max_Points = Pct_of_Max_Points  # Keep current performance
+    )
+}
+
+# Only proceed if we have the required data
+if(exists("men_2025") && exists("ladies_2025") && exists("age_analysis_men") && exists("age_analysis_ladies") &&
+   exists("men_gam_model") && exists("ladies_gam_model") && exists("final_features_men") && exists("final_features_ladies")) {
+  
+  print("=== MEN'S AGE-ADJUSTED GAM PREDICTIONS ===")
+  
+  # Apply ADDITIVE age adjustments to men's 2025 data
+  men_additive_data <- apply_age_adjustments(men_2025, age_analysis_men$additive_stats, "additive")
+  men_additive_data$Age_Adj_Pred_Add <- predict(men_gam_model, men_additive_data)
+  
+  # Apply MULTIPLICATIVE age adjustments to men's 2025 data
+  men_multiplicative_data <- apply_age_adjustments(men_2025, age_analysis_men$multiplicative_stats, "multiplicative")
+  men_multiplicative_data$Age_Adj_Pred_Mult <- predict(men_gam_model, men_multiplicative_data)
+  
+  # Combine results
+  men_age_gam_results <- men_2025 %>%
+    dplyr::select(Skier, Nation, Age, Pelo, Distance_Pelo, Sprint_Pelo, Pct_of_Max_Points) %>%
+    mutate(
+      Original_GAM_Pred = men_pred_data$Predicted_Pct_2026[match(Skier, men_pred_data$Skier)],
+      Additive_GAM_Pred = men_additive_data$Age_Adj_Pred_Add,
+      Multiplicative_GAM_Pred = men_multiplicative_data$Age_Adj_Pred_Mult,
+      
+      # Calculate improvement from age adjustments
+      Additive_Improvement = Additive_GAM_Pred - Original_GAM_Pred,
+      Multiplicative_Improvement = Multiplicative_GAM_Pred - Original_GAM_Pred,
+      
+      # Age category for analysis
+      Age_Category = case_when(
+        Age <= 23 ~ "Young (≤23)",
+        Age <= 27 ~ "Prime (24-27)", 
+        Age <= 31 ~ "Peak (28-31)",
+        Age <= 35 ~ "Mature (32-35)",
+        TRUE ~ "Veteran (36+)"
+      )
+    ) %>%
+    arrange(desc(Additive_GAM_Pred))
+  
+  print("Top 15 Men's Age-Adjusted GAM Predictions:")
+  print(men_age_gam_results %>%
+        head(15) %>%
+        mutate(
+          Original_GAM_Pred = round(Original_GAM_Pred * 100, 1),
+          Additive_GAM_Pred = round(Additive_GAM_Pred * 100, 1),
+          Multiplicative_GAM_Pred = round(Multiplicative_GAM_Pred * 100, 1),
+          Additive_Improvement = round(Additive_Improvement * 100, 1),
+          Multiplicative_Improvement = round(Multiplicative_Improvement * 100, 1)
+        ) %>%
+        dplyr::select(Skier, Nation, Age, Age_Category, Original_GAM_Pred, Additive_GAM_Pred, 
+               Multiplicative_GAM_Pred, Additive_Improvement, Multiplicative_Improvement))
+  
+  print("=== LADIES AGE-ADJUSTED GAM PREDICTIONS ===")
+  
+  # Apply ADDITIVE age adjustments to ladies 2025 data
+  ladies_additive_data <- apply_age_adjustments(ladies_2025, age_analysis_ladies$additive_stats, "additive")
+  ladies_additive_data$Age_Adj_Pred_Add <- predict(ladies_gam_model, ladies_additive_data)
+  
+  # Apply MULTIPLICATIVE age adjustments to ladies 2025 data
+  ladies_multiplicative_data <- apply_age_adjustments(ladies_2025, age_analysis_ladies$multiplicative_stats, "multiplicative")
+  ladies_multiplicative_data$Age_Adj_Pred_Mult <- predict(ladies_gam_model, ladies_multiplicative_data)
+  
+  # Combine results
+  ladies_age_gam_results <- ladies_2025 %>%
+    dplyr::select(Skier, Nation, Age, Pelo, Distance_Pelo, Sprint_Pelo, Pct_of_Max_Points) %>%
+    mutate(
+      Original_GAM_Pred = ladies_pred_data$Predicted_Pct_2026[match(Skier, ladies_pred_data$Skier)],
+      Additive_GAM_Pred = ladies_additive_data$Age_Adj_Pred_Add,
+      Multiplicative_GAM_Pred = ladies_multiplicative_data$Age_Adj_Pred_Mult,
+      
+      # Calculate improvement from age adjustments
+      Additive_Improvement = Additive_GAM_Pred - Original_GAM_Pred,
+      Multiplicative_Improvement = Multiplicative_GAM_Pred - Original_GAM_Pred,
+      
+      # Age category for analysis
+      Age_Category = case_when(
+        Age <= 23 ~ "Young (≤23)",
+        Age <= 27 ~ "Prime (24-27)", 
+        Age <= 31 ~ "Peak (28-31)",
+        Age <= 35 ~ "Mature (32-35)",
+        TRUE ~ "Veteran (36+)"
+      )
+    ) %>%
+    arrange(desc(Additive_GAM_Pred))
+  
+  print("Top 15 Ladies Age-Adjusted GAM Predictions:")
+  print(ladies_age_gam_results %>%
+        head(15) %>%
+        mutate(
+          Original_GAM_Pred = round(Original_GAM_Pred * 100, 1),
+          Additive_GAM_Pred = round(Additive_GAM_Pred * 100, 1),
+          Multiplicative_GAM_Pred = round(Multiplicative_GAM_Pred * 100, 1),
+          Additive_Improvement = round(Additive_Improvement * 100, 1),
+          Multiplicative_Improvement = round(Multiplicative_Improvement * 100, 1)
+        ) %>%
+        dplyr::select(Skier, Nation, Age, Age_Category, Original_GAM_Pred, Additive_GAM_Pred, 
+               Multiplicative_GAM_Pred, Additive_Improvement, Multiplicative_Improvement))
+  
+} else {
+  print("Required data not available for age-adjusted GAM predictions")
+}
+```
+
+### Age-Adjusted Odds Models
+
+```{r age-adjusted-odds}
+# Age-Adjusted Odds Models for both Men and Ladies
+# Using the same features as the original odds models but with age-adjusted ELO values
+
+print("=== AGE-ADJUSTED ODDS MODELS ===")
+
+if(exists("men_2025") && exists("ladies_2025") && exists("age_analysis_men") && exists("age_analysis_ladies") &&
+   exists("topthree_features_men") && exists("top5_features_men") && exists("top10_features_men") && exists("top30_features_men") &&
+   exists("topthree_features_ladies") && exists("top5_features_ladies") && exists("top10_features_ladies") && exists("top30_features_ladies")) {
+  
+  print("=== MEN'S AGE-ADJUSTED ODDS ===")
+  
+  # Prepare age-adjusted data for odds predictions
+  men_additive_odds_data <- apply_age_adjustments(men_2025, age_analysis_men$additive_stats, "additive")
+  men_multiplicative_odds_data <- apply_age_adjustments(men_2025, age_analysis_men$multiplicative_stats, "multiplicative")
+  
+  # Make sure we have all required features
+  required_cols <- unique(c(topthree_features_men, top5_features_men, top10_features_men, top30_features_men))
+  
+  # Check if columns exist and add if missing (use defaults)
+  for(col in required_cols) {
+    if(!col %in% names(men_additive_odds_data)) {
+      if(grepl("Distance_C", col)) men_additive_odds_data[[col]] <- men_additive_odds_data$Prev_Distance
+      else if(grepl("Distance_F", col)) men_additive_odds_data[[col]] <- men_additive_odds_data$Prev_Distance
+      else if(grepl("Sprint_C", col)) men_additive_odds_data[[col]] <- men_additive_odds_data$Prev_Sprint
+      else if(grepl("Sprint_F", col)) men_additive_odds_data[[col]] <- men_additive_odds_data$Prev_Sprint
+    }
+    if(!col %in% names(men_multiplicative_odds_data)) {
+      if(grepl("Distance_C", col)) men_multiplicative_odds_data[[col]] <- men_multiplicative_odds_data$Prev_Distance
+      else if(grepl("Distance_F", col)) men_multiplicative_odds_data[[col]] <- men_multiplicative_odds_data$Prev_Distance
+      else if(grepl("Sprint_C", col)) men_multiplicative_odds_data[[col]] <- men_multiplicative_odds_data$Prev_Sprint
+      else if(grepl("Sprint_F", col)) men_multiplicative_odds_data[[col]] <- men_multiplicative_odds_data$Prev_Sprint
+    }
+  }
+  
+  # Get predictions from existing models with age-adjusted data
+  men_add_top3 <- predict(place_model, men_additive_odds_data, type = "response")
+  men_add_top5 <- predict(top5_model, men_additive_odds_data, type = "response")
+  men_add_top10 <- predict(top10_model, men_additive_odds_data, type = "response")
+  men_add_top30 <- predict(top30_model, men_additive_odds_data, type = "response")
+  
+  men_mult_top3 <- predict(place_model, men_multiplicative_odds_data, type = "response")
+  men_mult_top5 <- predict(top5_model, men_multiplicative_odds_data, type = "response")
+  men_mult_top10 <- predict(top10_model, men_multiplicative_odds_data, type = "response")
+  men_mult_top30 <- predict(top30_model, men_multiplicative_odds_data, type = "response")
+  
+  # Create comprehensive results
+  men_age_odds_results <- data.frame(
+    Skier = men_2025$Skier,
+    Nation = men_2025$Nation,
+    Age = men_2025$Age,
+    
+    # Original odds (non-age-adjusted)
+    Orig_Top3_Prob = results_men$Top3_Prob[match(men_2025$Skier, results_men$Skier)],
+    Orig_Win_Prob = results_men$Win_Prob[match(men_2025$Skier, results_men$Skier)],
+    
+    # Additive age-adjusted odds
+    Add_Top3_Prob = men_add_top3,
+    Add_Win_Prob = men_add_top3 * 0.33,
+    Add_Top5_Prob = men_add_top5,
+    Add_Top10_Prob = men_add_top10,
+    Add_Top30_Prob = men_add_top30,
+    
+    # Multiplicative age-adjusted odds
+    Mult_Top3_Prob = men_mult_top3,
+    Mult_Win_Prob = men_mult_top3 * 0.33,
+    Mult_Top5_Prob = men_mult_top5,
+    Mult_Top10_Prob = men_mult_top10,
+    Mult_Top30_Prob = men_mult_top30,
+    
+    stringsAsFactors = FALSE
+  ) %>%
+  mutate(
+    # Calculate decimal odds
+    Add_Win_Decimal_Odds = 1 / Add_Win_Prob,
+    Add_Top3_Decimal_Odds = 1 / Add_Top3_Prob,
+    Mult_Win_Decimal_Odds = 1 / Mult_Win_Prob,
+    Mult_Top3_Decimal_Odds = 1 / Mult_Top3_Prob,
+    
+    # Age category
+    Age_Category = case_when(
+      Age <= 23 ~ "Young (≤23)",
+      Age <= 27 ~ "Prime (24-27)", 
+      Age <= 31 ~ "Peak (28-31)",
+      Age <= 35 ~ "Mature (32-35)",
+      TRUE ~ "Veteran (36+)"
+    )
+  ) %>%
+  arrange(desc(Add_Win_Prob))
+  
+  print("Top 15 Men's Age-Adjusted Odds (Additive Method):")
+  print(men_age_odds_results %>%
+        head(15) %>%
+        mutate(
+          Orig_Win_Prob = round(Orig_Win_Prob * 100, 1),
+          Add_Win_Prob = round(Add_Win_Prob * 100, 1),
+          Mult_Win_Prob = round(Mult_Win_Prob * 100, 1),
+          Add_Win_Decimal_Odds = round(Add_Win_Decimal_Odds, 1),
+          Mult_Win_Decimal_Odds = round(Mult_Win_Decimal_Odds, 1)
+        ) %>%
+        dplyr::select(Skier, Nation, Age, Age_Category, Orig_Win_Prob, Add_Win_Prob, Mult_Win_Prob,
+               Add_Win_Decimal_Odds, Mult_Win_Decimal_Odds))
+  
+  print("=== LADIES AGE-ADJUSTED ODDS ===")
+  
+  # Prepare ladies age-adjusted data for odds predictions
+  ladies_additive_odds_data <- apply_age_adjustments(ladies_2025, age_analysis_ladies$additive_stats, "additive")
+  ladies_multiplicative_odds_data <- apply_age_adjustments(ladies_2025, age_analysis_ladies$multiplicative_stats, "multiplicative")
+  
+  # Make sure we have all required features for ladies
+  required_cols_ladies <- unique(c(topthree_features_ladies, top5_features_ladies, top10_features_ladies, top30_features_ladies))
+  
+  for(col in required_cols_ladies) {
+    if(!col %in% names(ladies_additive_odds_data)) {
+      if(grepl("Distance_C", col)) ladies_additive_odds_data[[col]] <- ladies_additive_odds_data$Prev_Distance
+      else if(grepl("Distance_F", col)) ladies_additive_odds_data[[col]] <- ladies_additive_odds_data$Prev_Distance
+      else if(grepl("Sprint_C", col)) ladies_additive_odds_data[[col]] <- ladies_additive_odds_data$Prev_Sprint
+      else if(grepl("Sprint_F", col)) ladies_additive_odds_data[[col]] <- ladies_additive_odds_data$Prev_Sprint
+    }
+    if(!col %in% names(ladies_multiplicative_odds_data)) {
+      if(grepl("Distance_C", col)) ladies_multiplicative_odds_data[[col]] <- ladies_multiplicative_odds_data$Prev_Distance
+      else if(grepl("Distance_F", col)) ladies_multiplicative_odds_data[[col]] <- ladies_multiplicative_odds_data$Prev_Distance
+      else if(grepl("Sprint_C", col)) ladies_multiplicative_odds_data[[col]] <- ladies_multiplicative_odds_data$Prev_Sprint
+      else if(grepl("Sprint_F", col)) ladies_multiplicative_odds_data[[col]] <- ladies_multiplicative_odds_data$Prev_Sprint
+    }
+  }
+  
+  # Get predictions from existing ladies models with age-adjusted data
+  ladies_add_top3 <- predict(place_model_ladies, ladies_additive_odds_data, type = "response")
+  ladies_add_top5 <- predict(top5_model_ladies, ladies_additive_odds_data, type = "response")
+  ladies_add_top10 <- predict(top10_model_ladies, ladies_additive_odds_data, type = "response")
+  ladies_add_top30 <- predict(top30_model_ladies, ladies_additive_odds_data, type = "response")
+  
+  ladies_mult_top3 <- predict(place_model_ladies, ladies_multiplicative_odds_data, type = "response")
+  ladies_mult_top5 <- predict(top5_model_ladies, ladies_multiplicative_odds_data, type = "response")
+  ladies_mult_top10 <- predict(top10_model_ladies, ladies_multiplicative_odds_data, type = "response")
+  ladies_mult_top30 <- predict(top30_model_ladies, ladies_multiplicative_odds_data, type = "response")
+  
+  # Create comprehensive ladies results
+  ladies_age_odds_results <- data.frame(
+    Skier = ladies_2025$Skier,
+    Nation = ladies_2025$Nation,
+    Age = ladies_2025$Age,
+    
+    # Original odds (non-age-adjusted)
+    Orig_Top3_Prob = results_ladies$Top3_Prob[match(ladies_2025$Skier, results_ladies$Skier)],
+    Orig_Win_Prob = results_ladies$Win_Prob[match(ladies_2025$Skier, results_ladies$Skier)],
+    
+    # Additive age-adjusted odds
+    Add_Top3_Prob = ladies_add_top3,
+    Add_Win_Prob = ladies_add_top3 * 0.33,
+    Add_Top5_Prob = ladies_add_top5,
+    Add_Top10_Prob = ladies_add_top10,
+    Add_Top30_Prob = ladies_add_top30,
+    
+    # Multiplicative age-adjusted odds
+    Mult_Top3_Prob = ladies_mult_top3,
+    Mult_Win_Prob = ladies_mult_top3 * 0.33,
+    Mult_Top5_Prob = ladies_mult_top5,
+    Mult_Top10_Prob = ladies_mult_top10,
+    Mult_Top30_Prob = ladies_mult_top30,
+    
+    stringsAsFactors = FALSE
+  ) %>%
+  mutate(
+    # Calculate decimal odds
+    Add_Win_Decimal_Odds = 1 / Add_Win_Prob,
+    Add_Top3_Decimal_Odds = 1 / Add_Top3_Prob,
+    Mult_Win_Decimal_Odds = 1 / Mult_Win_Prob,
+    Mult_Top3_Decimal_Odds = 1 / Mult_Top3_Prob,
+    
+    # Age category
+    Age_Category = case_when(
+      Age <= 23 ~ "Young (≤23)",
+      Age <= 27 ~ "Prime (24-27)", 
+      Age <= 31 ~ "Peak (28-31)",
+      Age <= 35 ~ "Mature (32-35)",
+      TRUE ~ "Veteran (36+)"
+    )
+  ) %>%
+  arrange(desc(Add_Win_Prob))
+  
+  print("Top 15 Ladies Age-Adjusted Odds (Additive Method):")
+  print(ladies_age_odds_results %>%
+        head(15) %>%
+        mutate(
+          Orig_Win_Prob = round(Orig_Win_Prob * 100, 1),
+          Add_Win_Prob = round(Add_Win_Prob * 100, 1),
+          Mult_Win_Prob = round(Mult_Win_Prob * 100, 1),
+          Add_Win_Decimal_Odds = round(Add_Win_Decimal_Odds, 1),
+          Mult_Win_Decimal_Odds = round(Mult_Win_Decimal_Odds, 1)
+        ) %>%
+        dplyr::select(Skier, Nation, Age, Age_Category, Orig_Win_Prob, Add_Win_Prob, Mult_Win_Prob,
+               Add_Win_Decimal_Odds, Mult_Win_Decimal_Odds))
+  
+  # Store results for further analysis
+  assign("men_age_gam_results", men_age_gam_results, envir = .GlobalEnv)
+  assign("ladies_age_gam_results", ladies_age_gam_results, envir = .GlobalEnv)
+  assign("men_age_odds_results", men_age_odds_results, envir = .GlobalEnv)
+  assign("ladies_age_odds_results", ladies_age_odds_results, envir = .GlobalEnv)
+  
+  print("\n=== AGE ADJUSTMENT IMPACT SUMMARY ===")
+  
+  # Analyze impact of age adjustments
+  men_age_impact <- men_age_gam_results %>%
+    group_by(Age_Category) %>%
+    summarise(
+      Count = n(),
+      Avg_Additive_Impact = mean(Additive_Improvement, na.rm = TRUE),
+      Avg_Multiplicative_Impact = mean(Multiplicative_Improvement, na.rm = TRUE),
+      Max_Additive_Impact = max(Additive_Improvement, na.rm = TRUE),
+      Max_Multiplicative_Impact = max(Multiplicative_Improvement, na.rm = TRUE),
+      .groups = 'drop'
+    ) %>%
+    mutate(
+      Avg_Additive_Impact = round(Avg_Additive_Impact * 100, 1),
+      Avg_Multiplicative_Impact = round(Avg_Multiplicative_Impact * 100, 1),
+      Max_Additive_Impact = round(Max_Additive_Impact * 100, 1),
+      Max_Multiplicative_Impact = round(Max_Multiplicative_Impact * 100, 1)
+    )
+  
+  print("Men's Age Adjustment Impact by Age Category:")
+  print(men_age_impact)
+  
+  ladies_age_impact <- ladies_age_gam_results %>%
+    group_by(Age_Category) %>%
+    summarise(
+      Count = n(),
+      Avg_Additive_Impact = mean(Additive_Improvement, na.rm = TRUE),
+      Avg_Multiplicative_Impact = mean(Multiplicative_Improvement, na.rm = TRUE),
+      Max_Additive_Impact = max(Additive_Improvement, na.rm = TRUE),
+      Max_Multiplicative_Impact = max(Multiplicative_Improvement, na.rm = TRUE),
+      .groups = 'drop'
+    ) %>%
+    mutate(
+      Avg_Additive_Impact = round(Avg_Additive_Impact * 100, 1),
+      Avg_Multiplicative_Impact = round(Avg_Multiplicative_Impact * 100, 1),
+      Max_Additive_Impact = round(Max_Additive_Impact * 100, 1),
+      Max_Multiplicative_Impact = round(Max_Multiplicative_Impact * 100, 1)
+    )
+  
+  print("Ladies Age Adjustment Impact by Age Category:")
+  print(ladies_age_impact)
+  
+} else {
+  print("Required data not available for age-adjusted odds predictions")
+}
+```

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-05T00:00:00.000Z" agent="5.0" version="24.7.17" etag="0" type="device">
+  <diagram id="process-data-flow" name="Process Data Section Flow">
+    <mxGraphModel dx="1422" dy="1199" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1427" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Process Data Section Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="20" width="250" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- Start -->
+        <mxCell id="start" value="START&#xa;Raw Chrono Data" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="525" y="70" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Function Definition -->
+        <mxCell id="function_def" value="Define process_chrono_data()&#xa;Function for both Men &amp; Ladies" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="160" width="190" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- Add Points -->
+        <mxCell id="add_points" value="Add Points Based on Event Type&#xa;• Tour de Ski + City = TdS: TdS points (300-3)&#xa;• Tour de Ski only: Stage points (50-1)&#xa;• All others: World Cup points (100-1)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="420" y="240" width="310" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Filter Events -->
+        <mxCell id="filter_events" value="Filter for Relevant Events&#xa;Keep only: Offseason, World Cup,&#xa;Nordic Opening, Tour de Ski,&#xa;World Cup Final, Ski Tour Canada" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="350" width="270" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Calculate Cumulative -->
+        <mxCell id="calc_cumulative" value="Calculate Cumulative Points&#xa;• Group by Skier ID + Season&#xa;• Sort by Date, Race, Place&#xa;• cumsum(Points) per season&#xa;• Count Races_in_Season" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="440" y="460" width="270" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- Remove Team Events -->
+        <mxCell id="remove_team" value="Remove Team Events&#xa;Filter out Distance = 'Ts' (Team Sprint)&#xa;Filter out Distance = 'Rel' (Relay)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="460" y="580" width="230" height="70" as="geometry" />
+        </mxCell>
+        
+        <!-- Calculate Max Points -->
+        <mxCell id="calc_max_points" value="Calculate Maximum Possible Points&#xa;• Group by Season, Date, Race&#xa;• Max points per race = max(Points)&#xa;• Sum all max race points per season" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="440" y="680" width="270" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Calculate Percentage -->
+        <mxCell id="calc_percentage" value="Calculate Percentage of Max&#xa;Pct_of_Max_Points = &#xa;Cumulative_Points / Max_Points&#xa;(Key metric for analysis)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="460" y="790" width="230" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Process Both Datasets -->
+        <mxCell id="process_both" value="Apply Function to Both Datasets" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="900" width="170" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Men's Processing -->
+        <mxCell id="men_processing" value="M_processed =&#xa;process_chrono_data(M_chrono)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="320" y="970" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Ladies Processing -->
+        <mxCell id="ladies_processing" value="L_processed =&#xa;process_chrono_data(L_chrono)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="540" y="970" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Cross Validation -->
+        <mxCell id="cross_validation" value="Cross-Dataset Validation&#xa;• Compare season ranges&#xa;• Check event distributions&#xa;• Verify common seasons exist" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="450" y="1060" width="220" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Sample Validation -->
+        <mxCell id="sample_validation" value="Sample Skier Validation&#xa;• Check Klaebo in men's data&#xa;• Check Diggins in ladies data&#xa;• Verify data completeness" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="450" y="1170" width="220" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Success -->
+        <mxCell id="success" value="✓ PROCESSING COMPLETE&#xa;Clean datasets with:&#xa;• Points assigned by event type&#xa;• Cumulative season totals&#xa;• Percentage of max calculated&#xa;• Team events removed" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1280" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrows -->
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="start" target="function_def">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="function_def" target="add_points">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="add_points" target="filter_events">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="filter_events" target="calc_cumulative">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="calc_cumulative" target="remove_team">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="remove_team" target="calc_max_points">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="calc_max_points" target="calc_percentage">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="calc_percentage" target="process_both">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="process_both" target="men_processing">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="530" y="950" />
+              <mxPoint x="400" y="950" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="process_both" target="ladies_processing">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="950" />
+              <mxPoint x="620" y="950" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="men_processing" target="cross_validation">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="400" y="1040" />
+              <mxPoint x="520" y="1040" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ladies_processing" target="cross_validation">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="1040" />
+              <mxPoint x="580" y="1040" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cross_validation" target="sample_validation">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="sample_validation" target="success">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Key Data Flow Labels -->
+        <mxCell id="data_flow_1" value="Raw race data" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="750" y="240" width="70" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_flow_2" value="+ Points column" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="750" y="350" width="80" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_flow_3" value="Filtered events" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="750" y="460" width="80" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_flow_4" value="+ Cumulative_Points&#xa;+ Races_in_Season" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="750" y="515" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_flow_5" value="Individual events only" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="750" y="600" width="100" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_flow_6" value="+ Max_Points per season" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="750" y="710" width="120" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_flow_7" value="+ Pct_of_Max_Points&#xa;(KEY METRIC)" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="750" y="815" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

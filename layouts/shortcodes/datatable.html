@@ -75,49 +75,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 fixedColumns: {
                     left: 1
                 },
-                columnDefs: [
+                aoColumnDefs: [
                     // Hide ID column if it exists
                     {
-                        targets: idColumnIndex,
-                        visible: false
+                        aTargets: [idColumnIndex],
+                        bVisible: false
                     },
-                    // Format numeric values
+                    // All columns sort descending first
                     {
-                        targets: '_all',
-                        render: function(data, type, row) {
-                            if (type === 'display' && !isNaN(data) && data.toString().indexOf('.') !== -1) {
-                                return parseFloat(data).toFixed(2);
-                            }
-                            return data;
-                        }
-                    },
-                    // Add links to first column
-                    {
-                        targets: 0,
-                        render: function(data, type, row) {
-                            if (type === 'display' && idColumnIndex >= 0) {
-                                var id = row[idColumnIndex];
-                                var gender = 'L'; // Default to Ladies
-
-                                // If Sex column exists, use it to determine gender
-                                if (sexColumnIndex >= 0) {
-                                    var sex = row[sexColumnIndex];
-                                    gender = (sex === 'M') ? 'M' : 'L';
-                                } else {
-                                    // Check if table name contains men/ladies to determine gender
-                                    var tableName = '{{ lower (.Get 0) }}';
-                                    if (tableName.includes('men') || tableName.includes('m_')) {
-                                        gender = 'M';
-                                    }
-                                }
-
-                                return '<a href="/cross-country/skiers/skier/?id=' + id + '&gender=' + gender + '">' + data + '</a>';
-                            }
-                            return data;
-                        }
+                        aTargets: "_all",
+                        asSorting: ["desc", "asc"]
                     }
                 ],
-                order: [],
+                aaSorting: [], // No initial sorting
                 language: {
                     search: "Search:",
                     paginate: {

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-05T12:00:00.000Z" agent="5.0" version="24.7.17" etag="" type="device">
+  <diagram id="big-break-flow" name="Big Break Section Flow">
+    <mxGraphModel dx="1422" dy="1199" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1427" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="title" value="Big Break Section Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="20" width="250" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="start" value="START&#xa;Breakthrough Prediction&#xa;Analysis" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="70" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="define_function" value="Define predict_2026_breakthroughs()&#xa;Main prediction function with parameters:&#xa;• current_data (athlete dataset)&#xa;• breakthrough_model (trained model)&#xa;• top_predictors (feature variables)&#xa;• Input validation and setup" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="160" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="variable_mapping" value="Setup Variable Mapping&#xa;Map historical predictors to current:&#xa;• Prev_Pelo → Pelo&#xa;• Prev_Sprint → Sprint_Pelo&#xa;• Prev_Distance → Distance_Pelo&#xa;• Age remains Age" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="440" y="290" width="220" height="90" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="career_analysis" value="Career History Analysis&#xa;Identify athletes with previous breakthrough:&#xa;• Filter Pct_of_Max_Points &gt;= 50%&#xa;• Create exclusion list&#xa;• Remove already-successful athletes&#xa;• Focus on never-broke-through candidates" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="420" y="410" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="season_participation" value="2025 Season Participation&#xa;• Identify active 2025 participants&#xa;• Validate data completeness&#xa;• Filter for athletes with current season data&#xa;• Check performance metrics availability" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="440" y="540" width="220" height="90" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="candidate_identification" value="Breakthrough Candidate Selection&#xa;Multi-criteria filtering:&#xa;• Participated in 2025 season&#xa;• NEVER achieved 50%+ performance&#xa;• Valid age and Elo data&#xa;• Remove previously successful athletes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="660" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="feature_engineering" value="Feature Engineering &amp; Preparation&#xa;• Map current variables to predictor names&#xa;• Handle missing values (median/mean imputation)&#xa;• Validate predictor variable presence&#xa;• Create model-ready dataset&#xa;• Quality assurance checks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="420" y="790" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="model_prediction" value="Apply Breakthrough Model&#xa;• Generate probability predictions&#xa;• Validate prediction results&#xa;• Handle model failures gracefully&#xa;• Ensure probability range [0,1]&#xa;• Check for invalid predictions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="920" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="results_analysis" value="Results Analysis &amp; Compilation&#xa;• Analyze probability distributions&#xa;• Create likelihood categories:&#xa;  Very High (&gt;=80%), High (60-79%)&#xa;  Medium (40-59%), Low (20-39%)&#xa;  Very Low (&lt;20%)&#xa;• Compile athlete details with predictions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1050" width="260" height="110" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="execute_both_genders" value="Execute for Both Genders" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="1190" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="men_predictions" value="Men's Breakthrough Predictions&#xa;predict_2026_breakthroughs():&#xa;• Men's current data&#xa;• Men's trained model&#xa;• Men's optimal predictors" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="300" y="1260" width="180" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ladies_predictions" value="Ladies Breakthrough Predictions&#xa;predict_2026_breakthroughs():&#xa;• Ladies current data&#xa;• Ladies trained model&#xa;• Ladies optimal predictors" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="520" y="1260" width="180" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="display_results" value="Display Results &amp; Analysis&#xa;• Top 15 breakthrough candidates (both genders)&#xa;• Under-25 athlete analysis&#xa;• High-potential candidates (&gt;=30% prob)&#xa;• Likelihood distribution summaries&#xa;• Young prospect identification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1370" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="breakthrough_insights" value="Generate Breakthrough Insights&#xa;• Statistical summaries by likelihood&#xa;• Age-based segmentation analysis&#xa;• Probability distribution statistics&#xa;• Career trajectory predictions&#xa;• Risk assessment for betting" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1500" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="success" value="✓ BREAKTHROUGH PREDICTIONS COMPLETE&#xa;Comprehensive 2026 breakthrough analysis&#xa;ML-powered candidate identification&#xa;Risk-stratified prediction results&#xa;Ready for strategic decision making" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1630" width="180" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="start" target="define_function">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="define_function" target="variable_mapping">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="variable_mapping" target="career_analysis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="career_analysis" target="season_participation">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="season_participation" target="candidate_identification">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="candidate_identification" target="feature_engineering">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="feature_engineering" target="model_prediction">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="model_prediction" target="results_analysis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="results_analysis" target="execute_both_genders">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="execute_both_genders" target="men_predictions">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="1240" />
+              <mxPoint x="390" y="1240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="execute_both_genders" target="ladies_predictions">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="1240" />
+              <mxPoint x="610" y="1240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="men_predictions" target="display_results">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="390" y="1350" />
+              <mxPoint x="500" y="1350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ladies_predictions" target="display_results">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="1350" />
+              <mxPoint x="580" y="1350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="display_results" target="breakthrough_insights">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="breakthrough_insights" target="success">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,140 @@
+Hard to believe, but the 2024-25 cross-country ski season is already here and in this post, I will do my best to give some season predictions based on historical World Cup data.  The scope of this post is just the individual World Cup season.  The World Championships will have a post of their own when late February comes around.
+
+Schedule
+-The season is pretty milquetoast in terms of travel.  With no races outside of Western Europe and the entire Tour de Ski taking place in only two locations (both inside Italy), there is nothing too special with the schedule.  The one location that did not fit this criteria, Nove Mesto, was recently moved to Cogne, Italy due to funding issues.  Three of the four sites that have not been on the annual rotation have all hosted recently as well.  Cogne last hosted in 2019, Engadin 2021, and Tallinn in 2023.  Les Rousses is the sole new venue for the season (were supposed to host in 2022, but cancelled due to COVID).  And of course the big change of the season is no Holmenkollen 50km!
+
+In terms of what's on the schedule, this is the breakdown:
+-Total races: 30
+-Sprint: 11
+--Classic: 5
+--Freestyle: 6 
+-Distance: 19
+--Classic: 9
+--Freestyle: 8
+--Skiathlon: 2
+--Individual: 9
+--Mass Start: 9
+--Pursuit: 1
+-Classic: 14
+-Freestyle: 14
+
+Nothing too crazy here, but a couple things to note.  There are two skiathlons in the World Cup season, in the past there has been 1 at most.  Here is how it compares to last year
+
+-Total races: 33
+-Sprint: 13
+--Classic: 6
+--Freestyle: 7
+-Distance: 20
+--Classic: 10
+--Freestyle: 9
+--Skiathlon: 1
+--Individual: 9
+--Mass Start: 10
+--Pursuit: 1
+-Classic: 16
+-Freestyle: 16
+
+And for percentages of overall races
+
+Total Races	1	1	1
+Sprint	0.366666666666667	0.393939393939394	0.395522388059701
+Sprint Classic	0.166666666666667	0.181818181818182	0.17910447761194
+Sprint Freestyle	0.2	0.212121212121212	0.216417910447761
+Distance	0.633333333333333	0.606060606060606	0.604477611940299
+Distance Classic	0.3	0.303030303030303	0.283582089552239
+Distance Freestyle	0.266666666666667	0.272727272727273	0.291044776119403
+Distance Skiathlon	0.0666666666666667	0.0303030303030303	0.0298507462686567
+Distance Individual	0.3	0.272727272727273	0.246268656716418
+Distance Mass Start	0.3	0.303030303030303	0.253731343283582
+Distance Pursuit	0.0333333333333333	0.0303030303030303	0.104477611940299
+Classic	0.466666666666667	0.484848484848485	0.462686567164179
+Freestyle	0.466666666666667	0.484848484848485	0.507462686567164
+
+
+As you can see, there really is not too much difference.  Slightly fewer sprint races, more skiathlons, and fewer pursuits.  How this will affect the overall?  It's hard to tell, because the races account for just about one race in total over the course of a 30 race season, bigger factors will be when skiers are forced to miss races due to injuries and sickness.  However, it appears to be slightly more anti-Klaebo for men and possibly less pro-Diggins for women with the distance freestyle races being slightly down.  In terms of most similar seasons in recent years, it is most similar to 2019-20.  Of course, the more pure distance skiers did better that year.  Klaebo finished a distant second to Bolshunov in the overall for men, and Diggins finished sixth in the women's.  
+
+Off-season news:
+Russia: To not many people's surprise, Russian athletes will not be competing in the 2024-25 season.  
+
+Retirements
+
+New skiers
+
+Other news
+
+
+
+Men's
+Model 1:
+Set-up:
+First we want to set-up our data.  We first need to set up a y-axis for the skiers, which in this case is World Cup points.  So, we create a function to do just that called get_points and use the place of the skier and points list to accomplish this.
+
+Next we only want "modern" race results.  I am defining modern as anything in the last 5 seasons, and because we are modeling for World Cup only, will get rid of anything that is Olympics or World Championship.
+
+We also want the y-axis to be the cumulative points that a skier has at the end of the season, as races throughout the season would just muddle the y-axis and not set a standard to it.  Since we have the cumulative points down, we can now filter the df down to just the offseason since we will be just comparing elo scores from one offseason to total points in the next offseason.
+
+Our last step of setting up the data is to create a column called Prev_Pelo which for each skier takes their final elo score from the previous season.  If a racer did not compete in the previous season, they will not be included.  So rookie skiers do not count here.
+
+
+For modeling, we want to correctly predict the top skiers (we know average and below will probably end up with zero), so we need a measurement to be able to do that.  We are also working with multiple models.  We have at least 4 for each of them and more for quadratics.  For linear we have regular elo, distance elo, sprint elo, and distance and sprint elo.  Then we could also tie in experience and age for later models, however, since we know that both of them will shoot up when a skier is fresher and start declining when they get older, it's best to leave those out without further analysis.  That may be out of the scope for this year and a blog post by itself.  
+
+Since we want to predict the best skiers, I propose a scoring method for each model of an R2 version, but with residual*correct percentage of total elo for each skier.  That way it averages much higher to the best skiers and skiers who are predicted near zero, the residuals don't matter.
+
+I THINK R WILL BE BETTER
+
+Model 1: Linear regression Elo vs Cumulative Points
+To start let's see if a simple linear regression of a previous season's final elo can predict the next season points during the World Cup.  
+
+GRAPH 1
+
+Here we see that the answer is sorta...but I'm not sure if I would trust it, especially for the skiers we really want to predict the top guys.  Another issue with this model is the y-axis.  Cumulative points does not make sense when individual seasons have different number of races and therefore different sizes of the pot to take.  For example in one season Skier A could get 2600 points and in another Skier B could get 1200, however if the first season had 5000 available points and the second had 1300, then 1200 is more impressive.  To adjust for this we will make the y-axis the percent of maximum points.  Let's see what that looks like.
+
+GRAPH 2
+
+The model is better...but still we see that it's not great for higher values.  Instead of more modeling, let's take a look at the data.
+
+The R2 seems to be highest for both variables.
+
+EDA
+
+We can see from the histograms that the distribution of elo scores is skewed right, but relatively normal while the percent of max is not even close to normal.
+
+The box plot shows what we already saw with the histogram, while also highlighting the outliers being the better skiers.  This needs to be accounted for. We can do that by trying a number of different transformations.
+
+Log transformation
+It's certainly better visually!  Although we have one major spire on the left side and a slightly left skew on the right, but nothing too major overall.  Certainly an improvement for distribution.  However, when we do a regression, the R2 value doesn't seem to match the improved distribution.
+
+Square Root Transformation
+Also slightly better, but the massive spike at zero is still troublesome.  If it weren't for that the data sould be fairly right skewed.  So far the log transformation seems to be the best.
+
+Box-Cox Transformation
+Has the lowest skew, but definitely does not look like a normal distribution.  Of course the zeros are throwing things off too.
+
+Quantile Transformation
+
+Simple linear regression for different end of last season elo scores vs overall
+--Check for multicollinearity
+--Check for distribution of residuals
+For finding the right model to predict the results for this season, let's just start off with a simple linear regression model with previous 
+
+
+
+Logged regression
+
+Quadratic regression
+
+Quantile regression
+
+Segmented regression
+
+Multiple regression
+
+Multiple segmented regression
+
+Polynomial regression
+
+Ridge regression/other ML regressions
+
+Things to look for
+--Age will likely not be linear if it is in the regression model.
+--Different races in the season (can we get point bounds for each individual based on what races are going to happen?)

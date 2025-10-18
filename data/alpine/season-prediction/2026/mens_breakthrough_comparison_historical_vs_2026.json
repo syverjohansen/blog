@@ -1,0 +1,305 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Name",
+    "Nation",
+    "Age",
+    "Pre-Breakthrough Pct",
+    "Breakthrough Result",
+    "Predicted Prob",
+    "Season",
+    "Type"
+  ],
+  "rows": [
+    [
+      "Lucas Pinheiro Braathen",
+      "Norway",
+      22.2149212867899,
+      17.8,
+      25.1,
+      39.1,
+      2023,
+      "Historical Success"
+    ],
+    [
+      "Vincent Kriechmayr",
+      "Austria",
+      28.1971252566735,
+      19.5,
+      22.3,
+      36.8,
+      2020,
+      "Historical Success"
+    ],
+    [
+      "Loic Meillard",
+      "Switzerland",
+      24.1670088980151,
+      16.3,
+      23.1,
+      34.8,
+      2021,
+      "Historical Success"
+    ],
+    [
+      "Marco Odermatt",
+      "Switzerland",
+      23.1786447638604,
+      12.2,
+      31.4,
+      32.6,
+      2021,
+      "Historical Success"
+    ],
+    [
+      "Aleksander Aamodt Kilde",
+      "Norway",
+      27.1978097193703,
+      17.2,
+      33.8,
+      29.1,
+      2020,
+      "Historical Success"
+    ],
+    [
+      "Atle Lie McGrath",
+      "Norway",
+      25.2320328542094,
+      18.6,
+      "",
+      27.2,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Beat Feuz",
+      "Switzerland",
+      30.2012320328542,
+      12.4,
+      24.2,
+      20.7,
+      2018,
+      "Historical Success"
+    ],
+    [
+      "Matthias Mayer",
+      "Austria",
+      29.1964407939767,
+      13.1,
+      25.7,
+      17.9,
+      2020,
+      "Historical Success"
+    ],
+    [
+      "Zan Kranjec",
+      "Slovenia",
+      33.2320328542094,
+      7.5,
+      "",
+      11.9,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Alexis Monney",
+      "Switzerland",
+      25.2320328542094,
+      15.7,
+      "",
+      8.8,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Dominik Paris",
+      "Italy",
+      29.1991786447639,
+      14.7,
+      25.1,
+      8.2,
+      2019,
+      "Historical Success"
+    ],
+    [
+      "Alexander Steen Olsen",
+      "Norway",
+      24.2026009582478,
+      12.3,
+      "",
+      7.9,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Marco Schwarz",
+      "Austria",
+      25.1663244353183,
+      11.6,
+      23.4,
+      7.1,
+      2021,
+      "Historical Success"
+    ],
+    [
+      "Cameron Alexander",
+      "Canada",
+      28.0657084188912,
+      9.1,
+      "",
+      7.1,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Filip Zubcic",
+      "Croatia",
+      27.1649555099247,
+      13.4,
+      22.0,
+      6.5,
+      2021,
+      "Historical Success"
+    ],
+    [
+      "Stefan Rogentin",
+      "Switzerland",
+      31.2306639288159,
+      15.3,
+      "",
+      5.8,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Stefan Brennsteiner",
+      "Austria",
+      34.2313483915127,
+      7.7,
+      "",
+      4.8,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Nils Allegre",
+      "France",
+      31.2224503764545,
+      10.0,
+      "",
+      3.9,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Manuel Feller",
+      "Austria",
+      31.211498973306,
+      14.5,
+      27.3,
+      3.5,
+      2024,
+      "Historical Success"
+    ],
+    [
+      "James Crawford",
+      "Canada",
+      28.2217659137577,
+      12.6,
+      "",
+      3.5,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Thibaut Favrot",
+      "France",
+      31.2306639288159,
+      4.8,
+      "",
+      3.0,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Timon Haugan",
+      "Norway",
+      28.208076659822,
+      17.9,
+      22.3,
+      2.9,
+      2025,
+      "Historical Success"
+    ],
+    [
+      "Raphael Haaser",
+      "Austria",
+      28.2299794661191,
+      9.1,
+      "",
+      2.8,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Thomas Tumler",
+      "Switzerland",
+      36.2299794661191,
+      8.1,
+      "",
+      2.1,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Alexander Schmid",
+      "Germany",
+      30.9514031485284,
+      1.4,
+      "",
+      2.0,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Miha Hrobat",
+      "Slovenia",
+      30.1848049281314,
+      11.9,
+      "",
+      1.9,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Adrian Smiseth Sejersted",
+      "Norway",
+      31.2224503764545,
+      7.8,
+      "",
+      1.8,
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Franjo Von Allmen",
+      "Switzerland",
+      23.2197125256674,
+      7.0,
+      22.6,
+      1.6,
+      2025,
+      "Historical Success"
+    ],
+    [
+      "Cyprien Sarrazin",
+      "France",
+      29.0732375085558,
+      3.9,
+      21.0,
+      0.3,
+      2024,
+      "Historical Success"
+    ]
+  ]
+}

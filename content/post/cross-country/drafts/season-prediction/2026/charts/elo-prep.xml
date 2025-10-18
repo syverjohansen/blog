@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-05T00:00:00.000Z" agent="5.0" version="24.7.17" etag="0" type="device">
+  <diagram id="elo-prep-flow" name="ELO Preparation Section Flow">
+    <mxGraphModel dx="1422" dy="1199" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1427" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="ELO Preparation Section Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="300" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- Start -->
+        <mxCell id="start" value="START&#xa;Processed Data" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="70" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Helper Function -->
+        <mxCell id="helper_function" value="Define replace_na_with_quartile()&#xa;Function to impute missing values&#xa;with Q1 within each group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="460" y="160" width="240" height="70" as="geometry" />
+        </mxCell>
+        
+        <!-- Main Function -->
+        <mxCell id="main_function" value="Define prepare_elo_data()&#xa;Function for ELO feature preparation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="260" width="200" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- Filter Offseason -->
+        <mxCell id="filter_offseason" value="Filter for Offseason Events&#xa;Keep only Event == 'Offseason'&#xa;(Contains end-of-season ELO ratings)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="340" width="280" height="70" as="geometry" />
+        </mxCell>
+        
+        <!-- Create Lag Features -->
+        <mxCell id="create_lag_features" value="Create Lag Features (Previous Season)&#xa;• Prev_Pelo = lag(Pelo)&#xa;• Prev_Sprint = lag(Sprint_Pelo)&#xa;• Prev_Distance = lag(Distance_Pelo)&#xa;• Prev_F/C = lag(Freestyle/Classic_Pelo)&#xa;• Prev_Pct_of_Max_Points = lag(Pct_of_Max_Points)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="400" y="440" width="360" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Filter Seasons -->
+        <mxCell id="filter_seasons" value="Filter Seasons > 2015&#xa;Remove early seasons with&#xa;incomplete ELO data" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="480" y="570" width="200" height="70" as="geometry" />
+        </mxCell>
+        
+        <!-- Handle Missing Values -->
+        <mxCell id="handle_missing" value="Handle Missing Values&#xa;Group by Season, then:&#xa;• Replace NAs in lag features with Q1&#xa;• Set Prev_Pct_of_Max_Points NAs = 0&#xa;• Apply to all ELO lag variables" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="420" y="670" width="320" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- Validate Results -->
+        <mxCell id="validate_results" value="Validation Checks&#xa;• Check for infinite values&#xa;• Validate age ranges (15-50)&#xa;• Verify no remaining NAs&#xa;• Confirm key relationships" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="460" y="790" width="240" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Apply to Both Datasets -->
+        <mxCell id="apply_both" value="Apply Function to Both Datasets" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="900" width="180" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Men's ELO -->
+        <mxCell id="men_elo" value="M_elo =&#xa;prepare_elo_data(M_processed)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="320" y="970" width="180" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Ladies ELO -->
+        <mxCell id="ladies_elo" value="L_elo =&#xa;prepare_elo_data(L_processed)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="540" y="970" width="180" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Cross Validation -->
+        <mxCell id="cross_validation" value="Cross-Dataset Validation&#xa;• Compare season ranges&#xa;• Check column availability&#xa;• Verify key modeling variables exist&#xa;• Identify dataset differences" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="430" y="1060" width="280" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- Success -->
+        <mxCell id="success" value="✓ ELO PREPARATION COMPLETE&#xa;Ready for modeling with:&#xa;• Previous season ELO ratings&#xa;• Missing values imputed (Q1)&#xa;• Clean feature matrix&#xa;• Seasons > 2015 only" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1200" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrows -->
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="start" target="helper_function">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="helper_function" target="main_function">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="main_function" target="filter_offseason">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="filter_offseason" target="create_lag_features">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="create_lag_features" target="filter_seasons">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="filter_seasons" target="handle_missing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="handle_missing" target="validate_results">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="validate_results" target="apply_both">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="apply_both" target="men_elo">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="950" />
+              <mxPoint x="410" y="950" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="apply_both" target="ladies_elo">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="950" />
+              <mxPoint x="630" y="950" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="men_elo" target="cross_validation">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="1040" />
+              <mxPoint x="530" y="1040" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ladies_elo" target="cross_validation">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="630" y="1040" />
+              <mxPoint x="610" y="1040" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cross_validation" target="success">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Key Data Flow Labels -->
+        <mxCell id="data_flow_1" value="Full processed data" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="760" y="340" width="90" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_flow_2" value="Offseason ELO only" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="760" y="440" width="100" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_flow_3" value="+ Previous season&#xa;ELO features" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="780" y="490" width="80" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_flow_4" value="2016+ seasons only" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="760" y="590" width="100" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_flow_5" value="NAs imputed with Q1&#xa;Complete feature matrix" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="705" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

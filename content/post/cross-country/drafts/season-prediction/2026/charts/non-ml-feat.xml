@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-05T00:00:00.000Z" agent="5.0" version="24.7.17" etag="0" type="device">
+  <diagram id="non-ml-feat-flow" name="Non-ML Feature Selection Section Flow">
+    <mxGraphModel dx="1422" dy="1199" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1427" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Non-ML Feature Selection Section Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="20" width="350" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- Start -->
+        <mxCell id="start" value="START&#xa;Odds Setup Data +&#xa;Pre-created Lag Features" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="70" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Define Available Features -->
+        <mxCell id="define_features" value="Define Available Lag Features&#xa;• Prev_Pelo (overall ELO)&#xa;• Prev_Sprint (sprint ELO)&#xa;• Prev_Sprint_C/F (classic/freestyle sprint)&#xa;• Prev_Distance (distance ELO)&#xa;• Prev_Distance_C/F&#xa;• Prev_C/F (classic/freestyle)&#xa;• Prev_Pct_of_Max_Points&#xa;• Age" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="400" y="160" width="260" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Validate Feature Availability -->
+        <mxCell id="validate_availability" value="Validate Feature Availability&#xa;• Check features exist in training data&#xa;• Identify missing features&#xa;• Create final feature pool&#xa;• Handle feature incompatibilities" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="420" y="310" width="220" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Define Target Outcomes -->
+        <mxCell id="define_outcomes" value="Define Target Outcomes&#xa;Binary classification targets:&#xa;• TopThree (Place ≤ 3)&#xa;• Top5 (Place ≤ 5)&#xa;• Top10 (Place ≤ 10)&#xa;• Top30 (Place ≤ 30)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="420" y="420" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Exhaustive Feature Search -->
+        <mxCell id="exhaustive_search" value="Exhaustive Feature Search&#xa;For each outcome target:&#xa;• Test all combinations (2-5 features)&#xa;• Fit logistic regression models&#xa;• Calculate AIC for each model&#xa;• Handle model fitting errors" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="550" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- AIC Optimization -->
+        <mxCell id="aic_optimization" value="AIC-Based Model Selection&#xa;• Track lowest AIC per target&#xa;• Store best feature combination&#xa;• Balance model fit vs complexity&#xa;• Penalize overfitting" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="420" y="680" width="220" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Apply to Both Genders -->
+        <mxCell id="apply_both" value="Apply to Both Datasets" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="790" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Men's Feature Selection -->
+        <mxCell id="men_selection" value="Men's Optimal Features&#xa;per outcome target:&#xa;• best_features_men_TopThree&#xa;• best_features_men_Top5&#xa;• best_features_men_Top10&#xa;• best_features_men_Top30" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="260" y="860" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Ladies Feature Selection -->
+        <mxCell id="ladies_selection" value="Ladies Optimal Features&#xa;per outcome target:&#xa;• best_features_ladies_TopThree&#xa;• best_features_ladies_Top5&#xa;• best_features_ladies_Top10&#xa;• best_features_ladies_Top30" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="620" y="860" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Feature Comparison -->
+        <mxCell id="feature_comparison" value="Cross-Target Feature Analysis&#xa;• Compare selected features&#xa;• Identify frequently selected features&#xa;• Analyze gender differences&#xa;• Document selection patterns" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="420" y="990" width="220" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- Model Performance Summary -->
+        <mxCell id="performance_summary" value="Model Performance Summary&#xa;• Best AIC scores per target&#xa;• Feature selection frequency&#xa;• Model convergence rates&#xa;• Selection robustness analysis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1110" width="220" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- Success -->
+        <mxCell id="success" value="✓ FEATURE SELECTION COMPLETE&#xa;Optimal lag feature combinations&#xa;selected for each prediction target&#xa;Ready for logistic regression" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1230" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrows -->
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="start" target="define_features">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="define_features" target="validate_availability">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="validate_availability" target="define_outcomes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="define_outcomes" target="exhaustive_search">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="exhaustive_search" target="aic_optimization">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="aic_optimization" target="apply_both">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="apply_both" target="men_selection">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="840" />
+              <mxPoint x="350" y="840" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="apply_both" target="ladies_selection">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="570" y="840" />
+              <mxPoint x="710" y="840" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="men_selection" target="feature_comparison">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="970" />
+              <mxPoint x="480" y="970" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ladies_selection" target="feature_comparison">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="710" y="970" />
+              <mxPoint x="580" y="970" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="feature_comparison" target="performance_summary">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="performance_summary" target="success">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Key Information Labels -->
+        <mxCell id="search_space" value="Search Space:&#xa;All combinations&#xa;of 2-5 features" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="680" y="575" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="aic_criterion" value="AIC = -2log(L) + 2k&#xa;Lower is better" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="680" y="700" width="80" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="lag_features" value="Lag Features:&#xa;Previous season&#xa;performance metrics" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="200" width="100" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="binary_targets" value="4 Binary Targets:&#xa;Different success&#xa;thresholds" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="150" y="455" width="90" height="40" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

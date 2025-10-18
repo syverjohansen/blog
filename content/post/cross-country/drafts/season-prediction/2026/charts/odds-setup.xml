@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-05T00:00:00.000Z" agent="5.0" version="24.7.17" etag="0" type="device">
+  <diagram id="odds-setup-flow" name="Odds Setup Section Flow">
+    <mxGraphModel dx="1422" dy="1199" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1427" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Odds Setup Section Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="20" width="250" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- Start -->
+        <mxCell id="start" value="START&#xa;GAM Predictions +&#xa;ELO Training Data" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="70" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Calculate Season Rankings -->
+        <mxCell id="calculate_rankings" value="Calculate Season Rankings&#xa;• Group by Season&#xa;• rank(-Pct_of_Max_Points)&#xa;• ties.method = 'min'&#xa;• Higher % = Better (lower) rank" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="160" width="240" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- Create Binary Outcomes -->
+        <mxCell id="create_outcomes" value="Create Binary Outcome Variables&#xa;• TopThree: factor(Place ≤ 3)&#xa;• Top5: factor(Place ≤ 5)&#xa;• Top10: factor(Place ≤ 10)&#xa;• Top30: factor(Place ≤ 30)&#xa;1 = Success, 0 = Failure" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="280" width="280" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Validate Training Data -->
+        <mxCell id="validate_training" value="Validate Training Data&#xa;• Check outcome distributions&#xa;• Verify feature availability&#xa;• Ensure adequate sample sizes&#xa;• Handle missing values" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="410" width="240" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Setup Feature Mapping -->
+        <mxCell id="feature_mapping" value="Setup Feature Mapping&#xa;Create rename_map:&#xa;• 'Prev_Pelo' → 'Pelo'&#xa;• 'Prev_Distance' → 'Distance_Pelo'&#xa;• 'Prev_Sprint' → 'Sprint_Pelo'&#xa;• etc." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="520" width="240" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Prepare 2026 Prediction Data -->
+        <mxCell id="prepare_prediction_data" value="Prepare 2026 Prediction Data&#xa;• Apply feature name mapping&#xa;• Extract available prediction columns&#xa;• Handle missing prediction features&#xa;• Validate column compatibility" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="650" width="240" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- Apply to Both Datasets -->
+        <mxCell id="apply_both" value="Apply to Both Datasets" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="770" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Men's Setup -->
+        <mxCell id="men_setup" value="Men's Odds Setup&#xa;df_place (men)&#xa;pred_data_men" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="320" y="840" width="120" height="70" as="geometry" />
+        </mxCell>
+        
+        <!-- Ladies Setup -->
+        <mxCell id="ladies_setup" value="Ladies Odds Setup&#xa;df_place_ladies&#xa;pred_data_ladies" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="680" y="840" width="120" height="70" as="geometry" />
+        </mxCell>
+        
+        <!-- Backwards Compatibility -->
+        <mxCell id="backwards_compatibility" value="Setup Backwards Compatibility&#xa;Set default pred_data:&#xa;1st priority: pred_data_men&#xa;2nd priority: pred_data_ladies&#xa;Fallback: empty data.frame()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="940" width="240" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- Outcome Statistics -->
+        <mxCell id="outcome_statistics" value="Calculate Outcome Statistics&#xa;• Count success rates per outcome&#xa;• Generate distribution summaries&#xa;• Validate sufficient observations&#xa;• Report class imbalances" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1060" width="240" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- Data Quality Checks -->
+        <mxCell id="quality_checks" value="Final Data Quality Checks&#xa;• Verify prediction data completeness&#xa;• Check training-prediction compatibility&#xa;• Validate outcome factor levels&#xa;• Confirm feature availability" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1180" width="240" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- Success -->
+        <mxCell id="success" value="✓ ODDS SETUP COMPLETE&#xa;Training data with binary outcomes&#xa;2026 prediction data mapped&#xa;Ready for logistic modeling" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1300" width="160" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrows -->
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="start" target="calculate_rankings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="calculate_rankings" target="create_outcomes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="create_outcomes" target="validate_training">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="validate_training" target="feature_mapping">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="feature_mapping" target="prepare_prediction_data">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="prepare_prediction_data" target="apply_both">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="apply_both" target="men_setup">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="820" />
+              <mxPoint x="380" y="820" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="apply_both" target="ladies_setup">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="600" y="820" />
+              <mxPoint x="740" y="820" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="men_setup" target="backwards_compatibility">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="380" y="920" />
+              <mxPoint x="520" y="920" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ladies_setup" target="backwards_compatibility">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="740" y="920" />
+              <mxPoint x="600" y="920" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="backwards_compatibility" target="outcome_statistics">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="outcome_statistics" target="quality_checks">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="quality_checks" target="success">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Key Data Flow Labels -->
+        <mxCell id="ranking_formula" value="rank(-Pct_of_Max_Points)&#xa;Higher % → Lower rank" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="720" y="185" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="binary_conversion" value="Place ≤ threshold →&#xa;1 (Success), 0 (Failure)" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="720" y="315" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="outcome_types" value="4 Binary Outcomes:&#xa;Top3, Top5, Top10, Top30" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="315" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="feature_rename" value="Column mapping for&#xa;prediction compatibility" style="text;html=1;strokeColor=none;fillColor=#f0f0f0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="720" y="555" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

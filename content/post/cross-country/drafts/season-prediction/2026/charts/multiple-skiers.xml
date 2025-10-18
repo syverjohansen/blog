@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-05T12:00:00.000Z" agent="5.0" version="24.7.17" etag="" type="device">
+  <diagram id="multiple-skiers-flow" name="Multiple Skiers Section Flow">
+    <mxGraphModel dx="1422" dy="1199" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1427" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="title" value="Multiple Skiers Section Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="20" width="300" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="start" value="START&#xa;Multiple Challenger&#xa;Threat Analysis" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="70" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="validate_datasets" value="Data Validation&#xa;Validate men_pred_data exists&#xa;Check train_men dataset available&#xa;Ensure datasets not null/empty&#xa;Comprehensive error handling" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="160" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="extract_klaebo_baseline" value="Extract Klaebo Performance Baseline&#xa;Search using pattern matching&#xa;Extract predicted 2026 performance&#xa;Validate Klaebo data found&#xa;Set benchmark for challenger analysis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="420" y="290" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="identify_top_challengers" value="Identify Top 10 Challengers&#xa;Filter out Klaebo from dataset&#xa;Sort by predicted 2026 performance&#xa;Select top 10 competitors&#xa;Calculate gaps to Klaebo benchmark" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="420" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="scenario_analysis" value="Execute Three Challenge Scenarios" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="550" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="scenario1_moderate" value="Scenario 1: Moderate Collective&#xa;All top 10 improve by +5 points&#xa;Identify skiers beating Klaebo&#xa;Find closest remaining threat&#xa;Uniform improvement assumption" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="260" y="620" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="scenario2_age_based" value="Scenario 2: Age-Differentiated&#xa;Young (under 26): +8 points&#xa;Prime (27-30): +5 points&#xa;Veterans (31+): +2 points&#xa;Realistic aging considerations" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="460" y="620" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="scenario3_nation_based" value="Scenario 3: Nation-Based Training&#xa;Strongest nation: +6 points&#xa;Other nations: +2 points&#xa;Simulate coordinated training effects&#xa;National development impact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="660" y="620" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="historical_analysis" value="Historical Improvement Analysis&#xa;Analyze train_men historical data&#xa;Calculate improvement probabilities&#xa;5+ points, 8+ points, 10+ points&#xa;Statistical likelihood assessment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="420" y="750" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="probability_calculation" value="Multiple Threat Probability Assessment&#xa;Calculate probability of simultaneous threats&#xa;Estimate likelihood of multiple improvements&#xa;Statistical modeling of combined scenarios&#xa;Risk assessment for Klaebo dominance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="880" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="threat_level_assignment" value="Overall Threat Level Assignment&#xa;HIGH: Multiple realistic challengers&#xa;MODERATE-HIGH: Several possible threats&#xa;MODERATE: Limited challenger potential&#xa;LOW: Minimal threat to dominance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1010" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="scenario_comparison" value="Cross-Scenario Comparison&#xa;Compare outcomes across all scenarios&#xa;Identify consistent threat patterns&#xa;Highlight scenario-dependent risks&#xa;Strategic implications analysis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1140" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="success" value="MULTIPLE CHALLENGER ANALYSIS COMPLETE&#xa;Three scenario assessments executed&#xa;Historical pattern analysis completed&#xa;Threat level categorization assigned&#xa;Strategic insights generated" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1270" width="180" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="start" target="validate_datasets">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="validate_datasets" target="extract_klaebo_baseline">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="extract_klaebo_baseline" target="identify_top_challengers">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="identify_top_challengers" target="scenario_analysis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="scenario_analysis" target="scenario1_moderate">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="600" />
+              <mxPoint x="350" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="scenario_analysis" target="scenario2_age_based">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="scenario_analysis" target="scenario3_nation_based">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="600" />
+              <mxPoint x="750" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="scenario1_moderate" target="historical_analysis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="730" />
+              <mxPoint x="500" y="730" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="scenario2_age_based" target="historical_analysis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="730" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="scenario3_nation_based" target="historical_analysis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="750" y="730" />
+              <mxPoint x="580" y="730" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="historical_analysis" target="probability_calculation">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="probability_calculation" target="threat_level_assignment">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="threat_level_assignment" target="scenario_comparison">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="scenario_comparison" target="success">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

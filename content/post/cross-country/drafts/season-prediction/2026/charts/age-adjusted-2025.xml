@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-05T12:00:00.000Z" agent="5.0" version="24.7.17" etag="" type="device">
+  <diagram id="age-adjusted-2025-flow" name="Age Adjusted 2025 Section Flow">
+    <mxGraphModel dx="1422" dy="1199" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1427" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="title" value="Age Adjusted 2025 Section Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="350" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="start" value="START&#xa;Age-Adjusted 2026&#xa;Predictions" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="70" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="validate_age_analysis" value="Validate Age Analysis Object&#xa;• Check age_analysis exists and valid&#xa;• Verify required structure present&#xa;• Validate data completeness&#xa;• Report object dimensions&#xa;• Handle missing data gracefully" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="160" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="extract_factors" value="Extract Age Adjustment Factors&#xa;Prioritized extraction from:&#xa;• age_stats (preferred source)&#xa;• additive_stats (fallback)&#xa;Standardize column names:&#xa;• avg_pelo_change, avg_distance_change&#xa;• avg_classic_change, avg_freestyle_change&#xa;• avg_sprint_change" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="420" y="290" width="260" height="110" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="define_prediction_function" value="Define predict_2026_with_age_adjustment()&#xa;Comprehensive prediction function:&#xa;• Input validation for data frames&#xa;• Age conversion to integers&#xa;• ELO adjustment calculations&#xa;• Age group categorization&#xa;• Output validation and error handling" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="430" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="input_validation" value="Function Input Validation&#xa;• Check current_data is valid data frame&#xa;• Verify age_adj contains adjustment factors&#xa;• Validate required columns present:&#xa;  Age, Distance_Pelo, Sprint_Pelo&#xa;  Classic_Pelo, Freestyle_Pelo, Pelo&#xa;• Report data quality issues" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="440" y="560" width="220" height="110" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="data_processing" value="Data Processing &amp; Joining&#xa;• Convert athlete ages to integers&#xa;• Join current data with age adjustments&#xa;• Handle missing age adjustment data&#xa;• Validate join success and completeness&#xa;• Prepare for ELO calculations" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="700" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="apply_adjustments" value="Apply Age-Based ELO Adjustments&#xa;Calculate predicted 2026 values:&#xa;• Predicted_Distance_2026&#xa;• Predicted_Sprint_2026&#xa;• Predicted_Classic_2026&#xa;• Predicted_Freestyle_2026&#xa;• Predicted_Pelo_2026&#xa;Formula: Current_ELO + Age_Adjustment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="830" width="260" height="110" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="age_categorization" value="Age Group Categorization&#xa;Create age-based categories:&#xa;• Young (≤23 years)&#xa;• Prime (24-27 years)&#xa;• Peak (28-31 years)&#xa;• Mature (32-35 years)&#xa;• Veteran (36+ years)&#xa;• Statistical analysis by group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="970" width="220" height="110" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="prediction_execution" value="Execute Age-Adjusted Predictions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="1110" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="validate_inputs" value="Validate Prediction Inputs&#xa;• Check men_pred_data exists&#xa;• Verify age_adjustments available&#xa;• Validate data structure integrity&#xa;• Report input data quality" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1180" width="220" height="90" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="generate_predictions" value="Generate 2026 Predictions&#xa;• Apply prediction function to data&#xa;• Calculate age-adjusted ELO ratings&#xa;• Handle prediction failures gracefully&#xa;• Validate prediction results&#xa;• Check for invalid/missing predictions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1300" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="analysis_reporting" value="Analysis &amp; Reporting&#xa;• Top 15 predicted performers for 2026&#xa;• Biggest expected improvers (positive adj)&#xa;• Biggest expected decliners (negative adj)&#xa;• Age group performance analysis&#xa;• Statistical summaries and insights" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1430" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="success" value="✓ AGE-ADJUSTED PREDICTIONS COMPLETE&#xa;2026 performance predictions generated&#xa;Age-based statistical adjustments applied&#xa;Comprehensive analysis and reporting&#xa;Ready for strategic decision making" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1560" width="180" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="start" target="validate_age_analysis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="validate_age_analysis" target="extract_factors">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="extract_factors" target="define_prediction_function">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="define_prediction_function" target="input_validation">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="input_validation" target="data_processing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="data_processing" target="apply_adjustments">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="apply_adjustments" target="age_categorization">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="age_categorization" target="prediction_execution">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="prediction_execution" target="validate_inputs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="validate_inputs" target="generate_predictions">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="generate_predictions" target="analysis_reporting">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="analysis_reporting" target="success">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

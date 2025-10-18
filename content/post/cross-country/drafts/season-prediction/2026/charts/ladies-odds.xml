@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-05T12:00:00.000Z" agent="5.0" version="24.7.17" etag="" type="device">
+  <diagram id="ladies-odds-flow" name="Ladies Odds Section Flow">
+    <mxGraphModel dx="1422" dy="1199" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1427" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="title" value="Ladies Odds Section Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="20" width="250" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="start" value="START&#xa;Ladies Training Data +&#xa;Optimal Features" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="70" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="extract_features" value="Extract Ladies Optimal Features&#xa;From exhaustive search results:&#xa;• best_features_ladies_TopThree&#xa;• best_features_ladies_Top5&#xa;• best_features_ladies_Top10&#xa;• best_features_ladies_Top30" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="160" width="240" height="90" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="create_formulas" value="Create Ladies GLM Formulas&#xa;Build binomial formulas:&#xa;• topthree_formula_ladies&#xa;• top5_formula_ladies&#xa;• top10_formula_ladies&#xa;• top30_formula_ladies" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="440" y="280" width="220" height="90" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="train_models" value="Train Ladies Logistic Models&#xa;glm(formula, family = binomial):&#xa;• place_model_ladies (TopThree)&#xa;• top5_model_ladies (Top5)&#xa;• top10_model_ladies (Top10)&#xa;• top30_model_ladies (Top30)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="400" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="generate_probs" value="Generate Ladies Probabilities&#xa;predict(model, pred_data_ladies):&#xa;• top3_probs_ladies&#xa;• top5_probs_ladies&#xa;• top10_probs_ladies&#xa;• top30_probs_ladies" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="440" y="530" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="normalize_ladies_probs" value="Normalize Ladies Probabilities&#xa;• Win probs sum to 100% (1.0)&#xa;• Top3 probs sum to 300% (3.0)&#xa;• Top5 probs sum to 500% (5.0)&#xa;• Top10 probs sum to 1000% (10.0)&#xa;• Top30 probs sum to 3000% (30.0)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="660" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="podium_approximation" value="Podium Position Approximation&#xa;Split Top3 probability equally:&#xa;• Win_Prob = normalized_top3 * 0.33&#xa;• Second_Prob = normalized_top3 * 0.33&#xa;• Third_Prob = normalized_top3 * 0.34&#xa;(Applied AFTER normalization)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="790" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="create_results" value="Create Ladies Results DataFrame&#xa;results_ladies with:&#xa;• Skier, Nation&#xa;• Win/Second/Third probabilities&#xa;• Top5, Top10, Top30 probabilities&#xa;• Outside_Top30 = 1 - Top30" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="920" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="decimal_odds" value="Calculate Decimal Odds&#xa;Ladies_Decimal_Odds = 1 / prob:&#xa;• Win_Decimal_Odds&#xa;• Second_Decimal_Odds&#xa;• Third_Decimal_Odds&#xa;• Top5_Decimal_Odds&#xa;• Top10_Decimal_Odds&#xa;• Top30_Decimal_Odds" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="260" y="1050" width="180" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="american_odds" value="Calculate American Odds&#xa;Ladies American format:&#xa;If prob >= 0.5 (favorite):&#xa;  -prob/(1-prob) * 100&#xa;If prob &lt; 0.5 (underdog):&#xa;  (1-prob)/prob * 100&#xa;Handle infinite values (cap at 999.99)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="480" y="1050" width="180" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="odds_validation" value="Ladies Odds Validation&#xa;• Check logical ordering&#xa;• Validate probability constraints&#xa;• Handle edge cases (inf, NaN)&#xa;• Ensure Win >= Second >= Third odds" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1200" width="220" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="summary_tables" value="Generate Ladies Summary Tables&#xa;• Top 10 Season Winner Odds&#xa;• Top 10 Podium Finish Odds&#xa;• Top 10 Top-10 Finish Odds&#xa;• Formatted for display" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1310" width="220" height="90" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="success" value="✓ LADIES ODDS COMPLETE&#xa;Ladies-specific logistic models&#xa;Podium approximation method&#xa;Comprehensive betting odds" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1430" width="160" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="start" target="extract_features">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="extract_features" target="create_formulas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="create_formulas" target="train_models">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="train_models" target="generate_probs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="generate_probs" target="normalize_ladies_probs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="normalize_ladies_probs" target="podium_approximation">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="podium_approximation" target="create_results">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="create_results" target="decimal_odds">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="1030" />
+              <mxPoint x="350" y="1030" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="create_results" target="american_odds">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="1030" />
+              <mxPoint x="570" y="1030" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="decimal_odds" target="odds_validation">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="1180" />
+              <mxPoint x="500" y="1180" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="american_odds" target="odds_validation">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="570" y="1180" />
+              <mxPoint x="580" y="1180" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="odds_validation" target="summary_tables">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="summary_tables" target="success">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
