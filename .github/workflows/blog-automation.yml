@@ -18,27 +18,7 @@ jobs:
       with:
         fetch-depth: 0  # Need full history for git operations
     
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-    
-    - name: Install system dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y curl wget jq bc
-    
-    - name: Install R and required packages
-      run: |
-        # Install R
-        sudo apt-get install -y r-base r-base-dev
-        
-        # Install required R packages
-        sudo R -e "
-        install.packages(c('dplyr', 'purrr', 'tidyr', 'readr', 'ggplot2', 'openxlsx', 
-                          'moments', 'mgcv', 'glmnet', 'Boruta', 'leaps', 'MASS'), 
-                        repos='https://cran.rstudio.com/')
-        "
+    # No need to install anything - we're just using SSH to connect to your Mac
     
     - name: Set up SSH connection to your Mac
       env:
