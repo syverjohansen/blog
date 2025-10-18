@@ -77,11 +77,19 @@ jobs:
           git config --global user.email 'github-actions@users.noreply.github.com'
           git config --global user.name 'GitHub Actions Bot'
           
+          # Check current remote URL and switch to SSH if needed
+          current_remote=\$(git remote get-url origin)
+          if [[ \$current_remote == https://github.com/* ]]; then
+            echo 'Switching from HTTPS to SSH remote...'
+            repo_path=\${current_remote#https://github.com/}
+            git remote set-url origin git@github.com:\$repo_path
+          fi
+          
           # Add and commit any new files/changes
           git add .
           git diff --staged --quiet || git commit -m 'Automated blog update - \$(date -u)'
           
-          # Push changes back to GitHub
+          # Push changes back to GitHub using SSH
           git push origin main
         "
     
