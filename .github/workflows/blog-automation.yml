@@ -27,16 +27,22 @@ jobs:
         SSH_USER: ${{ secrets.SSH_USER }}
         SSH_PORT: ${{ secrets.SSH_PORT }}
       run: |
-        # Set up SSH key
+        # Set up SSH directory and key
         mkdir -p ~/.ssh
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 700 ~/.ssh
+        
+        # Write SSH key (ensure proper formatting)
+        echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         
-        # Add your Mac to known hosts
+        # Verify key format
+        ssh-keygen -l -f ~/.ssh/id_rsa
+        
+        # Add your Mac to known hosts (disable strict checking for first connection)
         ssh-keyscan -p $SSH_PORT $SSH_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
         
-        # Test connection
-        ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "echo 'SSH connection successful'"
+        # Test connection with verbose output
+        ssh -v -o StrictHostKeyChecking=no -p $SSH_PORT -i ~/.ssh/id_rsa $SSH_USER@$SSH_HOST "echo 'SSH connection successful'"
     
     - name: Run blog automation scripts
       env:
@@ -45,7 +51,7 @@ jobs:
         SSH_PORT: ${{ secrets.SSH_PORT }}
       run: |
         # Execute the master automation script on your Mac via SSH
-        ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "
+        ssh -o StrictHostKeyChecking=no -p $SSH_PORT -i ~/.ssh/id_rsa $SSH_USER@$SSH_HOST "
           export TZ=UTC
           cd ~/blog/daehl-e
           
@@ -64,7 +70,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         # Pull any changes made on your Mac back to GitHub
-        ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "
+        ssh -o StrictHostKeyChecking=no -p $SSH_PORT -i ~/.ssh/id_rsa $SSH_USER@$SSH_HOST "
           cd ~/blog/daehl-e
           
           # Configure git if not already done
@@ -73,7 +79,7 @@ jobs:
           
           # Add and commit any new files/changes
           git add .
-          git diff --staged --quiet || git commit -m 'Automated blog update - $(date -u)'
+          git diff --staged --quiet || git commit -m 'Automated blog update - \$(date -u)'
           
           # Push changes back to GitHub
           git push origin main
