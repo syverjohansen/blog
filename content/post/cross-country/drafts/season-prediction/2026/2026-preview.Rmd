@@ -808,7 +808,8 @@ if (nrow(L_elo) == 0) {
 cat(sprintf("Input datasets: Men %d rows, Ladies %d rows\n", nrow(M_elo), nrow(L_elo)))
 
 # Prepare training data - include more historical seasons to capture early breakthroughs
-# Use data from 2016+ to include breakthrough seasons like Klæbo 2018
+# Use data from 2016-2025 to include breakthrough seasons like Klæbo 2018
+# 2025 data is included because Prev_ features contain 2024 performance data needed for 2026 predictions
 cat("Filtering training data (2016-2025, non-NA Pct_of_Max_Points)...\n")
 
 # Check available seasons before filtering
@@ -1617,6 +1618,101 @@ if (is.null(ladies_gam_model)) {
   stop("Failed to build ladies GAM model")
 }
 
+# Debugging: Show specific skier values used in GAM models
+cat("\n=== DEBUGGING: SAMPLE SKIER VALUES ===\n")
+
+# Debug Gus Schumacher in men's training data
+cat("--- Gus Schumacher Training Data ---\n")
+gus_data <- train_men %>% filter(Skier == "Gus Schumacher")
+if (nrow(gus_data) > 0) {
+  cat(sprintf("Found %d training observations for Gus Schumacher\n", nrow(gus_data)))
+  cat("Seasons:", paste(sort(unique(gus_data$Season)), collapse = ", "), "\n")
+  
+  # Show values for the features used in the GAM model
+  cat("Feature values used in men's GAM:\n")
+  if (exists("final_features_men") && length(final_features_men) > 0) {
+    available_features <- intersect(final_features_men, names(gus_data))
+    if (length(available_features) > 0) {
+      gus_features <- gus_data %>% 
+        dplyr::select(Season, Pct_of_Max_Points, all_of(available_features)) %>%
+        arrange(Season)
+      print(gus_features)
+      
+      # Show most recent values
+      if (nrow(gus_features) > 0) {
+        recent_gus <- tail(gus_features, 1)
+        cat("\nMost recent Gus Schumacher values:\n")
+        for (feature in available_features) {
+          if (feature %in% names(recent_gus)) {
+            cat(sprintf("  %s: %.3f\n", feature, recent_gus[[feature]]))
+          }
+        }
+        cat(sprintf("  Pct_of_Max_Points: %.3f\n", recent_gus$Pct_of_Max_Points))
+      }
+    } else {
+      cat("No GAM features available for Gus Schumacher\n")
+    }
+  } else {
+    cat("No final features defined for men's GAM\n")
+  }
+} else {
+  cat("Gus Schumacher not found in men's training data\n")
+}
+
+# Debug Jessie Diggins in ladies training data
+cat("\n--- Jessie Diggins Training Data ---\n")
+jessie_data <- train_ladies %>% filter(Skier == "Jessie Diggins")
+if (nrow(jessie_data) > 0) {
+  cat(sprintf("Found %d training observations for Jessie Diggins\n", nrow(jessie_data)))
+  cat("Seasons:", paste(sort(unique(jessie_data$Season)), collapse = ", "), "\n")
+  
+  # Show values for the features used in the GAM model
+  cat("Feature values used in ladies GAM:\n")
+  if (exists("final_features_ladies") && length(final_features_ladies) > 0) {
+    available_features <- intersect(final_features_ladies, names(jessie_data))
+    if (length(available_features) > 0) {
+      jessie_features <- jessie_data %>% 
+        dplyr::select(Season, Pct_of_Max_Points, all_of(available_features)) %>%
+        arrange(Season)
+      print(jessie_features)
+      
+      # Show most recent values
+      if (nrow(jessie_features) > 0) {
+        recent_jessie <- tail(jessie_features, 1)
+        cat("\nMost recent Jessie Diggins values:\n")
+        for (feature in available_features) {
+          if (feature %in% names(recent_jessie)) {
+            cat(sprintf("  %s: %.3f\n", feature, recent_jessie[[feature]]))
+          }
+        }
+        cat(sprintf("  Pct_of_Max_Points: %.3f\n", recent_jessie$Pct_of_Max_Points))
+      }
+    } else {
+      cat("No GAM features available for Jessie Diggins\n")
+    }
+  } else {
+    cat("No final features defined for ladies GAM\n")
+  }
+} else {
+  cat("Jessie Diggins not found in ladies training data\n")
+}
+
+# Show GAM model formulas used
+cat("\n--- GAM Model Formulas Used ---\n")
+if (exists("gam_formula_men")) {
+  cat("Men's GAM formula:\n")
+  print(gam_formula_men)
+} else {
+  cat("Men's GAM formula not available\n")
+}
+
+if (exists("gam_formula_ladies")) {
+  cat("\nLadies GAM formula:\n")
+  print(gam_formula_ladies)
+} else {
+  cat("Ladies GAM formula not available\n")
+}
+
 # Model performance evaluation with validation
 cat("\n=== GAM MODEL PERFORMANCE EVALUATION ===\n")
 
@@ -1921,8 +2017,67 @@ if(nrow(men_2025) > 0) {
       warning("Men's prediction data contains missing values")
     }
     
+    # Debugging: Show prediction values for Gus Schumacher
+    cat("\n--- DEBUGGING: Gus Schumacher 2026 Prediction Values ---\n")
+    gus_pred_data <- men_pred_data %>% filter(Skier == "Gus Schumacher")
+    if (nrow(gus_pred_data) > 0) {
+      cat("Found Gus Schumacher in 2026 prediction data\n")
+      cat("Features being used for prediction:\n")
+      for (feature in final_features_men) {
+        if (feature %in% names(gus_pred_data)) {
+          value <- gus_pred_data[[feature]][1]
+          cat(sprintf("  %s: %.4f\n", feature, value))
+        } else {
+          cat(sprintf("  %s: MISSING\n", feature))
+        }
+      }
+      # Show corresponding current 2025 values
+      cat("Corresponding current 2025 ELO values:\n")
+      current_mapping <- list(
+        "Prev_Pelo" = "Pelo",
+        "Prev_Distance" = "Distance_Pelo", 
+        "Prev_Sprint" = "Sprint_Pelo",
+        "Prev_Distance_C" = "Distance_C_Pelo",
+        "Prev_Distance_F" = "Distance_F_Pelo",
+        "Prev_Sprint_C" = "Sprint_C_Pelo", 
+        "Prev_Sprint_F" = "Sprint_F_Pelo",
+        "Prev_C" = "Classic_Pelo",
+        "Prev_F" = "Freestyle_Pelo",
+        "Prev_Pct_of_Max_Points" = "Pct_of_Max_Points"
+      )
+      for (feature in final_features_men) {
+        if (feature %in% names(current_mapping)) {
+          current_col <- current_mapping[[feature]]
+          if (current_col %in% names(gus_pred_data)) {
+            value <- gus_pred_data[[current_col]][1]
+            cat(sprintf("  %s (from %s): %.4f\n", feature, current_col, value))
+          }
+        }
+      }
+      if ("Age" %in% names(gus_pred_data)) {
+        cat(sprintf("  Age: %.0f\n", gus_pred_data$Age[1]))
+      }
+      if ("Nation" %in% names(gus_pred_data)) {
+        cat(sprintf("  Nation: %s\n", gus_pred_data$Nation[1]))
+      }
+    } else {
+      cat("Gus Schumacher not found in 2026 prediction data\n")
+    }
+    
     # Generate predictions
     men_pred_data$Predicted_Pct_2026 <- predict(men_gam_model, men_pred_data)
+    
+    # Show Gus Schumacher's prediction
+    if (nrow(gus_pred_data) > 0) {
+      gus_prediction <- men_pred_data %>% 
+        filter(Skier == "Gus Schumacher") %>%
+        select(Skier, Predicted_Pct_2026)
+      if (nrow(gus_prediction) > 0) {
+        cat(sprintf("Gus Schumacher 2026 prediction: %.4f (%.2f%% of max points)\n", 
+                    gus_prediction$Predicted_Pct_2026[1], 
+                    gus_prediction$Predicted_Pct_2026[1] * 100))
+      }
+    }
     
     # Validate predictions
     pred_na_count <- sum(is.na(men_pred_data$Predicted_Pct_2026))
@@ -2043,8 +2198,67 @@ if(nrow(ladies_2025) > 0) {
       warning("Ladies prediction data contains missing values")
     }
     
+    # Debugging: Show prediction values for Jessie Diggins
+    cat("\n--- DEBUGGING: Jessie Diggins 2026 Prediction Values ---\n")
+    jessie_pred_data <- ladies_pred_data %>% filter(Skier == "Jessie Diggins")
+    if (nrow(jessie_pred_data) > 0) {
+      cat("Found Jessie Diggins in 2026 prediction data\n")
+      cat("Features being used for prediction:\n")
+      for (feature in final_features_ladies) {
+        if (feature %in% names(jessie_pred_data)) {
+          value <- jessie_pred_data[[feature]][1]
+          cat(sprintf("  %s: %.4f\n", feature, value))
+        } else {
+          cat(sprintf("  %s: MISSING\n", feature))
+        }
+      }
+      # Show corresponding current 2025 values
+      cat("Corresponding current 2025 ELO values:\n")
+      current_mapping <- list(
+        "Prev_Pelo" = "Pelo",
+        "Prev_Distance" = "Distance_Pelo", 
+        "Prev_Sprint" = "Sprint_Pelo",
+        "Prev_Distance_C" = "Distance_C_Pelo",
+        "Prev_Distance_F" = "Distance_F_Pelo",
+        "Prev_Sprint_C" = "Sprint_C_Pelo", 
+        "Prev_Sprint_F" = "Sprint_F_Pelo",
+        "Prev_C" = "Classic_Pelo",
+        "Prev_F" = "Freestyle_Pelo",
+        "Prev_Pct_of_Max_Points" = "Pct_of_Max_Points"
+      )
+      for (feature in final_features_ladies) {
+        if (feature %in% names(current_mapping)) {
+          current_col <- current_mapping[[feature]]
+          if (current_col %in% names(jessie_pred_data)) {
+            value <- jessie_pred_data[[current_col]][1]
+            cat(sprintf("  %s (from %s): %.4f\n", feature, current_col, value))
+          }
+        }
+      }
+      if ("Age" %in% names(jessie_pred_data)) {
+        cat(sprintf("  Age: %.0f\n", jessie_pred_data$Age[1]))
+      }
+      if ("Nation" %in% names(jessie_pred_data)) {
+        cat(sprintf("  Nation: %s\n", jessie_pred_data$Nation[1]))
+      }
+    } else {
+      cat("Jessie Diggins not found in 2026 prediction data\n")
+    }
+    
     # Generate predictions
     ladies_pred_data$Predicted_Pct_2026 <- predict(ladies_gam_model, ladies_pred_data)
+    
+    # Show Jessie Diggins's prediction
+    if (nrow(jessie_pred_data) > 0) {
+      jessie_prediction <- ladies_pred_data %>% 
+        filter(Skier == "Jessie Diggins") %>%
+        select(Skier, Predicted_Pct_2026)
+      if (nrow(jessie_prediction) > 0) {
+        cat(sprintf("Jessie Diggins 2026 prediction: %.4f (%.2f%% of max points)\n", 
+                    jessie_prediction$Predicted_Pct_2026[1], 
+                    jessie_prediction$Predicted_Pct_2026[1] * 100))
+      }
+    }
     
     # Validate predictions
     pred_na_count <- sum(is.na(ladies_pred_data$Predicted_Pct_2026))
@@ -2339,6 +2553,7 @@ cat("\n--- Categorical Outcome Creation ---\n")
 tryCatch({
   df_place <- df_place %>%
     mutate(
+      Win = factor(ifelse(Place <= 1, 1, 0)),        # Binary: 1=Win, 0=Not Win
       TopThree = factor(ifelse(Place <= 3, 1, 0)),  # Binary: 1=Top3, 0=Not Top3
       Top5 = factor(ifelse(Place <= 5, 1, 0)),
       Top10 = factor(ifelse(Place <= 10, 1, 0)),
@@ -2353,6 +2568,7 @@ tryCatch({
 tryCatch({
   df_place_ladies <- df_place_ladies %>%
     mutate(
+      Win = factor(ifelse(Place <= 1, 1, 0)),        # Binary: 1=Win, 0=Not Win
       TopThree = factor(ifelse(Place <= 3, 1, 0)),  # Binary: 1=Top3, 0=Not Top3
       Top5 = factor(ifelse(Place <= 5, 1, 0)),
       Top10 = factor(ifelse(Place <= 10, 1, 0)),
@@ -2374,7 +2590,7 @@ print(topthree_crosstab[1:min(10, nrow(topthree_crosstab)), ])
 
 # Validate factor levels
 expected_levels <- c("0", "1")
-targets <- c("TopThree", "Top5", "Top10", "Top30")
+targets <- c("Win", "TopThree", "Top5", "Top10", "Top30")
 
 for (target in targets) {
   men_levels <- levels(df_place[[target]])
@@ -2733,7 +2949,7 @@ exhaustive_feature_search <- function(target, data_df, gender_label, available_f
 cat("\n--- Data Structure Validation ---\n")
 
 # Check target variable distributions
-targets <- c("TopThree", "Top5", "Top10", "Top30")
+targets <- c("Win", "TopThree", "Top5", "Top10", "Top30")
 for (target in targets) {
   if (target %in% names(df_place)) {
     men_table <- table(df_place[[target]])
@@ -2861,7 +3077,7 @@ if (!exists("best_features_odds_ladies") || !is.list(best_features_odds_ladies))
 }
 
 # Required outcome categories
-required_outcomes <- c("TopThree", "Top5", "Top10", "Top30")
+required_outcomes <- c("Win", "TopThree", "Top5", "Top10", "Top30")
 missing_men <- setdiff(required_outcomes, names(best_features_odds_men))
 missing_ladies <- setdiff(required_outcomes, names(best_features_odds_ladies))
 
@@ -2875,18 +3091,21 @@ cat("✓ All required outcome categories present\n")
 
 tryCatch({
   # Use best features from exhaustive search for men
+  win_features_men <- best_features_odds_men[["Win"]]$features
   topthree_features_men <- best_features_odds_men[["TopThree"]]$features
   top5_features_men <- best_features_odds_men[["Top5"]]$features
   top10_features_men <- best_features_odds_men[["Top10"]]$features
   top30_features_men <- best_features_odds_men[["Top30"]]$features
   
   # Validate men's features
+  if (length(win_features_men) == 0) stop("No features found for men's Win")
   if (length(topthree_features_men) == 0) stop("No features found for men's TopThree")
   if (length(top5_features_men) == 0) stop("No features found for men's Top5")
   if (length(top10_features_men) == 0) stop("No features found for men's Top10")
   if (length(top30_features_men) == 0) stop("No features found for men's Top30")
   
-  cat("Men's feature counts - TopThree:", length(topthree_features_men), 
+  cat("Men's feature counts - Win:", length(win_features_men),
+      "TopThree:", length(topthree_features_men), 
       "Top5:", length(top5_features_men), 
       "Top10:", length(top10_features_men), 
       "Top30:", length(top30_features_men), "\n")
@@ -2897,18 +3116,21 @@ tryCatch({
 
 tryCatch({
   # Use best features from exhaustive search for ladies
+  win_features_ladies <- best_features_odds_ladies[["Win"]]$features
   topthree_features_ladies <- best_features_odds_ladies[["TopThree"]]$features
   top5_features_ladies <- best_features_odds_ladies[["Top5"]]$features
   top10_features_ladies <- best_features_odds_ladies[["Top10"]]$features
   top30_features_ladies <- best_features_odds_ladies[["Top30"]]$features
   
   # Validate ladies features
+  if (length(win_features_ladies) == 0) stop("No features found for ladies Win")
   if (length(topthree_features_ladies) == 0) stop("No features found for ladies TopThree")
   if (length(top5_features_ladies) == 0) stop("No features found for ladies Top5")
   if (length(top10_features_ladies) == 0) stop("No features found for ladies Top10")
   if (length(top30_features_ladies) == 0) stop("No features found for ladies Top30")
   
-  cat("Ladies feature counts - TopThree:", length(topthree_features_ladies), 
+  cat("Ladies feature counts - Win:", length(win_features_ladies),
+      "TopThree:", length(topthree_features_ladies), 
       "Top5:", length(top5_features_ladies), 
       "Top10:", length(top10_features_ladies), 
       "Top30:", length(top30_features_ladies), "\n")
@@ -2921,12 +3143,14 @@ tryCatch({
 cat("\n--- Formula Creation ---\n")
 tryCatch({
   # Create formulas for men's models
+  win_formula_men <- as.formula(paste("Win ~", paste(win_features_men, collapse = " + ")))
   topthree_formula_men <- as.formula(paste("TopThree ~", paste(topthree_features_men, collapse = " + ")))
   top5_formula_men <- as.formula(paste("Top5 ~", paste(top5_features_men, collapse = " + ")))
   top10_formula_men <- as.formula(paste("Top10 ~", paste(top10_features_men, collapse = " + ")))
   top30_formula_men <- as.formula(paste("Top30 ~", paste(top30_features_men, collapse = " + ")))
   
   # Validate formula creation
+  if (!inherits(win_formula_men, "formula")) stop("Failed to create Win formula for men")
   if (!inherits(topthree_formula_men, "formula")) stop("Failed to create TopThree formula for men")
   if (!inherits(top5_formula_men, "formula")) stop("Failed to create Top5 formula for men")
   if (!inherits(top10_formula_men, "formula")) stop("Failed to create Top10 formula for men")
@@ -2940,12 +3164,14 @@ tryCatch({
 
 tryCatch({
   # Create formulas for ladies models
+  win_formula_ladies <- as.formula(paste("Win ~", paste(win_features_ladies, collapse = " + ")))
   topthree_formula_ladies <- as.formula(paste("TopThree ~", paste(topthree_features_ladies, collapse = " + ")))
   top5_formula_ladies <- as.formula(paste("Top5 ~", paste(top5_features_ladies, collapse = " + ")))
   top10_formula_ladies <- as.formula(paste("Top10 ~", paste(top10_features_ladies, collapse = " + ")))
   top30_formula_ladies <- as.formula(paste("Top30 ~", paste(top30_features_ladies, collapse = " + ")))
   
   # Validate formula creation
+  if (!inherits(win_formula_ladies, "formula")) stop("Failed to create Win formula for ladies")
   if (!inherits(topthree_formula_ladies, "formula")) stop("Failed to create TopThree formula for ladies")
   if (!inherits(top5_formula_ladies, "formula")) stop("Failed to create Top5 formula for ladies")
   if (!inherits(top10_formula_ladies, "formula")) stop("Failed to create Top10 formula for ladies")
@@ -2958,22 +3184,26 @@ tryCatch({
 })
 
 print("=== MEN'S OPTIMIZED MODEL FORMULAS ===")
+print(win_formula_men)
 print(topthree_formula_men)
 print(top5_formula_men)
 print(top10_formula_men)
 print(top30_formula_men)
 
 print("=== LADIES OPTIMIZED MODEL FORMULAS ===")
+print(win_formula_ladies)
 print(topthree_formula_ladies)
 print(top5_formula_ladies)
 print(top10_formula_ladies)
 print(top30_formula_ladies)
 
 # Maintain backwards compatibility
+win_features <- win_features_men
 topthree_features <- topthree_features_men
 top5_features <- top5_features_men
 top10_features <- top10_features_men
 top30_features <- top30_features_men
+win_formula <- win_formula_men
 topthree_formula <- topthree_formula_men
 top5_formula <- top5_formula_men
 top10_formula <- top10_formula_men
@@ -3000,7 +3230,7 @@ if (nrow(df_place) == 0) {
 }
 
 # Check for required target variables
-required_targets <- c("TopThree", "Top5", "Top10", "Top30")
+required_targets <- c("Win", "TopThree", "Top5", "Top10", "Top30")
 missing_targets <- setdiff(required_targets, names(df_place))
 if (length(missing_targets) > 0) {
   stop("Missing target variables in df_place: ", paste(missing_targets, collapse = ", "))
@@ -3020,6 +3250,25 @@ for (target in required_targets) {
 
 # Fit models with optimal feature sets and validation
 cat("\n--- Model Training ---\n")
+tryCatch({
+  win_model <- glm(win_formula, family = binomial, data = df_place)
+  
+  # Validate model convergence
+  if (!win_model$converged) {
+    warning("Win model did not converge")
+  }
+  
+  # Check for model fitting issues
+  if (any(is.na(coef(win_model)))) {
+    warning("Win model has NA coefficients - possible multicollinearity")
+  }
+  
+  cat("✓ Win model fitted successfully\n")
+  
+}, error = function(e) {
+  stop("Error fitting Win model: ", e$message)
+})
+
 tryCatch({
   place_model <- glm(topthree_formula, family = binomial, data = df_place)
   
@@ -3082,7 +3331,7 @@ if (nrow(pred_data) == 0) {
 }
 
 # Check for required features in prediction data
-all_required_features <- unique(c(topthree_features_men, top5_features_men, top10_features_men, top30_features_men))
+all_required_features <- unique(c(win_features_men, topthree_features_men, top5_features_men, top10_features_men, top30_features_men))
 missing_pred_features <- setdiff(all_required_features, names(pred_data))
 if (length(missing_pred_features) > 0) {
   warning("Missing features in prediction data: ", paste(missing_pred_features, collapse = ", "))
@@ -3092,6 +3341,52 @@ cat("Prediction dataset has", nrow(pred_data), "observations and", ncol(pred_dat
 
 # Get predicted probabilities with validation
 cat("\n--- Model Predictions ---\n")
+tryCatch({
+  win_probs <- predict(win_model, pred_data, type = "response")
+  
+  # Validate predictions
+  if (any(is.na(win_probs))) {
+    warning("NA predictions detected for Win - ", sum(is.na(win_probs)), " out of ", length(win_probs))
+  }
+  if (any(win_probs < 0 | win_probs > 1, na.rm = TRUE)) {
+    warning("Invalid probability values for Win (outside 0-1 range)")
+  }
+  
+  cat("✓ Win predictions generated - Range: [", round(min(win_probs, na.rm = TRUE), 4), ", ", 
+      round(max(win_probs, na.rm = TRUE), 4), "]\n")
+  
+  # Debugging: Show prediction values for Gus Schumacher
+  gus_indices <- which(pred_data$Skier == "Gus Schumacher")
+  if (length(gus_indices) > 0) {
+    cat("\n--- DEBUGGING: Gus Schumacher Win Model Values ---\n")
+    gus_data <- pred_data[gus_indices[1], , drop = FALSE]
+    
+    # Show the features used in the Win model for Gus
+    cat("Win model features for Gus Schumacher:\n")
+    for (feature in win_features_men) {
+      if (feature %in% names(gus_data)) {
+        value <- gus_data[[feature]]
+        cat(sprintf("  %s: %s\n", feature, 
+                   ifelse(is.na(value), "NA", 
+                         ifelse(is.numeric(value), round(value, 4), value))))
+      } else {
+        cat(sprintf("  %s: MISSING\n", feature))
+      }
+    }
+    
+    # Show Win prediction for Gus
+    gus_win_prob <- win_probs[gus_indices[1]]
+    cat(sprintf("Win probability for Gus Schumacher: %.4f (%.2f%%)\n", 
+               gus_win_prob, gus_win_prob * 100))
+    cat("--- End Gus Schumacher Debug ---\n\n")
+  } else {
+    cat("Gus Schumacher not found in prediction data\n")
+  }
+  
+}, error = function(e) {
+  stop("Error generating Win predictions: ", e$message)
+})
+
 tryCatch({
   top3_probs <- predict(place_model, pred_data, type = "response")
   
@@ -3154,11 +3449,11 @@ cat("\n--- Normalizing Probabilities ---\n")
 
 # Normalize probabilities so they sum to expected totals
 # Win probabilities should sum to 100% (1.0)
-total_win_prob <- sum(top3_probs * 0.33, na.rm = TRUE)
+total_win_prob <- sum(win_probs, na.rm = TRUE)
 if (total_win_prob > 0) {
-  win_probs_normalized <- (top3_probs * 0.33) / total_win_prob
+  win_probs_normalized <- (win_probs / total_win_prob) * 1.0
 } else {
-  win_probs_normalized <- top3_probs * 0.33
+  win_probs_normalized <- win_probs
 }
 
 # Top3 probabilities should sum to 300% (3.0) since 3 positions
@@ -3497,6 +3792,9 @@ tryCatch({
 cat("=== LADIES ODDS VALIDATION ===\n")
 
 # Validate ladies-specific formulas exist
+if (!exists("win_formula_ladies") || !inherits(win_formula_ladies, "formula")) {
+  stop("win_formula_ladies not found or invalid")
+}
 if (!exists("topthree_formula_ladies") || !inherits(topthree_formula_ladies, "formula")) {
   stop("topthree_formula_ladies not found or invalid")
 }
@@ -3521,7 +3819,7 @@ if (nrow(df_place_ladies) == 0) {
 }
 
 # Check for required target variables in ladies data
-required_targets <- c("TopThree", "Top5", "Top10", "Top30")
+required_targets <- c("Win", "TopThree", "Top5", "Top10", "Top30")
 missing_targets <- setdiff(required_targets, names(df_place_ladies))
 if (length(missing_targets) > 0) {
   stop("Missing target variables in df_place_ladies: ", paste(missing_targets, collapse = ", "))
@@ -3543,6 +3841,25 @@ cat("Ladies training data:", nrow(df_place_ladies), "observations\n")
 
 # Fit ladies models with validation
 cat("\n--- Ladies Model Training ---\n")
+tryCatch({
+  win_model_ladies <- glm(win_formula_ladies, family = binomial, data = df_place_ladies)
+  
+  # Validate model convergence
+  if (!win_model_ladies$converged) {
+    warning("Ladies Win model did not converge")
+  }
+  
+  # Check for model fitting issues
+  if (any(is.na(coef(win_model_ladies)))) {
+    warning("Ladies Win model has NA coefficients - possible multicollinearity")
+  }
+  
+  cat("✓ Ladies Win model fitted successfully\n")
+  
+}, error = function(e) {
+  stop("Error fitting ladies Win model: ", e$message)
+})
+
 tryCatch({
   place_model_ladies <- glm(topthree_formula_ladies, family = binomial, data = df_place_ladies)
   
@@ -3605,7 +3922,7 @@ if (nrow(pred_data_ladies) == 0) {
 }
 
 # Check for required features in ladies prediction data
-all_required_features <- unique(c(topthree_features_ladies, top5_features_ladies, top10_features_ladies, top30_features_ladies))
+all_required_features <- unique(c(win_features_ladies, topthree_features_ladies, top5_features_ladies, top10_features_ladies, top30_features_ladies))
 missing_pred_features <- setdiff(all_required_features, names(pred_data_ladies))
 if (length(missing_pred_features) > 0) {
   warning("Missing features in ladies prediction data: ", paste(missing_pred_features, collapse = ", "))
@@ -3615,6 +3932,52 @@ cat("Ladies prediction dataset has", nrow(pred_data_ladies), "observations and",
 
 # Get predicted probabilities for ladies with validation
 cat("\n--- Ladies Model Predictions ---\n")
+tryCatch({
+  win_probs_ladies <- predict(win_model_ladies, pred_data_ladies, type = "response")
+  
+  # Validate predictions
+  if (any(is.na(win_probs_ladies))) {
+    warning("NA predictions detected for ladies Win - ", sum(is.na(win_probs_ladies)), " out of ", length(win_probs_ladies))
+  }
+  if (any(win_probs_ladies < 0 | win_probs_ladies > 1, na.rm = TRUE)) {
+    warning("Invalid probability values for ladies Win (outside 0-1 range)")
+  }
+  
+  cat("✓ Ladies Win predictions generated - Range: [", round(min(win_probs_ladies, na.rm = TRUE), 4), ", ", 
+      round(max(win_probs_ladies, na.rm = TRUE), 4), "]\n")
+  
+  # Debugging: Show prediction values for Jessie Diggins
+  jessie_indices <- which(pred_data_ladies$Skier == "Jessie Diggins")
+  if (length(jessie_indices) > 0) {
+    cat("\n--- DEBUGGING: Jessie Diggins Win Model Values ---\n")
+    jessie_data <- pred_data_ladies[jessie_indices[1], , drop = FALSE]
+    
+    # Show the features used in the Win model for Jessie
+    cat("Win model features for Jessie Diggins:\n")
+    for (feature in win_features_ladies) {
+      if (feature %in% names(jessie_data)) {
+        value <- jessie_data[[feature]]
+        cat(sprintf("  %s: %s\n", feature, 
+                   ifelse(is.na(value), "NA", 
+                         ifelse(is.numeric(value), round(value, 4), value))))
+      } else {
+        cat(sprintf("  %s: MISSING\n", feature))
+      }
+    }
+    
+    # Show Win prediction for Jessie
+    jessie_win_prob <- win_probs_ladies[jessie_indices[1]]
+    cat(sprintf("Win probability for Jessie Diggins: %.4f (%.2f%%)\n", 
+               jessie_win_prob, jessie_win_prob * 100))
+    cat("--- End Jessie Diggins Debug ---\n\n")
+  } else {
+    cat("Jessie Diggins not found in prediction data\n")
+  }
+  
+}, error = function(e) {
+  stop("Error generating ladies Win predictions: ", e$message)
+})
+
 tryCatch({
   top3_probs_ladies <- predict(place_model_ladies, pred_data_ladies, type = "response")
   
@@ -3677,15 +4040,15 @@ cat("\n--- Normalizing Ladies Probabilities ---\n")
 
 # Normalize ladies probabilities
 # Win probabilities should sum to 100% (1.0)
-total_win_prob_ladies <- sum(top3_probs_ladies * 0.33, na.rm = TRUE)
+total_win_prob_ladies <- sum(win_probs_ladies, na.rm = TRUE)
 if (total_win_prob_ladies > 0) {
-  win_probs_normalized_ladies <- (top3_probs_ladies * 0.33) / total_win_prob_ladies
+  win_probs_normalized_ladies <- (win_probs_ladies / total_win_prob_ladies) * 1.0
   second_probs_normalized_ladies <- win_probs_normalized_ladies
   third_probs_normalized_ladies <- win_probs_normalized_ladies
 } else {
-  win_probs_normalized_ladies <- top3_probs_ladies * 0.33
-  second_probs_normalized_ladies <- top3_probs_ladies * 0.33
-  third_probs_normalized_ladies <- top3_probs_ladies * 0.34
+  win_probs_normalized_ladies <- win_probs_ladies
+  second_probs_normalized_ladies <- win_probs_ladies
+  third_probs_normalized_ladies <- win_probs_ladies
 }
 
 # Top3 probabilities should sum to 300% (3.0)
