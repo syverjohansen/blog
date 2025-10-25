@@ -62,12 +62,12 @@ if (nrow(next_weekend_races) == 0) {
 # Create race dataframes for men and ladies (all alpine races are individual)
 men_races <- next_weekend_races %>%
   filter(Sex == "M") %>%
-  select(Distance, Period, Country) %>%
+  dplyr::select(Distance, Period, Country) %>%
   rename(discipline = Distance, period = Period, country = Country)
 
 ladies_races <- next_weekend_races %>%
   filter(Sex == "L") %>%
-  select(Distance, Period, Country) %>%
+  dplyr::select(Distance, Period, Country) %>%
   rename(discipline = Distance, period = Period, country = Country)
 
 log_info(paste("Found", nrow(men_races), "men's races,", nrow(ladies_races), "ladies' races"))
@@ -536,7 +536,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col) {
   
   # For individual races
   base_df <- startlist %>%
-    select(Skier, ID, Nation, Sex, all_of(race_prob_cols))
+    dplyr::select(Skier, ID, Nation, Sex, all_of(race_prob_cols))
   
   # For alpine races
   # Check if Elo columns exist, if not create them
@@ -549,7 +549,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col) {
     arrange(Date, Season, Race) %>%
     slice_tail(n = 1) %>%
     ungroup() %>%
-    select(Skier, any_of(elo_cols))
+    dplyr::select(Skier, any_of(elo_cols))
   
   # Debug: Check elo columns
   log_info(paste("Available elo columns:", paste(names(most_recent_elos), collapse=", ")))
@@ -781,7 +781,7 @@ combine_predictions <- function(race_dfs, startlist) {
   # Add Sex column
   final_predictions <- final_predictions %>%
     left_join(
-      startlist %>% select(Skier, ID, Sex),
+      startlist %>% dplyr::select(Skier, ID, Sex),
       by = "Skier"
     )
   
@@ -823,7 +823,7 @@ combine_predictions <- function(race_dfs, startlist) {
               !!paste0("Race", i, "_Confidence") := confidence_factor,
               !!paste0("Race", i, "_Probability") := !!sym(paste0("Race", i, "_Prob"))
             ) %>%
-            select(!!participant_col, 
+            dplyr::select(!!participant_col, 
                    !!paste0("Race", i, "_Base"),
                    !!paste0("Race", i, "_Period"),
                    !!paste0("Race", i, "_Discipline"),
@@ -902,7 +902,7 @@ combine_predictions <- function(race_dfs, startlist) {
   
   log_info("Returning final predictions")
   final_predictions %>%
-    select(all_of(select_cols))
+    dplyr::select(all_of(select_cols))
 }
 
 create_post_predictions <- function(final_predictions, n_races, gender) {
@@ -922,7 +922,7 @@ create_post_predictions <- function(final_predictions, n_races, gender) {
   select_cols <- c(select_cols, "Total_Points")
   
   post_predictions <- final_predictions %>%
-    select(all_of(select_cols)) %>%
+    dplyr::select(all_of(select_cols)) %>%
     # Add Sex if not present
     mutate(
       Sex = if("Sex" %in% names(.)) {
@@ -934,7 +934,7 @@ create_post_predictions <- function(final_predictions, n_races, gender) {
   
   # Make sure Sex is in the right position (after Nation)
   post_predictions <- post_predictions %>%
-    select(Skier, ID, Nation, Sex, everything())
+    dplyr::select(Skier, ID, Nation, Sex, everything())
   
   # Arrange by total points
   post_predictions <- post_predictions %>%
@@ -1502,7 +1502,7 @@ predict_races <- function(gender, startlist_override = NULL) {
             
             # Clean up temporary columns
             position_preds <- position_preds %>%
-              select(-period_effect, -period_adjustment, -adjusted_prob)
+              dplyr::select(-period_effect, -period_adjustment, -adjusted_prob)
           } else {
             # Use base prediction if no adjustments
             position_preds[[prob_col]] <- position_preds[[paste0(prob_col, "_base")]]
@@ -1510,7 +1510,7 @@ predict_races <- function(gender, startlist_override = NULL) {
           
           # Clean up base prediction column
           position_preds <- position_preds %>%
-            select(-paste0(prob_col, "_base"))
+            dplyr::select(-paste0(prob_col, "_base"))
           
           # Convert to percentage and round
           position_preds[[prob_col]] <- round(position_preds[[prob_col]] * 100, 1)
@@ -1604,7 +1604,7 @@ predict_races <- function(gender, startlist_override = NULL) {
           100 * Race_Prob  # Cap at 100 * probability
         )
       ) %>%
-      select(all_of(participant_col), 
+      dplyr::select(all_of(participant_col), 
              "Nation",
              Base_Prediction, period_adjustment, discipline_adjustment,
              prediction_volatility, volatility_ratio, confidence_factor,

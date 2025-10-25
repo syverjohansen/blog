@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Top5",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Top5%"
+  ],
+  "rows": [
+    [
+      "Alice Robinson",
+      "NZL",
+      100.0
+    ],
+    [
+      "Lara Gut-Behrami",
+      "SUI",
+      98.4102952308856
+    ],
+    [
+      "Sara Hector",
+      "SWE",
+      52.6873580620741
+    ],
+    [
+      "Thea Louise Stjernesund",
+      "NOR",
+      51.9303557910673
+    ],
+    [
+      "Paula Moltzan",
+      "USA",
+      36.9417108251324
+    ]
+  ]
+}

@@ -4297,6 +4297,20 @@ evaluate_breakthrough_predictors <- function(df, predictors) {
     model_data <- initial_data %>%
       dplyr::select(Will_Breakthrough, all_of(predictors))
     
+    # Impute missing values with first quartile (using existing function)
+    cat("\n--- Missing Data Imputation ---\n")
+    for (pred in predictors) {
+      if (pred %in% names(model_data)) {
+        initial_nas <- sum(is.na(model_data[[pred]]))
+        if (initial_nas > 0) {
+          cat(sprintf("Imputing %d missing values in %s\n", initial_nas, pred))
+          model_data[[pred]] <- replace_na_with_quartile(model_data[[pred]], pred)
+          final_nas <- sum(is.na(model_data[[pred]]))
+          cat(sprintf("  %s: %d -> %d NAs after imputation\n", pred, initial_nas, final_nas))
+        }
+      }
+    }
+    
     cat("✓ Data preparation completed\n")
     
   }, error = function(e) {
@@ -4529,6 +4543,178 @@ evaluate_breakthrough_predictors <- function(df, predictors) {
       )
       
       cat("✓ Reduced model with top predictors trained\n")
+      
+      # Add coefficient direction validation for breakthrough prediction
+      cat("\n--- Alpine Breakthrough Model Coefficient Validation ---\n")
+      tryCatch({
+        # Get logistic regression coefficients
+        logistic_coefs <- summary(reduced_model$finalModel)$coefficients
+        
+        # Expected positive coefficients for breakthrough prediction (alpine specific)
+        expected_positive_vars <- c("Prev_Pelo", "Prev_Downhill", "Prev_Super_G", "Prev_Giant_Slalom", 
+                                    "Prev_Slalom", "Prev_Pct_of_Max_Points")
+        expected_negative_vars <- c("Age")  # Younger athletes more likely to breakthrough
+        
+        cat("=== DEBUG: Predictor Values Used ===\n")
+        for (var in top_predictors) {
+          if (var %in% names(model_data)) {
+            vals <- model_data[[var]]
+            cat(sprintf("%s: min=%.3f, max=%.3f, mean=%.3f, na_count=%d\n", 
+                       var, min(vals, na.rm=TRUE), max(vals, na.rm=TRUE), 
+                       mean(vals, na.rm=TRUE), sum(is.na(vals))))
+          }
+        }
+        
+        # Check coefficient directions
+        for (var in top_predictors) {
+          if (var %in% rownames(logistic_coefs)) {
+            coef_value <- logistic_coefs[var, "Estimate"]
+            coef_pvalue <- logistic_coefs[var, "Pr(>|z|)"]
+            
+            # Check if coefficient direction matches expectation
+            if (var %in% expected_positive_vars) {
+              if (coef_value > 0) {
+                cat("✓", var, "has positive coefficient (", round(coef_value, 4), ") - VALID for breakthrough prediction\n")
+              } else {
+                cat("⚠️  WARNING:", var, "has negative coefficient (", round(coef_value, 4), ") - unexpected for breakthrough prediction\n")
+              }
+            } else if (var %in% expected_negative_vars) {
+              if (coef_value < 0) {
+                cat("✓", var, "has negative coefficient (", round(coef_value, 4), ") - VALID for breakthrough prediction\n")
+              } else {
+                cat("⚠️  WARNING:", var, "has positive coefficient (", round(coef_value, 4), ") - unexpected for breakthrough prediction\n")
+              }
+            } else {
+              # For other variables, include regardless of direction but note it
+              cat("?", var, "has coefficient (", round(coef_value, 4), ") - included (direction not specified)\n")
+            }
+            
+            # Also check statistical significance
+            if (coef_pvalue > 0.1) {
+              cat("  NOTE:", var, "p-value =", round(coef_pvalue, 4), "(not significant at 0.1 level)\n")
+            }
+          }
+        }
+        
+        # Implement intelligent model selection to find best model with correct coefficient directions
+        cat("\n--- Intelligent Model Selection for Correct Coefficient Directions ---\n")
+        
+        # Define core predictors we want to prioritize
+        core_predictors <- c("Age", "Prev_Pct_of_Max_Points")
+        available_predictors <- intersect(top_predictors, names(model_data))
+        
+        # Function to check if all coefficients have correct directions
+        check_coefficient_directions <- function(model_coefs, predictors_used) {
+          all_correct <- TRUE
+          for (var in predictors_used) {
+            if (var %in% rownames(model_coefs)) {
+              coef_value <- model_coefs[var, "Estimate"]
+              if (var %in% expected_positive_vars && coef_value <= 0) {
+                all_correct <- FALSE
+              } else if (var %in% expected_negative_vars && coef_value >= 0) {
+                all_correct <- FALSE
+              }
+            }
+          }
+          return(all_correct)
+        }
+        
+        best_model <- NULL
+        best_predictors <- NULL
+        best_roc <- 0
+        best_directions_correct <- FALSE
+        
+        # Try different combinations, starting with simpler models
+        for (n_predictors in 2:min(6, length(available_predictors))) {
+          # Always include Age if available
+          if ("Age" %in% available_predictors) {
+            remaining_predictors <- setdiff(available_predictors, "Age")
+            
+            # Try combinations that include Age
+            if (n_predictors > 1 && length(remaining_predictors) >= (n_predictors - 1)) {
+              combinations <- combn(remaining_predictors, n_predictors - 1, simplify = FALSE)
+              
+              for (combo in combinations[1:min(20, length(combinations))]) {  # Limit to 20 combinations
+                test_predictors <- c("Age", combo)
+                
+                tryCatch({
+                  test_formula <- as.formula(paste("Will_Breakthrough ~", paste(test_predictors, collapse = " + ")))
+                  
+                  test_model <- train(
+                    test_formula,
+                    data = model_data,
+                    method = "glm",
+                    family = "binomial",
+                    trControl = ctrl,
+                    metric = "ROC"
+                  )
+                  
+                  test_roc <- max(test_model$results$ROC, na.rm = TRUE)
+                  test_coefs <- summary(test_model$finalModel)$coefficients
+                  directions_correct <- check_coefficient_directions(test_coefs, test_predictors)
+                  
+                  # Prioritize models with correct directions, then by ROC
+                  is_better <- FALSE
+                  if (directions_correct && !best_directions_correct) {
+                    is_better <- TRUE  # First model with correct directions
+                  } else if (directions_correct && best_directions_correct && test_roc > best_roc) {
+                    is_better <- TRUE  # Better ROC among models with correct directions
+                  } else if (!directions_correct && !best_directions_correct && test_roc > best_roc) {
+                    is_better <- TRUE  # Better ROC when no good directions found yet
+                  }
+                  
+                  if (is_better) {
+                    best_model <- test_model
+                    best_predictors <- test_predictors
+                    best_roc <- test_roc
+                    best_directions_correct <- directions_correct
+                    
+                    cat("New best model found:", paste(test_predictors, collapse = ", "), 
+                        "ROC:", round(test_roc, 3), 
+                        "Directions:", ifelse(directions_correct, "✓ Correct", "✗ Wrong"), "\n")
+                  }
+                  
+                }, error = function(e) {
+                  # Skip combinations that fail
+                })
+              }
+            }
+          }
+        }
+        
+        # Use the best model found
+        if (!is.null(best_model)) {
+          reduced_model <- best_model
+          top_predictors <- best_predictors
+          
+          cat("\n--- Final Selected Model ---\n")
+          cat("Selected predictors:", paste(best_predictors, collapse = ", "), "\n")
+          cat("Model ROC:", round(best_roc, 3), "\n")
+          cat("All coefficients correct direction:", ifelse(best_directions_correct, "✓ Yes", "✗ No"), "\n")
+          
+          # Show final coefficients
+          final_coefs <- summary(best_model$finalModel)$coefficients
+          cat("\nFinal model coefficients:\n")
+          for (var in best_predictors) {
+            if (var %in% rownames(final_coefs)) {
+              coef_value <- final_coefs[var, "Estimate"]
+              coef_pvalue <- final_coefs[var, "Pr(>|z|)"]
+              direction_ok <- ""
+              if (var %in% expected_positive_vars) {
+                direction_ok <- ifelse(coef_value > 0, "✓", "✗")
+              } else if (var %in% expected_negative_vars) {
+                direction_ok <- ifelse(coef_value < 0, "✓", "✗")
+              }
+              cat(sprintf("  %s %s: coef=%.4f, p=%.4f\n", direction_ok, var, coef_value, coef_pvalue))
+            }
+          }
+        } else {
+          cat("No valid model found - keeping original\n")
+        }
+        
+      }, error = function(e) {
+        cat("Error in alpine breakthrough coefficient validation:", e$message, "\n")
+      })
     } else {
       warning("Too few predictors for reduced model")
       reduced_model <- logistic_model
@@ -4561,7 +4747,8 @@ evaluate_breakthrough_predictors <- function(df, predictors) {
 cat("\n--- Breakthrough Predictor Setup ---\n")
 
 tryCatch({
-  # Extract previous season features and age for men
+  # Extract previous season features and age for men 
+  
   men_prev_features <- names(train_men)[grep("^Prev_", names(train_men))]
   breakthrough_predictors_men <- c(men_prev_features, "Age")
   breakthrough_predictors_men <- breakthrough_predictors_men[!is.na(breakthrough_predictors_men)]
@@ -5324,7 +5511,9 @@ genuine_breakthroughs_men <- train_men %>%
   mutate(
     ever_above_20 = any(Pct_of_Max_Points >= 0.2),
     first_season = min(Season),
-    early_performance = ifelse(Season <= first_season + 1, Pct_of_Max_Points, NA),
+    first_breakthrough_season = min(Season[Pct_of_Max_Points > 0.2]),
+    # Only consider seasons BEFORE the breakthrough as "early" for comparison
+    early_performance = ifelse(Season < first_breakthrough_season, Pct_of_Max_Points, NA),
     max_early_performance = max(early_performance, na.rm = TRUE)
   ) %>%
   filter(
@@ -5390,7 +5579,9 @@ genuine_breakthroughs_ladies <- train_ladies %>%
   mutate(
     ever_above_20 = any(Pct_of_Max_Points >= 0.2),
     first_season = min(Season),
-    early_performance = ifelse(Season <= first_season + 1, Pct_of_Max_Points, NA),
+    first_breakthrough_season = min(Season[Pct_of_Max_Points > 0.2]),
+    # Only consider seasons BEFORE the breakthrough as "early" for comparison
+    early_performance = ifelse(Season < first_breakthrough_season, Pct_of_Max_Points, NA),
     max_early_performance = max(early_performance, na.rm = TRUE)
   ) %>%
   filter(

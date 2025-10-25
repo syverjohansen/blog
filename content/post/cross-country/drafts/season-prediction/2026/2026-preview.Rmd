@@ -1474,6 +1474,113 @@ if (!ladies_feature_check) {
   warning(sprintf("Some final ladies features not in training data: %s", paste(missing_ladies_features, collapse = ", ")))
 }
 
+# Add coefficient direction validation for selected features
+cat("\n=== COEFFICIENT DIRECTION VALIDATION ===\n")
+
+# Validate men's features
+if (length(final_features_men) > 0) {
+  cat("\n--- Men's Feature Coefficient Validation ---\n")
+  tryCatch({
+    # Train a simple model to check coefficient directions
+    men_validation_formula <- as.formula(paste("Pct_of_Max_Points ~", paste(final_features_men, collapse = " + ")))
+    men_validation_model <- lm(men_validation_formula, data = train_men)
+    men_coefs <- summary(men_validation_model)$coefficients
+    
+    # Expected positive coefficients for performance prediction
+    expected_positive <- c("Prev_Pelo", "Prev_Distance", "Prev_Distance_C", "Prev_Distance_F", 
+                          "Prev_Sprint", "Prev_Sprint_C", "Prev_Sprint_F", "Prev_C", "Prev_F",
+                          "Prev_Pct_of_Max_Points")
+    expected_negative <- c("Age")  # Older athletes may have declining performance
+    
+    cat("=== DEBUG: Predictor Values Used ===\n")
+    for (var in final_features_men) {
+      if (var %in% names(train_men)) {
+        vals <- train_men[[var]]
+        cat(sprintf("%s: min=%.3f, max=%.3f, mean=%.3f, na_count=%d\n", 
+                   var, min(vals, na.rm=TRUE), max(vals, na.rm=TRUE), 
+                   mean(vals, na.rm=TRUE), sum(is.na(vals))))
+      }
+    }
+    
+    for (var in final_features_men) {
+      if (var %in% rownames(men_coefs)) {
+        coef_value <- men_coefs[var, "Estimate"]
+        coef_pvalue <- men_coefs[var, "Pr(>|t|)"]
+        
+        if (var %in% expected_positive && coef_value < 0) {
+          cat("⚠️  WARNING:", var, "has negative coefficient (", round(coef_value, 4), ") - unexpected for performance prediction\n")
+        } else if (var %in% expected_positive && coef_value > 0) {
+          cat("✓", var, "has positive coefficient (", round(coef_value, 4), ") - logical for performance prediction\n")
+        } else if (var %in% expected_negative && coef_value < 0) {
+          cat("✓", var, "has negative coefficient (", round(coef_value, 4), ") - logical for performance prediction\n")
+        } else if (var %in% expected_negative && coef_value > 0) {
+          cat("⚠️  WARNING:", var, "has positive coefficient (", round(coef_value, 4), ") - unexpected for performance prediction\n")
+        } else {
+          cat("?", var, "has coefficient (", round(coef_value, 4), ") - direction not specified\n")
+        }
+        
+        if (coef_pvalue > 0.05) {
+          cat("  NOTE:", var, "p-value =", round(coef_pvalue, 4), "(not significant at 0.05 level)\n")
+        }
+      }
+    }
+  }, error = function(e) {
+    cat("Error in men's coefficient validation:", e$message, "\n")
+  })
+}
+
+# Validate ladies features
+if (length(final_features_ladies) > 0) {
+  cat("\n--- Ladies Feature Coefficient Validation ---\n")
+  tryCatch({
+    # Train a simple model to check coefficient directions
+    ladies_validation_formula <- as.formula(paste("Pct_of_Max_Points ~", paste(final_features_ladies, collapse = " + ")))
+    ladies_validation_model <- lm(ladies_validation_formula, data = train_ladies)
+    ladies_coefs <- summary(ladies_validation_model)$coefficients
+    
+    # Expected positive coefficients for performance prediction
+    expected_positive <- c("Prev_Pelo", "Prev_Distance", "Prev_Distance_C", "Prev_Distance_F", 
+                          "Prev_Sprint", "Prev_Sprint_C", "Prev_Sprint_F", "Prev_C", "Prev_F",
+                          "Prev_Pct_of_Max_Points")
+    expected_negative <- c("Age")  # Older athletes may have declining performance
+    
+    cat("=== DEBUG: Predictor Values Used ===\n")
+    for (var in final_features_ladies) {
+      if (var %in% names(train_ladies)) {
+        vals <- train_ladies[[var]]
+        cat(sprintf("%s: min=%.3f, max=%.3f, mean=%.3f, na_count=%d\n", 
+                   var, min(vals, na.rm=TRUE), max(vals, na.rm=TRUE), 
+                   mean(vals, na.rm=TRUE), sum(is.na(vals))))
+      }
+    }
+    
+    for (var in final_features_ladies) {
+      if (var %in% rownames(ladies_coefs)) {
+        coef_value <- ladies_coefs[var, "Estimate"]
+        coef_pvalue <- ladies_coefs[var, "Pr(>|t|)"]
+        
+        if (var %in% expected_positive && coef_value < 0) {
+          cat("⚠️  WARNING:", var, "has negative coefficient (", round(coef_value, 4), ") - unexpected for performance prediction\n")
+        } else if (var %in% expected_positive && coef_value > 0) {
+          cat("✓", var, "has positive coefficient (", round(coef_value, 4), ") - logical for performance prediction\n")
+        } else if (var %in% expected_negative && coef_value < 0) {
+          cat("✓", var, "has negative coefficient (", round(coef_value, 4), ") - logical for performance prediction\n")
+        } else if (var %in% expected_negative && coef_value > 0) {
+          cat("⚠️  WARNING:", var, "has positive coefficient (", round(coef_value, 4), ") - unexpected for performance prediction\n")
+        } else {
+          cat("?", var, "has coefficient (", round(coef_value, 4), ") - direction not specified\n")
+        }
+        
+        if (coef_pvalue > 0.05) {
+          cat("  NOTE:", var, "p-value =", round(coef_pvalue, 4), "(not significant at 0.05 level)\n")
+        }
+      }
+    }
+  }, error = function(e) {
+    cat("Error in ladies coefficient validation:", e$message, "\n")
+  })
+}
+
 cat(sprintf("\nFeature selection complete: Men %d features, Ladies %d features\n", 
             length(final_features_men), length(final_features_ladies)))
 ```
@@ -3058,6 +3165,101 @@ if (successful_ladies_targets == 0) {
 
 # Maintain backwards compatibility
 best_features_odds <- best_features_odds_men
+
+# Add coefficient direction validation for odds models
+cat("\n=== ODDS MODELS COEFFICIENT VALIDATION ===\n")
+
+# Expected positive coefficients for odds prediction (higher ELO/performance = higher win probability)
+expected_positive <- c("Prev_Pelo", "Prev_Distance", "Prev_Distance_C", "Prev_Distance_F", 
+                      "Prev_Sprint", "Prev_Sprint_C", "Prev_Sprint_F", "Prev_C", "Prev_F",
+                      "Prev_Pct_of_Max_Points")
+expected_negative <- c("Age")  # Age effects may vary
+
+# Validate men's odds models
+cat("\n--- Men's Odds Models Coefficient Validation ---\n")
+for (target in names(best_features_odds_men)) {
+  result <- best_features_odds_men[[target]]
+  if (length(result$features) > 0 && !is.null(result$model)) {
+    cat(sprintf("\n%s model:\n", target))
+    tryCatch({
+      model_coefs <- summary(result$model)$coefficients
+      
+      cat("=== DEBUG: Predictor Values Used ===\n")
+      for (var in result$features) {
+        if (var %in% names(df_place)) {
+          vals <- df_place[[var]]
+          cat(sprintf("%s: min=%.3f, max=%.3f, mean=%.3f, na_count=%d\n", 
+                     var, min(vals, na.rm=TRUE), max(vals, na.rm=TRUE), 
+                     mean(vals, na.rm=TRUE), sum(is.na(vals))))
+        }
+      }
+      
+      for (var in result$features) {
+        if (var %in% rownames(model_coefs)) {
+          coef_value <- model_coefs[var, "Estimate"]
+          coef_pvalue <- model_coefs[var, "Pr(>|z|)"]
+          
+          if (var %in% expected_positive && coef_value < 0) {
+            cat("  ⚠️  WARNING:", var, "has negative coefficient (", round(coef_value, 4), ") - unexpected for odds prediction\n")
+          } else if (var %in% expected_positive && coef_value > 0) {
+            cat("  ✓", var, "has positive coefficient (", round(coef_value, 4), ") - logical for odds prediction\n")
+          } else {
+            cat("  ?", var, "has coefficient (", round(coef_value, 4), ") - direction not specified\n")
+          }
+          
+          if (coef_pvalue > 0.05) {
+            cat("    NOTE:", var, "p-value =", round(coef_pvalue, 4), "(not significant at 0.05 level)\n")
+          }
+        }
+      }
+    }, error = function(e) {
+      cat("  Error validating", target, "coefficients:", e$message, "\n")
+    })
+  }
+}
+
+# Validate ladies odds models
+cat("\n--- Ladies Odds Models Coefficient Validation ---\n")
+for (target in names(best_features_odds_ladies)) {
+  result <- best_features_odds_ladies[[target]]
+  if (length(result$features) > 0 && !is.null(result$model)) {
+    cat(sprintf("\n%s model:\n", target))
+    tryCatch({
+      model_coefs <- summary(result$model)$coefficients
+      
+      cat("=== DEBUG: Predictor Values Used ===\n")
+      for (var in result$features) {
+        if (var %in% names(df_place_ladies)) {
+          vals <- df_place_ladies[[var]]
+          cat(sprintf("%s: min=%.3f, max=%.3f, mean=%.3f, na_count=%d\n", 
+                     var, min(vals, na.rm=TRUE), max(vals, na.rm=TRUE), 
+                     mean(vals, na.rm=TRUE), sum(is.na(vals))))
+        }
+      }
+      
+      for (var in result$features) {
+        if (var %in% rownames(model_coefs)) {
+          coef_value <- model_coefs[var, "Estimate"]
+          coef_pvalue <- model_coefs[var, "Pr(>|z|)"]
+          
+          if (var %in% expected_positive && coef_value < 0) {
+            cat("  ⚠️  WARNING:", var, "has negative coefficient (", round(coef_value, 4), ") - unexpected for odds prediction\n")
+          } else if (var %in% expected_positive && coef_value > 0) {
+            cat("  ✓", var, "has positive coefficient (", round(coef_value, 4), ") - logical for odds prediction\n")
+          } else {
+            cat("  ?", var, "has coefficient (", round(coef_value, 4), ") - direction not specified\n")
+          }
+          
+          if (coef_pvalue > 0.05) {
+            cat("    NOTE:", var, "p-value =", round(coef_pvalue, 4), "(not significant at 0.05 level)\n")
+          }
+        }
+      }
+    }, error = function(e) {
+      cat("  Error validating", target, "coefficients:", e$message, "\n")
+    })
+  }
+}
 
 cat("\n✓ Feature selection for odds models completed\n")
 
@@ -4895,6 +5097,180 @@ evaluate_breakthrough_predictors <- function(df, predictors) {
     reduced_roc <- max(reduced_model$results$ROC, na.rm = TRUE)
     cat("✓ Reduced model trained successfully - ROC:", round(reduced_roc, 3), "\n")
     
+    # Add coefficient direction validation for breakthrough prediction
+    cat("\n--- Breakthrough Model Coefficient Validation ---\n")
+    tryCatch({
+      # Get logistic regression coefficients
+      logistic_coefs <- summary(reduced_model$finalModel)$coefficients
+      
+      # Expected positive coefficients for breakthrough prediction (cross-country specific)
+      expected_positive_vars <- c("Prev_Pelo", "Prev_Distance", "Prev_Distance_C", "Prev_Distance_F", 
+                                  "Prev_Sprint", "Prev_Sprint_C", "Prev_Sprint_F", "Prev_C", "Prev_F",
+                                  "Prev_Pct_of_Max_Points")
+      expected_negative_vars <- c("Age")  # Younger athletes more likely to breakthrough
+      
+      cat("=== DEBUG: Predictor Values Used ===\n")
+      for (var in top_predictors) {
+        if (var %in% names(model_data)) {
+          vals <- model_data[[var]]
+          cat(sprintf("%s: min=%.3f, max=%.3f, mean=%.3f, na_count=%d\n", 
+                     var, min(vals, na.rm=TRUE), max(vals, na.rm=TRUE), 
+                     mean(vals, na.rm=TRUE), sum(is.na(vals))))
+        }
+      }
+      
+      # Check coefficient directions
+      for (var in top_predictors) {
+        if (var %in% rownames(logistic_coefs)) {
+          coef_value <- logistic_coefs[var, "Estimate"]
+          coef_pvalue <- logistic_coefs[var, "Pr(>|z|)"]
+          
+          # Check if coefficient direction matches expectation
+          if (var %in% expected_positive_vars) {
+            if (coef_value > 0) {
+              cat("✓", var, "has positive coefficient (", round(coef_value, 4), ") - VALID for breakthrough prediction\n")
+            } else {
+              cat("⚠️  WARNING:", var, "has negative coefficient (", round(coef_value, 4), ") - unexpected for breakthrough prediction\n")
+            }
+          } else if (var %in% expected_negative_vars) {
+            if (coef_value < 0) {
+              cat("✓", var, "has negative coefficient (", round(coef_value, 4), ") - VALID for breakthrough prediction\n")
+            } else {
+              cat("⚠️  WARNING:", var, "has positive coefficient (", round(coef_value, 4), ") - unexpected for breakthrough prediction\n")
+            }
+          } else {
+            # For other variables, include regardless of direction but note it
+            cat("?", var, "has coefficient (", round(coef_value, 4), ") - included (direction not specified)\n")
+          }
+          
+          # Also check statistical significance
+          if (coef_pvalue > 0.1) {
+            cat("  NOTE:", var, "p-value =", round(coef_pvalue, 4), "(not significant at 0.1 level)\n")
+          }
+        }
+      }
+      
+      
+      # Implement intelligent model selection to find best model with correct coefficient directions
+      cat("\n--- Intelligent Model Selection for Correct Coefficient Directions ---\n")
+      
+      # Define core predictors we want to prioritize
+      core_predictors <- c("Age", "Prev_Pct_of_Max_Points")
+      available_predictors <- intersect(top_predictors, names(model_data))
+      
+      # Function to check if all coefficients have correct directions
+      check_coefficient_directions <- function(model_coefs, predictors_used) {
+        all_correct <- TRUE
+        for (var in predictors_used) {
+          if (var %in% rownames(model_coefs)) {
+            coef_value <- model_coefs[var, "Estimate"]
+            if (var %in% expected_positive_vars && coef_value <= 0) {
+              all_correct <- FALSE
+            } else if (var %in% expected_negative_vars && coef_value >= 0) {
+              all_correct <- FALSE
+            }
+          }
+        }
+        return(all_correct)
+      }
+      
+      best_model <- NULL
+      best_predictors <- NULL
+      best_roc <- 0
+      best_directions_correct <- FALSE
+      
+      # Try different combinations, starting with simpler models
+      for (n_predictors in 2:min(6, length(available_predictors))) {
+        # Always include Age if available
+        if ("Age" %in% available_predictors) {
+          remaining_predictors <- setdiff(available_predictors, "Age")
+          
+          # Try combinations that include Age
+          if (n_predictors > 1 && length(remaining_predictors) >= (n_predictors - 1)) {
+            combinations <- combn(remaining_predictors, n_predictors - 1, simplify = FALSE)
+            
+            for (combo in combinations[1:min(20, length(combinations))]) {  # Limit to 20 combinations
+              test_predictors <- c("Age", combo)
+              
+              tryCatch({
+                test_formula <- as.formula(paste("Will_Breakthrough ~", paste(test_predictors, collapse = " + ")))
+                
+                test_model <- train(
+                  test_formula,
+                  data = model_data,
+                  method = "glm",
+                  family = "binomial",
+                  trControl = ctrl,
+                  metric = "ROC"
+                )
+                
+                test_roc <- max(test_model$results$ROC, na.rm = TRUE)
+                test_coefs <- summary(test_model$finalModel)$coefficients
+                directions_correct <- check_coefficient_directions(test_coefs, test_predictors)
+                
+                # Prioritize models with correct directions, then by ROC
+                is_better <- FALSE
+                if (directions_correct && !best_directions_correct) {
+                  is_better <- TRUE  # First model with correct directions
+                } else if (directions_correct && best_directions_correct && test_roc > best_roc) {
+                  is_better <- TRUE  # Better ROC among models with correct directions
+                } else if (!directions_correct && !best_directions_correct && test_roc > best_roc) {
+                  is_better <- TRUE  # Better ROC when no good directions found yet
+                }
+                
+                if (is_better) {
+                  best_model <- test_model
+                  best_predictors <- test_predictors
+                  best_roc <- test_roc
+                  best_directions_correct <- directions_correct
+                  
+                  cat("New best model found:", paste(test_predictors, collapse = ", "), 
+                      "ROC:", round(test_roc, 3), 
+                      "Directions:", ifelse(directions_correct, "✓ Correct", "✗ Wrong"), "\n")
+                }
+                
+              }, error = function(e) {
+                # Skip combinations that fail
+              })
+            }
+          }
+        }
+      }
+      
+      # Use the best model found
+      if (!is.null(best_model)) {
+        reduced_model <- best_model
+        top_predictors <- best_predictors
+        
+        cat("\n--- Final Selected Model ---\n")
+        cat("Selected predictors:", paste(best_predictors, collapse = ", "), "\n")
+        cat("Model ROC:", round(best_roc, 3), "\n")
+        cat("All coefficients correct direction:", ifelse(best_directions_correct, "✓ Yes", "✗ No"), "\n")
+        
+        # Show final coefficients
+        final_coefs <- summary(best_model$finalModel)$coefficients
+        cat("\nFinal model coefficients:\n")
+        for (var in best_predictors) {
+          if (var %in% rownames(final_coefs)) {
+            coef_value <- final_coefs[var, "Estimate"]
+            coef_pvalue <- final_coefs[var, "Pr(>|z|)"]
+            direction_ok <- ""
+            if (var %in% expected_positive_vars) {
+              direction_ok <- ifelse(coef_value > 0, "✓", "✗")
+            } else if (var %in% expected_negative_vars) {
+              direction_ok <- ifelse(coef_value < 0, "✓", "✗")
+            }
+            cat(sprintf("  %s %s: coef=%.4f, p=%.4f\n", direction_ok, var, coef_value, coef_pvalue))
+          }
+        }
+      } else {
+        cat("No valid model found - keeping original\n")
+      }
+      
+    }, error = function(e) {
+      cat("Error in breakthrough coefficient validation:", e$message, "\n")
+    })
+    
   }, error = function(e) {
     stop("Error training reduced model: ", e$message)
   })
@@ -5820,8 +6196,9 @@ genuine_breakthroughs_men <- train_men %>%
   arrange(Season) %>%
   mutate(
     ever_above_50 = any(Pct_of_Max_Points > 0.5),
-    first_season = min(Season),
-    early_performance = ifelse(Season <= first_season + 1, Pct_of_Max_Points, NA),
+    first_breakthrough_season = min(Season[Pct_of_Max_Points > 0.5]),
+    # Only consider seasons BEFORE the breakthrough as "early" for comparison
+    early_performance = ifelse(Season < first_breakthrough_season, Pct_of_Max_Points, NA),
     max_early_performance = max(early_performance, na.rm = TRUE)
   ) %>%
   filter(
@@ -5889,8 +6266,9 @@ genuine_breakthroughs_ladies <- train_ladies %>%
   arrange(Season) %>%
   mutate(
     ever_above_50 = any(Pct_of_Max_Points > 0.5),
-    first_season = min(Season),
-    early_performance = ifelse(Season <= first_season + 1, Pct_of_Max_Points, NA),
+    first_breakthrough_season = min(Season[Pct_of_Max_Points > 0.5]),
+    # Only consider seasons BEFORE the breakthrough as "early" for comparison
+    early_performance = ifelse(Season < first_breakthrough_season, Pct_of_Max_Points, NA),
     max_early_performance = max(early_performance, na.rm = TRUE)
   ) %>%
   filter(

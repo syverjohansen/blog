@@ -1,0 +1,269 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Name",
+    "Nation",
+    "Age",
+    "Pct Max Points",
+    "Breakthrough Prob",
+    "Likelihood"
+  ],
+  "rows": [
+    [
+      "Campbell Wright",
+      "USA",
+      22.8281998631075,
+      25.3,
+      50.1,
+      "High"
+    ],
+    [
+      "Niklas Hartweg",
+      "Switzerland",
+      25.0595482546201,
+      24.2,
+      40.3,
+      "High"
+    ],
+    [
+      "Martin Uldal",
+      "Norway",
+      23.8329911019849,
+      33.3,
+      39.4,
+      "Moderate"
+    ],
+    [
+      "Vebjørn Sørum",
+      "Norway",
+      26.6146475017112,
+      36.2,
+      20.6,
+      "Moderate"
+    ],
+    [
+      "Isak Frey",
+      "Norway",
+      21.5687885010267,
+      10.7,
+      18.0,
+      "Low"
+    ],
+    [
+      "Vitezslav Hornig",
+      "Czechia",
+      25.9082819986311,
+      21.7,
+      11.8,
+      "Low"
+    ],
+    [
+      "Emilien Claude",
+      "France",
+      25.7768651608487,
+      21.5,
+      10.5,
+      "Low"
+    ],
+    [
+      "Justus Strelow",
+      "Germany",
+      28.227241615332,
+      25.3,
+      9.5,
+      "Very Low"
+    ],
+    [
+      "Vitalii Mandzyn",
+      "Ukraine",
+      21.9603011635866,
+      12.8,
+      4.5,
+      "Very Low"
+    ],
+    [
+      "Tero Seppälä",
+      "Finland",
+      29.1581108829569,
+      15.1,
+      3.3,
+      "Very Low"
+    ],
+    [
+      "Victor Brandt",
+      "Sweden",
+      25.7084188911704,
+      8.4,
+      2.4,
+      "Very Low"
+    ],
+    [
+      "Oscar Lombardot",
+      "France",
+      24.911704312115,
+      5.7,
+      1.9,
+      "Very Low"
+    ],
+    [
+      "Tomas Mikyska",
+      "Czechia",
+      25.1334702258727,
+      1.5,
+      0.9,
+      "Very Low"
+    ],
+    [
+      "Danilo Riethmueller",
+      "Germany",
+      25.3579739904175,
+      15.8,
+      0.8,
+      "Very Low"
+    ],
+    [
+      "Blagoy Todev",
+      "Bulgaria",
+      23.7891854893908,
+      3.8,
+      0.7,
+      "Very Low"
+    ],
+    [
+      "David Zobel",
+      "Germany",
+      28.7775496235455,
+      3.6,
+      0.5,
+      "Very Low"
+    ],
+    [
+      "Maxime Germain",
+      "USA",
+      23.5838466803559,
+      3.4,
+      0.4,
+      "Very Low"
+    ],
+    [
+      "Didier Bionaz",
+      "Italy",
+      25.0349075975359,
+      5.8,
+      0.3,
+      "Very Low"
+    ],
+    [
+      "Felix Leitner",
+      "Austria",
+      28.2190280629706,
+      2.1,
+      0.3,
+      "Very Low"
+    ],
+    [
+      "Joscha Burkhalter",
+      "Switzerland",
+      28.6926762491444,
+      9.0,
+      0.2,
+      "Very Low"
+    ],
+    [
+      "Otto Invenius",
+      "Finland",
+      24.2819986310746,
+      5.0,
+      0.2,
+      "Very Low"
+    ],
+    [
+      "Sebastian Stalder",
+      "Switzerland",
+      27.170431211499,
+      6.6,
+      0.2,
+      "Very Low"
+    ],
+    [
+      "Simon Kaiser",
+      "Germany",
+      25.6728268309377,
+      1.2,
+      0.2,
+      "Very Low"
+    ],
+    [
+      "Anton Dudchenko",
+      "Ukraine",
+      28.2600958247776,
+      10.0,
+      0.2,
+      "Very Low"
+    ],
+    [
+      "Jan Gunka",
+      "Poland",
+      22.9377138945927,
+      2.4,
+      0.2,
+      "Very Low"
+    ],
+    [
+      "Lovro Planko",
+      "Slovenia",
+      23.8165639972622,
+      1.3,
+      0.1,
+      "Very Low"
+    ],
+    [
+      "Adam Runnalls",
+      "Canada",
+      26.4421629021218,
+      2.1,
+      0.1,
+      "Very Low"
+    ],
+    [
+      "Emil Nykvist",
+      "Sweden",
+      27.9890485968515,
+      1.8,
+      0.1,
+      "Very Low"
+    ],
+    [
+      "Jonas Marecek",
+      "Czechia",
+      24.1013004791239,
+      5.8,
+      0.1,
+      "Very Low"
+    ],
+    [
+      "Daniele Cappellari",
+      "Italy",
+      27.9863107460643,
+      2.3,
+      0.1,
+      "Very Low"
+    ],
+    [
+      "Dmitrii Shamaev",
+      "Romania",
+      29.7248459958932,
+      3.2,
+      0.0,
+      "Very Low"
+    ],
+    [
+      "Jaakko Ranta",
+      "Finland",
+      27.5947980835044,
+      1.1,
+      0.0,
+      "Very Low"
+    ]
+  ]
+}

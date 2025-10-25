@@ -45,41 +45,22 @@ get_season_dates() {
         return 1
     fi
     
-    # Use awk to find first and last race dates (excluding offseason/race 0)
-    local dates=$(awk -F',' '
-        BEGIN { 
-            first_date = ""
-            last_date = ""
-            date_col = 0
-            race_col = 0
-        }
-        NR==1 {
-            for(i=1; i<=NF; i++) {
-                gsub(/^[ \t]+|[ \t]+$/, "", $i)
-                if($i == "Date") date_col = i
-                if($i == "Race") race_col = i
-            }
-        }
-        NR>1 && date_col && race_col {
-            gsub(/^[ \t]+|[ \t]+$/, "", $date_col)
-            gsub(/^[ \t]+|[ \t]+$/, "", $race_col)
-            
-            # Skip offseason races (race number 0)
-            if($race_col != "0" && $race_col != 0) {
-                if(first_date == "" || $date_col < first_date) {
-                    first_date = $date_col
-                }
-                if(last_date == "" || $date_col > last_date) {
-                    last_date = $date_col
-                }
-            }
-        }
-        END {
-            if(first_date != "" && last_date != "") {
-                print first_date "|" last_date
-            }
-        }
-    ' "$races_csv" 2>/dev/null)
+    # Find the earliest and latest dates from the Date column
+    # Convert MM/DD/YYYY to YYYY-MM-DD for proper sorting, then convert back
+    local first_date=$(tail -n +2 "$races_csv" 2>/dev/null | awk -F',' '{
+        split($1, d, "/")
+        printf "%04d-%02d-%02d %s\n", d[3], d[1], d[2], $1
+    }' | sort | head -1 | awk '{print $2}')
+    
+    local last_date=$(tail -n +2 "$races_csv" 2>/dev/null | awk -F',' '{
+        split($1, d, "/")
+        printf "%04d-%02d-%02d %s\n", d[3], d[1], d[2], $1
+    }' | sort | tail -1 | awk '{print $2}')
+    
+    local dates=""
+    if [[ -n "$first_date" && -n "$last_date" ]]; then
+        dates="$first_date|$last_date"
+    fi
     
     if [[ -n "$dates" ]]; then
         echo "$dates"
@@ -97,9 +78,9 @@ convert_date_format() {
         local day="${BASH_REMATCH[2]}"
         local year="${BASH_REMATCH[3]}"
         
-        # Add leading zeros if needed
-        month=$(printf "%02d" "$month")
-        day=$(printf "%02d" "$day")
+        # Add leading zeros if needed (remove leading zeros first to avoid octal interpretation)
+        month=$(printf "%02d" "$((10#$month))")
+        day=$(printf "%02d" "$((10#$day))")
         
         echo "$year-$month-$day"
         return 0
@@ -163,13 +144,13 @@ get_overall_season() {
     local overall_first=""
     local overall_last=""
     
-    log_message "Determining overall season dates..."
+    log_message "Determining overall season dates..." >&2
     
     for sport in "${sports[@]}"; do
         local dates=$(get_season_dates "$sport")
         if [[ $? -eq 0 && -n "$dates" ]]; then
             IFS='|' read -r first_date last_date <<< "$dates"
-            log_message "  $sport: $first_date to $last_date"
+            log_message "  $sport: $first_date to $last_date" >&2
             
             # Convert to comparable format
             local first_iso=$(convert_date_format "$first_date")
@@ -187,16 +168,16 @@ get_overall_season() {
                 fi
             fi
         else
-            log_message "  $sport: No valid season dates found"
+            log_message "  $sport: No valid season dates found" >&2
         fi
     done
     
     if [[ -n "$overall_first" && -n "$overall_last" ]]; then
-        log_message "Overall season: $overall_first to $overall_last"
+        log_message "Overall season: $overall_first to $overall_last" >&2
         echo "$overall_first|$overall_last"
         return 0
     else
-        log_message "Error: Could not determine overall season dates"
+        log_message "Error: Could not determine overall season dates" >&2
         return 1
     fi
 }
@@ -208,24 +189,9 @@ has_races_today() {
     for sport in "${sports[@]}"; do
         local races_csv="$SKI_DIR/$sport/polars/excel365/races.csv"
         if [[ -f "$races_csv" ]]; then
-            # Check if today's date exists in the races CSV
+            # Check if today's date exists in the races CSV (comma-separated)
             if awk -F',' -v date="$TODAY_MMDDYYYY" '
-                NR==1 {
-                    for(i=1; i<=NF; i++) {
-                        gsub(/^[ \t]+|[ \t]+$/, "", $i)
-                        if($i == "Date") {
-                            date_col = i
-                            break
-                        }
-                    }
-                }
-                NR>1 && date_col {
-                    gsub(/^[ \t]+|[ \t]+$/, "", $date_col)
-                    if($date_col == date) {
-                        found=1
-                        exit
-                    }
-                }
+                NR>1 && $1 == date {found=1; exit}
                 END { exit !found }
             ' "$races_csv" 2>/dev/null; then
                 log_message "Found races today for $sport"
@@ -293,9 +259,9 @@ log_message "Season period: $season_start to $season_end"
 # Check if we're in season  
 # Convert YYYY-MM-DD to MM/DD/YYYY format
 season_start_mmdd="${season_start#*-}"
-season_start_mmdd="${season_start_mmdd#*-}/${season_start_mmdd%-*}/${season_start%-*-*}"
+season_start_mmdd="${season_start_mmdd%-*}/${season_start_mmdd#*-}/${season_start%-*-*}"
 season_end_mmdd="${season_end#*-}"  
-season_end_mmdd="${season_end_mmdd#*-}/${season_end_mmdd%-*}/${season_end%-*-*}"
+season_end_mmdd="${season_end_mmdd%-*}/${season_end_mmdd#*-}/${season_end%-*-*}"
 
 if ! is_in_season "$season_start_mmdd" "$season_end_mmdd"; then
     log_message "Currently outside of racing season. No scripts will be executed."

@@ -1,0 +1,109 @@
+[2025-10-25 01:54:20 GMT] =======================================
+[2025-10-25 01:54:20 GMT] Starting prediction script for October 25, 2025
+[2025-10-25 01:54:20 GMT] =======================================
+[2025-10-25 01:54:20 GMT] Date formats:
+[2025-10-25 01:54:20 GMT]   MM/DD/YYYY: 10/25/2025
+[2025-10-25 01:54:20 GMT]   YYYYMMDD: 20251025
+[2025-10-25 01:54:20 GMT]   Display: October 25, 2025
+[2025-10-25 01:54:20 GMT] =======================================
+[2025-10-25 01:54:20 GMT] Checking base directories:
+[2025-10-25 01:54:20 GMT]   BLOG_DIR: /Users/syverjohansen/blog/daehl-e (exists: yes)
+[2025-10-25 01:54:20 GMT]   SKI_DIR: /Users/syverjohansen/ski/elo/python (exists: yes)
+[2025-10-25 01:54:20 GMT]   CONTENT_DIR: /Users/syverjohansen/blog/daehl-e/content/post (exists: yes)
+[2025-10-25 01:54:20 GMT] =======================================
+[2025-10-25 01:54:20 GMT] Processing sports for predictions
+[2025-10-25 01:54:20 GMT] =======================================
+[2025-10-25 01:54:20 GMT] --- Starting alpine processing ---
+[2025-10-25 01:54:20 GMT] Processing sport: alpine -> alpine
+[2025-10-25 01:54:20 GMT] Checking directories for alpine:
+[2025-10-25 01:54:20 GMT]   Excel dir: /Users/syverjohansen/ski/elo/python/alpine/polars/excel365 (exists: yes)
+[2025-10-25 01:54:20 GMT]   Polars dir: /Users/syverjohansen/ski/elo/python/alpine/polars (exists: yes)
+[2025-10-25 01:54:20 GMT]   Weekends CSV: /Users/syverjohansen/ski/elo/python/alpine/polars/excel365/weekends.csv (exists: yes)
+[2025-10-25 01:54:20 GMT]   Races CSV: /Users/syverjohansen/ski/elo/python/alpine/polars/excel365/races.csv (exists: yes)
+[2025-10-25 01:54:20 GMT] Checking for date 10/25/2025 in /Users/syverjohansen/ski/elo/python/alpine/polars/excel365/weekends.csv
+[2025-10-25 01:54:20 GMT] ✓ Weekend races found for alpine on 10/25/2025
+[2025-10-25 01:54:20 GMT] Running startlist-scrape-weekend.py for alpine
+[2025-10-25 01:54:20 GMT] Completed startlist-scrape-weekend.py for alpine
+[2025-10-25 01:54:20 GMT] Processing weekend Excel files in /Users/syverjohansen/blog/daehl-e/content/post/alpine/drafts/weekly-picks/20251025
+[2025-10-25 01:54:20 GMT] Found        5 weekend Excel files to process
+[2025-10-25 01:54:20 GMT] Processing weekend Excel file: alpine_top_contenders.xlsx
+[2025-10-25 01:54:20 GMT] ✗ Error processing weekend alpine_top_contenders.xlsx
+[2025-10-25 01:54:20 GMT] Processing weekend Excel file: ladies_position_probabilities.xlsx
+[2025-10-25 01:54:20 GMT] ✗ Error processing weekend ladies_position_probabilities.xlsx
+[2025-10-25 01:54:20 GMT] Processing weekend Excel file: ladies.xlsx
+[2025-10-25 01:54:20 GMT] ✗ Error processing weekend ladies.xlsx
+[2025-10-25 01:54:20 GMT] Processing weekend Excel file: men_position_probabilities.xlsx
+[2025-10-25 01:54:21 GMT] ✗ Error processing weekend men_position_probabilities.xlsx
+[2025-10-25 01:54:21 GMT] Processing weekend Excel file: men.xlsx
+[2025-10-25 01:54:21 GMT] ✗ Error processing weekend men.xlsx
+[2025-10-25 01:54:21 GMT] Checking for date 10/25/2025 in /Users/syverjohansen/ski/elo/python/alpine/polars/excel365/races.csv
+[2025-10-25 01:54:21 GMT] ✓ Regular races found for alpine on 10/25/2025
+[2025-10-25 01:54:21 GMT] Running startlist-scrape-races.py for alpine
+[2025-10-25 01:54:21 GMT] Completed startlist-scrape-races.py for alpine
+[2025-10-25 01:54:21 GMT] Processing race Excel files in /Users/syverjohansen/blog/daehl-e/content/post/alpine/drafts/race-picks/20251025
+[2025-10-25 01:54:21 GMT] Found        3 race Excel files to process
+[2025-10-25 01:54:21 GMT] Processing race Excel file: alpine_top_contenders.xlsx
+[2025-10-25 01:54:21 GMT] ✗ Error processing race alpine_top_contenders.xlsx
+[2025-10-25 01:54:21 GMT] Processing race Excel file: ladies_position_probabilities.xlsx
+[2025-10-25 01:54:21 GMT] ✗ Error processing race ladies_position_probabilities.xlsx
+[2025-10-25 01:54:21 GMT] Processing race Excel file: ladies.xlsx
+[2025-10-25 01:54:21 GMT] ✗ Error processing race ladies.xlsx
+[2025-10-25 01:54:21 GMT] ✓ alpine returned prediction data: alpine:weekly-picks:true|alpine:race-picks:true
+[2025-10-25 01:54:21 GMT] Added prediction: alpine:weekly-picks:true
+[2025-10-25 01:54:21 GMT] Added prediction: alpine:race-picks:true
+[2025-10-25 01:54:21 GMT] --- Completed alpine processing ---
+[2025-10-25 01:54:21 GMT] 
+[2025-10-25 01:54:21 GMT] --- Starting biathlon processing ---
+[2025-10-25 01:54:21 GMT] Processing sport: biathlon -> biathlon
+[2025-10-25 01:54:21 GMT] Checking directories for biathlon:
+[2025-10-25 01:54:21 GMT]   Excel dir: /Users/syverjohansen/ski/elo/python/biathlon/polars/excel365 (exists: yes)
+[2025-10-25 01:54:21 GMT]   Polars dir: /Users/syverjohansen/ski/elo/python/biathlon/polars (exists: yes)
+[2025-10-25 01:54:21 GMT]   Weekends CSV: /Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/weekends.csv (exists: yes)
+[2025-10-25 01:54:21 GMT]   Races CSV: /Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/races.csv (exists: yes)
+[2025-10-25 01:54:21 GMT] Checking for date 10/25/2025 in /Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/weekends.csv
+[2025-10-25 01:54:21 GMT] ✗ No weekend races found for biathlon on 10/25/2025
+[2025-10-25 01:54:21 GMT] Checking for date 10/25/2025 in /Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/races.csv
+[2025-10-25 01:54:21 GMT] ✗ No regular races found for biathlon on 10/25/2025
+[2025-10-25 01:54:21 GMT] ✗ biathlon returned no prediction data
+[2025-10-25 01:54:21 GMT] --- Completed biathlon processing ---
+[2025-10-25 01:54:21 GMT] 
+[2025-10-25 01:54:21 GMT] --- Starting nordic-combined processing ---
+[2025-10-25 01:54:21 GMT] Processing sport: nordic-combined -> nordic-combined
+[2025-10-25 01:54:21 GMT] Checking directories for nordic-combined:
+[2025-10-25 01:54:21 GMT]   Excel dir: /Users/syverjohansen/ski/elo/python/nordic-combined/polars/excel365 (exists: yes)
+[2025-10-25 01:54:21 GMT]   Polars dir: /Users/syverjohansen/ski/elo/python/nordic-combined/polars (exists: yes)
+[2025-10-25 01:54:21 GMT]   Weekends CSV: /Users/syverjohansen/ski/elo/python/nordic-combined/polars/excel365/weekends.csv (exists: yes)
+[2025-10-25 01:54:21 GMT]   Races CSV: /Users/syverjohansen/ski/elo/python/nordic-combined/polars/excel365/races.csv (exists: yes)
+[2025-10-25 01:54:21 GMT] Checking for date 10/25/2025 in /Users/syverjohansen/ski/elo/python/nordic-combined/polars/excel365/weekends.csv
+[2025-10-25 01:54:21 GMT] ✗ No weekend races found for nordic-combined on 10/25/2025
+[2025-10-25 01:54:21 GMT] Checking for date 10/25/2025 in /Users/syverjohansen/ski/elo/python/nordic-combined/polars/excel365/races.csv
+[2025-10-25 01:54:21 GMT] ✗ No regular races found for nordic-combined on 10/25/2025
+[2025-10-25 01:54:21 GMT] ✗ nordic-combined returned no prediction data
+[2025-10-25 01:54:21 GMT] --- Completed nordic-combined processing ---
+[2025-10-25 01:54:21 GMT] 
+[2025-10-25 01:54:21 GMT] --- Starting ski processing ---
+[2025-10-25 01:54:21 GMT] Processing sport: ski -> cross-country
+[2025-10-25 01:54:21 GMT] Checking directories for ski:
+[2025-10-25 01:54:21 GMT]   Excel dir: /Users/syverjohansen/ski/elo/python/ski/polars/excel365 (exists: yes)
+[2025-10-25 01:54:22 GMT]   Polars dir: /Users/syverjohansen/ski/elo/python/ski/polars (exists: yes)
+[2025-10-25 01:54:22 GMT]   Weekends CSV: /Users/syverjohansen/ski/elo/python/ski/polars/excel365/weekends.csv (exists: yes)
+[2025-10-25 01:54:22 GMT]   Races CSV: /Users/syverjohansen/ski/elo/python/ski/polars/excel365/races.csv (exists: yes)
+[2025-10-25 01:54:22 GMT] Checking for date 10/25/2025 in /Users/syverjohansen/ski/elo/python/ski/polars/excel365/weekends.csv
+[2025-10-25 01:54:22 GMT] ✗ No weekend races found for ski on 10/25/2025
+[2025-10-25 01:54:22 GMT] Checking for date 10/25/2025 in /Users/syverjohansen/ski/elo/python/ski/polars/excel365/races.csv
+[2025-10-25 01:54:22 GMT] ✗ No regular races found for ski on 10/25/2025
+[2025-10-25 01:54:22 GMT] ✗ ski returned no prediction data
+[2025-10-25 01:54:22 GMT] --- Completed ski processing ---
+[2025-10-25 01:54:22 GMT] 
+[2025-10-25 01:54:22 GMT] --- Starting skijump processing ---
+[2025-10-25 01:54:22 GMT] Processing sport: skijump -> skijump
+[2025-10-25 01:54:22 GMT] Checking directories for skijump:
+[2025-10-25 01:54:22 GMT]   Excel dir: /Users/syverjohansen/ski/elo/python/skijump/polars/excel365 (exists: yes)
+[2025-10-25 01:54:22 GMT]   Polars dir: /Users/syverjohansen/ski/elo/python/skijump/polars (exists: yes)
+[2025-10-25 01:54:22 GMT]   Weekends CSV: /Users/syverjohansen/ski/elo/python/skijump/polars/excel365/weekends.csv (exists: yes)
+[2025-10-25 01:54:22 GMT]   Races CSV: /Users/syverjohansen/ski/elo/python/skijump/polars/excel365/races.csv (exists: yes)
+[2025-10-25 01:54:22 GMT] Checking for date 10/25/2025 in /Users/syverjohansen/ski/elo/python/skijump/polars/excel365/weekends.csv
+[2025-10-25 01:54:22 GMT] ✗ No weekend races found for skijump on 10/25/2025
+[2025-10-25 01:54:22 GMT] Checking for date 10/25/2025 in /Users/syverjohansen/ski/elo/python/skijump/polars/excel365/races.csv
+[2025-10-25 01:54:22 GMT] ✗ No regular races found for skijump on 10/25/2025
+[2025-10-25 01:54:22 GMT] ✗ skijump returned no prediction data

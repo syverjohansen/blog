@@ -4500,3 +4500,1948 @@ Odds framework handles alpine skiing's multi-discipline structure:
 - **Prediction Data Alignment**: Ensures feature name consistency between training and prediction data
 
 This alpine odds setup section establishes a robust framework for odds calculation that respects alpine skiing's competitive structure while providing comprehensive validation and error handling to ensure reliable odds modeling across multiple performance thresholds.
+## Section: {r non-ml-feat} - Alpine Feature Selection for Odds Models
+
+### Purpose
+This section performs exhaustive feature selection specifically for alpine skiing odds models, identifying optimal feature combinations for predicting categorical outcomes (Win, TopThree, Top5, Top10, Top30) using non-machine learning statistical approaches.
+
+### Alpine Feature Selection Framework
+
+#### 1. Library Loading and Data Validation
+```r
+# Load required libraries with validation
+cat("\n--- Library Loading ---\n")
+tryCatch({
+  library(leaps)
+  cat("✓ leaps library loaded\n")
+}, error = function(e) {
+  stop("Failed to load leaps library: ", e$message)
+})
+
+tryCatch({
+  library(caret)
+  cat("✓ caret library loaded\n")
+}, error = function(e) {
+  stop("Failed to load caret library: ", e$message)
+})
+```
+**Purpose**: Loads essential libraries for statistical feature selection. The `leaps` package provides exhaustive subset selection while `caret` offers model validation tools. Error handling ensures dependencies are available before proceeding.
+
+#### 2. Training Data Availability Validation
+```r
+# Validate input data availability
+if (\!exists("df_place") || \!exists("df_place_ladies")) {
+  stop("Training data with places not available - ensure odds-setup section completed successfully")
+}
+
+if (nrow(df_place) == 0) {
+  stop("Men's training data with places is empty")
+}
+if (nrow(df_place_ladies) == 0) {
+  stop("Ladies training data with places is empty")
+}
+
+cat(sprintf("Training data with outcomes: Men %d rows, Ladies %d rows\n", nrow(df_place), nrow(df_place_ladies)))
+```
+**Purpose**: Ensures that the categorical outcome data created in the `odds-setup` section is available and non-empty. This data contains the binary target variables (Win, TopThree, etc.) needed for logistic regression modeling.
+
+#### 3. Alpine Feature Definition and Validation
+```r
+# Define and validate features for alpine odds models
+features <- c("Prev_Pelo", "Prev_Downhill", "Prev_Super_G", "Prev_Giant_Slalom", 
+              "Prev_Slalom", "Prev_Combined", "Prev_Tech", "Prev_Speed", "Prev_Pct_of_Max_Points")
+
+# Check feature availability in training data
+men_available_features <- intersect(features, names(df_place))
+ladies_available_features <- intersect(features, names(df_place_ladies))
+
+cat(sprintf("Men's available alpine features: %d/%d\n", length(men_available_features), length(features)))
+cat(sprintf("Ladies available alpine features: %d/%d\n", length(ladies_available_features), length(features)))
+```
+**Purpose**: Defines the comprehensive set of alpine skiing predictor variables and validates their availability in the training datasets. These features include:
+- **Prev_Pelo**: Overall ELO rating from previous season
+- **Discipline-specific ratings**: Downhill, Super G, Giant Slalom, Slalom, Combined
+- **Category ratings**: Technical (Tech) and Speed discipline groupings
+- **Performance metric**: Percentage of maximum points achieved
+
+#### 4. Statistical Model Evaluation Function
+```r
+# Function to evaluate binary logistic model with validation
+evaluate_glm <- function(feature_set, data, target, gender_label = "Unknown") {
+  tryCatch({
+    # Validate inputs and check feature existence
+    if (length(feature_set) == 0) return(Inf)
+    
+    missing_features <- setdiff(feature_set, names(data))
+    if (length(missing_features) > 0) return(Inf)
+    
+    # Check target variable quality
+    if (\!target %in% names(data)) return(Inf)
+    
+    target_table <- table(data[[target]])
+    if (length(target_table) < 2 || any(target_table < 5)) {
+      return(Inf)  # Skip if insufficient observations per class
+    }
+    
+    # Build and evaluate logistic regression model
+    formula_str <- as.formula(paste(target, "~", paste(feature_set, collapse = " + ")))
+    model <- glm(formula_str, family = binomial, data = data)
+    
+    # Validate model convergence
+    if (\!model$converged) return(Inf)
+    
+    aic_value <- AIC(model)
+    if (\!is.finite(aic_value)) return(Inf)
+    
+    return(aic_value)
+  }, error = function(e) {
+    return(Inf)
+  })
+}
+```
+**Purpose**: Creates a robust evaluation function for binary logistic regression models. Key validation steps include:
+- **Feature Availability**: Ensures all features exist in the dataset
+- **Target Quality**: Validates binary outcomes have sufficient observations in both classes (minimum 5 per class)
+- **Model Convergence**: Checks that logistic regression converged successfully
+- **AIC Calculation**: Returns Akaike Information Criterion for model comparison
+
+#### 5. Exhaustive Feature Search Implementation
+```r
+# Exhaustive feature search function with validation
+exhaustive_feature_search <- function(target, data_df, gender_label, available_features) {
+  cat(sprintf("Searching %s alpine features for %s...\n", gender_label, target))
+  
+  best_aic <- Inf
+  best_features <- NULL
+  total_combinations <- 0
+  successful_models <- 0
+  
+  # Search through feature combinations (2-5 features)
+  max_features <- min(5, length(available_features))
+  
+  for(i in 2:max_features) {
+    if (i > length(available_features)) break
+    
+    combinations <- combn(available_features, i, simplify = FALSE)
+    total_combinations <- total_combinations + length(combinations)
+    
+    for(feature_set in combinations) {
+      aic <- evaluate_glm(feature_set, data_df, target, gender_label)
+      if(is.finite(aic)) {
+        successful_models <- successful_models + 1
+        if(aic < best_aic) {
+          best_aic <- aic
+          best_features <- feature_set
+        }
+      }
+    }
+  }
+  
+  cat(sprintf("  Tested %d combinations, %d successful models\n", total_combinations, successful_models))
+  return(list(features = best_features, aic = best_aic))
+}
+```
+**Purpose**: Implements comprehensive exhaustive search across alpine feature combinations. The algorithm:
+- **Tests feature combinations** from 2 to 5 features (balancing complexity vs. overfitting)
+- **Evaluates all possible combinations** using combinatorial approach
+- **Tracks success rates** to identify data quality issues
+- **Selects optimal features** based on lowest AIC (best balance of fit and complexity)
+
+#### 6. Target Variable Distribution Analysis
+```r
+# Debug and validate data structure
+targets <- c("Win", "TopThree", "Top5", "Top10", "Top30")
+for (target in targets) {
+  if (target %in% names(df_place)) {
+    men_table <- table(df_place[[target]])
+    cat(sprintf("Men's %s distribution: %s\n", target, paste(names(men_table), men_table, sep="=", collapse=", ")))
+  }
+  
+  if (target %in% names(df_place_ladies)) {
+    ladies_table <- table(df_place_ladies[[target]])
+    cat(sprintf("Ladies %s distribution: %s\n", target, paste(names(ladies_table), ladies_table, sep="=", collapse=", ")))
+  }
+}
+```
+**Purpose**: Analyzes the distribution of binary outcome variables to ensure sufficient data for modeling. This helps identify:
+- **Class imbalance issues**: Whether there are enough positive cases for each outcome
+- **Data availability**: Which targets have sufficient observations for reliable modeling
+- **Alpine-specific patterns**: How success rates differ between disciplines and genders
+
+#### 7. Comprehensive Feature Search Execution
+```r
+# Perform exhaustive feature search with validation
+cat("\n=== EXHAUSTIVE ALPINE FEATURE SEARCH ===\n")
+
+# Initialize result storage
+best_features_odds_men <- list()
+best_features_odds_ladies <- list()
+
+# Men's alpine feature search
+for(target in targets) {
+  if (target %in% names(df_place)) {
+    result <- exhaustive_feature_search(target, df_place, "Men's", features_men)
+    best_features_odds_men[[target]] <- result
+  }
+}
+
+# Ladies alpine feature search  
+for(target in targets) {
+  if (target %in% names(df_place_ladies)) {
+    result <- exhaustive_feature_search(target, df_place_ladies, "Ladies", features_ladies)
+    best_features_odds_ladies[[target]] <- result
+  }
+}
+```
+**Purpose**: Executes the comprehensive feature selection process for all alpine outcome categories and both genders. This creates optimized feature sets for:
+- **Win probability models**: Predicting race victories
+- **Podium models**: TopThree finish probabilities  
+- **Points-scoring models**: Top5, Top10, Top30 finish probabilities
+- **Gender-specific optimization**: Separate feature selection for men's and ladies competitions
+
+### Alpine-Specific Considerations
+
+**Multi-Discipline Structure**: Alpine skiing's diverse disciplines (speed vs. technical) require discipline-specific ELO ratings alongside overall ratings for optimal prediction accuracy.
+
+**Categorical Outcomes**: Unlike continuous GAM models, this section focuses on binary classification for practical betting/prediction applications.
+
+**Feature Complexity Management**: Limits feature combinations to 2-5 features to prevent overfitting while maintaining model interpretability.
+
+**Statistical Validation**: Emphasis on AIC-based model selection rather than pure accuracy to balance model fit with generalizability.
+
+### Error Handling and Quality Assurance
+
+The section implements comprehensive error handling including:
+- **Library dependency validation** before feature selection begins
+- **Training data existence checks** to ensure prerequisite sections completed
+- **Model convergence validation** for all logistic regression attempts
+- **Minimum observation requirements** to prevent unreliable models from insufficient data
+- **Feature availability verification** to handle missing or corrupted predictor variables
+
+This robust approach ensures that only statistically sound feature combinations are selected for the subsequent odds calculation models.
+EOF < /dev/null
+
+## Section: {r statistical-odds} - Statistical Odds Model Training and Prediction
+
+### Purpose
+This section trains logistic regression models using the optimized features from exhaustive feature selection, generates predictions for 2026 alpine skiers, and converts probabilities into betting odds with comprehensive normalization and validation.
+
+### Statistical Odds Framework
+
+#### 1. Feature Set Validation and Extraction
+```r
+cat("=== STATISTICAL ODDS VALIDATION ===\n")
+
+# Input validation for feature sets
+if (\!exists("best_features_odds_men") || \!is.list(best_features_odds_men)) {
+  stop("best_features_odds_men object not found or invalid")
+}
+if (\!exists("best_features_odds_ladies") || \!is.list(best_features_odds_ladies)) {
+  stop("best_features_odds_ladies object not found or invalid")
+}
+
+# Required outcome categories
+required_outcomes <- c("Win", "TopThree", "Top5", "Top10", "Top30")
+missing_men <- setdiff(required_outcomes, names(best_features_odds_men))
+missing_ladies <- setdiff(required_outcomes, names(best_features_odds_ladies))
+
+if (length(missing_men) > 0) {
+  stop("Missing outcome categories in men's features: ", paste(missing_men, collapse = ", "))
+}
+if (length(missing_ladies) > 0) {
+  stop("Missing outcome categories in ladies features: ", paste(missing_ladies, collapse = ", "))
+}
+cat("✓ All required outcome categories present\n")
+```
+**Purpose**: Validates that feature selection completed successfully and all required outcome categories have optimal feature sets. Ensures data pipeline integrity before model training begins.
+
+#### 2. Optimal Feature Extraction for Men's Models
+```r
+tryCatch({
+  # Use best features from exhaustive search for men
+  win_features_men <- best_features_odds_men[["Win"]]$features
+  topthree_features_men <- best_features_odds_men[["TopThree"]]$features
+  top5_features_men <- best_features_odds_men[["Top5"]]$features
+  top10_features_men <- best_features_odds_men[["Top10"]]$features
+  top30_features_men <- best_features_odds_men[["Top30"]]$features
+  
+  # Validate men's features
+  if (length(win_features_men) == 0) stop("No features found for men's Win")
+  if (length(topthree_features_men) == 0) stop("No features found for men's TopThree")
+  if (length(top5_features_men) == 0) stop("No features found for men's Top5")
+  if (length(top10_features_men) == 0) stop("No features found for men's Top10")
+  if (length(top30_features_men) == 0) stop("No features found for men's Top30")
+  
+  cat("Men's feature counts - Win:", length(win_features_men), 
+      "Top3:", length(topthree_features_men),
+      "Top5:", length(top5_features_men), 
+      "Top10:", length(top10_features_men), 
+      "Top30:", length(top30_features_men), "\n")
+      
+}, error = function(e) {
+  stop("Error extracting men's features: ", e$message)
+})
+```
+**Purpose**: Extracts the optimal feature combinations identified by exhaustive search for each outcome category. Validates that feature selection succeeded for all targets before proceeding to model training.
+
+#### 3. Formula Creation and Validation
+```r
+# Create formulas with validation
+cat("\n--- Formula Creation ---\n")
+tryCatch({
+  # Create formulas for men's models
+  win_formula_men <- as.formula(paste("Win ~", paste(win_features_men, collapse = " + ")))
+  topthree_formula_men <- as.formula(paste("TopThree ~", paste(topthree_features_men, collapse = " + ")))
+  top5_formula_men <- as.formula(paste("Top5 ~", paste(top5_features_men, collapse = " + ")))
+  top10_formula_men <- as.formula(paste("Top10 ~", paste(top10_features_men, collapse = " + ")))
+  top30_formula_men <- as.formula(paste("Top30 ~", paste(top30_features_men, collapse = " + ")))
+  
+  # Validate formula creation
+  if (\!inherits(win_formula_men, "formula")) stop("Failed to create Win formula for men")
+  if (\!inherits(topthree_formula_men, "formula")) stop("Failed to create TopThree formula for men")
+  if (\!inherits(top5_formula_men, "formula")) stop("Failed to create Top5 formula for men")
+  if (\!inherits(top10_formula_men, "formula")) stop("Failed to create Top10 formula for men")
+  if (\!inherits(top30_formula_men, "formula")) stop("Failed to create Top30 formula for men")
+  
+  cat("✓ Men's formulas created successfully\n")
+  
+}, error = function(e) {
+  stop("Error creating men's formulas: ", e$message)
+})
+```
+**Purpose**: Constructs R formula objects for logistic regression models using the optimized feature sets. Validates formula creation to ensure proper model specification.
+
+#### 4. Training Data Quality Assessment
+```r
+# Validate data availability for modeling
+if (\!exists("df_place") || \!is.data.frame(df_place)) {
+  stop("df_place dataset not found or invalid")
+}
+if (nrow(df_place) == 0) {
+  stop("df_place dataset is empty")
+}
+
+# Validate target variable distributions
+for (target in required_targets) {
+  target_dist <- table(df_place[[target]], useNA = "always")
+  cat("Target", target, "distribution:\n")
+  print(target_dist)
+  
+  # Check for extreme class imbalance
+  if (any(target_dist < 5, na.rm = TRUE)) {
+    warning("Very few observations for target ", target, " - model may be unstable")
+  }
+}
+```
+**Purpose**: Assesses training data quality and class distributions before model fitting. Identifies potential modeling challenges such as class imbalance that could affect model reliability.
+
+#### 5. Logistic Regression Model Training
+```r
+# Fit models with optimal feature sets and validation
+cat("\n--- Model Training ---\n")
+tryCatch({
+  win_model <- glm(win_formula, family = binomial, data = df_place)
+  
+  # Validate model convergence
+  if (\!win_model$converged) {
+    warning("Win model did not converge")
+  }
+  
+  # Check for model fitting issues
+  if (any(is.na(coef(win_model)))) {
+    warning("Win model has NA coefficients - possible multicollinearity")
+  }
+  
+  cat("✓ Win model fitted successfully\n")
+  
+}, error = function(e) {
+  stop("Error fitting Win model: ", e$message)
+})
+```
+**Purpose**: Trains binary logistic regression models for each outcome category using optimal feature sets. Includes comprehensive validation for model convergence and coefficient estimation issues.
+
+#### 6. Model Diagnostics and Quality Assessment
+```r
+# Model diagnostics
+cat("\n--- Model Diagnostics ---\n")
+models <- list(
+  Win = win_model,
+  TopThree = topthree_model,
+  Top5 = top5_model,
+  Top10 = top10_model,
+  Top30 = top30_model
+)
+
+for (model_name in names(models)) {
+  model <- models[[model_name]]
+  cat(sprintf("\n%s Model Summary:\n", model_name))
+  
+  # AIC
+  cat(sprintf("  AIC: %.2f\n", AIC(model)))
+  
+  # Deviance
+  cat(sprintf("  Residual Deviance: %.2f\n", deviance(model)))
+  
+  # Pseudo R-squared (McFadden)
+  null_deviance <- model$null.deviance
+  residual_deviance <- model$deviance
+  pseudo_r2 <- 1 - (residual_deviance / null_deviance)
+  cat(sprintf("  Pseudo R²: %.3f\n", pseudo_r2))
+  
+  # Check for perfect separation issues
+  fitted_probs <- fitted(model)
+  if (any(fitted_probs == 0) || any(fitted_probs == 1)) {
+    warning(sprintf("%s model may have perfect separation issues", model_name))
+  }
+}
+```
+**Purpose**: Provides comprehensive model diagnostics including AIC, deviance, pseudo R-squared, and perfect separation detection. Essential for assessing model quality and identifying potential issues.
+
+#### 7. 2026 Prediction Generation
+```r
+# ========== 2026 PREDICTIONS ==========
+cat("\n=== GENERATING 2026 ALPINE PREDICTIONS ===\n")
+
+# Validate prediction dataset
+if (\!exists("pred_data") || \!is.data.frame(pred_data)) {
+  stop("pred_data dataset not found or invalid")
+}
+if (nrow(pred_data) == 0) {
+  stop("pred_data dataset is empty")
+}
+
+# Generate predictions with comprehensive validation
+tryCatch({
+  win_probs <- predict(win_model, pred_data, type = "response")
+  
+  # Validate Win predictions
+  if (any(is.na(win_probs))) {
+    warning("NA predictions detected for Win - ", sum(is.na(win_probs)), " out of ", length(win_probs))
+  }
+  if (any(win_probs < 0  < /dev/null |  win_probs > 1, na.rm = TRUE)) {
+    warning("Invalid probability values for Win (outside 0-1 range)")
+  }
+  
+  cat("✓ Win predictions generated - Range: [", round(min(win_probs, na.rm = TRUE), 4), ", ", 
+      round(max(win_probs, na.rm = TRUE), 4), "]\n")
+      
+}, error = function(e) {
+  stop("Error generating Win predictions: ", e$message)
+})
+```
+**Purpose**: Generates probability predictions for 2026 alpine skiers using trained models. Includes comprehensive validation for prediction quality and range validation.
+
+#### 8. Probability Normalization Framework
+```r
+# Function for simple proportional scaling to cap maximum probability
+simple_scale <- function(probs, max_prob = 0.95) {
+  # Handle edge cases
+  if (length(probs) == 0) return(probs)
+  if (all(is.na(probs))) return(probs)
+  
+  max_current <- max(probs, na.rm = TRUE)
+  if (max_current <= max_prob) return(probs)
+  
+  # Scale all probabilities proportionally so max becomes max_prob
+  scaling_factor <- max_prob / max_current
+  return(probs * scaling_factor)
+}
+
+# Function for proportional scaling with simple maximum compression
+proportional_scale <- function(probs, target_sum, max_prob = 0.95) {
+  # Handle edge cases
+  if (length(probs) == 0) return(probs)
+  if (sum(probs, na.rm = TRUE) == 0) return(probs)
+  
+  # First apply proportional scaling to achieve target sum
+  scaled_probs <- (probs / sum(probs, na.rm = TRUE)) * target_sum
+  
+  # Then apply simple scaling to cap maximum at max_prob
+  final_probs <- simple_scale(scaled_probs, max_prob)
+  
+  return(final_probs)
+}
+
+# Normalize probabilities with proportional scaling and simple maximum compression
+# Win probabilities should sum to 100% (1.0), max individual 95%
+win_probs_normalized <- proportional_scale(win_probs, 1.0, 0.95)
+
+# Top3 probabilities should sum to 300% (3.0), max individual 95%
+top3_probs_normalized <- proportional_scale(top3_probs, 3.0, 0.95)
+
+# Top5 probabilities should sum to 500% (5.0), max individual 95%  
+top5_probs_normalized <- proportional_scale(top5_probs, 5.0, 0.95)
+
+# Top10 probabilities should sum to 1000% (10.0), max individual 95%
+top10_probs_normalized <- proportional_scale(top10_probs, 10.0, 0.95)
+
+# Top30 probabilities should sum to 3000% (30.0), max individual 95%
+top30_probs_normalized <- proportional_scale(top30_probs, 30.0, 0.95)
+```
+**Purpose**: Implements sophisticated probability normalization that ensures:
+- **Realistic probability bounds**: Maximum individual probability capped at 95%
+- **Market consistency**: Total probabilities sum to theoretically correct values
+- **Proportional scaling**: Maintains relative probability relationships
+- **Edge case handling**: Robust handling of empty or invalid probability sets
+
+#### 9. Odds Calculation and Formatting
+```r
+# Calculate decimal and American odds with validation
+results <- results %>%
+  mutate(
+    Win_Decimal_Odds = ifelse(Win_Prob > 0, 1 / Win_Prob, Inf),
+    Win_American_Odds = ifelse(Win_Prob >= 0.5,
+                              -Win_Prob/(1-Win_Prob) * 100,
+                              (1-Win_Prob)/Win_Prob * 100),
+    Top3_Decimal_Odds = ifelse(Top3_Prob > 0, 1 / Top3_Prob, Inf),
+    Top3_American_Odds = ifelse(Top3_Prob >= 0.5,
+                               -Top3_Prob/(1-Top3_Prob) * 100,
+                               (1-Top3_Prob)/Top3_Prob * 100)
+  ) %>%
+  # Format probabilities and odds with validation
+  mutate(
+    Win_Prob = ifelse(is.na(Win_Prob), "N/A", sprintf("%.1f%%", Win_Prob * 100)),
+    Top3_Prob = ifelse(is.na(Top3_Prob), "N/A", sprintf("%.1f%%", Top3_Prob * 100)),
+    
+    # Round decimal odds with Inf handling
+    Win_Decimal_Odds = ifelse(is.infinite(Win_Decimal_Odds), 999.99, 
+                             ifelse(Win_Decimal_Odds > 999.99, 999.99, round(Win_Decimal_Odds, 2))),
+    
+    # Format American odds with validation
+    Win_American_Odds = ifelse(is.na(Win_American_Odds) | is.infinite(Win_American_Odds), "N/A",
+                              ifelse(Win_American_Odds > 0, 
+                                    sprintf("+%.0f", round(Win_American_Odds, 0)),
+                                    sprintf("%.0f", round(Win_American_Odds, 0))))
+  )
+```
+**Purpose**: Converts normalized probabilities into standard betting odds formats:
+- **Decimal odds**: European format (1/probability)
+- **American odds**: US format (positive/negative based on probability threshold)
+- **Robust formatting**: Handles infinite values and maintains consistent presentation
+- **Percentage display**: User-friendly probability presentation
+
+### Alpine-Specific Statistical Considerations
+
+#### Multi-Outcome Probability Framework
+Alpine skiing odds framework handles multiple performance thresholds simultaneously:
+- **Win**: Season championship (100% total probability)
+- **TopThree**: Podium consistency (300% total probability)
+- **Top5/Top10/Top30**: Progressive performance tiers (500%/1000%/3000% total probability)
+
+#### Normalization Strategy
+The normalization approach balances statistical accuracy with betting market requirements:
+- **Proportional scaling**: Maintains relative skill differences between athletes
+- **Market viability**: Ensures probabilities sum to expected theoretical values
+- **Risk management**: Caps maximum individual probability to prevent extreme outliers
+
+#### Model Validation Integration
+Statistical odds section includes comprehensive model validation:
+- **Convergence monitoring**: Ensures reliable model parameter estimation
+- **Coefficient validation**: Detects multicollinearity and estimation issues
+- **Prediction range checking**: Validates probability bounds and distributions
+- **Quality metrics**: Provides AIC, deviance, and pseudo R-squared for model assessment
+
+### Error Handling and Quality Assurance
+
+The section implements extensive error handling including:
+- **Feature set validation** before model training
+- **Formula construction verification** with type checking
+- **Model convergence monitoring** for all logistic regression models
+- **Prediction validation** including range and missing value checks
+- **Normalization robustness** with edge case handling for empty or invalid probability sets
+- **Odds calculation safety** with infinite value handling and formatting validation
+
+This comprehensive approach ensures that alpine skiing odds are statistically sound, market-ready, and properly validated throughout the entire prediction pipeline.
+
+## Section: {r ladies-odds} - Ladies Alpine Odds Generation
+
+### Purpose
+This section generates comprehensive odds for ladies alpine skiing using gender-specific models and features, following the same statistical framework as men's odds but with ladies-specific feature optimization and model training.
+
+### Ladies Alpine Odds Framework
+
+#### 1. Ladies Formula Validation and Prerequisites
+```r
+cat("=== LADIES ODDS VALIDATION ===\n")
+
+# Validate ladies-specific formulas exist
+if (\!exists("win_formula_ladies") || \!inherits(win_formula_ladies, "formula")) {
+  stop("win_formula_ladies not found or invalid")
+}
+if (\!exists("topthree_formula_ladies") || \!inherits(topthree_formula_ladies, "formula")) {
+  stop("topthree_formula_ladies not found or invalid")
+}
+if (\!exists("top5_formula_ladies") || \!inherits(top5_formula_ladies, "formula")) {
+  stop("top5_formula_ladies not found or invalid")
+}
+if (\!exists("top10_formula_ladies") || \!inherits(top10_formula_ladies, "formula")) {
+  stop("top10_formula_ladies not found or invalid")
+}
+if (\!exists("top30_formula_ladies") || \!inherits(top30_formula_ladies, "formula")) {
+  stop("top30_formula_ladies not found or invalid")
+}
+cat("✓ All ladies formulas validated\n")
+```
+**Purpose**: Validates that ladies-specific logistic regression formulas were created successfully from the exhaustive feature selection process. These formulas use optimal feature combinations specifically identified for ladies alpine competition patterns.
+
+#### 2. Ladies Training Data Quality Assessment
+```r
+# Validate ladies training data
+cat("\n--- Ladies Model Training Data Validation ---\n")
+if (\!exists("df_place_ladies") || \!is.data.frame(df_place_ladies)) {
+  stop("df_place_ladies dataset not found or invalid")
+}
+if (nrow(df_place_ladies) == 0) {
+  stop("df_place_ladies dataset is empty")
+}
+
+# Validate ladies target variable distributions
+for (target in required_targets) {
+  target_dist <- table(df_place_ladies[[target]], useNA = "always")
+  cat("Ladies", target, "distribution:\n")
+  print(target_dist)
+  
+  # Check for extreme class imbalance
+  if (any(target_dist < 5, na.rm = TRUE)) {
+    warning("Very few observations for ladies ", target, " - model may be unstable")
+  }
+}
+
+cat("Ladies training data:", nrow(df_place_ladies), "observations\n")
+```
+**Purpose**: Assesses ladies-specific training data quality and target variable distributions. Identifies potential modeling challenges such as class imbalance that could affect ladies model reliability. Important for detecting gender-specific patterns in alpine skiing performance.
+
+#### 3. Ladies Model Training with Gender-Specific Features
+```r
+# Fit ladies models with validation
+cat("\n--- Ladies Model Training ---\n")
+tryCatch({
+  win_model_ladies <- glm(win_formula_ladies, family = binomial, data = df_place_ladies)
+  
+  # Validate model convergence
+  if (\!win_model_ladies$converged) {
+    warning("Ladies Win model did not converge")
+  }
+  
+  # Check for model fitting issues
+  if (any(is.na(coef(win_model_ladies)))) {
+    warning("Ladies Win model has NA coefficients - possible multicollinearity")
+  }
+  
+  cat("✓ Ladies Win model fitted successfully\n")
+  
+}, error = function(e) {
+  stop("Error fitting ladies Win model: ", e$message)
+})
+```
+**Purpose**: Trains ladies-specific logistic regression models using optimal feature sets identified through exhaustive search. Each model uses features specifically optimized for ladies alpine competition, potentially differing from men's models due to gender-specific performance patterns.
+
+#### 4. Ladies Prediction Data Validation
+```r
+# Validate ladies prediction data
+cat("\n--- Ladies Prediction Data Validation ---\n")
+if (\!exists("pred_data_ladies") || \!is.data.frame(pred_data_ladies)) {
+  stop("pred_data_ladies dataset not found or invalid")
+}
+if (nrow(pred_data_ladies) == 0) {
+  stop("pred_data_ladies dataset is empty")
+}
+
+# Check for required features in ladies prediction data
+all_required_features <- unique(c(topthree_features_ladies, top5_features_ladies, top10_features_ladies, top30_features_ladies))
+missing_pred_features <- setdiff(all_required_features, names(pred_data_ladies))
+if (length(missing_pred_features) > 0) {
+  warning("Missing features in ladies prediction data: ", paste(missing_pred_features, collapse = ", "))
+}
+
+cat("Ladies prediction dataset has", nrow(pred_data_ladies), "observations and", ncol(pred_data_ladies), "variables\n")
+```
+**Purpose**: Validates that ladies prediction data contains all features required by the optimized models. Ensures data quality and completeness for reliable 2026 ladies alpine predictions.
+
+#### 5. Ladies 2026 Probability Predictions
+```r
+# Get predicted probabilities for ladies with validation
+cat("\n--- Ladies Model Predictions ---\n")
+tryCatch({
+  win_probs_ladies <- predict(win_model_ladies, pred_data_ladies, type = "response")
+  
+  # Validate predictions
+  if (any(is.na(win_probs_ladies))) {
+    warning("NA predictions detected for ladies Win - ", sum(is.na(win_probs_ladies)), " out of ", length(win_probs_ladies))
+  }
+  if (any(win_probs_ladies < 0  < /dev/null |  win_probs_ladies > 1, na.rm = TRUE)) {
+    warning("Invalid probability values for ladies Win (outside 0-1 range)")
+  }
+  
+  cat("✓ Ladies Win predictions generated - Range: [", round(min(win_probs_ladies, na.rm = TRUE), 4), ", ", 
+      round(max(win_probs_ladies, na.rm = TRUE), 4), "]\n")
+      
+}, error = function(e) {
+  stop("Error generating ladies Win predictions: ", e$message)
+})
+```
+**Purpose**: Generates 2026 probability predictions for all ladies alpine skiers using trained gender-specific models. Includes comprehensive validation for prediction quality, range checking, and missing value detection.
+
+#### 6. Ladies Probability Normalization
+```r
+# ========== NORMALIZATION FOR LADIES ODDS ==========
+cat("\n--- Normalizing Ladies Probabilities ---\n")
+
+# Use the same proportional scaling function as men's odds
+# (Function already defined above in men's section)
+
+# Normalize ladies probabilities with proportional scaling and simple maximum compression
+# Win probabilities should sum to 100% (1.0), max individual 95%
+win_probs_normalized_ladies <- proportional_scale(win_probs_ladies, 1.0, 0.95)
+
+# Top3 probabilities should sum to 300% (3.0), max individual 95%
+top3_probs_normalized_ladies <- proportional_scale(top3_probs_ladies, 3.0, 0.95)
+
+# Top5 probabilities should sum to 500% (5.0), max individual 95%
+top5_probs_normalized_ladies <- proportional_scale(top5_probs_ladies, 5.0, 0.95)
+
+# Top10 probabilities should sum to 1000% (10.0), max individual 95%
+top10_probs_normalized_ladies <- proportional_scale(top10_probs_ladies, 10.0, 0.95)
+
+# Top30 probabilities should sum to 3000% (30.0), max individual 95%
+top30_probs_normalized_ladies <- proportional_scale(top30_probs_ladies, 30.0, 0.95)
+
+cat("Ladies Normalization applied:\n")
+cat("Win probs sum:", round(sum(win_probs_normalized_ladies, na.rm = TRUE), 3), "(target: 1.0)\n")
+cat("Top3 probs sum:", round(sum(top3_probs_normalized_ladies, na.rm = TRUE), 3), "(target: 3.0)\n")
+cat("Top5 probs sum:", round(sum(top5_probs_normalized_ladies, na.rm = TRUE), 3), "(target: 5.0)\n")
+cat("Top10 probs sum:", round(sum(top10_probs_normalized_ladies, na.rm = TRUE), 3), "(target: 10.0)\n")
+cat("Top30 probs sum:", round(sum(top30_probs_normalized_ladies, na.rm = TRUE), 3), "(target: 30.0)\n")
+```
+**Purpose**: Applies the same sophisticated normalization framework used for men's odds to ladies predictions. Ensures:
+- **Market consistency**: Total probabilities sum to theoretically correct values
+- **Risk management**: Maximum individual probability capped at 95%
+- **Proportional scaling**: Maintains relative skill differences between ladies athletes
+- **Gender-specific calibration**: Accounts for potential differences in competitive depth between men's and ladies fields
+
+#### 7. Ladies Results DataFrame Creation
+```r
+# Create ladies results dataframe with validation
+tryCatch({
+  # Create ladies results dataframe with all probabilities (USING NORMALIZED VALUES)
+  results_ladies <- data.frame(
+    Skier = pred_data_ladies$Skier,
+    Nation = pred_data_ladies$Nation,
+    Top3_Prob = top3_probs_normalized_ladies,    # Normalized Top3 probability
+    Win_Prob = win_probs_normalized_ladies,      # Normalized win probability
+    Second_Prob = second_probs_normalized_ladies, # Normalized second probability
+    Third_Prob = third_probs_normalized_ladies,  # Normalized third probability
+    Top5_Prob = top5_probs_normalized_ladies,    # Normalized Top5 probability
+    Top10_Prob = top10_probs_normalized_ladies,  # Normalized Top10 probability
+    Top30_Prob = top30_probs_normalized_ladies,  # Normalized Top30 probability
+    Outside_Prob = 1 - (top30_probs_normalized_ladies / 30.0)  # Adjusted for normalization
+  )
+  
+  # Validate ladies results dataframe
+  if (nrow(results_ladies) == 0) stop("Ladies results dataframe is empty")
+  if (any(is.na(results_ladies$Skier))) warning("Missing skier names in ladies results")
+  
+  # Check probability consistency for ladies
+  invalid_prob_consistency <- sum(results_ladies$Top3_Prob > results_ladies$Top5_Prob | 
+                                  results_ladies$Top5_Prob > results_ladies$Top10_Prob | 
+                                  results_ladies$Top10_Prob > results_ladies$Top30_Prob, na.rm = TRUE)
+  
+  if (invalid_prob_consistency > 0) {
+    warning("Probability inconsistency detected in ", invalid_prob_consistency, " ladies cases (P(smaller) > P(larger))")
+  }
+  
+  cat("✓ Ladies results dataframe created with", nrow(results_ladies), "skiers\n")
+  
+}, error = function(e) {
+  stop("Error creating ladies results dataframe: ", e$message)
+})
+```
+**Purpose**: Creates comprehensive ladies results dataframe with all normalized probabilities and validates logical consistency. Ensures probability relationships make sense (e.g., TopThree probability ≤ Top5 probability) for ladies-specific predictions.
+
+#### 8. Ladies Odds Calculation and Formatting
+```r
+# Calculate ladies decimal and American odds with validation
+tryCatch({
+  results_ladies <- results_ladies %>%
+    mutate(
+      Win_Decimal_Odds = ifelse(Win_Prob > 0, 1 / Win_Prob, Inf),
+      Win_American_Odds = ifelse(Win_Prob >= 0.5,
+                                -Win_Prob/(1-Win_Prob) * 100,
+                                (1-Win_Prob)/Win_Prob * 100),
+      Top3_Decimal_Odds = ifelse(Top3_Prob > 0, 1 / Top3_Prob, Inf),
+      Top3_American_Odds = ifelse(Top3_Prob >= 0.5,
+                                 -Top3_Prob/(1-Top3_Prob) * 100,
+                                 (1-Top3_Prob)/Top3_Prob * 100)
+    ) %>%
+    # Format ladies probabilities and odds with validation
+    mutate(
+      Win_Prob = ifelse(is.na(Win_Prob), "N/A", sprintf("%.1f%%", Win_Prob * 100)),
+      Top3_Prob = ifelse(is.na(Top3_Prob), "N/A", sprintf("%.1f%%", Top3_Prob * 100)),
+      
+      # Round ladies decimal odds with Inf handling
+      Win_Decimal_Odds = ifelse(is.infinite(Win_Decimal_Odds), 999.99, 
+                               ifelse(Win_Decimal_Odds > 999.99, 999.99, round(Win_Decimal_Odds, 2))),
+      
+      # Format ladies American odds with validation
+      Win_American_Odds = ifelse(is.na(Win_American_Odds) | is.infinite(Win_American_Odds), "N/A",
+                                ifelse(Win_American_Odds > 0, 
+                                      sprintf("+%.0f", round(Win_American_Odds, 0)),
+                                      sprintf("%.0f", round(Win_American_Odds, 0))))
+    )
+  
+  cat("✓ Ladies odds calculation and formatting completed\n")
+  
+}, error = function(e) {
+  stop("Error calculating ladies odds: ", e$message)
+})
+```
+**Purpose**: Converts ladies normalized probabilities into standard betting odds formats with the same robust formatting applied to men's odds. Handles infinite values and maintains consistent presentation for ladies alpine predictions.
+
+#### 9. Ladies Results Summary and Output
+```r
+cat("\n--- Ladies Final Results Summary ---\n")
+cat("Total ladies with odds:", nrow(results_ladies), "\n")
+cat("Ladies with valid Win probabilities:", sum(results_ladies$Win_Prob \!= "N/A"), "\n")
+cat("Highest ladies win probability:", max(numeric_win_probs_ladies, na.rm = TRUE), "%\n")
+
+print("=== 2026 LADIES ALPINE SEASON ODDS ===")
+print("Top 10 Ladies Season Winner Odds:")
+print(results_ladies %>% 
+      dplyr::select(Skier, Nation, Win_Prob, Win_Decimal_Odds, Win_American_Odds) %>%
+      head(10))
+
+print("Top 10 Ladies Podium Finish Odds:")
+print(results_ladies %>% 
+      arrange(desc(as.numeric(sub("%", "", Top3_Prob)))) %>%
+      dplyr::select(Skier, Nation, Top3_Prob, Top3_Decimal_Odds, Top3_American_Odds) %>%
+      head(10))
+```
+**Purpose**: Provides comprehensive summary of ladies alpine odds generation results and displays top performers across different outcome categories. Essential for verifying ladies-specific model performance and identifying key contenders.
+
+#### 10. Ladies Excel Export with Gender-Specific Formatting
+```r
+# Export Ladies Odds to Excel
+cat("\n=== EXPORTING LADIES ALPINE ODDS TO EXCEL ===\n")
+tryCatch({
+  if (\!is.null(results_ladies) && nrow(results_ladies) > 0) {
+    # Prepare data with numeric probabilities for proper sorting
+    ladies_odds_export <- results_ladies %>%
+      mutate(
+        # Convert probability percentages to numeric for proper handling
+        Win_Prob_Numeric = as.numeric(gsub("%", "", Win_Prob)),
+        Top3_Prob_Numeric = as.numeric(gsub("%", "", Top3_Prob)),
+        Top10_Prob_Numeric = as.numeric(gsub("%", "", Top10_Prob)),
+        Top30_Prob_Numeric = as.numeric(gsub("%", "", Top30_Prob))
+      ) %>%
+      arrange(desc(Win_Prob_Numeric))
+    
+    # Create separate Excel files for each outcome type
+    # Ladies Win odds file
+    win_data <- ladies_odds_export %>%
+      dplyr::select(Skier, Nation, Win_Prob, Win_Decimal_Odds, Win_American_Odds) %>%
+      rename(
+        "Win Prob" = Win_Prob,
+        "Win Decimal Odds" = Win_Decimal_Odds,
+        "Win American Odds" = Win_American_Odds
+      )
+    
+    win_wb <- createWorkbook()
+    addWorksheet(win_wb, "Ladies Alpine Win Odds 2026")
+    writeData(win_wb, "Ladies Alpine Win Odds 2026", win_data, startRow = 1, startCol = 1)
+    addStyle(win_wb, "Ladies Alpine Win Odds 2026", 
+             createStyle(fgFill = "#4472C4", fontColour = "white", textDecoration = "bold"),
+             rows = 1, cols = 1:ncol(win_data))
+    setColWidths(win_wb, "Ladies Alpine Win Odds 2026", cols = 1:ncol(win_data), widths = "auto")
+    saveWorkbook(win_wb, "excel365/Ladies_Win_Odds_2026.xlsx", overwrite = TRUE)
+    
+    cat("✓ Ladies alpine odds Excel files saved:\n")
+    cat("  - excel365/Ladies_Win_Odds_2026.xlsx\n")
+    cat("  - excel365/Ladies_Top3_Odds_2026.xlsx\n") 
+    cat("  - excel365/Ladies_Top10_Odds_2026.xlsx\n")
+    cat("  - excel365/Ladies_Top30_Odds_2026.xlsx\n")
+    
+  } else {
+    cat("No ladies alpine odds data available for export\n")
+  }
+  
+}, error = function(e) {
+  cat("Error exporting ladies alpine odds to Excel:", e$message, "\n")
+})
+```
+**Purpose**: Exports ladies alpine odds to separate Excel files with professional formatting. Creates gender-specific output files for easy comparison with men's odds and streamlined analysis of ladies competition predictions.
+
+### Gender-Specific Alpine Considerations
+
+#### Feature Optimization Differences
+Ladies alpine models may use different optimal feature combinations than men's models due to:
+- **Competitive depth variations**: Differences in field size and skill distribution
+- **Discipline emphasis patterns**: Potential gender-specific strengths in technical vs. speed disciplines  
+- **Performance trajectory differences**: Age-related performance patterns that may vary by gender
+
+#### Model Validation Approach
+Ladies models receive the same rigorous validation as men's models:
+- **Convergence monitoring**: Ensures reliable parameter estimation for ladies-specific patterns
+- **Class balance assessment**: Identifies potential issues with limited ladies competition data
+- **Prediction range validation**: Validates probability bounds for ladies alpine predictions
+
+#### Normalization Consistency
+Ladies probabilities use identical normalization framework to men's odds ensuring:
+- **Cross-gender comparability**: Consistent probability interpretation across genders
+- **Market integration**: Ladies odds can be combined with men's odds for mixed betting markets
+- **Risk management consistency**: Same maximum probability caps prevent extreme outliers
+
+### Error Handling and Quality Assurance
+
+The ladies odds section implements comprehensive error handling including:
+- **Gender-specific formula validation** ensuring ladies models exist and are properly specified
+- **Ladies training data validation** with class distribution assessment
+- **Model convergence monitoring** for all ladies logistic regression models  
+- **Prediction quality validation** including range and missing value checks
+- **Results consistency verification** ensuring logical probability relationships
+- **Export validation** with robust Excel file creation and error handling
+
+This comprehensive approach ensures that ladies alpine skiing odds are statistically sound, properly normalized, and maintain the same quality standards as men's odds while accounting for gender-specific competitive patterns.
+
+## Section: {r breakout-identifier} - Alpine Breakthrough Analysis
+
+### Purpose
+This section identifies historical breakthrough performers in alpine skiing and analyzes the patterns that characterize skiers who achieve significant performance improvements, establishing a foundation for predicting future breakthrough candidates.
+
+### Alpine Breakthrough Analysis Framework
+
+#### 1. Training Data Validation and Prerequisites
+```r
+cat("=== BREAKTHROUGH ANALYSIS VALIDATION ===\n")
+
+# Validate training data availability
+if (\!exists("train_men") || \!is.data.frame(train_men)) {
+  stop("train_men dataset not found or invalid")
+}
+if (\!exists("train_ladies") || \!is.data.frame(train_ladies)) {
+  stop("train_ladies dataset not found or invalid")
+}
+
+if (nrow(train_men) == 0) stop("train_men dataset is empty")
+if (nrow(train_ladies) == 0) stop("train_ladies dataset is empty")
+
+cat("Training data validated - Men:", nrow(train_men), "observations, Ladies:", nrow(train_ladies), "observations\n")
+```
+**Purpose**: Validates that comprehensive training datasets are available for breakthrough analysis. These datasets contain historical performance data necessary for identifying breakthrough patterns in alpine skiing.
+
+#### 2. Required Column Validation for Breakthrough Analysis
+```r
+# Validate required columns for breakthrough analysis
+required_breakthrough_cols <- c("Skier", "Nation", "Season", "Pct_of_Max_Points", "Age")
+missing_men_cols <- setdiff(required_breakthrough_cols, names(train_men))
+missing_ladies_cols <- setdiff(required_breakthrough_cols, names(train_ladies))
+
+if (length(missing_men_cols) > 0) {
+  stop("Missing required columns in train_men: ", paste(missing_men_cols, collapse = ", "))
+}
+if (length(missing_ladies_cols) > 0) {
+  stop("Missing required columns in train_ladies: ", paste(missing_ladies_cols, collapse = ", "))
+}
+cat("✓ All required columns present in both datasets\n")
+```
+**Purpose**: Ensures all essential columns are available for breakthrough analysis:
+- **Skier**: Athlete identification for tracking individual performance trajectories
+- **Nation**: Country representation for potential geographic/development pattern analysis
+- **Season**: Temporal context for breakthrough timing analysis
+- **Pct_of_Max_Points**: Key performance metric for defining breakthrough thresholds
+- **Age**: Critical factor for understanding breakthrough timing in athlete development
+
+#### 3. Performance Data Quality Assessment
+```r
+# Validate Pct_of_Max_Points data quality
+cat("\n--- Data Quality Validation ---\n")
+
+# Men's data validation
+men_invalid_pct <- sum(is.na(train_men$Pct_of_Max_Points)  < /dev/null |  
+                      train_men$Pct_of_Max_Points < 0 | 
+                      train_men$Pct_of_Max_Points > 1 | 
+                      \!is.finite(train_men$Pct_of_Max_Points))
+
+ladies_invalid_pct <- sum(is.na(train_ladies$Pct_of_Max_Points) | 
+                         train_ladies$Pct_of_Max_Points < 0 | 
+                         train_ladies$Pct_of_Max_Points > 1 | 
+                         \!is.finite(train_ladies$Pct_of_Max_Points))
+
+cat("Men's invalid Pct_of_Max_Points values:", men_invalid_pct, "\n")
+cat("Ladies invalid Pct_of_Max_Points values:", ladies_invalid_pct, "\n")
+
+if (men_invalid_pct > nrow(train_men) * 0.1) {
+  warning("More than 10% of men's Pct_of_Max_Points values are invalid")
+}
+if (ladies_invalid_pct > nrow(train_ladies) * 0.1) {
+  warning("More than 10% of ladies Pct_of_Max_Points values are invalid")
+}
+```
+**Purpose**: Validates the quality of the key performance metric used for breakthrough identification. The `Pct_of_Max_Points` should be bounded between 0 and 1, representing the percentage of maximum possible alpine World Cup points achieved in a season.
+
+#### 4. Historical Top Performers Identification
+```r
+# Identify historical top performers with validation
+cat("\n--- Historical Top Performers Analysis ---\n")
+
+tryCatch({
+  top_performers_men <- train_men %>%
+    filter(\!is.na(Pct_of_Max_Points), 
+           Pct_of_Max_Points > 0.2,
+           \!is.na(Skier),
+           \!is.na(Season),
+           \!is.na(Age)) %>%
+    dplyr::select(Skier, Nation, Season, Pct_of_Max_Points, Age)
+  
+  if (nrow(top_performers_men) == 0) {
+    warning("No men's breakthrough performers found with >20% points")
+  } else {
+    cat("✓ Men's breakthrough performers identified:", nrow(top_performers_men), "entries\n")
+  }
+  
+}, error = function(e) {
+  stop("Error identifying men's top performers: ", e$message)
+})
+```
+**Purpose**: Identifies historical breakthrough performers using a 20% threshold of maximum alpine points. This threshold represents significant alpine performance that indicates genuine breakthrough rather than minor improvements. The analysis:
+- **Filters for substantial performance**: 20% of max points represents meaningful alpine World Cup success
+- **Removes incomplete data**: Ensures all essential fields are available for analysis
+- **Creates baseline for comparison**: Establishes what constitutes breakthrough performance in alpine skiing
+
+#### 5. Breakthrough Performance Summary and Analysis
+```r
+# Summary statistics with validation
+tryCatch({
+  unique_men_breakthroughs <- length(unique(top_performers_men$Skier))
+  unique_ladies_breakthroughs <- length(unique(top_performers_ladies$Skier))
+  
+  cat("✓ Analysis completed successfully\n")
+  cat("Men's breakthrough entries:", nrow(top_performers_men), "\n")
+  cat("Ladies breakthrough entries:", nrow(top_performers_ladies), "\n")
+  
+  print("=== MEN'S HISTORICAL BREAKTHROUGH PERFORMERS (>20% of max points) ===")
+  print(paste("Unique men's breakthrough skiers:", unique_men_breakthroughs))
+  
+  if (nrow(top_performers_men) > 0) {
+    print("Recent men's breakthrough examples:")
+    recent_men <- top_performers_men %>%
+      arrange(desc(Season), desc(Pct_of_Max_Points))
+    print(recent_men)
+    
+    # Age distribution analysis
+    if (\!all(is.na(top_performers_men$Age))) {
+      cat("Men's breakthrough age range:", 
+          round(min(top_performers_men$Age, na.rm = TRUE), 1), "-", 
+          round(max(top_performers_men$Age, na.rm = TRUE), 1), "\n")
+      cat("Men's mean breakthrough age:", 
+          round(mean(top_performers_men$Age, na.rm = TRUE), 1), "\n")
+    }
+  } else {
+    print("No men's breakthrough examples to display")
+  }
+  
+}, error = function(e) {
+  stop("Error in men's breakthrough summary: ", e$message)
+})
+```
+**Purpose**: Provides comprehensive summary of historical breakthrough performances including:
+- **Unique athlete count**: Number of different skiers achieving breakthrough performance
+- **Recent examples**: Most recent breakthrough cases for pattern analysis
+- **Age distribution analysis**: Understanding the typical age range for alpine breakthrough
+- **Performance levels**: Distribution of breakthrough achievement levels
+
+### Alpine-Specific Breakthrough Considerations
+
+#### Performance Threshold Framework
+Alpine skiing breakthrough analysis uses sport-specific thresholds:
+- **Primary threshold (20%)**: Represents significant World Cup success and points-scoring consistency
+- **Secondary threshold (10%)**: Fallback for analysis when breakthrough cases are limited
+- **Age-inclusive approach**: No upper age limits as alpine skiing allows for later-career breakthroughs
+
+#### Multi-Discipline Impact
+Alpine skiing's diverse disciplines mean breakthrough can occur through:
+- **Technical discipline focus**: Excellence in Slalom and Giant Slalom
+- **Speed discipline success**: Breakthrough in Downhill and Super G events
+- **Combined approach**: Balanced performance across all alpine disciplines
+- **Seasonal consistency**: Regular points-scoring across the alpine calendar
+
+#### Development Pattern Recognition
+Breakthrough analysis in alpine skiing considers:
+- **National development systems**: Different countries have varying alpine development approaches
+- **Equipment and technique evolution**: Technological changes can enable breakthrough performance
+- **Competition depth changes**: Evolving competitive landscape affects breakthrough difficulty
+- **Career trajectory diversity**: Alpine careers can have multiple breakthrough phases
+
+### Data Quality and Validation
+
+The breakthrough identification process includes comprehensive validation:
+- **Performance metric bounds checking**: Ensures Pct_of_Max_Points values are realistic
+- **Completeness requirements**: All essential fields must be present for inclusion
+- **Temporal consistency**: Season and age data must be logical and consistent
+- **Missing data tolerance**: Handles cases where some data points may be unavailable
+- **Threshold adaptation**: Adjusts breakthrough criteria based on data availability
+
+### Statistical Robustness
+
+The analysis implements robust statistical practices:
+- **Error handling**: Comprehensive error catching for data quality issues
+- **Warning systems**: Alerts for potential data quality problems
+- **Validation checkpoints**: Multiple verification steps throughout the analysis
+- **Graceful degradation**: Continues analysis even when some components fail
+- **Result validation**: Ensures breakthrough identification produces meaningful results
+
+This alpine breakthrough identification section establishes the foundation for understanding what constitutes significant performance improvement in alpine skiing and provides the historical context necessary for predicting future breakthrough candidates.
+
+## Section: {r feat-select-break} - Alpine Breakthrough Feature Selection
+
+### Purpose
+This section implements comprehensive feature selection for alpine breakthrough prediction using machine learning techniques to identify the most predictive variables for determining which skiers are likely to achieve breakthrough performance (>20% of maximum alpine points).
+
+### Alpine Breakthrough Feature Selection Framework
+
+#### 1. Required Libraries and Dependencies
+```r
+# Load required libraries for breakthrough analysis
+tryCatch({
+  library(caret)
+  library(ranger)
+  library(pROC)
+  cat("✓ Required libraries loaded successfully\n")
+}, error = function(e) {
+  stop("Error loading required libraries: ", e$message)
+})
+```
+**Purpose**: Loads essential machine learning libraries for breakthrough analysis:
+- **caret**: Comprehensive framework for model training and validation
+- **ranger**: High-performance Random Forest implementation
+- **pROC**: ROC curve analysis for model evaluation
+
+#### 2. Enhanced Breakthrough Predictor Evaluation Function
+```r
+# Enhanced function to evaluate predictor importance for breakthrough prediction
+evaluate_breakthrough_predictors <- function(df, predictors) {
+  cat("\n--- Breakthrough Predictor Evaluation ---\n")
+  
+  # Input validation
+  if (\!is.data.frame(df)) stop("Input df is not a data frame")
+  if (nrow(df) == 0) stop("Input dataframe is empty")
+  if (is.null(predictors) || length(predictors) == 0) stop("No predictors provided")
+  
+  # Validate predictors exist in dataframe
+  missing_predictors <- setdiff(predictors, names(df))
+  if (length(missing_predictors) > 0) {
+    warning("Missing predictors: ", paste(missing_predictors, collapse = ", "))
+    predictors <- intersect(predictors, names(df))
+  }
+  
+  if (length(predictors) == 0) stop("No valid predictors remain after filtering")
+  cat("Using", length(predictors), "predictors for breakthrough analysis\n")
+```
+**Purpose**: Creates a comprehensive function for evaluating which features best predict alpine breakthrough performance. Includes robust input validation to ensure data quality and predictor availability.
+
+#### 3. Adaptive Breakthrough Definition and Data Preparation
+```r
+# Prepare data with validation and adaptive age filtering
+tryCatch({
+  # First, try broader age range to get sufficient breakthrough cases
+  initial_data <- df %>%
+    mutate(
+      # Define breakthrough as achieving >20% in this season
+      Will_Breakthrough = ifelse(is.na(Pct_of_Max_Points), NA, Pct_of_Max_Points >= 0.2),
+      Will_Breakthrough = factor(Will_Breakthrough, levels = c(FALSE, TRUE), 
+                               labels = c("No", "Yes")),
+      Age = as.numeric(Age)
+    ) %>%
+    filter(\!is.na(Will_Breakthrough),
+           \!is.na(Pct_of_Max_Points),
+           \!is.na(Age)) %>%
+    dplyr::select(Will_Breakthrough, Age, all_of(predictors)) %>%
+    na.omit()
+  
+  # Check breakthrough distribution across age ranges
+  breakthrough_by_age <- initial_data %>%
+    filter(Will_Breakthrough == "Yes") %>%
+    summarise(
+      n_breakthroughs = n(),
+      min_age = min(Age, na.rm = TRUE),
+      max_age = max(Age, na.rm = TRUE),
+      mean_age = mean(Age, na.rm = TRUE)
+    )
+  
+  cat("Initial breakthrough cases found:", breakthrough_by_age$n_breakthroughs, "\n")
+  if (breakthrough_by_age$n_breakthroughs > 0) {
+    cat("Breakthrough age range:", round(breakthrough_by_age$min_age, 1), "-", round(breakthrough_by_age$max_age, 1), "\n")
+  }
+  
+  # If still too few cases, try lower breakthrough threshold
+  if (breakthrough_by_age$n_breakthroughs < 5) {
+    cat("Very few breakthrough cases at 20% threshold, trying 10% threshold\n")
+    initial_data <- df %>%
+      mutate(
+        # Lower threshold for breakthrough (10%)
+        Will_Breakthrough = ifelse(is.na(Pct_of_Max_Points), NA, Pct_of_Max_Points >= 0.1),
+        Will_Breakthrough = factor(Will_Breakthrough, levels = c(FALSE, TRUE), 
+                                 labels = c("No", "Yes")),
+        Age = as.numeric(Age)
+      ) %>%
+      filter(\!is.na(Will_Breakthrough),
+             \!is.na(Pct_of_Max_Points),
+             \!is.na(Age)) %>%
+      dplyr::select(Will_Breakthrough, Age, all_of(predictors)) %>%
+      na.omit()
+  }
+```
+**Purpose**: Implements adaptive breakthrough definition with intelligent threshold adjustment:
+- **Primary threshold (20%)**: Represents significant alpine breakthrough performance
+- **Fallback threshold (10%)**: Used when insufficient cases exist at higher threshold
+- **Age-inclusive approach**: Uses all ages for alpine breakthrough model training
+- **Data quality filtering**: Removes incomplete cases for reliable model training
+
+#### 4. Class Distribution Analysis and Validation
+```r
+# Validate class distribution
+breakthrough_dist <- table(model_data$Will_Breakthrough, useNA = "always")
+print("Breakthrough distribution:")
+print(breakthrough_dist)
+
+# Check for class imbalance with adaptive thresholds
+min_class_size <- min(breakthrough_dist[breakthrough_dist > 0])  # Exclude NA count
+breakthrough_count <- breakthrough_dist[["Yes"]]
+no_breakthrough_count <- breakthrough_dist[["No"]]
+
+cat("Breakthrough cases (Yes):", breakthrough_count, "\n")
+cat("Non-breakthrough cases (No):", no_breakthrough_count, "\n")
+
+# Adaptive validation based on data availability
+if (min_class_size < 2) {
+  stop("Insufficient data for model training - need at least 2 cases per class")
+} else if (min_class_size < 5) {
+  warning("Very few cases in minority class (", min_class_size, ") - model may be unstable")
+} else if (breakthrough_count < 10) {
+  warning("Few breakthrough cases (", breakthrough_count, ") - consider this when interpreting results")
+}
+
+# Calculate class imbalance ratio
+imbalance_ratio <- max(breakthrough_count, no_breakthrough_count) / min(breakthrough_count, no_breakthrough_count)
+if (imbalance_ratio > 20) {
+  warning("Severe class imbalance detected (ratio: ", round(imbalance_ratio, 1), ":1)")
+} else if (imbalance_ratio > 10) {
+  warning("Moderate class imbalance detected (ratio: ", round(imbalance_ratio, 1), ":1)")
+}
+```
+**Purpose**: Analyzes class distribution and identifies potential modeling challenges:
+- **Minimum case requirements**: Ensures sufficient data for reliable model training
+- **Class imbalance detection**: Identifies when breakthrough cases are very rare
+- **Model stability assessment**: Warns when limited data may affect model reliability
+- **Adaptive validation**: Adjusts validation criteria based on data availability
+
+#### 5. Cross-Validation Setup with Adaptive Parameters
+```r
+# Cross-validation setup with adaptive parameters
+tryCatch({
+  # Adaptive CV parameters based on data size
+  if (nrow(model_data) < 50) {
+    cv_method <- "LOOCV"  # Leave-one-out for very small datasets
+    cv_number <- NULL
+  } else if (nrow(model_data) < 200) {
+    cv_method <- "cv"
+    cv_number <- 5  # 5-fold for small datasets
+  } else {
+    cv_method <- "cv"
+    cv_number <- 10  # 10-fold for larger datasets
+  }
+  
+  if (cv_method == "LOOCV") {
+    ctrl <- trainControl(method = "LOOCV", classProbs = TRUE, summaryFunction = twoClassSummary)
+    cat("Using Leave-One-Out Cross-Validation\n")
+  } else {
+    ctrl <- trainControl(method = cv_method, number = cv_number, classProbs = TRUE, summaryFunction = twoClassSummary)
+    cat("Using", cv_number, "-fold Cross-Validation\n")
+  }
+  
+}, error = function(e) {
+  stop("Error setting up cross-validation: ", e$message)
+})
+```
+**Purpose**: Implements adaptive cross-validation strategy based on dataset size:
+- **Leave-One-Out CV**: For very small datasets (<50 observations)
+- **5-fold CV**: For small datasets (50-200 observations)
+- **10-fold CV**: For larger datasets (>200 observations)
+- **ROC optimization**: Uses ROC as the optimization metric for breakthrough prediction
+
+#### 6. Logistic Regression Model Training
+```r
+# Train logistic model with validation
+tryCatch({
+  breakthrough_formula <- as.formula(paste("Will_Breakthrough ~", paste(predictors, collapse = " + ")))
+  cat("Training logistic regression model with", length(predictors), "predictors\n")
+  
+  logistic_model <- train(
+    breakthrough_formula,
+    data = model_data,
+    method = "glm",
+    family = "binomial",
+    trControl = ctrl,
+    metric = "ROC"
+  )
+  
+  cat("✓ Logistic regression model trained\n")
+  
+  # Extract coefficient importance
+  logistic_coefs <- summary(logistic_model$finalModel)$coefficients
+  logistic_importance <- abs(logistic_coefs[-1, "Estimate"])  # Exclude intercept
+  names(logistic_importance) <- rownames(logistic_coefs)[-1]
+  
+}, error = function(e) {
+  stop("Error training logistic regression: ", e$message)
+})
+```
+**Purpose**: Trains logistic regression model for breakthrough prediction:
+- **Binary classification**: Predicts breakthrough vs. non-breakthrough outcomes
+- **Coefficient importance**: Uses absolute coefficient values to rank feature importance
+- **Cross-validation**: Uses established CV framework for robust evaluation
+- **Error handling**: Robust error catching for model training issues
+
+#### 7. Random Forest Model Training with Importance
+```r
+# Train Random Forest with validation
+tryCatch({
+  cat("Training Random Forest model for variable importance\n")
+  
+  rf_model <- train(
+    breakthrough_formula,
+    data = model_data,
+    method = "ranger",
+    trControl = ctrl,
+    importance = 'impurity',
+    metric = "ROC"
+  )
+  
+  cat("✓ Random Forest model trained\n")
+  
+  # Extract variable importance
+  rf_importance <- rf_model$finalModel$variable.importance
+  
+}, error = function(e) {
+  warning("Error training Random Forest - using logistic regression only: ", e$message)
+  rf_model <- NULL
+  rf_importance <- NULL
+})
+```
+**Purpose**: Trains Random Forest model to complement logistic regression:
+- **Ensemble approach**: Captures non-linear relationships and interactions
+- **Variable importance**: Uses impurity-based importance measures
+- **Robust fallback**: Continues analysis even if Random Forest fails
+- **Complementary insights**: Provides different perspective on feature importance
+
+#### 8. Combined Importance Score Calculation
+```r
+# Combine and rank importance scores with validation
+tryCatch({
+  if (\!is.null(rf_importance)) {
+    # Normalize importance scores to 0-1 scale
+    logistic_norm <- (logistic_importance - min(logistic_importance)) / 
+                    (max(logistic_importance) - min(logistic_importance))
+    rf_norm <- (rf_importance - min(rf_importance)) / 
+               (max(rf_importance) - min(rf_importance))
+    
+    # Combine scores (equal weighting)
+    common_vars <- intersect(names(logistic_norm), names(rf_norm))
+    combined_importance <- (logistic_norm[common_vars] + rf_norm[common_vars]) / 2
+    
+    # Create comprehensive importance dataframe
+    importance_df <- data.frame(
+      Variable = common_vars,
+      Logistic_Importance = logistic_norm[common_vars],
+      RF_Importance = rf_norm[common_vars],
+      Combined_Importance = combined_importance,
+      stringsAsFactors = FALSE
+    ) %>%
+      arrange(desc(Combined_Importance))
+    
+    cat("✓ Combined importance scores calculated\n")
+    
+  } else {
+    # Use only logistic regression importance
+    importance_df <- data.frame(
+      Variable = names(logistic_importance),
+      Logistic_Importance = logistic_importance,
+      RF_Importance = NA,
+      Combined_Importance = logistic_importance,
+      stringsAsFactors = FALSE
+    ) %>%
+      arrange(desc(Combined_Importance))
+    
+    cat("✓ Logistic-only importance scores calculated\n")
+  }
+  
+}, error = function(e) {
+  stop("Error calculating variable importance: ", e$message)
+})
+```
+**Purpose**: Creates comprehensive feature importance rankings:
+- **Normalization**: Scales different importance metrics to comparable ranges
+- **Equal weighting**: Combines logistic and Random Forest importance equally
+- **Fallback strategy**: Uses single-method importance when one model fails
+- **Ranked output**: Provides ordered list of most important breakthrough predictors
+
+#### 9. Model Performance Comparison and Validation
+```r
+# Model performance comparison with validation
+tryCatch({
+  models_list <- list(Logistic = logistic_model)
+  if (\!is.null(rf_model)) {
+    models_list$RandomForest <- rf_model
+  }
+  
+  model_comparison <- resamples(models_list)
+  performance_summary <- summary(model_comparison)
+  
+  cat("✓ Model performance comparison completed\n")
+  
+}, error = function(e) {
+  warning("Error in model comparison: ", e$message)
+  model_comparison <- NULL
+  performance_summary <- NULL
+})
+```
+**Purpose**: Compares model performance across different algorithms:
+- **Cross-validation metrics**: Uses CV results for fair comparison
+- **Multiple algorithms**: Compares logistic regression and Random Forest when available
+- **Performance summary**: Provides comprehensive evaluation metrics
+- **Robust evaluation**: Handles cases where only one model is available
+
+#### 10. Top Predictor Selection and Reduced Model Training
+```r
+# Select top predictors with validation
+tryCatch({
+  # Select top predictors (up to 5, or fewer if not enough predictors)
+  n_top <- min(5, nrow(importance_df))
+  top_predictors <- importance_df$Variable[1:n_top]
+  
+  cat("✓ Top", n_top, "predictors selected\n")
+  
+  # Train reduced model with only top predictors
+  if (n_top >= 2) {  # Need at least 2 predictors for meaningful model
+    reduced_formula <- as.formula(paste("Will_Breakthrough ~", paste(top_predictors, collapse = " + ")))
+    
+    reduced_model <- train(
+      reduced_formula,
+      data = model_data,
+      method = "glm",
+      family = "binomial",
+      trControl = ctrl,
+      metric = "ROC"
+    )
+    
+    cat("✓ Reduced model with top predictors trained\n")
+  } else {
+    warning("Too few predictors for reduced model")
+    reduced_model <- logistic_model
+  }
+  
+}, error = function(e) {
+  warning("Error creating reduced model: ", e$message)
+  top_predictors <- predictors[1:min(3, length(predictors))]  # Fallback
+  reduced_model <- logistic_model
+})
+```
+**Purpose**: Creates optimized model using only the most important features:
+- **Feature reduction**: Selects top 5 predictors to prevent overfitting
+- **Minimum requirements**: Ensures at least 2 predictors for meaningful modeling
+- **Comparative analysis**: Allows comparison between full and reduced models
+- **Robust fallback**: Provides alternative when optimal selection fails
+
+### Alpine-Specific Feature Selection Considerations
+
+#### Multi-Discipline Feature Integration
+Alpine breakthrough prediction considers features across all disciplines:
+- **Overall ratings**: General alpine performance indicators
+- **Technical discipline focus**: Slalom and Giant Slalom specific ratings
+- **Speed discipline emphasis**: Downhill and Super G performance metrics
+- **Combined performance**: Integrated multi-discipline capabilities
+- **Age factor**: Critical for understanding alpine breakthrough timing
+
+#### Breakthrough Threshold Adaptation
+Alpine feature selection uses adaptive thresholds:
+- **Primary (20%)**: Significant World Cup points achievement
+- **Secondary (10%)**: Lower threshold when data is limited
+- **Career-based assessment**: Considers entire career trajectory rather than single season
+- **Competition depth awareness**: Accounts for varying competitive levels
+
+#### Model Ensemble Strategy
+The analysis employs multiple algorithms for robust feature selection:
+- **Logistic regression**: Linear relationships and statistical significance
+- **Random Forest**: Non-linear patterns and feature interactions
+- **Combined scoring**: Leverages strengths of both approaches
+- **Cross-validation**: Ensures reliable performance estimation
+
+### Quality Assurance and Validation
+
+The feature selection process includes comprehensive validation:
+- **Data quality checks**: Validates predictor availability and completeness
+- **Class distribution analysis**: Identifies and handles class imbalance issues
+- **Adaptive validation**: Adjusts criteria based on data availability
+- **Model stability assessment**: Warns about potential reliability issues
+- **Performance monitoring**: Tracks model quality throughout the process
+- **Error resilience**: Continues analysis even when components fail
+
+This alpine breakthrough feature selection section provides a robust framework for identifying the most predictive variables for breakthrough performance while handling the challenges of limited breakthrough cases and ensuring statistical reliability.
+EOF < /dev/null
+
+## Section: {r big-break} - Alpine 2026 Breakthrough Predictions
+
+### Purpose
+This section generates comprehensive predictions for 2026 alpine breakthrough candidates using trained machine learning models, identifying skiers who have never achieved 20% of maximum alpine points but show potential for breakthrough performance in the upcoming season.
+
+### Alpine 2026 Breakthrough Prediction Framework
+
+#### 1. Enhanced Breakthrough Prediction Function
+```r
+# Enhanced function to predict 2026 breakthrough candidates
+predict_2026_breakthroughs <- function(current_data, breakthrough_model, top_predictors) {
+  cat("\n--- 2026 Breakthrough Prediction Function ---\n")
+  
+  # Input validation
+  if (\!is.data.frame(current_data)) stop("current_data is not a data frame")
+  if (nrow(current_data) == 0) stop("current_data is empty")
+  if (is.null(breakthrough_model)) stop("breakthrough_model is NULL")
+  if (is.null(top_predictors) || length(top_predictors) == 0) stop("No top_predictors provided")
+  
+  cat("Input validation passed\n")
+  cat("Using", length(top_predictors), "top predictors for breakthrough prediction\n")
+```
+**Purpose**: Creates a comprehensive function for generating 2026 breakthrough predictions with robust input validation. Ensures all required components are available before proceeding with predictions.
+
+#### 2. Predictor Mapping and Data Preparation
+```r
+# Define mapping from prev variables to current Elo variables with validation
+predictor_mapping <- c(
+  "Prev_Pelo" = "Pelo",
+  "Prev_Downhill" = "Downhill_Pelo", 
+  "Prev_Super_G" = "Super G_Pelo",
+  "Prev_Giant_Slalom" = "Giant Slalom_Pelo",
+  "Prev_Slalom" = "Slalom_Pelo",
+  "Prev_Combined" = "Combined_Pelo",
+  "Prev_Tech" = "Tech_Pelo",
+  "Prev_Speed" = "Speed_Pelo",
+  "Age" = "Age"
+)
+
+# Validate required columns exist in current_data
+required_cols <- c("Skier", "Nation", "Season", "Age", "Pct_of_Max_Points")
+missing_cols <- setdiff(required_cols, names(current_data))
+if (length(missing_cols) > 0) {
+  stop("Missing required columns in current_data: ", paste(missing_cols, collapse = ", "))
+}
+```
+**Purpose**: Establishes mapping between training data features (Prev_*) and current prediction data features, ensuring compatibility between model expectations and available data for 2026 predictions.
+
+#### 3. Career History Analysis and Candidate Identification
+```r
+# Career history analysis with validation
+cat("\n--- Career History Analysis ---\n")
+
+# Get 2025 data for potential breakthrough candidates
+tryCatch({
+  # Focus on 2025 season as the most recent complete season
+  season_2025_data <- current_data %>%
+    filter(Season == 2025) %>%
+    group_by(Skier) %>%
+    arrange(desc(Season)) %>%
+    slice(1) %>%  # Take most recent entry for each skier in 2025
+    ungroup()
+  
+  if (nrow(season_2025_data) == 0) {
+    stop("No 2025 season data found")
+  }
+  
+  cat("✓ 2025 season data identified:", nrow(season_2025_data), "skiers\n")
+  
+}, error = function(e) {
+  stop("Error accessing 2025 season data: ", e$message)
+})
+```
+**Purpose**: Identifies potential breakthrough candidates by focusing on 2025 season performance as the baseline for 2026 predictions. Uses most recent complete season data for accurate candidate assessment.
+
+#### 4. Breakthrough Candidate Filtering with Career Analysis
+```r
+# Identify breakthrough candidates with validation
+tryCatch({
+  # Define breakthrough candidates: those who haven't yet achieved 20% in their CAREER
+  # First, calculate career maximum performance for each skier across ALL seasons
+  career_max_performance <- current_data %>%
+    filter(\!is.na(Pct_of_Max_Points)) %>%
+    group_by(Skier) %>%
+    summarise(
+      Career_Max_Pct = max(Pct_of_Max_Points, na.rm = TRUE),
+      .groups = 'drop'
+    )
+  
+  # Then get the most recent season data and filter based on career maximum
+  current_candidates <- season_2025_data %>%
+    filter(
+      \!is.na(Age),
+      \!is.na(Pct_of_Max_Points),
+      Pct_of_Max_Points > 0.01   # Must have some competitive results in recent season
+    ) %>%
+    group_by(Skier) %>%
+    arrange(desc(Season)) %>%
+    slice(1) %>%  # Take most recent season for each skier (should be 2025)
+    ungroup() %>%
+    # Join with career maximum performance
+    left_join(career_max_performance, by = "Skier") %>%
+    # Filter out those who have EVER achieved 20% or more in their career
+    filter(
+      \!is.na(Career_Max_Pct),
+      Career_Max_Pct < 0.2  # Haven't achieved 20% breakthrough in their ENTIRE CAREER
+    )
+```
+**Purpose**: Implements sophisticated candidate filtering that examines entire career trajectories rather than single seasons:
+- **Career-based assessment**: Excludes skiers who have already achieved breakthrough at any point
+- **Recent activity requirement**: Ensures candidates have meaningful 2025 performance
+- **Comprehensive evaluation**: Uses all available historical data for accurate filtering
+
+#### 5. Data Quality Assessment and Candidate Validation
+```r
+# Check for data quality issues in candidates
+na_age_count <- sum(is.na(current_candidates$Age))
+na_pct_count <- sum(is.na(current_candidates$Pct_of_Max_Points))
+
+if (na_age_count > 0) {
+  warning("Found ", na_age_count, " candidates with missing age data")
+}
+if (na_pct_count > 0) {
+  warning("Found ", na_pct_count, " candidates with missing performance data")
+}
+
+cat("✓ Breakthrough candidates identified:", nrow(current_candidates), "\n")
+```
+**Purpose**: Validates data quality for identified breakthrough candidates and provides transparency about any data limitations that might affect prediction reliability.
+
+#### 6. Top Candidates Analysis and Age Distribution
+```r
+# Top candidates analysis with validation
+tryCatch({
+  print("Top 2025 performers among breakthrough candidates:")
+  top_candidates <- current_candidates %>% 
+    filter(\!is.na(Pct_of_Max_Points)) %>%
+    dplyr::select(Skier, Nation, Age, Pct_of_Max_Points) %>% 
+    arrange(desc(Pct_of_Max_Points)) %>% 
+    head(15)
+  
+  if (nrow(top_candidates) > 0) {
+    print(top_candidates)
+    cat("✓ Top candidates validated\n")
+  } else {
+    warning("No valid top candidates found")
+  }
+  
+}, error = function(e) {
+  warning("Error analyzing top candidates: ", e$message)
+})
+
+# Age distribution analysis with validation
+tryCatch({
+  age_summary <- current_candidates %>%
+    filter(\!is.na(Age)) %>%
+    summarise(
+      min_age = min(Age),
+      max_age = max(Age),
+      mean_age = round(mean(Age), 1),
+      median_age = median(Age),
+      n_under_25 = sum(Age <= 25)
+    )
+  
+  print("Breakthrough candidates age distribution:")
+  print(age_summary)
+  
+  cat("Candidates under 25:", age_summary$n_under_25, "out of", nrow(current_candidates), "\n")
+  
+}, error = function(e) {
+  warning("Error analyzing age distribution: ", e$message)
+})
+```
+**Purpose**: Provides comprehensive analysis of breakthrough candidate pool including performance levels and age demographics, helping understand the characteristics of potential breakthrough athletes.
+
+#### 7. Prediction Data Preparation and Feature Mapping
+```r
+# Prepare prediction data with validation
+tryCatch({
+  cat("\n--- Prediction Data Preparation ---\n")
+  
+  # Create prediction dataset by mapping current Elo variables to previous variables
+  prediction_data <- current_candidates
+  
+  # Map current variables to "previous" variables for model prediction
+  for (prev_var in names(predictor_mapping)) {
+    current_var <- predictor_mapping[[prev_var]]
+    
+    if (current_var %in% names(prediction_data)) {
+      prediction_data[[prev_var]] <- prediction_data[[current_var]]
+    } else {
+      warning("Current variable ", current_var, " not found in data")
+      prediction_data[[prev_var]] <- NA
+    }
+  }
+  
+  # Validate prediction data quality
+  prediction_cols_available <- intersect(top_predictors, names(prediction_data))
+  missing_pred_cols <- setdiff(top_predictors, names(prediction_data))
+  
+  if (length(missing_pred_cols) > 0) {
+    warning("Missing prediction columns: ", paste(missing_pred_cols, collapse = ", "))
+  }
+  
+  cat("Available prediction columns:", length(prediction_cols_available), "out of", length(top_predictors), "\n")
+  
+}, error = function(e) {
+  stop("Error preparing prediction data: ", e$message)
+})
+```
+**Purpose**: Transforms current alpine performance data into the format expected by breakthrough prediction models, handling feature name mapping and validating data availability for reliable predictions.
+
+#### 8. Breakthrough Probability Generation
+```r
+# Generate breakthrough predictions with validation
+tryCatch({
+  cat("\n--- Generating Breakthrough Predictions ---\n")
+  
+  # Validate predictors are available for model
+  missing_predictors <- setdiff(top_predictors, names(prediction_data))
+  if (length(missing_predictors) > 0) {
+    warning("Missing predictors for model prediction: ", paste(missing_predictors, collapse = ", "))
+  }
+  
+  # Make breakthrough predictions
+  breakthrough_probs <- predict(breakthrough_model,
+                               newdata = prediction_data,
+                               type = "prob")
+  
+  # Validate prediction results
+  if (is.null(breakthrough_probs)) {
+    stop("Model prediction returned NULL")
+  }
+  if (nrow(breakthrough_probs) \!= nrow(prediction_data)) {
+    stop("Prediction result row count mismatch")
+  }
+  if (\!"Yes" %in% names(breakthrough_probs)) {
+    stop("Missing 'Yes' probability column in predictions")
+  }
+  if (any(is.na(breakthrough_probs$Yes))) {
+    warning("NA values detected in breakthrough probabilities")
+  }
+  
+  cat("✓ Breakthrough predictions generated for", nrow(breakthrough_probs), "candidates\n")
+  
+}, error = function(e) {
+  stop("Error generating breakthrough predictions: ", e$message)
+})
+```
+**Purpose**: Generates actual breakthrough probability predictions using trained models with comprehensive validation to ensure prediction quality and reliability.
+
+#### 9. Prediction Analysis and Distribution Assessment
+```r
+# Prediction analysis with validation
+tryCatch({
+  yes_probs <- breakthrough_probs[,"Yes"]
+  
+  # Validate probability values
+  if (any(is.na(yes_probs))) {
+    warning("Found NA values in breakthrough probabilities")
+  }
+  
+  if (any(yes_probs < 0  < /dev/null |  yes_probs > 1, na.rm = TRUE)) {
+    warning("Found invalid probability values (outside 0-1 range)")
+  }
+  
+  print("Distribution of breakthrough probabilities:")
+  print(summary(yes_probs))
+  
+  max_prob <- max(yes_probs, na.rm = TRUE)
+  high_prob_count <- sum(yes_probs > 0.1, na.rm = TRUE)
+  medium_prob_count <- sum(yes_probs > 0.05, na.rm = TRUE)
+  
+  cat("Highest breakthrough probability:", round(max_prob * 100, 1), "%\n")
+  cat("Candidates with >10% breakthrough probability:", high_prob_count, "\n")
+  cat("Candidates with >5% breakthrough probability:", medium_prob_count, "\n")
+  
+}, error = function(e) {
+  warning("Error analyzing predictions: ", e$message)
+})
+```
+**Purpose**: Analyzes the distribution and quality of breakthrough predictions, providing insights into prediction confidence and identifying candidates with meaningful breakthrough potential.
+
+#### 10. Results DataFrame Creation with Likelihood Categories
+```r
+# Create results dataframe with validation
+tryCatch({
+  cat("\n--- Creating Results DataFrame ---\n")
+  
+  # Ensure we have required predictors for output
+  available_predictors <- intersect(top_predictors, names(prediction_data))
+  
+  results <- prediction_data %>%
+    dplyr::select(Skier, Nation, Age, all_of(available_predictors), Pct_of_Max_Points) %>%
+    mutate(
+      Breakthrough_Prob = breakthrough_probs[,"Yes"],
+      Points_To_Threshold = pmax(0, 0.2 - Pct_of_Max_Points, na.rm = TRUE),
+      Likelihood = case_when(
+        is.na(Breakthrough_Prob) ~ "Unknown",
+        Breakthrough_Prob >= 0.6 ~ "Very High",
+        Breakthrough_Prob >= 0.4 ~ "High", 
+        Breakthrough_Prob >= 0.2 ~ "Moderate",
+        Breakthrough_Prob >= 0.1 ~ "Low",
+        TRUE ~ "Very Low"
+      )
+    ) %>%
+    arrange(desc(Breakthrough_Prob))
+  
+  # Create age-filtered subset for young prospects
+  under25_results <- results %>%
+    filter(Age <= 25) %>%
+    arrange(desc(Breakthrough_Prob))
+  
+  cat("✓ Results created with", nrow(results), "total candidates\n")
+  cat("Young prospects (≤25):", nrow(under25_results), "candidates\n")
+  
+}, error = function(e) {
+  stop("Error creating results: ", e$message)
+})
+```
+**Purpose**: Creates comprehensive results dataframe with categorical likelihood assessments and identifies young prospects with special breakthrough potential for focused analysis.
+
+#### 11. Model Execution for Men's and Ladies Predictions
+```r
+# Execute breakthrough predictions with validation
+cat("\n--- 2026 Breakthrough Prediction Execution ---\n")
+
+# Make 2026 breakthrough predictions for men
+tryCatch({
+  cat("Generating men's breakthrough predictions\n")
+  
+  # Validate inputs
+  if (is.null(breakthrough_analysis_men$reduced_model)) {
+    stop("Men's breakthrough model is NULL")
+  }
+  if (is.null(breakthrough_analysis_men$top_predictors) || length(breakthrough_analysis_men$top_predictors) == 0) {
+    stop("Men's top predictors are NULL or empty")
+  }
+  
+  breakthrough_predictions_men <- predict_2026_breakthroughs(
+    train_men,  # Use full training data to check career history
+    breakthrough_analysis_men$reduced_model,
+    breakthrough_analysis_men$top_predictors
+  )
+  
+  cat("✓ Men's breakthrough predictions completed\n")
+  
+}, error = function(e) {
+  stop("Error generating men's breakthrough predictions: ", e$message)
+})
+```
+**Purpose**: Executes the breakthrough prediction process for both men's and ladies alpine skiing with comprehensive validation and error handling.
+
+#### 12. Historical Breakthrough Model Validation
+```r
+# Create comparative analysis with historical breakthroughs
+cat("\n=== HISTORICAL BREAKTHROUGH COMPARISON ===\n")
+
+# Function to apply breakthrough model to historical data
+predict_historical_breakthrough <- function(historical_data, breakthrough_model, top_predictors) {
+  
+  # Define mapping from prev variables to current Elo variables
+  predictor_mapping <- c(
+    "Prev_Pelo" = "Pelo",
+    "Prev_Downhill" = "Downhill_Pelo",
+    "Prev_Super_G" = "Super G_Pelo", 
+    "Prev_Giant_Slalom" = "Giant Slalom_Pelo",
+    "Prev_Slalom" = "Slalom_Pelo",
+    "Prev_Combined" = "Combined_Pelo",
+    "Prev_Tech" = "Tech_Pelo",
+    "Prev_Speed" = "Speed_Pelo",
+    "Prev_Pct_of_Max_Points" = "Pct_of_Max_Points"
+  )
+  
+  # Create prediction dataset by mapping current values to prev_ names
+  prediction_data <- historical_data
+  
+  for(prev_var in names(predictor_mapping)) {
+    if(prev_var %in% top_predictors) {
+      current_var <- predictor_mapping[prev_var]
+      if(current_var %in% names(historical_data)) {
+        prediction_data[[prev_var]] <- prediction_data[[current_var]]
+      }
+    }
+  }
+  
+  # Handle missing values with median imputation
+  for(pred in top_predictors) {
+    if(pred %in% names(prediction_data)) {
+      na_count <- sum(is.na(prediction_data[[pred]]))
+      if(na_count > 0) {
+        pred_median <- median(prediction_data[[pred]], na.rm = TRUE)
+        if(is.na(pred_median)) {
+          pred_median <- 0
+        }
+        prediction_data[[pred]] <- ifelse(is.na(prediction_data[[pred]]),
+                                        pred_median,
+                                        prediction_data[[pred]])
+      }
+    }
+  }
+  
+  # Make predictions
+  tryCatch({
+    breakthrough_probs <- predict(breakthrough_model,
+                                 newdata = prediction_data,
+                                 type = "prob")
+    return(breakthrough_probs[,"Yes"])
+  }, error = function(e) {
+    warning("Error predicting historical breakthroughs: ", e$message)
+    return(rep(0.5, nrow(prediction_data)))  # Default to 50% if prediction fails
+  })
+}
+```
+**Purpose**: Validates breakthrough prediction models by testing them against historical breakthrough cases, providing confidence assessment for 2026 predictions through backtesting on known outcomes.
+
+### Alpine-Specific Breakthrough Prediction Considerations
+
+#### Career-Based Assessment Framework
+Alpine breakthrough prediction uses comprehensive career analysis:
+- **Full career evaluation**: Examines entire competitive history rather than single seasons
+- **20% threshold consistency**: Maintains consistent definition of breakthrough across analysis
+- **Recent activity requirements**: Ensures candidates have meaningful current competitive engagement
+- **Multi-season trajectory consideration**: Accounts for alpine skiing's varying performance patterns
+
+#### Age and Development Patterns
+Alpine breakthrough analysis considers age-specific factors:
+- **Young prospects focus**: Special attention to skiers ≤25 years old
+- **No upper age limits**: Alpine skiing allows for breakthrough at various career stages
+- **Development trajectory diversity**: Accommodates different paths to alpine success
+- **Experience vs. potential balance**: Weighs both current performance and growth potential
+
+#### Multi-Discipline Integration
+Alpine breakthrough predictions incorporate discipline diversity:
+- **Technical vs. Speed emphasis**: Considers different paths to breakthrough through discipline specialization
+- **Overall rating importance**: Uses comprehensive alpine performance metrics
+- **Discipline-specific features**: Incorporates individual discipline ELO ratings
+- **Combined performance assessment**: Evaluates overall alpine versatility
+
+#### Historical Validation Approach
+The prediction system includes robust validation:
+- **Backtesting against known outcomes**: Tests model performance on historical breakthrough cases
+- **Predictor variable consistency**: Ensures fair comparison between historical and current predictions
+- **Missing data handling**: Robust imputation strategies for incomplete historical data
+- **Model confidence assessment**: Provides reliability indicators for predictions
+
+### Quality Assurance and Validation
+
+The breakthrough prediction process includes comprehensive validation:
+- **Input data validation** ensuring all required components are available
+- **Career history verification** confirming accurate breakthrough candidate identification
+- **Prediction quality assessment** validating probability ranges and distributions
+- **Results consistency checking** ensuring logical relationships in output
+- **Historical model validation** through backtesting on known breakthrough cases
+- **Error resilience** with graceful handling of missing data or model failures
+
+This alpine breakthrough prediction section provides a sophisticated framework for identifying 2026 breakthrough candidates while maintaining statistical rigor and practical applicability for understanding future alpine skiing success patterns.
