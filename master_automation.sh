@@ -301,28 +301,28 @@ fi
 # Execute the scripts in order
 log_message "======================================="
 log_message "Execution Summary:"
-log_message "  predict_script.sh: $([ "$run_predict_script" = true ] && echo "YES" || echo "NO")"
-log_message "  score_scrape.sh: $([ "$run_score_scrape" = true ] && echo "YES" || echo "NO")"  
+log_message "  score_scrape.sh: $([ "$run_score_scrape" = true ] && echo "YES" || echo "NO")"
+log_message "  predict_script.sh: $([ "$run_predict_script" = true ] && echo "YES" || echo "NO")"  
 log_message "  recap_script.sh: $([ "$run_recap_script" = true ] && echo "YES" || echo "NO")"
 log_message "======================================="
 
 script_results=""
 
-# Run predict_script.sh first (for today's races)
-if [[ "$run_predict_script" = true ]]; then
-    if run_script "predict_script.sh"; then
-        script_results="$script_results predict_script:SUCCESS"
-    else
-        script_results="$script_results predict_script:FAILED"
-    fi
-fi
-
-# Run score_scrape.sh second (processes yesterday's results)
+# Run score_scrape.sh first (processes yesterday's results and updates Elo ratings)
 if [[ "$run_score_scrape" = true ]]; then
     if run_script "score_scrape.sh"; then
         script_results="$script_results score_scrape:SUCCESS"
     else
         script_results="$script_results score_scrape:FAILED"
+    fi
+fi
+
+# Run predict_script.sh second (for today's races, using updated Elo ratings)
+if [[ "$run_predict_script" = true ]]; then
+    if run_script "predict_script.sh"; then
+        script_results="$script_results predict_script:SUCCESS"
+    else
+        script_results="$script_results predict_script:FAILED"
     fi
 fi
 
