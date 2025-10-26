@@ -335,6 +335,72 @@ if [[ "$run_recap_script" = true ]]; then
     fi
 fi
 
+# Git automation - commit and push changes
+if [[ "$script_results" != *"FAILED"* ]]; then
+    log_message "======================================="
+    log_message "Committing and pushing changes to git"
+    log_message "======================================="
+    
+    # Change to blog directory for git operations
+    cd "$BLOG_DIR"
+    
+    # Check if there are any changes to commit
+    if ! git diff --quiet || ! git diff --cached --quiet || [[ -n "$(git ls-files --others --exclude-standard)" ]]; then
+        log_message "Changes detected, proceeding with git operations..."
+        
+        # Add all changes
+        log_message "Adding all changes to git..."
+        if git add . >> "$LOG_FILE" 2>&1; then
+            log_message "✓ Successfully added changes to git"
+        else
+            log_message "✗ Failed to add changes to git"
+            script_results="$script_results git_add:FAILED"
+        fi
+        
+        # Create commit message based on successful scripts
+        successful_scripts=""
+        [[ "$script_results" == *"predict_script:SUCCESS"* ]] && successful_scripts="$successful_scripts predict_script"
+        [[ "$script_results" == *"score_scrape:SUCCESS"* ]] && successful_scripts="$successful_scripts score_scrape"
+        [[ "$script_results" == *"recap_script:SUCCESS"* ]] && successful_scripts="$successful_scripts recap_script"
+        
+        commit_message="Master automation successfully ran and did the following:$successful_scripts"
+        
+        # Commit changes
+        log_message "Committing changes with message: $commit_message"
+        if git commit -m "$commit_message" >> "$LOG_FILE" 2>&1; then
+            log_message "✓ Successfully committed changes"
+            script_results="$script_results git_commit:SUCCESS"
+        else
+            log_message "✗ Failed to commit changes"
+            script_results="$script_results git_commit:FAILED"
+        fi
+        
+        # Pull latest changes from origin
+        log_message "Pulling latest changes from origin main..."
+        if git pull origin main >> "$LOG_FILE" 2>&1; then
+            log_message "✓ Successfully pulled from origin main"
+            script_results="$script_results git_pull:SUCCESS"
+        else
+            log_message "✗ Failed to pull from origin main"
+            script_results="$script_results git_pull:FAILED"
+        fi
+        
+        # Push changes to origin
+        log_message "Pushing changes to origin main..."
+        if git push origin main >> "$LOG_FILE" 2>&1; then
+            log_message "✓ Successfully pushed to origin main"
+            script_results="$script_results git_push:SUCCESS"
+        else
+            log_message "✗ Failed to push to origin main"
+            script_results="$script_results git_push:FAILED"
+        fi
+    else
+        log_message "No changes detected, skipping git operations"
+    fi
+else
+    log_message "Scripts failed, skipping git operations"
+fi
+
 # Final summary
 log_message "======================================="
 log_message "Master Automation Script Completed"
@@ -346,9 +412,9 @@ log_message "======================================="
 
 # Exit with error code if any script failed
 if [[ "$script_results" == *"FAILED"* ]]; then
-    log_message "⚠️  Some scripts failed. Check individual log files for details."
+    log_message "⚠️  Some operations failed. Check individual log files for details."
     exit 1
 else
-    log_message "✓ All executed scripts completed successfully"
+    log_message "✓ All operations completed successfully"
     exit 0
 fi
