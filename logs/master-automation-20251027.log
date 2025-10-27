@@ -1,0 +1,36 @@
+[2025-10-27 21:28:34 UTC] =======================================
+[2025-10-27 21:28:34 UTC] Master Automation Script Starting
+[2025-10-27 21:28:34 UTC] =======================================
+[2025-10-27 21:28:34 UTC] Date: 2025-10-27 (10/27/2025)
+[2025-10-27 21:28:34 UTC] Day of week: 1 (1=Monday, 7=Sunday)
+[2025-10-27 21:28:34 UTC] =======================================
+[2025-10-27 21:28:34 UTC] Determining overall season dates...
+[2025-10-27 21:28:34 UTC]   alpine: 10/25/2025 to 03/25/2026
+[2025-10-27 21:28:34 UTC]   biathlon: 11/29/2025 to 03/22/2026
+[2025-10-27 21:28:34 UTC]   nordic-combined: 11/28/2025 to 03/15/2026
+[2025-10-27 21:28:34 UTC]   ski: 11/28/2025 to 03/22/2026
+[2025-10-27 21:28:34 UTC]   skijump: 11/21/2025 to 03/28/2026
+[2025-10-27 21:28:34 UTC] Overall season: 2025-10-25 to 2026-03-28
+[2025-10-27 21:28:34 UTC] Season period: 2025-10-25 to 2026-03-28
+[2025-10-27 21:28:34 UTC] Season check: 2025-10-25 <= 2025-10-27 <= 2026-03-29
+[2025-10-27 21:28:34 UTC] ✓ Currently in racing season
+[2025-10-27 21:28:34 UTC] - No races found for today - skipping predict_script.sh
+[2025-10-27 21:28:34 UTC] ✓ In season - will run score_scrape.sh (checks yesterday's races)
+[2025-10-27 21:28:34 UTC] ✓ Monday detected - will run recap_script.sh
+[2025-10-27 21:28:34 UTC] =======================================
+[2025-10-27 21:28:34 UTC] Execution Summary:
+[2025-10-27 21:28:34 UTC]   score_scrape.sh: YES
+[2025-10-27 21:28:34 UTC]   predict_script.sh: NO
+[2025-10-27 21:28:34 UTC]   recap_script.sh: YES
+[2025-10-27 21:28:34 UTC] =======================================
+[2025-10-27 21:28:34 UTC] Starting score_scrape.sh...
+[2025-10-27 21:32:42 UTC] ✓ score_scrape.sh completed successfully (2025-10-27 21:28:34 UTC to 2025-10-27 21:32:42 UTC)
+[2025-10-27 21:32:42 UTC]   Output logged to: /Users/syverjohansen/blog/daehl-e/logs/score_scrape-20251027-212834.log
+[2025-10-27 21:32:42 UTC] Starting recap_script.sh...
+[2025-10-27 21:36:55 UTC] ✓ recap_script.sh completed successfully (2025-10-27 21:32:42 UTC to 2025-10-27 21:36:55 UTC)
+[2025-10-27 21:36:55 UTC]   Output logged to: /Users/syverjohansen/blog/daehl-e/logs/recap_script-20251027-213242.log
+[2025-10-27 21:36:55 UTC] =======================================
+[2025-10-27 21:36:55 UTC] Committing and pushing changes to git
+[2025-10-27 21:36:55 UTC] =======================================
+[2025-10-27 21:36:55 UTC] Changes detected, proceeding with git operations...
+[2025-10-27 21:36:55 UTC] Adding all changes to git...
