@@ -1,0 +1,705 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Win %",
+    "Decimal Odds",
+    "American Odds"
+  ],
+  "rows": [
+    [
+      "Johannes Lamparter",
+      "Summer",
+      13.11,
+      7.63,
+      663
+    ],
+    [
+      "Jens Lurås Oftebro",
+      "Summer",
+      12.78,
+      7.83,
+      683
+    ],
+    [
+      "Vinzenz Geiger",
+      "Summer",
+      12.45,
+      8.03,
+      703
+    ],
+    [
+      "Julian Schmid",
+      "Summer",
+      9.8,
+      10.21,
+      921
+    ],
+    [
+      "Ilkka Herola",
+      "Summer",
+      8.41,
+      11.89,
+      1089
+    ],
+    [
+      "Stefan Rettenegger",
+      "Summer",
+      4.9,
+      20.41,
+      1941
+    ],
+    [
+      "Kristjan Ilves",
+      "Summer",
+      3.57,
+      28.02,
+      2702
+    ],
+    [
+      "Wendelin Thannheimer",
+      "Summer",
+      2.97,
+      33.65,
+      3265
+    ],
+    [
+      "Franz-Josef Rehrl",
+      "Summer",
+      2.93,
+      34.17,
+      3317
+    ],
+    [
+      "Johannes Rydzek",
+      "Summer",
+      2.79,
+      35.82,
+      3482
+    ],
+    [
+      "Thomas Rettenegger",
+      "Summer",
+      1.72,
+      58.25,
+      5725
+    ],
+    [
+      "Terence Weber",
+      "Summer",
+      1.69,
+      59.09,
+      5809
+    ],
+    [
+      "Simen Tiller",
+      "Summer",
+      1.38,
+      72.4,
+      7140
+    ],
+    [
+      "David Mach",
+      "Summer",
+      1.26,
+      79.55,
+      7855
+    ],
+    [
+      "Martin Fritz",
+      "Summer",
+      1.09,
+      91.42,
+      9042
+    ],
+    [
+      "Laurent Muhlethaler",
+      "Summer",
+      1.06,
+      94.16,
+      9316
+    ],
+    [
+      "Manuel Faißt",
+      "Summer",
+      0.88,
+      113.83,
+      11283
+    ],
+    [
+      "Fabio Obermeyr",
+      "Summer",
+      0.71,
+      141.42,
+      14042
+    ],
+    [
+      "Akito Watabe",
+      "Summer",
+      0.68,
+      147.48,
+      14648
+    ],
+    [
+      "Ryota Yamamoto",
+      "Summer",
+      0.65,
+      153.6,
+      15260
+    ],
+    [
+      "Espen Andersen",
+      "Summer",
+      0.62,
+      161.06,
+      16006
+    ],
+    [
+      "Einar Lurås Oftebro",
+      "Summer",
+      0.57,
+      176.97,
+      17597
+    ],
+    [
+      "Lukas Greiderer",
+      "Summer",
+      0.47,
+      213.39,
+      21239
+    ],
+    [
+      "Ben Loomis",
+      "Summer",
+      0.31,
+      318.49,
+      31749
+    ],
+    [
+      "Richard Stenzel",
+      "Summer",
+      0.27,
+      371.42,
+      37042
+    ],
+    [
+      "Marius Solvik",
+      "Summer",
+      0.27,
+      373.7,
+      37270
+    ],
+    [
+      "Eero Hirvonen",
+      "Summer",
+      0.24,
+      413.39,
+      41239
+    ],
+    [
+      "Andreas Skoglund",
+      "Summer",
+      0.24,
+      421.69,
+      42069
+    ],
+    [
+      "Otto Niittykoski",
+      "Summer",
+      0.2,
+      501.26,
+      50026
+    ],
+    [
+      "Kasper Moen Flatla",
+      "Summer",
+      0.18,
+      552.15,
+      55115
+    ],
+    [
+      "Aapeli Karislahti",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Aaron Kostner",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Aleksander Skoglund",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Alessandro Pittin",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Ali Askar",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Andreas Gfrerer",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Andreas Ottesen",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Andrzej Waliczek",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Arttu Mäkiaho",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Atsushi Narita",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Carter Brubaker",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Chingiz Rakparov",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Christian Deuschl",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Dmytro Mazurchuk",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Domenico Mariotti",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Edgar Vallet",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Eemeli Kurttila",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Erik Lynch",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Even Leinan Lund",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Florian Kolb",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Gael Blondeau",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Gašper Brecl",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Haibin Fan",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Henry Johnstone",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Herman Happonen",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Iacopo Bortolas",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Jakob Lange",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Jan Vytrval",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Jarkko Lankinen",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Jens Dahlseide Kvamme",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Jesse Pääkkönen",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Jialei Wang",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Jiawen Zhao",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Jiri Konvalinka",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Jonas Fischbauer",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Kacper Jarzabek",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Karlis Svede",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Kodai Kimura",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Kyotaro Yamazaki",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Lukas Mühlbacher",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Mael Tyrode",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Manuel Einkemmer",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Manuel Senoner",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Marco Heinis",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Matic Garbajs",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Matteo Baud",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Niklas Malacinski",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Oleksandr Shovkoplias",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Oleksandr Shumbarets",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Pascal Müller",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Paul Walcher",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Pawel Szyndlar",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Peter Raisanen",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Raffaele Buzzi",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Ruslan Shumanskyi",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Sebastian Østvold",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Shogo Azegami",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Simon Mach",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Sora Yachi",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Stefano Radovan",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Stephen Schumann",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Tom Rochat",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Tristan Sommerfeldt",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Valtteri Holopainen",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Vid Vrhovnik",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Wille Karhumaa",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Yoshito Watabe",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Yuya Yamamoto",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ],
+    [
+      "Zihe Zhao",
+      "Summer",
+      0.17,
+      583.88,
+      58288
+    ]
+  ]
+}

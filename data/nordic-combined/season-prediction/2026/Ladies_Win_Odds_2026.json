@@ -1,0 +1,369 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Win %",
+    "Decimal Odds",
+    "American Odds"
+  ],
+  "rows": [
+    [
+      "Nathalie Armbruster",
+      "Summer",
+      17.28,
+      5.79,
+      479
+    ],
+    [
+      "Haruka Kasai",
+      "Summer",
+      9.75,
+      10.26,
+      926
+    ],
+    [
+      "Ida Marie Hagen",
+      "Summer",
+      9.28,
+      10.77,
+      977
+    ],
+    [
+      "Yuna Kasai",
+      "Summer",
+      5.79,
+      17.28,
+      1628
+    ],
+    [
+      "Marte Leinan Lund",
+      "Summer",
+      5.64,
+      17.73,
+      1673
+    ],
+    [
+      "Alexa Brabec",
+      "Summer",
+      4.94,
+      20.24,
+      1924
+    ],
+    [
+      "Léna Brocard",
+      "Summer",
+      4.65,
+      21.52,
+      2052
+    ],
+    [
+      "Ema Volavsek",
+      "Summer",
+      4.31,
+      23.21,
+      2221
+    ],
+    [
+      "Jenny Nowak",
+      "Summer",
+      4.11,
+      24.33,
+      2333
+    ],
+    [
+      "Ella Wilson",
+      "Summer",
+      4.07,
+      24.55,
+      2355
+    ],
+    [
+      "Cindy Haasch",
+      "Summer",
+      3.76,
+      26.62,
+      2562
+    ],
+    [
+      "Minja Korhonen",
+      "Summer",
+      3.2,
+      31.21,
+      3021
+    ],
+    [
+      "Kira Maria Kapustikova",
+      "Summer",
+      1.98,
+      50.49,
+      4949
+    ],
+    [
+      "Lisa Hirner",
+      "Summer",
+      1.93,
+      51.91,
+      5091
+    ],
+    [
+      "Haley Brabec",
+      "Summer",
+      1.69,
+      59.1,
+      5810
+    ],
+    [
+      "Hanna Midtsundstad",
+      "Summer",
+      1.62,
+      61.79,
+      6079
+    ],
+    [
+      "Claudia Purker",
+      "Summer",
+      1.24,
+      80.85,
+      7985
+    ],
+    [
+      "Annika Malacinski",
+      "Summer",
+      1.15,
+      86.96,
+      8596
+    ],
+    [
+      "Yuzuki Kainuma",
+      "Summer",
+      1.15,
+      87.01,
+      8601
+    ],
+    [
+      "Daniela Dejori",
+      "Summer",
+      0.82,
+      122.58,
+      12158
+    ],
+    [
+      "Kai McKinnon",
+      "Summer",
+      0.78,
+      128.27,
+      12727
+    ],
+    [
+      "Anna Senoner",
+      "Summer",
+      0.75,
+      133.34,
+      13234
+    ],
+    [
+      "Masa Likozar Brankovic",
+      "Summer",
+      0.73,
+      137.82,
+      13682
+    ],
+    [
+      "Tia Malovrh",
+      "Summer",
+      0.66,
+      151.95,
+      15095
+    ],
+    [
+      "Karina Kozlova",
+      "Summer",
+      0.66,
+      152.14,
+      15114
+    ],
+    [
+      "Annalena Slamik",
+      "Summer",
+      0.64,
+      155.27,
+      15427
+    ],
+    [
+      "Sophia Maurus",
+      "Summer",
+      0.63,
+      159.87,
+      15887
+    ],
+    [
+      "Jonna Kil",
+      "Summer",
+      0.59,
+      170.83,
+      16983
+    ],
+    [
+      "Ingrid Låte",
+      "Summer",
+      0.57,
+      174.69,
+      17369
+    ],
+    [
+      "Mille Marie Hagen",
+      "Summer",
+      0.47,
+      210.62,
+      20962
+    ],
+    [
+      "Katharina Gruber",
+      "Summer",
+      0.47,
+      213.65,
+      21265
+    ],
+    [
+      "Maria Gerboth",
+      "Summer",
+      0.46,
+      215.59,
+      21459
+    ],
+    [
+      "Nora Helene Evans",
+      "Summer",
+      0.38,
+      261.85,
+      26085
+    ],
+    [
+      "Greta Pinzani",
+      "Summer",
+      0.38,
+      265.68,
+      26468
+    ],
+    [
+      "Marion Droz Vincent",
+      "Summer",
+      0.37,
+      273.24,
+      27224
+    ],
+    [
+      "Anna Kerko",
+      "Summer",
+      0.36,
+      280.43,
+      27943
+    ],
+    [
+      "Romane Baud",
+      "Summer",
+      0.29,
+      344.56,
+      34356
+    ],
+    [
+      "Veronica Gianmoena",
+      "Summer",
+      0.29,
+      348.7,
+      34770
+    ],
+    [
+      "Petra Torvinen",
+      "Summer",
+      0.27,
+      366.14,
+      36514
+    ],
+    [
+      "Ronja Loh",
+      "Summer",
+      0.27,
+      376.98,
+      37598
+    ],
+    [
+      "Teja Pavec",
+      "Summer",
+      0.26,
+      383.58,
+      38258
+    ],
+    [
+      "Jolana Hradilova",
+      "Summer",
+      0.2,
+      503.67,
+      50267
+    ],
+    [
+      "Sana Azegami",
+      "Summer",
+      0.2,
+      509.41,
+      50841
+    ],
+    [
+      "Heta Hirvonen",
+      "Summer",
+      0.2,
+      509.77,
+      50877
+    ],
+    [
+      "Anna-Sophie Gredler",
+      "Summer",
+      0.17,
+      574.83,
+      57383
+    ],
+    [
+      "Anne Häckel",
+      "Summer",
+      0.16,
+      635.74,
+      63474
+    ],
+    [
+      "Trine Göpfert",
+      "Summer",
+      0.15,
+      685.26,
+      68426
+    ],
+    [
+      "Svenja Wuerth",
+      "Summer",
+      0.11,
+      897.56,
+      89656
+    ],
+    [
+      "Laura Pletz",
+      "Summer",
+      0.08,
+      1000.0,
+      99900
+    ],
+    [
+      "Silva Verbič",
+      "Summer",
+      0.08,
+      1000.0,
+      99900
+    ],
+    [
+      "Tereza Koldovska",
+      "Summer",
+      0.04,
+      1000.0,
+      99900
+    ]
+  ]
+}

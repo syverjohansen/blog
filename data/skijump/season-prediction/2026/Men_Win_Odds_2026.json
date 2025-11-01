@@ -1,0 +1,656 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Win %",
+    "Decimal Odds",
+    "American Odds"
+  ],
+  "rows": [
+    [
+      "Daniel Tschofenig",
+      "Austria",
+      23.61,
+      4.24,
+      324
+    ],
+    [
+      "Jan Hörl",
+      "Austria",
+      18.52,
+      5.4,
+      440
+    ],
+    [
+      "Anze Lanisek",
+      "Slovenia",
+      7.71,
+      12.96,
+      1196
+    ],
+    [
+      "Ryoyu Kobayashi",
+      "Japan",
+      7.11,
+      14.07,
+      1307
+    ],
+    [
+      "Stefan Kraft",
+      "Austria",
+      6.92,
+      14.44,
+      1344
+    ],
+    [
+      "Andreas Wellinger",
+      "Germany",
+      5.18,
+      19.29,
+      1829
+    ],
+    [
+      "Kristoffer Eriksen Sundal",
+      "Norway",
+      3.63,
+      27.52,
+      2652
+    ],
+    [
+      "Domen Prevc",
+      "Slovenia",
+      3.16,
+      31.67,
+      3067
+    ],
+    [
+      "Maximilian Ortner",
+      "Austria",
+      2.71,
+      36.85,
+      3585
+    ],
+    [
+      "Pawel Wasek",
+      "Poland",
+      1.94,
+      51.48,
+      5048
+    ],
+    [
+      "Ren Nikaido",
+      "Japan",
+      1.45,
+      69.18,
+      6818
+    ],
+    [
+      "Tate Frantz",
+      "USA",
+      1.39,
+      72.0,
+      7100
+    ],
+    [
+      "Timi Zajc",
+      "Slovenia",
+      1.31,
+      76.19,
+      7519
+    ],
+    [
+      "Gregor Deschwanden",
+      "Switzerland",
+      1.08,
+      92.45,
+      9145
+    ],
+    [
+      "Philipp Raimund",
+      "Germany",
+      0.88,
+      113.3,
+      11230
+    ],
+    [
+      "Karl Geiger",
+      "Germany",
+      0.81,
+      122.75,
+      12175
+    ],
+    [
+      "Halvor Egner Granerud",
+      "Norway",
+      0.62,
+      162.06,
+      16106
+    ],
+    [
+      "Markus Mueller",
+      "Austria",
+      0.52,
+      192.06,
+      19106
+    ],
+    [
+      "Benjamin Østvold",
+      "Norway",
+      0.46,
+      219.75,
+      21875
+    ],
+    [
+      "Stephan Embacher",
+      "Austria",
+      0.44,
+      227.8,
+      22680
+    ],
+    [
+      "Hektor Kapustik",
+      "Slovakia",
+      0.36,
+      276.82,
+      27582
+    ],
+    [
+      "Lovro Kos",
+      "Slovenia",
+      0.34,
+      293.96,
+      29296
+    ],
+    [
+      "Artti Aigro",
+      "Estonia",
+      0.33,
+      305.1,
+      30410
+    ],
+    [
+      "Pius Paschke",
+      "Germany",
+      0.33,
+      305.56,
+      30456
+    ],
+    [
+      "Rok Masle",
+      "Slovenia",
+      0.32,
+      309.19,
+      30819
+    ],
+    [
+      "Ziga Jancar",
+      "Slovenia",
+      0.31,
+      317.96,
+      31696
+    ],
+    [
+      "Kaimar Vagul",
+      "Estonia",
+      0.29,
+      342.69,
+      34169
+    ],
+    [
+      "Tomas Kuisma",
+      "Finland",
+      0.29,
+      344.5,
+      34350
+    ],
+    [
+      "Manuel Fettner",
+      "Austria",
+      0.27,
+      369.44,
+      36844
+    ],
+    [
+      "Jason Colby",
+      "USA",
+      0.24,
+      415.4,
+      41440
+    ],
+    [
+      "Isak Andreas Langmo",
+      "Norway",
+      0.24,
+      425.1,
+      42410
+    ],
+    [
+      "Aleksander Zniszczol",
+      "Poland",
+      0.22,
+      454.02,
+      45302
+    ],
+    [
+      "Jonas Schuster",
+      "Austria",
+      0.2,
+      503.7,
+      50270
+    ],
+    [
+      "Naoki Nakamura",
+      "Japan",
+      0.19,
+      524.29,
+      52329
+    ],
+    [
+      "Hannes Landerer",
+      "Austria",
+      0.19,
+      525.64,
+      52464
+    ],
+    [
+      "Erik Belshaw",
+      "USA",
+      0.18,
+      543.54,
+      54254
+    ],
+    [
+      "Adrian Thon Gundersrud",
+      "Norway",
+      0.16,
+      619.37,
+      61837
+    ],
+    [
+      "Weijie Zhen",
+      "China",
+      0.16,
+      619.8,
+      61880
+    ],
+    [
+      "Valentin Foubert",
+      "France",
+      0.16,
+      627.44,
+      62644
+    ],
+    [
+      "Constantin Schmid",
+      "Germany",
+      0.16,
+      634.87,
+      63387
+    ],
+    [
+      "Paavo Romppainen",
+      "Finland",
+      0.16,
+      643.28,
+      64228
+    ],
+    [
+      "Fredrik Villumstad",
+      "Norway",
+      0.15,
+      650.39,
+      64939
+    ],
+    [
+      "Zak Mogel",
+      "Slovenia",
+      0.15,
+      676.54,
+      67554
+    ],
+    [
+      "Clemens Aigner",
+      "Austria",
+      0.14,
+      695.66,
+      69466
+    ],
+    [
+      "Sølve Jokerud Strand",
+      "Norway",
+      0.14,
+      720.3,
+      71930
+    ],
+    [
+      "Ziga Jelar",
+      "Slovenia",
+      0.13,
+      740.79,
+      73979
+    ],
+    [
+      "Kacper Juroszek",
+      "Poland",
+      0.13,
+      754.87,
+      75387
+    ],
+    [
+      "Sakutaro Kobayashi",
+      "Japan",
+      0.13,
+      774.99,
+      77399
+    ],
+    [
+      "Yannick Wasser",
+      "Switzerland",
+      0.12,
+      806.83,
+      80583
+    ],
+    [
+      "Sindre Ulven Jørgensen",
+      "Norway",
+      0.11,
+      910.91,
+      90991
+    ],
+    [
+      "Qiwu Song",
+      "China",
+      0.11,
+      913.84,
+      91284
+    ],
+    [
+      "Yevhen Marusiak",
+      "Ukraine",
+      0.11,
+      914.91,
+      91391
+    ],
+    [
+      "Robin Pedersen",
+      "Norway",
+      0.11,
+      927.36,
+      92636
+    ],
+    [
+      "Ilya Mizernykh",
+      "Kazakhstan",
+      0.1,
+      956.87,
+      95587
+    ],
+    [
+      "Adrian Tittel",
+      "Germany",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Alex Insam",
+      "Italy",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Andrew Urlaub",
+      "USA",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Antti Aalto",
+      "Finland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Danil Vassilyev",
+      "Kazakhstan",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Dawid Kubacki",
+      "Poland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Decker Dean",
+      "USA",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Eetu Nousiainen",
+      "Finland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Enzo Milesi",
+      "France",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Fatih Arda Ipcioglu",
+      "Turkey",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Felix Hoffmann",
+      "Germany",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Felix Trunz",
+      "Switzerland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Francesco Cecon",
+      "Italy",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Jakub Wolny",
+      "Poland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Jarkko Määttä",
+      "Finland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Junshiro Kobayashi",
+      "Japan",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Kamil Stoch",
+      "Poland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Kasperi Valto",
+      "Finland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Keiichi Sato",
+      "Japan",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Kevin Bickner",
+      "USA",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Killian Peier",
+      "Switzerland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Luca Roth",
+      "Germany",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Maciej Kot",
+      "Poland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Muhammed Ali Bedir",
+      "Turkey",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Niko Kytösaho",
+      "Finland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Noriaki Kasai",
+      "Japan",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Piotr Zyla",
+      "Poland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Remo Imhof",
+      "Switzerland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Rok Oblak",
+      "Slovenia",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Roman Koudelka",
+      "Czechia",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Sandro Hauswirth",
+      "Switzerland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Simon Ammann",
+      "Switzerland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Taku Takeuchi",
+      "Japan",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Tomofumi Naito",
+      "Japan",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Vilho Palosaari",
+      "Finland",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Vitaliy Kalinichenko",
+      "Ukraine",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Vladimir Zografski",
+      "Bulgaria",
+      0.1,
+      1000.0,
+      99900
+    ],
+    [
+      "Yukiya Sato",
+      "Japan",
+      0.1,
+      1000.0,
+      99900
+    ]
+  ]
+}

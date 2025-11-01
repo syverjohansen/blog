@@ -1910,26 +1910,24 @@ tryCatch({
     
     # Create Excel-ready dataframe
     men_pred_results <- men_pred_data_full %>%
-      dplyr::select(Skier, Nation, Predicted_Pct_2026, Lower_CI, Upper_CI, 
+      dplyr::select(Skier, Nation, Predicted_Pct_2026, 
                     Pelo, Individual_Pelo, IndividualCompact_Pelo, MassStart_Pelo, Pct_of_Max_Points) %>%
       mutate(
         `Predicted Percent 2026` = round(Predicted_Pct_2026 * 100, 2),
-        `Lower 95% CI` = round(Lower_CI * 100, 2),
-        `Upper 95% CI` = round(Upper_CI * 100, 2),
         `Current Overall ELO` = round(Pelo, 0),
         `Current Individual ELO` = round(Individual_Pelo, 0),
         `Current IndividualCompact ELO` = round(IndividualCompact_Pelo, 0),
         `Current Mass Start ELO` = round(MassStart_Pelo, 0),
         `2025 Pct of Max Points` = round(Pct_of_Max_Points * 100, 2)
       ) %>%
-      dplyr::select(Skier, Nation, `Predicted Percent 2026`, `Lower 95% CI`, `Upper 95% CI`,
+      dplyr::select(Skier, Nation, `Predicted Percent 2026`,
                     `Current Overall ELO`, `Current Individual ELO`, `Current IndividualCompact ELO`, 
                     `Current Mass Start ELO`, `2025 Pct of Max Points`) %>%
       arrange(desc(`Predicted Percent 2026`))
     
     cat(sprintf("✓ Generated predictions for %d men's nordic combined athletes\n", nrow(men_pred_results)))
     cat("Top 5 men's nordic combined predictions:\n")
-    print(head(men_pred_results[c("Skier", "Predicted Percent 2026", "Lower 95% CI", "Upper 95% CI")], 5))
+    print(head(men_pred_results[c("Skier", "Predicted Percent 2026")], 5))
     
   } else {
     cat("No data available for men's 2026 nordic combined predictions\n")
@@ -1981,26 +1979,24 @@ tryCatch({
     
     # Create Excel-ready dataframe
     ladies_pred_results <- ladies_pred_data_full %>%
-      dplyr::select(Skier, Nation, Predicted_Pct_2026, Lower_CI, Upper_CI, 
+      dplyr::select(Skier, Nation, Predicted_Pct_2026, 
                     Pelo, Individual_Pelo, IndividualCompact_Pelo, MassStart_Pelo, Pct_of_Max_Points) %>%
       mutate(
         `Predicted Percent 2026` = round(Predicted_Pct_2026 * 100, 2),
-        `Lower 95% CI` = round(Lower_CI * 100, 2),
-        `Upper 95% CI` = round(Upper_CI * 100, 2),
         `Current Overall ELO` = round(Pelo, 0),
         `Current Individual ELO` = round(Individual_Pelo, 0),
         `Current IndividualCompact ELO` = round(IndividualCompact_Pelo, 0),
         `Current Mass Start ELO` = round(MassStart_Pelo, 0),
         `2025 Pct of Max Points` = round(Pct_of_Max_Points * 100, 2)
       ) %>%
-      dplyr::select(Skier, Nation, `Predicted Percent 2026`, `Lower 95% CI`, `Upper 95% CI`,
+      dplyr::select(Skier, Nation, `Predicted Percent 2026`,
                     `Current Overall ELO`, `Current Individual ELO`, `Current IndividualCompact ELO`, 
                     `Current Mass Start ELO`, `2025 Pct of Max Points`) %>%
       arrange(desc(`Predicted Percent 2026`))
     
     cat(sprintf("✓ Generated predictions for %d ladies nordic combined athletes\n", nrow(ladies_pred_results)))
     cat("Top 5 ladies nordic combined predictions:\n")
-    print(head(ladies_pred_results[c("Skier", "Predicted Percent 2026", "Lower 95% CI", "Upper 95% CI")], 5))
+    print(head(ladies_pred_results[c("Skier", "Predicted Percent 2026")], 5))
     
   } else {
     cat("No data available for ladies 2026 nordic combined predictions\n")
@@ -2033,7 +2029,7 @@ tryCatch({
     addStyle(men_wb, "Men_NordicCombined_2026", headerStyle, rows = 1, cols = 1:ncol(men_pred_results))
     
     # Save men's workbook
-    men_output_file <- "excel365/Men_NordicCombined_Predictions_2026.xlsx"
+    men_output_file <- "excel365/Men_WorldCup_Predictions_2026.xlsx"
     saveWorkbook(men_wb, men_output_file, overwrite = TRUE)
     
     cat(sprintf("✓ Men's nordic combined predictions exported to: %s\n", men_output_file))
@@ -2050,7 +2046,7 @@ tryCatch({
     addStyle(ladies_wb, "Ladies_NordicCombined_2026", headerStyle, rows = 1, cols = 1:ncol(ladies_pred_results))
     
     # Save ladies workbook
-    ladies_output_file <- "excel365/Ladies_NordicCombined_Predictions_2026.xlsx"
+    ladies_output_file <- "excel365/Ladies_WorldCup_Predictions_2026.xlsx"
     saveWorkbook(ladies_wb, ladies_output_file, overwrite = TRUE)
     
     cat(sprintf("✓ Ladies nordic combined predictions exported to: %s\n", ladies_output_file))
@@ -2419,7 +2415,7 @@ cat("\n--- Categorical Outcome Creation ---\n")
 tryCatch({
   men_odds_data <- men_odds_data %>%
     mutate(
-      Top1 = factor(ifelse(Place == 1, 1, 0)),      # Binary: 1=Winner, 0=Not Winner
+      Win = factor(ifelse(Place == 1, 1, 0)),      # Binary: 1=Winner, 0=Not Winner
       TopThree = factor(ifelse(Place <= 3, 1, 0)),  # Binary: 1=Top3, 0=Not Top3
       Top5 = factor(ifelse(Place <= 5, 1, 0)),
       Top10 = factor(ifelse(Place <= 10, 1, 0)),
@@ -2434,7 +2430,7 @@ tryCatch({
 tryCatch({
   ladies_odds_data <- ladies_odds_data %>%
     mutate(
-      Top1 = factor(ifelse(Place == 1, 1, 0)),      # Binary: 1=Winner, 0=Not Winner
+      Win = factor(ifelse(Place == 1, 1, 0)),      # Binary: 1=Winner, 0=Not Winner
       TopThree = factor(ifelse(Place <= 3, 1, 0)),  # Binary: 1=Top3, 0=Not Top3
       Top5 = factor(ifelse(Place <= 5, 1, 0)),
       Top10 = factor(ifelse(Place <= 10, 1, 0)),
@@ -2825,7 +2821,7 @@ exhaustive_feature_search <- function(target, data_df, gender_label, available_f
 cat("\n--- Data Structure Validation ---\n")
 
 # Check target variable distributions
-targets <- c("Top1", "TopThree", "Top5", "Top10", "Top30")
+targets <- c("Win", "TopThree", "Top5", "Top10", "Top30")
 for (target in targets) {
   if (target %in% names(men_odds_data)) {
     men_table <- table(men_odds_data[[target]])
@@ -2981,7 +2977,7 @@ if (!exists("best_features_odds_men") || !exists("best_features_odds_ladies")) {
 }
 
 # Define outcomes for nordic combined
-outcomes <- c("Top1", "TopThree", "Top5", "Top10", "Top30")
+outcomes <- c("Win", "TopThree", "Top5", "Top10", "Top30")
 
 # Validate feature selection results
 cat("\n--- Nordic Combined Feature Selection Validation ---\n")
@@ -3036,6 +3032,51 @@ fit_validated_glm <- function(features, data, outcome, gender_label) {
       warning(sprintf("%s nordic combined %s model has invalid coefficients", gender_label, outcome))
       return(NULL)
     }
+    
+    # Add coefficient direction validation for odds prediction
+    cat(sprintf("\n--- %s Nordic Combined %s Model Coefficient Validation ---\n", gender_label, outcome))
+    tryCatch({
+      # Get logistic regression coefficients
+      logistic_coefs <- summary(model)$coefficients
+      
+      # Expected positive coefficients for odds prediction (nordic combined specific)
+      expected_positive_vars <- c("Prev_Pelo", "Prev_Pct_of_Max_Points")
+      expected_negative_vars <- c("Age")  # Younger athletes more likely to achieve good results
+      
+      # Check coefficient directions
+      for (var in names(model$coefficients)) {
+        if (var != "(Intercept)" && var %in% rownames(logistic_coefs)) {
+          coef_value <- logistic_coefs[var, "Estimate"]
+          coef_pvalue <- logistic_coefs[var, "Pr(>|z|)"]
+          
+          # Check if coefficient direction matches expectation
+          if (var %in% expected_positive_vars) {
+            if (coef_value > 0) {
+              cat("✓", var, "has positive coefficient (", round(coef_value, 4), ") - VALID for", outcome, "prediction\n")
+            } else {
+              cat("⚠️  WARNING:", var, "has negative coefficient (", round(coef_value, 4), ") - unexpected for", outcome, "prediction\n")
+            }
+          } else if (var %in% expected_negative_vars) {
+            if (coef_value < 0) {
+              cat("✓", var, "has negative coefficient (", round(coef_value, 4), ") - VALID for", outcome, "prediction\n")
+            } else {
+              cat("⚠️  WARNING:", var, "has positive coefficient (", round(coef_value, 4), ") - unexpected for", outcome, "prediction\n")
+            }
+          } else {
+            # For other variables, include regardless of direction but note it
+            cat("?", var, "has coefficient (", round(coef_value, 4), ") - included (direction not specified)\n")
+          }
+          
+          # Also check statistical significance
+          if (coef_pvalue > 0.1) {
+            cat("  NOTE:", var, "p-value =", round(coef_pvalue, 4), "(not significant at 0.1 level)\n")
+          }
+        }
+      }
+      
+    }, error = function(e) {
+      cat("Error in nordic combined", outcome, "coefficient validation:", e$message, "\n")
+    })
     
     # Calculate model diagnostics
     null_deviance <- model$null.deviance
@@ -3134,6 +3175,34 @@ for (outcome in outcomes) {
   )
 }
 
+# DEBUG: Show prediction values for Oftebro
+oftebro_indices <- which(pred_data_men$Skier == "Jens Lurås Oftebro")
+if (length(oftebro_indices) > 0) {
+  cat("\n--- DEBUG: Oftebro Nordic Combined Model Values ---\n")
+  oftebro_data <- pred_data_men[oftebro_indices[1], , drop = FALSE]
+  
+  # Show all available features for Oftebro
+  cat("Available data for Oftebro:\n")
+  for (col_name in names(oftebro_data)) {
+    value <- oftebro_data[[col_name]]
+    cat(sprintf("  %s: %s\n", col_name, 
+               ifelse(is.na(value), "NA", 
+                     ifelse(is.numeric(value), round(value, 4), value))))
+  }
+  
+  # Show predictions for each outcome
+  cat("\nOftebro predictions:\n")
+  for (outcome in outcomes) {
+    if (outcome %in% names(men_predictions) && length(men_predictions[[outcome]]) >= oftebro_indices[1]) {
+      prob <- men_predictions[[outcome]][oftebro_indices[1]]
+      cat(sprintf("  %s probability: %.4f (%.2f%%)\n", outcome, prob, prob * 100))
+    }
+  }
+  cat("--- End Oftebro Debug ---\n\n")
+} else {
+  cat("Oftebro not found in men's prediction data\n")
+}
+
 # Generate ladies nordic combined predictions
 cat("\n--- Ladies Nordic Combined Predictions ---\n") 
 ladies_predictions <- list()
@@ -3142,6 +3211,34 @@ for (outcome in outcomes) {
   ladies_predictions[[outcome]] <- generate_nordic_combined_predictions(
     ladies_models[[outcome]], pred_data_ladies, outcome, "Ladies"
   )
+}
+
+# DEBUG: Show prediction values for Ida Marie Hagen
+ida_indices <- which(pred_data_ladies$Skier == "Ida Marie Hagen")
+if (length(ida_indices) > 0) {
+  cat("\n--- DEBUG: Ida Marie Hagen Nordic Combined Model Values ---\n")
+  ida_data <- pred_data_ladies[ida_indices[1], , drop = FALSE]
+  
+  # Show all available features for Ida Marie Hagen
+  cat("Available data for Ida Marie Hagen:\n")
+  for (col_name in names(ida_data)) {
+    value <- ida_data[[col_name]]
+    cat(sprintf("  %s: %s\n", col_name, 
+               ifelse(is.na(value), "NA", 
+                     ifelse(is.numeric(value), round(value, 4), value))))
+  }
+  
+  # Show predictions for each outcome
+  cat("\nIda Marie Hagen predictions:\n")
+  for (outcome in outcomes) {
+    if (outcome %in% names(ladies_predictions) && length(ladies_predictions[[outcome]]) >= ida_indices[1]) {
+      prob <- ladies_predictions[[outcome]][ida_indices[1]]
+      cat(sprintf("  %s probability: %.4f (%.2f%%)\n", outcome, prob, prob * 100))
+    }
+  }
+  cat("--- End Ida Marie Hagen Debug ---\n\n")
+} else {
+  cat("Ida Marie Hagen not found in ladies prediction data\n")
 }
 
 # Probability normalization function for nordic combined
@@ -3181,7 +3278,7 @@ normalize_nordic_combined_probabilities <- function(predictions, target_sum, max
 cat("\n--- Men's Nordic Combined Probability Normalization ---\n")
 
 men_norm_predictions <- list()
-normalization_targets <- list(Top1 = 1.0, TopThree = 3.0, Top5 = 5.0, Top10 = 10.0, Top30 = 30.0)
+normalization_targets <- list(Win = 1.0, TopThree = 3.0, Top5 = 5.0, Top10 = 10.0, Top30 = 30.0)
 
 for (outcome in outcomes) {
   if (outcome %in% names(normalization_targets)) {
@@ -3225,8 +3322,8 @@ if (nrow(pred_data_men) > 0) {
   men_results <- pred_data_men %>%
     dplyr::select(Skier, Nation) %>%
     mutate(
-      Win_Prob = if("Top1" %in% names(men_norm_predictions)) {
-        men_norm_predictions[["Top1"]]
+      Win_Prob = if("Win" %in% names(men_norm_predictions)) {
+        men_norm_predictions[["Win"]]
       } else {
         rep(0, nrow(pred_data_men))
       },
@@ -3250,6 +3347,14 @@ if (nrow(pred_data_men) > 0) {
       } else {
         rep(0, nrow(pred_data_men))
       }
+    ) %>%
+    mutate(
+      # Enforce logical ordering constraint: Win <= Top3 <= Top5 <= Top10 <= Top30
+      Win_Prob = pmax(Win_Prob, 0),
+      Top3_Prob = pmax(Top3_Prob, Win_Prob),
+      Top5_Prob = pmax(Top5_Prob, Top3_Prob),
+      Top10_Prob = pmax(Top10_Prob, Top5_Prob),
+      Top30_Prob = pmax(Top30_Prob, Top10_Prob)
     ) %>%
     mutate(
       # Convert to percentages
@@ -3299,8 +3404,8 @@ if (nrow(pred_data_ladies) > 0) {
   ladies_results <- pred_data_ladies %>%
     dplyr::select(Skier, Nation) %>%
     mutate(
-      Win_Prob = if("Top1" %in% names(ladies_norm_predictions)) {
-        ladies_norm_predictions[["Top1"]]
+      Win_Prob = if("Win" %in% names(ladies_norm_predictions)) {
+        ladies_norm_predictions[["Win"]]
       } else {
         rep(0, nrow(pred_data_ladies))
       },
@@ -3324,6 +3429,14 @@ if (nrow(pred_data_ladies) > 0) {
       } else {
         rep(0, nrow(pred_data_ladies))
       }
+    ) %>%
+    mutate(
+      # Enforce logical ordering constraint: Win <= Top3 <= Top5 <= Top10 <= Top30
+      Win_Prob = pmax(Win_Prob, 0),
+      Top3_Prob = pmax(Top3_Prob, Win_Prob),
+      Top5_Prob = pmax(Top5_Prob, Top3_Prob),
+      Top10_Prob = pmax(Top10_Prob, Top5_Prob),
+      Top30_Prob = pmax(Top30_Prob, Top10_Prob)
     ) %>%
     mutate(
       # Convert to percentages
@@ -3380,7 +3493,7 @@ if (!dir.exists(output_dir)) {
 if (nrow(men_results) > 0) {
   tryCatch({
     # Win odds
-    win_file <- file.path(output_dir, "Men_Nordic_Combined_Win_Odds_2026.xlsx")
+    win_file <- file.path(output_dir, "Men_Win_Odds_2026.xlsx")
     win_data <- men_results %>%
       dplyr::select(Skier, Nation, Win_Pct, Win_Decimal_Odds, Win_American_Odds) %>%
       rename(`Win %` = Win_Pct, `Decimal Odds` = Win_Decimal_Odds, `American Odds` = Win_American_Odds)
@@ -3388,7 +3501,7 @@ if (nrow(men_results) > 0) {
     cat("✓ Men's nordic combined win odds exported:", win_file, "\n")
     
     # Top 3 odds
-    top3_file <- file.path(output_dir, "Men_Nordic_Combined_Top3_Odds_2026.xlsx")
+    top3_file <- file.path(output_dir, "Men_Top3_Odds_2026.xlsx")
     top3_data <- men_results %>%
       dplyr::select(Skier, Nation, Top3_Pct, Top3_Decimal_Odds, Top3_American_Odds) %>%
       rename(`Top 3 %` = Top3_Pct, `Decimal Odds` = Top3_Decimal_Odds, `American Odds` = Top3_American_Odds)
@@ -3396,7 +3509,7 @@ if (nrow(men_results) > 0) {
     cat("✓ Men's nordic combined top 3 odds exported:", top3_file, "\n")
     
     # Top 10 odds
-    top10_file <- file.path(output_dir, "Men_Nordic_Combined_Top10_Odds_2026.xlsx")
+    top10_file <- file.path(output_dir, "Men_Top10_Odds_2026.xlsx")
     top10_data <- men_results %>%
       dplyr::select(Skier, Nation, Top10_Pct, Top10_Decimal_Odds, Top10_American_Odds) %>%
       rename(`Top 10 %` = Top10_Pct, `Decimal Odds` = Top10_Decimal_Odds, `American Odds` = Top10_American_Odds)
@@ -3404,7 +3517,7 @@ if (nrow(men_results) > 0) {
     cat("✓ Men's nordic combined top 10 odds exported:", top10_file, "\n")
     
     # Top 30 odds
-    top30_file <- file.path(output_dir, "Men_Nordic_Combined_Top30_Odds_2026.xlsx")
+    top30_file <- file.path(output_dir, "Men_Top30_Odds_2026.xlsx")
     top30_data <- men_results %>%
       dplyr::select(Skier, Nation, Top30_Pct, Top30_Decimal_Odds, Top30_American_Odds) %>%
       rename(`Top 30 %` = Top30_Pct, `Decimal Odds` = Top30_Decimal_Odds, `American Odds` = Top30_American_Odds)
@@ -3422,7 +3535,7 @@ if (nrow(men_results) > 0) {
 if (nrow(ladies_results) > 0) {
   tryCatch({
     # Win odds
-    win_file <- file.path(output_dir, "Ladies_Nordic_Combined_Win_Odds_2026.xlsx")
+    win_file <- file.path(output_dir, "Ladies_Win_Odds_2026.xlsx")
     win_data <- ladies_results %>%
       dplyr::select(Skier, Nation, Win_Pct, Win_Decimal_Odds, Win_American_Odds) %>%
       rename(`Win %` = Win_Pct, `Decimal Odds` = Win_Decimal_Odds, `American Odds` = Win_American_Odds)
@@ -3430,7 +3543,7 @@ if (nrow(ladies_results) > 0) {
     cat("✓ Ladies nordic combined win odds exported:", win_file, "\n")
     
     # Top 3 odds
-    top3_file <- file.path(output_dir, "Ladies_Nordic_Combined_Top3_Odds_2026.xlsx")
+    top3_file <- file.path(output_dir, "Ladies_Top3_Odds_2026.xlsx")
     top3_data <- ladies_results %>%
       dplyr::select(Skier, Nation, Top3_Pct, Top3_Decimal_Odds, Top3_American_Odds) %>%
       rename(`Top 3 %` = Top3_Pct, `Decimal Odds` = Top3_Decimal_Odds, `American Odds` = Top3_American_Odds)
@@ -3438,7 +3551,7 @@ if (nrow(ladies_results) > 0) {
     cat("✓ Ladies nordic combined top 3 odds exported:", top3_file, "\n")
     
     # Top 10 odds
-    top10_file <- file.path(output_dir, "Ladies_Nordic_Combined_Top10_Odds_2026.xlsx")
+    top10_file <- file.path(output_dir, "Ladies_Top10_Odds_2026.xlsx")
     top10_data <- ladies_results %>%
       dplyr::select(Skier, Nation, Top10_Pct, Top10_Decimal_Odds, Top10_American_Odds) %>%
       rename(`Top 10 %` = Top10_Pct, `Decimal Odds` = Top10_Decimal_Odds, `American Odds` = Top10_American_Odds)
@@ -3446,7 +3559,7 @@ if (nrow(ladies_results) > 0) {
     cat("✓ Ladies nordic combined top 10 odds exported:", top10_file, "\n")
     
     # Top 30 odds
-    top30_file <- file.path(output_dir, "Ladies_Nordic_Combined_Top30_Odds_2026.xlsx")
+    top30_file <- file.path(output_dir, "Ladies_Top30_Odds_2026.xlsx")
     top30_data <- ladies_results %>%
       dplyr::select(Skier, Nation, Top30_Pct, Top30_Decimal_Odds, Top30_American_Odds) %>%
       rename(`Top 30 %` = Top30_Pct, `Decimal Odds` = Top30_Decimal_Odds, `American Odds` = Top30_American_Odds)
@@ -3466,736 +3579,778 @@ cat("\n✓ Nordic combined statistical odds models completed\n")
 ### Breakthrough Candidate Analysis
 
 ```{r breakout-identifier}
-cat("=== NORDIC COMBINED BREAKTHROUGH ANALYSIS ===\n")
+cat("=== NORDIC COMBINED BREAKTHROUGH ANALYSIS VALIDATION ===\n")
 
-# Validate training data availability for breakthrough analysis
-cat("\n--- Training Data Validation for Breakthrough Analysis ---\n")
-
-if (!exists("train_men") || !exists("train_ladies")) {
-  stop("Training data not available - ensure previous sections completed successfully")
+# Validate training data availability
+if (!exists("train_men") || !is.data.frame(train_men)) {
+  stop("train_men dataset not found or invalid")
+}
+if (!exists("train_ladies") || !is.data.frame(train_ladies)) {
+  stop("train_ladies dataset not found or invalid")
 }
 
-if (nrow(train_men) == 0) {
-  stop("Men's training data is empty")
-}
-if (nrow(train_ladies) == 0) {
-  stop("Ladies training data is empty") 
-}
+if (nrow(train_men) == 0) stop("train_men dataset is empty")
+if (nrow(train_ladies) == 0) stop("train_ladies dataset is empty")
 
-cat(sprintf("Training data for nordic combined breakthrough analysis: Men %d rows, Ladies %d rows\n", 
-            nrow(train_men), nrow(train_ladies)))
+cat("Training data validated - Men:", nrow(train_men), "observations, Ladies:", nrow(train_ladies), "observations\n")
 
 # Validate required columns for breakthrough analysis
 required_breakthrough_cols <- c("Skier", "Nation", "Season", "Pct_of_Max_Points", "Age")
-missing_men_breakthrough <- setdiff(required_breakthrough_cols, names(train_men))
-missing_ladies_breakthrough <- setdiff(required_breakthrough_cols, names(train_ladies))
+missing_men_cols <- setdiff(required_breakthrough_cols, names(train_men))
+missing_ladies_cols <- setdiff(required_breakthrough_cols, names(train_ladies))
 
-if (length(missing_men_breakthrough) > 0) {
-  stop(sprintf("Men's training data missing required columns for nordic combined breakthrough analysis: %s", 
-               paste(missing_men_breakthrough, collapse = ", ")))
+if (length(missing_men_cols) > 0) {
+  stop("Missing required columns in train_men: ", paste(missing_men_cols, collapse = ", "))
 }
-if (length(missing_ladies_breakthrough) > 0) {
-  stop(sprintf("Ladies training data missing required columns for nordic combined breakthrough analysis: %s", 
-               paste(missing_ladies_breakthrough, collapse = ", ")))
+if (length(missing_ladies_cols) > 0) {
+  stop("Missing required columns in train_ladies: ", paste(missing_ladies_cols, collapse = ", "))
+}
+cat("✓ All required columns present in both datasets\n")
+
+# Validate Pct_of_Max_Points data quality
+cat("\n--- Data Quality Validation ---\n")
+
+# Men's data validation
+men_invalid_pct <- sum(is.na(train_men$Pct_of_Max_Points) | 
+                      train_men$Pct_of_Max_Points < 0 | 
+                      train_men$Pct_of_Max_Points > 1 | 
+                      !is.finite(train_men$Pct_of_Max_Points))
+
+ladies_invalid_pct <- sum(is.na(train_ladies$Pct_of_Max_Points) | 
+                         train_ladies$Pct_of_Max_Points < 0 | 
+                         train_ladies$Pct_of_Max_Points > 1 | 
+                         !is.finite(train_ladies$Pct_of_Max_Points))
+
+cat("Men's invalid Pct_of_Max_Points values:", men_invalid_pct, "\n")
+cat("Ladies invalid Pct_of_Max_Points values:", ladies_invalid_pct, "\n")
+
+if (men_invalid_pct > nrow(train_men) * 0.1) {
+  warning("More than 10% of men's Pct_of_Max_Points values are invalid")
+}
+if (ladies_invalid_pct > nrow(train_ladies) * 0.1) {
+  warning("More than 10% of ladies Pct_of_Max_Points values are invalid")
 }
 
-cat("✓ All required columns available for nordic combined breakthrough analysis\n")
+# Identify historical top performers with validation
+cat("\n--- Historical Top Performers Analysis ---\n")
 
-# Analyze historical breakthrough patterns for nordic combined
-cat("\n--- Historical Nordic Combined Breakthrough Analysis ---\n")
-
-# Define gender-specific breakthrough thresholds for nordic combined
-men_breakthrough_threshold <- 0.60    # 60% for men
-ladies_breakthrough_threshold <- 0.70  # 70% for ladies
-
-# Analyze men's breakthrough patterns
-men_breakthrough_analysis <- train_men %>%
-  filter(!is.na(Pct_of_Max_Points), !is.na(Age)) %>%
-  mutate(
-    Breakthrough = ifelse(Pct_of_Max_Points >= men_breakthrough_threshold, 1, 0)
-  ) %>%
-  group_by(Skier) %>%
-  summarise(
-    Ever_Breakthrough = max(Breakthrough, na.rm = TRUE),
-    Best_Pct = max(Pct_of_Max_Points, na.rm = TRUE),
-    First_Breakthrough_Age = ifelse(any(Breakthrough == 1), 
-                                   min(Age[Breakthrough == 1], na.rm = TRUE), NA),
-    Career_Seasons = n(),
-    .groups = 'drop'
-  )
-
-# Analyze ladies breakthrough patterns  
-ladies_breakthrough_analysis <- train_ladies %>%
-  filter(!is.na(Pct_of_Max_Points), !is.na(Age)) %>%
-  mutate(
-    Breakthrough = ifelse(Pct_of_Max_Points >= ladies_breakthrough_threshold, 1, 0)
-  ) %>%
-  group_by(Skier) %>%
-  summarise(
-    Ever_Breakthrough = max(Breakthrough, na.rm = TRUE),
-    Best_Pct = max(Pct_of_Max_Points, na.rm = TRUE),
-    First_Breakthrough_Age = ifelse(any(Breakthrough == 1), 
-                                   min(Age[Breakthrough == 1], na.rm = TRUE), NA),
-    Career_Seasons = n(),
-    .groups = 'drop'
-  )
-
-# Calculate breakthrough statistics for men
-men_breakthrough_count <- sum(men_breakthrough_analysis$Ever_Breakthrough, na.rm = TRUE)
-men_total_skiers <- nrow(men_breakthrough_analysis)
-men_breakthrough_rate <- men_breakthrough_count / men_total_skiers * 100
-
-cat(sprintf("Men's nordic combined breakthrough statistics:\n"))
-cat(sprintf("  Total skiers analyzed: %d\n", men_total_skiers))
-cat(sprintf("  Skiers who achieved breakthrough (≥%.0f%%): %d\n", men_breakthrough_threshold * 100, men_breakthrough_count))
-cat(sprintf("  Breakthrough rate: %.1f%%\n", men_breakthrough_rate))
-
-if (men_breakthrough_count > 0) {
-  men_breakthrough_ages <- men_breakthrough_analysis$First_Breakthrough_Age[!is.na(men_breakthrough_analysis$First_Breakthrough_Age)]
-  if (length(men_breakthrough_ages) > 0) {
-    cat(sprintf("  Average breakthrough age: %.1f years (range: %.0f-%.0f)\n", 
-                mean(men_breakthrough_ages), min(men_breakthrough_ages), max(men_breakthrough_ages)))
+tryCatch({
+  top_performers_men <- train_men %>%
+    filter(!is.na(Pct_of_Max_Points), 
+           Pct_of_Max_Points > 0.5,
+           !is.na(Skier),
+           !is.na(Season),
+           !is.na(Age)) %>%
+    dplyr::select(Skier, Nation, Season, Pct_of_Max_Points, Age)
+  
+  if (nrow(top_performers_men) == 0) {
+    warning("No men's breakthrough performers found with >50% points")
+  } else {
+    cat("✓ Men's breakthrough performers identified:", nrow(top_performers_men), "entries\n")
   }
-}
+  
+}, error = function(e) {
+  stop("Error identifying men's top performers: ", e$message)
+})
 
-# Calculate breakthrough statistics for ladies
-ladies_breakthrough_count <- sum(ladies_breakthrough_analysis$Ever_Breakthrough, na.rm = TRUE)
-ladies_total_skiers <- nrow(ladies_breakthrough_analysis)
-ladies_breakthrough_rate <- ladies_breakthrough_count / ladies_total_skiers * 100
-
-cat(sprintf("\nLadies nordic combined breakthrough statistics:\n"))
-cat(sprintf("  Total skiers analyzed: %d\n", ladies_total_skiers))
-cat(sprintf("  Skiers who achieved breakthrough (≥%.0f%%): %d\n", ladies_breakthrough_threshold * 100, ladies_breakthrough_count))
-cat(sprintf("  Breakthrough rate: %.1f%%\n", ladies_breakthrough_rate))
-
-if (ladies_breakthrough_count > 0) {
-  ladies_breakthrough_ages <- ladies_breakthrough_analysis$First_Breakthrough_Age[!is.na(ladies_breakthrough_analysis$First_Breakthrough_Age)]
-  if (length(ladies_breakthrough_ages) > 0) {
-    cat(sprintf("  Average breakthrough age: %.1f years (range: %.0f-%.0f)\n", 
-                mean(ladies_breakthrough_ages), min(ladies_breakthrough_ages), max(ladies_breakthrough_ages)))
+tryCatch({
+  top_performers_ladies <- train_ladies %>%
+    filter(!is.na(Pct_of_Max_Points), 
+           Pct_of_Max_Points > 0.5,
+           !is.na(Skier),
+           !is.na(Season),
+           !is.na(Age)) %>%
+    dplyr::select(Skier, Nation, Season, Pct_of_Max_Points, Age)
+  
+  if (nrow(top_performers_ladies) == 0) {
+    warning("No ladies breakthrough performers found with >50% points")
+  } else {
+    cat("✓ Ladies breakthrough performers identified:", nrow(top_performers_ladies), "entries\n")
   }
-}
+  
+}, error = function(e) {
+  stop("Error identifying ladies top performers: ", e$message)
+})
 
-# Age distribution analysis for breakthrough vs non-breakthrough skiers
-cat("\n--- Age Distribution Analysis ---\n")
-
-# Men's age analysis
-men_with_breakthrough <- train_men %>%
-  filter(!is.na(Pct_of_Max_Points), !is.na(Age)) %>%
-  mutate(Breakthrough = ifelse(Pct_of_Max_Points >= men_breakthrough_threshold, 1, 0))
-
-men_breakthrough_ages <- men_with_breakthrough %>% 
-  filter(Breakthrough == 1) %>% 
-  pull(Age)
-
-men_no_breakthrough_ages <- men_with_breakthrough %>% 
-  filter(Breakthrough == 0) %>% 
-  pull(Age)
-
-if (length(men_breakthrough_ages) > 0 && length(men_no_breakthrough_ages) > 0) {
-  cat(sprintf("Men's nordic combined age patterns:\n"))
-  cat(sprintf("  Breakthrough seasons average age: %.1f years\n", mean(men_breakthrough_ages)))
-  cat(sprintf("  Non-breakthrough seasons average age: %.1f years\n", mean(men_no_breakthrough_ages)))
-}
-
-# Ladies age analysis
-ladies_with_breakthrough <- train_ladies %>%
-  filter(!is.na(Pct_of_Max_Points), !is.na(Age)) %>%
-  mutate(Breakthrough = ifelse(Pct_of_Max_Points >= ladies_breakthrough_threshold, 1, 0))
-
-ladies_breakthrough_ages <- ladies_with_breakthrough %>% 
-  filter(Breakthrough == 1) %>% 
-  pull(Age)
-
-ladies_no_breakthrough_ages <- ladies_with_breakthrough %>% 
-  filter(Breakthrough == 0) %>% 
-  pull(Age)
-
-if (length(ladies_breakthrough_ages) > 0 && length(ladies_no_breakthrough_ages) > 0) {
-  cat(sprintf("Ladies nordic combined age patterns:\n"))
-  cat(sprintf("  Breakthrough seasons average age: %.1f years\n", mean(ladies_breakthrough_ages)))
-  cat(sprintf("  Non-breakthrough seasons average age: %.1f years\n", mean(ladies_no_breakthrough_ages)))
-}
-
-# Performance distribution analysis
-cat("\n--- Performance Distribution Analysis ---\n")
-
-# Analyze performance ranges
-men_performance_summary <- train_men %>%
-  filter(!is.na(Pct_of_Max_Points)) %>%
-  summarise(
-    Min_Pct = min(Pct_of_Max_Points),
-    Q1_Pct = quantile(Pct_of_Max_Points, 0.25),
-    Median_Pct = median(Pct_of_Max_Points),
-    Q3_Pct = quantile(Pct_of_Max_Points, 0.75),
-    Max_Pct = max(Pct_of_Max_Points),
-    Above_Threshold = sum(Pct_of_Max_Points >= men_breakthrough_threshold)
-  )
-
-ladies_performance_summary <- train_ladies %>%
-  filter(!is.na(Pct_of_Max_Points)) %>%
-  summarise(
-    Min_Pct = min(Pct_of_Max_Points),
-    Q1_Pct = quantile(Pct_of_Max_Points, 0.25),
-    Median_Pct = median(Pct_of_Max_Points),
-    Q3_Pct = quantile(Pct_of_Max_Points, 0.75),
-    Max_Pct = max(Pct_of_Max_Points),
-    Above_Threshold = sum(Pct_of_Max_Points >= ladies_breakthrough_threshold)
-  )
-
-cat(sprintf("Men's nordic combined performance distribution:\n"))
-cat(sprintf("  Range: %.1f%% - %.1f%%\n", men_performance_summary$Min_Pct * 100, men_performance_summary$Max_Pct * 100))
-cat(sprintf("  Quartiles: Q1=%.1f%%, Median=%.1f%%, Q3=%.1f%%\n", 
-            men_performance_summary$Q1_Pct * 100, men_performance_summary$Median_Pct * 100, men_performance_summary$Q3_Pct * 100))
-cat(sprintf("  Seasons above breakthrough threshold: %d\n", men_performance_summary$Above_Threshold))
-
-cat(sprintf("Ladies nordic combined performance distribution:\n"))
-cat(sprintf("  Range: %.1f%% - %.1f%%\n", ladies_performance_summary$Min_Pct * 100, ladies_performance_summary$Max_Pct * 100))
-cat(sprintf("  Quartiles: Q1=%.1f%%, Median=%.1f%%, Q3=%.1f%%\n", 
-            ladies_performance_summary$Q1_Pct * 100, ladies_performance_summary$Median_Pct * 100, ladies_performance_summary$Q3_Pct * 100))
-cat(sprintf("  Seasons above breakthrough threshold: %d\n", ladies_performance_summary$Above_Threshold))
-
-# List all skiers who achieved breakthrough threshold
-cat("\n--- Nordic Combined Breakthrough Achievers ---\n")
-
-# Men's breakthrough achievers
-men_breakthrough_achievers <- men_breakthrough_analysis %>%
-  filter(Ever_Breakthrough == 1) %>%
-  arrange(desc(Best_Pct)) %>%
-  dplyr::select(Skier, Best_Pct, First_Breakthrough_Age, Career_Seasons)
-
-if (nrow(men_breakthrough_achievers) > 0) {
-  cat(sprintf("Men who achieved ≥%.0f%% breakthrough in nordic combined:\n", men_breakthrough_threshold * 100))
-  for (i in 1:nrow(men_breakthrough_achievers)) {
-    skier <- men_breakthrough_achievers$Skier[i]
-    best_pct <- men_breakthrough_achievers$Best_Pct[i] * 100
-    first_age <- men_breakthrough_achievers$First_Breakthrough_Age[i]
-    seasons <- men_breakthrough_achievers$Career_Seasons[i]
+# Summary statistics with validation
+tryCatch({
+  unique_men_breakthroughs <- length(unique(top_performers_men$Skier))
+  unique_ladies_breakthroughs <- length(unique(top_performers_ladies$Skier))
+  
+  cat("✓ Analysis completed successfully\n")
+  cat("Men's breakthrough entries:", nrow(top_performers_men), "\n")
+  cat("Ladies breakthrough entries:", nrow(top_performers_ladies), "\n")
+  
+  print("=== MEN'S HISTORICAL NORDIC COMBINED BREAKTHROUGH PERFORMERS (>50% of max points) ===")
+  print(paste("Unique men's breakthrough skiers:", unique_men_breakthroughs))
+  
+  if (nrow(top_performers_men) > 0) {
+    print("Recent men's breakthrough examples:")
+    recent_men <- top_performers_men %>%
+      arrange(desc(Season), desc(Pct_of_Max_Points))
+    print(recent_men)
     
-    if (!is.na(first_age)) {
-      cat(sprintf("  %s: %.1f%% (first breakthrough at age %.0f, %d seasons)\n", 
-                  skier, best_pct, first_age, seasons))
-    } else {
-      cat(sprintf("  %s: %.1f%% (%d seasons)\n", 
-                  skier, best_pct, seasons))
+    # Age distribution analysis
+    if (!all(is.na(top_performers_men$Age))) {
+      cat("Men's breakthrough age range:", 
+          round(min(top_performers_men$Age, na.rm = TRUE), 1), "-", 
+          round(max(top_performers_men$Age, na.rm = TRUE), 1), "\n")
+      cat("Men's mean breakthrough age:", 
+          round(mean(top_performers_men$Age, na.rm = TRUE), 1), "\n")
     }
+  } else {
+    print("No men's breakthrough examples to display")
   }
-} else {
-  cat("No men achieved breakthrough threshold in nordic combined\n")
-}
+  
+}, error = function(e) {
+  stop("Error in men's breakthrough summary: ", e$message)
+})
 
-# Ladies breakthrough achievers
-ladies_breakthrough_achievers <- ladies_breakthrough_analysis %>%
-  filter(Ever_Breakthrough == 1) %>%
-  arrange(desc(Best_Pct)) %>%
-  dplyr::select(Skier, Best_Pct, First_Breakthrough_Age, Career_Seasons)
-
-if (nrow(ladies_breakthrough_achievers) > 0) {
-  cat(sprintf("\nLadies who achieved ≥%.0f%% breakthrough in nordic combined:\n", ladies_breakthrough_threshold * 100))
-  for (i in 1:nrow(ladies_breakthrough_achievers)) {
-    skier <- ladies_breakthrough_achievers$Skier[i]
-    best_pct <- ladies_breakthrough_achievers$Best_Pct[i] * 100
-    first_age <- ladies_breakthrough_achievers$First_Breakthrough_Age[i]
-    seasons <- ladies_breakthrough_achievers$Career_Seasons[i]
+tryCatch({
+  print("=== LADIES HISTORICAL NORDIC COMBINED BREAKTHROUGH PERFORMERS (>50% of max points) ===")
+  print(paste("Unique ladies breakthrough skiers:", unique_ladies_breakthroughs))
+  
+  if (nrow(top_performers_ladies) > 0) {
+    print("Recent ladies breakthrough examples:")
+    recent_ladies <- top_performers_ladies %>%
+      arrange(desc(Season), desc(Pct_of_Max_Points))
+    print(recent_ladies)
     
-    if (!is.na(first_age)) {
-      cat(sprintf("  %s: %.1f%% (first breakthrough at age %.0f, %d seasons)\n", 
-                  skier, best_pct, first_age, seasons))
-    } else {
-      cat(sprintf("  %s: %.1f%% (%d seasons)\n", 
-                  skier, best_pct, seasons))
+    # Age distribution analysis
+    if (!all(is.na(top_performers_ladies$Age))) {
+      cat("Ladies breakthrough age range:", 
+          round(min(top_performers_ladies$Age, na.rm = TRUE), 1), "-", 
+          round(max(top_performers_ladies$Age, na.rm = TRUE), 1), "\n")
+      cat("Ladies mean breakthrough age:", 
+          round(mean(top_performers_ladies$Age, na.rm = TRUE), 1), "\n")
     }
+  } else {
+    print("No ladies breakthrough examples to display")
   }
-} else {
-  cat("No ladies achieved breakthrough threshold in nordic combined\n")
-}
-
-# Store breakthrough analysis results for later use
-men_breakthrough_data <- men_breakthrough_analysis
-ladies_breakthrough_data <- ladies_breakthrough_analysis
-
-cat("\n✓ Nordic combined breakthrough analysis completed\n")
-cat("✓ Historical breakthrough patterns analyzed\n")
-cat("✓ Performance distributions calculated\n")
-cat("✓ Breakthrough candidate analysis data prepared\n")
+  
+}, error = function(e) {
+  stop("Error in ladies breakthrough summary: ", e$message)
+})
 ```
 
 ### Breakthrough Prediction Models
 
 ```{r feat-select-break}
-cat("=== NORDIC COMBINED BREAKTHROUGH PREDICTION MODELS ===\n")
+# Load required libraries for breakthrough analysis
+tryCatch({
+  library(caret)
+  library(ranger)
+  library(pROC)
+  cat("✓ Required libraries loaded successfully\n")
+}, error = function(e) {
+  stop("Error loading required libraries: ", e$message)
+})
 
-# Load required libraries for breakthrough modeling
-if (!require(randomForest)) {
-  install.packages("randomForest")
-  library(randomForest)
-}
-
-# Main function to evaluate breakthrough predictors for nordic combined
-evaluate_breakthrough_predictors <- function(data, threshold, gender_label, min_breakthrough = 5) {
-  cat(sprintf("\n--- Evaluating %s Nordic Combined Breakthrough Predictors ---\n", gender_label))
+# Enhanced function to evaluate predictor importance for breakthrough prediction
+evaluate_breakthrough_predictors <- function(df, predictors) {
+  cat("\n--- Breakthrough Predictor Evaluation ---\n")
   
-  # Validate input data
-  if (nrow(data) == 0) {
-    cat(sprintf("No %s nordic combined data available for breakthrough modeling\n", gender_label))
-    return(list(
-      model_logistic = NULL,
-      model_rf = NULL,
-      performance = list(logistic = NA, rf = NA),
-      feature_importance = NULL,
-      breakthrough_count = 0
-    ))
+  # Input validation
+  if (!is.data.frame(df)) stop("Input df is not a data frame")
+  if (nrow(df) == 0) stop("Input dataframe is empty")
+  if (is.null(predictors) || length(predictors) == 0) stop("No predictors provided")
+  
+  # Validate predictors exist in dataframe
+  missing_predictors <- setdiff(predictors, names(df))
+  if (length(missing_predictors) > 0) {
+    warning("Missing predictors: ", paste(missing_predictors, collapse = ", "))
+    predictors <- intersect(predictors, names(df))
   }
   
-  # Create breakthrough variable
-  modeling_data <- data %>%
-    filter(!is.na(Pct_of_Max_Points), !is.na(Age)) %>%
-    mutate(
-      Breakthrough = factor(ifelse(Pct_of_Max_Points >= threshold, "Yes", "No"))
-    )
+  if (length(predictors) == 0) stop("No valid predictors remain after filtering")
+  cat("Using", length(predictors), "predictors for breakthrough analysis\n")
   
-  breakthrough_count <- sum(modeling_data$Breakthrough == "Yes")
-  total_observations <- nrow(modeling_data)
-  
-  cat(sprintf("Data summary: %d total observations, %d breakthroughs (%.1f%%)\n", 
-              total_observations, breakthrough_count, 
-              (breakthrough_count / total_observations) * 100))
-  
-  # Check if we have sufficient breakthrough cases
-  if (breakthrough_count < min_breakthrough) {
-    cat(sprintf("Insufficient breakthrough cases (%d < %d required)\n", 
-                breakthrough_count, min_breakthrough))
-    
-    # Try lower threshold as fallback
-    fallback_threshold <- threshold * 0.5  # 50% of original threshold
-    cat(sprintf("Trying fallback threshold: %.0f%%\n", fallback_threshold * 100))
-    
-    modeling_data <- modeling_data %>%
+  # Prepare data with validation and adaptive age filtering
+  tryCatch({
+    # First, try broader age range to get sufficient breakthrough cases
+    initial_data <- df %>%
       mutate(
-        Breakthrough = factor(ifelse(Pct_of_Max_Points >= fallback_threshold, "Yes", "No"))
+        # Define breakthrough as achieving >50% in this season
+        Will_Breakthrough = ifelse(is.na(Pct_of_Max_Points), NA, Pct_of_Max_Points >= 0.5),
+        Will_Breakthrough = factor(Will_Breakthrough, levels = c(FALSE, TRUE), 
+                                 labels = c("No", "Yes")),
+        Age = as.numeric(Age)
+      ) %>%
+      filter(!is.na(Will_Breakthrough),
+             !is.na(Pct_of_Max_Points),
+             !is.na(Age)) %>%
+      dplyr::select(Will_Breakthrough, Age, all_of(predictors)) %>%
+      na.omit()
+    
+    # Check breakthrough distribution across age ranges
+    breakthrough_by_age <- initial_data %>%
+      filter(Will_Breakthrough == "Yes") %>%
+      summarise(
+        n_breakthroughs = n(),
+        min_age = min(Age, na.rm = TRUE),
+        max_age = max(Age, na.rm = TRUE),
+        mean_age = mean(Age, na.rm = TRUE)
       )
     
-    breakthrough_count <- sum(modeling_data$Breakthrough == "Yes")
-    cat(sprintf("Fallback data: %d breakthroughs (%.1f%%)\n", 
-                breakthrough_count, (breakthrough_count / nrow(modeling_data)) * 100))
-    
-    if (breakthrough_count < min_breakthrough) {
-      cat(sprintf("Still insufficient data with fallback threshold\n"))
-      return(list(
-        model_logistic = NULL,
-        model_rf = NULL,
-        performance = list(logistic = NA, rf = NA),
-        feature_importance = NULL,
-        breakthrough_count = breakthrough_count
-      ))
+    cat("Initial breakthrough cases found:", breakthrough_by_age$n_breakthroughs, "\n")
+    if (breakthrough_by_age$n_breakthroughs > 0) {
+      cat("Breakthrough age range:", round(breakthrough_by_age$min_age, 1), "-", round(breakthrough_by_age$max_age, 1), "\n")
     }
-  }
-  
-  # Age filtering - try different age thresholds to get sufficient data
-  age_thresholds <- c(30, 35, 40, 50)
-  selected_age_threshold <- NULL
-  
-  for (age_limit in age_thresholds) {
-    age_filtered_data <- modeling_data %>% filter(Age <= age_limit)
-    age_breakthroughs <- sum(age_filtered_data$Breakthrough == "Yes")
     
-    if (age_breakthroughs >= min_breakthrough) {
-      selected_age_threshold <- age_limit
-      modeling_data <- age_filtered_data
-      cat(sprintf("Using age filter: ≤%d years (%d observations, %d breakthroughs)\n", 
-                  age_limit, nrow(modeling_data), age_breakthroughs))
-      break
+    # If still too few cases, try lower breakthrough threshold
+    if (breakthrough_by_age$n_breakthroughs < 5) {
+      cat("Very few breakthrough cases at 50% threshold, trying 40% threshold\n")
+      initial_data <- df %>%
+        mutate(
+          # Lower threshold for breakthrough (40%)
+          Will_Breakthrough = ifelse(is.na(Pct_of_Max_Points), NA, Pct_of_Max_Points >= 0.4),
+          Will_Breakthrough = factor(Will_Breakthrough, levels = c(FALSE, TRUE), 
+                                   labels = c("No", "Yes")),
+          Age = as.numeric(Age)
+        ) %>%
+        filter(!is.na(Will_Breakthrough),
+               !is.na(Pct_of_Max_Points),
+               !is.na(Age)) %>%
+        dplyr::select(Will_Breakthrough, Age, all_of(predictors)) %>%
+        na.omit()
+      
+      # Recalculate breakthrough stats
+      breakthrough_by_age <- initial_data %>%
+        filter(Will_Breakthrough == "Yes") %>%
+        summarise(
+          n_breakthroughs = n(),
+          min_age = min(Age, na.rm = TRUE),
+          max_age = max(Age, na.rm = TRUE),
+          mean_age = mean(Age, na.rm = TRUE)
+        )
+      
+      cat("Breakthrough cases at 40% threshold:", breakthrough_by_age$n_breakthroughs, "\n")
     }
-  }
-  
-  if (is.null(selected_age_threshold)) {
-    cat("Using all ages (no age filter applied)\n")
-  }
-  
-  # Select previous season features for nordic combined
-  prev_features <- names(modeling_data)[grepl("^Prev_", names(modeling_data))]
-  available_features <- c(prev_features, "Age")
-  available_features <- available_features[available_features %in% names(modeling_data)]
-  
-  if (length(available_features) == 0) {
-    cat("No predictor features available\n")
-    return(list(
-      model_logistic = NULL,
-      model_rf = NULL,
-      performance = list(logistic = NA, rf = NA),
-      feature_importance = NULL,
-      breakthrough_count = breakthrough_count
-    ))
-  }
-  
-  cat(sprintf("Available predictor features: %s\n", paste(available_features, collapse = ", ")))
-  
-  # Prepare modeling dataset
-  model_formula <- as.formula(paste("Breakthrough ~", paste(available_features, collapse = " + ")))
-  
-  # Remove rows with missing values in predictor variables
-  complete_data <- modeling_data[complete.cases(modeling_data[c("Breakthrough", available_features)]), ]
-  
-  if (nrow(complete_data) < min_breakthrough * 2) {
-    cat(sprintf("Insufficient complete cases for modeling (%d rows)\n", nrow(complete_data)))
-    return(list(
-      model_logistic = NULL,
-      model_rf = NULL,
-      performance = list(logistic = NA, rf = NA),
-      feature_importance = NULL,
-      breakthrough_count = breakthrough_count
-    ))
-  }
-  
-  cat(sprintf("Complete cases for modeling: %d\n", nrow(complete_data)))
-  
-  # Cross-validation setup
-  n_obs <- nrow(complete_data)
-  if (n_obs < 20) {
-    cv_method <- "LOOCV"
-    cv_folds <- n_obs
-  } else if (n_obs < 50) {
-    cv_method <- "5-fold"
-    cv_folds <- 5
-  } else {
-    cv_method <- "10-fold"
-    cv_folds <- 10
-  }
-  
-  cat(sprintf("Using %s cross-validation\n", cv_method))
-  
-  # Initialize results storage
-  logistic_results <- list()
-  rf_results <- list()
-  
-  tryCatch({
-    # Logistic Regression with cross-validation
-    cat("Training logistic regression model...\n")
     
-    if (cv_method == "LOOCV") {
-      # Leave-one-out cross-validation
-      logistic_predictions <- rep(NA, n_obs)
-      
-      for (i in 1:n_obs) {
-        train_data <- complete_data[-i, ]
-        test_data <- complete_data[i, ]
-        
-        # Check if training data has both classes
-        if (length(unique(train_data$Breakthrough)) < 2) {
-          next
+    # Use all ages for model training (no age restrictions for breakthrough potential)
+    cat("Using all ages for breakthrough model training (no age restrictions)\n")
+    
+    model_data <- initial_data %>%
+      dplyr::select(Will_Breakthrough, all_of(predictors))
+    
+    # Impute missing values with first quartile (using existing function)
+    cat("\n--- Missing Data Imputation ---\n")
+    for (pred in predictors) {
+      if (pred %in% names(model_data)) {
+        initial_nas <- sum(is.na(model_data[[pred]]))
+        if (initial_nas > 0) {
+          cat(sprintf("Imputing %d missing values in %s\n", initial_nas, pred))
+          model_data[[pred]] <- replace_na_with_quartile(model_data[[pred]], pred)
+          final_nas <- sum(is.na(model_data[[pred]]))
+          cat(sprintf("  %s: %d -> %d NAs after imputation\n", pred, initial_nas, final_nas))
         }
-        
-        model <- glm(model_formula, data = train_data, family = binomial)
-        if (model$converged) {
-          pred_prob <- predict(model, test_data, type = "response")
-          logistic_predictions[i] <- pred_prob
-        }
-      }
-      
-      # Calculate performance
-      valid_predictions <- !is.na(logistic_predictions)
-      if (sum(valid_predictions) > 0) {
-        actual <- as.numeric(complete_data$Breakthrough[valid_predictions] == "Yes")
-        predicted <- logistic_predictions[valid_predictions]
-        
-        # AUC calculation
-        if (length(unique(actual)) > 1) {
-          auc <- tryCatch({
-            roc_obj <- pROC::roc(actual, predicted, quiet = TRUE)
-            as.numeric(roc_obj$auc)
-          }, error = function(e) NA)
-        } else {
-          auc <- NA
-        }
-        
-        logistic_results$auc <- auc
-        logistic_results$accuracy <- mean((predicted > 0.5) == actual)
-      }
-      
-    } else {
-      # K-fold cross-validation
-      set.seed(123)
-      fold_indices <- sample(1:cv_folds, n_obs, replace = TRUE)
-      
-      logistic_predictions <- rep(NA, n_obs)
-      
-      for (fold in 1:cv_folds) {
-        train_indices <- which(fold_indices != fold)
-        test_indices <- which(fold_indices == fold)
-        
-        if (length(train_indices) == 0 || length(test_indices) == 0) next
-        
-        train_data <- complete_data[train_indices, ]
-        test_data <- complete_data[test_indices, ]
-        
-        # Check if training data has both classes
-        if (length(unique(train_data$Breakthrough)) < 2) {
-          next
-        }
-        
-        model <- glm(model_formula, data = train_data, family = binomial)
-        if (model$converged) {
-          pred_prob <- predict(model, test_data, type = "response")
-          logistic_predictions[test_indices] <- pred_prob
-        }
-      }
-      
-      # Calculate performance
-      valid_predictions <- !is.na(logistic_predictions)
-      if (sum(valid_predictions) > 0) {
-        actual <- as.numeric(complete_data$Breakthrough[valid_predictions] == "Yes")
-        predicted <- logistic_predictions[valid_predictions]
-        
-        # AUC calculation
-        if (length(unique(actual)) > 1) {
-          auc <- tryCatch({
-            roc_obj <- pROC::roc(actual, predicted, quiet = TRUE)
-            as.numeric(roc_obj$auc)
-          }, error = function(e) NA)
-        } else {
-          auc <- NA
-        }
-        
-        logistic_results$auc <- auc
-        logistic_results$accuracy <- mean((predicted > 0.5) == actual)
       }
     }
     
-    # Train final logistic regression model on full data
-    final_logistic <- glm(model_formula, data = complete_data, family = binomial)
-    logistic_results$final_model <- final_logistic
-    
-    cat(sprintf("Logistic regression: AUC=%.3f, Accuracy=%.3f\n", 
-                logistic_results$auc %||% NA, logistic_results$accuracy %||% NA))
+    cat("✓ Data preparation completed\n")
     
   }, error = function(e) {
-    cat(sprintf("Logistic regression failed: %s\n", e$message))
-    logistic_results$auc <- NA
-    logistic_results$accuracy <- NA
-    logistic_results$final_model <- NULL
+    stop("Error in data preparation: ", e$message)
+  })
+  
+  print("Breakthrough data dimensions after filtering:")
+  print(dim(model_data))
+  
+  # Validate class distribution
+  breakthrough_dist <- table(model_data$Will_Breakthrough, useNA = "always")
+  print("Breakthrough distribution:")
+  print(breakthrough_dist)
+  
+  # Check for class imbalance with adaptive thresholds
+  min_class_size <- min(breakthrough_dist[breakthrough_dist > 0])  # Exclude NA count
+  breakthrough_count <- breakthrough_dist[["Yes"]]
+  no_breakthrough_count <- breakthrough_dist[["No"]]
+  
+  cat("Breakthrough cases (Yes):", breakthrough_count, "\n")
+  cat("Non-breakthrough cases (No):", no_breakthrough_count, "\n")
+  
+  # Adaptive validation based on data availability
+  if (min_class_size < 2) {
+    stop("Insufficient data for model training - need at least 2 cases per class")
+  } else if (min_class_size < 5) {
+    warning("Very few cases in minority class (", min_class_size, ") - model may be unstable")
+  } else if (breakthrough_count < 10) {
+    warning("Few breakthrough cases (", breakthrough_count, ") - consider this when interpreting results")
+  }
+  
+  # Calculate class imbalance ratio
+  imbalance_ratio <- max(breakthrough_count, no_breakthrough_count) / min(breakthrough_count, no_breakthrough_count)
+  if (imbalance_ratio > 20) {
+    warning("Severe class imbalance detected (ratio: ", round(imbalance_ratio, 1), ":1)")
+  } else if (imbalance_ratio > 10) {
+    warning("Moderate class imbalance detected (ratio: ", round(imbalance_ratio, 1), ":1)")
+  }
+  
+  # Validate examples with error handling
+  tryCatch({
+    print("Sample breakthrough cases (Will_Breakthrough = Yes):")
+    breakthrough_examples <- model_data %>% 
+      filter(Will_Breakthrough == "Yes") %>% 
+      head(10)
+    
+    if(nrow(breakthrough_examples) > 0) {
+      print(breakthrough_examples)
+      cat("✓ Breakthrough examples validated\n")
+    } else {
+      warning("No breakthrough examples found in filtered data!")
+    }
+    
+  }, error = function(e) {
+    warning("Error displaying breakthrough examples: ", e$message)
   })
   
   tryCatch({
-    # Random Forest with cross-validation
-    cat("Training random forest model...\n")
+    print("Sample non-breakthrough cases (Will_Breakthrough = No):")
+    non_breakthrough_examples <- model_data %>% 
+      filter(Will_Breakthrough == "No") %>% 
+      head(10)
     
-    if (cv_method == "LOOCV") {
-      # Leave-one-out cross-validation for Random Forest
-      rf_predictions <- rep(NA, n_obs)
-      
-      for (i in 1:n_obs) {
-        train_data <- complete_data[-i, ]
-        test_data <- complete_data[i, ]
-        
-        # Check if training data has both classes
-        if (length(unique(train_data$Breakthrough)) < 2) {
-          next
-        }
-        
-        rf_model <- randomForest(model_formula, data = train_data, ntree = 100)
-        pred_probs <- predict(rf_model, test_data, type = "prob")
-        if ("Yes" %in% colnames(pred_probs)) {
-          rf_predictions[i] <- pred_probs[, "Yes"]
-        } else {
-          rf_predictions[i] <- 1 - pred_probs[, 1]  # If only one column, assume it's "No"
-        }
-      }
-      
-      # Calculate performance
-      valid_predictions <- !is.na(rf_predictions)
-      if (sum(valid_predictions) > 0) {
-        actual <- as.numeric(complete_data$Breakthrough[valid_predictions] == "Yes")
-        predicted <- rf_predictions[valid_predictions]
-        
-        # AUC calculation
-        if (length(unique(actual)) > 1) {
-          auc <- tryCatch({
-            roc_obj <- pROC::roc(actual, predicted, quiet = TRUE)
-            as.numeric(roc_obj$auc)
-          }, error = function(e) NA)
-        } else {
-          auc <- NA
-        }
-        
-        rf_results$auc <- auc
-        rf_results$accuracy <- mean((predicted > 0.5) == actual)
-      }
-      
+    if(nrow(non_breakthrough_examples) > 0) {
+      print(non_breakthrough_examples)
+      cat("✓ Non-breakthrough examples validated\n")
     } else {
-      # K-fold cross-validation for Random Forest
-      set.seed(123)
-      fold_indices <- sample(1:cv_folds, n_obs, replace = TRUE)
-      
-      rf_predictions <- rep(NA, n_obs)
-      
-      for (fold in 1:cv_folds) {
-        train_indices <- which(fold_indices != fold)
-        test_indices <- which(fold_indices == fold)
-        
-        if (length(train_indices) == 0 || length(test_indices) == 0) next
-        
-        train_data <- complete_data[train_indices, ]
-        test_data <- complete_data[test_indices, ]
-        
-        # Check if training data has both classes
-        if (length(unique(train_data$Breakthrough)) < 2) {
-          next
-        }
-        
-        rf_model <- randomForest(model_formula, data = train_data, ntree = 100)
-        pred_probs <- predict(rf_model, test_data, type = "prob")
-        if ("Yes" %in% colnames(pred_probs)) {
-          rf_predictions[test_indices] <- pred_probs[, "Yes"]
-        } else {
-          rf_predictions[test_indices] <- 1 - pred_probs[, 1]  # If only one column, assume it's "No"
-        }
-      }
-      
-      # Calculate performance
-      valid_predictions <- !is.na(rf_predictions)
-      if (sum(valid_predictions) > 0) {
-        actual <- as.numeric(complete_data$Breakthrough[valid_predictions] == "Yes")
-        predicted <- rf_predictions[valid_predictions]
-        
-        # AUC calculation
-        if (length(unique(actual)) > 1) {
-          auc <- tryCatch({
-            roc_obj <- pROC::roc(actual, predicted, quiet = TRUE)
-            as.numeric(roc_obj$auc)
-          }, error = function(e) NA)
-        } else {
-          auc <- NA
-        }
-        
-        rf_results$auc <- auc
-        rf_results$accuracy <- mean((predicted > 0.5) == actual)
-      }
+      warning("No non-breakthrough examples found!")
     }
-    
-    # Train final Random Forest model on full data
-    final_rf <- randomForest(model_formula, data = complete_data, ntree = 500)
-    rf_results$final_model <- final_rf
-    rf_results$importance <- importance(final_rf)
-    
-    cat(sprintf("Random Forest: AUC=%.3f, Accuracy=%.3f\n", 
-                rf_results$auc %||% NA, rf_results$accuracy %||% NA))
     
   }, error = function(e) {
-    cat(sprintf("Random Forest failed: %s\n", e$message))
-    rf_results$auc <- NA
-    rf_results$accuracy <- NA
-    rf_results$final_model <- NULL
+    warning("Error displaying non-breakthrough examples: ", e$message)
   })
   
-  # Feature importance analysis
-  feature_importance <- NULL
-  if (!is.null(rf_results$final_model)) {
-    importance_scores <- importance(rf_results$final_model)
-    feature_importance <- data.frame(
-      Feature = rownames(importance_scores),
-      Importance = importance_scores[, 1],
-      stringsAsFactors = FALSE
-    ) %>%
-      arrange(desc(Importance))
-    
-    cat("Top 5 most important features:\n")
-    top_features <- head(feature_importance, 5)
-    for (i in 1:nrow(top_features)) {
-      cat(sprintf("  %d. %s: %.3f\n", i, top_features$Feature[i], top_features$Importance[i]))
+  # Cross-validation setup with adaptive parameters
+  tryCatch({
+    # Adaptive CV parameters based on data size
+    if (nrow(model_data) < 50) {
+      cv_method <- "LOOCV"  # Leave-one-out for very small datasets
+      cv_number <- NULL
+    } else if (nrow(model_data) < 200) {
+      cv_method <- "cv"
+      cv_number <- 5  # 5-fold for small datasets
+    } else {
+      cv_method <- "cv"
+      cv_number <- 10  # 10-fold for larger datasets
     }
-  }
+    
+    if (cv_method == "LOOCV") {
+      ctrl <- trainControl(method = "LOOCV", classProbs = TRUE, summaryFunction = twoClassSummary)
+      cat("Using Leave-One-Out Cross-Validation\n")
+    } else {
+      ctrl <- trainControl(method = cv_method, number = cv_number, classProbs = TRUE, summaryFunction = twoClassSummary)
+      cat("Using", cv_number, "-fold Cross-Validation\n")
+    }
+    
+  }, error = function(e) {
+    stop("Error setting up cross-validation: ", e$message)
+  })
   
+  # Train logistic model with validation
+  tryCatch({
+    breakthrough_formula <- as.formula(paste("Will_Breakthrough ~", paste(predictors, collapse = " + ")))
+    cat("Training logistic regression model with", length(predictors), "predictors\n")
+    
+    logistic_model <- train(
+      breakthrough_formula,
+      data = model_data,
+      method = "glm",
+      family = "binomial",
+      trControl = ctrl,
+      metric = "ROC"
+    )
+    
+    cat("✓ Logistic regression model trained\n")
+    
+    # Extract coefficient importance
+    logistic_coefs <- summary(logistic_model$finalModel)$coefficients
+    logistic_importance <- abs(logistic_coefs[-1, "Estimate"])  # Exclude intercept
+    names(logistic_importance) <- rownames(logistic_coefs)[-1]
+    
+  }, error = function(e) {
+    stop("Error training logistic regression: ", e$message)
+  })
+  
+  # Train Random Forest with validation
+  tryCatch({
+    cat("Training Random Forest model for variable importance\n")
+    
+    rf_model <- train(
+      breakthrough_formula,
+      data = model_data,
+      method = "ranger",
+      trControl = ctrl,
+      importance = 'impurity',
+      metric = "ROC"
+    )
+    
+    cat("✓ Random Forest model trained\n")
+    
+    # Extract variable importance
+    rf_importance <- rf_model$finalModel$variable.importance
+    
+  }, error = function(e) {
+    warning("Error training Random Forest - using logistic regression only: ", e$message)
+    rf_model <- NULL
+    rf_importance <- NULL
+  })
+  
+  # Combine and rank importance scores with validation
+  tryCatch({
+    if (!is.null(rf_importance)) {
+      # Normalize importance scores to 0-1 scale
+      logistic_norm <- (logistic_importance - min(logistic_importance)) / 
+                      (max(logistic_importance) - min(logistic_importance))
+      rf_norm <- (rf_importance - min(rf_importance)) / 
+                 (max(rf_importance) - min(rf_importance))
+      
+      # Combine scores (equal weighting)
+      common_vars <- intersect(names(logistic_norm), names(rf_norm))
+      combined_importance <- (logistic_norm[common_vars] + rf_norm[common_vars]) / 2
+      
+      # Create comprehensive importance dataframe
+      importance_df <- data.frame(
+        Variable = common_vars,
+        Logistic_Importance = logistic_norm[common_vars],
+        RF_Importance = rf_norm[common_vars],
+        Combined_Importance = combined_importance,
+        stringsAsFactors = FALSE
+      ) %>%
+        arrange(desc(Combined_Importance))
+      
+      cat("✓ Combined importance scores calculated\n")
+      
+    } else {
+      # Use only logistic regression importance
+      importance_df <- data.frame(
+        Variable = names(logistic_importance),
+        Logistic_Importance = logistic_importance,
+        RF_Importance = NA,
+        Combined_Importance = logistic_importance,
+        stringsAsFactors = FALSE
+      ) %>%
+        arrange(desc(Combined_Importance))
+      
+      cat("✓ Logistic-only importance scores calculated\n")
+    }
+    
+  }, error = function(e) {
+    stop("Error calculating variable importance: ", e$message)
+  })
+  
+  # Model performance comparison with validation
+  tryCatch({
+    models_list <- list(Logistic = logistic_model)
+    if (!is.null(rf_model)) {
+      models_list$RandomForest <- rf_model
+    }
+    
+    model_comparison <- resamples(models_list)
+    performance_summary <- summary(model_comparison)
+    
+    cat("✓ Model performance comparison completed\n")
+    
+  }, error = function(e) {
+    warning("Error in model comparison: ", e$message)
+    model_comparison <- NULL
+    performance_summary <- NULL
+  })
+  
+  # Select top predictors with validation
+  tryCatch({
+    # Select top predictors (up to 5, or fewer if not enough predictors)
+    n_top <- min(5, nrow(importance_df))
+    top_predictors <- importance_df$Variable[1:n_top]
+    
+    cat("✓ Top", n_top, "predictors selected\n")
+    
+    # Train reduced model with only top predictors
+    if (n_top >= 2) {  # Need at least 2 predictors for meaningful model
+      reduced_formula <- as.formula(paste("Will_Breakthrough ~", paste(top_predictors, collapse = " + ")))
+      
+      reduced_model <- train(
+        reduced_formula,
+        data = model_data,
+        method = "glm",
+        family = "binomial",
+        trControl = ctrl,
+        metric = "ROC"
+      )
+      
+      cat("✓ Reduced model with top predictors trained\n")
+      
+      # Add coefficient direction validation for breakthrough prediction
+      cat("\n--- Nordic Combined Breakthrough Model Coefficient Validation ---\n")
+      tryCatch({
+        # Get logistic regression coefficients
+        logistic_coefs <- summary(reduced_model$finalModel)$coefficients
+        
+        # Expected positive coefficients for breakthrough prediction (nordic combined specific)
+        expected_positive_vars <- c("Prev_Pelo", "Prev_Individual", "Prev_IndividualCompact", 
+                                    "Prev_MassStart", "Prev_Pct_of_Max_Points")
+        expected_negative_vars <- c("Age")  # Younger athletes more likely to breakthrough
+        
+        cat("=== DEBUG: Predictor Values Used ===\n")
+        for (var in top_predictors) {
+          if (var %in% names(model_data)) {
+            vals <- model_data[[var]]
+            cat(sprintf("%s: min=%.3f, max=%.3f, mean=%.3f, na_count=%d\n", 
+                       var, min(vals, na.rm=TRUE), max(vals, na.rm=TRUE), 
+                       mean(vals, na.rm=TRUE), sum(is.na(vals))))
+          }
+        }
+        
+        # Check coefficient directions
+        for (var in top_predictors) {
+          if (var %in% rownames(logistic_coefs)) {
+            coef_value <- logistic_coefs[var, "Estimate"]
+            coef_pvalue <- logistic_coefs[var, "Pr(>|z|)"]
+            
+            # Check if coefficient direction matches expectation
+            if (var %in% expected_positive_vars) {
+              if (coef_value > 0) {
+                cat("✓", var, "has positive coefficient (", round(coef_value, 4), ") - VALID for breakthrough prediction\n")
+              } else {
+                cat("⚠️  WARNING:", var, "has negative coefficient (", round(coef_value, 4), ") - unexpected for breakthrough prediction\n")
+              }
+            } else if (var %in% expected_negative_vars) {
+              if (coef_value < 0) {
+                cat("✓", var, "has negative coefficient (", round(coef_value, 4), ") - VALID for breakthrough prediction\n")
+              } else {
+                cat("⚠️  WARNING:", var, "has positive coefficient (", round(coef_value, 4), ") - unexpected for breakthrough prediction\n")
+              }
+            } else {
+              # For other variables, include regardless of direction but note it
+              cat("?", var, "has coefficient (", round(coef_value, 4), ") - included (direction not specified)\n")
+            }
+            
+            # Also check statistical significance
+            if (coef_pvalue > 0.1) {
+              cat("  NOTE:", var, "p-value =", round(coef_pvalue, 4), "(not significant at 0.1 level)\n")
+            }
+          }
+        }
+        
+        # Implement intelligent model selection to find best model with correct coefficient directions
+        cat("\n--- Intelligent Model Selection for Correct Coefficient Directions ---\n")
+        
+        # Define core predictors we want to prioritize
+        core_predictors <- c("Age", "Prev_Pct_of_Max_Points")
+        available_predictors <- intersect(top_predictors, names(model_data))
+        
+        # Function to check if all coefficients have correct directions
+        check_coefficient_directions <- function(model_coefs, predictors_used) {
+          all_correct <- TRUE
+          for (var in predictors_used) {
+            if (var %in% rownames(model_coefs)) {
+              coef_value <- model_coefs[var, "Estimate"]
+              if (var %in% expected_positive_vars && coef_value <= 0) {
+                all_correct <- FALSE
+              } else if (var %in% expected_negative_vars && coef_value >= 0) {
+                all_correct <- FALSE
+              }
+            }
+          }
+          return(all_correct)
+        }
+        
+        best_model <- NULL
+        best_predictors <- NULL
+        best_roc <- 0
+        best_directions_correct <- FALSE
+        
+        # Try different combinations, starting with simpler models
+        for (n_predictors in 2:min(6, length(available_predictors))) {
+          # Always include Age if available
+          if ("Age" %in% available_predictors) {
+            remaining_predictors <- setdiff(available_predictors, "Age")
+            
+            # Try combinations that include Age
+            if (n_predictors > 1 && length(remaining_predictors) >= (n_predictors - 1)) {
+              combinations <- combn(remaining_predictors, n_predictors - 1, simplify = FALSE)
+              
+              for (combo in combinations[1:min(20, length(combinations))]) {  # Limit to 20 combinations
+                test_predictors <- c("Age", combo)
+                
+                tryCatch({
+                  test_formula <- as.formula(paste("Will_Breakthrough ~", paste(test_predictors, collapse = " + ")))
+                  
+                  test_model <- train(
+                    test_formula,
+                    data = model_data,
+                    method = "glm",
+                    family = "binomial",
+                    trControl = ctrl,
+                    metric = "ROC"
+                  )
+                  
+                  test_roc <- max(test_model$results$ROC, na.rm = TRUE)
+                  test_coefs <- summary(test_model$finalModel)$coefficients
+                  directions_correct <- check_coefficient_directions(test_coefs, test_predictors)
+                  
+                  # Prioritize models with correct directions, then by ROC
+                  is_better <- FALSE
+                  if (directions_correct && !best_directions_correct) {
+                    is_better <- TRUE  # First model with correct directions
+                  } else if (directions_correct && best_directions_correct && test_roc > best_roc) {
+                    is_better <- TRUE  # Better ROC among models with correct directions
+                  } else if (!directions_correct && !best_directions_correct && test_roc > best_roc) {
+                    is_better <- TRUE  # Better ROC when no good directions found yet
+                  }
+                  
+                  if (is_better) {
+                    best_model <- test_model
+                    best_predictors <- test_predictors
+                    best_roc <- test_roc
+                    best_directions_correct <- directions_correct
+                    
+                    cat("New best model found:", paste(test_predictors, collapse = ", "), 
+                        "ROC:", round(test_roc, 3), 
+                        "Directions:", ifelse(directions_correct, "✓ Correct", "✗ Wrong"), "\n")
+                  }
+                  
+                }, error = function(e) {
+                  # Skip combinations that fail
+                })
+              }
+            }
+          }
+        }
+        
+        # Use the best model found
+        if (!is.null(best_model)) {
+          reduced_model <- best_model
+          top_predictors <- best_predictors
+          
+          cat("\n--- Final Selected Model ---\n")
+          cat("Selected predictors:", paste(best_predictors, collapse = ", "), "\n")
+          cat("Model ROC:", round(best_roc, 3), "\n")
+          cat("All coefficients correct direction:", ifelse(best_directions_correct, "✓ Yes", "✗ No"), "\n")
+          
+          # Show final coefficients
+          final_coefs <- summary(best_model$finalModel)$coefficients
+          cat("\nFinal model coefficients:\n")
+          for (var in best_predictors) {
+            if (var %in% rownames(final_coefs)) {
+              coef_value <- final_coefs[var, "Estimate"]
+              coef_pvalue <- final_coefs[var, "Pr(>|z|)"]
+              direction_ok <- ""
+              if (var %in% expected_positive_vars) {
+                direction_ok <- ifelse(coef_value > 0, "✓", "✗")
+              } else if (var %in% expected_negative_vars) {
+                direction_ok <- ifelse(coef_value < 0, "✓", "✗")
+              }
+              cat(sprintf("  %s %s: coef=%.4f, p=%.4f\n", direction_ok, var, coef_value, coef_pvalue))
+            }
+          }
+        } else {
+          cat("No valid model found - keeping original\n")
+        }
+        
+      }, error = function(e) {
+        cat("Error in nordic combined breakthrough coefficient validation:", e$message, "\n")
+      })
+    } else {
+      warning("Too few predictors for reduced model")
+      reduced_model <- logistic_model
+    }
+    
+  }, error = function(e) {
+    warning("Error creating reduced model: ", e$message)
+    top_predictors <- predictors[1:min(3, length(predictors))]  # Fallback
+    reduced_model <- logistic_model
+  })
+  
+  # Return comprehensive results
   return(list(
-    model_logistic = logistic_results$final_model,
-    model_rf = rf_results$final_model,
-    performance = list(
-      logistic = list(auc = logistic_results$auc, accuracy = logistic_results$accuracy),
-      rf = list(auc = rf_results$auc, accuracy = rf_results$accuracy)
-    ),
-    feature_importance = feature_importance,
-    breakthrough_count = breakthrough_count,
-    threshold_used = threshold,
-    age_filter = selected_age_threshold
+    importance = importance_df,
+    top_predictors = top_predictors,
+    full_model = logistic_model,
+    reduced_model = reduced_model,
+    rf_model = rf_model,
+    model_comparison = model_comparison,
+    performance = performance_summary,
+    data_summary = list(
+      n_observations = nrow(model_data),
+      n_breakthrough = breakthrough_count,
+      n_no_breakthrough = no_breakthrough_count,
+      age_cutoff = "No age restriction"
+    )
   ))
 }
 
-# Null coalescing operator helper
-`%||%` <- function(x, y) {
-  if (is.null(x)) return(y)
-  if (length(x) == 0) return(y)
-  if (all(is.na(x))) return(y)
-  return(x[1])  # Return first element if vector
-}
-
-# Load pROC library for AUC calculation
-if (!require(pROC)) {
-  install.packages("pROC")
-  library(pROC)
-}
+# Nordic Combined predictors from Elo preparation section
+nc_predictors <- c("Prev_Pelo", "Prev_Individual", "Prev_IndividualCompact", 
+                   "Prev_MassStart", "Prev_Pct_of_Max_Points", "Age")
 
 # Train breakthrough prediction models for men
 cat("\n=== MEN'S NORDIC COMBINED BREAKTHROUGH MODELS ===\n")
-men_breakthrough_models <- evaluate_breakthrough_predictors(
-  data = train_men,
-  threshold = men_breakthrough_threshold,
-  gender_label = "Men's",
-  min_breakthrough = 3  # Lower minimum for nordic combined due to smaller dataset
+men_breakthrough_results <- evaluate_breakthrough_predictors(
+  df = train_men,
+  predictors = nc_predictors
 )
 
-# Train breakthrough prediction models for ladies
+# Train breakthrough prediction models for ladies  
 cat("\n=== LADIES NORDIC COMBINED BREAKTHROUGH MODELS ===\n")
-ladies_breakthrough_models <- evaluate_breakthrough_predictors(
-  data = train_ladies,
-  threshold = ladies_breakthrough_threshold,
-  gender_label = "Ladies",
-  min_breakthrough = 3  # Lower minimum for nordic combined due to smaller dataset
+ladies_breakthrough_results <- evaluate_breakthrough_predictors(
+  df = train_ladies,
+  predictors = nc_predictors
 )
 
-# Model comparison and selection
+# Model performance summary
 cat("\n=== NORDIC COMBINED MODEL PERFORMANCE SUMMARY ===\n")
 
 # Men's model summary
-cat("Men's nordic combined breakthrough models:\n")
-if (!is.null(men_breakthrough_models$model_logistic) || !is.null(men_breakthrough_models$model_rf)) {
-  if (!is.null(men_breakthrough_models$model_logistic)) {
-    cat(sprintf("  Logistic Regression: AUC=%.3f, Accuracy=%.3f\n", 
-                men_breakthrough_models$performance$logistic$auc %||% NA,
-                men_breakthrough_models$performance$logistic$accuracy %||% NA))
+if (!is.null(men_breakthrough_results$reduced_model)) {
+  cat("Men's Nordic Combined Breakthrough Model:\n")
+  cat("  Selected predictors:", paste(men_breakthrough_results$top_predictors, collapse = ", "), "\n")
+  
+  # Get performance metrics
+  if (!is.null(men_breakthrough_results$model_comparison)) {
+    perf_metrics <- summary(men_breakthrough_results$model_comparison)
+    if ("Logistic" %in% names(perf_metrics$statistics$ROC)) {
+      men_roc <- round(perf_metrics$statistics$ROC$Logistic["Mean"], 3)
+      cat("  Cross-validation ROC:", men_roc, "\n")
+    }
   }
-  if (!is.null(men_breakthrough_models$model_rf)) {
-    cat(sprintf("  Random Forest: AUC=%.3f, Accuracy=%.3f\n", 
-                men_breakthrough_models$performance$rf$auc %||% NA,
-                men_breakthrough_models$performance$rf$accuracy %||% NA))
-  }
-  cat(sprintf("  Breakthrough cases: %d\n", men_breakthrough_models$breakthrough_count))
+  
+  cat("  Data summary:\n")
+  cat("    Total observations:", men_breakthrough_results$data_summary$n_observations, "\n")
+  cat("    Breakthrough cases:", men_breakthrough_results$data_summary$n_breakthrough, "\n")
+  cat("    Non-breakthrough cases:", men_breakthrough_results$data_summary$n_no_breakthrough, "\n")
 } else {
-  cat("  No successful models trained\n")
+  cat("Men's model training failed\n")
 }
 
 # Ladies model summary
-cat("Ladies nordic combined breakthrough models:\n")
-if (!is.null(ladies_breakthrough_models$model_logistic) || !is.null(ladies_breakthrough_models$model_rf)) {
-  if (!is.null(ladies_breakthrough_models$model_logistic)) {
-    cat(sprintf("  Logistic Regression: AUC=%.3f, Accuracy=%.3f\n", 
-                ladies_breakthrough_models$performance$logistic$auc %||% NA,
-                ladies_breakthrough_models$performance$logistic$accuracy %||% NA))
+if (!is.null(ladies_breakthrough_results$reduced_model)) {
+  cat("\nLadies Nordic Combined Breakthrough Model:\n")
+  cat("  Selected predictors:", paste(ladies_breakthrough_results$top_predictors, collapse = ", "), "\n")
+  
+  # Get performance metrics
+  if (!is.null(ladies_breakthrough_results$model_comparison)) {
+    perf_metrics <- summary(ladies_breakthrough_results$model_comparison)
+    if ("Logistic" %in% names(perf_metrics$statistics$ROC)) {
+      ladies_roc <- round(perf_metrics$statistics$ROC$Logistic["Mean"], 3)
+      cat("  Cross-validation ROC:", ladies_roc, "\n")
+    }
   }
-  if (!is.null(ladies_breakthrough_models$model_rf)) {
-    cat(sprintf("  Random Forest: AUC=%.3f, Accuracy=%.3f\n", 
-                ladies_breakthrough_models$performance$rf$auc %||% NA,
-                ladies_breakthrough_models$performance$rf$accuracy %||% NA))
-  }
-  cat(sprintf("  Breakthrough cases: %d\n", ladies_breakthrough_models$breakthrough_count))
+  
+  cat("  Data summary:\n")
+  cat("    Total observations:", ladies_breakthrough_results$data_summary$n_observations, "\n")
+  cat("    Breakthrough cases:", ladies_breakthrough_results$data_summary$n_breakthrough, "\n")
+  cat("    Non-breakthrough cases:", ladies_breakthrough_results$data_summary$n_no_breakthrough, "\n")
 } else {
-  cat("  No successful models trained\n")
+  cat("Ladies model training failed\n")
 }
 
 # Store models for future use
-breakthrough_models_men <- men_breakthrough_models
-breakthrough_models_ladies <- ladies_breakthrough_models
+breakthrough_models_men <- men_breakthrough_results
+breakthrough_models_ladies <- ladies_breakthrough_results
 
-cat("\n✓ Nordic combined breakthrough prediction models completed\n")
-cat("✓ Cross-validation performance evaluated\n")
+cat("\n✓ Nordic Combined breakthrough prediction models completed\n")
+cat("✓ Cross-validation performance evaluated\n") 
 cat("✓ Feature importance analysis completed\n")
 cat("✓ Models ready for 2026 breakthrough candidate prediction\n")
 ```
@@ -4203,819 +4358,924 @@ cat("✓ Models ready for 2026 breakthrough candidate prediction\n")
 ### 2026 Breakthrough Candidates
 
 ```{r big-break}
-cat("=== 2026 NORDIC COMBINED BREAKTHROUGH CANDIDATES ===\n")
+# Load required libraries for machine learning and comprehensive breakthrough analysis
+tryCatch({
+  library(caret)
+  library(ranger)
+  library(pROC)
+  library(openxlsx)
+  cat("✓ Required libraries loaded successfully\n")
+}, error = function(e) {
+  stop("Error loading required libraries: ", e$message)
+})
 
-# Function to predict 2026 breakthrough candidates
-predict_2026_breakthroughs <- function(models, current_data, gender_label, threshold_used) {
-  cat(sprintf("\n--- Identifying 2026 %s Nordic Combined Breakthrough Candidates ---\n", gender_label))
-  
-  # Validate inputs
-  if (is.null(models$model_logistic) && is.null(models$model_rf)) {
-    cat(sprintf("No trained models available for %s nordic combined breakthrough prediction\n", gender_label))
-    return(data.frame())
-  }
-  
-  if (nrow(current_data) == 0) {
-    cat(sprintf("No current data available for %s nordic combined breakthrough prediction\n", gender_label))
-    return(data.frame())
-  }
-  
-  # Get 2025 data as the most recent complete season for predictions
-  prediction_data <- current_data %>%
-    filter(Season == 2025) %>%
-    group_by(Skier) %>%
-    slice_tail(n = 1) %>%  # Get most recent record per skier in 2025
-    ungroup()
-  
-  if (nrow(prediction_data) == 0) {
-    cat(sprintf("No 2025 data available for %s nordic combined breakthrough prediction\n", gender_label))
-    return(data.frame())
-  }
-  
-  cat(sprintf("2025 %s data for breakthrough prediction: %d skiers\n", gender_label, nrow(prediction_data)))
-  
-  # Calculate career maximums to exclude skiers who already achieved breakthrough
-  career_maxes <- current_data %>%
-    group_by(Skier) %>%
-    summarise(
-      Career_Max_Pct = max(Pct_of_Max_Points, na.rm = TRUE),
-      Career_Seasons = n(),
-      .groups = 'drop'
-    )
-  
-  # Join with prediction data
-  candidate_data <- prediction_data %>%
-    left_join(career_maxes, by = "Skier") %>%
-    filter(
-      # Exclude skiers who already achieved breakthrough
-      Career_Max_Pct < threshold_used,
-      # Focus on development age range (16-30 years old)
-      Age >= 16, Age <= 30,
-      # Must have some competitive activity (>1% of max points in 2025)
-      Pct_of_Max_Points > 0.01,
-      # Must not be missing key data
-      !is.na(Age), !is.na(Pct_of_Max_Points)
-    )
-  
-  excluded_already_breakthrough <- sum(career_maxes$Career_Max_Pct >= threshold_used, na.rm = TRUE)
-  excluded_too_old <- sum(prediction_data$Age > 30, na.rm = TRUE)
-  excluded_too_young <- sum(prediction_data$Age < 16, na.rm = TRUE) 
-  excluded_inactive <- sum(prediction_data$Pct_of_Max_Points <= 0.01, na.rm = TRUE)
-  
-  cat(sprintf("Filtering results:\n"))
-  cat(sprintf("  Already achieved breakthrough (≥%.0f%%): %d skiers excluded\n", 
-              threshold_used * 100, excluded_already_breakthrough))
-  cat(sprintf("  Too old (>30 years): %d skiers excluded\n", excluded_too_old))
-  cat(sprintf("  Too young (<16 years): %d skiers excluded\n", excluded_too_young))
-  cat(sprintf("  Inactive (≤1%% points): %d skiers excluded\n", excluded_inactive))
-  cat(sprintf("  Breakthrough candidates remaining: %d skiers\n", nrow(candidate_data)))
-  
-  if (nrow(candidate_data) == 0) {
-    cat(sprintf("No %s nordic combined breakthrough candidates identified\n", gender_label))
-    return(data.frame())
-  }
-  
-  # Map current ELO ratings to previous season variable names for prediction
-  # This allows us to use current 2025 ratings as "previous" values for 2026 prediction
-  prediction_features <- candidate_data
-  
-  # Map current ratings to "Prev_" variables that the model expects
-  if ("Pelo" %in% names(prediction_features)) {
-    prediction_features$Prev_Pelo <- prediction_features$Pelo
-  }
-  if ("Individual_Pelo" %in% names(prediction_features)) {
-    prediction_features$Prev_Individual <- prediction_features$Individual_Pelo
-  }
-  if ("IndividualCompact_Pelo" %in% names(prediction_features)) {
-    prediction_features$Prev_IndividualCompact <- prediction_features$IndividualCompact_Pelo
-  }
-  if ("MassStart_Pelo" %in% names(prediction_features)) {
-    prediction_features$Prev_MassStart <- prediction_features$MassStart_Pelo
-  }
-  if ("Pct_of_Max_Points" %in% names(prediction_features)) {
-    prediction_features$Prev_Pct_of_Max_Points <- prediction_features$Pct_of_Max_Points
-  }
-  
-  # Generate breakthrough probability predictions
-  breakthrough_predictions <- candidate_data %>%
-    dplyr::select(Skier, Nation, Age, Pct_of_Max_Points, Career_Max_Pct, Career_Seasons)
-  
-  # Logistic regression predictions
-  if (!is.null(models$model_logistic)) {
-    tryCatch({
-      logistic_probs <- predict(models$model_logistic, newdata = prediction_features, type = "response")
-      breakthrough_predictions$Logistic_Prob <- logistic_probs
-      cat(sprintf("✓ Logistic regression predictions generated for %d candidates\n", 
-                  length(logistic_probs)))
-    }, error = function(e) {
-      cat(sprintf("Logistic regression prediction failed: %s\n", e$message))
-      breakthrough_predictions$Logistic_Prob <- rep(NA, nrow(breakthrough_predictions))
-    })
-  } else {
-    breakthrough_predictions$Logistic_Prob <- rep(NA, nrow(breakthrough_predictions))
-  }
-  
-  # Random Forest predictions
-  if (!is.null(models$model_rf)) {
-    tryCatch({
-      rf_probs <- predict(models$model_rf, newdata = prediction_features, type = "prob")
-      if ("Yes" %in% colnames(rf_probs)) {
-        breakthrough_predictions$RF_Prob <- rf_probs[, "Yes"]
-      } else {
-        breakthrough_predictions$RF_Prob <- 1 - rf_probs[, 1]
-      }
-      cat(sprintf("✓ Random Forest predictions generated for %d candidates\n", 
-                  nrow(rf_probs)))
-    }, error = function(e) {
-      cat(sprintf("Random Forest prediction failed: %s\n", e$message))
-      breakthrough_predictions$RF_Prob <- rep(NA, nrow(breakthrough_predictions))
-    })
-  } else {
-    breakthrough_predictions$RF_Prob <- rep(NA, nrow(breakthrough_predictions))
-  }
-  
-  # Combine predictions (average of available models)
-  breakthrough_predictions <- breakthrough_predictions %>%
-    mutate(
-      Avg_Breakthrough_Prob = case_when(
-        !is.na(Logistic_Prob) & !is.na(RF_Prob) ~ (Logistic_Prob + RF_Prob) / 2,
-        !is.na(Logistic_Prob) ~ Logistic_Prob,
-        !is.na(RF_Prob) ~ RF_Prob,
-        TRUE ~ 0
-      ),
-      Prob_Pct = round(Avg_Breakthrough_Prob * 100, 1),
-      
-      # Categorize breakthrough likelihood
-      Likelihood = case_when(
-        Avg_Breakthrough_Prob >= 0.30 ~ "High",
-        Avg_Breakthrough_Prob >= 0.10 ~ "Medium", 
-        Avg_Breakthrough_Prob >= 0.05 ~ "Low",
-        TRUE ~ "Very Low"
-      )
-    ) %>%
-    arrange(desc(Avg_Breakthrough_Prob))
-  
-  # Summary statistics
-  total_candidates <- nrow(breakthrough_predictions)
-  high_prob <- sum(breakthrough_predictions$Likelihood == "High")
-  medium_prob <- sum(breakthrough_predictions$Likelihood == "Medium")
-  low_prob <- sum(breakthrough_predictions$Likelihood == "Low")
-  very_low_prob <- sum(breakthrough_predictions$Likelihood == "Very Low")
-  
-  cat(sprintf("\n%s breakthrough probability distribution:\n", gender_label))
-  cat(sprintf("  High probability (≥30%%): %d candidates\n", high_prob))
-  cat(sprintf("  Medium probability (10-29%%): %d candidates\n", medium_prob))
-  cat(sprintf("  Low probability (5-9%%): %d candidates\n", low_prob))
-  cat(sprintf("  Very low probability (<5%%): %d candidates\n", very_low_prob))
-  
-  return(breakthrough_predictions)
+# Enhanced missing data imputation function (consistent with training preparation)
+replace_na_with_quartile <- function(x) {
+  if (all(is.na(x))) return(x)
+  quartiles <- quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+  first_quartile_val <- quartiles[1]  # Use first quartile for nordic combined
+  x[is.na(x)] <- first_quartile_val
+  return(x)
 }
 
-# Predict 2026 men's breakthrough candidates
-men_breakthrough_candidates <- predict_2026_breakthroughs(
-  models = breakthrough_models_men,
+# Comprehensive function to predict 2026 breakthrough candidates with enhanced validation
+predict_2026_breakthroughs <- function(current_data, breakthrough_model, top_predictors, gender_label) {
+  cat(sprintf("\n=== Predicting 2026 %s Nordic Combined Breakthrough Candidates ===\n", gender_label))
+  
+  # Enhanced input validation
+  if (!is.data.frame(current_data)) stop("current_data is not a data frame")
+  if (nrow(current_data) == 0) stop("current_data is empty")
+  if (is.null(breakthrough_model)) stop("breakthrough_model is NULL")
+  if (is.null(top_predictors) || length(top_predictors) == 0) stop("No top_predictors provided")
+  
+  cat(sprintf("Input validation passed: %d total %s records\n", nrow(current_data), gender_label))
+  
+  # Nordic Combined specific predictor mapping (training variables → current data variables)
+  predictor_mapping <- c(
+    "Prev_Pelo" = "Pelo",
+    "Prev_Individual" = "Individual_Pelo",
+    "Prev_IndividualCompact" = "IndividualCompact_Pelo",
+    "Prev_MassStart" = "MassStart_Pelo",
+    "Prev_Pct_of_Max_Points" = "Pct_of_Max_Points",
+    "Age" = "Age"
+  )
+  
+  # Get 2025 season data as most recent complete season
+  tryCatch({
+    season_2025 <- current_data %>%
+      filter(Season == 2025) %>%
+      group_by(Skier) %>%
+      slice_tail(n = 1) %>%  # Most recent record per skier in 2025
+      ungroup()
+    
+    if (nrow(season_2025) == 0) {
+      warning(sprintf("No 2025 data available for %s breakthrough prediction", gender_label))
+      return(data.frame())
+    }
+    
+    cat(sprintf("✓ Found %d %s skiers in 2025 season data\n", nrow(season_2025), gender_label))
+    
+  }, error = function(e) {
+    stop("Error extracting 2025 season data: ", e$message)
+  })
+  
+  # Calculate comprehensive career statistics
+  tryCatch({
+    career_maximums <- current_data %>%
+      filter(!is.na(Pct_of_Max_Points)) %>%
+      group_by(Skier) %>%
+      summarise(
+        Career_Max_Pct = max(Pct_of_Max_Points, na.rm = TRUE),
+        Career_Seasons = n_distinct(Season),
+        Career_Races = n(),
+        First_Season = min(Season, na.rm = TRUE),
+        Last_Season = max(Season, na.rm = TRUE),
+        Avg_Performance = mean(Pct_of_Max_Points, na.rm = TRUE),
+        .groups = "drop"
+      )
+    
+    cat(sprintf("✓ Career statistics calculated for %d skiers\n", nrow(career_maximums)))
+    
+  }, error = function(e) {
+    stop("Error calculating career statistics: ", e$message)
+  })
+  
+  # Identify breakthrough candidates with comprehensive filtering
+  tryCatch({
+    prediction_data <- season_2025 %>%
+      left_join(career_maximums, by = "Skier") %>%
+      filter(
+        # Nordic Combined: Exclude skiers who already achieved 50% breakthrough threshold
+        Career_Max_Pct < 0.5,
+        # Age range: minimum 16 (junior age) with no upper limit for breakthrough potential
+        Age >= 16,
+        # Must have meaningful competitive activity in 2025 (>1% of max points)
+        Pct_of_Max_Points > 0.01,
+        # Must have complete data for key variables
+        !is.na(Age), !is.na(Pct_of_Max_Points)
+      )
+    
+    # Calculate detailed filtering statistics
+    total_skiers <- nrow(season_2025)
+    already_breakthrough <- sum(career_maximums$Career_Max_Pct >= 0.5, na.rm = TRUE)
+    too_young <- sum(season_2025$Age < 16, na.rm = TRUE)
+    inactive_2025 <- sum(season_2025$Pct_of_Max_Points <= 0.01, na.rm = TRUE)
+    missing_data <- sum(is.na(season_2025$Age) | is.na(season_2025$Pct_of_Max_Points))
+    final_candidates <- nrow(prediction_data)
+    
+    cat(sprintf("\n--- %s Breakthrough Candidate Filtering ---\n", gender_label))
+    cat(sprintf("Total %s skiers in 2025: %d\n", gender_label, total_skiers))
+    cat(sprintf("Already achieved breakthrough (≥50%%): %d excluded\n", already_breakthrough))
+    cat(sprintf("Too young (<16 years): %d excluded\n", too_young))
+    cat(sprintf("Inactive in 2025 (≤1%% max points): %d excluded\n", inactive_2025))
+    cat(sprintf("Missing key data: %d excluded\n", missing_data))
+    cat(sprintf("Final breakthrough candidates: %d\n", final_candidates))
+    
+    if (nrow(prediction_data) == 0) {
+      warning(sprintf("No eligible %s breakthrough candidates identified", gender_label))
+      return(data.frame())
+    }
+    
+  }, error = function(e) {
+    stop("Error filtering breakthrough candidates: ", e$message)
+  })
+  
+  # Debug information for key athletes (Nordic Combined representatives)
+  debug_athletes <- c("Joergen Graabak", "Jens Luraas Oftebro")  # Norwegian men's representatives
+  if (gender_label == "Ladies") {
+    debug_athletes <- c("Gyda Westvold Hansen", "Mari Leinan Lund")  # Norwegian ladies representatives  
+  }
+  
+  for (athlete in debug_athletes) {
+    if (athlete %in% prediction_data$Skier) {
+      athlete_idx <- which(prediction_data$Skier == athlete)
+      cat(sprintf("\n=== DEBUG: %s Breakthrough Model Input ===\n", athlete))
+      athlete_data <- prediction_data[athlete_idx, ]
+      cat(sprintf("Age: %.1f\n", athlete_data$Age))
+      cat(sprintf("2025 Performance: %.1f%% of max points\n", athlete_data$Pct_of_Max_Points * 100))
+      cat(sprintf("Career Maximum: %.1f%% of max points\n", athlete_data$Career_Max_Pct * 100))
+      cat(sprintf("Career Seasons: %d\n", athlete_data$Career_Seasons))
+      cat(sprintf("Improvement Potential: %.1f points\n", (0.5 - athlete_data$Career_Max_Pct) * 100))
+    }
+  }
+  
+  # Feature mapping and validation
+  tryCatch({
+    # Map current 2025 performance to "Prev_" variables that the trained model expects
+    feature_mapping <- predictor_mapping[names(predictor_mapping) %in% top_predictors]
+    
+    cat(sprintf("\n--- Feature Mapping for %s Prediction ---\n", gender_label))
+    cat(sprintf("Top predictors from model: %s\n", paste(top_predictors, collapse = ", ")))
+    
+    # Apply feature mapping
+    for (prev_feature in names(feature_mapping)) {
+      current_feature <- feature_mapping[[prev_feature]]
+      if (prev_feature %in% top_predictors && current_feature %in% names(prediction_data)) {
+        prediction_data[[prev_feature]] <- prediction_data[[current_feature]]
+        cat(sprintf("✓ Mapped %s -> %s\n", current_feature, prev_feature))
+      } else if (prev_feature %in% top_predictors) {
+        cat(sprintf("✗ Missing feature: %s (needed for %s)\n", current_feature, prev_feature))
+      }
+    }
+    
+    # Validate predictor availability
+    available_predictors <- intersect(top_predictors, names(prediction_data))
+    missing_predictors <- setdiff(top_predictors, names(prediction_data))
+    
+    if (length(missing_predictors) > 0) {
+      cat(sprintf("WARNING: Missing predictors: %s\n", paste(missing_predictors, collapse = ", ")))
+    }
+    
+    if (length(available_predictors) == 0) {
+      stop(sprintf("No valid predictors available for %s breakthrough prediction", gender_label))
+    }
+    
+    cat(sprintf("Using %d/%d predictors: %s\n", 
+                length(available_predictors), length(top_predictors),
+                paste(available_predictors, collapse = ", ")))
+    
+  }, error = function(e) {
+    stop("Error in feature mapping: ", e$message)
+  })
+  
+  # Data quality checks and missing value handling
+  tryCatch({
+    prediction_clean <- prediction_data %>%
+      dplyr::select(all_of(c("Skier", "Nation", "Age", "Pct_of_Max_Points", 
+                      "Career_Max_Pct", "Career_Seasons", "Career_Races", available_predictors)))
+    
+    # Check for missing values in predictors
+    missing_counts <- prediction_clean %>%
+      dplyr::select(all_of(available_predictors)) %>%
+      summarise_all(~sum(is.na(.)))
+    
+    cat(sprintf("\n--- Missing Value Analysis for %s ---\n", gender_label))
+    for (predictor in available_predictors) {
+      missing_count <- missing_counts[[predictor]]
+      missing_pct <- round(missing_count / nrow(prediction_clean) * 100, 1)
+      cat(sprintf("%s: %d missing (%.1f%%)\n", predictor, missing_count, missing_pct))
+    }
+    
+    # Apply quartile imputation for missing values (consistent with training)
+    prediction_clean <- prediction_clean %>%
+      mutate(across(all_of(available_predictors), replace_na_with_quartile))
+    
+    # Check for infinite values and replace with NA
+    infinite_counts <- prediction_clean %>%
+      dplyr::select(all_of(available_predictors)) %>%
+      summarise_all(~sum(is.infinite(.)))
+    
+    if (sum(infinite_counts) > 0) {
+      cat("WARNING: Found infinite values in predictors, replacing with NA\n")
+      prediction_clean <- prediction_clean %>%
+        mutate(across(all_of(available_predictors), ~ifelse(is.infinite(.), NA, .)))
+    }
+    
+    cat(sprintf("✓ Data quality validation completed for %d candidates\n", nrow(prediction_clean)))
+    
+  }, error = function(e) {
+    stop("Error in data quality checks: ", e$message)
+  })  
+  # Generate breakthrough probability predictions
+  tryCatch({
+    # Use the trained model for breakthrough predictions
+    breakthrough_probs <- tryCatch({
+      predict(breakthrough_model, newdata = prediction_clean, type = "prob")
+    }, error = function(e) {
+      cat(sprintf("Initial prediction failed: %s\n", e$message))
+      cat("Attempting fallback prediction with na.action = na.pass\n")
+      predict(breakthrough_model, newdata = prediction_clean, type = "prob", na.action = na.pass)
+    })
+    
+    # Extract breakthrough probabilities ("Yes" class)
+    if ("Yes" %in% colnames(breakthrough_probs)) {
+      prob_values <- breakthrough_probs[, "Yes"]
+    } else if (ncol(breakthrough_probs) == 2) {
+      prob_values <- breakthrough_probs[, 2]  # Assume second column is positive class
+    } else {
+      prob_values <- breakthrough_probs[, 1]  # Fallback
+    }
+    
+    cat(sprintf("✓ Breakthrough predictions generated for %d candidates\n", length(prob_values)))
+    cat(sprintf("Probability range: %.1f%% to %.1f%%\n", 
+                min(prob_values, na.rm = TRUE) * 100, 
+                max(prob_values, na.rm = TRUE) * 100))
+    
+  }, error = function(e) {
+    stop("Error generating breakthrough predictions: ", e$message)
+  })
+  
+  # Create comprehensive results with enhanced classification
+  tryCatch({
+    breakthrough_results <- prediction_clean %>%
+      mutate(
+        Breakthrough_Prob = prob_values,
+        Breakthrough_Result = NA_real_,  # For 2026 predictions (unknown)
+        
+        # Nordic Combined breakthrough likelihood classification
+        Likelihood = case_when(
+          is.na(Breakthrough_Prob) ~ "Unknown",
+          Breakthrough_Prob >= 0.6 ~ "Very High",
+          Breakthrough_Prob >= 0.4 ~ "High", 
+          Breakthrough_Prob >= 0.2 ~ "Moderate",
+          Breakthrough_Prob >= 0.1 ~ "Low",
+          TRUE ~ "Very Low"
+        ),
+        
+        # Performance metrics
+        Current_Performance_Pct = round(Pct_of_Max_Points * 100, 1),
+        Career_Best_Pct = round(Career_Max_Pct * 100, 1),
+        Points_to_Threshold = pmax(0, 0.5 - Pct_of_Max_Points, na.rm = TRUE) * 100,
+        Improvement_Potential = round((0.5 - Career_Max_Pct) * 100, 1),
+        
+        # Additional context
+        Season = 2026,
+        Type = "2026 Prediction"
+      ) %>%
+      arrange(desc(Breakthrough_Prob))
+    
+    cat(sprintf("✓ Results processing completed for %d candidates\n", nrow(breakthrough_results)))
+    
+  }, error = function(e) {
+    stop("Error creating results dataframe: ", e$message)
+  })
+  
+  # Enhanced summary statistics
+  tryCatch({
+    total_candidates <- nrow(breakthrough_results)
+    
+    # Likelihood distribution
+    likelihood_summary <- breakthrough_results %>%
+      count(Likelihood) %>%
+      arrange(desc(n))
+    
+    cat(sprintf("\n--- %s Breakthrough Prediction Summary ---\n", gender_label))
+    cat(sprintf("Total candidates analyzed: %d\n", total_candidates))
+    
+    for (i in 1:nrow(likelihood_summary)) {
+      likelihood <- likelihood_summary$Likelihood[i]
+      count <- likelihood_summary$n[i]
+      pct <- round(count / total_candidates * 100, 1)
+      cat(sprintf("%s likelihood: %d candidates (%.1f%%)\n", likelihood, count, pct))
+    }
+    
+    # Age analysis for high-potential candidates
+    high_potential <- breakthrough_results %>%
+      filter(Likelihood %in% c("Very High", "High", "Moderate"))
+    
+    if (nrow(high_potential) > 0) {
+      age_range <- range(high_potential$Age, na.rm = TRUE)
+      avg_age <- mean(high_potential$Age, na.rm = TRUE)
+      cat(sprintf("\nHigh-potential candidates age analysis:\n"))
+      cat(sprintf("Age range: %.1f - %.1f years\n", age_range[1], age_range[2]))
+      cat(sprintf("Average age: %.1f years\n", avg_age))
+      
+      # Young prospects (under 25)
+      young_prospects <- sum(high_potential$Age < 25, na.rm = TRUE)
+      cat(sprintf("Young prospects (under 25): %d\n", young_prospects))
+    }
+    
+  }, error = function(e) {
+    warning("Error calculating summary statistics: ", e$message)
+  })
+  
+  return(breakthrough_results)
+}
+
+# Enhanced function for historical breakthrough prediction with debugging
+predict_historical_breakthrough <- function(historical_data, breakthrough_model, top_predictors) {
+  cat("\n--- Applying 2026 Model to Pre-Breakthrough Historical Cases ---\n")
+  
+  if (nrow(historical_data) == 0) {
+    cat("No historical data provided\n")
+    return(data.frame())
+  }
+  
+  # Nordic Combined predictor mapping for historical validation
+  predictor_mapping <- c(
+    "Prev_Pelo" = "Pelo",
+    "Prev_Individual" = "Individual_Pelo",
+    "Prev_IndividualCompact" = "IndividualCompact_Pelo",
+    "Prev_MassStart" = "MassStart_Pelo",
+    "Prev_Pct_of_Max_Points" = "Pct_of_Max_Points",
+    "Age" = "Age"
+  )
+  
+  tryCatch({
+    # Create prediction dataset by mapping pre-breakthrough values to "Prev_" model variables
+    prediction_data <- historical_data
+    
+    cat(sprintf("Processing %d historical cases\n", nrow(prediction_data)))
+    
+    # Debug: Show sample of input data
+    if (nrow(prediction_data) > 0) {
+      sample_case <- prediction_data[1, ]
+      cat(sprintf("Sample case: %s, Season %d, Pre-breakthrough: %.1f%%, Will breakthrough in %d with %.1f%%\n",
+                  sample_case$Skier, sample_case$Season, 
+                  sample_case$Pre_Breakthrough_Pct * 100,
+                  sample_case$Breakthrough_Season,
+                  sample_case$Breakthrough_Performance * 100))
+    }
+    
+    # Apply feature mapping for historical validation
+    for (prev_var in names(predictor_mapping)) {
+      if (prev_var %in% top_predictors) {
+        current_var <- predictor_mapping[[prev_var]]
+        if (current_var %in% names(prediction_data)) {
+          prediction_data[[prev_var]] <- prediction_data[[current_var]]
+          cat(sprintf("✓ Mapped %s -> %s\n", current_var, prev_var))
+        } else {
+          cat(sprintf("✗ Missing feature: %s\n", current_var))
+        }
+      }
+    }
+    
+    # Handle missing values with quartile imputation
+    available_predictors <- intersect(top_predictors, names(prediction_data))
+    cat(sprintf("Available predictors: %s\n", paste(available_predictors, collapse = ", ")))
+    
+    for (predictor in available_predictors) {
+      missing_count <- sum(is.na(prediction_data[[predictor]]))
+      if (missing_count > 0) {
+        q1_val <- quantile(prediction_data[[predictor]], 0.25, na.rm = TRUE)
+        prediction_data[[predictor]][is.na(prediction_data[[predictor]])] <- q1_val
+        cat(sprintf("Imputed %d missing values for %s using Q1 = %.3f\n", 
+                    missing_count, predictor, q1_val))
+      }
+    }
+    
+    # Generate predictions for historical cases
+    historical_probs <- predict(breakthrough_model, newdata = prediction_data, type = "prob")
+    
+    if ("Yes" %in% colnames(historical_probs)) {
+      prob_values <- historical_probs[, "Yes"]
+    } else {
+      prob_values <- historical_probs[, 2]  # Assume second column is "Yes"
+    }
+    
+    cat(sprintf("Generated predictions for %d cases, probability range: %.1f%% - %.1f%%\n",
+                length(prob_values), min(prob_values) * 100, max(prob_values) * 100))
+    
+    # Debug: Check dimensions before mutate
+    cat(sprintf("prediction_data rows: %d, prob_values length: %d\\n", 
+                nrow(prediction_data), length(prob_values)))
+    
+    # Ensure prob_values length matches dataframe rows
+    if (length(prob_values) != nrow(prediction_data)) {
+      warning(sprintf("Length mismatch: prediction_data has %d rows but prob_values has %d elements", 
+                      nrow(prediction_data), length(prob_values)))
+      # Truncate or pad as needed
+      if (length(prob_values) > nrow(prediction_data)) {
+        prob_values <- prob_values[1:nrow(prediction_data)]
+      } else {
+        prob_values <- c(prob_values, rep(NA, nrow(prediction_data) - length(prob_values)))
+      }
+      cat(sprintf("Adjusted prob_values length to: %d\\n", length(prob_values)))
+    }
+    
+    # Create results with correct historical context
+    historical_results <- tryCatch({
+      # Verify required columns exist
+      required_cols <- c("Breakthrough_Performance", "Pre_Breakthrough_Pct", "Season", 
+                        "Age_at_Prediction", "Breakthrough_Season", "Skier", "Nation")
+      missing_cols <- setdiff(required_cols, names(prediction_data))
+      
+      if (length(missing_cols) > 0) {
+        cat(sprintf("Missing required columns: %s\\n", paste(missing_cols, collapse = ", ")))
+        return(data.frame())
+      }
+      
+      # Create a completely new dataframe with only the columns we need
+      results_df <- data.frame(
+        Skier = prediction_data$Skier,
+        Nation = prediction_data$Nation,
+        Age = prediction_data$Age_at_Prediction,
+        Breakthrough_Prob = as.numeric(prob_values),
+        Breakthrough_Result = round(prediction_data$Breakthrough_Performance * 100, 1),
+        Pct_of_Max_Points = prediction_data$Pre_Breakthrough_Pct,
+        Pre_Breakthrough_Display = round(prediction_data$Pre_Breakthrough_Pct * 100, 1),
+        Breakthrough_Season = prediction_data$Breakthrough_Season,
+        Breakthrough_Performance = prediction_data$Breakthrough_Performance,
+        Season = prediction_data$Season,
+        Type = "Historical Success",
+        stringsAsFactors = FALSE
+      )
+      
+      return(results_df)
+    }, error = function(e) {
+      cat(sprintf("Error in historical validation: %s\\n", e$message))
+      cat(sprintf("prediction_data columns: %s\\n", paste(names(prediction_data), collapse = ", ")))
+      cat(sprintf("prob_values class: %s, length: %d\\n", class(prob_values), length(prob_values)))
+      return(data.frame())
+    })
+    
+    # Debug output
+    if (nrow(historical_results) > 0) {
+      cat("\nSample historical results:\n")
+      for (i in 1:min(3, nrow(historical_results))) {
+        result <- historical_results[i, ]
+        cat(sprintf("  %s: Pre-season %d (%.1f%%) -> Predicted %.1f%% -> Actual breakthrough %.1f%%\n",
+                    result$Skier, result$Season, result$Pre_Breakthrough_Display,
+                    result$Breakthrough_Prob * 100, result$Breakthrough_Result))
+      }
+    }
+    
+    cat(sprintf("✓ Historical validation completed for %d breakthrough cases\n", nrow(historical_results)))
+    
+    return(historical_results)
+    
+  }, error = function(e) {
+    cat(sprintf("Error in historical breakthrough prediction: %s\n", e$message))
+    cat(sprintf("Available columns: %s\n", paste(names(historical_data), collapse = ", ")))
+    return(data.frame())
+  })
+}
+
+# Execute breakthrough prediction analysis
+cat("\n=== 2026 NORDIC COMBINED BREAKTHROUGH PREDICTION ANALYSIS ===\n")
+
+# Validate that trained models exist
+if (!exists("breakthrough_models_men") || is.null(breakthrough_models_men)) {
+  stop("Men's breakthrough model not found. Ensure feat-select-break section completed successfully.")
+}
+if (!exists("breakthrough_models_ladies") || is.null(breakthrough_models_ladies)) {
+  stop("Ladies breakthrough model not found. Ensure feat-select-break section completed successfully.")
+}
+
+# Men's breakthrough prediction
+men_breakthrough_predictions <- predict_2026_breakthroughs(
   current_data = train_men,
-  gender_label = "Men's",
-  threshold_used = men_breakthrough_threshold
+  breakthrough_model = breakthrough_models_men$reduced_model,
+  top_predictors = breakthrough_models_men$top_predictors,
+  gender_label = "Men's"
 )
 
-# Predict 2026 ladies breakthrough candidates  
-ladies_breakthrough_candidates <- predict_2026_breakthroughs(
-  models = breakthrough_models_ladies,
+# Ladies breakthrough prediction
+ladies_breakthrough_predictions <- predict_2026_breakthroughs(
   current_data = train_ladies,
-  gender_label = "Ladies", 
-  threshold_used = ladies_breakthrough_threshold
+  breakthrough_model = breakthrough_models_ladies$reduced_model,
+  top_predictors = breakthrough_models_ladies$top_predictors,
+  gender_label = "Ladies"
 )
 
-# Display top candidates
-cat("\n=== TOP 2026 NORDIC COMBINED BREAKTHROUGH CANDIDATES ===\n")
+# Display comprehensive breakthrough analysis results
+cat("\n=== 2026 NORDIC COMBINED BREAKTHROUGH PREDICTION RESULTS ===\n")
 
-# Men's top candidates
-if (nrow(men_breakthrough_candidates) > 0) {
-  cat("\nTop Men's nordic combined breakthrough candidates for 2026:\n")
-  men_top_candidates <- head(men_breakthrough_candidates, 10)
+# Men's breakthrough candidate analysis
+if (nrow(men_breakthrough_predictions) > 0) {
+  cat("\n--- Men's Nordic Combined Breakthrough Candidates ---\n")
+  
+  # Top candidates by probability
+  men_top_candidates <- head(men_breakthrough_predictions, 10)
   
   for (i in 1:nrow(men_top_candidates)) {
     candidate <- men_top_candidates[i, ]
-    cat(sprintf("  %d. %s (%s): %.1f%% probability (%s)\n",
-                i, candidate$Skier, candidate$Nation, candidate$Prob_Pct, candidate$Likelihood))
-    cat(sprintf("      Age: %.0f, 2025 Performance: %.1f%%, Career Max: %.1f%%\n",
-                candidate$Age, candidate$Pct_of_Max_Points * 100, candidate$Career_Max_Pct * 100))
+    cat(sprintf("%d. %s (%s): %.1f%% probability (%s)\n",
+                i, candidate$Skier, candidate$Nation, 
+                round(candidate$Breakthrough_Prob * 100, 1), candidate$Likelihood))
+    cat(sprintf("   Age: %.0f, Current: %.1f%%, Career best: %.1f%%, Points needed: %.1f\n",
+                candidate$Age, candidate$Current_Performance_Pct, 
+                candidate$Career_Best_Pct, candidate$Points_to_Threshold))
   }
   
-  # Special focus on under-25 prospects
-  men_young_prospects <- men_breakthrough_candidates %>%
-    filter(Age < 25, Avg_Breakthrough_Prob >= 0.05) %>%
+  # High-potential candidates analysis
+  men_high_potential <- men_breakthrough_predictions %>%
+    filter(Likelihood %in% c("Very High", "High", "Moderate")) %>%
+    head(5)
+  
+  if (nrow(men_high_potential) > 0) {
+    cat("\nMen's high-potential breakthrough candidates:\n")
+    for (i in 1:nrow(men_high_potential)) {
+      candidate <- men_high_potential[i, ]
+      cat(sprintf("  %s (%s): %.1f%% probability, Age %.0f, %.1f points to breakthrough\n",
+                  candidate$Skier, candidate$Nation, 
+                  round(candidate$Breakthrough_Prob * 100, 1),
+                  candidate$Age, candidate$Points_to_Threshold))
+    }
+  }
+  
+  # Young prospects (under 25)
+  men_young_prospects <- men_breakthrough_predictions %>%
+    filter(Age < 25, Breakthrough_Prob >= 0.1) %>%
     head(5)
   
   if (nrow(men_young_prospects) > 0) {
-    cat("\nTop young men's prospects (under 25):\n")
+    cat("\nMen's young prospects (under 25):\n")
     for (i in 1:nrow(men_young_prospects)) {
       prospect <- men_young_prospects[i, ]
-      cat(sprintf("  %s (%s): Age %.0f, %.1f%% probability\n",
-                  prospect$Skier, prospect$Nation, prospect$Age, prospect$Prob_Pct))
+      cat(sprintf("  %s (%s): Age %.0f, %.1f%% probability, %.1f points needed\n",
+                  prospect$Skier, prospect$Nation, prospect$Age, 
+                  round(prospect$Breakthrough_Prob * 100, 1), prospect$Points_to_Threshold))
     }
   }
 } else {
-  cat("No men's nordic combined breakthrough candidates identified\n")
+  cat("No men's Nordic Combined breakthrough candidates identified for 2026\n")
 }
 
-# Ladies top candidates
-if (nrow(ladies_breakthrough_candidates) > 0) {
-  cat("\nTop Ladies nordic combined breakthrough candidates for 2026:\n")
-  ladies_top_candidates <- head(ladies_breakthrough_candidates, 10)
+# Ladies breakthrough candidate analysis
+if (nrow(ladies_breakthrough_predictions) > 0) {
+  cat("\n--- Ladies Nordic Combined Breakthrough Candidates ---\n")
+  
+  # Top candidates by probability
+  ladies_top_candidates <- head(ladies_breakthrough_predictions, 10)
   
   for (i in 1:nrow(ladies_top_candidates)) {
     candidate <- ladies_top_candidates[i, ]
-    cat(sprintf("  %d. %s (%s): %.1f%% probability (%s)\n",
-                i, candidate$Skier, candidate$Nation, candidate$Prob_Pct, candidate$Likelihood))
-    cat(sprintf("      Age: %.0f, 2025 Performance: %.1f%%, Career Max: %.1f%%\n",
-                candidate$Age, candidate$Pct_of_Max_Points * 100, candidate$Career_Max_Pct * 100))
+    cat(sprintf("%d. %s (%s): %.1f%% probability (%s)\n",
+                i, candidate$Skier, candidate$Nation, 
+                round(candidate$Breakthrough_Prob * 100, 1), candidate$Likelihood))
+    cat(sprintf("   Age: %.0f, Current: %.1f%%, Career best: %.1f%%, Points needed: %.1f\n",
+                candidate$Age, candidate$Current_Performance_Pct, 
+                candidate$Career_Best_Pct, candidate$Points_to_Threshold))
   }
   
-  # Special focus on under-25 prospects
-  ladies_young_prospects <- ladies_breakthrough_candidates %>%
-    filter(Age < 25, Avg_Breakthrough_Prob >= 0.05) %>%
+  # High-potential candidates analysis
+  ladies_high_potential <- ladies_breakthrough_predictions %>%
+    filter(Likelihood %in% c("Very High", "High", "Moderate")) %>%
+    head(5)
+  
+  if (nrow(ladies_high_potential) > 0) {
+    cat("\nLadies high-potential breakthrough candidates:\n")
+    for (i in 1:nrow(ladies_high_potential)) {
+      candidate <- ladies_high_potential[i, ]
+      cat(sprintf("  %s (%s): %.1f%% probability, Age %.0f, %.1f points to breakthrough\n",
+                  candidate$Skier, candidate$Nation, 
+                  round(candidate$Breakthrough_Prob * 100, 1),
+                  candidate$Age, candidate$Points_to_Threshold))
+    }
+  }
+  
+  # Young prospects (under 25)
+  ladies_young_prospects <- ladies_breakthrough_predictions %>%
+    filter(Age < 25, Breakthrough_Prob >= 0.1) %>%
     head(5)
   
   if (nrow(ladies_young_prospects) > 0) {
-    cat("\nTop young ladies prospects (under 25):\n")
+    cat("\nLadies young prospects (under 25):\n")
     for (i in 1:nrow(ladies_young_prospects)) {
       prospect <- ladies_young_prospects[i, ]
-      cat(sprintf("  %s (%s): Age %.0f, %.1f%% probability\n",
-                  prospect$Skier, prospect$Nation, prospect$Age, prospect$Prob_Pct))
+      cat(sprintf("  %s (%s): Age %.0f, %.1f%% probability, %.1f points needed\n",
+                  prospect$Skier, prospect$Nation, prospect$Age, 
+                  round(prospect$Breakthrough_Prob * 100, 1), prospect$Points_to_Threshold))
     }
   }
 } else {
-  cat("No ladies nordic combined breakthrough candidates identified\n")
+  cat("No ladies Nordic Combined breakthrough candidates identified for 2026\n")
 }
 
-# Export breakthrough candidates to Excel
-cat("\n--- Exporting 2026 Nordic Combined Breakthrough Candidates ---\n")
+# Historical breakthrough analysis for model validation
+cat("\n=== HISTORICAL BREAKTHROUGH VALIDATION ===\n")
 
-output_dir <- "/Users/syverjohansen/blog/daehl-e/content/post/nordic-combined/drafts/season-prediction/2026/excel365/"
-
-# Export men's breakthrough candidates
-if (nrow(men_breakthrough_candidates) > 0) {
-  tryCatch({
-    men_export <- men_breakthrough_candidates %>%
-      dplyr::select(Skier, Nation, Age, Prob_Pct, Likelihood, 
-             Pct_of_Max_Points, Career_Max_Pct, Career_Seasons) %>%
-      rename(
-        `Breakthrough Probability %` = Prob_Pct,
-        `Likelihood Category` = Likelihood,
-        `2025 Performance %` = Pct_of_Max_Points,
-        `Career Max %` = Career_Max_Pct,
-        `Career Seasons` = Career_Seasons
-      ) %>%
-      mutate(
-        `2025 Performance %` = round(`2025 Performance %` * 100, 1),
-        `Career Max %` = round(`Career Max %` * 100, 1)
-      )
-    
-    men_file <- file.path(output_dir, "Men_Nordic_Combined_Breakthrough_Candidates_2026.xlsx")
-    write.xlsx(men_export, men_file, overwrite = TRUE)
-    cat(sprintf("✓ Men's nordic combined breakthrough candidates exported: %s\n", men_file))
-    
-  }, error = function(e) {
-    cat(sprintf("Failed to export men's breakthrough candidates: %s\n", e$message))
-  })
-} else {
-  cat("No men's breakthrough candidates to export\n")
-}
-
-# Export ladies breakthrough candidates  
-if (nrow(ladies_breakthrough_candidates) > 0) {
-  tryCatch({
-    ladies_export <- ladies_breakthrough_candidates %>%
-      dplyr::select(Skier, Nation, Age, Prob_Pct, Likelihood,
-             Pct_of_Max_Points, Career_Max_Pct, Career_Seasons) %>%
-      rename(
-        `Breakthrough Probability %` = Prob_Pct,
-        `Likelihood Category` = Likelihood,
-        `2025 Performance %` = Pct_of_Max_Points,
-        `Career Max %` = Career_Max_Pct,
-        `Career Seasons` = Career_Seasons
-      ) %>%
-      mutate(
-        `2025 Performance %` = round(`2025 Performance %` * 100, 1),
-        `Career Max %` = round(`Career Max %` * 100, 1)
-      )
-    
-    ladies_file <- file.path(output_dir, "Ladies_Nordic_Combined_Breakthrough_Candidates_2026.xlsx")
-    write.xlsx(ladies_export, ladies_file, overwrite = TRUE)
-    cat(sprintf("✓ Ladies nordic combined breakthrough candidates exported: %s\n", ladies_file))
-    
-  }, error = function(e) {
-    cat(sprintf("Failed to export ladies breakthrough candidates: %s\n", e$message))
-  })
-} else {
-  cat("No ladies breakthrough candidates to export\n")
-}
-
-cat("\n✓ 2026 Nordic combined breakthrough candidate analysis completed\n")
-cat("✓ Top candidates identified and ranked by probability\n")
-cat("✓ Young prospects highlighted for development focus\n")
-cat("✓ Breakthrough candidate data exported to Excel\n")
-```
-
-### Age-Adjusted 2026 Predictions
-
-```{r df82}
-cat("=== NORDIC COMBINED AGE-ADJUSTED PREDICTIONS ===\n")
-
-# Helper function to replace NA values with first quartile
-replace_na_with_quartile <- function(x) {
-  tryCatch({
-    if (all(is.na(x))) {
-      warning("All values are NA, returning 0")
-      return(rep(0, length(x)))
-    }
-    
-    # Calculate first quartile
-    q1 <- quantile(x, 0.25, na.rm = TRUE)
-    
-    # Replace NA values with first quartile
-    result <- ifelse(is.na(x), q1, x)
-    
-    return(result)
-  }, error = function(e) {
-    warning(paste("Error in quartile replacement:", e$message))
-    return(ifelse(is.na(x), 0, x))
-  })
-}
-
-# Process men's nordic combined data for age analysis
-cat("\n--- Processing Men's Nordic Combined Data for Age Analysis ---\n")
-
-if (!exists("M_elo") || nrow(M_elo) == 0) {
-  stop("Men's nordic combined ELO data not available")
-}
-
-# Create men's df82 dataset
-df82_men <- M_elo %>%
-  filter(
-    Season >= 1981,  # Historical data requirement
-    !is.na(Skier), !is.na(Season), !is.na(Age),
-    Skier != "", Season > 0
-  ) %>%
-  group_by(Skier, Season) %>%
-  slice_tail(n = 1) %>%  # Get season-end values
-  ungroup() %>%
-  dplyr::select(Skier, Nation, Season, Age, Pct_of_Max_Points, 
-         Pelo, Individual_Pelo, IndividualCompact_Pelo, MassStart_Pelo)
-
-cat(sprintf("Men's nordic combined df82 dataset: %d rows, %d unique skiers\n", 
-            nrow(df82_men), length(unique(df82_men$Skier))))
-
-# Validate required columns for men
-required_cols_men <- c("Skier", "Nation", "Season", "Age", "Pct_of_Max_Points")
-missing_cols_men <- setdiff(required_cols_men, names(df82_men))
-if (length(missing_cols_men) > 0) {
-  stop(sprintf("Missing required columns in men's nordic combined data: %s", 
-               paste(missing_cols_men, collapse = ", ")))
-}
-
-# Create men's ELO dataframe with previous season values
-elo_df82 <- df82_men %>%
-  arrange(Skier, Season) %>%
-  group_by(Skier) %>%
-  mutate(
-    Prev_Pelo = lag(Pelo),
-    Prev_Individual = lag(Individual_Pelo),
-    Prev_IndividualCompact = lag(IndividualCompact_Pelo),
-    Prev_MassStart = lag(MassStart_Pelo),
-    Prev_Pct_of_Max_Points = lag(Pct_of_Max_Points),
-    Prev_Age = lag(Age)
-  ) %>%
-  ungroup() %>%
-  filter(Season > 1981) %>%  # Need at least one previous season
-  dplyr::select(Skier, Nation, Season, Age, Pct_of_Max_Points,
-         Pelo, Individual_Pelo, IndividualCompact_Pelo, MassStart_Pelo,
-         Prev_Pelo, Prev_Individual, Prev_IndividualCompact, Prev_MassStart,
-         Prev_Pct_of_Max_Points, Prev_Age)
-
-cat(sprintf("Men's nordic combined ELO dataframe: %d rows with previous season data\n", nrow(elo_df82)))
-
-# Handle missing values for men's data
-df82_final <- elo_df82 %>%
-  group_by(Season) %>%
-  mutate(
-    Prev_Pelo = replace_na_with_quartile(Prev_Pelo),
-    Prev_Individual = replace_na_with_quartile(Prev_Individual),
-    Prev_IndividualCompact = replace_na_with_quartile(Prev_IndividualCompact),
-    Prev_MassStart = replace_na_with_quartile(Prev_MassStart),
-    Prev_Pct_of_Max_Points = ifelse(is.na(Prev_Pct_of_Max_Points), 0, Prev_Pct_of_Max_Points)
-  ) %>%
-  ungroup()
-
-cat(sprintf("✓ Men's nordic combined missing values handled: %d final rows\n", nrow(df82_final)))
-
-# Process ladies nordic combined data for age analysis
-cat("\n--- Processing Ladies Nordic Combined Data for Age Analysis ---\n")
-
-if (!exists("L_elo") || nrow(L_elo) == 0) {
-  stop("Ladies nordic combined ELO data not available")
-}
-
-# Create ladies df82 dataset
-df82_ladies <- L_elo %>%
-  filter(
-    Season >= 1981,  # Historical data requirement
-    !is.na(Skier), !is.na(Season), !is.na(Age),
-    Skier != "", Season > 0
-  ) %>%
-  group_by(Skier, Season) %>%
-  slice_tail(n = 1) %>%  # Get season-end values
-  ungroup() %>%
-  dplyr::select(Skier, Nation, Season, Age, Pct_of_Max_Points, 
-         Pelo, Individual_Pelo, IndividualCompact_Pelo, MassStart_Pelo)
-
-cat(sprintf("Ladies nordic combined df82 dataset: %d rows, %d unique skiers\n", 
-            nrow(df82_ladies), length(unique(df82_ladies$Skier))))
-
-# Validate required columns for ladies
-required_cols_ladies <- c("Skier", "Nation", "Season", "Age", "Pct_of_Max_Points")
-missing_cols_ladies <- setdiff(required_cols_ladies, names(df82_ladies))
-if (length(missing_cols_ladies) > 0) {
-  stop(sprintf("Missing required columns in ladies nordic combined data: %s", 
-               paste(missing_cols_ladies, collapse = ", ")))
-}
-
-# Create ladies ELO dataframe with previous season values
-elo_df82_ladies <- df82_ladies %>%
-  arrange(Skier, Season) %>%
-  group_by(Skier) %>%
-  mutate(
-    Prev_Pelo = lag(Pelo),
-    Prev_Individual = lag(Individual_Pelo),
-    Prev_IndividualCompact = lag(IndividualCompact_Pelo),
-    Prev_MassStart = lag(MassStart_Pelo),
-    Prev_Pct_of_Max_Points = lag(Pct_of_Max_Points),
-    Prev_Age = lag(Age)
-  ) %>%
-  ungroup() %>%
-  filter(Season > 1981) %>%  # Need at least one previous season
-  dplyr::select(Skier, Nation, Season, Age, Pct_of_Max_Points,
-         Pelo, Individual_Pelo, IndividualCompact_Pelo, MassStart_Pelo,
-         Prev_Pelo, Prev_Individual, Prev_IndividualCompact, Prev_MassStart,
-         Prev_Pct_of_Max_Points, Prev_Age)
-
-cat(sprintf("Ladies nordic combined ELO dataframe: %d rows with previous season data\n", nrow(elo_df82_ladies)))
-
-# Handle missing values for ladies data
-df82_final_ladies <- elo_df82_ladies %>%
-  group_by(Season) %>%
-  mutate(
-    Prev_Pelo = replace_na_with_quartile(Prev_Pelo),
-    Prev_Individual = replace_na_with_quartile(Prev_Individual),
-    Prev_IndividualCompact = replace_na_with_quartile(Prev_IndividualCompact),
-    Prev_MassStart = replace_na_with_quartile(Prev_MassStart),
-    Prev_Pct_of_Max_Points = ifelse(is.na(Prev_Pct_of_Max_Points), 0, Prev_Pct_of_Max_Points)
-  ) %>%
-  ungroup()
-
-cat(sprintf("✓ Ladies nordic combined missing values handled: %d final rows\n", nrow(df82_final_ladies)))
-
-# GAM model function for nordic combined ELO prediction with age
-predict_elo_with_age_gam <- function(data) {
-  cat("\n--- Training Nordic Combined Age-Based GAM Models ---\n")
+# Comprehensive function to identify genuine breakthrough cases
+identify_historical_breakthroughs <- function(data, gender_label) {
+  cat(sprintf("\n--- Identifying Historical %s Breakthrough Cases ---\n", gender_label))
   
-  # Validate input data
-  if (nrow(data) < 100) {
-    warning("Limited data for GAM training")
-  }
-  
-  # Define nordic combined disciplines for modeling
-  disciplines <- list(
-    Overall = list(current = "Pelo", previous = "Prev_Pelo"),
-    Individual = list(current = "Individual_Pelo", previous = "Prev_Individual"),
-    IndividualCompact = list(current = "IndividualCompact_Pelo", previous = "Prev_IndividualCompact"),
-    MassStart = list(current = "MassStart_Pelo", previous = "Prev_MassStart")
-  )
-  
-  # Store GAM models and predictions
-  gam_models <- list()
-  gam_predictions <- list()
-  
-  # Train GAM model for each nordic combined discipline
-  for (discipline_name in names(disciplines)) {
-    discipline <- disciplines[[discipline_name]]
-    current_col <- discipline$current
-    previous_col <- discipline$previous
-    
-    # Check if columns exist and have sufficient data
-    if (!current_col %in% names(data) || !previous_col %in% names(data)) {
-      cat(sprintf("Skipping %s nordic combined: missing columns\n", discipline_name))
-      next
-    }
-    
-    # Prepare data for this discipline
-    model_data <- data %>%
-      filter(!is.na(.data[[current_col]]), !is.na(.data[[previous_col]]), !is.na(Age)) %>%
-      dplyr::select(all_of(c("Skier", "Season", "Age", current_col, previous_col)))
-    
-    if (nrow(model_data) < 50) {
-      cat(sprintf("Insufficient data for %s nordic combined GAM model (%d observations)\n", 
-                  discipline_name, nrow(model_data)))
-      next
-    }
-    
-    # Fit GAM model
-    tryCatch({
-      formula_str <- sprintf("%s ~ s(Age) + s(%s)", current_col, previous_col)
-      gam_model <- mgcv::gam(as.formula(formula_str), data = model_data)
-      
-      # Store model and calculate R-squared
-      gam_models[[discipline_name]] <- gam_model
-      r_squared <- summary(gam_model)$r.sq
-      
-      cat(sprintf("✓ %s nordic combined GAM: R² = %.3f (%d observations)\n", 
-                  discipline_name, r_squared, nrow(model_data)))
-      
-    }, error = function(e) {
-      cat(sprintf("Failed to fit %s nordic combined GAM model: %s\n", discipline_name, e$message))
-    })
-  }
-  
-  # Create prediction function
-  predict_function <- function(new_data) {
-    predictions <- new_data
-    
-    for (discipline_name in names(gam_models)) {
-      model <- gam_models[[discipline_name]]
-      discipline <- disciplines[[discipline_name]]
-      current_col <- discipline$current
-      previous_col <- discipline$previous
-      
-      # Generate predictions for this discipline
-      tryCatch({
-        pred_values <- predict(model, newdata = new_data)
-        predictions[[paste0("Predicted_", current_col)]] <- pred_values
-        
-      }, error = function(e) {
-        cat(sprintf("Failed to predict %s: %s\n", discipline_name, e$message))
-        predictions[[paste0("Predicted_", current_col)]] <- rep(NA, nrow(new_data))
-      })
-    }
-    
-    return(predictions)
-  }
-  
-  return(list(
-    models = gam_models,
-    predict = predict_function,
-    disciplines = names(gam_models)
-  ))
-}
-
-# Age progression analysis function for nordic combined
-analyze_elo_progression_by_age_gam <- function(data) {
-  cat("\n--- Analyzing Nordic Combined ELO Progression by Age ---\n")
-  
-  # Validate input data structure
-  required_age_cols <- c("Skier", "Age", "Pelo")
-  missing_age_cols <- setdiff(required_age_cols, names(data))
-  
-  if (length(missing_age_cols) > 0) {
-    stop(sprintf("Missing required columns for age analysis: %s", 
-                 paste(missing_age_cols, collapse = ", ")))
-  }
-  
-  # Prepare data for age analysis
-  age_data <- data %>%
-    filter(!is.na(Age), !is.na(Pelo), Age >= 16, Age <= 45) %>%
-    dplyr::select(Skier, Season, Age, Pelo, Individual_Pelo, IndividualCompact_Pelo, MassStart_Pelo)
-  
-  cat(sprintf("Age analysis data: %d observations, age range %.0f-%.0f\n", 
-              nrow(age_data), min(age_data$Age), max(age_data$Age)))
-  
-  return(age_data)
-}
-
-# Execute age analysis for men's nordic combined
-cat("\n=== MEN'S NORDIC COMBINED AGE ANALYSIS ===\n")
-
-age_analysis_men <- tryCatch({
-  analyze_elo_progression_by_age_gam(df82_final)
-}, error = function(e) {
-  cat(sprintf("Men's nordic combined age analysis failed: %s\n", e$message))
-  data.frame()
-})
-
-if (nrow(age_analysis_men) > 0) {
-  men_gam_result <- predict_elo_with_age_gam(df82_final)
-  cat(sprintf("Men's nordic combined GAM models trained for: %s\n", 
-              paste(men_gam_result$disciplines, collapse = ", ")))
-} else {
-  men_gam_result <- list(models = list(), predict = function(x) x, disciplines = character(0))
-  cat("No men's nordic combined GAM models trained\n")
-}
-
-# Execute age analysis for ladies nordic combined
-cat("\n=== LADIES NORDIC COMBINED AGE ANALYSIS ===\n")
-
-age_analysis_ladies <- tryCatch({
-  analyze_elo_progression_by_age_gam(df82_final_ladies)
-}, error = function(e) {
-  cat(sprintf("Ladies nordic combined age analysis failed: %s\n", e$message))
-  data.frame()
-})
-
-if (nrow(age_analysis_ladies) > 0) {
-  ladies_gam_result <- predict_elo_with_age_gam(df82_final_ladies)
-  cat(sprintf("Ladies nordic combined GAM models trained for: %s\n", 
-              paste(ladies_gam_result$disciplines, collapse = ", ")))
-} else {
-  ladies_gam_result <- list(models = list(), predict = function(x) x, disciplines = character(0))
-  cat("No ladies nordic combined GAM models trained\n")
-}
-
-# Function to predict 2026 with GAM age adjustment for nordic combined
-predict_2026_with_gam_age_adjustment <- function(current_data, gam_predictor, gender_label) {
-  cat(sprintf("\n--- Generating 2026 %s Nordic Combined Age-Adjusted Predictions ---\n", gender_label))
-  
-  if (nrow(current_data) == 0) {
-    cat(sprintf("No current data for %s nordic combined age adjustment\n", gender_label))
-    return(data.frame())
-  }
-  
-  # Prepare current data for age adjustment
-  prediction_data <- current_data %>%
-    filter(!is.na(Age), !is.na(Pelo)) %>%
-    mutate(
-      # Age in 2026 (add 1 year)
-      Age_2026 = Age + 1,
-      
-      # Map current ELO to previous season variables for GAM
-      Prev_Pelo = Pelo,
-      Prev_Individual = Individual_Pelo,
-      Prev_IndividualCompact = IndividualCompact_Pelo,
-      Prev_MassStart = MassStart_Pelo,
-      
-      # Age categories for nordic combined
-      Age_Category = case_when(
-        Age_2026 <= 23 ~ "Young",
-        Age_2026 <= 27 ~ "Prime", 
-        Age_2026 <= 31 ~ "Peak",
-        Age_2026 <= 35 ~ "Mature",
-        TRUE ~ "Veteran"
-      )
-    )
-  
-  cat(sprintf("Processing %d %s nordic combined athletes for age adjustment\n", 
-              nrow(prediction_data), gender_label))
-  
-  # Apply GAM predictions
-  age_adjusted_data <- tryCatch({
-    # Use 2026 age for prediction
-    gam_pred_data <- prediction_data %>%
-      mutate(Age = Age_2026)
-    
-    gam_predictor$predict(gam_pred_data)
-  }, error = function(e) {
-    cat(sprintf("GAM prediction failed for %s nordic combined: %s\n", gender_label, e$message))
-    prediction_data
-  })
-  
-  # Calculate age-based performance changes
-  age_adjusted_predictions <- age_adjusted_data %>%
-    mutate(
-      # Calculate ELO changes from current to predicted 2026
-      Pelo_Change = ifelse(!is.na(Predicted_Pelo), Predicted_Pelo - Pelo, 0),
-      Individual_Change = ifelse(!is.na(Predicted_Individual_Pelo), Predicted_Individual_Pelo - Individual_Pelo, 0),
-      IndividualCompact_Change = ifelse(!is.na(Predicted_IndividualCompact_Pelo), Predicted_IndividualCompact_Pelo - IndividualCompact_Pelo, 0),
-      MassStart_Change = ifelse(!is.na(Predicted_MassStart_Pelo), Predicted_MassStart_Pelo - MassStart_Pelo, 0),
-      
-      # Overall trajectory assessment
-      Overall_Trend = case_when(
-        Pelo_Change > 20 ~ "Strong Improvement",
-        Pelo_Change > 5 ~ "Improvement",
-        Pelo_Change > -5 ~ "Stable",
-        Pelo_Change > -20 ~ "Decline",
-        TRUE ~ "Strong Decline"
-      )
-    ) %>%
-    dplyr::select(Skier, Nation, Age, Age_2026, Age_Category, 
-           Pelo, Predicted_Pelo, Pelo_Change,
-           Individual_Pelo, Predicted_Individual_Pelo, Individual_Change,
-           IndividualCompact_Pelo, Predicted_IndividualCompact_Pelo, IndividualCompact_Change,
-           MassStart_Pelo, Predicted_MassStart_Pelo, MassStart_Change,
-           Overall_Trend) %>%
-    arrange(desc(Predicted_Pelo))
-  
-  # Summary by age category
-  age_summary <- age_adjusted_predictions %>%
-    group_by(Age_Category) %>%
+  # Step 1: Identify all athletes who achieved breakthrough (≥50%)
+  breakthrough_athletes <- data %>%
+    filter(!is.na(Pct_of_Max_Points), Season >= 2016, Season <= 2024) %>%
+    group_by(Skier) %>%
     summarise(
-      Count = n(),
-      Avg_Pelo_Change = mean(Pelo_Change, na.rm = TRUE),
-      Avg_Current_Pelo = mean(Pelo, na.rm = TRUE),
-      Avg_Predicted_Pelo = mean(Predicted_Pelo, na.rm = TRUE),
-      .groups = 'drop'
+      max_performance = max(Pct_of_Max_Points, na.rm = TRUE),
+      first_breakthrough_season = min(Season[Pct_of_Max_Points >= 0.5], na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    filter(
+      max_performance >= 0.5,  # Must have achieved breakthrough
+      !is.infinite(first_breakthrough_season)  # Must have valid breakthrough season
     )
   
-  cat(sprintf("%s nordic combined age-adjusted predictions by category:\n", gender_label))
-  for (i in 1:nrow(age_summary)) {
-    category <- age_summary$Age_Category[i]
-    count <- age_summary$Count[i]
-    change <- age_summary$Avg_Pelo_Change[i]
-    cat(sprintf("  %s: %d athletes, avg ELO change: %+.1f\n", category, count, change))
+  cat(sprintf("Found %d athletes who achieved breakthrough\n", nrow(breakthrough_athletes)))
+  
+  # Step 2: Get their data from the season BEFORE breakthrough
+  pre_breakthrough_data <- breakthrough_athletes %>%
+    rowwise() %>%
+    do({
+      skier_name <- .$Skier
+      breakthrough_season <- .$first_breakthrough_season
+      pre_season <- breakthrough_season - 1
+      
+      # Get pre-breakthrough season data
+      pre_data <- data %>%
+        filter(
+          Skier == skier_name, 
+          Season == pre_season,
+          !is.na(Pct_of_Max_Points)
+        ) %>%
+        slice_tail(n = 1)  # Most recent data from pre-breakthrough season
+      
+      if (nrow(pre_data) > 0) {
+        # Get breakthrough season performance for validation
+        breakthrough_data <- data %>%
+          filter(
+            Skier == skier_name,
+            Season == breakthrough_season,
+            Pct_of_Max_Points >= 0.5
+          ) %>%
+          slice_head(n = 1)  # First breakthrough performance
+        
+        if (nrow(breakthrough_data) > 0) {
+          pre_data %>%
+            mutate(
+              Pre_Breakthrough_Pct = Pct_of_Max_Points,
+              Breakthrough_Season = breakthrough_season,
+              Breakthrough_Performance = breakthrough_data$Pct_of_Max_Points[1],
+              Age_at_Prediction = Age,
+              Age_at_Breakthrough = breakthrough_data$Age[1]
+            )
+        } else {
+          data.frame()  # No valid breakthrough data
+        }
+      } else {
+        data.frame()  # No pre-breakthrough data
+      }
+    }) %>%
+    bind_rows()
+  
+  # Step 3: Filter for valid cases with relaxed age criteria
+  valid_cases <- pre_breakthrough_data %>%
+    filter(
+      !is.na(Pre_Breakthrough_Pct),
+      !is.na(Breakthrough_Performance),
+      Pre_Breakthrough_Pct < 0.5,  # Must not have already achieved breakthrough in pre-season
+      Breakthrough_Performance >= 0.5,  # Must have achieved breakthrough in next season
+      Age_at_Prediction >= 15  # Relaxed age filter to include more young athletes
+    )
+  
+  # Debug: Show why cases were filtered out
+  cat(sprintf("Filtering breakdown:\\n"))
+  cat(sprintf("  Total pre-breakthrough data found: %d\\n", nrow(pre_breakthrough_data)))
+  if (nrow(pre_breakthrough_data) > 0) {
+    missing_pre <- sum(is.na(pre_breakthrough_data$Pre_Breakthrough_Pct))
+    missing_breakthrough <- sum(is.na(pre_breakthrough_data$Breakthrough_Performance))
+    already_high <- sum(pre_breakthrough_data$Pre_Breakthrough_Pct >= 0.5, na.rm = TRUE)
+    low_breakthrough <- sum(pre_breakthrough_data$Breakthrough_Performance < 0.5, na.rm = TRUE)
+    too_young <- sum(pre_breakthrough_data$Age_at_Prediction < 15, na.rm = TRUE)
+    
+    cat(sprintf("  Missing pre-breakthrough data: %d excluded\\n", missing_pre))
+    cat(sprintf("  Missing breakthrough performance: %d excluded\\n", missing_breakthrough))
+    cat(sprintf("  Already above 50%% in pre-season: %d excluded\\n", already_high))
+    cat(sprintf("  Breakthrough season <50%%: %d excluded\\n", low_breakthrough))
+    cat(sprintf("  Too young (<15): %d excluded\\n", too_young))
   }
   
-  return(age_adjusted_predictions)
+  cat(sprintf("Final valid cases: %d\n", nrow(valid_cases)))
+  
+  if (nrow(valid_cases) > 0) {
+    cat("\nValid breakthrough cases found:\n")
+    for (i in 1:min(5, nrow(valid_cases))) {
+      case <- valid_cases[i, ]
+      cat(sprintf("  %s: Pre-season %d = %.1f%%, Breakthrough season %d = %.1f%%\n",
+                  case$Skier, case$Season, case$Pre_Breakthrough_Pct * 100,
+                  case$Breakthrough_Season, case$Breakthrough_Performance * 100))
+    }
+  }
+  
+  return(valid_cases)
 }
 
-# Generate age-adjusted predictions for men
-if (length(men_gam_result$disciplines) > 0 && exists("pred_men_2025") && nrow(pred_men_2025) > 0) {
-  men_age_adjusted <- predict_2026_with_gam_age_adjustment(
-    pred_men_2025, men_gam_result, "Men's"
-  )
-  cat(sprintf("✓ Men's nordic combined age-adjusted predictions: %d athletes\n", nrow(men_age_adjusted)))
-} else {
-  men_age_adjusted <- data.frame()
-  cat("No men's nordic combined age-adjusted predictions generated\n")
+# Identify historical breakthrough cases
+historical_men_breakthroughs <- identify_historical_breakthroughs(train_men, "Men's")
+historical_ladies_breakthroughs <- identify_historical_breakthroughs(train_ladies, "Ladies")
+
+# Apply current models to historical breakthrough cases
+men_historical_predictions <- data.frame()
+ladies_historical_predictions <- data.frame()
+
+if (nrow(historical_men_breakthroughs) > 0) {
+  tryCatch({
+    men_historical_predictions <- predict_historical_breakthrough(
+      historical_men_breakthroughs, 
+      breakthrough_models_men$reduced_model,
+      breakthrough_models_men$top_predictors
+    )
+    cat(sprintf("✓ Men's historical validation completed: %d cases\n", nrow(men_historical_predictions)))
+  }, error = function(e) {
+    warning(sprintf("Men's historical validation failed: %s", e$message))
+  })
 }
 
-# Generate age-adjusted predictions for ladies
-if (length(ladies_gam_result$disciplines) > 0 && exists("pred_ladies_2025") && nrow(pred_ladies_2025) > 0) {
-  ladies_age_adjusted <- predict_2026_with_gam_age_adjustment(
-    pred_ladies_2025, ladies_gam_result, "Ladies"
-  )
-  cat(sprintf("✓ Ladies nordic combined age-adjusted predictions: %d athletes\n", nrow(ladies_age_adjusted)))
-} else {
-  ladies_age_adjusted <- data.frame()
-  cat("No ladies nordic combined age-adjusted predictions generated\n")
+if (nrow(historical_ladies_breakthroughs) > 0) {
+  tryCatch({
+    ladies_historical_predictions <- predict_historical_breakthrough(
+      historical_ladies_breakthroughs,
+      breakthrough_models_ladies$reduced_model, 
+      breakthrough_models_ladies$top_predictors
+    )
+    cat(sprintf("✓ Ladies historical validation completed: %d cases\n", nrow(ladies_historical_predictions)))
+  }, error = function(e) {
+    warning(sprintf("Ladies historical validation failed: %s", e$message))
+  })
 }
 
-# Combine and export age-adjusted predictions
-cat("\n--- Exporting Nordic Combined Age-Adjusted Predictions ---\n")
+# Comprehensive Excel export with biathlon-style structure
+cat("\n=== COMPREHENSIVE EXCEL EXPORT ===\n")
 
 output_dir <- "/Users/syverjohansen/blog/daehl-e/content/post/nordic-combined/drafts/season-prediction/2026/excel365/"
 
-# Export men's age-adjusted predictions
-if (nrow(men_age_adjusted) > 0) {
+# Ensure output directory exists
+if (!dir.exists(output_dir)) {
+  dir.create(output_dir, recursive = TRUE)
+  cat(sprintf("✓ Created output directory: %s\n", output_dir))
+}
+
+# Export 2026 breakthrough candidates
+if (nrow(men_breakthrough_predictions) > 0) {
   tryCatch({
-    men_age_export <- men_age_adjusted %>%
-      dplyr::select(Skier, Nation, Age, Age_2026, Age_Category,
-             Pelo, Predicted_Pelo, Pelo_Change, Overall_Trend) %>%
-      rename(
-        `Current Age` = Age,
-        `2026 Age` = Age_2026,
-        `Age Category` = Age_Category,
-        `Current ELO` = Pelo,
-        `Predicted 2026 ELO` = Predicted_Pelo,
-        `ELO Change` = Pelo_Change,
-        `Trajectory` = Overall_Trend
+    men_export <- men_breakthrough_predictions %>%
+      arrange(desc(Breakthrough_Prob)) %>%
+      mutate(
+        Breakthrough_Probability_Pct = round(Breakthrough_Prob * 100, 1),
+        Pre_Breakthrough_Pct = round(Pct_of_Max_Points * 100, 1)
       ) %>%
-      arrange(desc(`Predicted 2026 ELO`))
+      dplyr::select(
+        Name = Skier, Nation, Age, 
+        `Breakthrough Probability %` = Breakthrough_Probability_Pct,
+        Likelihood, 
+        `Pre-Breakthrough %` = Pre_Breakthrough_Pct,
+        `Career Best %` = Career_Best_Pct,
+        `Points to Threshold` = Points_to_Threshold,
+        Season, Type
+      )
     
-    men_age_file <- file.path(output_dir, "Men_Nordic_Combined_Age_Adjusted_2026.xlsx")
-    write.xlsx(men_age_export, men_age_file, overwrite = TRUE)
-    cat(sprintf("✓ Men's nordic combined age-adjusted predictions exported: %s\n", men_age_file))
-    
+    men_filename <- file.path(output_dir, "mens_breakthrough_candidates_2026.xlsx")
+    write.xlsx(men_export, men_filename, overwrite = TRUE)
+    cat(sprintf("✓ Men's breakthrough candidates exported: %s (%d candidates)\n", 
+                men_filename, nrow(men_export)))
   }, error = function(e) {
-    cat(sprintf("Failed to export men's age-adjusted predictions: %s\n", e$message))
+    warning(sprintf("Failed to export men's breakthrough candidates: %s", e$message))
   })
 }
 
-# Export ladies age-adjusted predictions
-if (nrow(ladies_age_adjusted) > 0) {
+if (nrow(ladies_breakthrough_predictions) > 0) {
   tryCatch({
-    ladies_age_export <- ladies_age_adjusted %>%
-      dplyr::select(Skier, Nation, Age, Age_2026, Age_Category,
-             Pelo, Predicted_Pelo, Pelo_Change, Overall_Trend) %>%
-      rename(
-        `Current Age` = Age,
-        `2026 Age` = Age_2026,
-        `Age Category` = Age_Category,
-        `Current ELO` = Pelo,
-        `Predicted 2026 ELO` = Predicted_Pelo,
-        `ELO Change` = Pelo_Change,
-        `Trajectory` = Overall_Trend
+    ladies_export <- ladies_breakthrough_predictions %>%
+      arrange(desc(Breakthrough_Prob)) %>%
+      mutate(
+        Breakthrough_Probability_Pct = round(Breakthrough_Prob * 100, 1),
+        Pre_Breakthrough_Pct = round(Pct_of_Max_Points * 100, 1)
       ) %>%
-      arrange(desc(`Predicted 2026 ELO`))
+      dplyr::select(
+        Name = Skier, Nation, Age,
+        `Breakthrough Probability %` = Breakthrough_Probability_Pct,
+        Likelihood,
+        `Pre-Breakthrough %` = Pre_Breakthrough_Pct,
+        `Career Best %` = Career_Best_Pct,
+        `Points to Threshold` = Points_to_Threshold,
+        Season, Type
+      )
     
-    ladies_age_file <- file.path(output_dir, "Ladies_Nordic_Combined_Age_Adjusted_2026.xlsx")
-    write.xlsx(ladies_age_export, ladies_age_file, overwrite = TRUE)
-    cat(sprintf("✓ Ladies nordic combined age-adjusted predictions exported: %s\n", ladies_age_file))
-    
+    ladies_filename <- file.path(output_dir, "ladies_breakthrough_candidates_2026.xlsx")
+    write.xlsx(ladies_export, ladies_filename, overwrite = TRUE)
+    cat(sprintf("✓ Ladies breakthrough candidates exported: %s (%d candidates)\n", 
+                ladies_filename, nrow(ladies_export)))
   }, error = function(e) {
-    cat(sprintf("Failed to export ladies age-adjusted predictions: %s\n", e$message))
+    warning(sprintf("Failed to export ladies breakthrough candidates: %s", e$message))
   })
 }
 
-# Store final results
-age_adjusted_predictions <- list(
-  men = men_age_adjusted,
-  ladies = ladies_age_adjusted,
-  men_models = men_gam_result,
-  ladies_models = ladies_gam_result
-)
+# Export historical comparison files (biathlon-style comprehensive analysis)
+if (nrow(men_historical_predictions) > 0 && nrow(men_breakthrough_predictions) > 0) {
+  tryCatch({
+    # Combine historical and 2026 predictions for comparison
+    men_comparison <- bind_rows(
+      men_historical_predictions %>%
+        mutate(
+          Breakthrough_Probability_Pct = round(Breakthrough_Prob * 100, 1),
+          Likelihood = case_when(
+            Breakthrough_Prob >= 0.6 ~ "Very High",
+            Breakthrough_Prob >= 0.4 ~ "High",
+            Breakthrough_Prob >= 0.2 ~ "Moderate", 
+            Breakthrough_Prob >= 0.1 ~ "Low",
+            TRUE ~ "Very Low"
+          )
+        ) %>%
+        dplyr::select(
+          Name = Skier, Nation, Age,
+          `Breakthrough Probability %` = Breakthrough_Probability_Pct,
+          Likelihood,
+          `Pre-Breakthrough %` = Pre_Breakthrough_Display,  # Use correct pre-breakthrough display
+          `Breakthrough Result` = Breakthrough_Result,
+          Season, Type
+        ),
+      men_breakthrough_predictions %>%
+        mutate(
+          Breakthrough_Probability_Pct = round(Breakthrough_Prob * 100, 1),
+          Pre_Breakthrough_Pct = round(Pct_of_Max_Points * 100, 1)
+        ) %>%
+        dplyr::select(
+          Name = Skier, Nation, Age,
+          `Breakthrough Probability %` = Breakthrough_Probability_Pct,
+          Likelihood,
+          `Pre-Breakthrough %` = Pre_Breakthrough_Pct,
+          `Breakthrough Result` = Breakthrough_Result,
+          Season, Type
+        )
+    ) %>%
+      arrange(desc(`Breakthrough Probability %`))
+    
+    men_comparison_filename <- file.path(output_dir, "mens_breakthrough_comparison_historical_vs_2026.xlsx")
+    write.xlsx(men_comparison, men_comparison_filename, overwrite = TRUE)
+    cat(sprintf("✓ Men's historical comparison exported: %s (%d total entries)\n", 
+                men_comparison_filename, nrow(men_comparison)))
+  }, error = function(e) {
+    warning(sprintf("Failed to export men's comparison file: %s", e$message))
+  })
+}
 
-cat("\n✓ Nordic combined age-adjusted prediction analysis completed\n")
-cat("✓ GAM models trained for age-based ELO progression\n")
-cat("✓ 2026 predictions generated with age adjustments\n")
-cat("✓ Age category analysis completed\n")
-cat("✓ Age-adjusted predictions exported to Excel\n")
+if (nrow(ladies_historical_predictions) > 0 && nrow(ladies_breakthrough_predictions) > 0) {
+  tryCatch({
+    # Combine historical and 2026 predictions for comparison
+    ladies_comparison <- bind_rows(
+      ladies_historical_predictions %>%
+        mutate(
+          Breakthrough_Probability_Pct = round(Breakthrough_Prob * 100, 1),
+          Likelihood = case_when(
+            Breakthrough_Prob >= 0.6 ~ "Very High",
+            Breakthrough_Prob >= 0.4 ~ "High",
+            Breakthrough_Prob >= 0.2 ~ "Moderate",
+            Breakthrough_Prob >= 0.1 ~ "Low",
+            TRUE ~ "Very Low"
+          )
+        ) %>%
+        dplyr::select(
+          Name = Skier, Nation, Age,
+          `Breakthrough Probability %` = Breakthrough_Probability_Pct,
+          Likelihood,
+          `Pre-Breakthrough %` = Pre_Breakthrough_Display,  # Use correct pre-breakthrough display
+          `Breakthrough Result` = Breakthrough_Result,
+          Season, Type
+        ),
+      ladies_breakthrough_predictions %>%
+        mutate(
+          Breakthrough_Probability_Pct = round(Breakthrough_Prob * 100, 1),
+          Pre_Breakthrough_Pct = round(Pct_of_Max_Points * 100, 1)
+        ) %>%
+        dplyr::select(
+          Name = Skier, Nation, Age,
+          `Breakthrough Probability %` = Breakthrough_Probability_Pct,
+          Likelihood,
+          `Pre-Breakthrough %` = Pre_Breakthrough_Pct,
+          `Breakthrough Result` = Breakthrough_Result,
+          Season, Type
+        )
+    ) %>%
+      arrange(desc(`Breakthrough Probability %`))
+    
+    ladies_comparison_filename <- file.path(output_dir, "ladies_breakthrough_comparison_historical_vs_2026.xlsx")
+    write.xlsx(ladies_comparison, ladies_comparison_filename, overwrite = TRUE)
+    cat(sprintf("✓ Ladies historical comparison exported: %s (%d total entries)\n", 
+                ladies_comparison_filename, nrow(ladies_comparison)))
+  }, error = function(e) {
+    warning(sprintf("Failed to export ladies comparison file: %s", e$message))
+  })
+}
+
+cat("\n=== ANALYSIS COMPLETION SUMMARY ===\n")
+cat("✓ 2026 Nordic Combined breakthrough prediction analysis completed\n")
+cat("✓ Comprehensive breakthrough candidates identified with 50% threshold\n") 
+cat("✓ Historical validation performed on past breakthrough cases\n")
+cat("✓ Debug information provided for key Nordic Combined athletes\n")
+cat("✓ Excel files exported with biathlon-style comprehensive structure\n")
+cat("✓ Young prospects highlighted for development tracking\n")
+cat("✓ Model reliability assessed through historical comparison\n")
 ```

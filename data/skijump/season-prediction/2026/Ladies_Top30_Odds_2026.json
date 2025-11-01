@@ -1,0 +1,614 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Top 30 %",
+    "Decimal Odds",
+    "American Odds"
+  ],
+  "rows": [
+    [
+      "Nika Prevc",
+      "Slovenia",
+      90.58,
+      1.1,
+      -1000
+    ],
+    [
+      "Selina Freitag",
+      "Germany",
+      90.58,
+      1.1,
+      -1000
+    ],
+    [
+      "Eirin Maria Kvandal",
+      "Norway",
+      90.58,
+      1.1,
+      -1000
+    ],
+    [
+      "Katharina Schmid",
+      "Germany",
+      90.58,
+      1.1,
+      -1000
+    ],
+    [
+      "Lisa Eder",
+      "Austria",
+      90.49,
+      1.11,
+      -909
+    ],
+    [
+      "Alexandria Loutitt",
+      "Canada",
+      90.02,
+      1.11,
+      -909
+    ],
+    [
+      "Thea Minyan Bjørseth",
+      "Norway",
+      89.89,
+      1.11,
+      -909
+    ],
+    [
+      "Anna Odine Strøm",
+      "Norway",
+      90.38,
+      1.11,
+      -909
+    ],
+    [
+      "Ingvild Synnøve Midtskogen",
+      "Norway",
+      65.08,
+      1.54,
+      -185
+    ],
+    [
+      "Ema Klinec",
+      "Slovenia",
+      90.04,
+      1.11,
+      -909
+    ],
+    [
+      "Agnes Reisch",
+      "Germany",
+      84.96,
+      1.18,
+      -556
+    ],
+    [
+      "Julia Mühlbacher",
+      "Austria",
+      62.82,
+      1.59,
+      -169
+    ],
+    [
+      "Sara Takanashi",
+      "Japan",
+      89.37,
+      1.12,
+      -833
+    ],
+    [
+      "Abigail Strate",
+      "Canada",
+      83.97,
+      1.19,
+      -526
+    ],
+    [
+      "Kira Maria Kapustikova",
+      "Slovakia",
+      17.4,
+      5.75,
+      475
+    ],
+    [
+      "Lara Malsiner",
+      "Italy",
+      78.23,
+      1.28,
+      -357
+    ],
+    [
+      "Mia Ingolic",
+      "Slovenia",
+      17.11,
+      5.85,
+      485
+    ],
+    [
+      "Tina Erzar",
+      "Slovenia",
+      20.5,
+      4.88,
+      388
+    ],
+    [
+      "Kurumi Ichinohe",
+      "Japan",
+      40.39,
+      2.48,
+      148
+    ],
+    [
+      "Heta Hirvonen",
+      "Finland",
+      17.63,
+      5.67,
+      467
+    ],
+    [
+      "Taja Bodlaj",
+      "Slovenia",
+      24.5,
+      4.08,
+      308
+    ],
+    [
+      "Yuzuki Sato",
+      "Japan",
+      23.24,
+      4.3,
+      330
+    ],
+    [
+      "Ajda Kosnjek",
+      "Slovenia",
+      13.08,
+      7.65,
+      665
+    ],
+    [
+      "Sandra Sproch",
+      "USA",
+      17.2,
+      5.82,
+      482
+    ],
+    [
+      "Lucija Jurgec",
+      "Slovenia",
+      16.03,
+      6.24,
+      524
+    ],
+    [
+      "Meghann Wadsak",
+      "Austria",
+      16.93,
+      5.91,
+      491
+    ],
+    [
+      "Kikka Sakamoto",
+      "Japan",
+      16.73,
+      5.98,
+      498
+    ],
+    [
+      "Oosa Thure",
+      "Finland",
+      17.55,
+      5.7,
+      470
+    ],
+    [
+      "Zhanna Hlukhova",
+      "Ukraine",
+      13.54,
+      7.38,
+      638
+    ],
+    [
+      "Heidi Dyhre Tråserud",
+      "Norway",
+      46.44,
+      2.15,
+      115
+    ],
+    [
+      "Josephine Pagnier",
+      "France",
+      62.45,
+      1.6,
+      -167
+    ],
+    [
+      "Yangning Weng",
+      "China",
+      15.08,
+      6.63,
+      563
+    ],
+    [
+      "Taja Sitar",
+      "Slovenia",
+      18.36,
+      5.45,
+      445
+    ],
+    [
+      "Eva Pinkelnig",
+      "Austria",
+      90.47,
+      1.11,
+      -909
+    ],
+    [
+      "Josie Johnson",
+      "USA",
+      14.76,
+      6.77,
+      577
+    ],
+    [
+      "Annika Sieff",
+      "Italy",
+      37.5,
+      2.67,
+      167
+    ],
+    [
+      "Anezka Indrackova",
+      "Czechia",
+      13.13,
+      7.62,
+      662
+    ],
+    [
+      "Pola Beltowska",
+      "Poland",
+      13.53,
+      7.39,
+      639
+    ],
+    [
+      "Tamara Mesikova",
+      "Slovakia",
+      11.97,
+      8.36,
+      736
+    ],
+    [
+      "Yuki Ito",
+      "Japan",
+      88.2,
+      1.13,
+      -769
+    ],
+    [
+      "Riko Iwasaki",
+      "Japan",
+      16.14,
+      6.2,
+      520
+    ],
+    [
+      "Nozomi Maruyama",
+      "Japan",
+      76.16,
+      1.31,
+      -323
+    ],
+    [
+      "Alvine Holz",
+      "Germany",
+      16.19,
+      6.17,
+      517
+    ],
+    [
+      "Emely Torazza",
+      "Germany",
+      17.13,
+      5.84,
+      484
+    ],
+    [
+      "Tinkara Komar",
+      "Slovenia",
+      14.38,
+      6.96,
+      596
+    ],
+    [
+      "Martina Zanitzer",
+      "Italy",
+      13.23,
+      7.56,
+      656
+    ],
+    [
+      "Sina Arnet",
+      "Switzerland",
+      10.57,
+      9.46,
+      846
+    ],
+    [
+      "Natalia Slowik",
+      "Poland",
+      17.2,
+      5.81,
+      481
+    ],
+    [
+      "Jerica Jesenko",
+      "Slovenia",
+      17.98,
+      5.56,
+      456
+    ],
+    [
+      "Qingyue Peng",
+      "China",
+      12.55,
+      7.97,
+      697
+    ],
+    [
+      "Annika Belshaw",
+      "USA",
+      24.5,
+      4.08,
+      308
+    ],
+    [
+      "Emma Chervet",
+      "France",
+      14.91,
+      6.71,
+      571
+    ],
+    [
+      "Yutong Pan",
+      "China",
+      15.41,
+      6.49,
+      549
+    ],
+    [
+      "Nagomi Nakayama",
+      "Japan",
+      16.21,
+      6.17,
+      517
+    ],
+    [
+      "Klara Ulrichova",
+      "Czechia",
+      10.7,
+      9.35,
+      835
+    ],
+    [
+      "Yuka Seto",
+      "Japan",
+      70.3,
+      1.42,
+      -238
+    ],
+    [
+      "Veronika Jencova",
+      "Czechia",
+      15.6,
+      6.41,
+      541
+    ],
+    [
+      "Riko Sakurai",
+      "Japan",
+      17.53,
+      5.7,
+      470
+    ],
+    [
+      "Ringo Miyajima",
+      "Japan",
+      13.27,
+      7.53,
+      653
+    ],
+    [
+      "Paige Jones",
+      "USA",
+      14.56,
+      6.87,
+      587
+    ],
+    [
+      "Nora Midtsundstad",
+      "Norway",
+      15.52,
+      6.44,
+      544
+    ],
+    [
+      "Jenny Rautionaho",
+      "Finland",
+      68.36,
+      1.46,
+      -217
+    ],
+    [
+      "Anna Twardosz",
+      "Poland",
+      17.9,
+      5.59,
+      459
+    ],
+    [
+      "Rea Kindlimann",
+      "Switzerland",
+      18.27,
+      5.47,
+      447
+    ],
+    [
+      "Jessica Malsiner",
+      "Italy",
+      11.32,
+      8.83,
+      783
+    ],
+    [
+      "Nicole Maurer",
+      "Canada",
+      25.78,
+      3.88,
+      288
+    ],
+    [
+      "Shiyu Zhou",
+      "China",
+      14.25,
+      7.02,
+      602
+    ],
+    [
+      "Nicole Konderla",
+      "Poland",
+      10.03,
+      9.97,
+      897
+    ],
+    [
+      "Katra Komar",
+      "Slovenia",
+      16.14,
+      6.2,
+      520
+    ],
+    [
+      "Hannah Wiegele",
+      "Austria",
+      11.57,
+      8.64,
+      764
+    ],
+    [
+      "Martina Ambrosi",
+      "Italy",
+      11.31,
+      8.84,
+      784
+    ],
+    [
+      "Anna Rupprecht",
+      "Germany",
+      17.67,
+      5.66,
+      466
+    ],
+    [
+      "Bing Dong",
+      "China",
+      15.24,
+      6.56,
+      556
+    ],
+    [
+      "Chiara Kreuzer",
+      "Austria",
+      29.88,
+      3.35,
+      235
+    ],
+    [
+      "Daniela Haralambie",
+      "Romania",
+      10.92,
+      9.16,
+      816
+    ],
+    [
+      "Frida Westman",
+      "Sweden",
+      26.39,
+      3.79,
+      279
+    ],
+    [
+      "Haruka Iwasa",
+      "Japan",
+      15.7,
+      6.37,
+      537
+    ],
+    [
+      "Julia Kykkänen",
+      "Finland",
+      22.64,
+      4.42,
+      342
+    ],
+    [
+      "Juliane Seyfarth",
+      "Germany",
+      76.16,
+      1.31,
+      -323
+    ],
+    [
+      "Karolina Indrackova",
+      "Czechia",
+      13.04,
+      7.67,
+      667
+    ],
+    [
+      "Luisa Görlich",
+      "Germany",
+      27.38,
+      3.65,
+      265
+    ],
+    [
+      "Nika Kriznar",
+      "Slovenia",
+      47.34,
+      2.11,
+      111
+    ],
+    [
+      "Qi Liu",
+      "China",
+      30.59,
+      3.27,
+      227
+    ],
+    [
+      "Samantha Macuga",
+      "USA",
+      10.62,
+      9.41,
+      841
+    ],
+    [
+      "Silje Opseth",
+      "Norway",
+      36.56,
+      2.74,
+      174
+    ],
+    [
+      "Yuka Kobayashi",
+      "Japan",
+      13.68,
+      7.31,
+      631
+    ]
+  ]
+}

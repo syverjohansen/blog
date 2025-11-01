@@ -38,9 +38,28 @@ def process_chrono(df, file_path):
     # Add a "Place" column with values ranging from 1 to the length of the DataFrame
     df_current['Place'] = range(1, len(df_current) + 1)
     
-    # Select the desired columns for nordic combined chronological data
-    df_current = df_current[["Place", "Skier", "Nation", "Age", "Pelo", "Individual_Pelo", "IndividualCompact_Pelo", 
+    # Format birthday as readable date string for frontend age calculation
+    def format_birthday(birthday_str):
+        if pd.isna(birthday_str) or birthday_str == '' or str(birthday_str) == '1700-01-01T00:00:00.000000':
+            return None
+        try:
+            # Handle different birthday formats and convert to YYYY-MM-DD
+            if 'T' in str(birthday_str):
+                return str(birthday_str).split('T')[0]
+            else:
+                return str(birthday_str)
+        except:
+            return None
+    
+    df_current['Birthday_Formatted'] = df_current['Birthday'].apply(format_birthday)
+    
+    # Select the desired columns for nordic combined chronological data, using formatted birthday
+    df_current = df_current[["Place", "Skier", "Nation", "Birthday_Formatted", "Pelo", "Individual_Pelo", "IndividualCompact_Pelo", 
                              "MassStart_Pelo", "Sprint_Pelo", "ID"]]
+    
+    # Rename Birthday_Formatted to Birthday for JSON output
+    df_current = df_current.rename(columns={'Birthday_Formatted': 'Birthday'})
+    
     print(df_current)
     
     # Save the result to a JSON file

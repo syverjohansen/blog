@@ -89,19 +89,21 @@
                             orderSequence: ['desc', 'asc']
                         };
                     }
-                    else if (key === 'Age') {
+                    else if (key === 'Birthday') {
                         return {
                             data: key,
-                            title: key.charAt(0).toUpperCase() + key.slice(1),
-                            visible: key !== 'ID',
+                            title: 'Age',
+                            visible: true,
                             render: function(data, type, row) {
-                                if (type === 'display' && data !== null && data !== undefined) {
-                                    const numValue = parseFloat(data);
-                                    if (!isNaN(numValue)) {
-                                        return numValue.toFixed(2);
-                                    }
+                                if (type === 'display' && data && data !== null) {
+                                    // Calculate current age from birthday string (format: "1998-10-28 00:00:00")
+                                    const today = new Date();
+                                    const birthday = new Date(data.split(' ')[0]); // Extract just the date part
+                                    const ageInMilliseconds = today - birthday;
+                                    const ageInYears = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365.25);
+                                    return ageInYears.toFixed(2);
                                 }
-                                return data;
+                                return '';
                             }
                         };
                     }

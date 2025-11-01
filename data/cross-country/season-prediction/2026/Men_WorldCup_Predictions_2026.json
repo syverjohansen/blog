@@ -1,0 +1,1580 @@
+{
+  "sheet_name": "Men_Predictions_2026",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Age",
+    "Percent of Max Points 2025",
+    "Predicted Percent 2026"
+  ],
+  "rows": [
+    [
+      "Johannes Høsflot Klæbo",
+      "Norway",
+      28,
+      66.83,
+      75.76
+    ],
+    [
+      "Harald Østberg Amundsen",
+      "Norway",
+      26,
+      46.76,
+      47.87
+    ],
+    [
+      "Federico Pellegrino",
+      "Italy",
+      35,
+      49.68,
+      40.95
+    ],
+    [
+      "Edvin Anger",
+      "Sweden",
+      23,
+      55.59,
+      40.85
+    ],
+    [
+      "Erik Valnes",
+      "Norway",
+      29,
+      48.22,
+      39.64
+    ],
+    [
+      "Martin Løwstrøm Nyenget",
+      "Norway",
+      33,
+      34.67,
+      33.23
+    ],
+    [
+      "Hugo Lapalus",
+      "France",
+      27,
+      45.23,
+      30.28
+    ],
+    [
+      "William Poromaa",
+      "Sweden",
+      24,
+      29.34,
+      30.25
+    ],
+    [
+      "Mika Vermeulen",
+      "Austria",
+      26,
+      35.31,
+      30.02
+    ],
+    [
+      "Gus Schumacher",
+      "USA",
+      25,
+      31.1,
+      29.63
+    ],
+    [
+      "Ben Ogden",
+      "USA",
+      25,
+      34.7,
+      27.89
+    ],
+    [
+      "Friedrich Moch",
+      "Germany",
+      25,
+      31.95,
+      27.75
+    ],
+    [
+      "Iivo Niskanen",
+      "Finland",
+      33,
+      28.93,
+      27.74
+    ],
+    [
+      "Simen Hegstad Krüger",
+      "Norway",
+      32,
+      44.52,
+      26.8
+    ],
+    [
+      "Andreas Fjorden Ree",
+      "Norway",
+      25,
+      38.54,
+      26.03
+    ],
+    [
+      "Lucas Chanavat",
+      "France",
+      30,
+      22.17,
+      25.14
+    ],
+    [
+      "Iver Tildheim Andersen",
+      "Norway",
+      24,
+      25.77,
+      25.01
+    ],
+    [
+      "Lauri Vuorinen",
+      "Finland",
+      30,
+      23.5,
+      22.46
+    ],
+    [
+      "Jan Thomas Jenssen",
+      "Norway",
+      29,
+      20.65,
+      21.99
+    ],
+    [
+      "Mathis Desloges",
+      "France",
+      23,
+      32.9,
+      21.94
+    ],
+    [
+      "Michal Novak",
+      "Czechia",
+      28,
+      17.96,
+      19.89
+    ],
+    [
+      "Jules Chappaz",
+      "France",
+      26,
+      17.42,
+      18.97
+    ],
+    [
+      "Valerio Grond",
+      "Switzerland",
+      24,
+      16.37,
+      18.69
+    ],
+    [
+      "Andrew Musgrave",
+      "Great Britain",
+      35,
+      21.66,
+      17.63
+    ],
+    [
+      "Håvard Moseby",
+      "Norway",
+      25,
+      15.42,
+      17.44
+    ],
+    [
+      "Richard Jouve",
+      "France",
+      30,
+      16.64,
+      17.18
+    ],
+    [
+      "James Clinton Schoonmaker",
+      "USA",
+      25,
+      15.89,
+      16.66
+    ],
+    [
+      "Remi Bourdin",
+      "France",
+      23,
+      15.89,
+      16.45
+    ],
+    [
+      "Elia Barp",
+      "Italy",
+      22,
+      13.68,
+      16.41
+    ],
+    [
+      "Didrik Tønseth",
+      "Norway",
+      34,
+      5.7,
+      16.24
+    ],
+    [
+      "Davide Graz",
+      "Italy",
+      25,
+      14.74,
+      16.12
+    ],
+    [
+      "Janik Riebli",
+      "Switzerland",
+      26,
+      13.68,
+      16.02
+    ],
+    [
+      "Arsi Ruuskanen",
+      "Finland",
+      25,
+      19.35,
+      15.79
+    ],
+    [
+      "Even Northug",
+      "Norway",
+      29,
+      22.92,
+      15.53
+    ],
+    [
+      "Calle Halfvarsson",
+      "Sweden",
+      36,
+      11.68,
+      14.77
+    ],
+    [
+      "Antoine Cyr",
+      "Canada",
+      26,
+      13.01,
+      14.47
+    ],
+    [
+      "Zanden McMullen",
+      "USA",
+      24,
+      14.4,
+      14.33
+    ],
+    [
+      "Martino Carollo",
+      "Italy",
+      22,
+      10.7,
+      14.03
+    ],
+    [
+      "Jan Stölben",
+      "Germany",
+      24,
+      13.65,
+      13.9
+    ],
+    [
+      "Irineu Esteve Altimiras",
+      "Andorra",
+      29,
+      14.91,
+      13.74
+    ],
+    [
+      "Jens Burman",
+      "Sweden",
+      31,
+      14.6,
+      13.54
+    ],
+    [
+      "Gustaf Berglund",
+      "Sweden",
+      27,
+      8.93,
+      13.52
+    ],
+    [
+      "Emil Liekari",
+      "Finland",
+      24,
+      10.56,
+      13.12
+    ],
+    [
+      "Jaume Pueyo",
+      "Spain",
+      23,
+      10.93,
+      12.9
+    ],
+    [
+      "Truls Gisselman",
+      "Sweden",
+      24,
+      12.53,
+      12.87
+    ],
+    [
+      "Naoto Baba",
+      "Japan",
+      29,
+      13.07,
+      12.87
+    ],
+    [
+      "Thomas Hjalmar Westgård",
+      "Ireland",
+      29,
+      15.96,
+      12.68
+    ],
+    [
+      "Emil Danielsson",
+      "Sweden",
+      24,
+      10.93,
+      12.49
+    ],
+    [
+      "Jules Lapierre",
+      "France",
+      29,
+      10.15,
+      12.45
+    ],
+    [
+      "Olivier Leveille",
+      "Canada",
+      24,
+      11.78,
+      12.44
+    ],
+    [
+      "Håvard Solås Taugbøl",
+      "Norway",
+      32,
+      8.15,
+      12.37
+    ],
+    [
+      "Matz William Jenssen",
+      "Norway",
+      24,
+      8.93,
+      12.21
+    ],
+    [
+      "Joni Mäki",
+      "Finland",
+      30,
+      11.27,
+      11.72
+    ],
+    [
+      "Dominik Bury",
+      "Poland",
+      28,
+      9.07,
+      11.49
+    ],
+    [
+      "Giovanni Ticco",
+      "Italy",
+      25,
+      5.53,
+      11.33
+    ],
+    [
+      "Mattis Stenshagen",
+      "Norway",
+      29,
+      5.94,
+      11.19
+    ],
+    [
+      "Theo Schely",
+      "France",
+      25,
+      4.89,
+      11.16
+    ],
+    [
+      "Niko Anttola",
+      "Finland",
+      22,
+      5.4,
+      11.01
+    ],
+    [
+      "Clement Parisse",
+      "France",
+      32,
+      9.37,
+      10.9
+    ],
+    [
+      "Janosch Brugger",
+      "Germany",
+      28,
+      8.73,
+      10.8
+    ],
+    [
+      "Paolo Ventura",
+      "Italy",
+      29,
+      9.61,
+      10.74
+    ],
+    [
+      "Remi Lindholm",
+      "Finland",
+      27,
+      6.21,
+      10.72
+    ],
+    [
+      "Ansgar Evensen",
+      "Norway",
+      25,
+      11.48,
+      10.65
+    ],
+    [
+      "Albert Kuchler",
+      "Germany",
+      26,
+      9.13,
+      10.48
+    ],
+    [
+      "Perttu Hyvärinen",
+      "Finland",
+      34,
+      4.48,
+      10.22
+    ],
+    [
+      "Emil Iversen",
+      "Norway",
+      33,
+      4.89,
+      10.0
+    ],
+    [
+      "Michael Hellweger",
+      "Italy",
+      28,
+      9.68,
+      9.99
+    ],
+    [
+      "Alvar Johannes Alev",
+      "Estonia",
+      31,
+      12.67,
+      9.77
+    ],
+    [
+      "Niilo Moilanen",
+      "Finland",
+      24,
+      10.53,
+      9.66
+    ],
+    [
+      "Jason Rüesch",
+      "Switzerland",
+      31,
+      5.87,
+      9.54
+    ],
+    [
+      "Ristomatti Hakola",
+      "Finland",
+      34,
+      10.73,
+      9.24
+    ],
+    [
+      "Simone Dapra",
+      "Italy",
+      28,
+      8.15,
+      9.24
+    ],
+    [
+      "Ville Ahonen",
+      "Finland",
+      30,
+      9.2,
+      9.17
+    ],
+    [
+      "Måns Skoglund",
+      "Sweden",
+      23,
+      6.49,
+      9.03
+    ],
+    [
+      "Beda Klee",
+      "Switzerland",
+      29,
+      6.49,
+      8.89
+    ],
+    [
+      "Zak Ketterson",
+      "USA",
+      28,
+      7.78,
+      8.87
+    ],
+    [
+      "Kevin Bolger",
+      "USA",
+      32,
+      7.47,
+      8.8
+    ],
+    [
+      "Florian Notz",
+      "Germany",
+      33,
+      10.36,
+      8.79
+    ],
+    [
+      "Benjamin Moser",
+      "Austria",
+      28,
+      11.0,
+      8.65
+    ],
+    [
+      "Jack Young",
+      "USA",
+      22,
+      7.1,
+      8.62
+    ],
+    [
+      "Cyril Fähndrich",
+      "Switzerland",
+      25,
+      4.35,
+      8.39
+    ],
+    [
+      "Miha Simenc",
+      "Slovenia",
+      29,
+      8.12,
+      8.06
+    ],
+    [
+      "Marcus Grate",
+      "Sweden",
+      28,
+      6.59,
+      8.04
+    ],
+    [
+      "Sindre Bjørnestad Skar",
+      "Norway",
+      33,
+      1.02,
+      7.87
+    ],
+    [
+      "Oskar Svensson",
+      "Sweden",
+      29,
+      8.66,
+      7.75
+    ],
+    [
+      "Elias Keck",
+      "Germany",
+      22,
+      1.9,
+      7.75
+    ],
+    [
+      "Xavier McKeever",
+      "Canada",
+      22,
+      4.72,
+      7.74
+    ],
+    [
+      "Jiri Tuz",
+      "Czechia",
+      21,
+      5.87,
+      7.57
+    ],
+    [
+      "Johan Häggström",
+      "Sweden",
+      33,
+      8.32,
+      6.75
+    ],
+    [
+      "Lukas Mrkonjic",
+      "Austria",
+      26,
+      4.58,
+      6.29
+    ],
+    [
+      "Marius Kastner",
+      "Germany",
+      23,
+      1.63,
+      6.25
+    ],
+    [
+      "Markus Vuorela",
+      "Finland",
+      29,
+      3.16,
+      6.03
+    ],
+    [
+      "Ryo Hirose",
+      "Japan",
+      24,
+      4.28,
+      6.03
+    ],
+    [
+      "Nejc Stern",
+      "Slovenia",
+      21,
+      4.31,
+      5.72
+    ],
+    [
+      "Candide Pralong",
+      "Switzerland",
+      34,
+      5.67,
+      5.7
+    ],
+    [
+      "Anian Sossau",
+      "Germany",
+      25,
+      2.99,
+      5.68
+    ],
+    [
+      "Juuso Haarala",
+      "Finland",
+      28,
+      3.26,
+      5.11
+    ],
+    [
+      "Wiljam Mattila",
+      "Finland",
+      24,
+      6.28,
+      4.9
+    ],
+    [
+      "Eric Rosjö",
+      "Sweden",
+      26,
+      2.11,
+      4.9
+    ],
+    [
+      "Andrew Young",
+      "Great Britain",
+      33,
+      4.86,
+      4.68
+    ],
+    [
+      "Sasha Masson",
+      "Canada",
+      22,
+      1.87,
+      4.55
+    ],
+    [
+      "Martin Himma",
+      "Estonia",
+      26,
+      3.84,
+      4.39
+    ],
+    [
+      "Eero Rantala",
+      "Finland",
+      22,
+      1.63,
+      4.38
+    ],
+    [
+      "Remi Drolet",
+      "Canada",
+      25,
+      3.5,
+      4.31
+    ],
+    [
+      "Adam Fellner",
+      "Czechia",
+      32,
+      4.55,
+      4.3
+    ],
+    [
+      "Olli Ahonen",
+      "Finland",
+      25,
+      1.46,
+      4.28
+    ],
+    [
+      "Giacomo Gabrielli",
+      "Italy",
+      29,
+      3.09,
+      4.21
+    ],
+    [
+      "Qiang Wang",
+      "China",
+      32,
+      2.85,
+      4.19
+    ],
+    [
+      "Matyas Bauer",
+      "Czechia",
+      21,
+      2.95,
+      4.13
+    ],
+    [
+      "Vili Crv",
+      "Slovenia",
+      26,
+      2.55,
+      4.06
+    ],
+    [
+      "Arnaud Chautemps",
+      "France",
+      28,
+      1.02,
+      3.99
+    ],
+    [
+      "Michael Föttinger",
+      "Austria",
+      28,
+      3.02,
+      3.95
+    ],
+    [
+      "Francesco De Fabiani",
+      "Italy",
+      32,
+      0.98,
+      3.81
+    ],
+    [
+      "Mathias Holbæk",
+      "Norway",
+      22,
+      1.56,
+      3.81
+    ],
+    [
+      "Lauri Lepistö",
+      "Finland",
+      29,
+      1.36,
+      3.66
+    ],
+    [
+      "Simone Mocellini",
+      "Italy",
+      27,
+      0.95,
+      3.55
+    ],
+    [
+      "Verneri Suhonen",
+      "Finland",
+      28,
+      0.75,
+      3.49
+    ],
+    [
+      "Lars Young Vik",
+      "Australia",
+      24,
+      0.78,
+      3.37
+    ],
+    [
+      "Lauri Mannila",
+      "Finland",
+      26,
+      0.37,
+      3.26
+    ],
+    [
+      "Victor Cullet",
+      "France",
+      23,
+      0.98,
+      3.21
+    ],
+    [
+      "Pierre Grall-Johnson",
+      "Canada",
+      26,
+      1.26,
+      3.18
+    ],
+    [
+      "Bernat Selles Gasch",
+      "Spain",
+      22,
+      1.26,
+      2.99
+    ],
+    [
+      "Lauris Kaparkalejs",
+      "Latvia",
+      21,
+      2.41,
+      2.99
+    ],
+    [
+      "Lucas Bögl",
+      "Germany",
+      35,
+      3.87,
+      2.98
+    ],
+    [
+      "Raimo Vigants",
+      "Latvia",
+      26,
+      1.73,
+      2.98
+    ],
+    [
+      "Alessandro Chiocchetti",
+      "Italy",
+      23,
+      0.34,
+      2.97
+    ],
+    [
+      "Graham Ritchie",
+      "Canada",
+      26,
+      0.17,
+      2.79
+    ],
+    [
+      "Lorenzo Romano",
+      "Italy",
+      28,
+      2.31,
+      2.69
+    ],
+    [
+      "Miro Karppanen",
+      "Finland",
+      26,
+      1.73,
+      2.63
+    ],
+    [
+      "Svyatoslav Matassov",
+      "Kazakhstan",
+      25,
+      0.81,
+      2.6
+    ],
+    [
+      "Max Hollmann",
+      "Canada",
+      23,
+      1.19,
+      2.59
+    ],
+    [
+      "James Clugnet",
+      "Great Britain",
+      28,
+      3.19,
+      2.55
+    ],
+    [
+      "Dietmar Nöckler",
+      "Italy",
+      36,
+      0.58,
+      2.47
+    ],
+    [
+      "Erik Engel",
+      "Austria",
+      22,
+      0.68,
+      2.46
+    ],
+    [
+      "Julien Arnaud",
+      "France",
+      23,
+      1.7,
+      2.35
+    ],
+    [
+      "Hunter Wonders",
+      "USA",
+      27,
+      1.22,
+      2.26
+    ],
+    [
+      "Ludek Seller",
+      "Czechia",
+      30,
+      3.74,
+      2.09
+    ],
+    [
+      "Luke Jager",
+      "USA",
+      25,
+      2.34,
+      2.03
+    ],
+    [
+      "Will Koch",
+      "USA",
+      23,
+      0.2,
+      2.01
+    ],
+    [
+      "Florian Knopf",
+      "Germany",
+      25,
+      0.0,
+      1.97
+    ],
+    [
+      "Giandomenico Salvadori",
+      "Italy",
+      32,
+      0.61,
+      1.95
+    ],
+    [
+      "Franco Dal Farra",
+      "Argentina",
+      25,
+      0.0,
+      1.68
+    ],
+    [
+      "Björn Sandström",
+      "Sweden",
+      30,
+      0.0,
+      1.62
+    ],
+    [
+      "Yernur Bexultan",
+      "Kazakhstan",
+      23,
+      0.0,
+      1.61
+    ],
+    [
+      "Juuso Tossavainen",
+      "Finland",
+      26,
+      0.34,
+      1.55
+    ],
+    [
+      "Sultan Bazarbekov",
+      "Kazakhstan",
+      21,
+      0.0,
+      1.54
+    ],
+    [
+      "Jan-Friedrich Doerks",
+      "Germany",
+      24,
+      0.0,
+      1.54
+    ],
+    [
+      "Fredrik Gerardo Fodstad",
+      "Colombia",
+      24,
+      0.0,
+      1.53
+    ],
+    [
+      "Daniel Peshkov",
+      "Bulgaria",
+      22,
+      0.0,
+      1.42
+    ],
+    [
+      "Sebastian Bryja",
+      "Poland",
+      23,
+      0.0,
+      1.4
+    ],
+    [
+      "Marko Skender",
+      "Croatia",
+      24,
+      0.0,
+      1.4
+    ],
+    [
+      "Oleksandr Lisohor",
+      "Ukraine",
+      21,
+      0.2,
+      1.39
+    ],
+    [
+      "Miha Licef",
+      "Slovenia",
+      28,
+      1.22,
+      1.37
+    ],
+    [
+      "Michael Earnhart",
+      "USA",
+      22,
+      0.27,
+      1.36
+    ],
+    [
+      "Christopher Kalev",
+      "Estonia",
+      26,
+      0.61,
+      1.35
+    ],
+    [
+      "Maciej Starega",
+      "Poland",
+      35,
+      2.89,
+      1.26
+    ],
+    [
+      "Gabriel Gledhill",
+      "Great Britain",
+      22,
+      0.03,
+      1.26
+    ],
+    [
+      "Didar Kassenov",
+      "Kazakhstan",
+      23,
+      0.0,
+      1.24
+    ],
+    [
+      "Strahinja Eric",
+      "Bosnia&Herzegovina",
+      24,
+      0.0,
+      1.23
+    ],
+    [
+      "Aleksandar Grbovic",
+      "Montenegro",
+      22,
+      0.0,
+      1.22
+    ],
+    [
+      "Andrej Renda",
+      "Slovakia",
+      25,
+      0.0,
+      1.21
+    ],
+    [
+      "Robert Bugara",
+      "Poland",
+      23,
+      0.0,
+      1.2
+    ],
+    [
+      "Fedele De Campo",
+      "Australia",
+      24,
+      0.0,
+      1.13
+    ],
+    [
+      "Seve De Campo",
+      "Australia",
+      27,
+      0.0,
+      1.11
+    ],
+    [
+      "Yernar Nursbekov",
+      "Kazakhstan",
+      23,
+      0.0,
+      1.11
+    ],
+    [
+      "Mathis Poutot",
+      "Belgium",
+      22,
+      0.0,
+      1.1
+    ],
+    [
+      "Manex Silva",
+      "Brazil",
+      23,
+      0.0,
+      1.09
+    ],
+    [
+      "Martin Coradazzi",
+      "Italy",
+      26,
+      0.71,
+      1.07
+    ],
+    [
+      "Mikayel Mikayelyan",
+      "Armenia",
+      26,
+      0.75,
+      1.03
+    ],
+    [
+      "Tomas Dufek",
+      "Czechia",
+      25,
+      1.15,
+      1.01
+    ],
+    [
+      "Anze Gros",
+      "Slovenia",
+      23,
+      0.0,
+      1.0
+    ],
+    [
+      "Mateusz Haratyk",
+      "Poland",
+      27,
+      0.0,
+      0.97
+    ],
+    [
+      "Silvestrs Svauksts",
+      "Latvia",
+      21,
+      0.0,
+      0.95
+    ],
+    [
+      "Henri Roos",
+      "Estonia",
+      27,
+      0.0,
+      0.93
+    ],
+    [
+      "Karl-Johan Westberg",
+      "Sweden",
+      32,
+      0.41,
+      0.92
+    ],
+    [
+      "Stevenson Stavart",
+      "Haiti",
+      25,
+      0.0,
+      0.92
+    ],
+    [
+      "Robin Frommelt",
+      "Liechtenstein",
+      22,
+      0.0,
+      0.88
+    ],
+    [
+      "Mario Matikanov",
+      "Bulgaria",
+      21,
+      0.0,
+      0.83
+    ],
+    [
+      "Hugo Hinckfuss",
+      "Australia",
+      22,
+      0.48,
+      0.77
+    ],
+    [
+      "Mikael Abram",
+      "Italy",
+      29,
+      0.65,
+      0.74
+    ],
+    [
+      "Olof Jonsson",
+      "Sweden",
+      30,
+      0.68,
+      0.68
+    ],
+    [
+      "Stavre Jada",
+      "North Macedonia",
+      27,
+      0.0,
+      0.68
+    ],
+    [
+      "Sabin Coupat",
+      "France",
+      24,
+      0.34,
+      0.66
+    ],
+    [
+      "Dmytro Drahun",
+      "Ukraine",
+      27,
+      0.0,
+      0.65
+    ],
+    [
+      "Fedor Karpov",
+      "Kazakhstan",
+      26,
+      0.0,
+      0.56
+    ],
+    [
+      "Sebastian Kristoffer Endrestad",
+      "Chile",
+      26,
+      0.0,
+      0.46
+    ],
+    [
+      "Florin Robert Dolhascu",
+      "Romania",
+      24,
+      0.0,
+      0.42
+    ],
+    [
+      "Vladislav Kovalyov",
+      "Kazakhstan",
+      28,
+      0.0,
+      0.42
+    ],
+    [
+      "Wuerkaixi Kuerbanjiang",
+      "China",
+      25,
+      0.0,
+      0.42
+    ],
+    [
+      "Ruslan Denysenko",
+      "Ukraine",
+      24,
+      0.0,
+      0.28
+    ],
+    [
+      "Bentley Walker-Broose",
+      "Australia",
+      24,
+      0.0,
+      0.24
+    ],
+    [
+      "Kamil Bury",
+      "Poland",
+      30,
+      0.98,
+      0.21
+    ],
+    [
+      "Victor Santos",
+      "Brazil",
+      28,
+      0.0,
+      0.14
+    ],
+    [
+      "Olzhas Klimin",
+      "Kazakhstan",
+      29,
+      0.0,
+      0.09
+    ],
+    [
+      "Joachim Weel Rosbo",
+      "Denmark",
+      28,
+      0.0,
+      0.07
+    ],
+    [
+      "Dagur Benediktsson",
+      "Iceland",
+      27,
+      0.0,
+      0.02
+    ],
+    [
+      "Amed Oglago",
+      "Turkey",
+      27,
+      0.0,
+      -0.05
+    ],
+    [
+      "Nail Bashmakov",
+      "Kazakhstan",
+      29,
+      0.0,
+      -0.22
+    ],
+    [
+      "Simeon Deyanov",
+      "Bulgaria",
+      30,
+      0.0,
+      -0.39
+    ],
+    [
+      "Klaus Jungbluth Rodriguez",
+      "Ecuador",
+      46,
+      0.0,
+      -0.44
+    ],
+    [
+      "Marko Kilp",
+      "Estonia",
+      31,
+      0.34,
+      -0.51
+    ],
+    [
+      "Achbadrakh Batmunkh",
+      "Mongolia",
+      30,
+      0.0,
+      -0.63
+    ],
+    [
+      "Konstantin Bortsov",
+      "Kazakhstan",
+      29,
+      0.0,
+      -0.63
+    ],
+    [
+      "Jose Cabeca",
+      "Portugal",
+      29,
+      0.0,
+      -0.63
+    ],
+    [
+      "Vitaliy Pukhkalo",
+      "Kazakhstan",
+      32,
+      0.0,
+      -0.66
+    ],
+    [
+      "Milos Milosavljevic",
+      "Serbia",
+      30,
+      0.0,
+      -0.78
+    ],
+    [
+      "Niks Saulitis",
+      "Latvia",
+      24,
+      0.0,
+      -0.84
+    ],
+    [
+      "Julian Smith",
+      "Canada",
+      29,
+      0.03,
+      -1.05
+    ],
+    [
+      "Yonathan Jesus Fernandez",
+      "Chile",
+      39,
+      0.0,
+      -1.3
+    ],
+    [
+      "Darko Damjanovski",
+      "North Macedonia",
+      44,
+      0.0,
+      -1.34
+    ],
+    [
+      "Mark Chanloung",
+      "Thailand",
+      30,
+      0.0,
+      -1.43
+    ],
+    [
+      "Paul Constantin Pepene",
+      "Romania",
+      37,
+      0.0,
+      -1.46
+    ],
+    [
+      "Andriy Dotsenko",
+      "Ukraine",
+      30,
+      0.0,
+      -1.63
+    ],
+    [
+      "Jong-Won Jeong",
+      "South Korea",
+      33,
+      0.0,
+      -1.73
+    ],
+    [
+      "Apostolos Angelis",
+      "Greece",
+      32,
+      0.0,
+      -1.74
+    ],
+    [
+      "Erwan Käser",
+      "Switzerland",
+      33,
+      0.0,
+      -1.83
+    ],
+    [
+      "Imanol Rojo",
+      "Spain",
+      34,
+      0.48,
+      -1.84
+    ],
+    [
+      "Samuel Uduigowme Ikpefan",
+      "Nigeria",
+      33,
+      0.0,
+      -2.02
+    ],
+    [
+      "Timo Juhani Gronlund",
+      "Bolivia",
+      38,
+      0.0,
+      -2.1
+    ],
+    [
+      "Tautvydas Strolia",
+      "Lithuania",
+      30,
+      0.0,
+      -2.11
+    ],
+    [
+      "Modestas Vaiciulis",
+      "Lithuania",
+      36,
+      0.0,
+      -2.18
+    ],
+    [
+      "Philip Bellingham",
+      "Australia",
+      34,
+      0.07,
+      -3.05
+    ],
+    [
+      "Adam Konya",
+      "Hungary",
+      32,
+      0.0,
+      -4.53
+    ],
+    [
+      "Adam Büki",
+      "Hungary",
+      30,
+      0.0,
+      -4.61
+    ]
+  ]
+}

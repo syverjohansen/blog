@@ -1,0 +1,435 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Name",
+    "Nation",
+    "Age",
+    "Pre_Breakthrough_Pct",
+    "Breakthrough_Result",
+    "Predicted_Prob",
+    "Season",
+    "Type"
+  ],
+  "rows": [
+    [
+      "Yuki Ito",
+      "Japan",
+      22.839151266256,
+      29.7,
+      63.6,
+      "30.2",
+      2017,
+      "Historical Success"
+    ],
+    [
+      "Nika Kriznar",
+      "Slovenia",
+      21.0513347022587,
+      31.5,
+      75.1,
+      "26.1",
+      2021,
+      "Historical Success"
+    ],
+    [
+      "Lisa Eder",
+      "Austria",
+      23.605749486653,
+      36.8,
+      "",
+      "21.2",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Thea Minyan Bjørseth",
+      "Norway",
+      21.2977412731006,
+      28.5,
+      "",
+      "17.2",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Selina Freitag",
+      "Germany",
+      23.8384668035592,
+      17.7,
+      54.3,
+      "16.7",
+      2025,
+      "Historical Success"
+    ],
+    [
+      "Chiara Kreuzer",
+      "Austria",
+      22.6447638603696,
+      26.8,
+      73.1,
+      "15.7",
+      2020,
+      "Historical Success"
+    ],
+    [
+      "Ema Klinec",
+      "Slovenia",
+      22.7378507871321,
+      31.4,
+      42.4,
+      "10.4",
+      2021,
+      "Historical Success"
+    ],
+    [
+      "Maren Lundby",
+      "Norway",
+      22.5106091718001,
+      34.5,
+      58.4,
+      "9.8",
+      2017,
+      "Historical Success"
+    ],
+    [
+      "Katharina Schmid",
+      "Germany",
+      20.8021902806297,
+      20.1,
+      40.8,
+      "8.6",
+      2017,
+      "Historical Success"
+    ],
+    [
+      "Abigail Strate",
+      "Canada",
+      24.0739219712526,
+      17.1,
+      "",
+      "6.6",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Silje Opseth",
+      "Norway",
+      21.9164955509925,
+      29.9,
+      59.7,
+      "5.2",
+      2021,
+      "Historical Success"
+    ],
+    [
+      "Agnes Reisch",
+      "Germany",
+      25.4264202600958,
+      20.3,
+      "",
+      "3.7",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Eirin Maria Kvandal",
+      "Norway",
+      23.2717316906229,
+      35.4,
+      43.1,
+      "3.2",
+      2025,
+      "Historical Success"
+    ],
+    [
+      "Nozomi Maruyama",
+      "Japan",
+      26.8008213552361,
+      13.7,
+      "",
+      "3.2",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Nika Prevc",
+      "Slovenia",
+      19.0171115674196,
+      14.1,
+      61.1,
+      "2.7",
+      2024,
+      "Historical Success"
+    ],
+    [
+      "Josephine Pagnier",
+      "France",
+      22.7953456536619,
+      9.3,
+      "",
+      "2.7",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Anna Odine Strøm",
+      "Norway",
+      24.933607118412,
+      17.2,
+      49.2,
+      "2.6",
+      2023,
+      "Historical Success"
+    ],
+    [
+      "Lara Malsiner",
+      "Italy",
+      24.933607118412,
+      16.3,
+      "",
+      "2.4",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Julia Mühlbacher",
+      "Austria",
+      20.6324435318275,
+      11.1,
+      "",
+      "1.9",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Ingvild Synnøve Midtskogen",
+      "Norway",
+      17.2484599589322,
+      12.8,
+      "",
+      "1.8",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Jenny Rautionaho",
+      "Finland",
+      28.6516084873374,
+      11.9,
+      "",
+      "1.8",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Yuka Seto",
+      "Japan",
+      28.0739219712526,
+      13.1,
+      "",
+      "1.7",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Heidi Dyhre Tråserud",
+      "Norway",
+      21.6974674880219,
+      7.4,
+      "",
+      "1.3",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Alexandria Loutitt",
+      "Canada",
+      20.2026009582478,
+      21.0,
+      43.3,
+      "1.2",
+      2024,
+      "Historical Success"
+    ],
+    [
+      "Annika Sieff",
+      "Italy",
+      21.3990417522245,
+      5.8,
+      "",
+      "1.0",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Yuzuki Sato",
+      "Japan",
+      18.1574264202601,
+      2.1,
+      "",
+      "0.9",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Juliane Seyfarth",
+      "Germany",
+      29.0896646132786,
+      23.3,
+      60.5,
+      "0.8",
+      2019,
+      "Historical Success"
+    ],
+    [
+      "Luisa Görlich",
+      "Germany",
+      26.17659137577,
+      2.1,
+      "",
+      "0.8",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Kurumi Ichinohe",
+      "Japan",
+      20.7501711156742,
+      7.9,
+      "",
+      "0.7",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Tina Erzar",
+      "Slovenia",
+      17.2073921971253,
+      1.8,
+      "",
+      "0.7",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Taja Bodlaj",
+      "Slovenia",
+      18.8117727583847,
+      3.7,
+      "",
+      "0.6",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Qi Liu",
+      "China",
+      29.0622861054073,
+      5.0,
+      "",
+      "0.5",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Eva Pinkelnig",
+      "Austria",
+      31.7864476386037,
+      34.4,
+      65.1,
+      "0.4",
+      2020,
+      "Historical Success"
+    ],
+    [
+      "Annika Belshaw",
+      "USA",
+      22.7707049965777,
+      4.5,
+      "",
+      "0.4",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Emely Torazza",
+      "Germany",
+      20.3778234086242,
+      1.9,
+      "",
+      "0.4",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Nicole Maurer",
+      "Canada",
+      25.1444216290212,
+      4.7,
+      "",
+      "0.4",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Alvine Holz",
+      "Germany",
+      20.4024640657084,
+      2.0,
+      "",
+      "0.3",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Emma Chervet",
+      "France",
+      21.1991786447639,
+      1.5,
+      "",
+      "0.3",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Julia Kykkänen",
+      "Finland",
+      30.9267624914442,
+      3.4,
+      "",
+      "0.3",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Anna Twardosz",
+      "Poland",
+      23.9397672826831,
+      3.4,
+      "",
+      "0.3",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Paige Jones",
+      "USA",
+      22.5352498288843,
+      2.3,
+      "",
+      "0.2",
+      2026,
+      "2026 Prediction"
+    ],
+    [
+      "Martina Ambrosi",
+      "Italy",
+      23.9507186858316,
+      1.1,
+      "",
+      "0.2",
+      2026,
+      "2026 Prediction"
+    ]
+  ]
+}
