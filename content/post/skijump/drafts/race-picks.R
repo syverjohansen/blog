@@ -898,14 +898,24 @@ preprocess_data <- function(df, is_team = FALSE) {
   # Check if Elo columns exist, if not create them
   if(is_team) {
     elo_cols <- c("Avg_Small_Elo", "Avg_Medium_Elo", "Avg_Normal_Elo", "Avg_Large_Elo", "Avg_Flying_Elo", "Avg_Elo")
+    pelo_cols <- c("Avg_Small_Pelo", "Avg_Medium_Pelo", "Avg_Normal_Pelo", "Avg_Large_Pelo", "Avg_Flying_Pelo", "Avg_Pelo")
   } else {
     elo_cols <- c("Small_Elo", "Medium_Elo", "Normal_Elo", "Large_Elo", "Flying_Elo", "Elo")
+    pelo_cols <- c("Small_Pelo", "Medium_Pelo", "Normal_Pelo", "Large_Pelo", "Flying_Pelo", "Pelo")
   }
   
   # Make sure these columns exist (create if missing)
   for (col in elo_cols) {
     if (!col %in% names(df_with_points)) {
       log_info(paste("Creating missing column:", col))
+      df_with_points[[col]] <- 0
+    }
+  }
+  
+  # Make sure Pelo columns exist (create if missing)
+  for (col in pelo_cols) {
+    if (!col %in% names(df_with_points)) {
+      log_info(paste("Creating missing Pelo column:", col))
       df_with_points[[col]] <- 0
     }
   }
@@ -959,6 +969,18 @@ preprocess_data <- function(df, is_team = FALSE) {
         .names = "{.col}_Pct"
       )
     ) %>%
+    # Calculate percentages for each Pelo column
+    mutate(
+      across(
+        all_of(pelo_cols),
+        ~{
+          max_val <- max(.x, na.rm = TRUE)
+          if (max_val == 0) return(rep(0, length(.x)))
+          .x / max_val
+        },
+        .names = "{.col}_Pct"
+      )
+    ) %>%
     ungroup()
   
   # Ensure all required Elo_Pct columns exist
@@ -966,6 +988,15 @@ preprocess_data <- function(df, is_team = FALSE) {
   for (col in pct_cols) {
     if (!col %in% names(processed_df)) {
       log_info(paste("Creating missing percentage column:", col))
+      processed_df[[col]] <- 0
+    }
+  }
+  
+  # Ensure all required Pelo_Pct columns exist
+  pelo_pct_cols <- paste0(pelo_cols, "_Pct")
+  for (col in pelo_pct_cols) {
+    if (!col %in% names(processed_df)) {
+      log_info(paste("Creating missing Pelo percentage column:", col))
       processed_df[[col]] <- 0
     }
   }
@@ -1150,6 +1181,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
   if(is_team) {
     # Get all columns that might be needed for the model
     elo_cols <- c("Avg_Small_Elo", "Avg_Medium_Elo", "Avg_Normal_Elo", "Avg_Large_Elo", "Avg_Flying_Elo", "Avg_Elo")
+    pelo_cols <- c("Avg_Small_Pelo", "Avg_Medium_Pelo", "Avg_Normal_Pelo", "Avg_Large_Pelo", "Avg_Flying_Pelo", "Avg_Pelo")
     
     # Select needed columns from startlist
     result_cols <- c("Nation", elo_cols, race_prob_cols)
@@ -1196,6 +1228,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
     
     # For individual races
     elo_cols <- c("Small_Elo", "Medium_Elo", "Normal_Elo", "Large_Elo", "Flying_Elo", "Elo")
+    pelo_cols <- c("Small_Pelo", "Medium_Pelo", "Normal_Pelo", "Large_Pelo", "Flying_Pelo", "Pelo")
     
     # Get most recent Elo values
     most_recent_elos <- race_df %>%
@@ -1227,12 +1260,14 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       left_join(recent_points, by = "Skier")
   }
   
-  # For both team and individual: create Elo percentage columns
-  # Determine which Elo columns to work with
+  # For both team and individual: create Elo and Pelo percentage columns
+  # Determine which Elo and Pelo columns to work with
   if(is_team) {
     elo_columns_to_process <- c("Avg_Small_Elo", "Avg_Medium_Elo", "Avg_Normal_Elo", "Avg_Large_Elo", "Avg_Flying_Elo", "Avg_Elo")
+    pelo_columns_to_process <- c("Avg_Small_Pelo", "Avg_Medium_Pelo", "Avg_Normal_Pelo", "Avg_Large_Pelo", "Avg_Flying_Pelo", "Avg_Pelo")
   } else {
     elo_columns_to_process <- c("Small_Elo", "Medium_Elo", "Normal_Elo", "Large_Elo", "Flying_Elo", "Elo")
+    pelo_columns_to_process <- c("Small_Pelo", "Medium_Pelo", "Normal_Pelo", "Large_Pelo", "Flying_Pelo", "Pelo")
   }
   
   # Create percentage columns for each Elo column
@@ -1264,6 +1299,39 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
     } else if(!pct_col %in% names(result_df)) {
       # If we don't have the Elo column and the PCT doesn't exist yet
       log_info(paste("Creating missing Elo Pct column:", pct_col))
+      result_df[[pct_col]] <- 0.5  # Default to 0.5 (middle value)
+    }
+  }
+  
+  # Create percentage columns for each Pelo column (for prediction)
+  for(col in pelo_columns_to_process) {
+    pct_col <- paste0(col, "_Pct")
+    
+    if(col %in% names(result_df)) {
+      # If we have race_df with this column, get max values for normalization
+      if(col %in% names(race_df)) {
+        max_val <- max(race_df[[col]], na.rm = TRUE)
+        if(!is.na(max_val) && max_val > 0) {
+          log_info(paste("Calculating", pct_col, "from", col))
+          result_df[[pct_col]] <- result_df[[col]] / max_val
+        } else {
+          log_info(paste("Using default value for", pct_col, "(max value issue)"))
+          result_df[[pct_col]] <- 0.5
+        }
+      } else {
+        # If not available in race_df, normalize within the current dataset
+        max_val <- max(result_df[[col]], na.rm = TRUE)
+        if(!is.na(max_val) && max_val > 0) {
+          log_info(paste("Calculating", pct_col, "from", col, "(internal max)"))
+          result_df[[pct_col]] <- result_df[[col]] / max_val
+        } else {
+          log_info(paste("Using default value for", pct_col, "(internal max issue)"))
+          result_df[[pct_col]] <- 0.5
+        }
+      }
+    } else if(!pct_col %in% names(result_df)) {
+      # If we don't have the Pelo column and the PCT doesn't exist yet
+      log_info(paste("Creating missing Pelo Pct column:", pct_col))
       result_df[[pct_col]] <- 0.5  # Default to 0.5 (middle value)
     }
   }
@@ -1592,13 +1660,14 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     response_variable <- "Points"
     
     # Define explanatory variables based on race type
+    # Training uses pre-race ELO (Pelo) to avoid data leakage
     if(is_team) {
-      explanatory_vars <- c("Avg_Normal_Elo_Pct", "Avg_Large_Elo_Pct", 
-                            "Avg_Flying_Elo_Pct", "Avg_Elo_Pct")
+      explanatory_vars <- c("Avg_Normal_Pelo_Pct", "Avg_Large_Pelo_Pct", 
+                            "Avg_Flying_Pelo_Pct", "Avg_Pelo_Pct")
     } else {
       explanatory_vars <- c("Prev_Points_Weighted", 
-                            "Normal_Elo_Pct", "Large_Elo_Pct", 
-                            "Flying_Elo_Pct", "Elo_Pct")
+                            "Normal_Pelo_Pct", "Large_Pelo_Pct", 
+                            "Flying_Pelo_Pct", "Pelo_Pct")
     }
     
     # Create and fit model for points
