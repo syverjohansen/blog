@@ -58,8 +58,8 @@ $(document).ready(function() {
     // Clear existing hardcoded items
     $('.catalog-body').empty();
     
-    // Find all h2 and h3 elements in the post container
-    $('.post-container h2, .post-container h3').each(function() {
+    // Find all h2, h3, h4, and h5 elements in the post container
+    $('.post-container h2, .post-container h3, .post-container h4, .post-container h5').each(function() {
       var heading = $(this);
       
       // If the heading doesn't have an ID, create one based on the text
@@ -77,10 +77,20 @@ $(document).ready(function() {
       var listItem = $('<li>');
       if (headingLevel === 'h3') {
         listItem.css('padding-left', '1.5rem');
+      } else if (headingLevel === 'h4') {
+        listItem.css('padding-left', '3rem');
+      } else if (headingLevel === 'h5') {
+        listItem.css('padding-left', '4.5rem');
       }
       
       // Create the link
       var link = $('<a>').attr('href', '#' + headingId).text(headingText);
+      
+      // Make h4 links bold
+      if (headingLevel === 'h4') {
+        link.css('font-weight', 'bold');
+      }
+      
       listItem.append(link);
       
       // Add to the catalog
@@ -92,7 +102,7 @@ $(document).ready(function() {
       var scrollPosition = $(window).scrollTop();
       
       // Find the current heading
-      $('.post-container h2, .post-container h3').each(function() {
+      $('.post-container h2, .post-container h3, .post-container h4, .post-container h5').each(function() {
         var currentHeading = $(this);
         var sectionTop = currentHeading.offset().top - 100;
         var sectionId = currentHeading.attr('id');

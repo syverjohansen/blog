@@ -38,7 +38,16 @@
                             {{ if eq $index 0 }}
                                 <td>{{ $value }}</td>
                             {{ else }}
-                                <td data-value="{{ $value }}">{{ $value }}</td>
+                                {{ if findRE `^-?\d*\.?\d+$` (string $value) }}
+                                    {{ $numValue := float $value }}
+                                    {{ if eq $numValue (float (printf "%.0f" $numValue)) }}
+                                        <td data-value="{{ $value }}">{{ printf "%.0f" $numValue }}</td>
+                                    {{ else }}
+                                        <td data-value="{{ $value }}">{{ printf "%.2f" $numValue }}</td>
+                                    {{ end }}
+                                {{ else }}
+                                    <td data-value="{{ $value }}">{{ $value }}</td>
+                                {{ end }}
                             {{ end }}
                         {{ end }}
                     </tr>

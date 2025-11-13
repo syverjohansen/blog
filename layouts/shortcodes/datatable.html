@@ -51,7 +51,16 @@
                 {{ range $rows }}
                     <tr>
                         {{ range $cellIndex, $cellValue := . }}
-                            <td>{{ $cellValue }}</td>
+                            {{ if findRE `^-?\d*\.?\d+$` (string $cellValue) }}
+                                {{ $numValue := float $cellValue }}
+                                {{ if eq $numValue (float (printf "%.0f" $numValue)) }}
+                                    <td>{{ printf "%.0f" $numValue }}</td>
+                                {{ else }}
+                                    <td>{{ printf "%.2f" $numValue }}</td>
+                                {{ end }}
+                            {{ else }}
+                                <td>{{ $cellValue }}</td>
+                            {{ end }}
                         {{ end }}
                     </tr>
                 {{ end }}

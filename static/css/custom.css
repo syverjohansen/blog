@@ -123,14 +123,28 @@
   opacity: 0.9;
 }
 
-.side-catalog .catalog-body .h4_nav a,
-.side-catalog .catalog-body .h5_nav a,
-.side-catalog .catalog-body .h6_nav a {
+.side-catalog .catalog-body .h4_nav a {
+  font-weight: 700;
+  font-size: 13px;
+  padding-left: 32px;
+  border-left: 2px solid #ecf0f1;
+  opacity: 0.9;
+}
+
+.side-catalog .catalog-body .h5_nav a {
   font-weight: 400;
   font-size: 12px;
-  padding-left: 36px;
+  padding-left: 40px;
   border-left: 1px solid #ecf0f1;
   opacity: 0.8;
+}
+
+.side-catalog .catalog-body .h6_nav a {
+  font-weight: 400;
+  font-size: 11px;
+  padding-left: 48px;
+  border-left: 1px solid #ecf0f1;
+  opacity: 0.7;
 }
 
 /* Enhanced active state */
@@ -489,4 +503,65 @@ body {
   .tab-icon {
     display: none;
   }
+}
+
+/* Improved paragraph spacing for better readability - Multiple selectors for specificity */
+.post-container p,
+article .post-container p,
+.container .post-container p {
+  margin: 45px 0 !important;
+  line-height: 1.85 !important;
+  margin-bottom: 45px !important;
+  margin-top: 45px !important;
+}
+
+/* Target paragraphs more specifically with higher specificity */
+article .container .row .post-container p {
+  margin: 45px 0 !important;
+  line-height: 1.85 !important;
+}
+
+/* Ensure all paragraph-like elements get proper spacing */
+.post-container p,
+.post-container div > p,
+.post-container .post-content p {
+  margin: 45px 0 !important;
+}
+
+/* Adjust spacing after headings */
+.post-container h1,
+.post-container h2,
+.post-container h3,
+.post-container h4,
+.post-container h5,
+.post-container h6 {
+  margin-bottom: 35px !important;
+  margin-top: 50px !important;
+}
+
+/* Add more space before paragraphs that follow headings */
+.post-container h1 + p,
+.post-container h2 + p,
+.post-container h3 + p,
+.post-container h4 + p,
+.post-container h5 + p,
+.post-container h6 + p {
+  margin-top: 25px !important;
+}
+
+/* Override any theme paragraph styles completely */
+body p {
+  margin: 45px 0 !important;
+}
+
+/* Force spacing on the main content area */
+.col-lg-8.post-container p {
+  margin: 45px 0 !important;
+  line-height: 1.85 !important;
+}
+
+/* Diagnostic styling - remove after testing */
+.post-container p {
+  border-left: 3px solid red !important;
+  padding-left: 10px !important;
 }
