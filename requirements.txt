@@ -1,0 +1,47 @@
+# Core data processing
+pandas==2.2.3
+numpy==2.1.1
+polars-lts-cpu==1.7.1
+
+# Date and time handling
+python-dateutil==2.9.0.post0
+pytz==2024.2
+
+# Data visualization
+matplotlib
+seaborn
+plotly
+
+# Web framework and APIs
+flask
+flask-cors
+
+# Excel/spreadsheet handling
+openpyxl
+xlsxwriter
+xlrd
+
+# Web scraping and HTTP requests
+requests
+beautifulsoup4
+lxml
+selenium
+
+# Scientific computing and machine learning
+scipy
+scikit-learn
+
+# Data storage and serialization
+pickle5
+
+# Command line and system utilities
+click
+argparse-addons
+
+# Fuzzy string matching
+fuzzywuzzy
+python-Levenshtein
+
+# Additional utilities that may be used in automation scripts
+tqdm
+joblib
