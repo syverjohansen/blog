@@ -85,11 +85,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     left: 1
                 },
                 aoColumnDefs: [
+                    {{ if ge $idColumnIndex 0 }}
                     // Hide ID column if it exists
                     {
-                        aTargets: [idColumnIndex],
+                        aTargets: [{{ $idColumnIndex }}],
                         bVisible: false
                     },
+                    {{ end }}
                     // All columns sort descending first
                     {
                         aTargets: "_all",
