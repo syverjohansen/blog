@@ -1,0 +1,71 @@
+[2025-11-14 15:20:18 UTC] =======================================
+[2025-11-14 15:20:18 UTC] Master Automation Script Starting
+[2025-11-14 15:20:18 UTC] =======================================
+[2025-11-14 15:20:18 UTC] Date: 2025-11-14 (11/14/2025)
+[2025-11-14 15:20:18 UTC] Day of week: 5 (1=Monday, 7=Sunday)
+[2025-11-14 15:20:18 UTC] =======================================
+[2025-11-14 15:20:18 UTC] Determining overall season dates...
+[2025-11-14 15:20:18 UTC] Warning: Races CSV not found for alpine: /root/ski/elo/python/alpine/polars/excel365/races.csv
+[2025-11-14 15:20:18 UTC]   alpine: [2025-11-14 15:20:18 UTC] Warning: Races CSV not found for alpine: /root/ski/elo/python/alpine/polars/excel365/races.csv to 
+[2025-11-14 15:20:18 UTC] Warning: Races CSV not found for biathlon: /root/ski/elo/python/biathlon/polars/excel365/races.csv
+[2025-11-14 15:20:18 UTC]   biathlon: [2025-11-14 15:20:18 UTC] Warning: Races CSV not found for biathlon: /root/ski/elo/python/biathlon/polars/excel365/races.csv to 
+[2025-11-14 15:20:18 UTC] Warning: Races CSV not found for nordic-combined: /root/ski/elo/python/nordic-combined/polars/excel365/races.csv
+[2025-11-14 15:20:18 UTC]   nordic-combined: [2025-11-14 15:20:18 UTC] Warning: Races CSV not found for nordic-combined: /root/ski/elo/python/nordic-combined/polars/excel365/races.csv to 
+[2025-11-14 15:20:18 UTC] Warning: Races CSV not found for ski: /root/ski/elo/python/ski/polars/excel365/races.csv
+[2025-11-14 15:20:18 UTC]   ski: [2025-11-14 15:20:18 UTC] Warning: Races CSV not found for ski: /root/ski/elo/python/ski/polars/excel365/races.csv to 
+[2025-11-14 15:20:18 UTC] Warning: Races CSV not found for skijump: /root/ski/elo/python/skijump/polars/excel365/races.csv
+[2025-11-14 15:20:18 UTC]   skijump: [2025-11-14 15:20:18 UTC] Warning: Races CSV not found for skijump: /root/ski/elo/python/skijump/polars/excel365/races.csv to 
+[2025-11-14 15:20:18 UTC] Error: Could not determine overall season dates
+[2025-11-14 15:20:18 UTC] Error: Could not determine season dates. Exiting.
+[2025-11-14 15:21:09 UTC] =======================================
+[2025-11-14 15:21:09 UTC] Master Automation Script Starting
+[2025-11-14 15:21:09 UTC] =======================================
+[2025-11-14 15:21:09 UTC] Date: 2025-11-14 (11/14/2025)
+[2025-11-14 15:21:09 UTC] Day of week: 5 (1=Monday, 7=Sunday)
+[2025-11-14 15:21:09 UTC] =======================================
+[2025-11-14 15:21:09 UTC] Determining overall season dates...
+[2025-11-14 15:21:09 UTC] Warning: Races CSV not found for alpine: /root/ski/elo/python/alpine/polars/excel365/races.csv
+[2025-11-14 15:21:09 UTC]   alpine: [2025-11-14 15:21:09 UTC] Warning: Races CSV not found for alpine: /root/ski/elo/python/alpine/polars/excel365/races.csv to 
+[2025-11-14 15:21:09 UTC] Warning: Races CSV not found for biathlon: /root/ski/elo/python/biathlon/polars/excel365/races.csv
+[2025-11-14 15:21:09 UTC]   biathlon: [2025-11-14 15:21:09 UTC] Warning: Races CSV not found for biathlon: /root/ski/elo/python/biathlon/polars/excel365/races.csv to 
+[2025-11-14 15:21:09 UTC] Warning: Races CSV not found for nordic-combined: /root/ski/elo/python/nordic-combined/polars/excel365/races.csv
+[2025-11-14 15:21:09 UTC]   nordic-combined: [2025-11-14 15:21:09 UTC] Warning: Races CSV not found for nordic-combined: /root/ski/elo/python/nordic-combined/polars/excel365/races.csv to 
+[2025-11-14 15:21:09 UTC] Warning: Races CSV not found for ski: /root/ski/elo/python/ski/polars/excel365/races.csv
+[2025-11-14 15:21:09 UTC]   ski: [2025-11-14 15:21:09 UTC] Warning: Races CSV not found for ski: /root/ski/elo/python/ski/polars/excel365/races.csv to 
+[2025-11-14 15:21:09 UTC] Warning: Races CSV not found for skijump: /root/ski/elo/python/skijump/polars/excel365/races.csv
+[2025-11-14 15:21:09 UTC]   skijump: [2025-11-14 15:21:09 UTC] Warning: Races CSV not found for skijump: /root/ski/elo/python/skijump/polars/excel365/races.csv to 
+[2025-11-14 15:21:09 UTC] Error: Could not determine overall season dates
+[2025-11-14 15:21:09 UTC] Error: Could not determine season dates. Exiting.
+[2025-11-14 15:37:08 UTC] =======================================
+[2025-11-14 15:37:08 UTC] Master Automation Script Starting
+[2025-11-14 15:37:08 UTC] =======================================
+[2025-11-14 15:37:08 UTC] Date: 2025-11-14 (11/14/2025)
+[2025-11-14 15:37:08 UTC] Day of week: 5 (1=Monday, 7=Sunday)
+[2025-11-14 15:37:08 UTC] =======================================
+[2025-11-14 15:37:08 UTC] Determining overall season dates...
+[2025-11-14 15:37:08 UTC]   alpine: 10/25/2025 to 03/25/2026
+[2025-11-14 15:37:08 UTC]   biathlon: 11/29/2025 to 03/22/2026
+[2025-11-14 15:37:09 UTC]   nordic-combined: 11/28/2025 to 03/15/2026
+[2025-11-14 15:37:09 UTC]   ski: 11/28/2025 to 03/22/2026
+[2025-11-14 15:37:09 UTC]   skijump: 11/21/2025 to 03/28/2026
+[2025-11-14 15:37:09 UTC] Overall season: 2025-10-25 to 2026-03-28
+[2025-11-14 15:37:09 UTC] Season period: 2025-10-25 to 2026-03-28
+[2025-11-14 15:37:09 UTC] Season check: 2025-10-25 <= 2025-11-14 <= 2026-03-29
+[2025-11-14 15:37:09 UTC] ✓ Currently in racing season
+[2025-11-14 15:37:09 UTC] - No races found for today - skipping predict_script.sh
+[2025-11-14 15:37:09 UTC] ✓ In season - will run score_scrape.sh (checks yesterday's races)
+[2025-11-14 15:37:09 UTC] - Not Monday - skipping recap_script.sh
+[2025-11-14 15:37:09 UTC] =======================================
+[2025-11-14 15:37:09 UTC] Execution Summary:
+[2025-11-14 15:37:09 UTC]   score_scrape.sh: YES
+[2025-11-14 15:37:09 UTC]   predict_script.sh: NO
+[2025-11-14 15:37:09 UTC]   recap_script.sh: NO
+[2025-11-14 15:37:09 UTC] =======================================
+[2025-11-14 15:37:09 UTC] Starting score_scrape_ubuntu.sh...
+[2025-11-14 15:37:09 UTC] ✓ score_scrape_ubuntu.sh completed successfully (2025-11-14 15:37:09 UTC to 2025-11-14 15:37:09 UTC)
+[2025-11-14 15:37:09 UTC]   Output logged to: /root/blog/daehl-e/logs/score_scrape_ubuntu-20251114-153709.log
+[2025-11-14 15:37:09 UTC] =======================================
+[2025-11-14 15:37:09 UTC] Committing and pushing changes to git
+[2025-11-14 15:37:09 UTC] =======================================
+[2025-11-14 15:37:09 UTC] Changes detected, proceeding with git operations...
+[2025-11-14 15:37:09 UTC] Adding all changes to git...
