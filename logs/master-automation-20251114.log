@@ -130,3 +130,59 @@ fatal: Authentication failed for 'https://github.com/syverjohansen/blog.git/'
 [2025-11-14 15:40:01 UTC] =======================================
 [2025-11-14 15:40:01 UTC] Changes detected, proceeding with git operations...
 [2025-11-14 15:40:01 UTC] Adding all changes to git...
+[2025-11-14 15:40:01 UTC] ✓ Successfully added changes to git
+[2025-11-14 15:40:01 UTC] Committing changes with message: Master automation successfully ran and did the following: score_scrape
+[main 00fd127d] Master automation successfully ran and did the following: score_scrape
+ 2 files changed, 134 insertions(+)
+ create mode 100644 logs/score_scrape_ubuntu-20251114-154001.log
+[2025-11-14 15:40:01 UTC] ✓ Successfully committed changes
+[2025-11-14 15:40:01 UTC] Pulling latest changes from origin main...
+From https://github.com/syverjohansen/blog
+ * branch              main       -> FETCH_HEAD
+Already up to date.
+[2025-11-14 15:40:01 UTC] ✓ Successfully pulled from origin main
+[2025-11-14 15:40:01 UTC] Pushing changes to origin main...
+remote: Invalid username or token. Password authentication is not supported for Git operations.
+fatal: Authentication failed for 'https://github.com/syverjohansen/blog.git/'
+[2025-11-14 15:40:10 UTC] ✗ Failed to push to origin main
+[2025-11-14 15:40:10 UTC] =======================================
+[2025-11-14 15:40:10 UTC] Master Automation Script Completed
+[2025-11-14 15:40:10 UTC] =======================================
+[2025-11-14 15:40:10 UTC] Execution results: score_scrape:SUCCESS git_commit:SUCCESS git_pull:SUCCESS git_push:FAILED
+[2025-11-14 15:40:10 UTC] Total execution time: 2025-11-14 15:40:10 UTC
+[2025-11-14 15:40:10 UTC] Log file: /root/blog/daehl-e/logs/master-automation-20251114.log
+[2025-11-14 15:40:10 UTC] =======================================
+[2025-11-14 15:40:10 UTC] ⚠️  Some operations failed. Check individual log files for details.
+[2025-11-14 15:41:40 UTC] =======================================
+[2025-11-14 15:41:40 UTC] Master Automation Script Starting
+[2025-11-14 15:41:40 UTC] =======================================
+[2025-11-14 15:41:40 UTC] Date: 2025-11-14 (11/14/2025)
+[2025-11-14 15:41:40 UTC] Day of week: 5 (1=Monday, 7=Sunday)
+[2025-11-14 15:41:40 UTC] =======================================
+[2025-11-14 15:41:40 UTC] Determining overall season dates...
+[2025-11-14 15:41:40 UTC]   alpine: 10/25/2025 to 03/25/2026
+[2025-11-14 15:41:40 UTC]   biathlon: 11/29/2025 to 03/22/2026
+[2025-11-14 15:41:40 UTC]   nordic-combined: 11/28/2025 to 03/15/2026
+[2025-11-14 15:41:40 UTC]   ski: 11/28/2025 to 03/22/2026
+[2025-11-14 15:41:40 UTC]   skijump: 11/21/2025 to 03/28/2026
+[2025-11-14 15:41:40 UTC] Overall season: 2025-10-25 to 2026-03-28
+[2025-11-14 15:41:40 UTC] Season period: 2025-10-25 to 2026-03-28
+[2025-11-14 15:41:40 UTC] Season check: 2025-10-25 <= 2025-11-14 <= 2026-03-29
+[2025-11-14 15:41:40 UTC] ✓ Currently in racing season
+[2025-11-14 15:41:40 UTC] - No races found for today - skipping predict_script.sh
+[2025-11-14 15:41:40 UTC] ✓ In season - will run score_scrape.sh (checks yesterday's races)
+[2025-11-14 15:41:40 UTC] - Not Monday - skipping recap_script.sh
+[2025-11-14 15:41:40 UTC] =======================================
+[2025-11-14 15:41:40 UTC] Execution Summary:
+[2025-11-14 15:41:40 UTC]   score_scrape.sh: YES
+[2025-11-14 15:41:40 UTC]   predict_script.sh: NO
+[2025-11-14 15:41:40 UTC]   recap_script.sh: NO
+[2025-11-14 15:41:40 UTC] =======================================
+[2025-11-14 15:41:40 UTC] Starting score_scrape_ubuntu.sh...
+[2025-11-14 15:41:40 UTC] ✓ score_scrape_ubuntu.sh completed successfully (2025-11-14 15:41:40 UTC to 2025-11-14 15:41:40 UTC)
+[2025-11-14 15:41:40 UTC]   Output logged to: /root/blog/daehl-e/logs/score_scrape_ubuntu-20251114-154140.log
+[2025-11-14 15:41:40 UTC] =======================================
+[2025-11-14 15:41:40 UTC] Committing and pushing changes to git
+[2025-11-14 15:41:40 UTC] =======================================
+[2025-11-14 15:41:40 UTC] Changes detected, proceeding with git operations...
+[2025-11-14 15:41:40 UTC] Adding all changes to git...
