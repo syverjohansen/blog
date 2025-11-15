@@ -205,7 +205,7 @@ run_script() {
     local start_time=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
     local output_file="$LOG_DIR/${script_name%.sh}-$(date -u '+%Y%m%d-%H%M%S').log"
     
-    if bash "$script_path" > "$output_file" 2>&1; then
+    if bash "$script_path" 2>&1 | tee "$output_file"; then
         local end_time=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
         log_message "✓ $script_name completed successfully ($start_time to $end_time)"
         log_message "  Output logged to: $output_file"
