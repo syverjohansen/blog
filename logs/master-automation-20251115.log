@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [2025-11-15 12:49:08 UTC] =======================================
 [2025-11-15 12:49:08 UTC] Master Automation Script Starting
 [2025-11-15 12:49:08 UTC] =======================================
@@ -251,3 +252,166 @@ hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 [2025-11-15 13:10:03 UTC] Log file: /Users/syverjohansen/blog/daehl-e/logs/master-automation-20251115.log
 [2025-11-15 13:10:03 UTC] =======================================
 [2025-11-15 13:10:03 UTC] ⚠️  Some operations failed. Check individual log files for details.
+=======
+[2025-11-15 00:00:01 UTC] =======================================
+[2025-11-15 00:00:01 UTC] Master Automation Script Starting
+[2025-11-15 00:00:01 UTC] =======================================
+[2025-11-15 00:00:01 UTC] Date: 2025-11-15 (11/15/2025)
+[2025-11-15 00:00:01 UTC] Day of week: 6 (1=Monday, 7=Sunday)
+[2025-11-15 00:00:01 UTC] =======================================
+[2025-11-15 00:00:01 UTC] Determining overall season dates...
+[2025-11-15 00:00:01 UTC]   alpine: 10/25/2025 to 03/25/2026
+[2025-11-15 00:00:01 UTC]   biathlon: 11/29/2025 to 03/22/2026
+[2025-11-15 00:00:01 UTC]   nordic-combined: 11/28/2025 to 03/15/2026
+[2025-11-15 00:00:01 UTC]   ski: 11/28/2025 to 03/22/2026
+[2025-11-15 00:00:01 UTC]   skijump: 11/21/2025 to 03/28/2026
+[2025-11-15 00:00:01 UTC] Overall season: 2025-10-25 to 2026-03-28
+[2025-11-15 00:00:01 UTC] Season period: 2025-10-25 to 2026-03-28
+[2025-11-15 00:00:01 UTC] Season check: 2025-10-25 <= 2025-11-15 <= 2026-03-29
+[2025-11-15 00:00:01 UTC] ✓ Currently in racing season
+[2025-11-15 00:00:01 UTC] Found races today for alpine
+[2025-11-15 00:00:01 UTC] ✓ Races found for today - will run predict_script.sh
+[2025-11-15 00:00:01 UTC] ✓ In season - will run score_scrape.sh (checks yesterday's races)
+[2025-11-15 00:00:01 UTC] - Not Monday - skipping recap_script.sh
+[2025-11-15 00:00:01 UTC] =======================================
+[2025-11-15 00:00:01 UTC] Execution Summary:
+[2025-11-15 00:00:01 UTC]   score_scrape.sh: YES
+[2025-11-15 00:00:01 UTC]   predict_script.sh: YES
+[2025-11-15 00:00:01 UTC]   recap_script.sh: NO
+[2025-11-15 00:00:01 UTC] =======================================
+[2025-11-15 00:00:01 UTC] Starting score_scrape_ubuntu.sh...
+[2025-11-15 00:00:01 UTC] ✓ score_scrape_ubuntu.sh completed successfully (2025-11-15 00:00:01 UTC to 2025-11-15 00:00:01 UTC)
+[2025-11-15 00:00:01 UTC]   Output logged to: /root/blog/daehl-e/logs/score_scrape_ubuntu-20251115-000001.log
+[2025-11-15 00:00:01 UTC] Starting predict_script_ubuntu.sh...
+[2025-11-15 00:00:02 UTC] ✓ predict_script_ubuntu.sh completed successfully (2025-11-15 00:00:01 UTC to 2025-11-15 00:00:02 UTC)
+[2025-11-15 00:00:02 UTC]   Output logged to: /root/blog/daehl-e/logs/predict_script_ubuntu-20251115-000001.log
+[2025-11-15 00:00:02 UTC] =======================================
+[2025-11-15 00:00:02 UTC] Committing and pushing changes to git
+[2025-11-15 00:00:02 UTC] =======================================
+[2025-11-15 00:00:02 UTC] Changes detected, proceeding with git operations...
+[2025-11-15 00:00:02 UTC] Adding all changes to git...
+[2025-11-15 00:00:02 UTC] ✓ Successfully added changes to git
+[2025-11-15 00:00:02 UTC] Committing changes with message: Master automation successfully ran and did the following: predict_script score_scrape
+[main 0ee08603] Master automation successfully ran and did the following: predict_script score_scrape
+ 5 files changed, 269 insertions(+)
+ create mode 100644 logs/cron.log
+ create mode 100644 logs/master-automation-20251115.log
+ create mode 100644 logs/predict_script_ubuntu-20251115-000001.log
+ create mode 100644 logs/score_scrape_ubuntu-20251115-000001.log
+[2025-11-15 00:00:02 UTC] ✓ Successfully committed changes
+[2025-11-15 00:00:02 UTC] Pulling latest changes from origin main...
+From github.com:syverjohansen/blog
+ * branch              main       -> FETCH_HEAD
+Already up to date.
+[2025-11-15 00:00:03 UTC] ✓ Successfully pulled from origin main
+[2025-11-15 00:00:03 UTC] Pushing changes to origin main...
+To github.com:syverjohansen/blog.git
+   354e4692..0ee08603  main -> main
+[2025-11-15 00:00:04 UTC] ✓ Successfully pushed to origin main
+[2025-11-15 00:00:04 UTC] =======================================
+[2025-11-15 00:00:04 UTC] Master Automation Script Completed
+[2025-11-15 00:00:04 UTC] =======================================
+[2025-11-15 00:00:04 UTC] Execution results: score_scrape:SUCCESS predict_script:SUCCESS git_commit:SUCCESS git_pull:SUCCESS git_push:SUCCESS
+[2025-11-15 00:00:04 UTC] Total execution time: 2025-11-15 00:00:04 UTC
+[2025-11-15 00:00:04 UTC] Log file: /root/blog/daehl-e/logs/master-automation-20251115.log
+[2025-11-15 00:00:04 UTC] =======================================
+[2025-11-15 00:00:04 UTC] ✓ All operations completed successfully
+[2025-11-15 12:40:56 UTC] =======================================
+[2025-11-15 12:40:56 UTC] Master Automation Script Starting
+[2025-11-15 12:40:56 UTC] =======================================
+[2025-11-15 12:40:56 UTC] Date: 2025-11-15 (11/15/2025)
+[2025-11-15 12:40:56 UTC] Day of week: 6 (1=Monday, 7=Sunday)
+[2025-11-15 12:40:56 UTC] =======================================
+[2025-11-15 12:40:56 UTC] Determining overall season dates...
+[2025-11-15 12:40:56 UTC]   alpine: 10/25/2025 to 03/25/2026
+[2025-11-15 12:40:56 UTC]   biathlon: 11/29/2025 to 03/22/2026
+[2025-11-15 12:40:56 UTC]   nordic-combined: 11/28/2025 to 03/15/2026
+[2025-11-15 12:40:56 UTC]   ski: 11/28/2025 to 03/22/2026
+[2025-11-15 12:40:57 UTC]   skijump: 11/21/2025 to 03/28/2026
+[2025-11-15 12:40:57 UTC] Overall season: 2025-10-25 to 2026-03-28
+[2025-11-15 12:40:57 UTC] Season period: 2025-10-25 to 2026-03-28
+[2025-11-15 12:40:57 UTC] Season check: 2025-10-25 <= 2025-11-15 <= 2026-03-29
+[2025-11-15 12:40:57 UTC] ✓ Currently in racing season
+[2025-11-15 12:40:57 UTC] Found races today for alpine
+[2025-11-15 12:40:57 UTC] ✓ Races found for today - will run predict_script.sh
+[2025-11-15 12:40:57 UTC] ✓ In season - will run score_scrape.sh (checks yesterday's races)
+[2025-11-15 12:40:57 UTC] - Not Monday - skipping recap_script.sh
+[2025-11-15 12:40:57 UTC] =======================================
+[2025-11-15 12:40:57 UTC] Execution Summary:
+[2025-11-15 12:40:57 UTC]   score_scrape.sh: YES
+[2025-11-15 12:40:57 UTC]   predict_script.sh: YES
+[2025-11-15 12:40:57 UTC]   recap_script.sh: NO
+[2025-11-15 12:40:57 UTC] =======================================
+[2025-11-15 12:40:57 UTC] Starting score_scrape_ubuntu.sh...
+[2025-11-15 12:40:57 UTC] ✓ score_scrape_ubuntu.sh completed successfully (2025-11-15 12:40:57 UTC to 2025-11-15 12:40:57 UTC)
+[2025-11-15 12:40:57 UTC]   Output logged to: /root/blog/daehl-e/logs/score_scrape_ubuntu-20251115-124057.log
+[2025-11-15 12:40:57 UTC] Starting predict_script_ubuntu.sh...
+[2025-11-15 12:40:57 UTC] ✓ predict_script_ubuntu.sh completed successfully (2025-11-15 12:40:57 UTC to 2025-11-15 12:40:57 UTC)
+[2025-11-15 12:40:57 UTC]   Output logged to: /root/blog/daehl-e/logs/predict_script_ubuntu-20251115-124057.log
+[2025-11-15 12:40:57 UTC] =======================================
+[2025-11-15 12:40:57 UTC] Committing and pushing changes to git
+[2025-11-15 12:40:57 UTC] =======================================
+[2025-11-15 12:40:57 UTC] Changes detected, proceeding with git operations...
+[2025-11-15 12:40:57 UTC] Adding all changes to git...
+[2025-11-15 12:40:57 UTC] ✓ Successfully added changes to git
+[2025-11-15 12:40:57 UTC] Committing changes with message: Master automation successfully ran and did the following: predict_script score_scrape
+[main 89fd4f06] Master automation successfully ran and did the following: predict_script score_scrape
+ 4 files changed, 250 insertions(+)
+ create mode 100644 logs/predict_script_ubuntu-20251115-124057.log
+ create mode 100644 logs/score_scrape_ubuntu-20251115-124057.log
+[2025-11-15 12:40:57 UTC] ✓ Successfully committed changes
+[2025-11-15 12:40:57 UTC] Pulling latest changes from origin main...
+From github.com:syverjohansen/blog
+ * branch              main       -> FETCH_HEAD
+Already up to date.
+[2025-11-15 12:40:58 UTC] ✓ Successfully pulled from origin main
+[2025-11-15 12:40:58 UTC] Pushing changes to origin main...
+To github.com:syverjohansen/blog.git
+   0ee08603..89fd4f06  main -> main
+[2025-11-15 12:40:59 UTC] ✓ Successfully pushed to origin main
+[2025-11-15 12:40:59 UTC] =======================================
+[2025-11-15 12:40:59 UTC] Master Automation Script Completed
+[2025-11-15 12:40:59 UTC] =======================================
+[2025-11-15 12:40:59 UTC] Execution results: score_scrape:SUCCESS predict_script:SUCCESS git_commit:SUCCESS git_pull:SUCCESS git_push:SUCCESS
+[2025-11-15 12:40:59 UTC] Total execution time: 2025-11-15 12:40:59 UTC
+[2025-11-15 12:40:59 UTC] Log file: /root/blog/daehl-e/logs/master-automation-20251115.log
+[2025-11-15 12:40:59 UTC] =======================================
+[2025-11-15 12:40:59 UTC] ✓ All operations completed successfully
+[2025-11-15 12:46:49 UTC] =======================================
+[2025-11-15 12:46:49 UTC] Master Automation Script Starting
+[2025-11-15 12:46:49 UTC] =======================================
+[2025-11-15 12:46:49 UTC] Date: 2025-11-15 (11/15/2025)
+[2025-11-15 12:46:49 UTC] Day of week: 6 (1=Monday, 7=Sunday)
+[2025-11-15 12:46:49 UTC] =======================================
+[2025-11-15 12:46:49 UTC] Determining overall season dates...
+[2025-11-15 12:46:49 UTC]   alpine: 10/25/2025 to 03/25/2026
+[2025-11-15 12:46:49 UTC]   biathlon: 11/29/2025 to 03/22/2026
+[2025-11-15 12:46:49 UTC]   nordic-combined: 11/28/2025 to 03/15/2026
+[2025-11-15 12:46:49 UTC]   ski: 11/28/2025 to 03/22/2026
+[2025-11-15 12:46:49 UTC]   skijump: 11/21/2025 to 03/28/2026
+[2025-11-15 12:46:49 UTC] Overall season: 2025-10-25 to 2026-03-28
+[2025-11-15 12:46:49 UTC] Season period: 2025-10-25 to 2026-03-28
+[2025-11-15 12:46:49 UTC] Season check: 2025-10-25 <= 2025-11-15 <= 2026-03-29
+[2025-11-15 12:46:49 UTC] ✓ Currently in racing season
+[2025-11-15 12:46:49 UTC] Found races today for alpine
+[2025-11-15 12:46:49 UTC] ✓ Races found for today - will run predict_script.sh
+[2025-11-15 12:46:49 UTC] ✓ In season - will run score_scrape.sh (checks yesterday's races)
+[2025-11-15 12:46:49 UTC] - Not Monday - skipping recap_script.sh
+[2025-11-15 12:46:49 UTC] =======================================
+[2025-11-15 12:46:49 UTC] Execution Summary:
+[2025-11-15 12:46:49 UTC]   score_scrape.sh: YES
+[2025-11-15 12:46:49 UTC]   predict_script.sh: YES
+[2025-11-15 12:46:49 UTC]   recap_script.sh: NO
+[2025-11-15 12:46:49 UTC] =======================================
+[2025-11-15 12:46:49 UTC] Starting score_scrape_ubuntu.sh...
+[2025-11-15 12:46:49 UTC] ✓ score_scrape_ubuntu.sh completed successfully (2025-11-15 12:46:49 UTC to 2025-11-15 12:46:49 UTC)
+[2025-11-15 12:46:49 UTC]   Output logged to: /root/blog/daehl-e/logs/score_scrape_ubuntu-20251115-124649.log
+[2025-11-15 12:46:49 UTC] Starting predict_script_ubuntu.sh...
+[2025-11-15 12:46:49 UTC] ✓ predict_script_ubuntu.sh completed successfully (2025-11-15 12:46:49 UTC to 2025-11-15 12:46:49 UTC)
+[2025-11-15 12:46:49 UTC]   Output logged to: /root/blog/daehl-e/logs/predict_script_ubuntu-20251115-124649.log
+[2025-11-15 12:46:49 UTC] =======================================
+[2025-11-15 12:46:49 UTC] Committing and pushing changes to git
+[2025-11-15 12:46:49 UTC] =======================================
+[2025-11-15 12:46:49 UTC] Changes detected, proceeding with git operations...
+[2025-11-15 12:46:49 UTC] Adding all changes to git...
+>>>>>>> 4a6449bbece67aaa2ce64377eaf790b2753caa56
