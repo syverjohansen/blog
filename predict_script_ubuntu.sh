@@ -92,7 +92,7 @@ process_sport() {
         # Run weekend scrape script
         if [[ -f "$polars_dir/startlist-scrape-weekend.py" ]]; then
             log_message "Running startlist-scrape-weekend.py for $sport_dir"
-            cd "$polars_dir" && python startlist-scrape-weekend.py >/dev/null 2>&1
+            cd "$polars_dir" && python startlist-scrape-weekend.py
             log_message "Completed startlist-scrape-weekend.py for $sport_dir"
         else
             log_message "Warning: startlist-scrape-weekend.py not found for $sport_dir"
@@ -101,6 +101,10 @@ process_sport() {
         # Process weekend predictions
         local weekend_source_dir="$CONTENT_DIR/$content_sport/drafts/weekly-picks/$TODAY_YYYYMMDD"
         local weekend_output_dir="$BLOG_DIR/data/$content_sport/drafts/weekly-picks/$TODAY_YYYYMMDD"
+        
+        # Create weekend source directory if it doesn't exist
+        mkdir -p "$weekend_source_dir"
+        log_message "Created weekend source directory: $weekend_source_dir"
         
         if [[ -d "$weekend_source_dir" ]]; then
             log_message "Processing weekend Excel files in $weekend_source_dir"
@@ -116,7 +120,7 @@ process_sport() {
             for excel_file in "$weekend_source_dir"/*.xlsx; do
                 if [[ -f "$excel_file" ]]; then
                     log_message "Processing weekend Excel file: $(basename "$excel_file")"
-                    python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$weekend_output_dir" >/dev/null 2>&1
+                    python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$weekend_output_dir"
                     if [[ $? -eq 0 ]]; then
                         log_message "✓ Successfully processed weekend $(basename "$excel_file")"
                     else
@@ -145,7 +149,7 @@ process_sport() {
         # Run race scrape script
         if [[ -f "$polars_dir/startlist-scrape-races.py" ]]; then
             log_message "Running startlist-scrape-races.py for $sport_dir"
-            cd "$polars_dir" && python startlist-scrape-races.py >/dev/null 2>&1
+            cd "$polars_dir" && python startlist-scrape-races.py
             log_message "Completed startlist-scrape-races.py for $sport_dir"
         else
             log_message "Warning: startlist-scrape-races.py not found for $sport_dir"
@@ -154,6 +158,10 @@ process_sport() {
         # Process race predictions
         local race_source_dir="$CONTENT_DIR/$content_sport/drafts/race-picks/$TODAY_YYYYMMDD"
         local race_output_dir="$BLOG_DIR/data/$content_sport/drafts/race-picks/$TODAY_YYYYMMDD"
+        
+        # Create race source directory if it doesn't exist
+        mkdir -p "$race_source_dir"
+        log_message "Created race source directory: $race_source_dir"
         
         if [[ -d "$race_source_dir" ]]; then
             log_message "Processing race Excel files in $race_source_dir"
@@ -169,7 +177,7 @@ process_sport() {
             for excel_file in "$race_source_dir"/*.xlsx; do
                 if [[ -f "$excel_file" ]]; then
                     log_message "Processing race Excel file: $(basename "$excel_file")"
-                    python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$race_output_dir" >/dev/null 2>&1
+                    python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$race_output_dir"
                     if [[ $? -eq 0 ]]; then
                         log_message "✓ Successfully processed race $(basename "$excel_file")"
                     else
