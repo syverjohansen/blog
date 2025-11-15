@@ -65,12 +65,12 @@ check_date_in_csv() {
     ' "$csv_file" 2>/dev/null
 }
 
-# Function to process sport predictions
-process_sport() {
+# Function to process sport data generation (Python/R scripts + Excel to JSON)
+process_sport_data() {
     local sport_dir="$1"
     local content_sport=$(get_content_sport "$sport_dir")
     
-    log_message "Processing sport: $sport_dir -> $content_sport"
+    log_message "Processing sport data: $sport_dir -> $content_sport"
     
     local excel_dir="$SKI_DIR/$sport_dir/polars/excel365"
     local polars_dir="$SKI_DIR/$sport_dir/polars"
@@ -83,7 +83,7 @@ process_sport() {
     log_message "  Weekends CSV: $weekends_csv (exists: $([ -f "$weekends_csv" ] && echo "yes" || echo "no"))"
     log_message "  Races CSV: $races_csv (exists: $([ -f "$races_csv" ] && echo "yes" || echo "no"))"
     
-    local processed_predictions=""
+    local data_generated=""
     
     # Check for weekend races
     if check_date_in_csv "$weekends_csv" "$TODAY_MMDDYYYY"; then
@@ -129,11 +129,11 @@ process_sport() {
                 fi
             done
             
-            # Add to processed predictions
-            if [[ -n "$processed_predictions" ]]; then
-                processed_predictions="$processed_predictions|$content_sport:weekly-picks:true"
+            # Add to data generated
+            if [[ -n "$data_generated" ]]; then
+                data_generated="$data_generated|$content_sport:weekly-picks:true"
             else
-                processed_predictions="$content_sport:weekly-picks:true"
+                data_generated="$content_sport:weekly-picks:true"
             fi
         else
             log_message "Weekend source directory not found: $weekend_source_dir"
@@ -186,11 +186,11 @@ process_sport() {
                 fi
             done
             
-            # Add to processed predictions
-            if [[ -n "$processed_predictions" ]]; then
-                processed_predictions="$processed_predictions|$content_sport:race-picks:true"
+            # Add to data generated
+            if [[ -n "$data_generated" ]]; then
+                data_generated="$data_generated|$content_sport:race-picks:true"
             else
-                processed_predictions="$content_sport:race-picks:true"
+                data_generated="$content_sport:race-picks:true"
             fi
         else
             log_message "Race source directory not found: $race_source_dir"
@@ -199,8 +199,8 @@ process_sport() {
         log_message "✗ No regular races found for $sport_dir on $TODAY_MMDDYYYY"
     fi
     
-    # Return all processed predictions for this sport
-    echo "$processed_predictions"
+    # Return all data generated for this sport
+    echo "$data_generated"
 }
 
 # Function to create sport section content for Hugo post
@@ -411,11 +411,11 @@ log_message "Processing sports for predictions"
 log_message "======================================="
 
 for sport_dir in alpine biathlon nordic-combined ski skijump; do
-    log_message "--- Starting $sport_dir processing ---"
-    result=$(process_sport "$sport_dir")
+    log_message "--- Starting $sport_dir data generation ---"
+    result=$(process_sport_data "$sport_dir")
     
     if [[ -n "$result" ]]; then
-        log_message "✓ $sport_dir returned prediction data: $result"
+        log_message "✓ $sport_dir returned data generation result: $result"
         
         # Handle multiple predictions from a single sport (separated by |)
         IFS='|' read -ra sport_predictions <<< "$result"
@@ -430,19 +430,26 @@ for sport_dir in alpine biathlon nordic-combined ski skijump; do
             fi
         done
     else
-        log_message "✗ $sport_dir returned no prediction data"
+        log_message "✗ $sport_dir returned no data generation result"
     fi
     log_message "--- Completed $sport_dir processing ---"
     log_message ""
 done
 
 log_message "======================================="
-log_message "Sport processing complete"
-log_message "Sports with predictions: $sports_with_predictions"
+log_message "Data generation phase complete"
+log_message "Sports with generated data: $sports_with_predictions"
 log_message "======================================="
 
-# Create Hugo posts if there are predictions
+# Wait briefly to ensure all data files are fully written
+log_message "Waiting 5 seconds for data files to be fully written..."
+sleep 5
+
+# Phase 2: Create Hugo posts if there are predictions
 if [[ -n "$sports_with_predictions" ]]; then
+    log_message "======================================="
+    log_message "Starting Hugo post creation phase"
+    log_message "======================================="
     log_message "Creating Hugo posts for predictions"
     log_message "Raw sports_with_predictions: '$sports_with_predictions'"
     
