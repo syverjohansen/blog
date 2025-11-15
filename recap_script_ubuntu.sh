@@ -114,7 +114,7 @@ process_sport_recap() {
     # Step 1: Run standings_scrape.py
     if [[ -f "$standings_script" ]]; then
         log_message "Running standings_scrape.py for $sport_dir"
-        cd "$polars_dir" && python standings_scrape.py
+        cd "$polars_dir" && source ~/blog/venv/bin/activate && python standings_scrape.py
         local standings_exit_code=$?
         if [[ $standings_exit_code -eq 0 ]]; then
             log_message "✓ Successfully ran standings_scrape.py for $sport_dir"
@@ -174,7 +174,7 @@ process_sport_recap() {
                 
                 if [[ -f "$excel_file" ]]; then
                     log_message "Processing Excel file: $(basename "$excel_file")"
-                    python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$recap_output_dir"
+                    source ~/blog/venv/bin/activate && python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$recap_output_dir"
                     if [[ $? -eq 0 ]]; then
                         log_message "✓ Successfully processed $(basename "$excel_file")"
                         ((files_processed++))
