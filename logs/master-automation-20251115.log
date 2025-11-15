@@ -577,3 +577,40 @@ To https://github.com/syverjohansen/blog.git
 [2025-11-15 13:25:22 UTC] Changes detected, proceeding with git operations...
 [2025-11-15 13:25:22 UTC] Adding all changes to git...
 >>>>>>> bf3a02151db645ca1af3a31c2fbb8ba8418e869f
+[2025-11-15 13:32:27 UTC] =======================================
+[2025-11-15 13:32:27 UTC] Master Automation Script Starting
+[2025-11-15 13:32:27 UTC] =======================================
+[2025-11-15 13:32:27 UTC] Date: 2025-11-15 (11/15/2025)
+[2025-11-15 13:32:27 UTC] Day of week: 6 (1=Monday, 7=Sunday)
+[2025-11-15 13:32:27 UTC] =======================================
+[2025-11-15 13:32:27 UTC] Determining overall season dates...
+[2025-11-15 13:32:27 UTC]   alpine: 10/25/2025 to 03/25/2026
+[2025-11-15 13:32:27 UTC]   biathlon: 11/29/2025 to 03/22/2026
+[2025-11-15 13:32:27 UTC]   nordic-combined: 11/28/2025 to 03/15/2026
+[2025-11-15 13:32:27 UTC]   ski: 11/28/2025 to 03/22/2026
+[2025-11-15 13:32:27 UTC]   skijump: 11/21/2025 to 03/28/2026
+[2025-11-15 13:32:27 UTC] Overall season: 2025-10-25 to 2026-03-28
+[2025-11-15 13:32:27 UTC] Season period: 2025-10-25 to 2026-03-28
+[2025-11-15 13:32:27 UTC] Season check: 2025-10-25 <= 2025-11-15 <= 2026-03-29
+[2025-11-15 13:32:27 UTC] ✓ Currently in racing season
+[2025-11-15 13:32:27 UTC] Found races today for alpine
+[2025-11-15 13:32:27 UTC] ✓ Races found for today - will run predict_script.sh
+[2025-11-15 13:32:27 UTC] ✓ In season - will run score_scrape.sh (checks yesterday's races)
+[2025-11-15 13:32:27 UTC] - Not Monday - skipping recap_script.sh
+[2025-11-15 13:32:27 UTC] =======================================
+[2025-11-15 13:32:27 UTC] Execution Summary:
+[2025-11-15 13:32:27 UTC]   score_scrape.sh: YES
+[2025-11-15 13:32:27 UTC]   predict_script.sh: YES
+[2025-11-15 13:32:27 UTC]   recap_script.sh: NO
+[2025-11-15 13:32:27 UTC] =======================================
+[2025-11-15 13:32:27 UTC] Starting score_scrape_ubuntu.sh...
+[2025-11-15 13:32:28 UTC] ✓ score_scrape_ubuntu.sh completed successfully (2025-11-15 13:32:27 UTC to 2025-11-15 13:32:27 UTC)
+[2025-11-15 13:32:28 UTC]   Output logged to: /root/blog/daehl-e/logs/score_scrape_ubuntu-20251115-133227.log
+[2025-11-15 13:32:28 UTC] Starting predict_script_ubuntu.sh...
+[2025-11-15 13:32:43 UTC] ✓ predict_script_ubuntu.sh completed successfully (2025-11-15 13:32:28 UTC to 2025-11-15 13:32:43 UTC)
+[2025-11-15 13:32:43 UTC]   Output logged to: /root/blog/daehl-e/logs/predict_script_ubuntu-20251115-133228.log
+[2025-11-15 13:32:43 UTC] =======================================
+[2025-11-15 13:32:43 UTC] Committing and pushing changes to git
+[2025-11-15 13:32:43 UTC] =======================================
+[2025-11-15 13:32:43 UTC] Changes detected, proceeding with git operations...
+[2025-11-15 13:32:43 UTC] Adding all changes to git...
