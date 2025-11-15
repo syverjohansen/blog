@@ -969,3 +969,62 @@ To github.com:syverjohansen/blog.git
 [2025-11-15 14:28:56 UTC] =======================================
 [2025-11-15 14:28:56 UTC] Changes detected, proceeding with git operations...
 [2025-11-15 14:28:56 UTC] Adding all changes to git...
+[2025-11-15 14:28:56 UTC] ✓ Successfully added changes to git
+[2025-11-15 14:28:56 UTC] Committing changes with message: Master automation successfully ran and did the following: predict_script score_scrape
+[main d5275dab] Master automation successfully ran and did the following: predict_script score_scrape
+ 2 files changed, 61 insertions(+)
+[2025-11-15 14:28:56 UTC] ✓ Successfully committed changes
+[2025-11-15 14:28:56 UTC] Pulling latest changes from origin main...
+From github.com:syverjohansen/blog
+ * branch              main       -> FETCH_HEAD
+Already up to date.
+[2025-11-15 14:28:56 UTC] ✓ Successfully pulled from origin main
+[2025-11-15 14:28:56 UTC] Pushing changes to origin main...
+To github.com:syverjohansen/blog.git
+   27ae70d8..d5275dab  main -> main
+[2025-11-15 14:28:57 UTC] ✓ Successfully pushed to origin main
+[2025-11-15 14:28:57 UTC] =======================================
+[2025-11-15 14:28:57 UTC] Master Automation Script Completed
+[2025-11-15 14:28:57 UTC] =======================================
+[2025-11-15 14:28:57 UTC] Execution results: score_scrape:SUCCESS predict_script:SUCCESS git_commit:SUCCESS git_pull:SUCCESS git_push:SUCCESS
+[2025-11-15 14:28:57 UTC] Total execution time: 2025-11-15 14:28:57 UTC
+[2025-11-15 14:28:57 UTC] Log file: /root/blog/daehl-e/logs/master-automation-20251115.log
+[2025-11-15 14:28:57 UTC] =======================================
+[2025-11-15 14:28:57 UTC] ✓ All operations completed successfully
+[2025-11-15 14:31:12 UTC] =======================================
+[2025-11-15 14:31:12 UTC] Master Automation Script Starting
+[2025-11-15 14:31:12 UTC] =======================================
+[2025-11-15 14:31:12 UTC] Date: 2025-11-15 (11/15/2025)
+[2025-11-15 14:31:12 UTC] Day of week: 6 (1=Monday, 7=Sunday)
+[2025-11-15 14:31:12 UTC] =======================================
+[2025-11-15 14:31:12 UTC] Determining overall season dates...
+[2025-11-15 14:31:12 UTC]   alpine: 10/25/2025 to 03/25/2026
+[2025-11-15 14:31:12 UTC]   biathlon: 11/29/2025 to 03/22/2026
+[2025-11-15 14:31:12 UTC]   nordic-combined: 11/28/2025 to 03/15/2026
+[2025-11-15 14:31:12 UTC]   ski: 11/28/2025 to 03/22/2026
+[2025-11-15 14:31:12 UTC]   skijump: 11/21/2025 to 03/28/2026
+[2025-11-15 14:31:12 UTC] Overall season: 2025-10-25 to 2026-03-28
+[2025-11-15 14:31:12 UTC] Season period: 2025-10-25 to 2026-03-28
+[2025-11-15 14:31:12 UTC] Season check: 2025-10-25 <= 2025-11-15 <= 2026-03-29
+[2025-11-15 14:31:12 UTC] ✓ Currently in racing season
+[2025-11-15 14:31:12 UTC] Found races today for alpine
+[2025-11-15 14:31:12 UTC] ✓ Races found for today - will run predict_script.sh
+[2025-11-15 14:31:12 UTC] ✓ In season - will run score_scrape.sh (checks yesterday's races)
+[2025-11-15 14:31:12 UTC] - Not Monday - skipping recap_script.sh
+[2025-11-15 14:31:12 UTC] =======================================
+[2025-11-15 14:31:12 UTC] Execution Summary:
+[2025-11-15 14:31:12 UTC]   score_scrape.sh: YES
+[2025-11-15 14:31:12 UTC]   predict_script.sh: YES
+[2025-11-15 14:31:12 UTC]   recap_script.sh: NO
+[2025-11-15 14:31:12 UTC] =======================================
+[2025-11-15 14:31:12 UTC] Starting score_scrape_ubuntu.sh...
+[2025-11-15 14:31:13 UTC] ✓ score_scrape_ubuntu.sh completed successfully (2025-11-15 14:31:12 UTC to 2025-11-15 14:31:13 UTC)
+[2025-11-15 14:31:13 UTC]   Output logged to: /root/blog/daehl-e/logs/score_scrape_ubuntu-20251115-143112.log
+[2025-11-15 14:31:13 UTC] Starting predict_script_ubuntu.sh...
+[2025-11-15 14:31:36 UTC] ✓ predict_script_ubuntu.sh completed successfully (2025-11-15 14:31:13 UTC to 2025-11-15 14:31:36 UTC)
+[2025-11-15 14:31:36 UTC]   Output logged to: /root/blog/daehl-e/logs/predict_script_ubuntu-20251115-143113.log
+[2025-11-15 14:31:36 UTC] =======================================
+[2025-11-15 14:31:36 UTC] Committing and pushing changes to git
+[2025-11-15 14:31:36 UTC] =======================================
+[2025-11-15 14:31:36 UTC] Changes detected, proceeding with git operations...
+[2025-11-15 14:31:36 UTC] Adding all changes to git...
