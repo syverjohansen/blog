@@ -92,7 +92,7 @@ process_sport_data() {
         # Run weekend scrape script
         if [[ -f "$polars_dir/startlist-scrape-weekend.py" ]]; then
             log_message "Running startlist-scrape-weekend.py for $sport_dir"
-            cd "$polars_dir" && source ~/blog/venv/bin/activate && python startlist-scrape-weekend.py
+            cd "$polars_dir" && source ~/blog/venv/bin/activate && python startlist-scrape-weekend.py >/dev/null 2>&1
             log_message "Completed startlist-scrape-weekend.py for $sport_dir"
         else
             log_message "Warning: startlist-scrape-weekend.py not found for $sport_dir"
@@ -120,7 +120,7 @@ process_sport_data() {
             for excel_file in "$weekend_source_dir"/*.xlsx; do
                 if [[ -f "$excel_file" ]]; then
                     log_message "Processing weekend Excel file: $(basename "$excel_file")"
-                    source ~/blog/venv/bin/activate && python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$weekend_output_dir"
+                    source ~/blog/venv/bin/activate && python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$weekend_output_dir" >/dev/null 2>&1
                     if [[ $? -eq 0 ]]; then
                         log_message "✓ Successfully processed weekend $(basename "$excel_file")"
                     else
@@ -149,7 +149,7 @@ process_sport_data() {
         # Run race scrape script
         if [[ -f "$polars_dir/startlist-scrape-races.py" ]]; then
             log_message "Running startlist-scrape-races.py for $sport_dir"
-            cd "$polars_dir" && source ~/blog/venv/bin/activate && python startlist-scrape-races.py
+            cd "$polars_dir" && source ~/blog/venv/bin/activate && python startlist-scrape-races.py >/dev/null 2>&1
             log_message "Completed startlist-scrape-races.py for $sport_dir"
         else
             log_message "Warning: startlist-scrape-races.py not found for $sport_dir"
@@ -177,7 +177,7 @@ process_sport_data() {
             for excel_file in "$race_source_dir"/*.xlsx; do
                 if [[ -f "$excel_file" ]]; then
                     log_message "Processing race Excel file: $(basename "$excel_file")"
-                    source ~/blog/venv/bin/activate && python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$race_output_dir"
+                    source ~/blog/venv/bin/activate && python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$race_output_dir" >/dev/null 2>&1
                     if [[ $? -eq 0 ]]; then
                         log_message "✓ Successfully processed race $(basename "$excel_file")"
                     else
