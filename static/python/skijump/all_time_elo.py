@@ -4,8 +4,8 @@ import os
 import numpy as np
 
 # Load feather files
-L_chrono = pd.read_feather('/Users/syverjohansen/ski/elo/python/skijump/polars/excel365/ladies_chrono.feather')
-M_chrono = pd.read_feather('/Users/syverjohansen/ski/elo/python/skijump/polars/excel365/men_chrono.feather')
+L_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/ladies_chrono.feather'))
+M_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/men_chrono.feather'))
 
 chronos = [L_chrono, M_chrono]
 chronos_str = ["L_chrono", "M_chrono"]

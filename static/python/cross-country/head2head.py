@@ -4,8 +4,8 @@ import os
 import numpy as np
 
 # Read the CSV files
-men_df = pd.read_csv('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/men_chrono.csv')
-ladies_df = pd.read_csv('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/ladies_chrono.csv')
+men_df = pd.read_csv(os.path.expanduser('~/ski/elo/python/ski/polars/excel365/men_chrono.csv'))
+ladies_df = pd.read_csv(os.path.expanduser('~/ski/elo/python/ski/polars/excel365/ladies_chrono.csv'))
 
 def clean_value(value):
     """Clean a value for JSON serialization"""

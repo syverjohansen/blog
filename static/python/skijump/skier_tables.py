@@ -7,8 +7,8 @@ from datetime import datetime
 
 # Load your data
 print("Loading data...")
-L_chrono = pl.read_ipc('/Users/syverjohansen/ski/elo/python/skijump/polars/excel365/ladies_chrono.feather')
-M_chrono = pl.read_ipc('/Users/syverjohansen/ski/elo/python/skijump/polars/excel365/men_chrono.feather')
+L_chrono = pl.read_ipc(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/ladies_chrono.feather'))
+M_chrono = pl.read_ipc(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/men_chrono.feather'))
 
 # Check for null dates and analyze patterns
 def analyze_null_dates(df, label):

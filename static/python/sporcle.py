@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """
 Sporcle Quiz Data Generator
@@ -358,7 +359,7 @@ def generate_current_year_50(sport, gender):
     ski_sport = ski_sport_map.get(sport, sport)
     
     # Load current ELO data
-    elo_file = f"/Users/syverjohansen/ski/elo/python/{ski_sport}/polars/excel365/{gender}.csv"
+    elo_file = fos.path.expanduser("~/ski/elo/python/{ski_sport}/polars/excel365/{gender}.csv")
     
     try:
         df = pd.read_csv(elo_file)
@@ -528,7 +529,7 @@ def generate_king_queen(sport, gender):
     
     # Load chrono data
     gender_name = "ladies" if gender == "L" else "men"
-    chrono_file = f"/Users/syverjohansen/ski/elo/python/{ski_sport}/polars/excel365/{gender_name}_chrono.csv"
+    chrono_file = fos.path.expanduser("~/ski/elo/python/{ski_sport}/polars/excel365/{gender_name}_chrono.csv")
     
     try:
         df = pd.read_csv(chrono_file)
@@ -577,7 +578,7 @@ def generate_days_on_top(sport, gender):
     
     # Load chrono data
     gender_name = "ladies" if gender == "L" else "men"
-    chrono_file = f"/Users/syverjohansen/ski/elo/python/{ski_sport}/polars/excel365/{gender_name}_chrono.csv"
+    chrono_file = fos.path.expanduser("~/ski/elo/python/{ski_sport}/polars/excel365/{gender_name}_chrono.csv")
     
     try:
         df = pd.read_csv(chrono_file)
@@ -664,7 +665,7 @@ def generate_seasonal_wins(sport, gender):
     
     # Load chrono data  
     gender_name = "ladies" if gender == "L" else "men"
-    chrono_file = f"/Users/syverjohansen/ski/elo/python/{ski_sport}/polars/excel365/{gender_name}_chrono.csv"
+    chrono_file = fos.path.expanduser("~/ski/elo/python/{ski_sport}/polars/excel365/{gender_name}_chrono.csv")
     
     try:
         df = pd.read_csv(chrono_file)
@@ -744,7 +745,7 @@ def generate_career_wins(sport, gender):
     
     # Load chrono data  
     gender_name = "ladies" if gender == "L" else "men"
-    chrono_file = f"/Users/syverjohansen/ski/elo/python/{ski_sport}/polars/excel365/{gender_name}_chrono.csv"
+    chrono_file = fos.path.expanduser("~/ski/elo/python/{ski_sport}/polars/excel365/{gender_name}_chrono.csv")
     
     try:
         df = pd.read_csv(chrono_file)
@@ -817,7 +818,7 @@ def generate_top10_seasonal(sport, gender, discipline=None):
     
     # Load chrono data  
     gender_name = "ladies" if gender == "L" else "men"
-    chrono_file = f"/Users/syverjohansen/ski/elo/python/{ski_sport}/polars/excel365/{gender_name}_chrono.csv"
+    chrono_file = fos.path.expanduser("~/ski/elo/python/{ski_sport}/polars/excel365/{gender_name}_chrono.csv")
     
     try:
         df = pd.read_csv(chrono_file)

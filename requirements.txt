@@ -33,6 +33,7 @@ scipy
 scikit-learn
 
 # Data storage and serialization
+pyarrow
 # pickle5 - only needed for Python < 3.8, removed for Python 3.11 compatibility
 
 # Command line and system utilities

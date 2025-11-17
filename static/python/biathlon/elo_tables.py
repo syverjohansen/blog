@@ -4,20 +4,20 @@ import os
 from datetime import datetime
 
 # Load Ladies (L) biathlon data
-L = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/L.feather')
-L_Sprint = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/L_Sprint.feather')
-L_Pursuit = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/L_Pursuit.feather')
-L_Individual = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/L_Individual.feather')
-L_Mass_Start = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/L_Mass_Start.feather')
-L_chrono = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/ladies_chrono.feather')
+L = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/L.feather'))
+L_Sprint = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/L_Sprint.feather'))
+L_Pursuit = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/L_Pursuit.feather'))
+L_Individual = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/L_Individual.feather'))
+L_Mass_Start = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/L_Mass_Start.feather'))
+L_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/ladies_chrono.feather'))
 
 # Load Men's (M) biathlon data
-M = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/M.feather')
-M_Sprint = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/M_Sprint.feather')
-M_Pursuit = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/M_Pursuit.feather')
-M_Individual = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/M_Individual.feather')
-M_Mass_Start = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/M_Mass_Start.feather')
-M_chrono = pd.read_feather('/Users/syverjohansen/ski/elo/python/biathlon/polars/excel365/men_chrono.feather')
+M = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/M.feather'))
+M_Sprint = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/M_Sprint.feather'))
+M_Pursuit = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/M_Pursuit.feather'))
+M_Individual = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/M_Individual.feather'))
+M_Mass_Start = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/M_Mass_Start.feather'))
+M_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/men_chrono.feather'))
 
 # List of DataFrames
 dfs = [L, L_Sprint, L_Pursuit, L_Individual, L_Mass_Start,

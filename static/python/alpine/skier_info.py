@@ -5,10 +5,10 @@ import json
 import os
 
 
-L_chrono = pl.read_ipc('/Users/syverjohansen/ski/elo/python/alpine/polars/excel365/ladies_chrono.feather')
+L_chrono = pl.read_ipc(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/ladies_chrono.feather'))
 
 
-M_chrono = pl.read_ipc('/Users/syverjohansen/ski/elo/python/alpine/polars/excel365/men_chrono.feather')
+M_chrono = pl.read_ipc(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/men_chrono.feather'))
 
 #L_chrono = L_chrono.filter(pl.col("City")!="Summer")
 #M_chrono = M_chrono.filter(pl.col("City")!="Summer")

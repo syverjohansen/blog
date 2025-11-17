@@ -121,7 +121,7 @@ def process_season(df, ID, sex, skier_data_dict):
 
 def main():
     # Load data
-    base_path = '/Users/syverjohansen/ski/elo/python/ski/polars/excel365'
+    base_path = os.path.expanduser('~/ski/elo/python/ski/polars/excel365')
     output_dir_base = '/Users/syverjohansen/blog/daehl-e/static/python/cross-country/excel365'
     # Make sure base output directory exists
     os.makedirs(output_dir_base, exist_ok=True)
