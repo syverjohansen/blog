@@ -26,6 +26,7 @@ requests
 beautifulsoup4
 lxml
 selenium
+aiohttp
 
 # Scientific computing and machine learning
 scipy
