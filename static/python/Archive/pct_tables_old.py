@@ -120,7 +120,7 @@ def process_season(df, ID, sex):
     df = df.select(["Exp", "Date", "City", "Country", "Event", "Distance", "MS", "Technique", "Place", "Season", "Race", "Age", "Elo_Pct","Distance_Elo_Pct", "Distance_C_Elo_Pct", "Distance_F_Elo_Pct",
     "Sprint_Elo_Pct", "Sprint_C_Elo_Pct", "Sprint_F_Elo_Pct", "Classic_Elo_Pct", "Freestyle_Elo_Pct", "ID"])
 
-    file_path = fos.path.expanduser("~/blog/daehl-e/static/python/excel365/{sex}/{ID}_pct.json")
+    file_path = os.path.expanduser("~/blog/daehl-e/static/python/excel365/{sex}/{ID}_pct.json")
     # Save the result to a JSON file
     json_str = df.write_json(file_path)
 
