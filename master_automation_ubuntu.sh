@@ -7,6 +7,10 @@
 # Set timezone to UTC for all operations
 export TZ=UTC
 
+# Activate virtual environment
+source "$HOME/blog/daehl-e/venv/bin/activate"
+echo "Virtual environment activated: $(which python3)"
+
 # Get current date information in UTC (GNU date syntax)
 TODAY_UTC=$(date -u '+%Y-%m-%d')
 TODAY_MMDDYYYY=$(date -u '+%m/%d/%Y')
