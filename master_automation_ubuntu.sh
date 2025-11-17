@@ -25,6 +25,12 @@ mkdir -p "$LOG_DIR"
 # Log file for this run
 LOG_FILE="$LOG_DIR/master-automation-$(date -u '+%Y%m%d').log"
 
+# Remove existing log file for today if it exists
+if [[ -f "$LOG_FILE" ]]; then
+    rm -f "$LOG_FILE"
+    echo "Removed existing log file: $LOG_FILE"
+fi
+
 # Logging function
 log_message() {
     local timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
