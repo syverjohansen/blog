@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fix hard-coded Mac paths in Python files to use cross-platform paths
+Fix remaining hard-coded blog paths in Python files
 """
 import os
 import re
@@ -12,17 +12,17 @@ def fix_file_paths(file_path):
     
     original_content = content
     
-    # Replace hard-coded Mac paths with expanduser paths
-    # Pattern: os.path.expanduser('~/ski/...') -> os.path.expanduser('~/ski/...')
+    # Replace hard-coded Mac blog paths with expanduser paths
+    # Pattern: os.path.expanduser('~/blog/...') -> os.path.expanduser('~/blog/...')
     content = re.sub(
-        r"'/Users/syverjohansen(/ski/[^']*)'",
+        r"'/Users/syverjohansen(/blog/[^']*)'",
         r"os.path.expanduser('~\1')",
         content
     )
     
-    # Pattern: os.path.expanduser("~/ski/...") -> os.path.expanduser("~/ski/...")
+    # Pattern: os.path.expanduser("~/blog/...") -> os.path.expanduser("~/blog/...")
     content = re.sub(
-        r'"/Users/syverjohansen(/ski/[^"]*)"',
+        r'"/Users/syverjohansen(/blog/[^"]*)"',
         r'os.path.expanduser("~\1")',
         content
     )
@@ -57,10 +57,10 @@ def fix_file_paths(file_path):
         return False
 
 def main():
-    # Get all Python files with the hard-coded paths
+    # Get all Python files with the hard-coded blog paths
     import subprocess
     result = subprocess.run([
-        'find', '.', '-name', '*.py', '-exec', 'grep', '-l', '/Users/syverjohansen', '{}', ';'
+        'find', '.', '-name', '*.py', '-exec', 'grep', '-l', '/Users/syverjohansen/blog', '{}', ';'
     ], capture_output=True, text=True, cwd=os.path.expanduser('~/blog/daehl-e'))
     
     files_to_fix = result.stdout.strip().split('\n')

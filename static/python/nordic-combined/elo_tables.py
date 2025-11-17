@@ -86,13 +86,13 @@ def process_df(df, file_path):
 # Process each DataFrame and save the results to JSON files
 for i, df in enumerate(chronos):	
     print(i)
-    file_path = f"/Users/syverjohansen/blog/daehl-e/static/python/nordic-combined/excel365/{chronos_str[i]}_current.json"
+    file_path = fos.path.expanduser("~/blog/daehl-e/static/python/nordic-combined/excel365/{chronos_str[i]}_current.json")
     process_chrono(df, file_path)
 
 # Uncomment below to process individual category DataFrames
 # for i, df in enumerate(dfs):
 #     print(i)
-#     file_path = f"/Users/syverjohansen/blog/daehl-e/static/python/nordic-combined/excel365/{dfs_str[i]}_current.json"
+#     file_path = fos.path.expanduser("~/blog/daehl-e/static/python/nordic-combined/excel365/{dfs_str[i]}_current.json")
 #     process_df(df, file_path)
 
 print("All nordic combined files have been processed.")

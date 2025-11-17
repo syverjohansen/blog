@@ -23,8 +23,8 @@ def chop_decimals(df):
         df = df.with_columns(pl.col(col).round(2))
     return df
 
-output_dir_L = '/Users/syverjohansen/blog/daehl-e/content/skiers/l'
-output_dir_M = '/Users/syverjohansen/blog/daehl-e/content/skiers/m'
+output_dir_L = os.path.expanduser('~/blog/daehl-e/content/skiers/l')
+output_dir_M = os.path.expanduser('~/blog/daehl-e/content/skiers/m')
 
 L_chrono = chop_decimals(L_chrono)
 M_chrono = chop_decimals(M_chrono)
@@ -60,7 +60,7 @@ def process_chrono(df, ID, sex):
     df = df.select(["Exp", "Date", "City", "Country", "Event", "Distance", "MS", "Technique", "Place", "Season", "Race", "Age", "Elo","Distance_Elo", "Distance_C_Elo", "Distance_F_Elo",
     "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo", "Classic_Elo", "Freestyle_Elo", "ID"])
 
-    file_path = f"/Users/syverjohansen/blog/daehl-e/static/python/excel365/{sex}/{ID}.json"
+    file_path = fos.path.expanduser("~/blog/daehl-e/static/python/excel365/{sex}/{ID}.json")
     # Save the result to a JSON file
     json_str = df.write_json(file_path)
     #with open(file_path, 'w') as f:

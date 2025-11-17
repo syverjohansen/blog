@@ -79,73 +79,73 @@ def process_df(df, file_path):
 #for i, df in enumerate(dfs):
 for i, df in enumerate(chronos):	
     print(i)
-    file_path = f"/Users/syverjohansen/blog/daehl-e/static/python/excel365/{chronos_str[i]}_current.json"
+    file_path = fos.path.expanduser("~/blog/daehl-e/static/python/excel365/{chronos_str[i]}_current.json")
     #process_df(df, file_path)
     process_chrono(df, file_path)
 
 
 
-'''L.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/L.csv')
-L_Distance.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Distance.csv')
-L_Distance_C.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Distance_C.csv')
-L_Distance_F.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Distance_F.csv')
-L_Sprint.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Sprint.csv')
-L_Sprint_C.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Sprint_C.csv')
-L_Sprint_F.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Sprint_F.csv')
-L_C.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_C.csv')
-L_F.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_F.csv')
+'''L.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/L.csv'))
+L_Distance.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/L_Distance.csv'))
+L_Distance_C.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/L_Distance_C.csv'))
+L_Distance_F.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/L_Distance_F.csv'))
+L_Sprint.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/L_Sprint.csv'))
+L_Sprint_C.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/L_Sprint_C.csv'))
+L_Sprint_F.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/L_Sprint_F.csv'))
+L_C.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/L_C.csv'))
+L_F.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/L_F.csv'))
 
-M.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/M.csv')
-M_Distance.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Distance.csv')
-M_Distance_C.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Distance_C.csv')
-M_Distance_F.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Distance_F.csv')
-M_Sprint.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Sprint.csv')
-M_Sprint_C.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Sprint_C.csv')
-M_Sprint_F.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Sprint_F.csv')
-M_C.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_C.csv')
-M_F.to_csv('/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_F.csv')'''
+M.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/M.csv'))
+M_Distance.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/M_Distance.csv'))
+M_Distance_C.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/M_Distance_C.csv'))
+M_Distance_F.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/M_Distance_F.csv'))
+M_Sprint.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/M_Sprint.csv'))
+M_Sprint_C.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/M_Sprint_C.csv'))
+M_Sprint_F.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/M_Sprint_F.csv'))
+M_C.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/M_C.csv'))
+M_F.to_csv(os.path.expanduser('~/blog/daehl-e/static/python/excel365/M_F.csv'))'''
 
 
-'''L.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/L.json", 
+'''L.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/L.json"), 
 	orient = 'records', lines=False)
-L_Distance.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Distance.json", 
+L_Distance.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/L_Distance.json"), 
 	orient = 'records', lines=False)
-L_Distance_C.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Distance_C.json",
+L_Distance_C.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/L_Distance_C.json"),
 	orient= 'records', lines=False)
-L_Distance_F.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Distance_F.json",
+L_Distance_F.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/L_Distance_F.json"),
 	orient = 'records', lines=False)
-L_Sprint.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Sprint.json",
+L_Sprint.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/L_Sprint.json"),
 	orient = 'records', lines=False)
-L_Sprint_C.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Sprint_C.json",
+L_Sprint_C.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/L_Sprint_C.json"),
 	orient = 'records', lines=False)
-L_Sprint_F.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_Sprint_F.json",
+L_Sprint_F.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/L_Sprint_F.json"),
 	orient = 'records', lines=False)
-L_C.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_C.json",
+L_C.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/L_C.json"),
 	orient = 'records', lines=False)
-L_F.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/L_F.json",
+L_F.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/L_F.json"),
 	orient = 'records', lines=False)
 
 
 
 
 
-M.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/M.json", 
+M.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/M.json"), 
 	orient = 'records', lines=False)
-M_Distance.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Distance.json", 
+M_Distance.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/M_Distance.json"), 
 	orient = 'records', lines=False)
-M_Distance_C.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Distance_C.json",
+M_Distance_C.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/M_Distance_C.json"),
 	orient = 'records', lines=False)
-M_Distance_F.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Distance_F.json",
+M_Distance_F.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/M_Distance_F.json"),
 	orient = 'records', lines=False)
-M_Sprint.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Sprint.json",
+M_Sprint.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/M_Sprint.json"),
 	orient = 'records', lines=False)
-M_Sprint_C.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Sprint_C.json",
+M_Sprint_C.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/M_Sprint_C.json"),
 	orient = 'records', lines=False)
-M_Sprint_F.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_Sprint_F.json",
+M_Sprint_F.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/M_Sprint_F.json"),
 	orient = 'records', lines=False)
-M_C.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_C.json",
+M_C.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/M_C.json"),
 	orient = 'records', lines=False)
-M_F.to_json("/Users/syverjohansen/blog/daehl-e/static/python/excel365/M_F.json",
+M_F.to_json(os.path.expanduser("~/blog/daehl-e/static/python/excel365/M_F.json"),
 	orient = 'records', lines=False)'''
 
 

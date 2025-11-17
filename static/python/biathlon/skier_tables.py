@@ -129,7 +129,7 @@ def calculate_elo_percentages(df):
 # Process balanced data with the date fixes
 def process_balanced_data():
     # Create output directories
-    output_base = '/Users/syverjohansen/blog/daehl-e/static/python/biathlon/excel365'
+    output_base = os.path.expanduser('~/blog/daehl-e/static/python/biathlon/excel365')
     os.makedirs(os.path.join(output_base, 'L'), exist_ok=True)
     os.makedirs(os.path.join(output_base, 'M'), exist_ok=True)
 

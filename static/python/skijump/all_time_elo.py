@@ -100,7 +100,7 @@ def process_all_time_records(df, file_path):
 # Process each DataFrame
 for i, df in enumerate(chronos):
     print(f"Processing {chronos_str[i]}")
-    file_path = f"/Users/syverjohansen/blog/daehl-e/static/python/skijump/excel365/{chronos_str[i]}_all_time.json"
+    file_path = fos.path.expanduser("~/blog/daehl-e/static/python/skijump/excel365/{chronos_str[i]}_all_time.json")
     process_all_time_records(df, file_path)
 
 print("All files have been processed.")

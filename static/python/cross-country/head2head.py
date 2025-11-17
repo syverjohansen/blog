@@ -137,7 +137,7 @@ ladies_data = process_head2head_data(ladies_df, 'L')
 ladies_races = create_race_lookup(ladies_df, 'L')
 
 # Create output directory if it doesn't exist
-output_dir = '/Users/syverjohansen/blog/daehl-e/static/python/cross-country/excel365'
+output_dir = os.path.expanduser('~/blog/daehl-e/static/python/cross-country/excel365')
 head2head_dir = f"{output_dir}/head2head"
 os.makedirs(head2head_dir, exist_ok=True)
 

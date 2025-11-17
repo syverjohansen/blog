@@ -14,7 +14,7 @@ def all_dict(df, file_path):
         json.dump(all_dict, f, indent=4)
 
 
-all_dict(L, "/Users/syverjohansen/blog/daehl-e/static/python/alpine/excel365/L_all_ids.json")
-all_dict(M, "/Users/syverjohansen/blog/daehl-e/static/python/alpine/excel365/M_all_ids.json")
+all_dict(L, os.path.expanduser("~/blog/daehl-e/static/python/alpine/excel365/L_all_ids.json"))
+all_dict(M, os.path.expanduser("~/blog/daehl-e/static/python/alpine/excel365/M_all_ids.json"))
 
 

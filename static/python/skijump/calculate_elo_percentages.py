@@ -2,7 +2,7 @@ import os
 import json
 
 # Base directory of your JSON files
-output_base = '/Users/syverjohansen/blog/daehl-e/static/python/cross-country/excel365'
+output_base = os.path.expanduser('~/blog/daehl-e/static/python/cross-country/excel365')
 
 # Function to calculate Elo percentages for a single group file
 def calculate_percentages_for_group(gender, group_key):

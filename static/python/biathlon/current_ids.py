@@ -14,7 +14,7 @@ def current_dict(df, file_path):
         json.dump(current_dict, f, indent=4)
 
 
-current_dict(L, "/Users/syverjohansen/blog/daehl-e/static/python/biathlon/excel365/L_current_ids.json")
-current_dict(M, "/Users/syverjohansen/blog/daehl-e/static/python/biathlon/excel365/M_current_ids.json")
+current_dict(L, os.path.expanduser("~/blog/daehl-e/static/python/biathlon/excel365/L_current_ids.json"))
+current_dict(M, os.path.expanduser("~/blog/daehl-e/static/python/biathlon/excel365/M_current_ids.json"))
 
 
