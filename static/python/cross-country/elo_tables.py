@@ -98,7 +98,7 @@ def process_df(df, file_path):
 #for i, df in enumerate(dfs):
 for i, df in enumerate(chronos):	
     print(i)
-    file_path = fos.path.expanduser("~/blog/daehl-e/static/python/cross-country/excel365/{chronos_str[i]}_current.json")
+    file_path = os.path.expanduser("~/blog/daehl-e/static/python/cross-country/excel365/{chronos_str[i]}_current.json")
     #process_df(df, file_path)
     process_chrono(df, file_path)
 
