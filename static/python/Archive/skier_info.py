@@ -69,7 +69,7 @@ for a in range(2):
 	df = df.rename({col: col.lower() for col in df.columns})
 	
 	print(df)
-	file_path = os.path.expanduser("~/blog/daehl-e/static/python/excel365/{sex}/skier_info.json")
+	file_path = os.path.expanduser(f"~/blog/daehl-e/static/python/excel365/{sex}/skier_info.json")
 	json_data = df.to_dicts()
 	with open(file_path, "w") as json_file:
 	    json.dump(json_data, json_file, indent=2)
