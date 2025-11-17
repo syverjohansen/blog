@@ -200,19 +200,37 @@ run_script() {
     fi
     
     log_message "Starting $script_name..."
+    log_message "========== $script_name OUTPUT BEGIN =========="
     
     # Run script and capture output
     local start_time=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
     local output_file="$LOG_DIR/${script_name%.sh}-$(date -u '+%Y%m%d-%H%M%S').log"
     
-    if bash "$script_path" 2>&1 | tee "$output_file"; then
-        local end_time=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+    # Use a temporary file to capture all output
+    local temp_output=$(mktemp)
+    
+    if bash "$script_path" 2>&1 | tee "$output_file" "$temp_output"; then
+        local exit_code=0
+    else
+        local exit_code=$?
+    fi
+    
+    # Append the script output to the main log file with timestamps
+    while IFS= read -r line; do
+        echo "[$(date -u '+%Y-%m-%d %H:%M:%S UTC')] [$script_name] $line" >> "$LOG_FILE"
+    done < "$temp_output"
+    
+    # Clean up temp file
+    rm -f "$temp_output"
+    
+    local end_time=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+    log_message "========== $script_name OUTPUT END =========="
+    
+    if [[ $exit_code -eq 0 ]]; then
         log_message "✓ $script_name completed successfully ($start_time to $end_time)"
         log_message "  Output logged to: $output_file"
         return 0
     else
-        local exit_code=$?
-        local end_time=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
         log_message "✗ $script_name failed with exit code $exit_code ($start_time to $end_time)"
         log_message "  Error output in: $output_file"
         return $exit_code
@@ -331,9 +349,12 @@ if [[ "$script_results" != *"FAILED"* ]]; then
         
         # Add all changes
         log_message "Adding all changes to git..."
-        if git add . >> "$LOG_FILE" 2>&1; then
+        log_message "========== GIT ADD OUTPUT BEGIN =========="
+        if git add . 2>&1 | tee -a "$LOG_FILE"; then
+            log_message "========== GIT ADD OUTPUT END =========="
             log_message "✓ Successfully added changes to git"
         else
+            log_message "========== GIT ADD OUTPUT END =========="
             log_message "✗ Failed to add changes to git"
             script_results="$script_results git_add:FAILED"
         fi
@@ -348,30 +369,39 @@ if [[ "$script_results" != *"FAILED"* ]]; then
         
         # Commit changes
         log_message "Committing changes with message: $commit_message"
-        if git commit -m "$commit_message" >> "$LOG_FILE" 2>&1; then
+        log_message "========== GIT COMMIT OUTPUT BEGIN =========="
+        if git commit -m "$commit_message" 2>&1 | tee -a "$LOG_FILE"; then
+            log_message "========== GIT COMMIT OUTPUT END =========="
             log_message "✓ Successfully committed changes"
             script_results="$script_results git_commit:SUCCESS"
         else
+            log_message "========== GIT COMMIT OUTPUT END =========="
             log_message "✗ Failed to commit changes"
             script_results="$script_results git_commit:FAILED"
         fi
         
         # Pull latest changes from origin
         log_message "Pulling latest changes from origin main..."
-        if git pull origin main >> "$LOG_FILE" 2>&1; then
+        log_message "========== GIT PULL OUTPUT BEGIN =========="
+        if git pull origin main 2>&1 | tee -a "$LOG_FILE"; then
+            log_message "========== GIT PULL OUTPUT END =========="
             log_message "✓ Successfully pulled from origin main"
             script_results="$script_results git_pull:SUCCESS"
         else
+            log_message "========== GIT PULL OUTPUT END =========="
             log_message "✗ Failed to pull from origin main"
             script_results="$script_results git_pull:FAILED"
         fi
         
         # Push changes to origin
         log_message "Pushing changes to origin main..."
-        if git push origin main >> "$LOG_FILE" 2>&1; then
+        log_message "========== GIT PUSH OUTPUT BEGIN =========="
+        if git push origin main 2>&1 | tee -a "$LOG_FILE"; then
+            log_message "========== GIT PUSH OUTPUT END =========="
             log_message "✓ Successfully pushed to origin main"
             script_results="$script_results git_push:SUCCESS"
         else
+            log_message "========== GIT PUSH OUTPUT END =========="
             log_message "✗ Failed to push to origin main"
             script_results="$script_results git_push:FAILED"
         fi
