@@ -926,9 +926,9 @@ calculate_remaining_races <- function(races_file) {
   # Get current date in UTC
   today_utc <- as.Date(Sys.time(), tz = "UTC")
   
-  # Filter for remaining races (today or after) and exclude Mixed sex races
+  # Filter for remaining races (today or after) and exclude Mixed sex races and Championships
   remaining <- races %>%
-    filter(Date >= today_utc, Sex %in% c("M", "L"))
+    filter(Date >= today_utc, Sex %in% c("M", "L"), Championship != 1)
   
   # Initialize counts for both genders
   counts <- list(
