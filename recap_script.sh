@@ -114,7 +114,7 @@ process_sport_recap() {
     # Step 1: Run standings_scrape.py
     if [[ -f "$standings_script" ]]; then
         log_message "Running standings_scrape.py for $sport_dir"
-        cd "$polars_dir" && source ~/blog/venv/bin/activate && python standings_scrape.py
+        cd "$polars_dir" && source ~/blog/venv/bin/activate && python standings_scrape.py > /dev/null
         local standings_exit_code=$?
         if [[ $standings_exit_code -eq 0 ]]; then
             log_message "✓ Successfully ran standings_scrape.py for $sport_dir"
@@ -138,7 +138,7 @@ process_sport_recap() {
     # Step 3: Run race-recap2.R
     if [[ -f "$recap_script" ]]; then
         log_message "Running race-recap2.R for $sport_dir"
-        cd "$(dirname "$recap_script")" && Rscript race-recap2.R
+        cd "$(dirname "$recap_script")" && Rscript race-recap2.R > /dev/null
         local recap_exit_code=$?
         if [[ $recap_exit_code -eq 0 ]]; then
             log_message "✓ Successfully ran race-recap2.R for $sport_dir"
@@ -174,7 +174,7 @@ process_sport_recap() {
                 
                 if [[ -f "$excel_file" ]]; then
                     log_message "Processing Excel file: $(basename "$excel_file")"
-                    source ~/blog/venv/bin/activate && python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$recap_output_dir"
+                    source ~/blog/venv/bin/activate && python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$recap_output_dir" > /dev/null
                     if [[ $? -eq 0 ]]; then
                         log_message "✓ Successfully processed $(basename "$excel_file")"
                         ((files_processed++))

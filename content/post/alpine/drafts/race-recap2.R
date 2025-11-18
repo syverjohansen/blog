@@ -11,7 +11,7 @@ library(mgcv)     # for GAM models
 library(leaps)    # for feature selection
 library(lubridate) # for date handling
 
-# Define file paths
+# Define file paths (ALPINE PATHS)
 men_chrono_path <- "~/ski/elo/python/alpine/polars/excel365/men_chrono.csv"
 ladies_chrono_path <- "~/ski/elo/python/alpine/polars/excel365/ladies_chrono.csv"
 races_path <- "~/ski/elo/python/alpine/polars/excel365/races.csv"
@@ -22,13 +22,13 @@ get_gmt_date_formatted <- function() {
   format(as.POSIXct(Sys.time(), tz = "GMT"), "%Y%m%d")
 }
 
-# Define the base output directory function that uses the GMT date
+# Define the base output directory function that uses the GMT date (ALPINE PATH)
 get_output_dir <- function() {
   date_str <- get_gmt_date_formatted()
   file.path("~/blog/daehl-e/content/post/alpine/drafts/weekly-recap", date_str)
 }
 
-# Read the CSV files
+# Read the CSV files (Alpine data)
 men_chrono <- read.csv(men_chrono_path)
 ladies_chrono <- read.csv(ladies_chrono_path)
 
@@ -142,6 +142,15 @@ generate_weekly_elo_change <- function(chrono_data, gender, base_dir) {
   file_path <- file.path(week_dir, paste0(gender, "_elo_change.xlsx"))
   write_xlsx(elo_changes, file_path)
   
+  # Create a top gainers/losers summary
+  top_gainers <- elo_changes %>%
+    arrange(desc(Elo_Change)) %>%
+    head(10)
+  
+  top_losers <- elo_changes %>%
+    arrange(Elo_Change) %>%
+    head(10)
+  
   # Return the full dataframe
   return(elo_changes)
 }
@@ -150,35 +159,30 @@ generate_weekly_elo_change <- function(chrono_data, gender, base_dir) {
 men_elo_changes <- generate_weekly_elo_change(men_chrono, "men", base_dir)
 women_elo_changes <- generate_weekly_elo_change(ladies_chrono, "ladies", base_dir)
 
-# Alpine points system setup
-alpine_points <- c(100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+# Points system setup (ALPINE POINTS SYSTEM)
+alpine_points <- c(100,80,60,50,45,40,36,32,29,26,24,22,20,18,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
 
 # Function to replace both NAs and NaNs in a vector
 replace_nas_vector <- function(x) {
-  if(is.null(x)) return(NULL)
-  # Convert to numeric if it's not already
-  x <- as.numeric(unlist(x))
-  # Replace both NAs and NaNs
-  x[is.na(x) | is.nan(x) | !is.finite(x)] <- 0
-  return(x)
+    if(is.null(x)) return(NULL)
+    # Convert to numeric if it's not already
+    x <- as.numeric(unlist(x))
+    # Replace both NAs and NaNs
+    x[is.na(x) | is.nan(x) | !is.finite(x)] <- 0
+    return(x)
 }
 
 # Function to replace NAs with first quartile
 replace_na_with_quartile <- function(x) {
-  quartile_1 <- quantile(x, 0.25, na.rm = TRUE)
-  ifelse(is.na(x), quartile_1, x)
+    quartile_1 <- quantile(x, 0.25, na.rm = TRUE)
+    ifelse(is.na(x), quartile_1, x)
 }
 
-# Create points conversion function for alpine
-place_to_points <- Vectorize(function(place) {
-  if (is.na(place)) return(0)
-  if (place <= length(alpine_points)) alpine_points[place] else 0
-})
-
+# Create points conversion function for Alpine
 create_points_columns <- function(df) {
   df %>%
     mutate(
-      Points = place_to_points(Place)
+      Points = map_dbl(Place, ~if(.x <= length(alpine_points)) alpine_points[.x] else 0)
     )
 }
 
@@ -241,7 +245,7 @@ create_pelo_percentages <- function(df) {
     ungroup()
 }
 
-# Function to select best features and create GAM
+# Function to select best features and create GAM with specified points type
 select_gam_features <- function(df, points_col = "Points") {
   # Get predictor columns (all Pelo percentages and weighted average)
   predictors <- c(
@@ -254,15 +258,15 @@ select_gam_features <- function(df, points_col = "Points") {
       all_of(predictors),
       replace_na_with_quartile
     ))
-  
-  # Create formula for feature selection
+    
+  # Create formula for feature selection using specified points column
   base_formula <- as.formula(paste(points_col, "~", paste(predictors, collapse = " + ")))
   
   # Perform exhaustive feature selection
   feature_selection <- regsubsets(base_formula, 
-                                  data = df, 
-                                  nvmax = length(predictors),
-                                  method = "exhaustive")
+                                data = df, 
+                                nvmax = length(predictors),
+                                method = "exhaustive")
   
   # Get summary and find model with lowest BIC
   selection_summary <- summary(feature_selection)
@@ -271,8 +275,8 @@ select_gam_features <- function(df, points_col = "Points") {
   
   # Create GAM formula with selected features using smooth terms
   gam_formula <- as.formula(paste(points_col, "~", 
-                                  paste(paste0("s(", selected_vars, ")"), 
-                                        collapse = " + ")))
+                                paste(paste0("s(", selected_vars, ")"), 
+                                collapse = " + ")))
   
   # Fit GAM with selected features
   final_gam <- gam(gam_formula, data = df, method = "REML")
@@ -287,57 +291,46 @@ select_gam_features <- function(df, points_col = "Points") {
 
 # Function to generate predictions for Alpine race types
 generate_race_predictions <- function(chrono_data, race_type, gender) {
-  # Define discipline mapping for Pelo columns
-  discipline_mapping <- list(
+  # Define filter conditions based on Alpine race type
+  filter_conditions <- list(
+    "Downhill" = "Distance == 'Downhill'",
+    "Super_G" = "Distance == 'Super G'",
+    "Giant_Slalom" = "Distance == 'Giant Slalom'",
+    "Slalom" = "Distance == 'Slalom'",
+    "Combined" = "Distance == 'Combined'"
+  )
+  
+  condition <- filter_conditions[[race_type]]
+  
+  # Define mapping between race types and their corresponding Pelo_Pct columns (Alpine uses spaces in names)
+  pelo_pct_mapping <- list(
     "Downhill" = "Downhill_Pelo_Pct",
-    "Super_G" = "Super.G_Pelo_Pct",
-    "Giant_Slalom" = "Giant.Slalom_Pelo_Pct",
+    "Super_G" = "`Super G_Pelo_Pct`", 
+    "Giant_Slalom" = "`Giant Slalom_Pelo_Pct`",
     "Slalom" = "Slalom_Pelo_Pct",
     "Combined" = "Combined_Pelo_Pct"
   )
   
   # Get the corresponding Pelo_Pct column for this race type
-  pelo_pct_col <- discipline_mapping[[race_type]]
+  pelo_pct_col <- pelo_pct_mapping[[race_type]]
   
   # Process and filter training data
   train_df <- chrono_data %>%
     filter(
       City != "Summer",
-      Distance == gsub("_", " ", race_type)  # Convert "Super_G" to "Super G", etc.
+      eval(parse(text = condition))
     ) %>%
     create_points_columns() %>%
-    group_by(ID) %>%
-    arrange(Season, Race) %>%
-    mutate(
-      Weighted_Last_5 = sapply(row_number(), function(i) {
-        prev_races <- Points[max(1, i-5):(i-1)]
-        if(length(prev_races) > 0) {
-          weights <- seq(1,length(prev_races))
-          weighted.mean(prev_races, weights, na.rm = TRUE)
-        } else {
-          NA_real_
-        }
-      })
-    ) %>%
-    mutate(
-      Weighted_Last_5_2 = sapply(row_number(), function(i) {
-        prev_races <- Points[max(1, i-4):(i-0)]
-        if(length(prev_races) > 0) {
-          weights <- seq(1,length(prev_races))
-          weighted.mean(prev_races, weights, na.rm = TRUE)
-        } else {
-          NA_real_
-        }
-      })
-    ) %>%
-    ungroup()
+    calculate_weighted_average() %>%
+    calculate_weighted_average2() %>%
+    filter(Season > max(Season, na.rm = TRUE)-11) %>%
+    create_pelo_percentages()
   
-  train_df <- train_df %>%
-    filter(
-      Season > max(Season)-11
-    ) %>%
-    create_pelo_percentages() %>%
-    filter(!!sym(discipline_mapping[[race_type]]) > 0.75)
+  # Apply Pelo percentage filter only if the column exists
+  if(pelo_pct_col %in% names(train_df)) {
+    train_df <- train_df %>%
+      filter(!!sym(pelo_pct_col) > 0.75)
+  }
   
   # Build model
   model_results <- select_gam_features(train_df, "Points")
@@ -349,7 +342,7 @@ generate_race_predictions <- function(chrono_data, race_type, gender) {
       Season == max(Season)
     )
   
-  # Update Elo columns (convert Pelo to Elo for current season)
+  # Update Elo columns
   pelo_cols <- names(test_df)[grep("Pelo$", names(test_df))]
   elo_cols <- gsub("Pelo$", "Elo", pelo_cols)
   
@@ -422,7 +415,7 @@ generate_race_predictions <- function(chrono_data, race_type, gender) {
     predictions = gam_df,
     model = model_results,
     feature_summary = paste("Selected features for", gender, race_type, ":", 
-                            paste(model_results$selected_features, collapse = ", "))
+                          paste(model_results$selected_features, collapse = ", "))
   ))
 }
 
@@ -439,6 +432,8 @@ for(race_type in race_types) {
   all_models[[paste0("M_", race_type)]] <- results$model
 }
 
+print(all_predictions)
+
 # Generate predictions for women
 for(race_type in race_types) {
   cat("\nProcessing Women's", race_type, "...\n")
@@ -447,7 +442,7 @@ for(race_type in race_types) {
   all_models[[paste0("L_", race_type)]] <- results$model
 }
 
-# Combine and format predictions
+# Combine and format predictions for Alpine
 final_predictions <- bind_rows(all_predictions) %>%
   group_by(Skier, ID, gender) %>%
   summarise(
@@ -456,28 +451,30 @@ final_predictions <- bind_rows(all_predictions) %>%
     .groups = 'drop'
   ) %>%
   # Replace -Inf values with NA
-  mutate(predicted_points = ifelse(is.infinite(predicted_points), NA_real_, predicted_points))
+  mutate(across(ends_with("_points"), 
+                ~ifelse(is.infinite(.), NA_real_, .)))
 
-print(final_predictions)
-print(all_predictions)
+final_predictions
+all_predictions
 
-# Load standings for both genders
-standings_df <- read_csv("~/ski/elo/python/alpine/polars/excel365/men_standings.csv")
-ladies_standings_df <- read_csv("~/ski/elo/python/alpine/polars/excel365/ladies_standings.csv")
+library(arrow)
 
-# Get top 30 skiers from each gender
-top_30_men <- standings_df %>%
-  arrange(desc(Points)) %>%
-  head(30) %>%
-  pull(Skier)
+# Function to get race history with sophisticated error handling (CROSS-COUNTRY APPROACH)
+place_to_points <- Vectorize(function(place) {
+    if (is.na(place)) return(0)
+    if (place <= length(alpine_points)) alpine_points[place] else 0
+})
 
-top_30_women <- ladies_standings_df %>%
-  arrange(desc(Points)) %>%
-  head(30) %>%
-  pull(Skier)
+# Modified create_points_columns function for Alpine
+create_points_columns <- function(df) {
+    df %>%
+        mutate(
+            Points = place_to_points(Place)
+        )
+}
 
-# Function to calculate race participation probabilities for alpine simulation
-calculate_skier_race_probabilities_alpine <- function(chrono_data, skier_name) {
+# Function to calculate race participation probabilities for simulation
+calculate_skier_race_probabilities <- function(chrono_data, skier_name) {
   log_info("Calculating race probabilities for skier: {skier_name}")
   
   # Get skier's first ever race date
@@ -497,12 +494,12 @@ calculate_skier_race_probabilities_alpine <- function(chrono_data, skier_name) {
     max(five_years_ago, as.Date(skier_first_race))
   }
   
-  # Function to get race probability for a specific discipline
-  get_discipline_probability <- function(discipline) {
-    # For alpine disciplines
+  # Function to get race probability for Alpine race types
+  get_race_type_probability <- function(race_type) {
+    # Alpine race filtering logic
     all_races <- chrono_data %>%
       filter(
-        Distance == discipline,
+        Distance == gsub("_", " ", race_type),
         Date >= start_date,
         City != "Summer"
       ) %>%
@@ -510,7 +507,7 @@ calculate_skier_race_probabilities_alpine <- function(chrono_data, skier_name) {
     
     skier_races <- chrono_data %>%
       filter(
-        Distance == discipline,
+        Distance == gsub("_", " ", race_type),
         Date >= start_date,
         City != "Summer",
         Skier == skier_name
@@ -526,28 +523,28 @@ calculate_skier_race_probabilities_alpine <- function(chrono_data, skier_name) {
     races_participated <- nrow(skier_races)
     prob <- min(1, races_participated / total_races)
     
-    log_debug("Probability for {skier_name} in {discipline}: {prob} ({races_participated}/{total_races})")
+    log_debug("Probability for {skier_name} in {race_type}: {prob} ({races_participated}/{total_races})")
     
     return(prob)
   }
   
-  # Calculate probabilities for all alpine disciplines
+  # Calculate probabilities for Alpine race types
   probabilities <- list(
-    Downhill = get_discipline_probability("Downhill"),
-    Super_G = get_discipline_probability("Super G"),
-    Giant_Slalom = get_discipline_probability("Giant Slalom"),
-    Slalom = get_discipline_probability("Slalom"),
-    Combined = get_discipline_probability("Combined")
+    Downhill = get_race_type_probability("Downhill"),
+    Super_G = get_race_type_probability("Super_G"),
+    Giant_Slalom = get_race_type_probability("Giant_Slalom"),
+    Slalom = get_race_type_probability("Slalom"),
+    Combined = get_race_type_probability("Combined")
   )
   
   return(probabilities)
 }
 
-create_race_probability_table_alpine <- function(men_chrono, ladies_chrono, top_30_men, top_30_women) {
-  log_info("Pre-calculating race probabilities for all alpine skiers")
+create_race_probability_table <- function(men_chrono, ladies_chrono, top_30_men, top_30_women) {
+  log_info("Pre-calculating race probabilities for all skiers")
   
   # Function to calculate probabilities for a single skier
-  calculate_single_skier_probabilities_alpine <- function(chrono_data, skier_name) {
+  calculate_single_skier_probabilities <- function(chrono_data, skier_name) {
     # Get skier's first ever race date
     skier_first_race <- chrono_data %>%
       filter(Skier == skier_name) %>%
@@ -565,11 +562,17 @@ create_race_probability_table_alpine <- function(men_chrono, ladies_chrono, top_
       max(five_years_ago, as.Date(skier_first_race))
     }
     
-    # Function to get race probability for a specific discipline
-    get_discipline_probability <- function(discipline) {
+    # Function to get race probability for Alpine race types
+    get_race_type_probability <- function(race_type) {
+      distance_value <- case_when(
+        race_type == "Super_G" ~ "Super G",
+        race_type == "Giant_Slalom" ~ "Giant Slalom",
+        TRUE ~ race_type
+      )
+      
       all_races <- chrono_data %>%
         filter(
-          Distance == discipline,
+          Distance == distance_value,
           Date >= start_date,
           City != "Summer"
         ) %>%
@@ -577,7 +580,7 @@ create_race_probability_table_alpine <- function(men_chrono, ladies_chrono, top_
       
       skier_races <- chrono_data %>%
         filter(
-          Distance == discipline,
+          Distance == distance_value,
           Date >= start_date,
           City != "Summer",
           Skier == skier_name
@@ -596,14 +599,14 @@ create_race_probability_table_alpine <- function(men_chrono, ladies_chrono, top_
       return(prob)
     }
     
-    # Calculate probabilities for all alpine disciplines
+    # Calculate probabilities for Alpine race types
     return(data.frame(
       Skier = skier_name,
-      Downhill = get_discipline_probability("Downhill"),
-      Super_G = get_discipline_probability("Super G"),
-      Giant_Slalom = get_discipline_probability("Giant Slalom"),
-      Slalom = get_discipline_probability("Slalom"),
-      Combined = get_discipline_probability("Combined"),
+      Downhill = get_race_type_probability("Downhill"),
+      Super_G = get_race_type_probability("Super_G"),
+      Giant_Slalom = get_race_type_probability("Giant_Slalom"),
+      Slalom = get_race_type_probability("Slalom"),
+      Combined = get_race_type_probability("Combined"),
       stringsAsFactors = FALSE
     ))
   }
@@ -611,14 +614,14 @@ create_race_probability_table_alpine <- function(men_chrono, ladies_chrono, top_
   # Calculate for all men
   men_probabilities <- do.call(rbind, lapply(top_30_men, function(skier) {
     cat("Calculating probabilities for male skier:", skier, "\n")
-    calculate_single_skier_probabilities_alpine(men_chrono, skier)
+    calculate_single_skier_probabilities(men_chrono, skier)
   }))
   men_probabilities$Gender <- "M"
   
   # Calculate for all women  
   women_probabilities <- do.call(rbind, lapply(top_30_women, function(skier) {
     cat("Calculating probabilities for female skier:", skier, "\n")
-    calculate_single_skier_probabilities_alpine(ladies_chrono, skier)
+    calculate_single_skier_probabilities(ladies_chrono, skier)
   }))
   women_probabilities$Gender <- "L"
   
@@ -629,68 +632,96 @@ create_race_probability_table_alpine <- function(men_chrono, ladies_chrono, top_
   
   # Save to file for future use
   output_dir <- get_output_dir()
-  write_xlsx(all_probabilities, file.path(output_dir, "alpine_race_probabilities.xlsx"))
+  write_xlsx(all_probabilities, file.path(output_dir, "race_probabilities.xlsx"))
   
   return(all_probabilities)
 }
 
-# Function to get race history for alpine
 get_race_history <- function(skier_id, race_type, predictions_list, n_required = 10, gender="M") {
   chrono_data <- if(gender == "M") men_chrono else ladies_chrono
-  
-  # Create points columns
+  # First create points columns in chrono data
   chrono_with_points <- chrono_data %>%
-    create_points_columns()
-  
-  # Get actual results based on race type
-  real_results <- chrono_with_points %>%
-    filter(
-      Skier == skier_id,
-      City != "Summer",
-      Distance == gsub("_", " ", race_type),  # Convert "Super_G" to "Super G"
-      Season > max(Season)-11
-    ) %>%
-    arrange(desc(Date)) %>%
-    dplyr::slice_head(n = n_required) %>%
-    pull(Points)
-  
-  print(paste("Race type:", race_type))
-  
-  # If we have enough results, return them
-  if(length(real_results) >= n_required) {
-    print("Met the requirement")
-    return(real_results)
-  } else {
-    print(paste("The skier has participated in:", length(real_results)))
-  }
-  
-  # Get predicted score from all_predictions
-  pred_type <- paste0(gender, "_", race_type)
-  
-  predicted_score <- predictions_list[[pred_type]] %>%
-    filter(Skier == skier_id) %>%
-    pull(predicted_points)
-  
-  if(length(real_results) > 1) {
-    variation_sd <- sd(unlist(real_results))
-  } else {
-    variation_sd <- predicted_score * 0.15
-  }
-  
-  n_to_generate <- n_required - length(real_results)
-  generated_results <- numeric(n_to_generate)
-  
-  for(i in 1:n_to_generate) {
-    new_score <- predicted_score + rnorm(1, 0, variation_sd)
-    generated_results[i] <- pmin(pmax(round(new_score), 0), 100)  # Alpine max is 100
-  }
-  
-  all_results <- c(real_results, generated_results)
-  return(all_results)
+      create_points_columns()
+    
+    # Get actual results based on race type (Alpine)
+    real_results <- chrono_with_points %>%
+        filter(
+            Skier == skier_id,
+            City != "Summer",
+            Distance == case_when(
+              race_type == "Super_G" ~ "Super G",
+              race_type == "Giant_Slalom" ~ "Giant Slalom",
+              TRUE ~ race_type
+            ),
+            Season > max(Season, na.rm = TRUE)-11
+        ) %>%
+        arrange(desc(Date)) %>%
+        dplyr::slice_head(n = n_required) %>%
+        pull(Points)
+      
+    print(paste("Race type:", race_type))
+    # If we have enough results, return them
+    if(length(real_results) >= n_required) {
+      print("Met the requirement")
+        return(real_results)
+    }
+    else{
+      print("The skier has participated in: ")
+      print(length(real_results))
+    }
+    
+   # Get predicted score from all_predictions for Alpine
+    pred_type <- paste0(gender, "_", race_type)
+    
+    predicted_score <- predictions_list[[pred_type]] %>%
+        filter(Skier == skier_id) %>%
+        pull(predicted_points)
+
+    # Enhanced error handling (Cross-Country approach)
+    if(length(predicted_score) == 0 || is.na(predicted_score)) {
+      log_info("No prediction found for {skier_id} in {pred_type}, using fallback")
+      predicted_score <- 15  # Alpine-appropriate fallback
+    }
+
+    # Rest of the function remains the same with enhanced validation
+    if(length(real_results) > 1) {
+        variation_sd <- sd(unlist(real_results))
+    } else {
+        variation_sd <- predicted_score * 0.15
+    }
+    
+    n_to_generate <- n_required - length(real_results)
+
+    generated_results <- numeric(n_to_generate)
+    
+    max_points <- 100  # Alpine max points
+    
+    for(i in 1:n_to_generate) {
+        new_score <- predicted_score + rnorm(1, 0, variation_sd)
+        generated_results[i] <- pmin(pmax(round(new_score), 0), max_points)
+    }
+    
+    all_results <- c(real_results, generated_results)
+    return(all_results)
 }
+
+standings_df <- read_csv("~/ski/elo/python/alpine/polars/excel365/men_standings.csv")
+ladies_standings_df <- read_csv("~/ski/elo/python/alpine/polars/excel365/ladies_standings.csv")
+
+# Get top 30 skiers for Alpine
+top_30_men <- standings_df %>%
+    arrange(desc(Points)) %>%
+    head(30) %>%
+    pull(Skier)
+
+top_30_women <- ladies_standings_df %>%
+    arrange(desc(Points)) %>%
+    head(30) %>%
+    pull(Skier)
 
 # Create storage for all histories
 all_histories <- list()
+print(all_predictions)
 
 # Process men
 for(skier in top_30_men) {
@@ -698,7 +729,7 @@ for(skier in top_30_men) {
   
   all_histories[[skier]] <- list()
   
-  for(race_type in race_types) {
+  for(race_type in c("Downhill", "Super_G", "Giant_Slalom", "Slalom", "Combined")) {
     all_histories[[skier]][[race_type]] <- 
       get_race_history(skier, race_type, all_predictions, 10, gender = "M")
   }
@@ -710,7 +741,7 @@ for(skier in top_30_women) {
   
   all_histories[[skier]] <- list()
   
-  for(race_type in race_types) {
+  for(race_type in c("Downhill", "Super_G", "Giant_Slalom", "Slalom", "Combined")) {
     all_histories[[skier]][[race_type]] <- 
       get_race_history(skier, race_type, all_predictions, 10, gender = "L")
   }
@@ -718,7 +749,7 @@ for(skier in top_30_women) {
 
 # Clean up NAs and NaNs
 all_histories_clean <- lapply(all_histories, function(skier_list) {
-  lapply(skier_list, replace_nas_vector)
+    lapply(skier_list, replace_nas_vector)
 })
 
 # Modified summarize function to include gender
@@ -755,129 +786,151 @@ summary_df %>%
   slice_head(n = 10) %>%
   print(n = 20)
 
-# Modified race distribution function to handle sparse data
+# SOPHISTICATED CROSS-COUNTRY KDE IMPLEMENTATION
+library(logger)
+library(dplyr)
+library(arrow)
+library(writexl)
+
+# Load standings for both genders
+standings_df <- read_csv("~/ski/elo/python/alpine/polars/excel365/men_standings.csv")
+ladies_standings_df <- read_csv("~/ski/elo/python/alpine/polars/excel365/ladies_standings.csv")
+
+# Set up logging
+log_file <- "~/blog/daehl-e/content/post/alpine/drafts/weekly-recap/alpine_simulation_log.log"
+log_appender(appender_file(log_file))
+
+# SOPHISTICATED KDE IMPLEMENTATION (EXACTLY FROM CROSS-COUNTRY)
 create_race_distribution <- function(race_results, n_simulations = 1, max_points = 100) {
-  points <- race_results$Points
-  weights <- race_results$Weight
-  n_actual_races <- length(points)
-  
-  # If very few points, use simple method
-  if (n_actual_races < 2) {
-    mean_points <- weighted.mean(points, weights)
-    sd_points <- max(5, mean_points * 0.15)
-    simulated_points <- rnorm(n_simulations, mean_points, sd_points)
-    return(pmin(pmax(round(simulated_points), 0), max_points))
-  }
-  
-  # Calculate proportion of maximum points
-  prop_max <- weighted.mean(points == max_points, weights)
-  
-  # Initialize simulated points
-  simulated_points <- numeric(n_simulations)
-  
-  # Determine number of max point races
-  n_max <- rbinom(1, n_simulations, prop_max)
-  if(n_max > 0) {
-    simulated_points[1:n_max] <- max_points
-  }
-  
-  if (n_max < n_simulations) {
-    # Handle non-maximum points
-    non_max_mask <- points < max_points
-    if(sum(non_max_mask) == 0) {
-      # If no non-max points, use high but not perfect score
-      simulated_points[(n_max + 1):n_simulations] <- max_points * 0.95
-      return(simulated_points)
+    points <- race_results$Points
+    weights <- race_results$Weight
+    n_actual_races <- length(points)
+    
+    # CRITICAL FIX: Early validation for insufficient data
+    if (n_actual_races < 2) {
+        log_info("Using simple method - too few points")
+        mean_points <- weighted.mean(points, weights)
+        sd_points <- max(5, mean_points * 0.15)
+        simulated_points <- rnorm(n_simulations, mean_points, sd_points)
+        return(pmin(pmax(round(simulated_points), 0), max_points))
     }
     
-    non_max_points <- points[non_max_mask]
-    non_max_weights <- weights[non_max_mask]
+    # Calculate proportion of maximum points
+    prop_max <- weighted.mean(points == max_points, weights)
     
-    # Initialize remaining_points
-    remaining_points <- numeric(n_simulations - n_max)
+    # Initialize simulated points
+    simulated_points <- numeric(n_simulations)
     
-    # Try KDE method first
-    kde_success <- tryCatch({
-      if(length(unique(non_max_points)) < 3) stop("Too few unique points for KDE")
-      
-      # Continuing from kde <- density line...
-      
-      kde <- density(non_max_points, 
-                     weights = non_max_weights/sum(non_max_weights),
-                     kernel = "gaussian",
-                     bw = "nrd",
-                     from = max(min(non_max_points) - 5, 0),
-                     to = max_points - 1,  # Leave room for maximum
-                     n = 512)
-      
-      kde$y[kde$x < min(non_max_points)] <- 0
-      kde$y <- kde$y / sum(kde$y)
-      
-      remaining_points <- sample(kde$x, 
-                                 n_simulations - n_max, 
-                                 prob = kde$y, 
-                                 replace = TRUE)
-      TRUE
-    }, error = function(e) {
-      FALSE
-    })
+    # Determine number of max point races
+    n_max <- rbinom(1, n_simulations, prop_max)
+    if(n_max > 0) {
+        simulated_points[1:n_max] <- max_points
+    }
     
-    # If KDE failed, use bootstrap method
-    if (!kde_success) {
-      if(length(non_max_points) == 0) {
-        # If no non-max points available, use a reasonable default
-        remaining_points <- rnorm(n_simulations - n_max, max_points * 0.85, max_points * 0.10)
-      } else {
-        # Ensure weights match points length
-        if(length(non_max_weights) != length(non_max_points)) {
-          log_info("Weight length mismatch: adjusting weights")
-          non_max_weights <- rep(1, length(non_max_points))
+    if (n_max < n_simulations) {
+        # Handle non-maximum points
+        non_max_mask <- points < max_points
+        if(sum(non_max_mask) == 0) {
+            # If no non-max points, use high but not perfect score
+            simulated_points[(n_max + 1):n_simulations] <- max_points * 0.95
+            return(simulated_points)
         }
         
-        # Sample with error checking
-        tryCatch({
-          remaining_points <- sample(non_max_points,
-                                     n_simulations - n_max,
-                                     prob = non_max_weights,
-                                     replace = TRUE)
+        non_max_points <- points[non_max_mask]
+        non_max_weights <- weights[non_max_mask]
+        
+        # Initialize remaining_points
+        remaining_points <- numeric(n_simulations - n_max)
+        
+        # Try KDE method first
+        kde_success <- tryCatch({
+            if(length(unique(non_max_points)) < 3) stop("Too few unique points for KDE")
+            
+            kde <- density(non_max_points, 
+                         weights = non_max_weights/sum(non_max_weights),
+                         kernel = "gaussian",
+                         bw = "nrd",
+                         from = max(min(non_max_points) - 5, 0),
+                         to = max_points - 1,  # Leave room for maximum
+                         n = 512)
+            
+            kde$y[kde$x < min(non_max_points)] <- 0
+            kde$y <- kde$y / sum(kde$y)
+            
+            remaining_points <- sample(kde$x, 
+                                    n_simulations - n_max, 
+                                    prob = kde$y, 
+                                    replace = TRUE)
+            TRUE
         }, error = function(e) {
-          remaining_points <- sample(non_max_points,
-                                     n_simulations - n_max,
-                                     replace = TRUE)
+            FALSE
         })
         
-        # Add variation
-        variation <- rnorm(n_simulations - n_max, 
-                           0, 
-                           max(5, sd(non_max_points)/2))
-        remaining_points <- remaining_points + variation
-      }
+        # If KDE failed, use bootstrap method
+        if (!kde_success) {
+            # CRITICAL FIX: Check for empty vectors before KDE
+            if(length(non_max_points) == 0) {
+                # If no non-max points available, use a reasonable default
+                remaining_points <- rnorm(n_simulations - n_max, max_points * 0.85, max_points * 0.10)
+            } else {
+                # CRITICAL FIX: Weight validation before sampling
+                if(length(non_max_weights) != length(non_max_points)) {
+                    log_info("Weight length mismatch: adjusting weights")
+                    non_max_weights <- rep(1, length(non_max_points))
+                }
+                
+                # CRITICAL FIX: Nested tryCatch for sampling
+                tryCatch({
+                    remaining_points <- sample(non_max_points,
+                                            n_simulations - n_max,
+                                            prob = non_max_weights,
+                                            replace = TRUE)
+                }, error = function(e) {
+                    log_info("Sampling error: falling back to uniform sampling")
+                    remaining_points <- sample(non_max_points,
+                                            n_simulations - n_max,
+                                            replace = TRUE)
+                })
+                
+                # Add variation
+                variation <- rnorm(n_simulations - n_max, 
+                                 0, 
+                                 max(5, sd(non_max_points)/2))
+                remaining_points <- remaining_points + variation
+            }
+        }
+        
+        # Ensure valid range
+        simulated_points[(n_max + 1):n_simulations] <- 
+            pmin(pmax(round(remaining_points), 0), max_points - 1)
     }
     
-    # Ensure valid range
-    simulated_points[(n_max + 1):n_simulations] <- 
-      pmin(pmax(round(remaining_points), 0), max_points - 1)
-  }
-  
-  return(simulated_points)
+    return(simulated_points)
 }
 
-# Function to calculate remaining races for alpine
-calculate_remaining_races_alpine <- function(races_file) {
+# Test the function
+fake_data <- data.frame(
+    Points = c(45, 32, 24, 19, 45),
+    Weight = seq(5, 1)
+)
+simulated_points <- create_race_distribution(fake_data, n_simulations = 1)
+
+# Calculate remaining races for Alpine
+calculate_remaining_races <- function(races_file) {
   # Read races file
   races <- read.csv(races_file, stringsAsFactors = FALSE)
   
-  # Convert dates to Date objects
+  # Convert dates to Date objects (assuming MM/DD/YYYY format)
   races$Date <- as.Date(races$Date, format = "%m/%d/%Y")
   
   # Get current date in UTC
   today_utc <- as.Date(Sys.time(), tz = "UTC")
   
-  # Filter for remaining races
+  # Filter for remaining races (today or after) and exclude Mixed sex races
   remaining <- races %>%
-    filter(Date >= today_utc, Sex %in% c("M", "L"), Championship!=1)
+    filter(Date >= today_utc, Sex %in% c("M", "L"))
   
-  # Initialize counts
+  # Initialize counts for both genders
   counts <- list(
     M = list(
       Downhill = 0,
@@ -899,68 +952,54 @@ calculate_remaining_races_alpine <- function(races_file) {
     return(counts)
   }
   
-  # Create race type categories for each race
-  remaining_categorized <- remaining %>%
-    mutate(
-      # Create race type categories
-      race_category = case_when(
-        Distance == "Downhill" ~ "Downhill",
-        Distance == "Super G" ~ "Super_G",
-        Distance == "Giant Slalom" ~ "Giant_Slalom",
-        Distance == "Slalom" ~ "Slalom",
-        Distance == "Combined" ~ "Combined",
-        TRUE ~ "Other"
-      )
-    )
-  
-  # Debug: Show categorization
-  cat("Race categorization:\n")
-  print(remaining_categorized %>% 
-          select(Sex, Distance, race_category) %>%
-          arrange(Sex, race_category))
-  
-  # Count unique race types by gender
+  # Count races by gender and type for Alpine
   for(gender in c("M", "L")) {
-    gender_races <- remaining_categorized %>%
+    gender_races <- remaining %>%
       filter(Sex == gender)
     
-    # Get unique race categories for this gender
-    unique_categories <- unique(gender_races$race_category)
+    # Count each Alpine discipline with correct Distance mapping
+    discipline_mapping <- list(
+      "Downhill" = "Downhill",
+      "Super_G" = "Super G", 
+      "Giant_Slalom" = "Giant Slalom",
+      "Slalom" = "Slalom",
+      "Combined" = "Combined"
+    )
     
-    cat("\nUnique race categories for", gender, ":", paste(unique_categories, collapse = ", "), "\n")
-    
-    # Count each category
-    for(category in unique_categories) {
-      if(category != "Other") {
-        category_count <- sum(gender_races$race_category == category)
-        counts[[gender]][[category]] <- counts[[gender]][[category]] + category_count
-      }
+    for(discipline in c("Downhill", "Super_G", "Giant_Slalom", "Slalom", "Combined")) {
+      distance_value <- discipline_mapping[[discipline]]
+      discipline_count <- sum(gender_races$Distance == distance_value, na.rm = TRUE)
+      counts[[gender]][[discipline]] <- counts[[gender]][[discipline]] + discipline_count
     }
   }
   
   return(counts)
 }
 
-# Calculate remaining races dynamically
+# Calculate remaining races dynamically for Alpine
 races_path <- "~/ski/elo/python/alpine/polars/excel365/races.csv"
-remaining_races_by_gender <- calculate_remaining_races_alpine(races_path)
+remaining_races_by_gender <- calculate_remaining_races(races_path)
 print(remaining_races_by_gender)
 
-# Function to simulate a single alpine race for all skiers
-simulate_race_alpine <- function(histories, race_type) {
-  log_info("Simulating alpine race of type {race_type}")
+remaining_races <- remaining_races_by_gender$M
+
+# Function to simulate a single race for all skiers with sophisticated error handling
+simulate_race <- function(histories, race_type) {
+  log_info("Simulating Alpine race of type {race_type}")
   
-  # Get appropriate race histories for each skier
+  # Alpine max points
+  max_points <- 100
+  
   results <- sapply(names(histories), function(skier) {
     race_history <- histories[[skier]][[race_type]]
     
-    # Check for valid history
+    # CRITICAL FIX: Check for valid history
     if(is.null(race_history) || length(race_history) == 0) {
       log_info("No history for {skier} in {race_type}")
       return(0)
     }
     
-    # Remove any NAs or NaNs from history
+    # CRITICAL FIX: Remove any NAs or NaNs from history
     race_history <- race_history[!is.na(race_history) & !is.nan(race_history)]
     
     if(length(race_history) >= 3) {
@@ -971,7 +1010,7 @@ simulate_race_alpine <- function(histories, race_type) {
       )
       
       tryCatch({
-        simulated_points <- create_race_distribution(fake_data, n_simulations = 1, max_points = 100)
+        simulated_points <- create_race_distribution(fake_data, n_simulations = 1, max_points = max_points)
         return(simulated_points[1])
       }, error = function(e) {
         log_info("{skier}'s race_distribution failed")
@@ -979,30 +1018,30 @@ simulate_race_alpine <- function(histories, race_type) {
         # If distribution creation fails, use simple mean with variation
         mean_points <- mean(race_history)
         result <- mean_points + rnorm(1, 0, max(5, mean_points * 0.15))
-        return(max(0, min(100, round(result))))
+        return(max(0, min(max_points, round(result))))
       })
     } else {
       log_info("Not enough history for {skier} in {race_type}")
       mean_points <- mean(race_history)
+      # CRITICAL FIX: Validate mean before using
       if(is.na(mean_points) || is.nan(mean_points)) {
         log_info("Invalid mean for {skier} in {race_type}")
         return(0)
       }
       result <- mean_points + rnorm(1, 0, max(5, mean_points * 0.15))
-      return(max(0, min(100, round(result))))
+      return(max(0, min(max_points, round(result))))
     }
   })
   
-  # Final check for any NAs or NaNs
+  # CRITICAL FIX: Final safety check
   results[is.na(results) | is.nan(results)] <- 0
   return(results)
 }
 
-simulate_race_with_probability_alpine <- function(histories, race_type, probability_table) {
-  log_info("Simulating alpine race of type {race_type} with pre-computed probabilities")
+simulate_race_with_probability <- function(histories, race_type, probability_table) {
+  log_info("Simulating Alpine race of type {race_type} with pre-computed probabilities")
   
-  # Get the probability column name (convert race_type format)
-  prob_col <- gsub("_", "_", race_type)  # Keep the underscore format
+  max_points <- 100
   
   results <- sapply(names(histories), function(skier) {
     # Get participation probability from pre-computed table
@@ -1012,7 +1051,7 @@ simulate_race_with_probability_alpine <- function(histories, race_type, probabil
       participation_prob <- 0.5  # Default if skier not found
       log_debug("Skier {skier} not found in probability table, using default 0.5")
     } else {
-      participation_prob <- skier_prob_row[[prob_col]]
+      participation_prob <- skier_prob_row[[race_type]]
     }
     
     # Randomly determine if skier participates
@@ -1038,12 +1077,12 @@ simulate_race_with_probability_alpine <- function(histories, race_type, probabil
       )
       
       tryCatch({
-        simulated_points <- create_race_distribution(fake_data, n_simulations = 1, max_points = 100)
+        simulated_points <- create_race_distribution(fake_data, n_simulations = 1, max_points = max_points)
         return(simulated_points[1])
       }, error = function(e) {
         mean_points <- mean(race_history)
         result <- mean_points + rnorm(1, 0, max(5, mean_points * 0.15))
-        return(max(0, min(100, round(result))))
+        return(max(0, min(max_points, round(result))))
       })
     } else {
       mean_points <- mean(race_history)
@@ -1051,7 +1090,7 @@ simulate_race_with_probability_alpine <- function(histories, race_type, probabil
         return(0)
       }
       result <- mean_points + rnorm(1, 0, max(5, mean_points * 0.15))
-      return(max(0, min(100, round(result))))
+      return(max(0, min(max_points, round(result))))
     }
   })
   
@@ -1059,13 +1098,12 @@ simulate_race_with_probability_alpine <- function(histories, race_type, probabil
   return(results)
 }
 
-# Modified simulate_season function for alpine
-simulate_season_alpine <- function(histories, standings_df, gender="M", n_simulations = 100, remaining_races_by_gender, probability_table) {
-  print("Simulating Alpine Season with Pre-computed Participation Probabilities")
-  log_info("Starting {if(gender=='M') 'men' else 'women'}'s alpine season simulation with pre-computed probabilities")
-  
-  # Filter probability table for current gender
-  gender_probabilities <- probability_table[probability_table$Gender == gender, ]
+# Modified simulate_season function for Alpine
+simulate_season <- function(histories, standings_df, gender="M", n_simulations = 100, remaining_races_by_gender) {
+  print("Simulating Alpine Season")
+  log_info("Starting {if(gender=='M') 'men' else 'women'}'s Alpine season simulation")
+  log_info("Starting season simulation with {n_simulations} iterations")
+  log_info("Number of skiers: {length(names(histories))}")
   
   # Get race counts for this specific gender
   gender_races <- remaining_races_by_gender[[gender]]
@@ -1090,11 +1128,13 @@ simulate_season_alpine <- function(histories, standings_df, gender="M", n_simula
       pull(Points) %>%
       first()
     
+    # If skier not in standings, assume 0 points
     if(length(current_points) == 0) {
+      log_info("{skier} is not in the standings")
       current_points <- 0
     }
     season_results[, skier] <- current_points
-  }
+  }    
   
   log_info("Current {if(gender=='M') 'men' else 'women'}'s standings loaded. Top 5:")
   top_5_current <- sort(season_results[1,], decreasing = TRUE)[1:5]
@@ -1102,18 +1142,18 @@ simulate_season_alpine <- function(histories, standings_df, gender="M", n_simula
     log_info("{names(top_5_current)[i]}: {top_5_current[i]}")
   }
   
-  # Run simulations
+  # Run simulations for Alpine disciplines
   for(sim in 1:n_simulations) {
     if(sim %% 10 == 0) {
       log_info("Running {if(gender=='M') 'men' else 'women'}'s simulation {sim}")
     }
     
-    # Simulate races for each discipline
-    for(discipline in names(gender_races)) {
-      n_races <- gender_races[[discipline]]
+    # Simulate Alpine races
+    for(race_type in names(gender_races)) {
+      n_races <- gender_races[[race_type]]
       if(n_races > 0) {
         for(i in 1:n_races) {
-          results <- simulate_race_with_probability_alpine(gender_histories, discipline, gender_probabilities)
+          results <- simulate_race(gender_histories, race_type)
           season_results[sim,] <- season_results[sim,] + results
         }
       }
@@ -1146,8 +1186,82 @@ simulate_season_alpine <- function(histories, standings_df, gender="M", n_simula
   ))
 }
 
-# Create standings summary function for alpine
-create_standings_summary_alpine <- function(simulation_results, standings_df, gender) {
+simulate_season_with_probabilities <- function(histories, standings_df, gender="M", n_simulations = 100, remaining_races_by_gender, probability_table) {
+  print("Simulating Alpine Season with Pre-computed Participation Probabilities")
+  log_info("Starting {if(gender=='M') 'men' else 'women'}'s Alpine season simulation with pre-computed probabilities")
+  
+  # Filter probability table for current gender
+  gender_probabilities <- probability_table[probability_table$Gender == gender, ]
+  
+  # Get race counts for this specific gender
+  gender_races <- remaining_races_by_gender[[gender]]
+  
+  # Filter histories for current gender
+  gender_histories <- histories[names(histories) %in% standings_df$Skier]
+  all_skiers <- names(gender_histories)
+  
+  # Initialize results matrix
+  season_results <- matrix(0, nrow = n_simulations, ncol = length(all_skiers))
+  colnames(season_results) <- all_skiers
+  
+  # Add current points to all simulations
+  for(skier in all_skiers) {
+    current_points <- standings_df %>%
+      filter(Skier == skier) %>%
+      pull(Points) %>%
+      first()
+    
+    if(length(current_points) == 0) {
+      current_points <- 0
+    }
+    season_results[, skier] <- current_points
+  }
+  
+  # Run simulations for Alpine
+  for(sim in 1:n_simulations) {
+    if(sim %% 10 == 0) {
+      log_info("Running {if(gender=='M') 'men' else 'women'}'s simulation {sim}")
+    }
+    
+    # Simulate Alpine races
+    for(race_type in names(gender_races)) {
+      n_races <- gender_races[[race_type]]
+      if(n_races > 0) {
+        for(i in 1:n_races) {
+          results <- simulate_race_with_probability(gender_histories, race_type, gender_probabilities)
+          season_results[sim,] <- season_results[sim,] + results
+        }
+      }
+    }
+  }
+  
+  # Calculate winning probabilities (same as before)
+  winners <- apply(season_results, 1, which.max)
+  win_probs <- table(all_skiers[winners]) / n_simulations
+  win_probs <- sort(win_probs, decreasing = TRUE)
+  
+  final_points_summary <- data.frame(
+    Skier = all_skiers,
+    Gender = gender,
+    Current_Points = season_results[1,],
+    Mean_Final_Points = colMeans(season_results),
+    Mean_Points_Gained = colMeans(season_results) - season_results[1,],
+    Win_Prob = ifelse(all_skiers %in% names(win_probs), 
+                      win_probs[all_skiers], 0)
+  ) %>%
+    arrange(desc(Mean_Final_Points))
+  
+  return(list(
+    probabilities = win_probs,
+    simulation_results = season_results,
+    summary = final_points_summary
+  ))
+}
+
+library(writexl)
+
+# Modified create_standings_summary function for Alpine
+create_standings_summary <- function(simulation_results, standings_df, gender) {
   # First replace any NaN values with 0
   simulation_results[is.nan(simulation_results)] <- 0
   
@@ -1210,15 +1324,11 @@ create_standings_summary_alpine <- function(simulation_results, standings_df, ge
   return(final_table)
 }
 
-# Set up logging
-log_file <- file.path(get_output_dir(), "alpine_simulation_log.log")
-log_appender(appender_file(log_file))
+# Run simulations with participation probabilities for Alpine
+race_probability_table <- create_race_probability_table(men_chrono, ladies_chrono, top_30_men, top_30_women)
 
-# Step 1: Create race probability table (pre-compute probabilities for faster simulation)
-race_probability_table <- create_race_probability_table_alpine(men_chrono, ladies_chrono, top_30_men, top_30_women)
-
-# Step 2: Run simulations using pre-computed probabilities
-men_sims <- simulate_season_alpine(
+# Step 2: Run simulations using pre-computed probabilities (much faster!)
+men_sims <- simulate_season_with_probabilities(
   all_histories_clean, 
   standings_df, 
   "M", 
@@ -1227,7 +1337,7 @@ men_sims <- simulate_season_alpine(
   race_probability_table
 )
 
-women_sims <- simulate_season_alpine(
+women_sims <- simulate_season_with_probabilities(
   all_histories_clean, 
   ladies_standings_df, 
   "L", 
@@ -1237,67 +1347,51 @@ women_sims <- simulate_season_alpine(
 )
 
 # Create summaries for both genders
-men_summary <- create_standings_summary_alpine(men_sims$simulation_results, standings_df, "M")
-women_summary <- create_standings_summary_alpine(women_sims$simulation_results, ladies_standings_df, "L")
+men_summary <- create_standings_summary(men_sims$simulation_results, standings_df, "M")
+women_summary <- create_standings_summary(women_sims$simulation_results, ladies_standings_df, "L")
 
-# Save all outputs
-output_dir <- get_output_dir()
-dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-
-# Save prediction results
-write_xlsx(final_predictions, file.path(output_dir, "alpine_predictions.xlsx"))
-
-# Save simulation results
+# Save separate Excel files for each gender
+output_dir = get_output_dir()
 write_xlsx(men_summary, file.path(output_dir, "men_standings_predictions.xlsx"))
 write_xlsx(women_summary, file.path(output_dir, "ladies_standings_predictions.xlsx"))
 
-
+# ALPINE - MAGIC NUMBERS IMPLEMENTATION
+# Function to calculate total points remaining for Alpine
 calculate_total_points_remaining_alpine <- function(gender_races) {
-  # Alpine: Max points per race = 100
-  total_races <- sum(unlist(gender_races))
-  return(total_races * 100)
+  # Alpine has single point system: 100 points max per race
+  total_points <- sum(unlist(gender_races)) * 100
+  return(total_points)
 }
 
 # Function to calculate magic numbers for Alpine championship elimination
 calculate_magic_numbers_alpine <- function(standings_df, remaining_races_by_gender, gender = "M") {
   
-  # Get the current leader's points
   leader_points <- max(standings_df$Points, na.rm = TRUE)
-  
-  # Calculate total points available from remaining races
   gender_races <- remaining_races_by_gender[[gender]]
-  total_points_remaining <- sum(unlist(gender_races)) * 100 # Alpine max = 100
   
-  # Filter to only skiers with points who have a mathematical chance
+  # Alpine simple calculation
+  total_points_remaining <- sum(unlist(gender_races)) * 100
+  
   magic_numbers <- standings_df %>%
-    filter(Points > 0) %>%  # Only skiers with points
+    filter(Points > 0) %>%
     mutate(
       Current_Place = rank(desc(Points), ties.method = "min"),
-      
-      # Magic number calculation (CORRECTED):
-      # How many points does the leader need to eliminate this person?
-      # If this person gets ALL remaining points, leader needs: (Current_Points + Total_Remaining + 1) - Leader_Points
       Magic_Number = pmax(0, Points + total_points_remaining + 1 - leader_points),
-      
-      # Check if person has mathematical chance
-      # If their max possible (current + all remaining) > leader's current, they're still alive
       Max_Possible_Points = Points + total_points_remaining,
       Mathematical_Chance = Max_Possible_Points > leader_points
     ) %>%
-    filter(Mathematical_Chance == TRUE) %>%  # Only show skiers still in contention
+    filter(Mathematical_Chance == TRUE) %>%
     select(Skier, ID, Current_Place, Points, Magic_Number) %>%
     arrange(Current_Place)
   
   return(magic_numbers)
 }
+
 # Calculate magic numbers for both genders
 men_magic_numbers <- calculate_magic_numbers_alpine(standings_df, remaining_races_by_gender, "M")
-
 women_magic_numbers <- calculate_magic_numbers_alpine(ladies_standings_df, remaining_races_by_gender, "L")
 
 # Save to Excel files
 output_dir <- get_output_dir()
 write_xlsx(men_magic_numbers, file.path(output_dir, "men_magic_numbers.xlsx"))
 write_xlsx(women_magic_numbers, file.path(output_dir, "ladies_magic_numbers.xlsx"))
-
-
