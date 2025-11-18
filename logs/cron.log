@@ -34054,3 +34054,113 @@ Execution halted
 [2025-11-17 00:09:33 UTC] Log file: /root/blog/daehl-e/logs/master-automation-20251117.log
 [2025-11-17 00:09:33 UTC] =======================================
 [2025-11-17 00:09:33 UTC] ✓ All operations completed successfully
+Virtual environment activated: /root/blog/venv/bin/python3
+[2025-11-18 00:00:01 UTC] =======================================
+[2025-11-18 00:00:01 UTC] Master Automation Script Starting
+[2025-11-18 00:00:01 UTC] =======================================
+[2025-11-18 00:00:01 UTC] Date: 2025-11-18 (11/18/2025)
+[2025-11-18 00:00:01 UTC] Day of week: 2 (1=Monday, 7=Sunday)
+[2025-11-18 00:00:01 UTC] =======================================
+[2025-11-18 00:00:01 UTC] Determining overall season dates...
+[2025-11-18 00:00:01 UTC]   alpine: 10/25/2025 to 03/25/2026
+[2025-11-18 00:00:01 UTC]   biathlon: 11/29/2025 to 03/22/2026
+[2025-11-18 00:00:01 UTC]   nordic-combined: 11/28/2025 to 03/15/2026
+[2025-11-18 00:00:01 UTC]   ski: 11/28/2025 to 03/22/2026
+[2025-11-18 00:00:01 UTC]   skijump: 11/21/2025 to 03/28/2026
+[2025-11-18 00:00:01 UTC] Overall season: 2025-10-25 to 2026-03-28
+[2025-11-18 00:00:01 UTC] Season period: 2025-10-25 to 2026-03-28
+[2025-11-18 00:00:01 UTC] Season check: 2025-10-25 <= 2025-11-18 <= 2026-03-29
+[2025-11-18 00:00:01 UTC] ✓ Currently in racing season
+[2025-11-18 00:00:01 UTC] - No races found for today - skipping predict_script.sh
+[2025-11-18 00:00:01 UTC] ✓ In season - will run score_scrape.sh (checks yesterday's races)
+[2025-11-18 00:00:01 UTC] - Not Monday - skipping recap_script.sh
+[2025-11-18 00:00:01 UTC] =======================================
+[2025-11-18 00:00:01 UTC] Execution Summary:
+[2025-11-18 00:00:01 UTC]   score_scrape.sh: YES
+[2025-11-18 00:00:01 UTC]   predict_script.sh: NO
+[2025-11-18 00:00:01 UTC]   recap_script.sh: NO
+[2025-11-18 00:00:01 UTC] =======================================
+[2025-11-18 00:00:01 UTC] Starting score_scrape_ubuntu.sh...
+[2025-11-18 00:00:01 UTC] ========== score_scrape_ubuntu.sh OUTPUT BEGIN ==========
+=== Ski Statistics Update Script ===
+Date: Tue Nov 18 00:00:01 GMT 2025
+Checking for races on: 11/17/2025
+======================================
+
+=== CHECKING FOR RACES ===
+  Checking /root/ski/elo/python/alpine/polars/excel365/races.csv for date 11/17/2025
+- No races found for alpine on 11/17/2025
+  Available dates in file:
+10/25/2025
+10/26/2025
+11/15/2025
+11/16/2025
+11/22/2025
+11/23/2025
+11/27/2025
+11/28/2025
+11/29/2025
+11/30/2025
+  Checking /root/ski/elo/python/biathlon/polars/excel365/races.csv for date 11/17/2025
+- No races found for biathlon on 11/17/2025
+  Available dates in file:
+11/29/2025
+11/30/2025
+12/02/2025
+12/03/2025
+12/05/2025
+12/06/2025
+12/07/2025
+12/12/2025
+12/13/2025
+12/14/2025
+  Checking /root/ski/elo/python/nordic-combined/polars/excel365/races.csv for date 11/17/2025
+- No races found for nordic-combined on 11/17/2025
+  Available dates in file:
+01/03/2026
+01/04/2026
+01/09/2026
+01/10/2026
+11/28/2025
+11/29/2025
+11/30/2025
+12/05/2025
+12/06/2025
+12/07/2025
+  Checking /root/ski/elo/python/skijump/polars/excel365/races.csv for date 11/17/2025
+- No races found for skijump on 11/17/2025
+  Available dates in file:
+11/21/2025
+11/23/2025
+11/25/2025
+11/26/2025
+11/28/2025
+11/29/2025
+11/30/2025
+12/03/2025
+12/05/2025
+12/07/2025
+  Checking /root/ski/elo/python/ski/polars/excel365/races.csv for date 11/17/2025
+- No races found for ski on 11/17/2025
+  Available dates in file:
+11/28/2025
+11/29/2025
+11/30/2025
+12/05/2025
+12/06/2025
+12/07/2025
+12/12/2025
+12/13/2025
+12/14/2025
+12/28/2025
+
+No races found for yesterday (11/17/2025). Exiting.
+[2025-11-18 00:00:02 UTC] ========== score_scrape_ubuntu.sh OUTPUT END ==========
+[2025-11-18 00:00:02 UTC] ✓ score_scrape_ubuntu.sh completed successfully (2025-11-18 00:00:01 UTC to 2025-11-18 00:00:02 UTC)
+[2025-11-18 00:00:02 UTC]   Output logged to: /root/blog/daehl-e/logs/score_scrape_ubuntu-20251118-000001.log
+[2025-11-18 00:00:02 UTC] =======================================
+[2025-11-18 00:00:02 UTC] Committing and pushing changes to git
+[2025-11-18 00:00:02 UTC] =======================================
+[2025-11-18 00:00:02 UTC] Changes detected, proceeding with git operations...
+[2025-11-18 00:00:02 UTC] Adding all changes to git...
+[2025-11-18 00:00:02 UTC] ========== GIT ADD OUTPUT BEGIN ==========
