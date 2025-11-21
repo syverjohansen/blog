@@ -34442,3 +34442,444 @@ No races found for yesterday (11/19/2025). Exiting.
 [2025-11-20 00:00:03 UTC] Changes detected, proceeding with git operations...
 [2025-11-20 00:00:03 UTC] Adding all changes to git...
 [2025-11-20 00:00:03 UTC] ========== GIT ADD OUTPUT BEGIN ==========
+[2025-11-20 00:00:03 UTC] ========== GIT ADD OUTPUT END ==========
+[2025-11-20 00:00:03 UTC] ✓ Successfully added changes to git
+[2025-11-20 00:00:03 UTC] Committing changes with message: Master automation successfully ran and did the following: score_scrape
+[2025-11-20 00:00:03 UTC] ========== GIT COMMIT OUTPUT BEGIN ==========
+[main e911b05e] Master automation successfully ran and did the following: score_scrape
+ 1 file changed, 139 insertions(+)
+[2025-11-20 00:00:03 UTC] ========== GIT COMMIT OUTPUT END ==========
+[2025-11-20 00:00:03 UTC] ✓ Successfully committed changes
+[2025-11-20 00:00:03 UTC] Pulling latest changes from origin main...
+[2025-11-20 00:00:03 UTC] ========== GIT PULL OUTPUT BEGIN ==========
+From github.com:syverjohansen/blog
+ * branch              main       -> FETCH_HEAD
+Already up to date.
+[2025-11-20 00:00:04 UTC] ========== GIT PULL OUTPUT END ==========
+[2025-11-20 00:00:04 UTC] ✓ Successfully pulled from origin main
+[2025-11-20 00:00:04 UTC] Pushing changes to origin main...
+[2025-11-20 00:00:04 UTC] ========== GIT PUSH OUTPUT BEGIN ==========
+To github.com:syverjohansen/blog.git
+   fb1c2693..e911b05e  main -> main
+[2025-11-20 00:00:05 UTC] ========== GIT PUSH OUTPUT END ==========
+[2025-11-20 00:00:05 UTC] ✓ Successfully pushed to origin main
+[2025-11-20 00:00:05 UTC] =======================================
+[2025-11-20 00:00:05 UTC] Master Automation Script Completed
+[2025-11-20 00:00:05 UTC] =======================================
+[2025-11-20 00:00:05 UTC] Execution results: score_scrape:SUCCESS git_commit:SUCCESS git_pull:SUCCESS git_push:SUCCESS
+[2025-11-20 00:00:05 UTC] Total execution time: 2025-11-20 00:00:05 UTC
+[2025-11-20 00:00:05 UTC] Log file: /root/blog/daehl-e/logs/master-automation-20251120.log
+[2025-11-20 00:00:05 UTC] =======================================
+[2025-11-20 00:00:05 UTC] ✓ All operations completed successfully
+Virtual environment activated: /root/blog/venv/bin/python3
+[2025-11-21 00:00:02 UTC] =======================================
+[2025-11-21 00:00:02 UTC] Master Automation Script Starting
+[2025-11-21 00:00:02 UTC] =======================================
+[2025-11-21 00:00:02 UTC] Date: 2025-11-21 (11/21/2025)
+[2025-11-21 00:00:02 UTC] Day of week: 5 (1=Monday, 7=Sunday)
+[2025-11-21 00:00:02 UTC] =======================================
+[2025-11-21 00:00:02 UTC] Determining overall season dates...
+[2025-11-21 00:00:02 UTC]   alpine: 10/25/2025 to 03/25/2026
+[2025-11-21 00:00:02 UTC]   biathlon: 11/29/2025 to 03/22/2026
+[2025-11-21 00:00:02 UTC]   nordic-combined: 11/28/2025 to 03/15/2026
+[2025-11-21 00:00:02 UTC]   ski: 11/28/2025 to 03/22/2026
+[2025-11-21 00:00:02 UTC]   skijump: 11/21/2025 to 03/28/2026
+[2025-11-21 00:00:02 UTC] Overall season: 2025-10-25 to 2026-03-28
+[2025-11-21 00:00:02 UTC] Season period: 2025-10-25 to 2026-03-28
+[2025-11-21 00:00:02 UTC] Season check: 2025-10-25 <= 2025-11-21 <= 2026-03-29
+[2025-11-21 00:00:02 UTC] ✓ Currently in racing season
+[2025-11-21 00:00:02 UTC] Found races today for skijump
+[2025-11-21 00:00:02 UTC] ✓ Races found for today - will run predict_script.sh
+[2025-11-21 00:00:02 UTC] ✓ In season - will run score_scrape.sh (checks yesterday's races)
+[2025-11-21 00:00:02 UTC] - Not Monday - skipping recap_script.sh
+[2025-11-21 00:00:02 UTC] =======================================
+[2025-11-21 00:00:02 UTC] Execution Summary:
+[2025-11-21 00:00:02 UTC]   score_scrape.sh: YES
+[2025-11-21 00:00:02 UTC]   predict_script.sh: YES
+[2025-11-21 00:00:02 UTC]   recap_script.sh: NO
+[2025-11-21 00:00:02 UTC] =======================================
+[2025-11-21 00:00:02 UTC] Starting score_scrape_ubuntu.sh...
+[2025-11-21 00:00:02 UTC] ========== score_scrape_ubuntu.sh OUTPUT BEGIN ==========
+=== Ski Statistics Update Script ===
+Date: Fri Nov 21 00:00:02 GMT 2025
+Checking for races on: 11/20/2025
+======================================
+
+=== CHECKING FOR RACES ===
+  Checking /root/ski/elo/python/alpine/polars/excel365/races.csv for date 11/20/2025
+- No races found for alpine on 11/20/2025
+  Available dates in file:
+10/25/2025
+10/26/2025
+11/15/2025
+11/16/2025
+11/22/2025
+11/23/2025
+11/27/2025
+11/28/2025
+11/29/2025
+11/30/2025
+  Checking /root/ski/elo/python/biathlon/polars/excel365/races.csv for date 11/20/2025
+- No races found for biathlon on 11/20/2025
+  Available dates in file:
+11/29/2025
+11/30/2025
+12/02/2025
+12/03/2025
+12/05/2025
+12/06/2025
+12/07/2025
+12/12/2025
+12/13/2025
+12/14/2025
+  Checking /root/ski/elo/python/nordic-combined/polars/excel365/races.csv for date 11/20/2025
+- No races found for nordic-combined on 11/20/2025
+  Available dates in file:
+01/03/2026
+01/04/2026
+01/09/2026
+01/10/2026
+11/28/2025
+11/29/2025
+11/30/2025
+12/05/2025
+12/06/2025
+12/07/2025
+  Checking /root/ski/elo/python/skijump/polars/excel365/races.csv for date 11/20/2025
+- No races found for skijump on 11/20/2025
+  Available dates in file:
+11/21/2025
+11/23/2025
+11/25/2025
+11/26/2025
+11/28/2025
+11/29/2025
+11/30/2025
+12/03/2025
+12/05/2025
+12/07/2025
+  Checking /root/ski/elo/python/ski/polars/excel365/races.csv for date 11/20/2025
+- No races found for ski on 11/20/2025
+  Available dates in file:
+11/28/2025
+11/29/2025
+11/30/2025
+12/05/2025
+12/06/2025
+12/07/2025
+12/12/2025
+12/13/2025
+12/14/2025
+12/28/2025
+
+No races found for yesterday (11/20/2025). Exiting.
+[2025-11-21 00:00:03 UTC] ========== score_scrape_ubuntu.sh OUTPUT END ==========
+[2025-11-21 00:00:03 UTC] ✓ score_scrape_ubuntu.sh completed successfully (2025-11-21 00:00:02 UTC to 2025-11-21 00:00:03 UTC)
+[2025-11-21 00:00:03 UTC]   Output logged to: /root/blog/daehl-e/logs/score_scrape_ubuntu-20251121-000002.log
+[2025-11-21 00:00:03 UTC] Starting predict_script_ubuntu.sh...
+[2025-11-21 00:00:03 UTC] ========== predict_script_ubuntu.sh OUTPUT BEGIN ==========
+[2025-11-21 00:00:03 GMT] =======================================
+[2025-11-21 00:00:03 GMT] Starting prediction script for November 21, 2025
+[2025-11-21 00:00:03 GMT] =======================================
+[2025-11-21 00:00:03 GMT] Date formats:
+[2025-11-21 00:00:03 GMT]   MM/DD/YYYY: 11/21/2025
+[2025-11-21 00:00:03 GMT]   YYYYMMDD: 20251121
+[2025-11-21 00:00:03 GMT]   Display: November 21, 2025
+[2025-11-21 00:00:03 GMT] =======================================
+[2025-11-21 00:00:03 GMT] Checking base directories:
+[2025-11-21 00:00:03 GMT]   BLOG_DIR: /root/blog/daehl-e (exists: yes)
+[2025-11-21 00:00:03 GMT]   SKI_DIR: /root/ski/elo/python (exists: yes)
+[2025-11-21 00:00:03 GMT]   CONTENT_DIR: /root/blog/daehl-e/content/post (exists: yes)
+[2025-11-21 00:00:03 GMT] =======================================
+[2025-11-21 00:00:03 GMT] Processing sports for predictions
+[2025-11-21 00:00:03 GMT] =======================================
+[2025-11-21 00:00:03 GMT] --- Starting alpine data generation ---
+[2025-11-21 00:00:03 GMT] Processing sport data: alpine -> alpine
+[2025-11-21 00:00:03 GMT] Checking directories for alpine:
+[2025-11-21 00:00:03 GMT]   Excel dir: /root/ski/elo/python/alpine/polars/excel365 (exists: yes)
+[2025-11-21 00:00:03 GMT]   Polars dir: /root/ski/elo/python/alpine/polars (exists: yes)
+[2025-11-21 00:00:03 GMT]   Weekends CSV: /root/ski/elo/python/alpine/polars/excel365/weekends.csv (exists: yes)
+[2025-11-21 00:00:03 GMT]   Races CSV: /root/ski/elo/python/alpine/polars/excel365/races.csv (exists: yes)
+[2025-11-21 00:00:03 GMT] Checking for date 11/21/2025 in /root/ski/elo/python/alpine/polars/excel365/weekends.csv
+[2025-11-21 00:00:03 GMT] ✗ No weekend races found for alpine on 11/21/2025
+[2025-11-21 00:00:03 GMT] Checking for date 11/21/2025 in /root/ski/elo/python/alpine/polars/excel365/races.csv
+[2025-11-21 00:00:03 GMT] ✗ No regular races found for alpine on 11/21/2025
+[2025-11-21 00:00:03 GMT] ✗ alpine returned no data generation result
+[2025-11-21 00:00:03 GMT] --- Completed alpine processing ---
+[2025-11-21 00:00:03 GMT] 
+[2025-11-21 00:00:03 GMT] --- Starting biathlon data generation ---
+[2025-11-21 00:00:03 GMT] Processing sport data: biathlon -> biathlon
+[2025-11-21 00:00:03 GMT] Checking directories for biathlon:
+[2025-11-21 00:00:03 GMT]   Excel dir: /root/ski/elo/python/biathlon/polars/excel365 (exists: yes)
+[2025-11-21 00:00:03 GMT]   Polars dir: /root/ski/elo/python/biathlon/polars (exists: yes)
+[2025-11-21 00:00:03 GMT]   Weekends CSV: /root/ski/elo/python/biathlon/polars/excel365/weekends.csv (exists: yes)
+[2025-11-21 00:00:03 GMT]   Races CSV: /root/ski/elo/python/biathlon/polars/excel365/races.csv (exists: yes)
+[2025-11-21 00:00:03 GMT] Checking for date 11/21/2025 in /root/ski/elo/python/biathlon/polars/excel365/weekends.csv
+[2025-11-21 00:00:03 GMT] ✗ No weekend races found for biathlon on 11/21/2025
+[2025-11-21 00:00:03 GMT] Checking for date 11/21/2025 in /root/ski/elo/python/biathlon/polars/excel365/races.csv
+[2025-11-21 00:00:03 GMT] ✗ No regular races found for biathlon on 11/21/2025
+[2025-11-21 00:00:03 GMT] ✗ biathlon returned no data generation result
+[2025-11-21 00:00:03 GMT] --- Completed biathlon processing ---
+[2025-11-21 00:00:03 GMT] 
+[2025-11-21 00:00:03 GMT] --- Starting nordic-combined data generation ---
+[2025-11-21 00:00:03 GMT] Processing sport data: nordic-combined -> nordic-combined
+[2025-11-21 00:00:03 GMT] Checking directories for nordic-combined:
+[2025-11-21 00:00:03 GMT]   Excel dir: /root/ski/elo/python/nordic-combined/polars/excel365 (exists: yes)
+[2025-11-21 00:00:03 GMT]   Polars dir: /root/ski/elo/python/nordic-combined/polars (exists: yes)
+[2025-11-21 00:00:03 GMT]   Weekends CSV: /root/ski/elo/python/nordic-combined/polars/excel365/weekends.csv (exists: yes)
+[2025-11-21 00:00:03 GMT]   Races CSV: /root/ski/elo/python/nordic-combined/polars/excel365/races.csv (exists: yes)
+[2025-11-21 00:00:03 GMT] Checking for date 11/21/2025 in /root/ski/elo/python/nordic-combined/polars/excel365/weekends.csv
+[2025-11-21 00:00:03 GMT] ✗ No weekend races found for nordic-combined on 11/21/2025
+[2025-11-21 00:00:03 GMT] Checking for date 11/21/2025 in /root/ski/elo/python/nordic-combined/polars/excel365/races.csv
+[2025-11-21 00:00:03 GMT] ✗ No regular races found for nordic-combined on 11/21/2025
+[2025-11-21 00:00:03 GMT] ✗ nordic-combined returned no data generation result
+[2025-11-21 00:00:03 GMT] --- Completed nordic-combined processing ---
+[2025-11-21 00:00:03 GMT] 
+[2025-11-21 00:00:03 GMT] --- Starting ski data generation ---
+[2025-11-21 00:00:03 GMT] Processing sport data: ski -> cross-country
+[2025-11-21 00:00:03 GMT] Checking directories for ski:
+[2025-11-21 00:00:03 GMT]   Excel dir: /root/ski/elo/python/ski/polars/excel365 (exists: yes)
+[2025-11-21 00:00:03 GMT]   Polars dir: /root/ski/elo/python/ski/polars (exists: yes)
+[2025-11-21 00:00:03 GMT]   Weekends CSV: /root/ski/elo/python/ski/polars/excel365/weekends.csv (exists: yes)
+[2025-11-21 00:00:03 GMT]   Races CSV: /root/ski/elo/python/ski/polars/excel365/races.csv (exists: yes)
+[2025-11-21 00:00:03 GMT] Checking for date 11/21/2025 in /root/ski/elo/python/ski/polars/excel365/weekends.csv
+[2025-11-21 00:00:03 GMT] ✗ No weekend races found for ski on 11/21/2025
+[2025-11-21 00:00:03 GMT] Checking for date 11/21/2025 in /root/ski/elo/python/ski/polars/excel365/races.csv
+[2025-11-21 00:00:03 GMT] ✗ No regular races found for ski on 11/21/2025
+[2025-11-21 00:00:03 GMT] ✗ ski returned no data generation result
+[2025-11-21 00:00:03 GMT] --- Completed ski processing ---
+[2025-11-21 00:00:03 GMT] 
+[2025-11-21 00:00:03 GMT] --- Starting skijump data generation ---
+[2025-11-21 00:00:03 GMT] Processing sport data: skijump -> skijump
+[2025-11-21 00:00:03 GMT] Checking directories for skijump:
+[2025-11-21 00:00:03 GMT]   Excel dir: /root/ski/elo/python/skijump/polars/excel365 (exists: yes)
+[2025-11-21 00:00:03 GMT]   Polars dir: /root/ski/elo/python/skijump/polars (exists: yes)
+[2025-11-21 00:00:03 GMT]   Weekends CSV: /root/ski/elo/python/skijump/polars/excel365/weekends.csv (exists: yes)
+[2025-11-21 00:00:03 GMT]   Races CSV: /root/ski/elo/python/skijump/polars/excel365/races.csv (exists: yes)
+[2025-11-21 00:00:03 GMT] Checking for date 11/21/2025 in /root/ski/elo/python/skijump/polars/excel365/weekends.csv
+[2025-11-21 00:00:03 GMT] ✓ Weekend races found for skijump on 11/21/2025
+[2025-11-21 00:00:03 GMT] Running startlist-scrape-weekend.py for skijump
+[2025-11-21 00:03:59 GMT] Completed startlist-scrape-weekend.py for skijump
+[2025-11-21 00:03:59 GMT] Created weekend source directory: /root/blog/daehl-e/content/post/skijump/drafts/weekly-picks/20251121
+[2025-11-21 00:03:59 GMT] Processing weekend Excel files in /root/blog/daehl-e/content/post/skijump/drafts/weekly-picks/20251121
+[2025-11-21 00:03:59 GMT] Found 7 weekend Excel files to process
+[2025-11-21 00:03:59 GMT] Processing weekend Excel file: Mixed_team.xlsx
+[2025-11-21 00:04:01 GMT] ✓ Successfully processed weekend Mixed_team.xlsx
+[2025-11-21 00:04:01 GMT] Processing weekend Excel file: Mixed_team_position_probabilities.xlsx
+[2025-11-21 00:04:02 GMT] ✓ Successfully processed weekend Mixed_team_position_probabilities.xlsx
+[2025-11-21 00:04:02 GMT] Processing weekend Excel file: ladies.xlsx
+[2025-11-21 00:04:03 GMT] ✓ Successfully processed weekend ladies.xlsx
+[2025-11-21 00:04:03 GMT] Processing weekend Excel file: ladies_position_probabilities.xlsx
+[2025-11-21 00:04:05 GMT] ✓ Successfully processed weekend ladies_position_probabilities.xlsx
+[2025-11-21 00:04:05 GMT] Processing weekend Excel file: men.xlsx
+[2025-11-21 00:04:06 GMT] ✓ Successfully processed weekend men.xlsx
+[2025-11-21 00:04:06 GMT] Processing weekend Excel file: men_position_probabilities.xlsx
+[2025-11-21 00:04:07 GMT] ✓ Successfully processed weekend men_position_probabilities.xlsx
+[2025-11-21 00:04:07 GMT] Processing weekend Excel file: skijump_top_contenders.xlsx
+[2025-11-21 00:04:08 GMT] ✓ Successfully processed weekend skijump_top_contenders.xlsx
+[2025-11-21 00:04:08 GMT] Checking for date 11/21/2025 in /root/ski/elo/python/skijump/polars/excel365/races.csv
+[2025-11-21 00:04:08 GMT] ✓ Regular races found for skijump on 11/21/2025
+[2025-11-21 00:04:08 GMT] Running startlist-scrape-races.py for skijump
+[2025-11-21 00:05:20 GMT] Completed startlist-scrape-races.py for skijump
+[2025-11-21 00:05:20 GMT] Created race source directory: /root/blog/daehl-e/content/post/skijump/drafts/race-picks/20251121
+[2025-11-21 00:05:20 GMT] Processing race Excel files in /root/blog/daehl-e/content/post/skijump/drafts/race-picks/20251121
+[2025-11-21 00:05:20 GMT] Found 7 race Excel files to process
+[2025-11-21 00:05:20 GMT] Processing race Excel file: Mixed_team.xlsx
+[2025-11-21 00:05:22 GMT] ✓ Successfully processed race Mixed_team.xlsx
+[2025-11-21 00:05:22 GMT] Processing race Excel file: Mixed_team_position_probabilities.xlsx
+[2025-11-21 00:05:23 GMT] ✓ Successfully processed race Mixed_team_position_probabilities.xlsx
+[2025-11-21 00:05:23 GMT] Processing race Excel file: ladies.xlsx
+[2025-11-21 00:05:23 GMT] ✓ Successfully processed race ladies.xlsx
+[2025-11-21 00:05:23 GMT] Processing race Excel file: ladies_position_probabilities.xlsx
+[2025-11-21 00:05:24 GMT] ✓ Successfully processed race ladies_position_probabilities.xlsx
+[2025-11-21 00:05:24 GMT] Processing race Excel file: men.xlsx
+[2025-11-21 00:05:25 GMT] ✓ Successfully processed race men.xlsx
+[2025-11-21 00:05:25 GMT] Processing race Excel file: men_position_probabilities.xlsx
+[2025-11-21 00:05:26 GMT] ✓ Successfully processed race men_position_probabilities.xlsx
+[2025-11-21 00:05:26 GMT] Processing race Excel file: skijump_top_contenders.xlsx
+[2025-11-21 00:05:28 GMT] ✓ Successfully processed race skijump_top_contenders.xlsx
+[2025-11-21 00:05:28 GMT] ✓ skijump returned data generation result: skijump:weekly-picks:true|skijump:race-picks:true
+[2025-11-21 00:05:28 GMT] Added prediction: skijump:weekly-picks:true
+[2025-11-21 00:05:28 GMT] Added prediction: skijump:race-picks:true
+[2025-11-21 00:05:28 GMT] --- Completed skijump processing ---
+[2025-11-21 00:05:28 GMT] 
+[2025-11-21 00:05:28 GMT] =======================================
+[2025-11-21 00:05:28 GMT] Data generation phase complete
+[2025-11-21 00:05:28 GMT] Sports with generated data: skijump:weekly-picks:true|skijump:race-picks:true
+[2025-11-21 00:05:28 GMT] =======================================
+[2025-11-21 00:05:28 GMT] Waiting 5 seconds for data files to be fully written...
+[2025-11-21 00:05:33 GMT] =======================================
+[2025-11-21 00:05:33 GMT] Starting Hugo post creation phase
+[2025-11-21 00:05:33 GMT] =======================================
+[2025-11-21 00:05:33 GMT] Creating Hugo posts for predictions
+[2025-11-21 00:05:33 GMT] Raw sports_with_predictions: 'skijump:weekly-picks:true|skijump:race-picks:true'
+[2025-11-21 00:05:33 GMT] Found 2 sport(s) with predictions
+[2025-11-21 00:05:33 GMT] Prediction array contents:
+[2025-11-21 00:05:33 GMT]   [0]: 'skijump:weekly-picks:true'
+[2025-11-21 00:05:33 GMT]   [1]: 'skijump:race-picks:true'
+[2025-11-21 00:05:33 GMT] Processing prediction: sport='skijump', type='weekly-picks', weekend='true'
+[2025-11-21 00:05:33 GMT] Added to weekend predictions: skijump:weekly-picks:true
+[2025-11-21 00:05:33 GMT] Processing prediction: sport='skijump', type='race-picks', weekend='true'
+[2025-11-21 00:05:33 GMT] Added to race predictions: skijump:race-picks:true
+[2025-11-21 00:05:33 GMT] Final weekend predictions: 'skijump:weekly-picks:true'
+[2025-11-21 00:05:33 GMT] Final race predictions: 'skijump:race-picks:true'
+[2025-11-21 00:05:33 GMT] Creating weekly picks post
+[2025-11-21 00:05:33 GMT] Weekend predictions to process: 'skijump:weekly-picks:true'
+[2025-11-21 00:05:33 GMT] Weekly post directory: /root/blog/daehl-e/content/post/weekly-picks (exists: yes)
+[2025-11-21 00:05:33 GMT] Weekly post file: /root/blog/daehl-e/content/post/weekly-picks/20251121.md
+[2025-11-21 00:05:33 GMT] Created weekly post header
+[2025-11-21 00:05:33 GMT] Adding section for weekend sport: skijump
+[2025-11-21 00:05:33 GMT] Creating section for sport: Skijump
+[2025-11-21 00:05:33 GMT] Files found in /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121:
+[2025-11-21 00:05:33 GMT]   - Mixed_team.json
+[2025-11-21 00:05:33 GMT]   - Mixed_team_position_probabilities.json
+[2025-11-21 00:05:33 GMT]   - ladies.json
+[2025-11-21 00:05:33 GMT]   - ladies_position_probabilities_Ladies_Race_1.json
+[2025-11-21 00:05:33 GMT]   - ladies_position_probabilities_Ladies_Race_2.json
+[2025-11-21 00:05:33 GMT]   - men.json
+[2025-11-21 00:05:33 GMT]   - men_position_probabilities_Men_Race_1.json
+[2025-11-21 00:05:33 GMT]   - men_position_probabilities_Men_Race_2.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Ladies_Race_1___Podium.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Ladies_Race_1___Top5.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Ladies_Race_1___Win.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Ladies_Race_2___Podium.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Ladies_Race_2___Top5.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Ladies_Race_2___Win.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Men_Race_1___Podium.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Men_Race_1___Top5.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Men_Race_1___Win.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Men_Race_2___Podium.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Men_Race_2___Top5.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Men_Race_2___Win.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Mixed_Team_Race_1___Podium.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Mixed_Team_Race_1___Top5.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Mixed_Team_Race_1___Win.json
+[2025-11-21 00:05:33 GMT] Total JSON files found: 23
+[2025-11-21 00:05:33 GMT] Skijump team categories: men_team ladies_team Mixed_team
+[2025-11-21 00:05:33 GMT] Checking category 'men':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/men.json (exists: yes)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/men_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 2
+[2025-11-21 00:05:33 GMT]     - men_position_probabilities_Men_Race_1.json
+[2025-11-21 00:05:33 GMT]     - men_position_probabilities_Men_Race_2.json
+[2025-11-21 00:05:33 GMT]   → Adding section for Men
+[2025-11-21 00:05:33 GMT] Adding Points section for men in skijump
+[2025-11-21 00:05:33 GMT] Adding Position Probabilities section for men in skijump
+[2025-11-21 00:05:33 GMT] Adding Race 1 for men in skijump
+[2025-11-21 00:05:33 GMT] Adding Race 2 for men in skijump
+[2025-11-21 00:05:33 GMT] Checking category 'ladies':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/ladies.json (exists: yes)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/ladies_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 2
+[2025-11-21 00:05:33 GMT]     - ladies_position_probabilities_Ladies_Race_1.json
+[2025-11-21 00:05:33 GMT]     - ladies_position_probabilities_Ladies_Race_2.json
+[2025-11-21 00:05:33 GMT]   → Adding section for Ladies
+[2025-11-21 00:05:33 GMT] Adding Points section for ladies in skijump
+[2025-11-21 00:05:33 GMT] Adding Position Probabilities section for ladies in skijump
+[2025-11-21 00:05:33 GMT] Adding Race 1 for ladies in skijump
+[2025-11-21 00:05:33 GMT] Adding Race 2 for ladies in skijump
+[2025-11-21 00:05:33 GMT] Checking category 'mixed':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/mixed.json (exists: no)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/mixed_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 0
+[2025-11-21 00:05:33 GMT]   → No content found for mixed
+[2025-11-21 00:05:33 GMT] Checking category 'men_team':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/men_team.json (exists: no)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/men_team_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 0
+[2025-11-21 00:05:33 GMT]   → No content found for men_team
+[2025-11-21 00:05:33 GMT] Checking category 'ladies_team':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/ladies_team.json (exists: no)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/ladies_team_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 0
+[2025-11-21 00:05:33 GMT]   → No content found for ladies_team
+[2025-11-21 00:05:33 GMT] Checking category 'Mixed_team':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/Mixed_team.json (exists: yes)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/weekly-picks/20251121/Mixed_team_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 1
+[2025-11-21 00:05:33 GMT]     - Mixed_team_position_probabilities.json
+[2025-11-21 00:05:33 GMT]   → Adding section for Mixed Team
+[2025-11-21 00:05:33 GMT] Adding Points section for Mixed_team in skijump
+[2025-11-21 00:05:33 GMT] Adding Position Probabilities section for Mixed_team in skijump
+[2025-11-21 00:05:33 GMT] Adding Race 1 for Mixed_team in skijump
+[2025-11-21 00:05:33 GMT] ✓ Created weekly picks post: /root/blog/daehl-e/content/post/weekly-picks/20251121.md
+[2025-11-21 00:05:33 GMT] Creating race picks post
+[2025-11-21 00:05:33 GMT] Race predictions to process: 'skijump:race-picks:true'
+[2025-11-21 00:05:33 GMT] Race post directory: /root/blog/daehl-e/content/post/race-picks (exists: yes)
+[2025-11-21 00:05:33 GMT] Race post file: /root/blog/daehl-e/content/post/race-picks/20251121.md
+[2025-11-21 00:05:33 GMT] Created race post header
+[2025-11-21 00:05:33 GMT] Adding section for race sport: skijump
+[2025-11-21 00:05:33 GMT] Creating section for sport: Skijump
+[2025-11-21 00:05:33 GMT] Files found in /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121:
+[2025-11-21 00:05:33 GMT]   - Mixed_team.json
+[2025-11-21 00:05:33 GMT]   - Mixed_team_position_probabilities.json
+[2025-11-21 00:05:33 GMT]   - ladies.json
+[2025-11-21 00:05:33 GMT]   - ladies_position_probabilities.json
+[2025-11-21 00:05:33 GMT]   - men.json
+[2025-11-21 00:05:33 GMT]   - men_position_probabilities.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Ladies_Race_1___Podium.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Ladies_Race_1___Top5.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Ladies_Race_1___Win.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Men_Race_1___Podium.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Men_Race_1___Top5.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Men_Race_1___Win.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Mixed_Team_Race_1___Podium.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Mixed_Team_Race_1___Top5.json
+[2025-11-21 00:05:33 GMT]   - skijump_top_contenders_Mixed_Team_Race_1___Win.json
+[2025-11-21 00:05:33 GMT] Total JSON files found: 15
+[2025-11-21 00:05:33 GMT] Skijump team categories: men_team ladies_team Mixed_team
+[2025-11-21 00:05:33 GMT] Checking category 'men':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/men.json (exists: yes)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/men_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 1
+[2025-11-21 00:05:33 GMT]     - men_position_probabilities.json
+[2025-11-21 00:05:33 GMT]   → Adding section for Men
+[2025-11-21 00:05:33 GMT] Adding Points section for men in skijump
+[2025-11-21 00:05:33 GMT] Adding Position Probabilities section for men in skijump
+[2025-11-21 00:05:33 GMT] Adding Race 1 for men in skijump
+[2025-11-21 00:05:33 GMT] Checking category 'ladies':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/ladies.json (exists: yes)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/ladies_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 1
+[2025-11-21 00:05:33 GMT]     - ladies_position_probabilities.json
+[2025-11-21 00:05:33 GMT]   → Adding section for Ladies
+[2025-11-21 00:05:33 GMT] Adding Points section for ladies in skijump
+[2025-11-21 00:05:33 GMT] Adding Position Probabilities section for ladies in skijump
+[2025-11-21 00:05:33 GMT] Adding Race 1 for ladies in skijump
+[2025-11-21 00:05:33 GMT] Checking category 'mixed':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/mixed.json (exists: no)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/mixed_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 0
+[2025-11-21 00:05:33 GMT]   → No content found for mixed
+[2025-11-21 00:05:33 GMT] Checking category 'men_team':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/men_team.json (exists: no)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/men_team_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 0
+[2025-11-21 00:05:33 GMT]   → No content found for men_team
+[2025-11-21 00:05:33 GMT] Checking category 'ladies_team':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/ladies_team.json (exists: no)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/ladies_team_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 0
+[2025-11-21 00:05:33 GMT]   → No content found for ladies_team
+[2025-11-21 00:05:33 GMT] Checking category 'Mixed_team':
+[2025-11-21 00:05:33 GMT]   Points file: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/Mixed_team.json (exists: yes)
+[2025-11-21 00:05:33 GMT]   Prob base: /root/blog/daehl-e/data/skijump/drafts/race-picks/20251121/Mixed_team_position_probabilities
+[2025-11-21 00:05:33 GMT]   Probability files found: 1
+[2025-11-21 00:05:33 GMT]     - Mixed_team_position_probabilities.json
+[2025-11-21 00:05:33 GMT]   → Adding section for Mixed Team
+[2025-11-21 00:05:33 GMT] Adding Points section for Mixed_team in skijump
+[2025-11-21 00:05:33 GMT] Adding Position Probabilities section for Mixed_team in skijump
+[2025-11-21 00:05:33 GMT] Adding Race 1 for Mixed_team in skijump
+[2025-11-21 00:05:33 GMT] ✓ Created race picks post: /root/blog/daehl-e/content/post/race-picks/20251121.md
+[2025-11-21 00:05:33 GMT] =======================================
+[2025-11-21 00:05:33 GMT] Prediction script completed successfully
+[2025-11-21 00:05:33 GMT] =======================================
+[2025-11-21 00:05:34 UTC] ========== predict_script_ubuntu.sh OUTPUT END ==========
+[2025-11-21 00:05:34 UTC] ✓ predict_script_ubuntu.sh completed successfully (2025-11-21 00:00:03 UTC to 2025-11-21 00:05:34 UTC)
+[2025-11-21 00:05:34 UTC]   Output logged to: /root/blog/daehl-e/logs/predict_script_ubuntu-20251121-000003.log
+[2025-11-21 00:05:34 UTC] =======================================
+[2025-11-21 00:05:34 UTC] Committing and pushing changes to git
+[2025-11-21 00:05:34 UTC] =======================================
+[2025-11-21 00:05:34 UTC] Changes detected, proceeding with git operations...
+[2025-11-21 00:05:34 UTC] Adding all changes to git...
+[2025-11-21 00:05:34 UTC] ========== GIT ADD OUTPUT BEGIN ==========

@@ -1,0 +1,1004 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Sex",
+    "Race1 Points",
+    "Race1 Probability",
+    "Total Points"
+  ],
+  "rows": [
+    [
+      "Jan Hörl",
+      2416,
+      "AUT",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Stefan Kraft",
+      432,
+      "AUT",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Daniel Tschofenig",
+      2542,
+      "AUT",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Anze Lanisek",
+      1166,
+      "SLO",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Ryoyu Kobayashi",
+      1637,
+      "JPN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Andreas Wellinger",
+      553,
+      "GER",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Johann Forfang",
+      902,
+      "NOR",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Gregor Deschwanden",
+      273,
+      "SUI",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Domen Prevc",
+      1868,
+      "SLO",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Kristoffer Eriksen Sundal",
+      2575,
+      "NOR",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Manuel Fettner",
+      17,
+      "AUT",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Karl Geiger",
+      554,
+      "GER",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Marius Lindvik",
+      1920,
+      "NOR",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Pawel Wasek",
+      2189,
+      "POL",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Maximilian Ortner",
+      2556,
+      "AUT",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Pius Paschke",
+      1556,
+      "GER",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Timi Zajc",
+      2106,
+      "SLO",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Ren Nikaido",
+      2283,
+      "JPN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Halvor Egner Granerud",
+      1828,
+      "NOR",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Philipp Raimund",
+      2401,
+      "GER",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Tate Frantz",
+      2628,
+      "USA",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Aleksander Zniszczol",
+      277,
+      "POL",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Kamil Stoch",
+      40,
+      "POL",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Benjamin Østvold",
+      2546,
+      "NOR",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Lovro Kos",
+      2405,
+      "SLO",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Artti Aigro",
+      1871,
+      "EST",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Naoki Nakamura",
+      1845,
+      "JPN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Dawid Kubacki",
+      69,
+      "POL",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Vladimir Zografski",
+      61,
+      "BUL",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Giovanni Bresadola",
+      2277,
+      "ITA",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Piotr Zyla",
+      98,
+      "POL",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Antti Aalto",
+      924,
+      "FIN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Stephan Embacher",
+      2638,
+      "AUT",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Yukiya Sato",
+      881,
+      "JPN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Sakutaro Kobayashi",
+      2637,
+      "JPN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Jules Chervet",
+      2571,
+      "FRA",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Kevin Bickner",
+      1644,
+      "USA",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Hektor Kapustik",
+      2674,
+      "SVK",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Yevhen Marusiak",
+      2089,
+      "UKR",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Valentin Foubert",
+      2423,
+      "FRA",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Alex Insam",
+      915,
+      "ITA",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Svyatoslav Nazarenko",
+      2587,
+      "KAZ",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Jason Colby",
+      2679,
+      "USA",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Erik Belshaw",
+      2497,
+      "USA",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Weijie Zhen",
+      2560,
+      "CHN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Felix Hoffmann",
+      1893,
+      "GER",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Rok Oblak",
+      2576,
+      "SLO",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Sandro Hauswirth",
+      2116,
+      "SUI",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Mihnea Alexandru Spulber",
+      2143,
+      "ROU",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Mackenzie Boyd-Clowes",
+      95,
+      "CAN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Roman Koudelka",
+      24,
+      "CZE",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Daniel Andrei Cacina",
+      2329,
+      "ROU",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Tomofumi Naito",
+      2404,
+      "JPN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Vilho Palosaari",
+      2533,
+      "FIN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Simon Ammann",
+      4,
+      "SUI",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Felix Trunz",
+      2654,
+      "SUI",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Ilya Mizernykh",
+      2685,
+      "KAZ",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Muhammed Ali Bedir",
+      2117,
+      "TUR",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Kasperi Valto",
+      2513,
+      "FIN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Fatih Arda Ipcioglu",
+      1890,
+      "TUR",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Francesco Cecon",
+      2431,
+      "ITA",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Andrew Urlaub",
+      2426,
+      "USA",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Vitaliy Kalinichenko",
+      1839,
+      "UKR",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Danil Vassilyev",
+      2476,
+      "KAZ",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "TOMASIAK Kacper",
+      239625,
+      "POL",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "VANWIEREN Tarik",
+      274961,
+      "CAN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "OBERSTEINER Louis",
+      229568,
+      "FRA",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "LYU Yixin",
+      237716,
+      "CHN",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "KESSELI Juri",
+      229759,
+      "SUI",
+      "M",
+      100,
+      1,
+      100
+    ],
+    [
+      "Michael Hayböck",
+      66,
+      "Austria",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Clemens Aigner",
+      1827,
+      "Austria",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Markus Mueller",
+      2540,
+      "Austria",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Robert Johansson",
+      1413,
+      "Norway",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Markus Eisenbichler",
+      275,
+      "Germany",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Stephan Leyhe",
+      1169,
+      "Germany",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Ziga Jelar",
+      1858,
+      "Slovenia",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Robin Pedersen",
+      1933,
+      "Norway",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Fredrik Villumstad",
+      2243,
+      "Norway",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Rok Masle",
+      2545,
+      "Slovenia",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Constantin Schmid",
+      2178,
+      "Germany",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Killian Peier",
+      882,
+      "Switzerland",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Tomas Kuisma",
+      2504,
+      "Finland",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Sølve Jokerud Strand",
+      2566,
+      "Norway",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Zak Mogel",
+      2417,
+      "Slovenia",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Ziga Jancar",
+      2732,
+      "Slovenia",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Hannes Landerer",
+      2600,
+      "Austria",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Isak Andreas Langmo",
+      2677,
+      "Norway",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Adrian Thon Gundersrud",
+      2535,
+      "Norway",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Jonas Schuster",
+      2579,
+      "Austria",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Kacper Juroszek",
+      2418,
+      "Poland",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Jakub Wolny",
+      1587,
+      "Poland",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Paavo Romppainen",
+      2602,
+      "Finland",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Kaimar Vagul",
+      2626,
+      "Estonia",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Qiwu Song",
+      2559,
+      "China",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Sindre Ulven Jørgensen",
+      2583,
+      "Norway",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Noriaki Kasai",
+      30,
+      "Japan",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Luca Roth",
+      2397,
+      "Germany",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Yannick Wasser",
+      2514,
+      "Switzerland",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Junshiro Kobayashi",
+      266,
+      "Japan",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Adrian Tittel",
+      2608,
+      "Germany",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Remo Imhof",
+      2569,
+      "Switzerland",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Maciej Kot",
+      103,
+      "Poland",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Enzo Milesi",
+      2507,
+      "France",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Jarkko Määttä",
+      53,
+      "Finland",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Eetu Nousiainen",
+      1869,
+      "Finland",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Niko Kytösaho",
+      1830,
+      "Finland",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Keiichi Sato",
+      2184,
+      "Japan",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Taku Takeuchi",
+      33,
+      "Japan",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Decker Dean",
+      2284,
+      "USA",
+      "M",
+      0,
+      0,
+      0
+    ],
+    [
+      "Casey Larson",
+      2114,
+      "USA",
+      "M",
+      0,
+      0,
+      0
+    ]
+  ]
+}
