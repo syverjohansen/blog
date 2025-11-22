@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 1 - Top5",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Top5%"
+  ],
+  "rows": [
+    [
+      "Henrik Kristoffersen",
+      "NOR",
+      100.0
+    ],
+    [
+      "Lucas Pinheiro Braathen",
+      "BRA",
+      98.4728161270617
+    ],
+    [
+      "Linus Strasser",
+      "GER",
+      86.7440439828955
+    ],
+    [
+      "Atle Lie McGrath",
+      "NOR",
+      70.1282834453268
+    ],
+    [
+      "Dave Ryding",
+      "GBR",
+      22.4801466096518
+    ]
+  ]
+}

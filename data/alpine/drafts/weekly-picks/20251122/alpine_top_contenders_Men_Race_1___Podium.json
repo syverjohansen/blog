@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Henrik Kristoffersen",
+      "NOR",
+      100.0
+    ],
+    [
+      "Lucas Pinheiro Braathen",
+      "BRA",
+      64.4562334217507
+    ],
+    [
+      "Linus Strasser",
+      "GER",
+      45.8885941644562
+    ],
+    [
+      "Atle Lie McGrath",
+      "NOR",
+      40.053050397878
+    ],
+    [
+      "Dave Ryding",
+      "GBR",
+      7.42705570291777
+    ]
+  ]
+}
