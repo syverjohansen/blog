@@ -39,7 +39,7 @@ races <- read.csv("~/ski/elo/python/biathlon/polars/excel365/races.csv",
                   stringsAsFactors = FALSE)
 
 # Get today's date in the right format
-today_date <- format(Sys.Date(), "%m/%d/%Y")
+today_date <- format(as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d"), "%m/%d/%Y")
 log_info(paste("Today's date:", today_date))
 
 # Filter to only include races for today
@@ -48,7 +48,7 @@ today_races <- races %>%
 
 # If no races found for today, try with 2-digit year format
 if(nrow(today_races) == 0) {
-  today_date_short <- format(Sys.Date(), "%m/%d/%y")
+  today_date_short <- format(as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d"), "%m/%d/%y")
   log_info(paste("Trying with short year format:", today_date_short))
   today_races <- races %>%
     dplyr::filter(Date == today_date_short)

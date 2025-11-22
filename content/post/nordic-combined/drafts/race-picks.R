@@ -43,7 +43,7 @@ races <- read.csv("~/ski/elo/python/nordic-combined/polars/excel365/races.csv",
                   stringsAsFactors = FALSE)
 
 # Get today's date in the right format
-today_date <- format(Sys.Date(), "%m/%d/%Y")
+today_date <- format(as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d"), "%m/%d/%Y")
 log_info(paste("Today's date:", today_date))
 
 # Filter to only include races for today
@@ -52,7 +52,7 @@ today_races <- races %>%
 
 # If no races found for today, try with 2-digit year format
 if(nrow(today_races) == 0) {
-  today_date_short <- format(Sys.Date(), "%m/%d/%y")
+  today_date_short <- format(as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d"), "%m/%d/%y")
   log_info(paste("Trying with short year format:", today_date_short))
   today_races <- races %>%
     filter(Date == today_date_short)
@@ -1272,6 +1272,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
   if(is_team) {
     # Get all columns that might be needed for the model
     elo_cols <- c("Avg_Sprint_Elo", "Avg_Individual_Elo", "Avg_MassStart_Elo", "Avg_IndividualCompact_Elo", "Avg_Elo")
+    pelo_cols <- c("Avg_Sprint_Pelo", "Avg_Individual_Pelo", "Avg_MassStart_Pelo", "Avg_IndividualCompact_Pelo", "Avg_Pelo")
     
     # Select needed columns from startlist
     result_cols <- c("Nation", elo_cols, race_prob_cols)
@@ -1309,6 +1310,42 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       if(!col %in% names(result_df)) {
         log_info(paste("Adding missing Elo column:", col))
         result_df[[col]] <- 0
+      }
+    }
+    
+    # CRITICAL: Convert Elo columns to Pelo_Pct columns for model prediction
+    # Models are trained on Pelo data but we predict using Elo data from startlist
+    for(i in seq_along(elo_cols)) {
+      elo_col <- elo_cols[i]
+      pelo_col <- pelo_cols[i]  # corresponding Pelo column name
+      pelo_pct_col <- paste0(pelo_col, "_Pct")
+      
+      if(elo_col %in% names(result_df)) {
+        # Get max value for normalization from race_df (historical Pelo data)
+        if(pelo_col %in% names(race_df)) {
+          max_val <- max(race_df[[pelo_col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using max Pelo =", max_val))
+            result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+          } else {
+            log_warn(paste("No valid max value for", pelo_col, "using default"))
+            result_df[[pelo_pct_col]] <- 0.5
+          }
+        } else {
+          # Fallback: normalize within current Elo data
+          max_val <- max(result_df[[elo_col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using internal max =", max_val))
+            result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+          } else {
+            log_warn(paste("No valid data for", elo_col, "using default"))
+            result_df[[pelo_pct_col]] <- 0.5
+          }
+        }
+      } else {
+        # If Elo column doesn't exist, create default Pelo_Pct
+        log_info(paste("Creating default", pelo_pct_col, "(missing", elo_col, ")"))
+        result_df[[pelo_pct_col]] <- 0.5
       }
     }
   } else {
@@ -1349,12 +1386,14 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       left_join(recent_points, by = "Skier")
   }
   
-  # For both team and individual: create Elo percentage columns
+  # For both team and individual: create Elo and Pelo percentage columns
   # Determine which Elo columns to work with
   if(is_team) {
     elo_columns_to_process <- c("Avg_Sprint_Elo", "Avg_Individual_Elo", "Avg_MassStart_Elo", "Avg_IndividualCompact_Elo", "Avg_Elo")
+    pelo_columns_to_process <- c("Avg_Sprint_Pelo", "Avg_Individual_Pelo", "Avg_MassStart_Pelo", "Avg_IndividualCompact_Pelo", "Avg_Pelo")
   } else {
     elo_columns_to_process <- c("Sprint_Elo", "Individual_Elo", "MassStart_Elo", "IndividualCompact_Elo", "Elo")
+    pelo_columns_to_process <- c("Sprint_Pelo", "Individual_Pelo", "MassStart_Pelo", "IndividualCompact_Pelo", "Pelo")
   }
   
   # Create percentage columns for each Elo column
@@ -1387,6 +1426,42 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       # If we don't have the Elo column and the PCT doesn't exist yet
       log_info(paste("Creating missing Elo Pct column:", pct_col))
       result_df[[pct_col]] <- 0.5  # Default to 0.5 (middle value)
+    }
+  }
+  
+  # CRITICAL: Create Pelo_Pct columns from Elo values for model prediction
+  # Models are trained on Pelo data but we predict using Elo data from startlist
+  for(i in seq_along(elo_columns_to_process)) {
+    elo_col <- elo_columns_to_process[i]
+    pelo_col <- pelo_columns_to_process[i]  # corresponding Pelo column name
+    pelo_pct_col <- paste0(pelo_col, "_Pct")
+    
+    if(elo_col %in% names(result_df)) {
+      # Get max value for normalization from race_df (historical Pelo data if available)
+      if(pelo_col %in% names(race_df)) {
+        max_val <- max(race_df[[pelo_col]], na.rm = TRUE)
+        if(!is.na(max_val) && max_val > 0) {
+          log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using max Pelo =", max_val))
+          result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+        } else {
+          log_warn(paste("No valid max value for", pelo_col, "using default"))
+          result_df[[pelo_pct_col]] <- 0.5
+        }
+      } else {
+        # Fallback: normalize within current Elo data
+        max_val <- max(result_df[[elo_col]], na.rm = TRUE)
+        if(!is.na(max_val) && max_val > 0) {
+          log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using internal max =", max_val))
+          result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+        } else {
+          log_warn(paste("No valid data for", elo_col, "using default"))
+          result_df[[pelo_pct_col]] <- 0.5
+        }
+      }
+    } else {
+      # If Elo column doesn't exist, create default Pelo_Pct
+      log_info(paste("Creating default", pelo_pct_col, "(missing", elo_col, ")"))
+      result_df[[pelo_pct_col]] <- 0.5
     }
   }
   

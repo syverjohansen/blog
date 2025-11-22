@@ -74,25 +74,18 @@ $(document).ready(function() {
                     data: 'Olympics',
                     title: 'Olympics',
                     render: function(data) {
-                        return data ? data.toFixed(1) : '0';
+                        return (data !== null && data !== undefined) ? data.toFixed(1) : '0';
                     }
                 },
                 {
                     data: 'WSC',
                     title: 'World Champs',
                     render: function(data) {
-                        return data ? data.toFixed(1) : '0';
+                        return (data !== null && data !== undefined) ? data.toFixed(1) : '0';
                     }
                 },
                 {
-                    data: 'Tour',
-                    title: 'Tour de Ski',
-                    render: function(data) {
-                        return data ? data.toFixed(1) : '0';
-                    }
-                },
-                {
-                    data: 'WC',
+                    data: 'World Cup',
                     title: 'World Cup',
                     render: function(data) {
                         return data ? data.toFixed(1) : '0';
@@ -102,14 +95,23 @@ $(document).ready(function() {
                     data: 'Table',
                     title: 'Standings',
                     render: function(data) {
-                        return data ? data.toFixed(1) : '0';
+                        // Handle all numeric values including 0
+                        if (typeof data === 'number') {
+                            return data.toFixed(1);
+                        }
+                        // Handle string numbers
+                        if (typeof data === 'string' && !isNaN(parseFloat(data))) {
+                            return parseFloat(data).toFixed(1);
+                        }
+                        // Default for null/undefined/non-numeric
+                        return '0.0';
                     }
                 },
                 {
                     data: 'Total',
                     title: 'Total',
                     render: function(data) {
-                        return data ? data.toFixed(1) : '0';
+                        return (data !== null && data !== undefined) ? data.toFixed(1) : '0';
                     }
                 },
                 {
@@ -149,14 +151,14 @@ $(document).ready(function() {
                 columnDefs: [
                     {
                         // Set default order for numeric columns to be descending
-                        targets: [3, 4, 5, 6, 7, 8, 9], // Olympic, WSC, Tour, WC, Table, Total columns
+                        targets: [3, 4, 5, 6, 7, 8], // Olympic, WSC, WC, Table, Total columns
                         orderSequence: ['desc', 'asc']
                     }
                 ]
             });
         }).fail(function() {
             console.error(`Failed to load JSON data for ${gender}`);
-            $(tableId).html('<tr><td colspan="9">Error loading rankings data</td></tr>');
+            $(tableId).html('<tr><td colspan="8">Error loading rankings data</td></tr>');
         });
     }
 

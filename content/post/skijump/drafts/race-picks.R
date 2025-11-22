@@ -42,7 +42,7 @@ races <- read.csv("~/ski/elo/python/skijump/polars/excel365/races.csv",
                   stringsAsFactors = FALSE)
 
 # Get today's date in the right format
-today_date <- format(Sys.Date(), "%m/%d/%Y")
+today_date <- format(as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d"), "%m/%d/%Y")
 log_info(paste("Today's date:", today_date))
 
 # Filter to only include races for today
@@ -51,7 +51,7 @@ today_races <- races %>%
 
 # If no races found for today, try with 2-digit year format
 if(nrow(today_races) == 0) {
-  today_date_short <- format(Sys.Date(), "%m/%d/%y")
+  today_date_short <- format(as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d"), "%m/%d/%y")
   log_info(paste("Trying with short year format:", today_date_short))
   today_races <- races %>%
     filter(Date == today_date_short)
@@ -235,13 +235,21 @@ format_position_results <- function(position_results, race_date, gender, is_team
   # Use standard R operations for adding columns
   formatted_results <- position_results
   
-  # Add participation and probability columns
+  # Add participation and probability columns based on race type
   formatted_results$Participation <- NA_real_
   formatted_results$Win <- NA_real_
   formatted_results$Podium <- NA_real_
-  formatted_results$Top5 <- NA_real_
-  formatted_results$Top10 <- NA_real_
-  formatted_results$Top30 <- NA_real_
+  
+  if(is_team) {
+    # Team races: Win, Podium, Top5, Top10
+    formatted_results$Top5 <- NA_real_
+    formatted_results$Top10 <- NA_real_
+  } else {
+    # Individual races: Win, Podium, Top5, Top10, Top30
+    formatted_results$Top5 <- NA_real_
+    formatted_results$Top10 <- NA_real_
+    formatted_results$Top30 <- NA_real_
+  }
   
   # Process row by row instead of using rowwise()
   for(i in 1:nrow(formatted_results)) {
@@ -254,9 +262,17 @@ format_position_results <- function(position_results, race_date, gender, is_team
     
     formatted_results$Win[i] <- position_results$prob_top1[i]
     formatted_results$Podium[i] <- position_results$prob_top3[i]
-    formatted_results$Top5[i] <- position_results$prob_top5[i]
-    formatted_results$Top10[i] <- position_results$prob_top10[i]
-    formatted_results$Top30[i] <- position_results$prob_top30[i]
+    
+    if(is_team) {
+      # Team races: assign Top5, Top10
+      formatted_results$Top5[i] <- position_results$prob_top5[i]
+      formatted_results$Top10[i] <- position_results$prob_top10[i]
+    } else {
+      # Individual races: assign Top5, Top10, Top30
+      formatted_results$Top5[i] <- position_results$prob_top5[i]
+      formatted_results$Top10[i] <- position_results$prob_top10[i]
+      formatted_results$Top30[i] <- position_results$prob_top30[i]
+    }
   }
   
   # Select columns without sym()
@@ -264,7 +280,13 @@ format_position_results <- function(position_results, race_date, gender, is_team
   if(!is_team) {
     select_cols <- c(select_cols, "ID", "Nation", "Sex")
   }
-  select_cols <- c(select_cols, "Race", "Participation", "Win", "Podium", "Top5", "Top10", "Top30")
+  
+  # Add probability columns based on race type
+  if(is_team) {
+    select_cols <- c(select_cols, "Race", "Participation", "Win", "Podium", "Top5", "Top10")
+  } else {
+    select_cols <- c(select_cols, "Race", "Participation", "Win", "Podium", "Top5", "Top10", "Top30")
+  }
   
   formatted_results <- formatted_results[, select_cols]
   
@@ -368,49 +390,61 @@ create_top_contenders_summary <- function(results_list, race_date) {
       race_df <- position_data[position_data$Race == race_num, ]
       
       # Top 5 for win probability
-      win_order <- order(-race_df$prob_top1)
-      win_contenders <- race_df[win_order[1:min(5, length(win_order))], ]
-      
-      if(!is_team) {
-        win_contenders <- win_contenders[, c(participant_col, "Nation", "prob_top1")]
+      if("prob_top1" %in% names(race_df) && !all(is.na(race_df$prob_top1))) {
+        win_order <- order(-race_df$prob_top1)
+        win_contenders <- race_df[win_order[1:min(5, length(win_order))], ]
+        
+        if(!is_team) {
+          win_contenders <- win_contenders[, c(participant_col, "Nation", "prob_top1")]
+        } else {
+          win_contenders <- win_contenders[, c(participant_col, "prob_top1")]
+        }
+        
+        names(win_contenders)[names(win_contenders) == "prob_top1"] <- "Win%"
+        
+        sheet_name <- paste0(display_name, " Race ", race_num, " - Win")
+        top_contenders[[sheet_name]] <- win_contenders
       } else {
-        win_contenders <- win_contenders[, c(participant_col, "prob_top1")]
+        log_warn(paste("Skipping Win contenders for race", race_num, "- prob_top1 column missing or all NA"))
       }
-      
-      names(win_contenders)[names(win_contenders) == "prob_top1"] <- "Win%"
-      
-      sheet_name <- paste0(display_name, " Race ", race_num, " - Win")
-      top_contenders[[sheet_name]] <- win_contenders
       
       # Top 5 for podium probability
-      podium_order <- order(-race_df$prob_top3)
-      podium_contenders <- race_df[podium_order[1:min(5, length(podium_order))], ]
-      
-      if(!is_team) {
-        podium_contenders <- podium_contenders[, c(participant_col, "Nation", "prob_top3")]
+      if("prob_top3" %in% names(race_df) && !all(is.na(race_df$prob_top3))) {
+        podium_order <- order(-race_df$prob_top3)
+        podium_contenders <- race_df[podium_order[1:min(5, length(podium_order))], ]
+        
+        if(!is_team) {
+          podium_contenders <- podium_contenders[, c(participant_col, "Nation", "prob_top3")]
+        } else {
+          podium_contenders <- podium_contenders[, c(participant_col, "prob_top3")]
+        }
+        
+        names(podium_contenders)[names(podium_contenders) == "prob_top3"] <- "Podium%"
+        
+        sheet_name <- paste0(display_name, " Race ", race_num, " - Podium")
+        top_contenders[[sheet_name]] <- podium_contenders
       } else {
-        podium_contenders <- podium_contenders[, c(participant_col, "prob_top3")]
+        log_warn(paste("Skipping Podium contenders for race", race_num, "- prob_top3 column missing or all NA"))
       }
-      
-      names(podium_contenders)[names(podium_contenders) == "prob_top3"] <- "Podium%"
-      
-      sheet_name <- paste0(display_name, " Race ", race_num, " - Podium")
-      top_contenders[[sheet_name]] <- podium_contenders
       
       # Top 5 for Top-5 probability
-      top5_order <- order(-race_df$prob_top5)
-      top5_contenders <- race_df[top5_order[1:min(5, length(top5_order))], ]
-      
-      if(!is_team) {
-        top5_contenders <- top5_contenders[, c(participant_col, "Nation", "prob_top5")]
+      if("prob_top5" %in% names(race_df) && !all(is.na(race_df$prob_top5))) {
+        top5_order <- order(-race_df$prob_top5)
+        top5_contenders <- race_df[top5_order[1:min(5, length(top5_order))], ]
+        
+        if(!is_team) {
+          top5_contenders <- top5_contenders[, c(participant_col, "Nation", "prob_top5")]
+        } else {
+          top5_contenders <- top5_contenders[, c(participant_col, "prob_top5")]
+        }
+        
+        names(top5_contenders)[names(top5_contenders) == "prob_top5"] <- "Top5%"
+        
+        sheet_name <- paste0(display_name, " Race ", race_num, " - Top5")
+        top_contenders[[sheet_name]] <- top5_contenders
       } else {
-        top5_contenders <- top5_contenders[, c(participant_col, "prob_top5")]
+        log_warn(paste("Skipping Top5 contenders for race", race_num, "- prob_top5 column missing or all NA"))
       }
-      
-      names(top5_contenders)[names(top5_contenders) == "prob_top5"] <- "Top5%"
-      
-      sheet_name <- paste0(display_name, " Race ", race_num, " - Top5")
-      top_contenders[[sheet_name]] <- top5_contenders
     }
   }
   
@@ -704,133 +738,99 @@ calculate_race_probabilities <- function() {
 
 # Create processed team chrono files
 create_team_chronos <- function() {
-  log_info("Creating team-based chronological files")
+  log_info("Loading team-based chronological files")
   
   # Only process if we have team races
   total_team_races <- nrow(men_teams) + nrow(ladies_teams) + nrow(mixed_teams)
   if(total_team_races == 0) {
-    log_info("No team races scheduled - skipping team chrono creation")
+    log_info("No team races scheduled - skipping team chrono loading")
     return(FALSE)
-  }
-  
-  # Load men's and ladies' chronological data
-  men_chrono <- read.csv("~/ski/elo/python/skijump/polars/relay/excel365/men_chrono_elevation.csv", 
-                         stringsAsFactors = FALSE) %>%
-    mutate(Date = as.Date(Date))
-  
-  ladies_chrono <- read.csv("~/ski/elo/python/skijump/polars/relay/excel365/ladies_chrono_elevation.csv", 
-                            stringsAsFactors = FALSE) %>%
-    mutate(Date = as.Date(Date))
-  
-  # Check if Points column exists, if not create it
-  if(!"Points" %in% names(men_chrono)) {
-    log_info("Creating Points column in men's chrono based on Place")
-    men_chrono$Points <- mapply(function(place, RaceType) {
-      get_points(place, RaceType)
-    }, men_chrono$Place, men_chrono$RaceType)
-  }
-  
-  if(!"Points" %in% names(ladies_chrono)) {
-    log_info("Creating Points column in ladies' chrono based on Place")
-    ladies_chrono$Points <- mapply(function(place, RaceType) {
-      get_points(place, RaceType)
-    }, ladies_chrono$Place, ladies_chrono$RaceType)
   }
   
   # Process men's team chrono
   if(nrow(men_teams) > 0) {
-    log_info("Creating men's team chrono")
-    men_team_chrono <- men_chrono %>%
-      filter(grepl("Team", RaceType, ignore.case = TRUE)) %>%  # RaceType contains "Team"
-      # Group by race to get team results
-      group_by(Date, City, Country, Nation, RaceType, Season, Race, Event, HillSize) %>%
-      summarize(
-        # Team rank is the first Place value within each group
-        Place = first(Place),
-        Points = first(Points),
-        # Calculate average Elo values for the team
-        Avg_Elo = mean(Elo, na.rm = TRUE),
-        Avg_Small_Elo = mean(Small_Elo, na.rm = TRUE),
-        Avg_Medium_Elo = mean(Medium_Elo, na.rm = TRUE),
-        Avg_Normal_Elo = mean(Normal_Elo, na.rm = TRUE),
-        Avg_Large_Elo = mean(Large_Elo, na.rm = TRUE),
-        Avg_Flying_Elo = mean(Flying_Elo, na.rm = TRUE),
-        # Additional metadata
-        Sex = "M",
-        .groups = "drop"
-      )
+    log_info("Loading men's team chrono")
+    men_team_chrono_path <- "~/ski/elo/python/skijump/polars/relay/excel365/men_team_chrono.csv"
     
-    # Save men's team chrono
-    write.csv(men_team_chrono,
-              "~/ski/elo/python/skijump/polars/relay/excel365/men_team_chrono.csv",
-              row.names = FALSE)
-    log_info(paste("Created men's team chrono with", nrow(men_team_chrono), "team entries"))
+    if(file.exists(men_team_chrono_path)) {
+      men_team_chrono <<- read.csv(men_team_chrono_path, stringsAsFactors = FALSE) %>%
+        mutate(Date = as.Date(Date))
+      
+      # Check if Points column exists, if not create it using get_points
+      if(!"Points" %in% names(men_team_chrono)) {
+        log_info("Creating Points column in men's team chrono based on Place and RaceType")
+        men_team_chrono$Points <<- mapply(function(place, race_type) {
+          get_points(place, race_type)
+        }, men_team_chrono$Place, men_team_chrono$RaceType)
+        
+        # Save the updated file with Points column
+        write.csv(men_team_chrono, men_team_chrono_path, row.names = FALSE)
+        log_info("Saved updated men's team chrono with Points column")
+      }
+      
+      log_info(paste("Loaded men's team chrono with", nrow(men_team_chrono), "team entries"))
+    } else {
+      log_warn(paste("Men's team chrono file not found:", men_team_chrono_path))
+      men_team_chrono <<- data.frame()
+    }
   }
   
   # Process ladies' team chrono
   if(nrow(ladies_teams) > 0) {
-    log_info("Creating ladies' team chrono")
-    ladies_team_chrono <- ladies_chrono %>%
-      filter(grepl("Team", RaceType, ignore.case = TRUE)) %>%  # RaceType contains "Team"
-      # Group by race to get team results
-      group_by(Date, City, Country, Nation, RaceType, Season, Race, Event, HillSize) %>%
-      summarize(
-        # Team rank is the first Place value within each group
-        Place = first(Place),
-        Points = first(Points),
-        # Calculate average Elo values for the team
-        Avg_Elo = mean(Elo, na.rm = TRUE),
-        Avg_Small_Elo = mean(Small_Elo, na.rm = TRUE),
-        Avg_Medium_Elo = mean(Medium_Elo, na.rm = TRUE),
-        Avg_Normal_Elo = mean(Normal_Elo, na.rm = TRUE),
-        Avg_Large_Elo = mean(Large_Elo, na.rm = TRUE),
-        Avg_Flying_Elo = mean(Flying_Elo, na.rm = TRUE),
-        # Additional metadata
-        Sex = "L",
-        .groups = "drop"
-      )
+    log_info("Loading ladies' team chrono")
+    ladies_team_chrono_path <- "~/ski/elo/python/skijump/polars/relay/excel365/ladies_team_chrono.csv"
     
-    # Save ladies' team chrono
-    write.csv(ladies_team_chrono,
-              "~/ski/elo/python/skijump/polars/relay/excel365/ladies_team_chrono.csv",
-              row.names = FALSE)
-    log_info(paste("Created ladies' team chrono with", nrow(ladies_team_chrono), "team entries"))
+    if(file.exists(ladies_team_chrono_path)) {
+      ladies_team_chrono <<- read.csv(ladies_team_chrono_path, stringsAsFactors = FALSE) %>%
+        mutate(Date = as.Date(Date))
+      
+      # Check if Points column exists, if not create it using get_points
+      if(!"Points" %in% names(ladies_team_chrono)) {
+        log_info("Creating Points column in ladies' team chrono based on Place and RaceType")
+        ladies_team_chrono$Points <<- mapply(function(place, race_type) {
+          get_points(place, race_type)
+        }, ladies_team_chrono$Place, ladies_team_chrono$RaceType)
+        
+        # Save the updated file with Points column
+        write.csv(ladies_team_chrono, ladies_team_chrono_path, row.names = FALSE)
+        log_info("Saved updated ladies' team chrono with Points column")
+      }
+      
+      log_info(paste("Loaded ladies' team chrono with", nrow(ladies_team_chrono), "team entries"))
+    } else {
+      log_warn(paste("Ladies' team chrono file not found:", ladies_team_chrono_path))
+      ladies_team_chrono <<- data.frame()
+    }
   }
   
-  # Process mixed team chrono (combine men's and ladies' team data)
+  # Process mixed team chrono
   if(nrow(mixed_teams) > 0) {
-    log_info("Creating mixed team chrono by combining men's and ladies' team results")
+    log_info("Loading mixed team chrono")
+    mixed_team_chrono_path <- "~/ski/elo/python/skijump/polars/relay/excel365/mixed_team_chrono.csv"
     
-    # Combine men's and ladies' team data for mixed team predictions
-    mixed_team_chrono <- bind_rows(
-      men_chrono %>% filter(grepl("Team", RaceType, ignore.case = TRUE)),  # Men's team races
-      ladies_chrono %>% filter(grepl("Team", RaceType, ignore.case = TRUE))  # Ladies' team races
-    ) %>%
-      # Group by race to get team results
-      group_by(Date, City, Country, Nation, RaceType, Season, Race, Event, HillSize) %>%
-      summarize(
-        # Team rank is the first Place value within each group
-        Place = first(Place),
-        Points = first(Points),
-        # Calculate average Elo values for the team (combining male and female athletes)
-        Avg_Elo = mean(Elo, na.rm = TRUE),
-        Avg_Small_Elo = mean(Small_Elo, na.rm = TRUE),
-        Avg_Medium_Elo = mean(Medium_Elo, na.rm = TRUE),
-        Avg_Normal_Elo = mean(Normal_Elo, na.rm = TRUE),
-        Avg_Large_Elo = mean(Large_Elo, na.rm = TRUE),
-        Avg_Flying_Elo = mean(Flying_Elo, na.rm = TRUE),
-        # Additional metadata
-        Sex = "Mixed",  # Mark as Mixed for the output
-        .groups = "drop"
-      )
-    
-    # Save mixed team chrono
-    write.csv(mixed_team_chrono,
-              "~/ski/elo/python/skijump/polars/relay/excel365/mixed_team_chrono.csv",
-              row.names = FALSE)
-    log_info(paste("Created mixed team chrono with", nrow(mixed_team_chrono), "team entries using combined men's and ladies' team data"))
+    if(file.exists(mixed_team_chrono_path)) {
+      mixed_team_chrono <<- read.csv(mixed_team_chrono_path, stringsAsFactors = FALSE) %>%
+        mutate(Date = as.Date(Date))
+      
+      # Check if Points column exists, if not create it using get_points
+      if(!"Points" %in% names(mixed_team_chrono)) {
+        log_info("Creating Points column in mixed team chrono based on Place and RaceType")
+        mixed_team_chrono$Points <<- mapply(function(place, race_type) {
+          get_points(place, race_type)
+        }, mixed_team_chrono$Place, mixed_team_chrono$RaceType)
+        
+        # Save the updated file with Points column
+        write.csv(mixed_team_chrono, mixed_team_chrono_path, row.names = FALSE)
+        log_info("Saved updated mixed team chrono with Points column")
+      }
+      
+      log_info(paste("Loaded mixed team chrono with", nrow(mixed_team_chrono), "team entries"))
+    } else {
+      log_warn(paste("Mixed team chrono file not found:", mixed_team_chrono_path))
+      mixed_team_chrono <<- data.frame()
+    }
   }
-  
+
   return(TRUE)
 }
 
@@ -1221,6 +1221,42 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
         result_df[[col]] <- 0
       }
     }
+    
+    # CRITICAL: Convert Elo columns to Pelo_Pct columns for model prediction
+    # Models are trained on Pelo data but we predict using Elo data from startlist
+    for(i in seq_along(elo_cols)) {
+      elo_col <- elo_cols[i]
+      pelo_col <- pelo_cols[i]  # corresponding Pelo column name
+      pelo_pct_col <- paste0(pelo_col, "_Pct")
+      
+      if(elo_col %in% names(result_df)) {
+        # Get max value for normalization from race_df (historical Pelo data)
+        if(pelo_col %in% names(race_df)) {
+          max_val <- max(race_df[[pelo_col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using max Pelo =", max_val))
+            result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+          } else {
+            log_warn(paste("No valid max value for", pelo_col, "using default"))
+            result_df[[pelo_pct_col]] <- 0.5
+          }
+        } else {
+          # Fallback: normalize within current Elo data
+          max_val <- max(result_df[[elo_col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using internal max =", max_val))
+            result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+          } else {
+            log_warn(paste("No valid data for", elo_col, "using default"))
+            result_df[[pelo_pct_col]] <- 0.5
+          }
+        }
+      } else {
+        # If Elo column doesn't exist, create default Pelo_Pct
+        log_info(paste("Creating default", pelo_pct_col, "(missing", elo_col, ")"))
+        result_df[[pelo_pct_col]] <- 0.5
+      }
+    }
   } else {
     # For individual races, use the original approach
     base_df <- startlist %>%
@@ -1260,81 +1296,82 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       left_join(recent_points, by = "Skier")
   }
   
-  # For both team and individual: create Elo and Pelo percentage columns
-  # Determine which Elo and Pelo columns to work with
-  if(is_team) {
-    elo_columns_to_process <- c("Avg_Small_Elo", "Avg_Medium_Elo", "Avg_Normal_Elo", "Avg_Large_Elo", "Avg_Flying_Elo", "Avg_Elo")
-    pelo_columns_to_process <- c("Avg_Small_Pelo", "Avg_Medium_Pelo", "Avg_Normal_Pelo", "Avg_Large_Pelo", "Avg_Flying_Pelo", "Avg_Pelo")
-  } else {
-    elo_columns_to_process <- c("Small_Elo", "Medium_Elo", "Normal_Elo", "Large_Elo", "Flying_Elo", "Elo")
-    pelo_columns_to_process <- c("Small_Pelo", "Medium_Pelo", "Normal_Pelo", "Large_Pelo", "Flying_Pelo", "Pelo")
-  }
-  
-  # Create percentage columns for each Elo column
-  for(col in elo_columns_to_process) {
-    pct_col <- paste0(col, "_Pct")
+  # For individual races only: create Elo and Pelo percentage columns
+  # Teams already have their Pelo_Pct columns created above from Elo data
+  if(!is_team) {
+    # CRITICAL: For individual races, create Pelo_Pct columns from Elo columns
+    # Models are trained on Pelo data but we predict using Elo data from startlist
+    elo_cols <- c("Small_Elo", "Medium_Elo", "Normal_Elo", "Large_Elo", "Flying_Elo", "Elo")
+    pelo_cols <- c("Small_Pelo", "Medium_Pelo", "Normal_Pelo", "Large_Pelo", "Flying_Pelo", "Pelo")
     
-    if(col %in% names(result_df)) {
-      # If we have race_df with this column, get max values for normalization
-      if(col %in% names(race_df)) {
-        max_val <- max(race_df[[col]], na.rm = TRUE)
-        if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Calculating", pct_col, "from", col))
-          result_df[[pct_col]] <- result_df[[col]] / max_val
+    # First create Elo_Pct columns (for reference, though models use Pelo_Pct)
+    for(col in elo_cols) {
+      pct_col <- paste0(col, "_Pct")
+      
+      if(col %in% names(result_df)) {
+        # If we have race_df with this column, get max values for normalization
+        if(col %in% names(race_df)) {
+          max_val <- max(race_df[[col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Calculating", pct_col, "from", col))
+            result_df[[pct_col]] <- result_df[[col]] / max_val
+          } else {
+            log_info(paste("Using default value for", pct_col, "(max value issue)"))
+            result_df[[pct_col]] <- 0.5
+          }
         } else {
-          log_info(paste("Using default value for", pct_col, "(max value issue)"))
-          result_df[[pct_col]] <- 0.5
+          # If not available in race_df, normalize within the current dataset
+          max_val <- max(result_df[[col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Calculating", pct_col, "from", col, "(internal max)"))
+            result_df[[pct_col]] <- result_df[[col]] / max_val
+          } else {
+            log_info(paste("Using default value for", pct_col, "(internal max issue)"))
+            result_df[[pct_col]] <- 0.5
+          }
+        }
+      } else if(!pct_col %in% names(result_df)) {
+        # If we don't have the Elo column and the PCT doesn't exist yet
+        log_info(paste("Creating missing Elo Pct column:", pct_col))
+        result_df[[pct_col]] <- 0.5  # Default to 0.5 (middle value)
+      }
+    }
+    
+    # CRITICAL: Create Pelo_Pct columns from Elo values (not Pelo values which don't exist for individuals)
+    for(i in seq_along(elo_cols)) {
+      elo_col <- elo_cols[i]
+      pelo_col <- pelo_cols[i]  # corresponding Pelo column name
+      pelo_pct_col <- paste0(pelo_col, "_Pct")
+      
+      if(elo_col %in% names(result_df)) {
+        # Get max value for normalization from race_df (historical Pelo data if available)
+        if(pelo_col %in% names(race_df)) {
+          max_val <- max(race_df[[pelo_col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using max Pelo =", max_val))
+            result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+          } else {
+            log_warn(paste("No valid max value for", pelo_col, "using default"))
+            result_df[[pelo_pct_col]] <- 0.5
+          }
+        } else {
+          # Fallback: normalize within current Elo data
+          max_val <- max(result_df[[elo_col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using internal max =", max_val))
+            result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+          } else {
+            log_warn(paste("No valid data for", elo_col, "using default"))
+            result_df[[pelo_pct_col]] <- 0.5
+          }
         }
       } else {
-        # If not available in race_df, normalize within the current dataset
-        max_val <- max(result_df[[col]], na.rm = TRUE)
-        if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Calculating", pct_col, "from", col, "(internal max)"))
-          result_df[[pct_col]] <- result_df[[col]] / max_val
-        } else {
-          log_info(paste("Using default value for", pct_col, "(internal max issue)"))
-          result_df[[pct_col]] <- 0.5
-        }
+        # If Elo column doesn't exist, create default Pelo_Pct
+        log_info(paste("Creating default", pelo_pct_col, "(missing", elo_col, ")"))
+        result_df[[pelo_pct_col]] <- 0.5
       }
-    } else if(!pct_col %in% names(result_df)) {
-      # If we don't have the Elo column and the PCT doesn't exist yet
-      log_info(paste("Creating missing Elo Pct column:", pct_col))
-      result_df[[pct_col]] <- 0.5  # Default to 0.5 (middle value)
     }
-  }
-  
-  # Create percentage columns for each Pelo column (for prediction)
-  for(col in pelo_columns_to_process) {
-    pct_col <- paste0(col, "_Pct")
-    
-    if(col %in% names(result_df)) {
-      # If we have race_df with this column, get max values for normalization
-      if(col %in% names(race_df)) {
-        max_val <- max(race_df[[col]], na.rm = TRUE)
-        if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Calculating", pct_col, "from", col))
-          result_df[[pct_col]] <- result_df[[col]] / max_val
-        } else {
-          log_info(paste("Using default value for", pct_col, "(max value issue)"))
-          result_df[[pct_col]] <- 0.5
-        }
-      } else {
-        # If not available in race_df, normalize within the current dataset
-        max_val <- max(result_df[[col]], na.rm = TRUE)
-        if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Calculating", pct_col, "from", col, "(internal max)"))
-          result_df[[pct_col]] <- result_df[[col]] / max_val
-        } else {
-          log_info(paste("Using default value for", pct_col, "(internal max issue)"))
-          result_df[[pct_col]] <- 0.5
-        }
-      }
-    } else if(!pct_col %in% names(result_df)) {
-      # If we don't have the Pelo column and the PCT doesn't exist yet
-      log_info(paste("Creating missing Pelo Pct column:", pct_col))
-      result_df[[pct_col]] <- 0.5  # Default to 0.5 (middle value)
-    }
-  }
+  }  # End of if(!is_team)
   
   # Replace NAs with first quartile
   result_df <- result_df %>%
@@ -1575,7 +1612,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
       mutate(Date = as.Date(Date)) %>%
       preprocess_data(is_team = is_team)
   }
-  
+
   # For debugging
   log_info(paste("Chronological data dimensions:", nrow(df), "x", ncol(df)))
   log_info(paste("First few columns:", paste(names(df)[1:min(10, length(names(df)))], collapse=", ")))
@@ -1587,8 +1624,12 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
   # Initialize position predictions list
   position_predictions <- list()
   
-  # Define position thresholds
-  position_thresholds <- c(1, 3, 5, 10, 30)  # Win, Podium, Top 5, Top 10, Top 30
+  # Define position thresholds based on race type
+  if(is_team) {
+    position_thresholds <- c(1, 3, 5, 10)  # Win, Podium, Top 5, Top 10 for team/relay events
+  } else {
+    position_thresholds <- c(1, 3, 5, 10, 30)  # Win, Podium, Top 5, Top 10, Top 30 for individual events
+  }
   
   # Debug: Show race probability columns in startlist
   race_prob_cols <- grep("^Race\\d+_Prob$", names(startlist), value = TRUE)
@@ -1625,6 +1666,9 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     race_df <- df %>%
       filter(RaceType == races$racetype[i])
     
+    # Log hill size for debugging
+    log_info(paste("Race", i, "hill size:", races$hillsize[i], "| Race type:", ifelse(is_team, "Team", "Individual")))
+    
     # Get relevant Elo column based on race type and hill size
     if(is_team) {
       # For team races, use general average ELO or hill-specific ELO
@@ -1655,7 +1699,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
       group_by(!!sym(participant_col)) %>%
       arrange(Season, Race) %>%
       ungroup()
-    
+
     # Feature selection and model fitting for points prediction
     response_variable <- "Points"
     
@@ -1672,12 +1716,21 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     
     # Create and fit model for points
     formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))
+    log_info(paste("Initial formula with all variables:", paste(response_variable, "~", paste(explanatory_vars, collapse = " + "))))
+    
     tryCatch({
       exhaustive_selection <- regsubsets(formula, data = race_df_75, nbest = 1, method = "exhaustive")
       summary_exhaustive <- summary(exhaustive_selection)
       best_bic_vars <- names(coef(exhaustive_selection, which.min(summary_exhaustive$bic)))
+      
+      log_info(paste("Variables selected by BIC:", paste(best_bic_vars, collapse = ", ")))
+      log_info(paste("Number of variables selected:", length(best_bic_vars)))
+      log_info(paste("Best BIC value:", min(summary_exhaustive$bic)))
+      
       smooth_terms <- paste("s(", best_bic_vars[-1], ")", collapse=" + ")
       gam_formula <- as.formula(paste("Points ~", smooth_terms))
+      
+      log_info(paste("Final GAM formula:", as.character(gam_formula)[3]))
       
       model <- gam(gam_formula, data = race_df_75)
     }, error = function(e) {
@@ -1721,15 +1774,24 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
       # Create formula for regsubsets using the same explanatory variables as the points model
       pos_formula <- as.formula(paste("position_achieved ~", paste(position_feature_vars, collapse = " + ")))
       
+      log_info(paste("Position model for threshold", threshold, "- Initial formula:", paste("position_achieved ~", paste(position_feature_vars, collapse = " + "))))
+      log_info(paste("Training data size for threshold", threshold, ":", nrow(race_df), "rows"))
+      
       # Use regsubsets to select best features for this position threshold
       tryCatch({
         pos_selection <- regsubsets(pos_formula, data = race_df, nbest = 1, method = "exhaustive")
         pos_summary <- summary(pos_selection)
         pos_best_bic_vars <- names(coef(pos_selection, which.min(pos_summary$bic)))
         
+        log_info(paste("Position model threshold", threshold, "- Variables selected by BIC:", paste(pos_best_bic_vars, collapse = ", ")))
+        log_info(paste("Position model threshold", threshold, "- Number of variables selected:", length(pos_best_bic_vars)))
+        log_info(paste("Position model threshold", threshold, "- Best BIC value:", round(min(pos_summary$bic), 4)))
+        
         # Create smooth terms for GAM using best BIC variables (remove intercept)
         pos_smooth_terms <- paste("s(", pos_best_bic_vars[-1], ")", collapse=" + ")
         pos_gam_formula <- as.formula(paste("position_achieved ~", pos_smooth_terms))
+        
+        log_info(paste("Position model threshold", threshold, "- Final GAM formula:", as.character(pos_gam_formula)[3]))
         
         # Fit the position model with binomial family
         position_model <- gam(pos_gam_formula,
@@ -1737,14 +1799,16 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
                               family = binomial,
                               method = "REML")
         
+        log_info(paste("Position model threshold", threshold, "- GAM model fitted successfully"))
+        
         # Calculate Brier score for model evaluation
         predicted_probs <- predict(position_model, newdata = race_df, type = "response")
         brier_score <- mean((race_df$position_achieved - predicted_probs)^2, na.rm = TRUE)
-        log_info(paste("Brier score for threshold", threshold, ":", round(brier_score, 4)))
+        log_info(paste("Position model threshold", threshold, "- Brier score:", round(brier_score, 4)))
         
-        # Log selected variables
-        log_info(paste("Variables selected for", threshold, "position model:", 
-                       paste(pos_best_bic_vars[-1], collapse=", ")))
+        # Log model summary statistics
+        log_info(paste("Position model threshold", threshold, "- Mean predicted probability:", round(mean(predicted_probs, na.rm = TRUE), 4)))
+        log_info(paste("Position model threshold", threshold, "- Actual success rate:", round(mean(race_df$position_achieved, na.rm = TRUE), 4)))
         
         # Store the model
         position_models[[paste0("threshold_", threshold)]] <- position_model
@@ -1951,7 +2015,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     
     # Prepare startlist data
     startlist_prepared <- prepare_startlist_data(startlist, race_df, elo_col, is_team = is_team)
-    
+    View(startlist_prepared)
     # Ensure race probability column exists
     if(!(race_prob_col %in% names(startlist_prepared))) {
       log_warn(paste("Race probability column missing:", race_prob_col))
@@ -2277,12 +2341,15 @@ run_integrated_predictions_workflow <- function() {
   log_info("Updating startlist variables with calculated probabilities")
   # Individual events startlists
   men_startlist <- prob_results$men
+
+  
   ladies_startlist <- prob_results$ladies
   
   # Team startlists
   men_team_startlist <- prob_results$men_team
   ladies_team_startlist <- prob_results$ladies_team
   mixed_team_startlist <- prob_results$mixed_team
+
   
   # Log the sizes of the startlists
   log_info(paste("Men's startlist has", nrow(men_startlist), "entries"))
