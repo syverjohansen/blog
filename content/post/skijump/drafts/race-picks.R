@@ -1578,6 +1578,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     }
     participant_col <- "Skier"
   }
+
   
   # Log the size of the startlist to track if it's being modified
   log_info(paste("Selected startlist has", nrow(startlist), "entries"))
@@ -2049,7 +2050,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     
     # Prepare startlist data
     startlist_prepared <- prepare_startlist_data(startlist, race_df, elo_col, is_team = is_team)
-    View(startlist_prepared)
+
     # Ensure race probability column exists
     if(!(race_prob_col %in% names(startlist_prepared))) {
       log_warn(paste("Race probability column missing:", race_prob_col))

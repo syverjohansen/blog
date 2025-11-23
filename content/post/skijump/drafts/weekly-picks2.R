@@ -1566,11 +1566,11 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     # Set races variable first
     if(gender == "men") {
       races <- men_races
-      chrono_path <- "~/ski/elo/python/skijump/polars/excel365/men_chrono.csv"
+      chrono_path <- "~/ski/elo/python/skijump/polars/excel365/men_chrono_elevation.csv"
       log_info(paste("Using men's races:", nrow(races), "races found"))
     } else {
       races <- ladies_races
-      chrono_path <- "~/ski/elo/python/skijump/polars/excel365/ladies_chrono.csv"
+      chrono_path <- "~/ski/elo/python/skijump/polars/excel365/ladies_chrono_elevation.csv"
       log_info(paste("Using ladies' races:", nrow(races), "races found"))
     }
     
@@ -1774,7 +1774,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     # Clean data before model fitting - remove infinite values
     race_df_75_clean <- race_df_75 %>%
       mutate(across(all_of(explanatory_vars), ~ifelse(is.infinite(.x) | is.nan(.x), 0, .x)))
-    
+  
     # Check for infinite values in explanatory variables
     for(var in explanatory_vars) {
       if(var %in% names(race_df_75_clean)) {
@@ -2430,9 +2430,7 @@ run_integrated_predictions_workflow <- function() {
   # Individual events startlists
   men_startlist <- prob_results$men
   ladies_startlist <- prob_results$ladies
-  
-  View(men_startlist)
-  
+
   # Team startlists
   men_team_startlist <- prob_results$men_team
   ladies_team_startlist <- prob_results$ladies_team
