@@ -1222,29 +1222,63 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       }
     }
     
+    # First, create Elo_Pct columns for teams (needed for some models)
+    for(elo_col in elo_cols) {
+      elo_pct_col <- paste0(elo_col, "_Pct")
+      
+      if(elo_col %in% names(result_df)) {
+        # Get max value for normalization from race_df
+        if(elo_col %in% names(race_df)) {
+          max_val <- max(race_df[[elo_col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Creating", elo_pct_col, "from", elo_col))
+            result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
+          } else {
+            log_info(paste("Using default value for", elo_pct_col))
+            result_df[[elo_pct_col]] <- 0.5
+          }
+        } else {
+          # Fallback: normalize within current data
+          max_val <- max(result_df[[elo_col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Creating", elo_pct_col, "from", elo_col, "(internal max)"))
+            result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
+          } else {
+            log_info(paste("Using default value for", elo_pct_col))
+            result_df[[elo_pct_col]] <- 0.5
+          }
+        }
+      } else {
+        log_info(paste("Creating default", elo_pct_col, "(missing", elo_col, ")"))
+        result_df[[elo_pct_col]] <- 0.5
+      }
+    }
+    
     # CRITICAL: Convert Elo columns to Pelo_Pct columns for model prediction
     # Models are trained on Pelo data but we predict using Elo data from startlist
+    # For teams: use Elo max values since historical team Pelo data doesn't exist
     for(i in seq_along(elo_cols)) {
       elo_col <- elo_cols[i]
       pelo_col <- pelo_cols[i]  # corresponding Pelo column name
       pelo_pct_col <- paste0(pelo_col, "_Pct")
       
       if(elo_col %in% names(result_df)) {
-        # Get max value for normalization from race_df (historical Pelo data)
-        if(pelo_col %in% names(race_df)) {
-          max_val <- max(race_df[[pelo_col]], na.rm = TRUE)
+        # For teams, use Elo max values (since team Pelo data doesn't exist historically)
+        # Get max value from race_df Elo data instead of non-existent Pelo data
+        if(elo_col %in% names(race_df)) {
+          max_val <- max(race_df[[elo_col]], na.rm = TRUE)
           if(!is.na(max_val) && max_val > 0) {
-            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using max Pelo =", max_val))
+            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using max Elo =", max_val))
             result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
           } else {
-            log_warn(paste("No valid max value for", pelo_col, "using default"))
+            log_warn(paste("No valid max value for", elo_col, "using default"))
             result_df[[pelo_pct_col]] <- 0.5
           }
         } else {
           # Fallback: normalize within current Elo data
           max_val <- max(result_df[[elo_col]], na.rm = TRUE)
           if(!is.na(max_val) && max_val > 0) {
-            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using internal max =", max_val))
+            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using internal Elo max =", max_val))
             result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
           } else {
             log_warn(paste("No valid data for", elo_col, "using default"))

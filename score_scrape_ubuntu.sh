@@ -101,6 +101,7 @@ run_elo_processing() {
         
         echo "      Running chrono.py..."
         python3 chrono.py
+        python3 relay_chrono.py
         
         # Skip elevation_chrono_merge.py for alpine (doesn't exist)  
         if [[ "$sport" != "alpine" ]]; then

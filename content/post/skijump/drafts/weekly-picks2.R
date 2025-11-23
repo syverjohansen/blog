@@ -883,6 +883,38 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       }
     }
     
+    # First, create Elo_Pct columns for teams (needed for some models)
+    for(elo_col in elo_cols) {
+      elo_pct_col <- paste0(elo_col, "_Pct")
+      
+      if(elo_col %in% names(result_df)) {
+        # Get max value for normalization from race_df
+        if(elo_col %in% names(race_df)) {
+          max_val <- max(race_df[[elo_col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Creating", elo_pct_col, "from", elo_col))
+            result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
+          } else {
+            log_info(paste("Using default value for", elo_pct_col))
+            result_df[[elo_pct_col]] <- 0.5
+          }
+        } else {
+          # Fallback: normalize within current data
+          max_val <- max(result_df[[elo_col]], na.rm = TRUE)
+          if(!is.na(max_val) && max_val > 0) {
+            log_info(paste("Creating", elo_pct_col, "from", elo_col, "(internal max)"))
+            result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
+          } else {
+            log_info(paste("Using default value for", elo_pct_col))
+            result_df[[elo_pct_col]] <- 0.5
+          }
+        }
+      } else {
+        log_info(paste("Creating default", elo_pct_col, "(missing", elo_col, ")"))
+        result_df[[elo_pct_col]] <- 0.5
+      }
+    }
+    
     # CRITICAL: Convert Elo columns to Pelo_Pct columns for model prediction
     # Models are trained on Pelo data but we predict using Elo data from startlist
     for(i in seq_along(elo_cols)) {
@@ -1739,8 +1771,23 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))
     log_info(paste("Initial formula with all variables:", paste(response_variable, "~", paste(explanatory_vars, collapse = " + "))))
     
+    # Clean data before model fitting - remove infinite values
+    race_df_75_clean <- race_df_75 %>%
+      mutate(across(all_of(explanatory_vars), ~ifelse(is.infinite(.x) | is.nan(.x), 0, .x)))
+    
+    # Check for infinite values in explanatory variables
+    for(var in explanatory_vars) {
+      if(var %in% names(race_df_75_clean)) {
+        inf_count <- sum(is.infinite(race_df_75_clean[[var]]))
+        if(inf_count > 0) {
+          log_warn(paste("Found", inf_count, "infinite values in", var, "- replacing with 0"))
+        }
+      }
+    }
+    
     tryCatch({
-      exhaustive_selection <- regsubsets(formula, data = race_df_75, nbest = 1, method = "exhaustive")
+      formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))
+      exhaustive_selection <- regsubsets(formula, data = race_df_75_clean, nbest = 1, method = "exhaustive")
       summary_exhaustive <- summary(exhaustive_selection)
       best_bic_vars <- names(coef(exhaustive_selection, which.min(summary_exhaustive$bic)))
       
@@ -1753,26 +1800,42 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
       
       log_info(paste("Final GAM formula:", as.character(gam_formula)[3]))
       
-      model <- gam(gam_formula, data = race_df_75)
+      model <- gam(gam_formula, data = race_df_75_clean)
     }, error = function(e) {
       log_warn(paste("Error in model selection:", e$message))
-      # Fallback to a simpler model with reduced degrees of freedom
+      # Fallback to a simpler model using the same explanatory variables
       tryCatch({
-        # Try with reduced degrees of freedom
-        fallback_formula <- as.formula(paste("Points ~ s(", elo_col, ", k=3) + s(Period, k=3) + s(HillSize_Flag, k=3)"))
-        model <<- gam(fallback_formula, data = race_df_75)
+        # Use the first available explanatory variable with reduced degrees of freedom
+        primary_var <- explanatory_vars[1]
+        if(primary_var %in% names(race_df_75_clean)) {
+          fallback_formula <- as.formula(paste("Points ~ s(", primary_var, ", k=3)"))
+          model <<- gam(fallback_formula, data = race_df_75_clean)
+          log_info(paste("Using GAM fallback with", primary_var))
+        } else {
+          # If primary variable not available, use elo_col
+          fallback_formula <- as.formula(paste("Points ~ s(", elo_col, ", k=3)"))
+          model <<- gam(fallback_formula, data = race_df_75_clean)
+          log_info(paste("Using GAM fallback with", elo_col))
+        }
       }, error = function(e2) {
         log_warn(paste("Error in fallback GAM model:", e2$message))
-        # Try linear terms only
+        # Try linear terms only using explanatory variables
         tryCatch({
-          linear_formula <- as.formula(paste("Points ~", elo_col))
-          model <<- lm(linear_formula, data = race_df_75)
-          log_info("Using linear model as final fallback")
+          primary_var <- explanatory_vars[1]
+          if(primary_var %in% names(race_df_75_clean)) {
+            linear_formula <- as.formula(paste("Points ~", primary_var))
+            model <<- lm(linear_formula, data = race_df_75_clean)
+            log_info(paste("Using linear model as fallback with", primary_var))
+          } else {
+            linear_formula <- as.formula(paste("Points ~", elo_col))
+            model <<- lm(linear_formula, data = race_df_75_clean)
+            log_info(paste("Using linear model as fallback with", elo_col))
+          }
         }, error = function(e3) {
           log_warn(paste("Error in linear fallback:", e3$message))
           # Ultimate fallback - use only elo column
           simple_formula <- as.formula(paste("Points ~", elo_col))
-          model <<- lm(simple_formula, data = race_df_75)
+          model <<- lm(simple_formula, data = race_df_75_clean)
           log_info("Using simple linear model with only ELO as ultimate fallback")
         })
       })
@@ -2367,6 +2430,8 @@ run_integrated_predictions_workflow <- function() {
   # Individual events startlists
   men_startlist <- prob_results$men
   ladies_startlist <- prob_results$ladies
+  
+  View(men_startlist)
   
   # Team startlists
   men_team_startlist <- prob_results$men_team
