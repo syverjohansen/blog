@@ -403,17 +403,90 @@ if [[ "$script_results" != *"FAILED"* ]]; then
             script_results="$script_results git_pull:FAILED"
         fi
         
-        # Push changes to origin
-        log_message "Pushing changes to origin main..."
-        log_message "========== GIT PUSH OUTPUT BEGIN =========="
-        if git push origin main 2>&1 | tee -a "$LOG_FILE"; then
-            log_message "========== GIT PUSH OUTPUT END =========="
-            log_message "✓ Successfully pushed to origin main"
-            script_results="$script_results git_push:SUCCESS"
+        # Push changes to ski repository first
+        log_message "======================================="
+        log_message "Pushing changes to ski repository"
+        log_message "======================================="
+        
+        # Change to ski elo directory
+        cd "$HOME/ski/elo"
+        
+        # Check if there are any changes in ski repository
+        if ! git diff --quiet || ! git diff --cached --quiet || [[ -n "$(git ls-files --others --exclude-standard)" ]]; then
+            log_message "Changes detected in ski repository, proceeding with git operations..."
+            
+            # Add all changes in ski repo
+            log_message "Adding all changes to ski repository..."
+            log_message "========== SKI GIT ADD OUTPUT BEGIN =========="
+            if git add . 2>&1 | tee -a "$LOG_FILE"; then
+                log_message "========== SKI GIT ADD OUTPUT END =========="
+                log_message "✓ Successfully added changes to ski repository"
+            else
+                log_message "========== SKI GIT ADD OUTPUT END =========="
+                log_message "✗ Failed to add changes to ski repository"
+                script_results="$script_results ski_git_add:FAILED"
+            fi
+            
+            # Commit changes to ski repo
+            ski_commit_message="Automated update from blog automation script"
+            log_message "Committing changes to ski repository with message: $ski_commit_message"
+            log_message "========== SKI GIT COMMIT OUTPUT BEGIN =========="
+            if git commit -m "$ski_commit_message" 2>&1 | tee -a "$LOG_FILE"; then
+                log_message "========== SKI GIT COMMIT OUTPUT END =========="
+                log_message "✓ Successfully committed changes to ski repository"
+                script_results="$script_results ski_git_commit:SUCCESS"
+            else
+                log_message "========== SKI GIT COMMIT OUTPUT END =========="
+                log_message "✗ Failed to commit changes to ski repository"
+                script_results="$script_results ski_git_commit:FAILED"
+            fi
+            
+            # Pull latest changes from origin for ski repo
+            log_message "Pulling latest changes from ski repository origin..."
+            log_message "========== SKI GIT PULL OUTPUT BEGIN =========="
+            if git pull origin main 2>&1 | tee -a "$LOG_FILE"; then
+                log_message "========== SKI GIT PULL OUTPUT END =========="
+                log_message "✓ Successfully pulled from ski repository origin"
+                script_results="$script_results ski_git_pull:SUCCESS"
+            else
+                log_message "========== SKI GIT PULL OUTPUT END =========="
+                log_message "✗ Failed to pull from ski repository origin"
+                script_results="$script_results ski_git_pull:FAILED"
+            fi
+            
+            # Push changes to ski repository
+            log_message "Pushing changes to ski repository origin..."
+            log_message "========== SKI GIT PUSH OUTPUT BEGIN =========="
+            if git push origin main 2>&1 | tee -a "$LOG_FILE"; then
+                log_message "========== SKI GIT PUSH OUTPUT END =========="
+                log_message "✓ Successfully pushed to ski repository origin"
+                script_results="$script_results ski_git_push:SUCCESS"
+            else
+                log_message "========== SKI GIT PUSH OUTPUT END =========="
+                log_message "✗ Failed to push to ski repository origin"
+                script_results="$script_results ski_git_push:FAILED"
+            fi
         else
-            log_message "========== GIT PUSH OUTPUT END =========="
-            log_message "✗ Failed to push to origin main"
-            script_results="$script_results git_push:FAILED"
+            log_message "No changes detected in ski repository, skipping ski git operations"
+        fi
+        
+        # Return to blog directory for blog repository operations
+        cd "$BLOG_DIR"
+        
+        # Push changes to blog repository
+        log_message "======================================="
+        log_message "Pushing changes to blog repository"
+        log_message "======================================="
+        log_message "Pushing changes to blog repository origin main..."
+        log_message "========== BLOG GIT PUSH OUTPUT BEGIN =========="
+        if git push origin main 2>&1 | tee -a "$LOG_FILE"; then
+            log_message "========== BLOG GIT PUSH OUTPUT END =========="
+            log_message "✓ Successfully pushed to blog repository origin main"
+            script_results="$script_results blog_git_push:SUCCESS"
+        else
+            log_message "========== BLOG GIT PUSH OUTPUT END =========="
+            log_message "✗ Failed to push to blog repository origin main"
+            script_results="$script_results blog_git_push:FAILED"
         fi
     else
         log_message "No changes detected, skipping git operations"
