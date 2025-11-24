@@ -284,6 +284,7 @@ log_message "✓ Currently in racing season"
 run_score_scrape=false
 run_recap_script=false  
 run_predict_script=false
+run_season_script=false
 
 # Decision logic for which scripts to run
 
@@ -307,12 +308,21 @@ else
     log_message "- Not Monday - skipping recap_script.sh"
 fi
 
+# 4. season_script.sh - Run on May 1st every year for complete season processing
+if [[ "$TODAY_UTC" == *"-05-01" ]]; then
+    log_message "✓ May 1st detected - will run season_script_ubuntu.sh (annual season processing)"
+    run_season_script=true
+else
+    log_message "- Not May 1st - skipping season_script_ubuntu.sh"
+fi
+
 # Execute the scripts in order
 log_message "======================================="
 log_message "Execution Summary:"
 log_message "  score_scrape.sh: $([ "$run_score_scrape" = true ] && echo "YES" || echo "NO")"
 log_message "  predict_script.sh: $([ "$run_predict_script" = true ] && echo "YES" || echo "NO")"  
 log_message "  recap_script.sh: $([ "$run_recap_script" = true ] && echo "YES" || echo "NO")"
+log_message "  season_script.sh: $([ "$run_season_script" = true ] && echo "YES" || echo "NO")"
 log_message "======================================="
 
 script_results=""
@@ -335,12 +345,21 @@ if [[ "$run_predict_script" = true ]]; then
     fi
 fi
 
-# Run recap_script.sh last (weekly analysis)
+# Run recap_script.sh (weekly analysis)
 if [[ "$run_recap_script" = true ]]; then
     if run_script "recap_script_ubuntu.sh"; then
         script_results="$script_results recap_script:SUCCESS"
     else
         script_results="$script_results recap_script:FAILED"
+    fi
+fi
+
+# Run season_script.sh (annual complete season processing on May 1st)
+if [[ "$run_season_script" = true ]]; then
+    if run_script "season_script_ubuntu.sh"; then
+        script_results="$script_results season_script:SUCCESS"
+    else
+        script_results="$script_results season_script:FAILED"
     fi
 fi
 
@@ -374,6 +393,7 @@ if [[ "$script_results" != *"FAILED"* ]]; then
         [[ "$script_results" == *"predict_script:SUCCESS"* ]] && successful_scripts="$successful_scripts predict_script"
         [[ "$script_results" == *"score_scrape:SUCCESS"* ]] && successful_scripts="$successful_scripts score_scrape"
         [[ "$script_results" == *"recap_script:SUCCESS"* ]] && successful_scripts="$successful_scripts recap_script"
+        [[ "$script_results" == *"season_script:SUCCESS"* ]] && successful_scripts="$successful_scripts season_script"
         
         commit_message="Master automation successfully ran and did the following:$successful_scripts"
         
