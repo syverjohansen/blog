@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 2 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Mikaela Shiffrin",
+      "USA",
+      73.8316811144485
+    ],
+    [
+      "Lena Dürr",
+      "Germany",
+      34.5742854532163
+    ],
+    [
+      "Lara Colturi",
+      "Albania",
+      31.0230544144852
+    ],
+    [
+      "Paula Moltzan",
+      "USA",
+      24.8158928179672
+    ],
+    [
+      "Katharina Huber",
+      "Austria",
+      21.1199087812487
+    ]
+  ]
+}

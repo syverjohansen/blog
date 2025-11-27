@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Aleksander Aamodt Kilde",
+      "NOR",
+      79.4607454401269
+    ],
+    [
+      "Vincent Kriechmayr",
+      "AUT",
+      41.157811260904
+    ],
+    [
+      "Franjo Von Allmen",
+      "SUI",
+      29.2624900872324
+    ],
+    [
+      "Adrian Smiseth Sejersted",
+      "NOR",
+      17.1292624900872
+    ],
+    [
+      "James Crawford",
+      "CAN",
+      16.6534496431404
+    ]
+  ]
+}
