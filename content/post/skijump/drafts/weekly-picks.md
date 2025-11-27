@@ -1,3 +1,33 @@
+
+How weekly-picks.md would work in an ideal world
+
+
+
+1) Gathering the startlist
+Individuals: Creates a mock startlist for the weekend-scrape python file that scrapes the FIS startlist using the FIS link for the first race of the weekend and then inputting the other skiers that have raced this season into the startlist.  Also puts in the latest elo scores of each of the skiers in the appropriate columns.  Outputs to a csv file to be referenced by the R file.
+
+Teams: Same as individuals, but separates the skiers into each leg (1-4) and creates columns for average elos for each of the teams. 
+
+Mixed Team: Same as mixed team, but make sure to reference the correct chrono files.
+
+Quality Assurance tests
+1) Properly reads startlist (multiple styles)
+2) Properly gets all skiers from current season
+3) Only runs if there is a weekend race that day UTC.
+4) Works even if the startlist isn't ready
+5) Works with a config file
+6) Have enough Race_{i} prob columns for as many races there are that weekend 
+7) Puts in correct elo values into all the columns (avg elo for teams)
+
+2) Setting up training data
+Individuals: Reads in the chrono elevation for the specific gender.  Modifies it by adding a Points column using the World Cup points structure where place one is 100, etc.  Imputs NA values in the Pelo columns to be replaced by the first quartile for that column.  Creats a Prev_Points_weighted column that calculates the weighted average last 5 races of that specific race points where the most recent gets a weight of 5 and the least recent gets 1.  Gets a zero if a skier does not have any previous races.
+
+Teams: Reads in the chrono elevation (relay) for the specific gender.  Does the same modifications as the individual one, but in the rows for team events, references the skiers last 5 individual events of that hill size (not team).  
+
+Mixed team: Same thing as Team, but uses all of 
+
+
+
 ## Executive Summary
 
 The purpose of weekly picks is to predict the results for the upcoming weekend of events for Ski Jumping.  The steps to accomplish this are:
