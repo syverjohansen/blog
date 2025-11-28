@@ -1,0 +1,1868 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Sex",
+    "Race1 Points",
+    "Race1 Probability",
+    "Total Points"
+  ],
+  "rows": [
+    [
+      "Henrik Kristoffersen",
+      2391,
+      "NOR",
+      "M",
+      38.921989710406,
+      1,
+      38.921989710406
+    ],
+    [
+      "Lucas Pinheiro Braathen",
+      4748,
+      "BRA",
+      "M",
+      34.8236408876509,
+      1,
+      34.8236408876509
+    ],
+    [
+      "Stefan Brennsteiner",
+      2436,
+      "AUT",
+      "M",
+      34.1527718567303,
+      1,
+      34.1527718567303
+    ],
+    [
+      "Raphael Haaser",
+      4221,
+      "AUT",
+      "M",
+      25.5005744750024,
+      1,
+      25.5005744750024
+    ],
+    [
+      "Atle Lie McGrath",
+      4711,
+      "NOR",
+      "M",
+      24.5804244323698,
+      1,
+      24.5804244323698
+    ],
+    [
+      "Alexis Pinturault",
+      232,
+      "FRA",
+      "M",
+      17.4139747301129,
+      1,
+      17.4139747301129
+    ],
+    [
+      "Luca De Aliprandini",
+      1799,
+      "ITA",
+      "M",
+      15.9079236169931,
+      1,
+      15.9079236169931
+    ],
+    [
+      "Anton Grammel",
+      3004,
+      "GER",
+      "M",
+      14.3020820898214,
+      1,
+      14.3020820898214
+    ],
+    [
+      "Alexander Schmid",
+      2410,
+      "GER",
+      "M",
+      12.1637241268966,
+      1,
+      12.1637241268966
+    ],
+    [
+      "Flavio Vitale",
+      7093,
+      "FRA",
+      "M",
+      10.7042056615355,
+      1,
+      10.7042056615355
+    ],
+    [
+      "Alban Elezi Cannaferina",
+      5693,
+      "FRA",
+      "M",
+      5.88528301915623,
+      1,
+      5.88528301915623
+    ],
+    [
+      "Jonas Stockinger",
+      3030,
+      "GER",
+      "M",
+      5.7737886624954,
+      1,
+      5.7737886624954
+    ],
+    [
+      "Lukas Feurstein",
+      5336,
+      "AUT",
+      "M",
+      2.72711970176883,
+      1,
+      2.72711970176883
+    ],
+    [
+      "Stefan Babinsky",
+      3039,
+      "AUT",
+      "M",
+      1.8299233875432,
+      1,
+      1.8299233875432
+    ],
+    [
+      "Noel Zwischenbrugger",
+      6600,
+      "AUT",
+      "M",
+      1.26120173834412,
+      1,
+      1.26120173834412
+    ],
+    [
+      "Eirik Hystad Solberg",
+      6716,
+      "NOR",
+      "M",
+      1.0571621705477,
+      1,
+      1.0571621705477
+    ],
+    [
+      "Patrick Kenney",
+      3044,
+      "USA",
+      "M",
+      0.52573902144984,
+      1,
+      0.52573902144984
+    ],
+    [
+      "Tiziano Gravier",
+      5351,
+      "ARG",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Oscar Andreas Sandvik",
+      6803,
+      "NOR",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Andrej Drukarov",
+      3014,
+      "LTU",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Louis Muhlen-Schulte",
+      3008,
+      "AUS",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "George Steffey",
+      4295,
+      "USA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Christian Borgnaes",
+      5528,
+      "DEN",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Bridger Gile",
+      5310,
+      "USA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Loevan Parand",
+      5340,
+      "FRA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Hayata Wakatsuki",
+      4979,
+      "JPN",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Linus Strasser",
+      1932,
+      "GER",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Tobias Kastlunger",
+      5321,
+      "ITA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "FEURSTEIN Patrick                                                                \n\n\nRossignol",
+      54359,
+      "AUT",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "ANGUENOT Leo                                                                \n\n\nRossignol",
+      6190628,
+      "FRA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "MEILLARD Loic                                                                \n\n\nRossignol",
+      512182,
+      "SUI",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "TUMLER Thomas                                                                \n\n\nStoeckli",
+      511638,
+      "SUI",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "KRANJEC Zan                                                                \n\n\nRossignol",
+      561244,
+      "SLO",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "BORSOTTI Giovanni                                                                \n\n\nRossignol",
+      990048,
+      "ITA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "DELLA VITE Filippo                                                                \n\n\nRossignol",
+      6293775,
+      "ITA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "LAINE Tormis                                                                \n\n\nVoelkl",
+      390044,
+      "EST",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "VERDU Joan                                                                \n\n\nVan Deer",
+      20398,
+      "AND",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "VINATZER Alex                                                                \n\n\nAtomic",
+      6293171,
+      "ITA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "MAES Sam                                                                \n\n\nVoelkl",
+      60261,
+      "BEL",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "AERNI Luca                                                                \n\n\nFischer",
+      511983,
+      "SUI",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "GRATZ Fabian                                                                \n\n\nFischer",
+      202829,
+      "GER",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "HAUGAN Timon                                                                \n\n\nVan Deer",
+      422507,
+      "NOR",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "SCHWARZ Marco                                                                \n\n\nAtomic",
+      54320,
+      "AUT",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "ODERMATT Marco                                                                \n\n\nStoeckli",
+      512269,
+      "SUI",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "ZUBCIC Filip                                                                \n\n\nAtomic",
+      380335,
+      "CRO",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "FAVROT Thibaut                                                                \n\n\nDynastar",
+      194935,
+      "FRA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "RADAMUS River                                                                \n\n\nRossignol",
+      6532084,
+      "USA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "AX SWARTZ Fabian                                                                \n\n\nVan Deer",
+      502617,
+      "SWE",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "KATO Seigo                                                                \n\n\nAtomic",
+      6300451,
+      "JPN",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "JANUTIN Fadri                                                                \n\n\nFischer",
+      512424,
+      "SUI",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "NELSON Isaiah                                                                \n\n\nRossignol",
+      6532790,
+      "USA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "READ Erik                                                                \n\n\nAtomic",
+      103729,
+      "CAN",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "ORECCHIONI Diego                                                                \n\n\nRossignol",
+      6190876,
+      "FRA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "ZAMPA Andreas                                                                \n\n\nSalomon",
+      700879,
+      "SVK",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "HAECHLER Lenz                                                                \n\n\nStoeckli",
+      512588,
+      "SUI",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "ORTEGA FORNESA Albert                                                                \n\n\nRossignol",
+      492192,
+      "ESP",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "FRANZONI Giovanni                                                                \n\n\nRossignol",
+      6293831,
+      "ITA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "HANSSON William                                                                \n\n\nRossignol",
+      502433,
+      "SWE",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "ZURBRUEGG Sandro                                                                \n\n\nStoeckli",
+      512495,
+      "SUI",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "SIMONET Livio                                                                \n\n\nRossignol",
+      512301,
+      "SUI",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "FAVRE Guerlain                                                                \n\n\nSalomon",
+      6190875,
+      "FRA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "SARCHETT Ryder                                                                \n\n\nDynastar",
+      6533248,
+      "USA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "STURM Joshua                                                                \n\n\nAtomic",
+      54630,
+      "AUT",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "ZAMPA Adam                                                                \n\n\nSalomon",
+      700830,
+      "SVK",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "AMMAN Hannes                                                                \n\n\nRossignol",
+      203114,
+      "GER",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Marco Odermatt",
+      3040,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Marco Schwarz",
+      2561,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Loic Meillard",
+      2565,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Zan Kranjec",
+      1942,
+      "Slovenia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Thibaut Favrot",
+      2493,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Filip Zubcic",
+      249,
+      "Croatia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Thomas Tumler",
+      2409,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Timon Haugan",
+      3049,
+      "Norway",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "River Radamus",
+      2986,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Joan Verdu Sanchez",
+      2551,
+      "Andorra",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Aleksander Aamodt Kilde",
+      2393,
+      "Norway",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Alex Vinatzer",
+      4040,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sam Maes",
+      3002,
+      "Belgium",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Manuel Feller",
+      2396,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Fabian Gratz",
+      4358,
+      "Germany",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Giovanni Borsotti",
+      114,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Tormis Laine",
+      4056,
+      "Estonia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Justin Murisier",
+      67,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Luca Aerni",
+      2392,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ryan Cochran-Siegle",
+      1918,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Patrick Feurstein",
+      5295,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Victor Muffat-Jeandet",
+      2024,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Jared Goldberg",
+      2445,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Armand Marchant",
+      2603,
+      "Belgium",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Filippo Della Vite",
+      5526,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Vincent Kriechmayr",
+      1912,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Erik Read",
+      1920,
+      "Canada",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Aleix Aubert Serracanta",
+      6824,
+      "Spain",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "James Crawford",
+      2720,
+      "Canada",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ramon Zenhäusern",
+      2427,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Nils Allegre",
+      2395,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Kristoffer Jakobsen",
+      2765,
+      "Sweden",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Alexis Monney",
+      5493,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Laurie Taylor",
+      4143,
+      "Great Britain",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Brodie Seger",
+      2711,
+      "Canada",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Jan Zabystran",
+      2719,
+      "Czechia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Dave Ryding",
+      2375,
+      "Great Britain",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Andreas Zampa",
+      1973,
+      "Slovakia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Henrik Von Appen",
+      2505,
+      "Chile",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Yohei Koyama",
+      2447,
+      "Japan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Michael Matt",
+      2481,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Marc Rochat",
+      2812,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Rok Aznoh",
+      5119,
+      "Slovenia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Albert Popov",
+      2597,
+      "Bulgaria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Theodor Brækken",
+      6709,
+      "Norway",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Samuel Kolega",
+      3029,
+      "Croatia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Hugh McAdam",
+      5549,
+      "Australia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Rasmus Bakkevig",
+      7233,
+      "Norway",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Stefan Rogentin",
+      3505,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Daniel Yule",
+      2404,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Romed Baumann",
+      10,
+      "Germany",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Istok Rodes",
+      2454,
+      "Croatia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Marco Abbruzzese",
+      5426,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Blaise Giezendanner",
+      2476,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Hugo Desgrippes",
+      5508,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Mikkel Remsøy",
+      5471,
+      "Norway",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Arnaud Boisset",
+      4710,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Adrian Smiseth Sejersted",
+      2386,
+      "Norway",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Daniel Hemetsberger",
+      4605,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Matteo Canins",
+      4739,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Antoine Azzolin",
+      6717,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Richard Leitgeb",
+      2854,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Franjo Von Allmen",
+      5674,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Simon Jocher",
+      4305,
+      "Germany",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Kyle Negomir",
+      4714,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Nicolo Molteni",
+      4296,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Guglielmo Bosca",
+      2413,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Peder Lunder",
+      7230,
+      "Norway",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Jesper Pohjolainen",
+      5401,
+      "Finland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Joaquim Salarich",
+      2697,
+      "Spain",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anton Tremmel",
+      2746,
+      "Germany",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Matthieu Bailet",
+      2742,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Benjamin Ritchie",
+      5296,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Paco Rassat",
+      5371,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Steven Amiez",
+      5409,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Jett Seymour",
+      4992,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sebastian Holzmann",
+      2425,
+      "Germany",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Billy Major",
+      2607,
+      "Great Britain",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Simon Rueland",
+      3725,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "AJ Ginnis",
+      2683,
+      "Greece",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Dominik Zerhoch",
+      5569,
+      "Germany",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Corrado Barbera",
+      5644,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Bryce Bennett",
+      2387,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Florian Schieder",
+      3043,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Benjamin Jacques Alliod",
+      5631,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Vincent Wieser",
+      5486,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sam Morse",
+      2636,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Cameron Alexander",
+      4306,
+      "Canada",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Raphael Lessard",
+      5312,
+      "Canada",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Elian Lehto",
+      4054,
+      "Finland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Andreas Ploier",
+      4998,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ander Mintegui",
+      6890,
+      "Spain",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Charles Gamel Seigneur",
+      5612,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Nils Alphand",
+      4310,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Nejc Naralocnik",
+      3001,
+      "Slovenia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Jeffrey Read",
+      2208,
+      "Canada",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lars Rösti",
+      4300,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Felix Monsén",
+      2567,
+      "Sweden",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Juhan Luik",
+      2613,
+      "Estonia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Roy-Alexander Steudle",
+      5425,
+      "Great Britain",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Wiley Maple",
+      1808,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Florian Loriot",
+      5301,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Tanner Perkins",
+      6297,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Gustav Wissting",
+      7109,
+      "Sweden",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Miha Hrobat",
+      2633,
+      "Slovenia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Fabian Ax Swartz",
+      6700,
+      "Sweden",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Adrian Pertl",
+      4172,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Isaiah Nelson",
+      5504,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Juan Del Campo",
+      2602,
+      "Spain",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Luke Winters",
+      4709,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Fadri Janutin",
+      5338,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Cooper Puckett",
+      5567,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Dominik Paris",
+      91,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Giovanni Franzoni",
+      5497,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Simon Maurberger",
+      2640,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Christof Innerhofer",
+      13,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Eduard Hallberg",
+      6820,
+      "Finland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Tommaso Sala",
+      2588,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ryder Sarchett",
+      6284,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Riley Seger",
+      4304,
+      "Canada",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Clement Noel",
+      2758,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Liam Wallace",
+      4988,
+      "Canada",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Tanguy Nef",
+      3065,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Pietro Tranchina",
+      7025,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Johannes Strolz",
+      2401,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Seigo Kato",
+      2734,
+      "Japan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Dominik Raschner",
+      2639,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Adam Hofstedt",
+      5449,
+      "Sweden",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Mattia Casse",
+      158,
+      "Italy",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Hannes Amman",
+      5698,
+      "Germany",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Freddy Carrick-Smith",
+      8011,
+      "Great Britain",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Wiliam St-Germain",
+      2483,
+      "Canada",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Fredrik Møller",
+      5758,
+      "Norway",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Adrien Theaux",
+      19,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ryoma Katayama",
+      5578,
+      "Japan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Fabio Gstrein",
+      3066,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "William Hansson",
+      5403,
+      "Sweden",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Semyel Bissig",
+      4294,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Livio Simonet",
+      5413,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Guerlain Favre",
+      5499,
+      "France",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Joshua Sturm",
+      5399,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ]
+  ]
+}
