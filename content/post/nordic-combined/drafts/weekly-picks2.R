@@ -1649,7 +1649,6 @@ combine_predictions <- function(race_dfs, startlist, is_team = FALSE) {
           }
           participant_col <- "Skier"
         }
-        
         # Log the size of the startlist to track if it's being modified
         log_info(paste("Selected startlist has", nrow(startlist), "entries"))
         log_info(paste("Using chronological data from:", chrono_path))
@@ -1715,10 +1714,10 @@ combine_predictions <- function(race_dfs, startlist, is_team = FALSE) {
         } else {
           # Standard individual race handling
           df <- read.csv(chrono_path, stringsAsFactors = FALSE) %>%
-            mutate(Date = as.Date(Date)) %>%
+            mutate(Date = as.Date(Date), 
+                   RaceType = gsub(" ", "", RaceType)) %>%
             preprocess_data(is_team = is_team)
         }
-        
         # For debugging
         log_info(paste("Chronological data dimensions:", nrow(df), "x", ncol(df)))
         log_info(paste("First few columns:", paste(names(df)[1:min(10, length(names(df)))], collapse=", ")))
@@ -1775,11 +1774,15 @@ combine_predictions <- function(race_dfs, startlist, is_team = FALSE) {
           } else {
             log_warn(paste("Race probability column", race_prob_col, "NOT FOUND in startlist!"))
           }
-          
+          View(df)
+          log_info(paste("Looking for RaceType:", races$racetype[i]))
+          log_info(paste("Available RaceTypes in df:", paste(unique(df$RaceType),
+                                                             collapse=", ")))
+          log_info(paste("Number of rows in df:", nrow(df)))
           # Filter base dataset for race type
           race_df <- df %>%
-            filter(RaceType == races$racetype[i])
-          
+            filter(RaceType == gsub(" ", "", races$racetype[i]))
+          View(race_df)
           # Get relevant Elo column based on race type
           if(is_team) {
             # For team races, use general average ELO
@@ -1819,7 +1822,7 @@ combine_predictions <- function(race_dfs, startlist, is_team = FALSE) {
                                   "MassStart_Elo_Pct", "IndividualCompact_Elo_Pct", 
                                   "Elo_Pct")#, "Period", "Elevation_Flag")
           }
-          
+          View(race_df_75)
           # Create and fit model for points
           formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))
           tryCatch({
@@ -2540,3 +2543,5 @@ combine_predictions <- function(race_dfs, startlist, is_team = FALSE) {
       
       # Run the integrated predictions workflow
       run_integrated_predictions_workflow()
+      
+      

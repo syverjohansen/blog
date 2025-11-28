@@ -1773,11 +1773,27 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     } else {
       log_warn(paste("Race probability column", race_prob_col, "NOT FOUND in startlist!"))
     }
-    
+    View(df)
     # Filter base dataset for race type
-    race_df <- df %>%
-      filter(RaceType == races$racetype[i])
+    target_racetype <- gsub(" ", "", races$racetype[i])
+    log_info(paste("Looking for RaceType:", races$racetype[i], "-> cleaned:",
+                   target_racetype))
+    log_info(paste("Available RaceTypes in df BEFORE cleaning:",
+                   paste(unique(df$RaceType), collapse=", ")))
     
+    # Clean the RaceType column in df
+    df <- df %>%
+      mutate(RaceType = gsub(" ", "", RaceType))
+    
+    log_info(paste("Available RaceTypes in df AFTER cleaning:",
+                   paste(unique(df$RaceType), collapse=", ")))
+    log_info(paste("Number of rows in df:", nrow(df)))
+    
+    race_df <- df %>%
+      filter(RaceType == target_racetype)
+    
+    log_info(paste("Filtered race_df has", nrow(race_df), "rows"))
+    View(race_df)
     # Get relevant Elo column based on race type
     if(is_team) {
       # For team races, use general average ELO

@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 2 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Anze Lanisek",
+      "SLO",
+      55.2070994508576
+    ],
+    [
+      "Ryoyu Kobayashi",
+      "JPN",
+      45.9828450862625
+    ],
+    [
+      "Daniel Tschofenig",
+      "AUT",
+      38.6109038333438
+    ],
+    [
+      "Jan Hörl",
+      "AUT",
+      36.1314756568621
+    ],
+    [
+      "Stefan Kraft",
+      "AUT",
+      33.1804693151192
+    ]
+  ]
+}

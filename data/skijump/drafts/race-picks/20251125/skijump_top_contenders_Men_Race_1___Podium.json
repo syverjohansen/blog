@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Stefan Kraft",
+      "AUT",
+      45.9775280898876
+    ],
+    [
+      "Jan Hörl",
+      "AUT",
+      45.438202247191
+    ],
+    [
+      "Andreas Wellinger",
+      "GER",
+      39.3707865168539
+    ],
+    [
+      "Ryoyu Kobayashi",
+      "JPN",
+      23.4606741573034
+    ],
+    [
+      "Daniel Tschofenig",
+      "AUT",
+      23.1910112359551
+    ]
+  ]
+}
