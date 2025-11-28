@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      14099,
+      187.364813634792
+    ],
+    [
+      "Kerttu Niskanen",
+      37,
+      "L",
+      "Finland",
+      5083,
+      163.739172421243
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "L",
+      "Norway",
+      8343,
+      143.14453940075
+    ],
+    [
+      "Krista Pärmäkoski",
+      13,
+      "L",
+      "Finland",
+      3295,
+      141.825872443557
+    ],
+    [
+      "Katerina Janatova",
+      3198,
+      "L",
+      "Czechia",
+      2078,
+      135.224804424836
+    ],
+    [
+      "Jasmi Joensuu",
+      1675,
+      "L",
+      "Finland",
+      3958,
+      134.832125012425
+    ],
+    [
+      "Teresa Stadlober",
+      529,
+      "L",
+      "Austria",
+      4737,
+      129.889003306579
+    ],
+    [
+      "Johanna Matintalo",
+      1761,
+      "L",
+      "Finland",
+      995,
+      115.079585387388
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      17784,
+      186.335713569911
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "M",
+      "Italy",
+      8712,
+      144.7237455521
+    ],
+    [
+      "Mika Vermeulen",
+      12673,
+      "M",
+      "Austria",
+      5811,
+      143.458705073059
+    ],
+    [
+      "Iivo Niskanen",
+      1470,
+      "M",
+      "Finland",
+      7105,
+      131.476249043408
+    ],
+    [
+      "Erik Valnes",
+      5923,
+      "M",
+      "Norway",
+      8356,
+      121.195977855926
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "M",
+      "France",
+      4212,
+      114.030190016576
+    ],
+    [
+      "Michal Novak",
+      3655,
+      "M",
+      "Czechia",
+      1156,
+      109.970075771915
+    ],
+    [
+      "Friedrich Moch",
+      9323,
+      "M",
+      "Germany",
+      3035,
+      94.2675221613995
+    ]
+  ]
+}
