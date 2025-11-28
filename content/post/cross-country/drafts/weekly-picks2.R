@@ -1030,7 +1030,7 @@ optimize_weekly_team <- function(men_results, ladies_results, prediction_type = 
 run_fantasy_optimization <- function(men_results, ladies_results, weekend_date) {
   # Create directory for output
   weekend_folder <- format(next_weekend_date, "%Y%m%d")
-  dir_path <- paste0("/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", weekend_folder)
+  dir_path <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", weekend_folder)
   
   
   if (!dir.exists(dir_path)) {
@@ -2037,7 +2037,7 @@ if(adj_name %in% names(position_adjustments)) {
   
   # Create folder path based on next race weekend date
   weekend_folder <- format(next_weekend_date, "%Y%m%d")
-  dir_path <- paste0("/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", weekend_folder)
+  dir_path <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", weekend_folder)
   
   # Create directory if it doesn't exist
   if (!dir.exists(dir_path)) {
@@ -2083,7 +2083,7 @@ format_position_results <- function(position_results, next_weekend_date, gender)
 
   weekend_folder <- format(next_weekend_date, "%Y%m%d")
   dir_path <- paste0(
-    "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", 
+    "~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", 
     weekend_folder
   )
   
@@ -2129,7 +2129,7 @@ create_top_contenders_summary <- function(men_results, ladies_results) {
   
   weekend_folder <- format(next_weekend_date, "%Y%m%d")
   dir_path <- paste0(
-    "/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", 
+    "~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", 
     weekend_folder
   )
   

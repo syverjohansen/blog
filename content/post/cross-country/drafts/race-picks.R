@@ -598,7 +598,7 @@ format_position_results <- function(position_results, current_date, gender) {
     arrange(Race, desc(Win))
   
   today_folder <- format(current_date, "%Y%m%d")
-  dir_path <- paste0("/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/race-picks/", today_folder)
+  dir_path <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", today_folder)
   
   if (!dir.exists(dir_path)) {
     dir.create(dir_path, recursive = TRUE)
@@ -1242,7 +1242,7 @@ predict_races <- function(gender) {
   
   # Create folder path based on today's date
   today_folder <- format(current_date, "%Y%m%d")
-  dir_path <- paste0("/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/race-picks/", today_folder)
+  dir_path <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", today_folder)
   
   # Create directory if it doesn't exist
   if (!dir.exists(dir_path)) {
@@ -1267,7 +1267,7 @@ predict_races <- function(gender) {
 # Function to create top contenders summary
 create_top_contenders_summary <- function(men_results, ladies_results) {
   today_folder <- format(current_date, "%Y%m%d")
-  dir_path <- paste0("/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/race-picks/", today_folder)
+  dir_path <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", today_folder)
   
   if (!dir.exists(dir_path)) {
     dir.create(dir_path, recursive = TRUE)
@@ -1415,7 +1415,7 @@ run_race_day_predictions <- function() {
   
   # Display file locations
   today_folder <- format(current_date, "%Y%m%d")
-  output_dir <- paste0("/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/race-picks/", today_folder)
+  output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", today_folder)
   cat("\nFiles saved to:", output_dir, "\n")
   
   # List saved files
@@ -1647,6 +1647,6 @@ if(!is.null(race_day_results$top_contenders)) {
 }
 
 today_folder <- format(current_date, "%Y%m%d")
-output_dir <- paste0("/Users/syverjohansen/blog/daehl-e/content/post/cross-country/drafts/race-picks/", today_folder)
+output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", today_folder)
 cat("\nAll files saved to:", output_dir, "\n")
 cat("Ready for blog publication!\n")
