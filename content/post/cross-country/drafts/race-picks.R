@@ -79,15 +79,15 @@ if(nrow(men_races) == 0 && nrow(ladies_races) == 0) {
 
 # Read startlists
 log_info("Reading startlists")
-men_startlist <- if(file.exists("~/ski/elo/python/ski/polars/excel365/startlist_weekend_men.csv")) {
-  read.csv("~/ski/elo/python/ski/polars/excel365/startlist_weekend_men.csv", 
+men_startlist <- if(file.exists("~/ski/elo/python/ski/polars/excel365/startlist_races_men.csv")) {
+  read.csv("~/ski/elo/python/ski/polars/excel365/startlist_races_men.csv", 
            stringsAsFactors = FALSE)
 } else {
   data.frame(Skier = character(0))
 }
 
-ladies_startlist <- if(file.exists("~/ski/elo/python/ski/polars/excel365/startlist_weekend_ladies.csv")) {
-  read.csv("~/ski/elo/python/ski/polars/excel365/startlist_weekend_ladies.csv", 
+ladies_startlist <- if(file.exists("~/ski/elo/python/ski/polars/excel365/startlist_races_ladies.csv")) {
+  read.csv("~/ski/elo/python/ski/polars/excel365/startlist_races_ladies.csv", 
            stringsAsFactors = FALSE)
 } else {
   data.frame(Skier = character(0))
@@ -99,6 +99,8 @@ if(nrow(men_startlist) == 0 && nrow(ladies_startlist) == 0) {
   cat("No startlist data available for today's races. Exiting.\n")
   quit(save = "no", status = 0)
 }
+men_startlist$Sex = "M"
+ladies_startlist$Sex = "L"
 
 log_info(paste("Loaded", nrow(men_startlist), "men and", nrow(ladies_startlist), "ladies from startlists"))
 
@@ -241,12 +243,13 @@ preprocess_data <- function(df) {
 }
 
 # Function to prepare startlist data with ELO information
-prepare_startlist_data <- function(startlist, race_df, pelo_col) {
+prepare_startlist_data <- function(startlist, race_df, pelo_col, gender) {
   log_info(paste("Preparing startlist data for", pelo_col))
-  
+  startlist$Sex <- ifelse(gender == "men", "M", "L")
+ 
   # Keep only essential columns from startlist
   base_df <- startlist %>%
-    dplyr::select(Skier, ID, Nation, Sex, Price)
+    dplyr::select(Skier, ID, Nation, Price, Sex)
   
   # Get all required Elo columns and their corresponding Pelo names
   elo_cols <- c("Distance_Elo", "Distance_C_Elo", "Distance_F_Elo",
@@ -1013,7 +1016,7 @@ predict_races <- function(gender) {
       )
     
     # Prepare startlist data
-    startlist_prepared <- prepare_startlist_data(startlist, race_df, pelo_col)
+    startlist_prepared <- prepare_startlist_data(startlist, race_df, pelo_col, gender)
     
     # NEW: Make position probability predictions with adjustments
     position_preds <- data.frame(
