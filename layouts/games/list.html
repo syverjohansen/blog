@@ -260,9 +260,11 @@
 document.addEventListener('DOMContentLoaded', async function() {
     // Load quiz data
     try {
-        const response = await fetch('/python/sporcle/quizzes.csv');
-        const csvText = await response.text();
-        const quizzes = parseCSV(csvText);
+        const response = await fetch('/python/sporcle/quizzes.json');
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        const quizzes = await response.json();
         
         // Group quizzes by gender and sport
         const groupedQuizzes = groupQuizzes(quizzes);
