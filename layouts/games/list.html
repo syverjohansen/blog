@@ -369,7 +369,20 @@ function groupQuizzes(quizzes) {
     quizzes.forEach(quiz => {
         const gender = quiz.Sex;
         const sport = quiz.Sport;
+        const type = quiz.Type;
         
+        // Skip if any required fields are missing
+        if (!gender || !sport || !type) {
+            console.warn('Skipping quiz with missing data:', quiz);
+            return;
+        }
+        
+        // Initialize gender object if not exists
+        if (!grouped[gender]) {
+            grouped[gender] = {};
+        }
+        
+        // Initialize sport object if not exists
         if (!grouped[gender][sport]) {
             grouped[gender][sport] = {
                 'Top-10': [],
@@ -378,7 +391,12 @@ function groupQuizzes(quizzes) {
             };
         }
         
-        grouped[gender][sport][quiz.Type].push(quiz);
+        // Initialize type array if not exists
+        if (!grouped[gender][sport][type]) {
+            grouped[gender][sport][type] = [];
+        }
+        
+        grouped[gender][sport][type].push(quiz);
     });
     
     return grouped;
