@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Thea Louise Stjernesund",
+      "NOR",
+      100.0
+    ],
+    [
+      "Sara Hector",
+      "SWE",
+      92.1568627450981
+    ],
+    [
+      "Mikaela Shiffrin",
+      "USA",
+      41.1764705882353
+    ],
+    [
+      "Camille Rast",
+      "SUI",
+      18.3006535947712
+    ],
+    [
+      "Kajsa Vickhoff Lie",
+      "NOR",
+      9.80392156862745
+    ]
+  ]
+}

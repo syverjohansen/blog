@@ -1,0 +1,1283 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Sex",
+    "Race1 Points",
+    "Race1 Probability",
+    "Total Points"
+  ],
+  "rows": [
+    [
+      "Thea Louise Stjernesund",
+      3019,
+      "NOR",
+      "L",
+      39.4993099633113,
+      1,
+      39.4993099633113
+    ],
+    [
+      "Sara Hector",
+      133,
+      "SWE",
+      "L",
+      35.2303007050135,
+      1,
+      35.2303007050135
+    ],
+    [
+      "Mikaela Shiffrin",
+      72,
+      "USA",
+      "L",
+      28.7231447142926,
+      1,
+      28.7231447142926
+    ],
+    [
+      "Camille Rast",
+      3229,
+      "SUI",
+      "L",
+      19.1740671385257,
+      1,
+      19.1740671385257
+    ],
+    [
+      "Mina Fürst Holtmann",
+      480,
+      "NOR",
+      "L",
+      15.4795833953325,
+      1,
+      15.4795833953325
+    ],
+    [
+      "Maryna Gasienica Daniel",
+      289,
+      "POL",
+      "L",
+      14.3924764943514,
+      1,
+      14.3924764943514
+    ],
+    [
+      "Kajsa Vickhoff Lie",
+      2963,
+      "NOR",
+      "L",
+      13.6588103620216,
+      1,
+      13.6588103620216
+    ],
+    [
+      "Stephanie Brunner",
+      234,
+      "AUT",
+      "L",
+      13.2259980327993,
+      1,
+      13.2259980327993
+    ],
+    [
+      "Lena Dürr",
+      28,
+      "GER",
+      "L",
+      12.9703094176869,
+      1,
+      12.9703094176869
+    ],
+    [
+      "Wendy Holdener",
+      78,
+      "SUI",
+      "L",
+      11.0719759673502,
+      1,
+      11.0719759673502
+    ],
+    [
+      "Katharina Liensberger",
+      2921,
+      "AUT",
+      "L",
+      6.35603050563834,
+      1,
+      6.35603050563834
+    ],
+    [
+      "Estelle Alphand",
+      197,
+      "SWE",
+      "L",
+      5.34903024211458,
+      1,
+      5.34903024211458
+    ],
+    [
+      "Emma Aicher",
+      4194,
+      "GER",
+      "L",
+      3.14716726310873,
+      1,
+      3.14716726310873
+    ],
+    [
+      "Madeline Sylvester-Davik",
+      5486,
+      "NOR",
+      "L",
+      2.10767716225321,
+      1,
+      2.10767716225321
+    ],
+    [
+      "Vanessa Kasper",
+      3023,
+      "SUI",
+      "L",
+      1.52975980896141,
+      1,
+      1.52975980896141
+    ],
+    [
+      "Victoria Olivier",
+      4232,
+      "AUT",
+      "L",
+      0.547609750837523,
+      1,
+      0.547609750837523
+    ],
+    [
+      "Doriane Escane",
+      3577,
+      "FRA",
+      "L",
+      0.521325024930775,
+      1,
+      0.521325024930775
+    ],
+    [
+      "Cornelia Öhlund",
+      5016,
+      "SWE",
+      "L",
+      0.226865766015305,
+      1,
+      0.226865766015305
+    ],
+    [
+      "Camille Cerutti",
+      2964,
+      "FRA",
+      "L",
+      0.041469538369153,
+      1,
+      0.041469538369153
+    ],
+    [
+      "Tricia Mangan",
+      1341,
+      "USA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Bianca Bakke Westhoff",
+      4160,
+      "NOR",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Arianne Forget",
+      4919,
+      "CAN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Francesca Baruzzi Farriol",
+      1336,
+      "ARG",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Hilma Lövblom",
+      3985,
+      "SWE",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Fabiana Dorigo",
+      4130,
+      "GER",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "llaria Ghisalberti",
+      4151,
+      "ITA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Hanna Aronsson Elfman",
+      4063,
+      "SWE",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Viktoria Bürgler",
+      4323,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Lisa Hörhager",
+      4176,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Keely Cashman",
+      2975,
+      "USA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Jessica Hilzinger",
+      1339,
+      "GER",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "GOGGIA Sofia                                                                \n\n\nAtomic",
+      298323,
+      "ITA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "LJUTIC Zrinka                                                                \n\n\nAtomic",
+      385116,
+      "CRO",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "MOLTZAN Paula                                                                \n\n\nRossignol",
+      539909,
+      "USA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "SCHEIB Julia                                                                \n\n\nRossignol",
+      56416,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "COLTURI Lara                                                                \n\n\nBlizzard",
+      805009,
+      "ALB",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "O BRIEN Nina                                                                \n\n\nRossignol",
+      6535773,
+      "USA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "RICHARDSON Britt                                                                \n\n\nDynastar",
+      108461,
+      "CAN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "GRENIER Valerie                                                                \n\n\nRossignol",
+      107613,
+      "CAN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "ROBINSON Alice                                                                \n\n\nSalomon",
+      415232,
+      "NZL",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "BOCOCK Elisabeth                                                                \n\n\nRossignol",
+      6537468,
+      "USA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "ZENERE Asja                                                                \n\n\nSalomon",
+      299363,
+      "ITA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "BUCIK JOGAN Ana                                                                \n\n\nSalomon",
+      565401,
+      "SLO",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "DIREZ Clara                                                                \n\n\nDynastar",
+      197651,
+      "FRA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "COLLOMB Giorgia                                                                \n\n\nRossignol",
+      6296778,
+      "ITA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "ASTNER Nina                                                                \n\n\nAtomic",
+      56517,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "GRITSCH Franziska                                                                \n\n\nBlizzard",
+      56392,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "DELLA MEA Lara                                                                \n\n\nFischer",
+      6295075,
+      "ITA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "PILLER Sue                                                                \n\n\nAtomic",
+      516813,
+      "SUI",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "MCFARLANE Caitlin                                                                \n\n\nRossignol",
+      198253,
+      "FRA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "GRAY Cassidy                                                                \n\n\nAtomic",
+      108077,
+      "CAN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "PYKALAINEN Erika                                                                \n\n\nAtomic",
+      185475,
+      "FIN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "MORITZ Kjersti                                                                \n\n\nFISCHER",
+      6537255,
+      "USA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "LAMONTAGNE Justine                                                                \n\n\nRossignol",
+      108336,
+      "CAN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "WILD Simone                                                                \n\n\nFischer",
+      516268,
+      "SUI",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "HUML Lara                                                                \n\n\n-",
+      156249,
+      "CZE",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Lara Gut-Behrami",
+      10,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Alice Robinson",
+      3891,
+      "New Zealand",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Paula Moltzan",
+      294,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Julia Scheib",
+      2970,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lara Colturi",
+      5268,
+      "Albania",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Zrinka Ljutic",
+      4175,
+      "Croatia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Valerie Grenier",
+      460,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Nina O'Brien",
+      1346,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "AJ Hurt",
+      3886,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Brett Richardson",
+      4212,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Katie Hensien",
+      3887,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Asja Zenere",
+      1325,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Neja Dvornik",
+      3890,
+      "Slovenia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Clara Direz",
+      252,
+      "France",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Elisabeth Bocock",
+      4761,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ana Bucik Jogan",
+      180,
+      "Slovenia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lara Della Mea",
+      3580,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Erika Pykäläinen",
+      3894,
+      "Finland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Cassidy Gray",
+      4154,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Zita Toth",
+      3970,
+      "Hungary",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Laurence St-Germain",
+      379,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Clara-Marie Holmer Vorre",
+      4211,
+      "Denmark",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Selina Egloff",
+      3958,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Nina Astner",
+      3959,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Katharina Gallhuber",
+      2829,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Marie Lamure",
+      3993,
+      "France",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Annette Belfrond",
+      4065,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Amelia Smart",
+      2983,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Melanie Meillard",
+      1322,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Moa Boström Mussener",
+      4168,
+      "Sweden",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sue Piller",
+      5832,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Chisaki Maeda",
+      2985,
+      "Japan",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lila Lapanja",
+      377,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Annika Hunt",
+      5297,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Amelie Klopfenstein",
+      4092,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Phoebe Heaydon",
+      5282,
+      "Australia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Victoria Palla",
+      3921,
+      "Great Britain",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Marjolaine Ollier",
+      5699,
+      "France",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Alice Pazzaglia",
+      4303,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Eliane Christen",
+      4471,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Natalie Falch",
+      4280,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anuk Brändli",
+      5277,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Dzenifera Germane",
+      4080,
+      "Latvia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Emilia Mondinelli",
+      4987,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Rosa Pohjolainen",
+      4060,
+      "Finland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Marion Chevrier",
+      4203,
+      "France",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Annabel Jallat",
+      5433,
+      "France",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Silja Koskinen",
+      5220,
+      "Finland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Aada Kanto",
+      5444,
+      "Finland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Eren Watanabe",
+      4205,
+      "Japan",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Kia Suni",
+      5944,
+      "Finland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Madeleine Beck",
+      5214,
+      "Liechtenstein",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sophie Mahon",
+      5255,
+      "Australia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Aline Höpli",
+      4226,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Nicole Good",
+      3782,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Kiara Alexander",
+      4743,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Carla Mijares Ruf",
+      4106,
+      "Andorra",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Liv Moritz",
+      4744,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Stefanie Grob",
+      4970,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Kim Vanreusel",
+      2962,
+      "Belgium",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Asa Ando",
+      427,
+      "Japan",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Mialitiana Clerc",
+      3889,
+      "Madagascar",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Beatrice Sola",
+      4229,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Giulia Valleriani",
+      5329,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sophie Mathiou",
+      4103,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Noa Szollos",
+      4124,
+      "Israel",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Franziska Gritsch",
+      3694,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Aline Danioth",
+      1321,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Katharina Truppe",
+      1345,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anna Swenn-Larsson",
+      76,
+      "Sweden",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Shaienne Zehnder",
+      5933,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Giorgia Collomb",
+      5332,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ali Nullmeyer",
+      2972,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Martina Dubovska",
+      168,
+      "Czechia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Liene Bondare",
+      511,
+      "Latvia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Caitlin McFarlane",
+      4104,
+      "France",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Rebeka Jancova",
+      4087,
+      "Slovakia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Maja Waroschitz",
+      5878,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sarah Bennett",
+      4156,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Leona Popovic",
+      1193,
+      "Croatia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Laura Steinmair",
+      4237,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Jasmina Suter",
+      262,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Elisa Platino",
+      3947,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Katharina Huber",
+      1324,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Andreja Slokar",
+      3736,
+      "Slovenia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ]
+  ]
+}
