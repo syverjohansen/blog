@@ -171,3 +171,11 @@ params = ["categories", "tags"]  #Whichparameters should be included in the Algo
     [markup.goldmark.renderer]
       unsafe = true
 
+[mediaTypes]
+  [mediaTypes."text/csv"]
+    suffixes = ["csv"]
+
+[outputFormats.CSV]
+  mediaType = "text/csv"
+  isPlainText = true
+
