@@ -89,8 +89,10 @@ run_elo_processing() {
         echo "    Running chrono.py..."
         python3 chrono.py
         
-        echo "    Running elevation_chrono_merge.py..."
-        python3 elevation_chrono.merge.py
+        if [[ "$sport" != "alpine" ]]; then
+            echo "    Running elevation_chrono_merge.py..."
+            python3 elevation_chrono_merge.py
+        fi
     fi
     
     # Run scripts in relay directory (skip for alpine)
@@ -111,8 +113,10 @@ run_elo_processing() {
         python3 chrono.py
         python3 relay_chrono.py
         
-        echo "      Running elevation_chrono.merge.py..."
-        python3 elevation_chrono.merge.py
+        if [[ "$sport" != "alpine" ]]; then
+            echo "    Running elevation_chrono_merge.py..."
+            python3 elevation_chrono_merge.py
+        fi
     fi
 }
 
