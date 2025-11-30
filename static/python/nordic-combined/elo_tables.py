@@ -102,7 +102,7 @@ m_current_ids, l_current_ids = load_current_ids()
 
 for i, df in enumerate(chronos):	
     print(i)
-    file_path = os.path.expanduser("~/blog/daehl-e/static/python/nordic-combined/excel365/{chronos_str[i]}_current.json")
+    file_path = os.path.expanduser(f"~/blog/daehl-e/static/python/nordic-combined/excel365/{chronos_str[i]}_current.json")
     
     # Determine which current_ids to use based on the dataframe name
     if 'M_' in chronos_str[i] or chronos_str[i] == 'M_chrono':
