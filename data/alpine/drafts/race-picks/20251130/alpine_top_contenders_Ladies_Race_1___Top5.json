@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Top5",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Top5%"
+  ],
+  "rows": [
+    [
+      "Mikaela Shiffrin",
+      "USA",
+      100.0
+    ],
+    [
+      "Lena Dürr",
+      "GER",
+      97.0740103270224
+    ],
+    [
+      "Wendy Holdener",
+      "SUI",
+      82.3407917383821
+    ],
+    [
+      "Camille Rast",
+      "SUI",
+      67.0567986230637
+    ],
+    [
+      "Katharina Liensberger",
+      "AUT",
+      62.7882960413081
+    ]
+  ]
+}
