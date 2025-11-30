@@ -6375,19 +6375,19 @@
     "season": 2015,
     "race": 5,
     "date": "2014-12-07",
-    "city": "Nordic Opening",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Lillehammer",
+    "country": "Norway",
+    "distance": "10",
+    "technique": "C"
   },
   "2015_6": {
     "season": 2015,
     "race": 6,
     "date": "2014-12-07",
-    "city": "Lillehammer",
-    "country": "Norway",
-    "distance": "10",
-    "technique": "C"
+    "city": "Nordic Opening",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2015_7": {
     "season": 2015,
@@ -6483,19 +6483,19 @@
     "season": 2015,
     "race": 17,
     "date": "2015-01-11",
-    "city": "Tour de Ski",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "9",
+    "technique": "F"
   },
   "2015_18": {
     "season": 2015,
     "race": 18,
     "date": "2015-01-11",
-    "city": "Val di Fiemme",
-    "country": "Italy",
-    "distance": "9",
-    "technique": "F"
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2015_19": {
     "season": 2015,
@@ -6645,19 +6645,19 @@
     "season": 2016,
     "race": 3,
     "date": "2015-11-29",
-    "city": "Nordic Opening",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Ruka",
+    "country": "Finland",
+    "distance": "10",
+    "technique": "C"
   },
   "2016_4": {
     "season": 2016,
     "race": 4,
     "date": "2015-11-29",
-    "city": "Ruka",
-    "country": "Finland",
-    "distance": "10",
-    "technique": "C"
+    "city": "Nordic Opening",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2016_5": {
     "season": 2016,
@@ -6771,19 +6771,19 @@
     "season": 2016,
     "race": 18,
     "date": "2016-01-10",
-    "city": "Tour de Ski",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "9",
+    "technique": "F"
   },
   "2016_19": {
     "season": 2016,
     "race": 19,
     "date": "2016-01-10",
-    "city": "Val di Fiemme",
-    "country": "Italy",
-    "distance": "9",
-    "technique": "F"
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2016_20": {
     "season": 2016,
@@ -6794,149 +6794,140 @@
     "distance": "Sprint",
     "technique": "F"
   },
-  "2016_21": {
+  "2016_22": {
     "season": 2016,
-    "race": 21,
+    "race": 22,
     "date": "2016-01-23",
     "city": "Nov\u00e9 M\u011bsto na Morav\u011b",
     "country": "Czechia",
     "distance": "10",
     "technique": "F"
   },
-  "2016_23": {
+  "2016_24": {
     "season": 2016,
-    "race": 23,
+    "race": 24,
     "date": "2016-02-03",
     "city": "Drammen",
     "country": "Norway",
     "distance": "Sprint",
     "technique": "C"
   },
-  "2016_24": {
+  "2016_25": {
     "season": 2016,
-    "race": 24,
+    "race": 25,
     "date": "2016-02-07",
     "city": "Holmenkollen",
     "country": "Norway",
     "distance": "30",
     "technique": "C"
   },
-  "2016_25": {
+  "2016_26": {
     "season": 2016,
-    "race": 25,
+    "race": 26,
     "date": "2016-02-11",
     "city": "Stockholm",
     "country": "Sweden",
     "distance": "Sprint",
     "technique": "C"
   },
-  "2016_26": {
+  "2016_27": {
     "season": 2016,
-    "race": 26,
+    "race": 27,
     "date": "2016-02-13",
     "city": "Falun",
     "country": "Sweden",
     "distance": "5",
     "technique": "C"
   },
-  "2016_27": {
+  "2016_28": {
     "season": 2016,
-    "race": 27,
+    "race": 28,
     "date": "2016-02-14",
     "city": "Falun",
     "country": "Sweden",
     "distance": "10",
     "technique": "F"
   },
-  "2016_28": {
+  "2016_29": {
     "season": 2016,
-    "race": 28,
+    "race": 29,
     "date": "2016-02-20",
     "city": "Lahti",
     "country": "Finland",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2016_29": {
+  "2016_30": {
     "season": 2016,
-    "race": 29,
+    "race": 30,
     "date": "2016-02-21",
     "city": "Lahti",
     "country": "Finland",
     "distance": "Duathlon",
     "technique": "P"
   },
-  "2016_30": {
+  "2016_31": {
     "season": 2016,
-    "race": 30,
+    "race": 31,
     "date": "2016-03-01",
     "city": "Gatineau, QC",
     "country": "Canada",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2016_31": {
+  "2016_32": {
     "season": 2016,
-    "race": 31,
+    "race": 32,
     "date": "2016-03-02",
     "city": "Montr\u00e9al, QC",
     "country": "Canada",
     "distance": "10",
     "technique": "C"
   },
-  "2016_32": {
+  "2016_33": {
     "season": 2016,
-    "race": 32,
+    "race": 33,
     "date": "2016-03-04",
     "city": "Qu\u00e9bec, QC",
     "country": "Canada",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2016_33": {
+  "2016_34": {
     "season": 2016,
-    "race": 33,
+    "race": 34,
     "date": "2016-03-05",
     "city": "Qu\u00e9bec, QC",
     "country": "Canada",
     "distance": "10",
     "technique": "F"
   },
-  "2016_34": {
+  "2016_35": {
     "season": 2016,
-    "race": 34,
+    "race": 35,
     "date": "2016-03-08",
     "city": "Canmore, AB",
     "country": "Canada",
     "distance": "Sprint",
     "technique": "C"
   },
-  "2016_35": {
+  "2016_36": {
     "season": 2016,
-    "race": 35,
+    "race": 36,
     "date": "2016-03-09",
     "city": "Canmore, AB",
     "country": "Canada",
     "distance": "Duathlon",
     "technique": "P"
   },
-  "2016_36": {
+  "2016_37": {
     "season": 2016,
-    "race": 36,
+    "race": 37,
     "date": "2016-03-11",
     "city": "Canmore, AB",
     "country": "Canada",
     "distance": "10",
     "technique": "F"
-  },
-  "2016_37": {
-    "season": 2016,
-    "race": 37,
-    "date": "2016-03-12",
-    "city": "Ski Tour Canada",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
   },
   "2016_38": {
     "season": 2016,
@@ -6946,6 +6937,15 @@
     "country": "Canada",
     "distance": "10",
     "technique": "C"
+  },
+  "2016_39": {
+    "season": 2016,
+    "race": 39,
+    "date": "2016-03-12",
+    "city": "Ski Tour Canada",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2017_1": {
     "season": 2017,
@@ -6987,19 +6987,19 @@
     "season": 2017,
     "race": 5,
     "date": "2016-12-04",
-    "city": "Nordic Opening",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Lillehammer",
+    "country": "Norway",
+    "distance": "10",
+    "technique": "C"
   },
   "2017_6": {
     "season": 2017,
     "race": 6,
     "date": "2016-12-04",
-    "city": "Lillehammer",
-    "country": "Norway",
-    "distance": "10",
-    "technique": "C"
+    "city": "Nordic Opening",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2017_7": {
     "season": 2017,
@@ -7086,19 +7086,19 @@
     "season": 2017,
     "race": 17,
     "date": "2017-01-08",
-    "city": "Tour de Ski",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "9",
+    "technique": "F"
   },
   "2017_18": {
     "season": 2017,
     "race": 18,
     "date": "2017-01-08",
-    "city": "Val di Fiemme",
-    "country": "Italy",
-    "distance": "9",
-    "technique": "F"
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2017_19": {
     "season": 2017,
@@ -7154,104 +7154,95 @@
     "distance": "Duathlon",
     "technique": "P"
   },
-  "2017_27": {
+  "2017_28": {
     "season": 2017,
-    "race": 27,
+    "race": 28,
     "date": "2017-02-18",
     "city": "Otep\u00e4\u00e4",
     "country": "Estonia",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2017_28": {
+  "2017_29": {
     "season": 2017,
-    "race": 28,
+    "race": 29,
     "date": "2017-02-19",
     "city": "Otep\u00e4\u00e4",
     "country": "Estonia",
     "distance": "10",
     "technique": "C"
   },
-  "2017_29": {
+  "2017_30": {
     "season": 2017,
-    "race": 29,
+    "race": 30,
     "date": "2017-02-23",
     "city": "Lahti",
     "country": "Finland",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2017_30": {
+  "2017_31": {
     "season": 2017,
-    "race": 30,
+    "race": 31,
     "date": "2017-02-25",
     "city": "Lahti",
     "country": "Finland",
     "distance": "Duathlon",
     "technique": "P"
   },
-  "2017_32": {
+  "2017_33": {
     "season": 2017,
-    "race": 32,
+    "race": 33,
     "date": "2017-02-28",
     "city": "Lahti",
     "country": "Finland",
     "distance": "10",
     "technique": "C"
   },
-  "2017_34": {
+  "2017_35": {
     "season": 2017,
-    "race": 34,
+    "race": 35,
     "date": "2017-03-04",
     "city": "Lahti",
     "country": "Finland",
     "distance": "30",
     "technique": "F"
   },
-  "2017_35": {
+  "2017_36": {
     "season": 2017,
-    "race": 35,
+    "race": 36,
     "date": "2017-03-08",
     "city": "Drammen",
     "country": "Norway",
     "distance": "Sprint",
     "technique": "C"
   },
-  "2017_36": {
+  "2017_37": {
     "season": 2017,
-    "race": 36,
+    "race": 37,
     "date": "2017-03-12",
     "city": "Holmenkollen",
     "country": "Norway",
     "distance": "30",
     "technique": "C"
   },
-  "2017_37": {
+  "2017_38": {
     "season": 2017,
-    "race": 37,
+    "race": 38,
     "date": "2017-03-17",
     "city": "Qu\u00e9bec, QC",
     "country": "Canada",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2017_38": {
+  "2017_39": {
     "season": 2017,
-    "race": 38,
+    "race": 39,
     "date": "2017-03-18",
     "city": "Qu\u00e9bec, QC",
     "country": "Canada",
     "distance": "10",
     "technique": "C"
-  },
-  "2017_39": {
-    "season": 2017,
-    "race": 39,
-    "date": "2017-03-19",
-    "city": "World Cup Final",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
   },
   "2017_40": {
     "season": 2017,
@@ -7261,6 +7252,15 @@
     "country": "Canada",
     "distance": "10",
     "technique": "F"
+  },
+  "2017_41": {
+    "season": 2017,
+    "race": 41,
+    "date": "2017-03-19",
+    "city": "World Cup Final",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2018_1": {
     "season": 2018,
@@ -7284,19 +7284,19 @@
     "season": 2018,
     "race": 3,
     "date": "2017-11-26",
-    "city": "Nordic Opening",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Ruka",
+    "country": "Finland",
+    "distance": "10",
+    "technique": "F"
   },
   "2018_4": {
     "season": 2018,
     "race": 4,
     "date": "2017-11-26",
-    "city": "Ruka",
-    "country": "Finland",
-    "distance": "10",
-    "technique": "F"
+    "city": "Nordic Opening",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2018_5": {
     "season": 2018,
@@ -7401,19 +7401,19 @@
     "season": 2018,
     "race": 16,
     "date": "2018-01-07",
-    "city": "Tour de Ski",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "9",
+    "technique": "F"
   },
   "2018_17": {
     "season": 2018,
     "race": 17,
     "date": "2018-01-07",
-    "city": "Val di Fiemme",
-    "country": "Italy",
-    "distance": "9",
-    "technique": "F"
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2018_18": {
     "season": 2018,
@@ -7424,140 +7424,131 @@
     "distance": "Sprint",
     "technique": "F"
   },
-  "2018_19": {
+  "2018_20": {
     "season": 2018,
-    "race": 19,
+    "race": 20,
     "date": "2018-01-20",
     "city": "Planica",
     "country": "Slovenia",
     "distance": "Sprint",
     "technique": "C"
   },
-  "2018_20": {
+  "2018_21": {
     "season": 2018,
-    "race": 20,
+    "race": 21,
     "date": "2018-01-21",
     "city": "Planica",
     "country": "Slovenia",
     "distance": "10",
     "technique": "C"
   },
-  "2018_21": {
+  "2018_22": {
     "season": 2018,
-    "race": 21,
+    "race": 22,
     "date": "2018-01-27",
     "city": "Seefeld in Tirol",
     "country": "Austria",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2018_22": {
+  "2018_23": {
     "season": 2018,
-    "race": 22,
+    "race": 23,
     "date": "2018-01-28",
     "city": "Seefeld in Tirol",
     "country": "Austria",
     "distance": "10",
     "technique": "F"
   },
-  "2018_23": {
+  "2018_24": {
     "season": 2018,
-    "race": 23,
+    "race": 24,
     "date": "2018-02-10",
     "city": "Pyeongchang",
     "country": "South Korea",
     "distance": "Duathlon",
     "technique": "P"
   },
-  "2018_24": {
+  "2018_25": {
     "season": 2018,
-    "race": 24,
+    "race": 25,
     "date": "2018-02-13",
     "city": "Pyeongchang",
     "country": "South Korea",
     "distance": "Sprint",
     "technique": "C"
   },
-  "2018_25": {
+  "2018_26": {
     "season": 2018,
-    "race": 25,
+    "race": 26,
     "date": "2018-02-15",
     "city": "Pyeongchang",
     "country": "South Korea",
     "distance": "10",
     "technique": "F"
   },
-  "2018_28": {
+  "2018_29": {
     "season": 2018,
-    "race": 28,
+    "race": 29,
     "date": "2018-02-25",
     "city": "Pyeongchang",
     "country": "South Korea",
     "distance": "30",
     "technique": "C"
   },
-  "2018_29": {
+  "2018_30": {
     "season": 2018,
-    "race": 29,
+    "race": 30,
     "date": "2018-03-03",
     "city": "Lahti",
     "country": "Finland",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2018_30": {
+  "2018_31": {
     "season": 2018,
-    "race": 30,
+    "race": 31,
     "date": "2018-03-04",
     "city": "Lahti",
     "country": "Finland",
     "distance": "10",
     "technique": "C"
   },
-  "2018_31": {
+  "2018_32": {
     "season": 2018,
-    "race": 31,
+    "race": 32,
     "date": "2018-03-07",
     "city": "Drammen",
     "country": "Norway",
     "distance": "Sprint",
     "technique": "C"
   },
-  "2018_32": {
+  "2018_33": {
     "season": 2018,
-    "race": 32,
+    "race": 33,
     "date": "2018-03-11",
     "city": "Holmenkollen",
     "country": "Norway",
     "distance": "30",
     "technique": "F"
   },
-  "2018_33": {
+  "2018_34": {
     "season": 2018,
-    "race": 33,
+    "race": 34,
     "date": "2018-03-16",
     "city": "Falun",
     "country": "Sweden",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2018_34": {
+  "2018_35": {
     "season": 2018,
-    "race": 34,
+    "race": 35,
     "date": "2018-03-17",
     "city": "Falun",
     "country": "Sweden",
     "distance": "10",
     "technique": "C"
-  },
-  "2018_35": {
-    "season": 2018,
-    "race": 35,
-    "date": "2018-03-18",
-    "city": "World Cup Final",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
   },
   "2018_36": {
     "season": 2018,
@@ -7567,6 +7558,15 @@
     "country": "Sweden",
     "distance": "10",
     "technique": "F"
+  },
+  "2018_37": {
+    "season": 2018,
+    "race": 37,
+    "date": "2018-03-18",
+    "city": "World Cup Final",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2019_1": {
     "season": 2019,
@@ -7608,19 +7608,19 @@
     "season": 2019,
     "race": 5,
     "date": "2018-12-02",
-    "city": "Nordic Opening",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Lillehammer",
+    "country": "Norway",
+    "distance": "10",
+    "technique": "C"
   },
   "2019_6": {
     "season": 2019,
     "race": 6,
     "date": "2018-12-02",
-    "city": "Lillehammer",
-    "country": "Norway",
-    "distance": "10",
-    "technique": "C"
+    "city": "Nordic Opening",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2019_7": {
     "season": 2019,
@@ -7707,19 +7707,19 @@
     "season": 2019,
     "race": 17,
     "date": "2019-01-06",
-    "city": "Tour de Ski",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "10",
+    "technique": "F"
   },
   "2019_18": {
     "season": 2019,
     "race": 18,
     "date": "2019-01-06",
-    "city": "Val di Fiemme",
-    "country": "Italy",
-    "distance": "10",
-    "technique": "F"
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2019_19": {
     "season": 2019,
@@ -7766,122 +7766,113 @@
     "distance": "Sprint",
     "technique": "F"
   },
-  "2019_26": {
+  "2019_27": {
     "season": 2019,
-    "race": 26,
+    "race": 27,
     "date": "2019-02-16",
     "city": "Cogne",
     "country": "Italy",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2019_27": {
+  "2019_28": {
     "season": 2019,
-    "race": 27,
+    "race": 28,
     "date": "2019-02-17",
     "city": "Cogne",
     "country": "Italy",
     "distance": "10",
     "technique": "C"
   },
-  "2019_28": {
+  "2019_29": {
     "season": 2019,
-    "race": 28,
+    "race": 29,
     "date": "2019-02-21",
     "city": "Seefeld in Tirol",
     "country": "Austria",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2019_29": {
+  "2019_30": {
     "season": 2019,
-    "race": 29,
+    "race": 30,
     "date": "2019-02-23",
     "city": "Seefeld in Tirol",
     "country": "Austria",
     "distance": "Duathlon",
     "technique": "P"
   },
-  "2019_31": {
+  "2019_32": {
     "season": 2019,
-    "race": 31,
+    "race": 32,
     "date": "2019-02-26",
     "city": "Seefeld in Tirol",
     "country": "Austria",
     "distance": "10",
     "technique": "C"
   },
-  "2019_33": {
+  "2019_34": {
     "season": 2019,
-    "race": 33,
+    "race": 34,
     "date": "2019-03-02",
     "city": "Seefeld in Tirol",
     "country": "Austria",
     "distance": "30",
     "technique": "F"
   },
-  "2019_34": {
+  "2019_35": {
     "season": 2019,
-    "race": 34,
+    "race": 35,
     "date": "2019-03-10",
     "city": "Holmenkollen",
     "country": "Norway",
     "distance": "30",
     "technique": "C"
   },
-  "2019_35": {
+  "2019_36": {
     "season": 2019,
-    "race": 35,
+    "race": 36,
     "date": "2019-03-12",
     "city": "Drammen",
     "country": "Norway",
     "distance": "Sprint",
     "technique": "C"
   },
-  "2019_36": {
+  "2019_37": {
     "season": 2019,
-    "race": 36,
+    "race": 37,
     "date": "2019-03-16",
     "city": "Falun",
     "country": "Sweden",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2019_37": {
+  "2019_38": {
     "season": 2019,
-    "race": 37,
+    "race": 38,
     "date": "2019-03-17",
     "city": "Falun",
     "country": "Sweden",
     "distance": "10",
     "technique": "F"
   },
-  "2019_38": {
+  "2019_39": {
     "season": 2019,
-    "race": 38,
+    "race": 39,
     "date": "2019-03-22",
     "city": "Qu\u00e9bec, QC",
     "country": "Canada",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2019_39": {
+  "2019_40": {
     "season": 2019,
-    "race": 39,
+    "race": 40,
     "date": "2019-03-23",
     "city": "Qu\u00e9bec, QC",
     "country": "Canada",
     "distance": "10",
     "technique": "C"
-  },
-  "2019_40": {
-    "season": 2019,
-    "race": 40,
-    "date": "2019-03-24",
-    "city": "World Cup Final",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
   },
   "2019_41": {
     "season": 2019,
@@ -7891,6 +7882,15 @@
     "country": "Canada",
     "distance": "10",
     "technique": "F"
+  },
+  "2019_42": {
+    "season": 2019,
+    "race": 42,
+    "date": "2019-03-24",
+    "city": "World Cup Final",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2020_1": {
     "season": 2020,
@@ -7914,19 +7914,19 @@
     "season": 2020,
     "race": 3,
     "date": "2019-12-01",
-    "city": "Nordic Opening",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Ruka",
+    "country": "Finland",
+    "distance": "10",
+    "technique": "F"
   },
   "2020_4": {
     "season": 2020,
     "race": 4,
     "date": "2019-12-01",
-    "city": "Ruka",
-    "country": "Finland",
-    "distance": "10",
-    "technique": "F"
+    "city": "Nordic Opening",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2020_5": {
     "season": 2020,
@@ -7964,47 +7964,38 @@
     "distance": "Sprint",
     "technique": "F"
   },
-  "2020_10": {
+  "2020_11": {
     "season": 2020,
-    "race": 10,
+    "race": 11,
     "date": "2019-12-28",
     "city": "Lenzerheide",
     "country": "Switzerland",
     "distance": "10",
     "technique": "F"
   },
-  "2020_11": {
+  "2020_12": {
     "season": 2020,
-    "race": 11,
+    "race": 12,
     "date": "2019-12-29",
     "city": "Lenzerheide",
     "country": "Switzerland",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2020_12": {
+  "2020_13": {
     "season": 2020,
-    "race": 12,
+    "race": 13,
     "date": "2019-12-31",
     "city": "Toblach / Dobbiaco",
     "country": "Italy",
     "distance": "10",
     "technique": "F"
   },
-  "2020_13": {
-    "season": 2020,
-    "race": 13,
-    "date": "2020-01-01",
-    "city": "Toblach / Dobbiaco",
-    "country": "Italy",
-    "distance": "10",
-    "technique": "C"
-  },
   "2020_14": {
     "season": 2020,
     "race": 14,
-    "date": "2020-01-03",
-    "city": "Val di Fiemme",
+    "date": "2020-01-01",
+    "city": "Toblach / Dobbiaco",
     "country": "Italy",
     "distance": "10",
     "technique": "C"
@@ -8012,20 +8003,20 @@
   "2020_15": {
     "season": 2020,
     "race": 15,
-    "date": "2020-01-04",
+    "date": "2020-01-03",
     "city": "Val di Fiemme",
     "country": "Italy",
-    "distance": "Sprint",
+    "distance": "10",
     "technique": "C"
   },
   "2020_16": {
     "season": 2020,
     "race": 16,
-    "date": "2020-01-05",
-    "city": "Tour de Ski",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "date": "2020-01-04",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "Sprint",
+    "technique": "C"
   },
   "2020_17": {
     "season": 2020,
@@ -8039,71 +8030,71 @@
   "2020_18": {
     "season": 2020,
     "race": 18,
+    "date": "2020-01-05",
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
+  },
+  "2020_19": {
+    "season": 2020,
+    "race": 19,
     "date": "2020-01-11",
     "city": "Dresden",
     "country": "Germany",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2020_20": {
+  "2020_21": {
     "season": 2020,
-    "race": 20,
+    "race": 21,
     "date": "2020-01-18",
     "city": "Nov\u00e9 M\u011bsto na Morav\u011b",
     "country": "Czechia",
     "distance": "10",
     "technique": "F"
   },
-  "2020_21": {
+  "2020_22": {
     "season": 2020,
-    "race": 21,
+    "race": 22,
     "date": "2020-01-19",
     "city": "Nov\u00e9 M\u011bsto na Morav\u011b",
     "country": "Czechia",
     "distance": "10",
     "technique": "C"
   },
-  "2020_22": {
+  "2020_23": {
     "season": 2020,
-    "race": 22,
+    "race": 23,
     "date": "2020-01-25",
     "city": "Oberstdorf",
     "country": "Germany",
     "distance": "Duathlon",
     "technique": "P"
   },
-  "2020_23": {
+  "2020_24": {
     "season": 2020,
-    "race": 23,
+    "race": 24,
     "date": "2020-01-26",
     "city": "Oberstdorf",
     "country": "Germany",
     "distance": "Sprint",
     "technique": "C"
   },
-  "2020_24": {
+  "2020_25": {
     "season": 2020,
-    "race": 24,
+    "race": 25,
     "date": "2020-02-08",
     "city": "Falun",
     "country": "Sweden",
     "distance": "Sprint",
     "technique": "C"
   },
-  "2020_25": {
-    "season": 2020,
-    "race": 25,
-    "date": "2020-02-09",
-    "city": "Falun",
-    "country": "Sweden",
-    "distance": "10",
-    "technique": "F"
-  },
   "2020_26": {
     "season": 2020,
     "race": 26,
-    "date": "2020-02-15",
-    "city": "\u00d6stersund",
+    "date": "2020-02-09",
+    "city": "Falun",
     "country": "Sweden",
     "distance": "10",
     "technique": "F"
@@ -8111,47 +8102,47 @@
   "2020_27": {
     "season": 2020,
     "race": 27,
+    "date": "2020-02-15",
+    "city": "\u00d6stersund",
+    "country": "Sweden",
+    "distance": "10",
+    "technique": "F"
+  },
+  "2020_28": {
+    "season": 2020,
+    "race": 28,
     "date": "2020-02-16",
     "city": "\u00d6stersund",
     "country": "Sweden",
     "distance": "10",
     "technique": "C"
   },
-  "2020_28": {
+  "2020_29": {
     "season": 2020,
-    "race": 28,
+    "race": 29,
     "date": "2020-02-18",
     "city": "\u00c5re",
     "country": "Sweden",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2020_29": {
+  "2020_30": {
     "season": 2020,
-    "race": 29,
+    "race": 30,
     "date": "2020-02-20",
     "city": "Mer\u00e5ker",
     "country": "Norway",
     "distance": "34",
     "technique": "F"
   },
-  "2020_30": {
+  "2020_31": {
     "season": 2020,
-    "race": 30,
+    "race": 31,
     "date": "2020-02-22",
     "city": "Trondheim",
     "country": "Norway",
     "distance": "Sprint",
     "technique": "C"
-  },
-  "2020_31": {
-    "season": 2020,
-    "race": 31,
-    "date": "2020-02-23",
-    "city": "Ski Tour 2020",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
   },
   "2020_32": {
     "season": 2020,
@@ -8165,24 +8156,33 @@
   "2020_33": {
     "season": 2020,
     "race": 33,
+    "date": "2020-02-23",
+    "city": "Ski Tour 2020",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
+  },
+  "2020_34": {
+    "season": 2020,
+    "race": 34,
     "date": "2020-02-29",
     "city": "Lahti",
     "country": "Finland",
     "distance": "10",
     "technique": "C"
   },
-  "2020_35": {
+  "2020_36": {
     "season": 2020,
-    "race": 35,
+    "race": 36,
     "date": "2020-03-04",
     "city": "Konnerud",
     "country": "Norway",
     "distance": "Sprint",
     "technique": "F"
   },
-  "2020_36": {
+  "2020_37": {
     "season": 2020,
-    "race": 36,
+    "race": 37,
     "date": "2020-03-07",
     "city": "Holmenkollen",
     "country": "Norway",
@@ -8211,19 +8211,19 @@
     "season": 2021,
     "race": 3,
     "date": "2020-11-29",
-    "city": "Nordic Opening",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Ruka",
+    "country": "Finland",
+    "distance": "10",
+    "technique": "F"
   },
   "2021_4": {
     "season": 2021,
     "race": 4,
     "date": "2020-11-29",
-    "city": "Ruka",
-    "country": "Finland",
-    "distance": "10",
-    "technique": "F"
+    "city": "Nordic Opening",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2021_5": {
     "season": 2021,
@@ -8319,19 +8319,19 @@
     "season": 2021,
     "race": 16,
     "date": "2021-01-10",
-    "city": "Tour de Ski",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "10",
+    "technique": "F"
   },
   "2021_17": {
     "season": 2021,
     "race": 17,
     "date": "2021-01-10",
-    "city": "Val di Fiemme",
-    "country": "Italy",
-    "distance": "10",
-    "technique": "F"
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2021_18": {
     "season": 2021,
@@ -8553,19 +8553,19 @@
     "season": 2022,
     "race": 16,
     "date": "2022-01-04",
-    "city": "Tour de Ski",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "10",
+    "technique": "F"
   },
   "2022_17": {
     "season": 2022,
     "race": 17,
     "date": "2022-01-04",
-    "city": "Val di Fiemme",
-    "country": "Italy",
-    "distance": "10",
-    "technique": "F"
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2022_18": {
     "season": 2022,
@@ -8805,19 +8805,19 @@
     "season": 2023,
     "race": 17,
     "date": "2023-01-08",
-    "city": "Tour de Ski",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "10",
+    "technique": "F"
   },
   "2023_18": {
     "season": 2023,
     "race": 18,
     "date": "2023-01-08",
-    "city": "Val di Fiemme",
-    "country": "Italy",
-    "distance": "10",
-    "technique": "F"
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2023_19": {
     "season": 2023,
@@ -9111,19 +9111,19 @@
     "season": 2024,
     "race": 17,
     "date": "2024-01-07",
-    "city": "Tour de Ski",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "10",
+    "technique": "F"
   },
   "2024_18": {
     "season": 2024,
     "race": 18,
     "date": "2024-01-07",
-    "city": "Val di Fiemme",
-    "country": "Italy",
-    "distance": "10",
-    "technique": "F"
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2024_19": {
     "season": 2024,
@@ -9408,19 +9408,19 @@
     "season": 2025,
     "race": 16,
     "date": "2025-01-05",
-    "city": "Tour de Ski",
-    "country": "FIS",
-    "distance": "0",
-    "technique": "Unknown"
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "10",
+    "technique": "F"
   },
   "2025_17": {
     "season": 2025,
     "race": 17,
     "date": "2025-01-05",
-    "city": "Val di Fiemme",
-    "country": "Italy",
-    "distance": "10",
-    "technique": "F"
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   },
   "2025_18": {
     "season": 2025,
@@ -9610,5 +9610,14 @@
     "country": "Finland",
     "distance": "Sprint",
     "technique": "C"
+  },
+  "2026_3": {
+    "season": 2026,
+    "race": 3,
+    "date": "2025-11-30",
+    "city": "Ruka",
+    "country": "Finland",
+    "distance": "20",
+    "technique": "F"
   }
 }
