@@ -246,6 +246,31 @@ log_message "Date: $TODAY_UTC ($TODAY_MMDDYYYY)"
 log_message "Day of week: $TODAY_DAY_OF_WEEK (1=Monday, 7=Sunday)"
 log_message "======================================="
 
+# Pull latest changes from both repositories before processing
+log_message "======================================="
+log_message "Pulling latest changes before processing"
+log_message "======================================="
+
+# Pull latest changes from blog repository
+cd "$BLOG_DIR"
+log_message "Pulling latest changes from blog repository..."
+if git pull origin main >> "$LOG_FILE" 2>&1; then
+    log_message "✓ Successfully pulled latest blog repository changes"
+else
+    log_message "⚠️  Warning: Failed to pull from blog repository origin main"
+fi
+
+# Pull latest changes from ski repository
+cd "$SKI_DIR/.." # Go to ~/ski directory (parent of elo/python)
+log_message "Pulling latest changes from ski repository..."
+if git pull origin main >> "$LOG_FILE" 2>&1; then
+    log_message "✓ Successfully pulled latest ski repository changes"
+else
+    log_message "⚠️  Warning: Failed to pull from ski repository origin main"
+fi
+
+log_message "======================================="
+
 # Get overall season dates
 overall_season=$(get_overall_season)
 if [[ $? -ne 0 || -z "$overall_season" ]]; then

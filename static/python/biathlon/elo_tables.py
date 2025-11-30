@@ -29,9 +29,20 @@ dfs_str = ["L", "L_Sprint", "L_Pursuit", "L_Individual", "L_Mass_Start",
 chronos = [L_chrono, M_chrono]
 chronos_str = ["L_chrono", "M_chrono"]
 
-def process_chrono(df, file_path):
+# Load current IDs
+def load_current_ids():
+    with open(os.path.expanduser('~/blog/daehl-e/static/python/biathlon/excel365/M_current_ids.json'), 'r') as f:
+        m_current_ids = set(json.load(f).keys())
+    with open(os.path.expanduser('~/blog/daehl-e/static/python/biathlon/excel365/L_current_ids.json'), 'r') as f:
+        l_current_ids = set(json.load(f).keys())
+    return m_current_ids, l_current_ids
+
+def process_chrono(df, file_path, current_ids):
     # Filter the DataFrame to keep only the rows with the maximum date
     df_current = df.loc[df['Date'] == max(df['Date'])]
+    
+    # Filter to include only current skiers based on IDs
+    df_current = df_current[df_current['ID'].astype(str).isin(current_ids)]
     
     # Sort the filtered DataFrame by the "Elo" column in descending order
     df_current = df_current.sort_values(by="Elo", ascending=False)
@@ -67,9 +78,12 @@ def process_chrono(df, file_path):
     df_current.to_json(file_path, orient='records', lines=False)
 
 # Function to process each DataFrame
-def process_df(df, file_path):
+def process_df(df, file_path, current_ids):
     # Filter the DataFrame to keep only the rows with the maximum date
     df_current = df.loc[df['Date'] == max(df['Date'])]
+    
+    # Filter to include only current skiers based on IDs
+    df_current = df_current[df_current['ID'].astype(str).isin(current_ids)]
     
     # Sort the filtered DataFrame by the "Elo" column in descending order
     df_current = df_current.sort_values(by="Elo", ascending=False)
@@ -84,11 +98,17 @@ def process_df(df, file_path):
     # Save the result to a JSON file
     df_current.to_json(file_path, orient='records', lines=False)
 
+# Load current IDs
+m_current_ids, l_current_ids = load_current_ids()
+
 # Process each DataFrame and save the results to JSON files
 for i, df in enumerate(chronos):    
     print(i)
-    file_path = os.path.expanduser("~/blog/daehl-e/static/python/biathlon/excel365/{chronos_str[i]}_current.json")
-    process_chrono(df, file_path)
+    file_path = os.path.expanduser(f"~/blog/daehl-e/static/python/biathlon/excel365/{chronos_str[i]}_current.json")
+    
+    # Use appropriate current_ids based on gender
+    current_ids = l_current_ids if 'L_' in chronos_str[i] else m_current_ids
+    process_chrono(df, file_path, current_ids)
 
 # Uncomment below to process individual category DataFrames
 # for i, df in enumerate(dfs):

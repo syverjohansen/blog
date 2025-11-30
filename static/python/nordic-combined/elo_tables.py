@@ -28,9 +28,20 @@ dfs_str = ["L", "L_Individual", "L_Individual_Compact", "L_Mass_Start", "L_Sprin
 chronos = [L_chrono, M_chrono]
 chronos_str = ["L_chrono", "M_chrono"]
 
-def process_chrono(df, file_path):
+# Load current IDs
+def load_current_ids():
+    with open(os.path.expanduser('~/blog/daehl-e/static/python/nordic-combined/excel365/M_current_ids.json'), 'r') as f:
+        m_current_ids = set(json.load(f).keys())
+    with open(os.path.expanduser('~/blog/daehl-e/static/python/nordic-combined/excel365/L_current_ids.json'), 'r') as f:
+        l_current_ids = set(json.load(f).keys())
+    return m_current_ids, l_current_ids
+
+def process_chrono(df, file_path, current_ids):
     # Filter the DataFrame to keep only the rows with the maximum date
     df_current = df.loc[df['Date'] == max(df['Date'])]
+    
+    # Filter to include only current skiers based on IDs
+    df_current = df_current[df_current['ID'].astype(str).isin(current_ids)]
     
     # Sort the filtered DataFrame by the "Elo" column in descending order
     df_current = df_current.sort_values(by="Elo", ascending=False)
@@ -66,9 +77,12 @@ def process_chrono(df, file_path):
     df_current.to_json(file_path, orient='records', lines=False)
 
 # Function to process each DataFrame
-def process_df(df, file_path):
+def process_df(df, file_path, current_ids):
     # Filter the DataFrame to keep only the rows with the maximum date
     df_current = df.loc[df['Date'] == max(df['Date'])]
+    
+    # Filter to include only current skiers based on IDs
+    df_current = df_current[df_current['ID'].astype(str).isin(current_ids)]
     
     # Sort the filtered DataFrame by the "Elo" column in descending order
     df_current = df_current.sort_values(by="Elo", ascending=False)
@@ -84,15 +98,31 @@ def process_df(df, file_path):
     df_current.to_json(file_path, orient='records', lines=False)
 
 # Process each DataFrame and save the results to JSON files
+m_current_ids, l_current_ids = load_current_ids()
+
 for i, df in enumerate(chronos):	
     print(i)
     file_path = os.path.expanduser("~/blog/daehl-e/static/python/nordic-combined/excel365/{chronos_str[i]}_current.json")
-    process_chrono(df, file_path)
+    
+    # Determine which current_ids to use based on the dataframe name
+    if 'M_' in chronos_str[i] or chronos_str[i] == 'M_chrono':
+        current_ids = m_current_ids
+    else:
+        current_ids = l_current_ids
+    
+    process_chrono(df, file_path, current_ids)
 
 # Uncomment below to process individual category DataFrames
 # for i, df in enumerate(dfs):
 #     print(i)
 #     file_path = os.path.expanduser("~/blog/daehl-e/static/python/nordic-combined/excel365/{dfs_str[i]}_current.json")
-#     process_df(df, file_path)
+#     
+#     # Determine which current_ids to use based on the dataframe name
+#     if 'M_' in dfs_str[i] or dfs_str[i].startswith('M'):
+#         current_ids = m_current_ids
+#     else:
+#         current_ids = l_current_ids
+#     
+#     process_df(df, file_path, current_ids)
 
 print("All nordic combined files have been processed.")
