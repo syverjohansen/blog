@@ -1415,7 +1415,7 @@ calculate_remaining_races <- function(races_file) {
       is_distance = !is_sprint,  # Individual distance races (20, 10, 50, etc.)
       is_world_cup = (Stage == 0),
       is_stage_race = (Stage == 1),
-      is_tds = (!is.na(Final_Climb) & Final_Climb == 1),
+      is_tds = (City=="Tour de Ski"),
       
       # Clean technique (handle NAs and empty strings)
       technique_clean = case_when(
