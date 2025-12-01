@@ -1,0 +1,684 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Franziska Preuss",
+      926,
+      1,
+      1278,
+      1891
+    ],
+    [
+      "Lou Jeanmonnot",
+      1769,
+      2,
+      1258,
+      1871
+    ],
+    [
+      "Julia Simon",
+      1300,
+      3,
+      902,
+      1515
+    ],
+    [
+      "Elvira Öberg",
+      2266,
+      4,
+      761,
+      1374
+    ],
+    [
+      "Oceane Michelon",
+      2736,
+      5,
+      760,
+      1373
+    ],
+    [
+      "Jeanne Richard",
+      2680,
+      6,
+      755,
+      1368
+    ],
+    [
+      "Suvi Minkkinen",
+      1233,
+      7,
+      694,
+      1307
+    ],
+    [
+      "Justine Braisaz-Bouchet",
+      1217,
+      8,
+      657,
+      1270
+    ],
+    [
+      "Selina Grotian",
+      2783,
+      9,
+      640,
+      1253
+    ],
+    [
+      "Maren Kirkeeide",
+      2898,
+      10,
+      548,
+      1161
+    ],
+    [
+      "Lisa Theresa Hauser",
+      1006,
+      11,
+      496,
+      1109
+    ],
+    [
+      "Hanna Öberg",
+      1384,
+      12,
+      488,
+      1101
+    ],
+    [
+      "Dorothea Wierer",
+      54,
+      13,
+      446,
+      1059
+    ],
+    [
+      "Karoline Offigstad Knotten",
+      1275,
+      14,
+      421,
+      1034
+    ],
+    [
+      "Milena Todorova",
+      1598,
+      15,
+      416,
+      1029
+    ],
+    [
+      "Amy Baserga",
+      2261,
+      16,
+      415,
+      1028
+    ],
+    [
+      "Yuliia Dzhima",
+      505,
+      17,
+      368,
+      981
+    ],
+    [
+      "Ella Halvarsson",
+      2456,
+      18,
+      367,
+      980
+    ],
+    [
+      "Lena Häcki-Gross",
+      1238,
+      19,
+      359,
+      972
+    ],
+    [
+      "Anna Magnusson",
+      1305,
+      20,
+      356,
+      969
+    ],
+    [
+      "Tereza Vobornikova",
+      2442,
+      21,
+      349,
+      962
+    ],
+    [
+      "Lotte Lie",
+      1237,
+      21,
+      349,
+      962
+    ],
+    [
+      "Anamarija Lampic",
+      2354,
+      23,
+      332,
+      945
+    ],
+    [
+      "Ida Lien",
+      2235,
+      24,
+      310,
+      923
+    ],
+    [
+      "Vanessa Voigt",
+      2165,
+      25,
+      307,
+      920
+    ],
+    [
+      "Aita Gasparin",
+      1003,
+      25,
+      307,
+      920
+    ],
+    [
+      "Ingrid Landmark Tandrevold",
+      1553,
+      27,
+      292,
+      905
+    ],
+    [
+      "Paulina Batovska Fialkova",
+      947,
+      28,
+      289,
+      902
+    ],
+    [
+      "Natalia Sidorowicz",
+      2951,
+      29,
+      267,
+      880
+    ],
+    [
+      "Samuela Comola",
+      1803,
+      30,
+      258,
+      871
+    ],
+    [
+      "Julia Tannheimer",
+      2896,
+      31,
+      232,
+      845
+    ],
+    [
+      "Khrystyna Dmytrenko",
+      1589,
+      32,
+      224,
+      837
+    ],
+    [
+      "Marketa Davidova",
+      1394,
+      33,
+      223,
+      836
+    ],
+    [
+      "Paula Botet",
+      2417,
+      34,
+      214,
+      827
+    ],
+    [
+      "Maya Cloetens",
+      2588,
+      35,
+      203,
+      816
+    ],
+    [
+      "Jessica Jislova",
+      958,
+      36,
+      200,
+      813
+    ],
+    [
+      "Sara Andersson",
+      2547,
+      37,
+      199,
+      812
+    ],
+    [
+      "Michela Carrara",
+      1596,
+      38,
+      193,
+      806
+    ],
+    [
+      "Anna-Karin Heijdenberg",
+      2635,
+      39,
+      171,
+      784
+    ],
+    [
+      "Hannah Auchentaller",
+      2552,
+      39,
+      171,
+      784
+    ],
+    [
+      "Sophie Chauveau",
+      2177,
+      41,
+      150,
+      763
+    ],
+    [
+      "Venla Lehtonen",
+      2309,
+      42,
+      148,
+      761
+    ],
+    [
+      "Anna Gandler",
+      2264,
+      43,
+      146,
+      759
+    ],
+    [
+      "Ragnhild Femsteinevik",
+      1269,
+      44,
+      131,
+      744
+    ],
+    [
+      "Johanna Skottheim",
+      1340,
+      45,
+      119,
+      732
+    ],
+    [
+      "Lucie Charvatova",
+      1083,
+      46,
+      105,
+      718
+    ],
+    [
+      "Regina Ermits",
+      1314,
+      47,
+      103,
+      716
+    ],
+    [
+      "Kamila Zuk",
+      1554,
+      48,
+      97,
+      710
+    ],
+    [
+      "Martina Trabucchi",
+      2593,
+      49,
+      96,
+      709
+    ],
+    [
+      "Elisa Gasparin",
+      487,
+      50,
+      85,
+      698
+    ],
+    [
+      "Olena Horodna",
+      2735,
+      51,
+      84,
+      697
+    ],
+    [
+      "Camille Bened",
+      2166,
+      52,
+      79,
+      692
+    ],
+    [
+      "Deedra Irwin",
+      2437,
+      52,
+      79,
+      692
+    ],
+    [
+      "Sophia Schneider",
+      1592,
+      52,
+      79,
+      692
+    ],
+    [
+      "Polona Klemencic",
+      1606,
+      55,
+      77,
+      690
+    ],
+    [
+      "Gro Njølstad Randby",
+      2719,
+      56,
+      76,
+      689
+    ],
+    [
+      "Susan Külm",
+      1043,
+      57,
+      75,
+      688
+    ],
+    [
+      "Alina Stremous",
+      2758,
+      57,
+      75,
+      688
+    ],
+    [
+      "Marthe Kråkstad Johansen",
+      1802,
+      57,
+      75,
+      688
+    ],
+    [
+      "Joanna Jakiela",
+      1612,
+      60,
+      67,
+      680
+    ],
+    [
+      "Sonja Leinamo",
+      2793,
+      61,
+      65,
+      678
+    ],
+    [
+      "Gilonne Guigonnat",
+      1805,
+      61,
+      65,
+      678
+    ],
+    [
+      "Karoline Erdal",
+      1768,
+      63,
+      60,
+      673
+    ],
+    [
+      "Lena Repinc",
+      2555,
+      64,
+      59,
+      672
+    ],
+    [
+      "Juni Arnekleiv",
+      2384,
+      65,
+      53,
+      666
+    ],
+    [
+      "Anna Andexer",
+      2690,
+      66,
+      49,
+      662
+    ],
+    [
+      "Tamara Steiner",
+      1587,
+      67,
+      45,
+      658
+    ],
+    [
+      "Emma Lunder",
+      501,
+      68,
+      42,
+      655
+    ],
+    [
+      "Anna Weidel",
+      1337,
+      69,
+      38,
+      651
+    ],
+    [
+      "Anna Maka",
+      941,
+      70,
+      34,
+      647
+    ],
+    [
+      "Stefanie Scherer",
+      2228,
+      71,
+      26,
+      639
+    ],
+    [
+      "Julia Kink",
+      2917,
+      72,
+      25,
+      638
+    ],
+    [
+      "Lea Meier",
+      2505,
+      73,
+      24,
+      637
+    ],
+    [
+      "Anastasiya Kuzmina",
+      12,
+      73,
+      24,
+      637
+    ],
+    [
+      "Natalija Kocergina",
+      906,
+      75,
+      16,
+      629
+    ],
+    [
+      "Inka Hämäläinen",
+      2794,
+      75,
+      16,
+      629
+    ],
+    [
+      "Emilie Kalkenberg",
+      1572,
+      77,
+      15,
+      628
+    ],
+    [
+      "Johanna Puff",
+      2718,
+      77,
+      15,
+      628
+    ],
+    [
+      "Sanita Bulina",
+      2459,
+      77,
+      15,
+      628
+    ],
+    [
+      "Valentina Dimitrova",
+      2573,
+      80,
+      14,
+      627
+    ],
+    [
+      "Lidiia Zhurauskaite",
+      3097,
+      81,
+      12,
+      625
+    ],
+    [
+      "Nadia Moser",
+      1786,
+      81,
+      12,
+      625
+    ],
+    [
+      "Lea Rothschopf",
+      2556,
+      81,
+      12,
+      625
+    ],
+    [
+      "Pascale Paradis",
+      2454,
+      81,
+      12,
+      625
+    ],
+    [
+      "Estere Volfa",
+      2865,
+      81,
+      12,
+      625
+    ],
+    [
+      "Baiba Bendika",
+      531,
+      81,
+      12,
+      625
+    ],
+    [
+      "Lora Hristova",
+      2569,
+      87,
+      10,
+      623
+    ],
+    [
+      "Rebecca Passler",
+      2533,
+      88,
+      9,
+      622
+    ],
+    [
+      "Ekaterina Avvakumova",
+      1638,
+      88,
+      9,
+      622
+    ],
+    [
+      "Kristyna Otcovska",
+      2868,
+      88,
+      9,
+      622
+    ],
+    [
+      "Oleksandra Merkushyna",
+      2819,
+      91,
+      8,
+      621
+    ],
+    [
+      "Johanna Talihärm",
+      894,
+      92,
+      6,
+      619
+    ],
+    [
+      "Anna Juppe",
+      2776,
+      92,
+      6,
+      619
+    ],
+    [
+      "Eve Bouvard",
+      2761,
+      94,
+      4,
+      617
+    ],
+    [
+      "Anastasia Tolmacheva",
+      2072,
+      95,
+      2,
+      615
+    ],
+    [
+      "Dunja Zdouc",
+      1080,
+      95,
+      2,
+      615
+    ]
+  ]
+}
