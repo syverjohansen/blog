@@ -680,7 +680,7 @@ get_race_history <- function(skier_id, race_type, predictions_list, n_required =
     # Enhanced error handling (Cross-Country approach)
     if(length(predicted_score) == 0 || is.na(predicted_score)) {
       log_info("No prediction found for {skier_id} in {pred_type}, using fallback")
-      predicted_score <- 15  # Alpine-appropriate fallback
+      predicted_score <- 0  # Alpine-appropriate fallback
     }
 
     # Rest of the function remains the same with enhanced validation

@@ -1067,10 +1067,11 @@ get_race_history <- function(skier_id, race_type, predictions_list, points_type 
         "stage_predicted_points"
     }
     
+    print(predictions_list[[pred_type]])
     predicted_score <- predictions_list[[pred_type]] %>%
         filter(Skier == skier_id) %>%
         pull(!!sym(pred_col))
-
+    
     # Rest of the function remains the same
     if(length(real_results) > 1) {
         variation_sd <- sd(unlist(real_results))
@@ -1474,7 +1475,7 @@ calculate_remaining_races <- function(races_file) {
       }
     }
   }
-  
+  print(counts)
   return(counts)
 }
 

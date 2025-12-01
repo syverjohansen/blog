@@ -1067,10 +1067,12 @@ get_race_history <- function(skier_id, race_type, predictions_list, points_type 
         "stage_predicted_points"
     }
     
+    
+
     predicted_score <- predictions_list[[pred_type]] %>%
         filter(Skier == skier_id) %>%
         pull(!!sym(pred_col))
-
+    
     # Rest of the function remains the same
     if(length(real_results) > 1) {
         variation_sd <- sd(unlist(real_results))

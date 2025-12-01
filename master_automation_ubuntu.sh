@@ -448,9 +448,9 @@ if [[ "$script_results" != *"FAILED"* ]]; then
             script_results="$script_results git_pull:FAILED"
         fi
         
-        # Push changes to ski repository first
+        # Push changes to ski repository first (in separate chunks)
         log_message "======================================="
-        log_message "Pushing changes to ski repository"
+        log_message "Pushing changes to ski repository (in separate chunks)"
         log_message "======================================="
         
         # Change to ski elo directory
@@ -460,56 +460,133 @@ if [[ "$script_results" != *"FAILED"* ]]; then
         if ! git diff --quiet || ! git diff --cached --quiet || [[ -n "$(git ls-files --others --exclude-standard)" ]]; then
             log_message "Changes detected in ski repository, proceeding with git operations..."
             
-            # Add all changes in ski repo
-            log_message "Adding all changes to ski repository..."
-            log_message "========== SKI GIT ADD OUTPUT BEGIN =========="
+            ski_commit_base="Automated update from blog automation script"
+            
+            # First chunk: CSV files
+            log_message "Processing CSV files in ski repository..."
+            log_message "========== SKI CSV GIT ADD OUTPUT BEGIN =========="
+            if git add "*.csv" 2>&1 | tee -a "$LOG_FILE"; then
+                log_message "========== SKI CSV GIT ADD OUTPUT END =========="
+                if git diff --cached --quiet; then
+                    log_message "No CSV file changes to commit in ski repository"
+                else
+                    log_message "Committing CSV files in ski repository..."
+                    log_message "========== SKI CSV GIT COMMIT OUTPUT BEGIN =========="
+                    if git commit -m "$ski_commit_base - CSV files" 2>&1 | tee -a "$LOG_FILE"; then
+                        log_message "========== SKI CSV GIT COMMIT OUTPUT END =========="
+                        log_message "✓ Successfully committed CSV files to ski repository"
+                        
+                        # Push CSV commit
+                        log_message "Pushing CSV files to ski repository origin..."
+                        log_message "========== SKI CSV GIT PUSH OUTPUT BEGIN =========="
+                        if git push origin main 2>&1 | tee -a "$LOG_FILE"; then
+                            log_message "========== SKI CSV GIT PUSH OUTPUT END =========="
+                            log_message "✓ Successfully pushed CSV files to ski repository"
+                            script_results="$script_results ski_git_csv:SUCCESS"
+                        else
+                            log_message "========== SKI CSV GIT PUSH OUTPUT END =========="
+                            log_message "✗ Failed to push CSV files to ski repository"
+                            script_results="$script_results ski_git_csv:FAILED"
+                        fi
+                    else
+                        log_message "========== SKI CSV GIT COMMIT OUTPUT END =========="
+                        log_message "✗ Failed to commit CSV files to ski repository"
+                        script_results="$script_results ski_git_csv:FAILED"
+                    fi
+                fi
+            else
+                log_message "========== SKI CSV GIT ADD OUTPUT END =========="
+                log_message "✗ Failed to add CSV files to ski repository"
+                script_results="$script_results ski_git_csv:FAILED"
+            fi
+            
+            # Second chunk: Feather files
+            log_message "Processing feather files in ski repository..."
+            log_message "========== SKI FEATHER GIT ADD OUTPUT BEGIN =========="
+            if git add "*.feather" 2>&1 | tee -a "$LOG_FILE"; then
+                log_message "========== SKI FEATHER GIT ADD OUTPUT END =========="
+                if git diff --cached --quiet; then
+                    log_message "No feather file changes to commit in ski repository"
+                else
+                    log_message "Committing feather files in ski repository..."
+                    log_message "========== SKI FEATHER GIT COMMIT OUTPUT BEGIN =========="
+                    if git commit -m "$ski_commit_base - Feather files" 2>&1 | tee -a "$LOG_FILE"; then
+                        log_message "========== SKI FEATHER GIT COMMIT OUTPUT END =========="
+                        log_message "✓ Successfully committed feather files to ski repository"
+                        
+                        # Push feather commit
+                        log_message "Pushing feather files to ski repository origin..."
+                        log_message "========== SKI FEATHER GIT PUSH OUTPUT BEGIN =========="
+                        if git push origin main 2>&1 | tee -a "$LOG_FILE"; then
+                            log_message "========== SKI FEATHER GIT PUSH OUTPUT END =========="
+                            log_message "✓ Successfully pushed feather files to ski repository"
+                            script_results="$script_results ski_git_feather:SUCCESS"
+                        else
+                            log_message "========== SKI FEATHER GIT PUSH OUTPUT END =========="
+                            log_message "✗ Failed to push feather files to ski repository"
+                            script_results="$script_results ski_git_feather:FAILED"
+                        fi
+                    else
+                        log_message "========== SKI FEATHER GIT COMMIT OUTPUT END =========="
+                        log_message "✗ Failed to commit feather files to ski repository"
+                        script_results="$script_results ski_git_feather:FAILED"
+                    fi
+                fi
+            else
+                log_message "========== SKI FEATHER GIT ADD OUTPUT END =========="
+                log_message "✗ Failed to add feather files to ski repository"
+                script_results="$script_results ski_git_feather:FAILED"
+            fi
+            
+            # Third chunk: Everything else
+            log_message "Processing all other files in ski repository..."
+            log_message "========== SKI OTHER GIT ADD OUTPUT BEGIN =========="
             if git add . 2>&1 | tee -a "$LOG_FILE"; then
-                log_message "========== SKI GIT ADD OUTPUT END =========="
-                log_message "✓ Successfully added changes to ski repository"
+                log_message "========== SKI OTHER GIT ADD OUTPUT END =========="
+                if git diff --cached --quiet; then
+                    log_message "No other file changes to commit in ski repository"
+                else
+                    log_message "Committing all other files in ski repository..."
+                    log_message "========== SKI OTHER GIT COMMIT OUTPUT BEGIN =========="
+                    if git commit -m "$ski_commit_base - Other files" 2>&1 | tee -a "$LOG_FILE"; then
+                        log_message "========== SKI OTHER GIT COMMIT OUTPUT END =========="
+                        log_message "✓ Successfully committed other files to ski repository"
+                        
+                        # Pull latest changes before final push
+                        log_message "Pulling latest changes from ski repository origin..."
+                        log_message "========== SKI GIT PULL OUTPUT BEGIN =========="
+                        if git pull origin main 2>&1 | tee -a "$LOG_FILE"; then
+                            log_message "========== SKI GIT PULL OUTPUT END =========="
+                            log_message "✓ Successfully pulled from ski repository origin"
+                            script_results="$script_results ski_git_pull:SUCCESS"
+                            
+                            # Push other files commit
+                            log_message "Pushing other files to ski repository origin..."
+                            log_message "========== SKI OTHER GIT PUSH OUTPUT BEGIN =========="
+                            if git push origin main 2>&1 | tee -a "$LOG_FILE"; then
+                                log_message "========== SKI OTHER GIT PUSH OUTPUT END =========="
+                                log_message "✓ Successfully pushed other files to ski repository"
+                                script_results="$script_results ski_git_other:SUCCESS"
+                            else
+                                log_message "========== SKI OTHER GIT PUSH OUTPUT END =========="
+                                log_message "✗ Failed to push other files to ski repository"
+                                script_results="$script_results ski_git_other:FAILED"
+                            fi
+                        else
+                            log_message "========== SKI GIT PULL OUTPUT END =========="
+                            log_message "✗ Failed to pull from ski repository origin"
+                            script_results="$script_results ski_git_pull:FAILED"
+                        fi
+                    else
+                        log_message "========== SKI OTHER GIT COMMIT OUTPUT END =========="
+                        log_message "✗ Failed to commit other files to ski repository"
+                        script_results="$script_results ski_git_other:FAILED"
+                    fi
+                fi
             else
-                log_message "========== SKI GIT ADD OUTPUT END =========="
-                log_message "✗ Failed to add changes to ski repository"
-                script_results="$script_results ski_git_add:FAILED"
-            fi
-            
-            # Commit changes to ski repo
-            ski_commit_message="Automated update from blog automation script"
-            log_message "Committing changes to ski repository with message: $ski_commit_message"
-            log_message "========== SKI GIT COMMIT OUTPUT BEGIN =========="
-            if git commit -m "$ski_commit_message" 2>&1 | tee -a "$LOG_FILE"; then
-                log_message "========== SKI GIT COMMIT OUTPUT END =========="
-                log_message "✓ Successfully committed changes to ski repository"
-                script_results="$script_results ski_git_commit:SUCCESS"
-            else
-                log_message "========== SKI GIT COMMIT OUTPUT END =========="
-                log_message "✗ Failed to commit changes to ski repository"
-                script_results="$script_results ski_git_commit:FAILED"
-            fi
-            
-            # Pull latest changes from origin for ski repo
-            log_message "Pulling latest changes from ski repository origin..."
-            log_message "========== SKI GIT PULL OUTPUT BEGIN =========="
-            if git pull origin main 2>&1 | tee -a "$LOG_FILE"; then
-                log_message "========== SKI GIT PULL OUTPUT END =========="
-                log_message "✓ Successfully pulled from ski repository origin"
-                script_results="$script_results ski_git_pull:SUCCESS"
-            else
-                log_message "========== SKI GIT PULL OUTPUT END =========="
-                log_message "✗ Failed to pull from ski repository origin"
-                script_results="$script_results ski_git_pull:FAILED"
-            fi
-            
-            # Push changes to ski repository
-            log_message "Pushing changes to ski repository origin..."
-            log_message "========== SKI GIT PUSH OUTPUT BEGIN =========="
-            if git push origin main 2>&1 | tee -a "$LOG_FILE"; then
-                log_message "========== SKI GIT PUSH OUTPUT END =========="
-                log_message "✓ Successfully pushed to ski repository origin"
-                script_results="$script_results ski_git_push:SUCCESS"
-            else
-                log_message "========== SKI GIT PUSH OUTPUT END =========="
-                log_message "✗ Failed to push to ski repository origin"
-                script_results="$script_results ski_git_push:FAILED"
+                log_message "========== SKI OTHER GIT ADD OUTPUT END =========="
+                log_message "✗ Failed to add other files to ski repository"
+                script_results="$script_results ski_git_other:FAILED"
             fi
         else
             log_message "No changes detected in ski repository, skipping ski git operations"
