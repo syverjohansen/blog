@@ -271,6 +271,59 @@ fi
 
 log_message "======================================="
 
+# Run scrapers for race changes/cancellations check
+log_message "======================================="
+log_message "Running scrapers to check for race changes/cancellations"
+log_message "======================================="
+
+# Function to run scrapers for a sport
+run_scrapers_for_sport() {
+    local sport="$1"
+    local sport_dir="$SKI_DIR/$sport/polars"
+    
+    if [[ ! -d "$sport_dir" ]]; then
+        log_message "Warning: Sport directory not found: $sport_dir"
+        return 1
+    fi
+    
+    log_message "Running scrapers for $sport..."
+    
+    # Change to sport directory
+    cd "$sport_dir"
+    
+    # Run race_scrape.py
+    if [[ -f "race_scrape.py" ]]; then
+        log_message "  Running race_scrape.py for $sport..."
+        if python3 race_scrape.py >> "$LOG_FILE" 2>&1; then
+            log_message "  ✓ race_scrape.py completed successfully for $sport"
+        else
+            log_message "  ⚠️ race_scrape.py failed for $sport (exit code $?)"
+        fi
+    else
+        log_message "  Warning: race_scrape.py not found for $sport"
+    fi
+    
+    # Run weekend_scrape.py
+    if [[ -f "weekend_scrape.py" ]]; then
+        log_message "  Running weekend_scrape.py for $sport..."
+        if python3 weekend_scrape.py >> "$LOG_FILE" 2>&1; then
+            log_message "  ✓ weekend_scrape.py completed successfully for $sport"
+        else
+            log_message "  ⚠️ weekend_scrape.py failed for $sport (exit code $?)"
+        fi
+    else
+        log_message "  Warning: weekend_scrape.py not found for $sport"
+    fi
+}
+
+# Run scrapers for each sport (excluding biathlon due to website restrictions)
+scraper_sports=("alpine" "ski" "nordic-combined" "skijump")
+for sport in "${scraper_sports[@]}"; do
+    run_scrapers_for_sport "$sport"
+done
+
+log_message "======================================="
+
 # Get overall season dates
 overall_season=$(get_overall_season)
 if [[ $? -ne 0 || -z "$overall_season" ]]; then
