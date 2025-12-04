@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Stefan Babinsky",
+      "AUT",
+      63.3165829145729
+    ],
+    [
+      "Alexis Pinturault",
+      "FRA",
+      45.2261306532663
+    ],
+    [
+      "Raphael Haaser",
+      "AUT",
+      4.52261306532663
+    ],
+    [
+      "Henrik Kristoffersen",
+      "NOR",
+      3.01507537688442
+    ],
+    [
+      "Stefan Brennsteiner",
+      "AUT",
+      3.01507537688442
+    ]
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 2 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Marco Odermatt",
+      "Switzerland",
+      53.6410117904246
+    ],
+    [
+      "Franjo Von Allmen",
+      "Switzerland",
+      43.0110926984606
+    ],
+    [
+      "Aleksander Aamodt Kilde",
+      "Norway",
+      27.7179894329955
+    ],
+    [
+      "Dominik Paris",
+      "Italy",
+      25.6167994335932
+    ],
+    [
+      "Stefan Rogentin",
+      "Switzerland",
+      17.3911509574729
+    ]
+  ]
+}
