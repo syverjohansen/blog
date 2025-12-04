@@ -1674,11 +1674,14 @@ run_integrated_predictions_workflow <- function() {
   # First calculate race probabilities
   log_info("Calculating race probabilities")
   prob_results <- calculate_race_probabilities()
+
   
   log_info("Updating startlist variables with calculated probabilities")
   # Individual events startlists
   men_startlist <- prob_results$men
   ladies_startlist <- prob_results$ladies
+
+  
   
   # Log the sizes of the startlists
   log_info(paste("Men's startlist has", nrow(men_startlist), "entries"))
