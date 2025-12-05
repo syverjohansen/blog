@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      13487,
+      208.22237632651
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "L",
+      "Norway",
+      9011,
+      158.55876434602
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "L",
+      "Sweden",
+      4508,
+      138.771528871473
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      4307,
+      133.730926673769
+    ],
+    [
+      "Linn Svahn",
+      3190,
+      "L",
+      "Sweden",
+      3220,
+      116.384017307792
+    ],
+    [
+      "Katerina Janatova",
+      3198,
+      "L",
+      "Czechia",
+      2029,
+      109.759455470864
+    ],
+    [
+      "Johanna Matintalo",
+      1761,
+      "L",
+      "Finland",
+      1988,
+      104.086721916095
+    ],
+    [
+      "Caterina Ganz",
+      1721,
+      "L",
+      "Italy",
+      431,
+      100.053566786997
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      19118,
+      252.679665444543
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "M",
+      "Norway",
+      14714,
+      201.179013252222
+    ],
+    [
+      "Simen Hegstad Krüger",
+      2355,
+      "M",
+      "Norway",
+      6388,
+      142.697577838961
+    ],
+    [
+      "Mika Vermeulen",
+      12673,
+      "M",
+      "Austria",
+      5208,
+      141.386662901554
+    ],
+    [
+      "Pål Golberg",
+      88,
+      "M",
+      "Norway",
+      5570,
+      122.875983738028
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "M",
+      "France",
+      4496,
+      113.999863884743
+    ],
+    [
+      "Friedrich Moch",
+      9323,
+      "M",
+      "Germany",
+      3371,
+      104.732437783423
+    ],
+    [
+      "Mathis Desloges",
+      12767,
+      "M",
+      "France",
+      1634,
+      94.2093516895013
+    ]
+  ]
+}
