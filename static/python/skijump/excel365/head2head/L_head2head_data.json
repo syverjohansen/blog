@@ -4298,7 +4298,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 33,
-      "elo": 1183.0398630539692,
+      "elo": 1183.039863053969,
       "skier_name": "Julia Kykk\u00e4nen"
     },
     {
@@ -4309,7 +4309,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 27,
-      "elo": 1181.050953970914,
+      "elo": 1181.0509539709135,
       "skier_name": "Julia Kykk\u00e4nen"
     },
     {
@@ -4320,7 +4320,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 32,
-      "elo": 1168.9024555753913,
+      "elo": 1168.902455575391,
       "skier_name": "Julia Kykk\u00e4nen"
     },
     {
@@ -4331,7 +4331,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 36,
-      "elo": 1177.2180833016969,
+      "elo": 1177.2180833016964,
       "skier_name": "Julia Kykk\u00e4nen"
     },
     {
@@ -4342,7 +4342,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 26,
-      "elo": 1183.6552426795477,
+      "elo": 1183.6552426795474,
       "skier_name": "Julia Kykk\u00e4nen"
     },
     {
@@ -4353,7 +4353,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 21,
-      "elo": 1201.1398696302608,
+      "elo": 1201.1398696302606,
       "skier_name": "Julia Kykk\u00e4nen"
     },
     {
@@ -5387,7 +5387,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 35,
-      "elo": 1202.4731553443005,
+      "elo": 1205.6684480596564,
       "skier_name": "Julia Kykk\u00e4nen"
     },
     {
@@ -5398,7 +5398,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 30,
-      "elo": 1192.793489277984,
+      "elo": 1195.9809217316115,
       "skier_name": "Julia Kykk\u00e4nen"
     },
     {
@@ -5409,7 +5409,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 24,
-      "elo": 1282.1538895368817,
+      "elo": 1278.435732728239,
       "skier_name": "Julia Kykk\u00e4nen"
     },
     {
@@ -5420,7 +5420,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 28,
-      "elo": 1271.2041186830488,
+      "elo": 1268.568008290693,
       "skier_name": "Julia Kykk\u00e4nen"
     }
   ],
@@ -10326,7 +10326,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 6,
-      "elo": 1604.6232170880671,
+      "elo": 1603.210626562146,
       "skier_name": "Katharina Schmid"
     },
     {
@@ -10337,7 +10337,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 4,
-      "elo": 1633.6750730483886,
+      "elo": 1630.4585140184115,
       "skier_name": "Katharina Schmid"
     },
     {
@@ -10348,7 +10348,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 7,
-      "elo": 1654.4402920493735,
+      "elo": 1650.361512095522,
       "skier_name": "Katharina Schmid"
     },
     {
@@ -10359,7 +10359,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 8,
-      "elo": 1661.1688638912458,
+      "elo": 1656.7706187141298,
       "skier_name": "Katharina Schmid"
     },
     {
@@ -10370,7 +10370,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 12,
-      "elo": 1644.9725100468995,
+      "elo": 1641.7866695113223,
+      "skier_name": "Katharina Schmid"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 19,
+      "elo": 1600.9949303556157,
       "skier_name": "Katharina Schmid"
     }
   ],
@@ -11270,7 +11281,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 5,
-      "elo": 1505.9570883532126,
+      "elo": 1505.9570883532124,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11292,7 +11303,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 3,
-      "elo": 1526.6146840932836,
+      "elo": 1526.6146840932834,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11303,7 +11314,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 3,
-      "elo": 1539.7141523590951,
+      "elo": 1539.714152359095,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11314,7 +11325,7 @@
       "country": "Russia",
       "event": "Normal",
       "place": 5,
-      "elo": 1550.1310577082547,
+      "elo": 1550.1310577082545,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11347,7 +11358,7 @@
       "country": "Russia",
       "event": "Large",
       "place": 11,
-      "elo": 1562.3270093450278,
+      "elo": 1562.3270093450276,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11358,7 +11369,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 2,
-      "elo": 1545.629050942792,
+      "elo": 1545.6290509427918,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11369,7 +11380,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 5,
-      "elo": 1561.2866910505682,
+      "elo": 1561.286691050568,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11380,7 +11391,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 11,
-      "elo": 1565.010895796164,
+      "elo": 1565.0108957961638,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11391,7 +11402,7 @@
       "country": "Japan",
       "event": "Large",
       "place": 3,
-      "elo": 1582.647466187874,
+      "elo": 1582.6474661878738,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11402,7 +11413,7 @@
       "country": "Japan",
       "event": "Large",
       "place": 1,
-      "elo": 1602.6837760170563,
+      "elo": 1602.683776017056,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11413,7 +11424,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 1,
-      "elo": 1621.3317822371632,
+      "elo": 1621.331782237163,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11424,7 +11435,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 1,
-      "elo": 1639.103410074001,
+      "elo": 1639.1034100740007,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11435,7 +11446,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 3,
-      "elo": 1652.0688190256444,
+      "elo": 1652.0688190256442,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11446,7 +11457,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 2,
-      "elo": 1666.0763327718375,
+      "elo": 1666.076332771837,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11457,7 +11468,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 4,
-      "elo": 1676.156500719556,
+      "elo": 1676.1565007195557,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11479,7 +11490,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 3,
-      "elo": 1682.0796033158767,
+      "elo": 1682.0796033158765,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11490,7 +11501,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 2,
-      "elo": 1695.249698933428,
+      "elo": 1695.2496989334277,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11501,7 +11512,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 2,
-      "elo": 1707.669055209014,
+      "elo": 1707.6690552090138,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11512,7 +11523,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 6,
-      "elo": 1711.2674769722692,
+      "elo": 1711.267476972269,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11523,7 +11534,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 4,
-      "elo": 1717.919121818893,
+      "elo": 1717.9191218188928,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11534,7 +11545,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 7,
-      "elo": 1659.352228276643,
+      "elo": 1659.3522282766428,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11545,7 +11556,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 7,
-      "elo": 1663.4058839592951,
+      "elo": 1663.405883959295,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11556,7 +11567,7 @@
       "country": "Germany",
       "event": "Normal",
       "place": 32,
-      "elo": 1621.5856648207744,
+      "elo": 1621.585664820774,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11578,7 +11589,7 @@
       "country": "Russia",
       "event": "Normal",
       "place": 9,
-      "elo": 1546.65274177375,
+      "elo": 1546.6527417737498,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11589,7 +11600,7 @@
       "country": "Norway",
       "event": "Normal",
       "place": 8,
-      "elo": 1554.484151147291,
+      "elo": 1554.4841511472907,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11611,7 +11622,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 9,
-      "elo": 1571.673780407491,
+      "elo": 1571.6737804074908,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11622,7 +11633,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 11,
-      "elo": 1573.641087176383,
+      "elo": 1573.6410871763828,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11633,7 +11644,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 8,
-      "elo": 1579.9208020474891,
+      "elo": 1579.920802047489,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11644,7 +11655,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 9,
-      "elo": 1586.818029970394,
+      "elo": 1586.8180299703938,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -11655,7 +11666,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 10,
-      "elo": 1591.9702448481237,
+      "elo": 1591.9702448481232,
       "skier_name": "Eva Pinkelnig"
     },
     {
@@ -13661,7 +13672,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 24,
-      "elo": 1363.5367964584068,
+      "elo": 1365.3085733409948,
       "skier_name": "Jenny Rautionaho"
     },
     {
@@ -13672,7 +13683,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 35,
-      "elo": 1290.604098671858,
+      "elo": 1296.7707469732677,
       "skier_name": "Jenny Rautionaho"
     },
     {
@@ -13683,7 +13694,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 27,
-      "elo": 1326.2482978333771,
+      "elo": 1327.814135259809,
       "skier_name": "Jenny Rautionaho"
     },
     {
@@ -13694,7 +13705,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 24,
-      "elo": 1324.9568421303256,
+      "elo": 1325.7589164717551,
       "skier_name": "Jenny Rautionaho"
     },
     {
@@ -13705,7 +13716,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 33,
-      "elo": 1274.4964397381425,
+      "elo": 1278.1321423465492,
+      "skier_name": "Jenny Rautionaho"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 23,
+      "elo": 1291.5856961527309,
       "skier_name": "Jenny Rautionaho"
     }
   ],
@@ -19954,7 +19976,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 28,
-      "elo": 1332.7087250281063,
+      "elo": 1332.708725028106,
       "skier_name": "Spela Rogelj"
     },
     {
@@ -19965,7 +19987,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 17,
-      "elo": 1344.682669039031,
+      "elo": 1344.6826690390308,
       "skier_name": "Spela Rogelj"
     },
     {
@@ -19976,7 +19998,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 18,
-      "elo": 1353.7062817453266,
+      "elo": 1353.7062817453264,
       "skier_name": "Spela Rogelj"
     },
     {
@@ -19987,7 +20009,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 28,
-      "elo": 1344.9364535316731,
+      "elo": 1344.936453531673,
       "skier_name": "Spela Rogelj"
     },
     {
@@ -19998,7 +20020,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 27,
-      "elo": 1339.1226570849544,
+      "elo": 1339.1226570849542,
       "skier_name": "Spela Rogelj"
     },
     {
@@ -20009,7 +20031,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 15,
-      "elo": 1354.64381039468,
+      "elo": 1354.6438103946798,
       "skier_name": "Spela Rogelj"
     },
     {
@@ -20020,7 +20042,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 19,
-      "elo": 1362.2423951415458,
+      "elo": 1362.2423951415456,
       "skier_name": "Spela Rogelj"
     },
     {
@@ -20031,7 +20053,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 18,
-      "elo": 1370.852750043216,
+      "elo": 1370.8527500432158,
       "skier_name": "Spela Rogelj"
     },
     {
@@ -22510,7 +22532,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 3,
-      "elo": 1556.3620996623176,
+      "elo": 1556.3620996623174,
       "skier_name": "Ursa Bogataj"
     },
     {
@@ -22543,7 +22565,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 7,
-      "elo": 1591.794279013957,
+      "elo": 1591.7942790139568,
       "skier_name": "Ursa Bogataj"
     },
     {
@@ -22554,7 +22576,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 6,
-      "elo": 1593.161618619085,
+      "elo": 1593.1616186190847,
       "skier_name": "Ursa Bogataj"
     },
     {
@@ -22565,7 +22587,7 @@
       "country": "China",
       "event": "Normal",
       "place": 1,
-      "elo": 1606.7210670017523,
+      "elo": 1606.721067001752,
       "skier_name": "Ursa Bogataj"
     },
     {
@@ -22576,7 +22598,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 1,
-      "elo": 1618.2868686453908,
+      "elo": 1618.2868686453903,
       "skier_name": "Ursa Bogataj"
     },
     {
@@ -22587,7 +22609,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 3,
-      "elo": 1627.036996741046,
+      "elo": 1627.0369967410456,
       "skier_name": "Ursa Bogataj"
     },
     {
@@ -22598,7 +22620,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 3,
-      "elo": 1636.2887056220231,
+      "elo": 1636.288705622023,
       "skier_name": "Ursa Bogataj"
     },
     {
@@ -22609,7 +22631,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 4,
-      "elo": 1643.9471930202185,
+      "elo": 1643.947193020218,
       "skier_name": "Ursa Bogataj"
     },
     {
@@ -22620,7 +22642,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 2,
-      "elo": 1654.259004415279,
+      "elo": 1654.2590044152787,
       "skier_name": "Ursa Bogataj"
     },
     {
@@ -22631,7 +22653,7 @@
       "country": "Germany",
       "event": "Normal",
       "place": 1,
-      "elo": 1666.297339029128,
+      "elo": 1666.2973390291277,
       "skier_name": "Ursa Bogataj"
     },
     {
@@ -22642,7 +22664,7 @@
       "country": "Germany",
       "event": "Normal",
       "place": 1,
-      "elo": 1678.0881076299077,
+      "elo": 1678.0881076299074,
       "skier_name": "Ursa Bogataj"
     },
     {
@@ -23612,7 +23634,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 11,
-      "elo": 1586.0465338680629,
+      "elo": 1586.0465338680626,
       "skier_name": "Chiara Kreuzer"
     },
     {
@@ -23623,7 +23645,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 18,
-      "elo": 1576.8283542175038,
+      "elo": 1576.8283542175036,
       "skier_name": "Chiara Kreuzer"
     },
     {
@@ -23634,7 +23656,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 8,
-      "elo": 1582.3574839402518,
+      "elo": 1582.3574839402515,
       "skier_name": "Chiara Kreuzer"
     },
     {
@@ -23645,7 +23667,7 @@
       "country": "Germany",
       "event": "Normal",
       "place": 16,
-      "elo": 1577.8180115317446,
+      "elo": 1577.8180115317443,
       "skier_name": "Chiara Kreuzer"
     },
     {
@@ -25042,7 +25064,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 36,
-      "elo": 1323.4130921293656,
+      "elo": 1326.2112601072656,
       "skier_name": "Chiara Kreuzer"
     }
   ],
@@ -27752,7 +27774,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 26,
-      "elo": 1391.5073805690524,
+      "elo": 1394.7379010072866,
       "skier_name": "Silje Opseth"
     },
     {
@@ -27763,7 +27785,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 23,
-      "elo": 1371.7465323978893,
+      "elo": 1375.4889961300505,
       "skier_name": "Silje Opseth"
     },
     {
@@ -27774,7 +27796,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 38,
-      "elo": 1317.5103632757132,
+      "elo": 1323.5230893129883,
       "skier_name": "Silje Opseth"
     },
     {
@@ -27785,7 +27807,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 25,
-      "elo": 1313.2937530548677,
+      "elo": 1317.7587009200597,
       "skier_name": "Silje Opseth"
     },
     {
@@ -27796,7 +27818,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 40,
-      "elo": 1230.5542296691658,
+      "elo": 1239.2209685715547,
+      "skier_name": "Silje Opseth"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 21,
+      "elo": 1269.8683379222955,
       "skier_name": "Silje Opseth"
     }
   ],
@@ -29140,7 +29173,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 1,
-      "elo": 1511.8112859178189,
+      "elo": 1506.612643769974,
       "skier_name": "Nozomi Maruyama"
     },
     {
@@ -29151,7 +29184,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 1,
-      "elo": 1574.2295092311956,
+      "elo": 1565.8149465752788,
       "skier_name": "Nozomi Maruyama"
     },
     {
@@ -29162,7 +29195,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 1,
-      "elo": 1639.6758630335885,
+      "elo": 1628.8835103469291,
       "skier_name": "Nozomi Maruyama"
     },
     {
@@ -29173,7 +29206,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 2,
-      "elo": 1678.971575591618,
+      "elo": 1666.8204759212992,
       "skier_name": "Nozomi Maruyama"
     },
     {
@@ -29184,7 +29217,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 3,
-      "elo": 1704.976801404046,
+      "elo": 1692.3383764963887,
+      "skier_name": "Nozomi Maruyama"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 4,
+      "elo": 1713.7072364965447,
       "skier_name": "Nozomi Maruyama"
     }
   ],
@@ -36692,7 +36736,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 49,
-      "elo": 1215.13614139501,
+      "elo": 1215.1361413950103,
       "skier_name": "Guy-Lim Park"
     },
     {
@@ -36703,7 +36747,7 @@
       "country": "South Korea",
       "event": "Normal",
       "place": 35,
-      "elo": 1200.4077855510611,
+      "elo": 1200.4077855510614,
       "skier_name": "Guy-Lim Park"
     },
     {
@@ -36714,7 +36758,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 44,
-      "elo": 1207.7630410127729,
+      "elo": 1207.763041012773,
       "skier_name": "Guy-Lim Park"
     },
     {
@@ -37585,7 +37629,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 23,
-      "elo": 1393.9905287467204,
+      "elo": 1395.9641165660012,
       "skier_name": "Agnes Reisch"
     },
     {
@@ -37596,7 +37640,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 29,
-      "elo": 1343.62687666909,
+      "elo": 1348.4372738449897,
       "skier_name": "Agnes Reisch"
     },
     {
@@ -37607,7 +37651,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 8,
-      "elo": 1452.9634800213048,
+      "elo": 1448.7450487668295,
       "skier_name": "Agnes Reisch"
     },
     {
@@ -37618,7 +37662,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 5,
-      "elo": 1516.3480242142834,
+      "elo": 1508.2395651833433,
       "skier_name": "Agnes Reisch"
     },
     {
@@ -37629,7 +37673,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 11,
-      "elo": 1532.2783576822742,
+      "elo": 1524.1604033753351,
+      "skier_name": "Agnes Reisch"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 5,
+      "elo": 1570.0229601694928,
       "skier_name": "Agnes Reisch"
     }
   ],
@@ -40198,7 +40253,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 9,
-      "elo": 1544.5405911183857,
+      "elo": 1543.39477941099,
       "skier_name": "Nika Kriznar"
     },
     {
@@ -40209,7 +40264,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 13,
-      "elo": 1540.105483586626,
+      "elo": 1539.3675264951792,
       "skier_name": "Nika Kriznar"
     },
     {
@@ -40220,7 +40275,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 5,
-      "elo": 1595.1231939545655,
+      "elo": 1590.7856938317566,
       "skier_name": "Nika Kriznar"
     },
     {
@@ -40231,7 +40286,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 17,
-      "elo": 1567.6921541406027,
+      "elo": 1565.4038379119204,
       "skier_name": "Nika Kriznar"
     },
     {
@@ -40242,7 +40297,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 9,
-      "elo": 1583.181238066142,
+      "elo": 1579.713699156745,
+      "skier_name": "Nika Kriznar"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 2,
+      "elo": 1629.0220793146286,
       "skier_name": "Nika Kriznar"
     }
   ],
@@ -42197,7 +42263,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 58,
-      "elo": 1088.7652153633087,
+      "elo": 1093.426792288344,
       "skier_name": "Natalie Eilers"
     }
   ],
@@ -43015,7 +43081,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 22,
-      "elo": 1263.349664640972,
+      "elo": 1262.1294409566185,
       "skier_name": "Nicole Maurer"
     },
     {
@@ -43026,7 +43092,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 28,
-      "elo": 1249.7550080831172,
+      "elo": 1249.691739025376,
       "skier_name": "Nicole Maurer"
     },
     {
@@ -43037,7 +43103,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 42,
-      "elo": 1226.8374107969398,
+      "elo": 1228.4712477160078,
       "skier_name": "Nicole Maurer"
     },
     {
@@ -43048,7 +43114,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 26,
-      "elo": 1238.214046069585,
+      "elo": 1238.379717131199,
       "skier_name": "Nicole Maurer"
     },
     {
@@ -43059,7 +43125,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 29,
-      "elo": 1227.5331180644062,
+      "elo": 1228.1553033688783,
+      "skier_name": "Nicole Maurer"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 37,
+      "elo": 1186.3065130442012,
       "skier_name": "Nicole Maurer"
     }
   ],
@@ -45727,7 +45804,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 49,
-      "elo": 1287.4479734248437,
+      "elo": 1295.465208400115,
       "skier_name": "Josephine Pagnier"
     }
   ],
@@ -47935,7 +48012,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 29,
-      "elo": 1230.5992173612567,
+      "elo": 1231.7570779567775,
       "skier_name": "Katra Komar"
     },
     {
@@ -47946,7 +48023,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 31,
-      "elo": 1209.622596924999,
+      "elo": 1211.925227785857,
       "skier_name": "Katra Komar"
     },
     {
@@ -47957,7 +48034,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 30,
-      "elo": 1262.5224303024152,
+      "elo": 1260.639708192782,
       "skier_name": "Katra Komar"
     },
     {
@@ -47968,7 +48045,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 27,
-      "elo": 1256.433113958756,
+      "elo": 1255.096619760926,
+      "skier_name": "Katra Komar"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 27,
+      "elo": 1252.243570270459,
       "skier_name": "Katra Komar"
     }
   ],
@@ -48700,7 +48788,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 16,
-      "elo": 1257.975268463289,
+      "elo": 1254.0809580362013,
       "skier_name": "Anna Twardosz"
     },
     {
@@ -48711,7 +48799,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 27,
-      "elo": 1250.6486747529366,
+      "elo": 1248.08124367737,
       "skier_name": "Anna Twardosz"
     },
     {
@@ -48722,7 +48810,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 10,
-      "elo": 1387.3739212314636,
+      "elo": 1376.795800456011,
       "skier_name": "Anna Twardosz"
     },
     {
@@ -48733,7 +48821,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 30,
-      "elo": 1341.398457923122,
+      "elo": 1335.7175536095838,
       "skier_name": "Anna Twardosz"
     },
     {
@@ -48744,7 +48832,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 20,
-      "elo": 1352.087472697055,
+      "elo": 1346.566711345845,
+      "skier_name": "Anna Twardosz"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 17,
+      "elo": 1373.6028187542724,
       "skier_name": "Anna Twardosz"
     }
   ],
@@ -49769,7 +49868,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 2,
-      "elo": 1545.9961562488772,
+      "elo": 1541.9058151442696,
       "skier_name": "Abigail Strate"
     },
     {
@@ -49780,7 +49879,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 5,
-      "elo": 1581.2652841698873,
+      "elo": 1575.4956990381158,
       "skier_name": "Abigail Strate"
     },
     {
@@ -49791,7 +49890,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 15,
-      "elo": 1574.8419072356417,
+      "elo": 1570.7803655048806,
       "skier_name": "Abigail Strate"
     },
     {
@@ -49802,7 +49901,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 9,
-      "elo": 1591.425998387365,
+      "elo": 1586.4459174203478,
       "skier_name": "Abigail Strate"
     },
     {
@@ -49813,7 +49912,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 2,
-      "elo": 1637.3764555570951,
+      "elo": 1629.644526675073,
+      "skier_name": "Abigail Strate"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 10,
+      "elo": 1632.8642972729813,
       "skier_name": "Abigail Strate"
     }
   ],
@@ -51209,7 +51319,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 14,
-      "elo": 1408.0759503194845,
+      "elo": 1406.3979298877027,
       "skier_name": "Frida Westman"
     },
     {
@@ -51220,7 +51330,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 9,
-      "elo": 1454.307399416518,
+      "elo": 1449.8467376882868,
       "skier_name": "Frida Westman"
     },
     {
@@ -51231,7 +51341,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 38,
-      "elo": 1369.4362393417491,
+      "elo": 1372.027234089272,
       "skier_name": "Frida Westman"
     },
     {
@@ -51242,7 +51352,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 21,
-      "elo": 1372.7842866176911,
+      "elo": 1374.0257307525496,
       "skier_name": "Frida Westman"
     },
     {
@@ -51253,7 +51363,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 15,
-      "elo": 1401.1065970064794,
+      "elo": 1399.762915457998,
+      "skier_name": "Frida Westman"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 20,
+      "elo": 1401.3968861809512,
       "skier_name": "Frida Westman"
     }
   ],
@@ -52999,7 +53120,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 1,
-      "elo": 1804.4236518800556,
+      "elo": 1804.423651880055,
       "skier_name": "Sara Takanashi"
     },
     {
@@ -53175,7 +53296,7 @@
       "country": "Kazakhstan",
       "event": "Normal",
       "place": 1,
-      "elo": 1840.2486226012188,
+      "elo": 1840.2486226012184,
       "skier_name": "Sara Takanashi"
     },
     {
@@ -53186,7 +53307,7 @@
       "country": "Kazakhstan",
       "event": "Normal",
       "place": 1,
-      "elo": 1846.1841796556307,
+      "elo": 1846.1841796556305,
       "skier_name": "Sara Takanashi"
     },
     {
@@ -53197,7 +53318,7 @@
       "country": "Norway",
       "event": "Normal",
       "place": 1,
-      "elo": 1771.121274564406,
+      "elo": 1771.1212745644057,
       "skier_name": "Sara Takanashi"
     },
     {
@@ -55122,7 +55243,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 11,
-      "elo": 1549.955287436367,
+      "elo": 1549.7386110613627,
       "skier_name": "Sara Takanashi"
     },
     {
@@ -55133,7 +55254,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 14,
-      "elo": 1539.4239824325473,
+      "elo": 1539.8442927793303,
       "skier_name": "Sara Takanashi"
     },
     {
@@ -55144,7 +55265,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 9,
-      "elo": 1574.6412883053572,
+      "elo": 1572.465171123892,
       "skier_name": "Sara Takanashi"
     },
     {
@@ -55155,7 +55276,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 4,
-      "elo": 1616.2658342946577,
+      "elo": 1611.1460508837322,
       "skier_name": "Sara Takanashi"
     },
     {
@@ -55166,7 +55287,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 7,
-      "elo": 1632.6799715394995,
+      "elo": 1626.76609949097,
+      "skier_name": "Sara Takanashi"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 8,
+      "elo": 1639.8030594868917,
       "skier_name": "Sara Takanashi"
     }
   ],
@@ -57437,7 +57569,7 @@
       "country": "Norway",
       "event": "Normal",
       "place": 35,
-      "elo": 1272.843659412403,
+      "elo": 1272.8436594124028,
       "skier_name": "Aleksandra Barantceva"
     },
     {
@@ -59771,7 +59903,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 12,
-      "elo": 1413.768291828626,
+      "elo": 1411.3314441208483,
       "skier_name": "Yuka Seto"
     },
     {
@@ -59782,7 +59914,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 19,
-      "elo": 1408.6316258414342,
+      "elo": 1407.003757843622,
       "skier_name": "Yuka Seto"
     },
     {
@@ -59793,7 +59925,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 22,
-      "elo": 1422.8023697760889,
+      "elo": 1420.775867802247,
       "skier_name": "Yuka Seto"
     },
     {
@@ -59804,7 +59936,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 11,
-      "elo": 1463.3246975673258,
+      "elo": 1458.471533879662,
       "skier_name": "Yuka Seto"
     },
     {
@@ -59815,7 +59947,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 8,
-      "elo": 1505.793843663921,
+      "elo": 1498.604465393711,
+      "skier_name": "Yuka Seto"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 14,
+      "elo": 1507.5631840328986,
       "skier_name": "Yuka Seto"
     }
   ],
@@ -60026,7 +60169,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 47,
-      "elo": 1192.1362001056457,
+      "elo": 1195.0626827634323,
       "skier_name": "Bing Dong"
     },
     {
@@ -60037,7 +60180,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 37,
-      "elo": 1155.730091265626,
+      "elo": 1160.1927916599416,
       "skier_name": "Bing Dong"
     }
   ],
@@ -62938,7 +63081,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 3,
-      "elo": 1598.81872800351,
+      "elo": 1596.0808132254392,
       "skier_name": "Lisa Eder"
     },
     {
@@ -62949,7 +63092,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 12,
-      "elo": 1588.918273052211,
+      "elo": 1587.2017144782685,
       "skier_name": "Lisa Eder"
     },
     {
@@ -62960,7 +63103,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 3,
-      "elo": 1640.501538404128,
+      "elo": 1635.6077327749683,
       "skier_name": "Lisa Eder"
     },
     {
@@ -62971,7 +63114,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 6,
-      "elo": 1659.6513397615972,
+      "elo": 1653.7545935625558,
       "skier_name": "Lisa Eder"
     },
     {
@@ -62982,7 +63125,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 5,
-      "elo": 1678.699364115945,
+      "elo": 1671.894308804738,
+      "skier_name": "Lisa Eder"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 7,
+      "elo": 1682.327192576082,
       "skier_name": "Lisa Eder"
     }
   ],
@@ -64282,7 +64436,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 19,
-      "elo": 1563.481823776363,
+      "elo": 1566.747818813696,
       "skier_name": "Selina Freitag"
     },
     {
@@ -64293,7 +64447,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 21,
-      "elo": 1512.7612231153394,
+      "elo": 1518.7066420793046,
       "skier_name": "Selina Freitag"
     },
     {
@@ -64304,7 +64458,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 17,
-      "elo": 1516.0427287622842,
+      "elo": 1519.929585343952,
       "skier_name": "Selina Freitag"
     },
     {
@@ -64315,7 +64469,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 10,
-      "elo": 1540.050933585006,
+      "elo": 1540.944505800465,
       "skier_name": "Selina Freitag"
     },
     {
@@ -64326,7 +64480,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 6,
-      "elo": 1576.061167096893,
+      "elo": 1573.8214069941926,
+      "skier_name": "Selina Freitag"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 9,
+      "elo": 1591.5445559530124,
       "skier_name": "Selina Freitag"
     }
   ],
@@ -65601,7 +65766,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 37,
-      "elo": 1181.7569265368852,
+      "elo": 1185.4067502955245,
       "skier_name": "Annika Belshaw"
     },
     {
@@ -65612,7 +65777,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 31,
-      "elo": 1240.2833069560695,
+      "elo": 1238.9424134638862,
       "skier_name": "Annika Belshaw"
     },
     {
@@ -65623,7 +65788,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 27,
-      "elo": 1243.7478687087355,
+      "elo": 1242.0535793035676,
       "skier_name": "Annika Belshaw"
     },
     {
@@ -65634,7 +65799,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 28,
-      "elo": 1236.847943244701,
+      "elo": 1235.7357015793425,
+      "skier_name": "Annika Belshaw"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 24,
+      "elo": 1253.0701272547064,
       "skier_name": "Annika Belshaw"
     }
   ],
@@ -65680,7 +65856,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 64,
-      "elo": 1130.1090799412373,
+      "elo": 1139.6888830093867,
       "skier_name": "Veronika Shishkina"
     }
   ],
@@ -67952,7 +68128,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 7,
-      "elo": 1614.0767165410127,
+      "elo": 1613.210156107447,
       "skier_name": "Eirin Maria Kvandal"
     },
     {
@@ -67963,7 +68139,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 7,
-      "elo": 1626.4529815932565,
+      "elo": 1624.8002930273865,
       "skier_name": "Eirin Maria Kvandal"
     },
     {
@@ -67974,7 +68150,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 3,
-      "elo": 1663.1228207315398,
+      "elo": 1658.761118314114,
       "skier_name": "Eirin Maria Kvandal"
     },
     {
@@ -67985,7 +68161,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 10,
-      "elo": 1656.6131512487332,
+      "elo": 1652.8107609707529,
+      "skier_name": "Eirin Maria Kvandal"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 3,
+      "elo": 1684.901532329537,
       "skier_name": "Eirin Maria Kvandal"
     }
   ],
@@ -68935,7 +69122,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 39,
-      "elo": 1146.8586418890582,
+      "elo": 1150.4901700618525,
       "skier_name": "Jessica Malsiner"
     },
     {
@@ -68946,7 +69133,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 50,
-      "elo": 1123.1208852146192,
+      "elo": 1127.3345951630436,
       "skier_name": "Jessica Malsiner"
     }
   ],
@@ -68970,7 +69157,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 62,
-      "elo": 1154.288881270975,
+      "elo": 1163.8178230869448,
       "skier_name": "Rea Kindlimann"
     }
   ],
@@ -70388,7 +70575,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 21,
-      "elo": 1293.0637124301677,
+      "elo": 1286.1304900270434,
       "skier_name": "Paige Jones"
     },
     {
@@ -70399,7 +70586,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 34,
-      "elo": 1249.5886308909046,
+      "elo": 1246.5995289800828,
       "skier_name": "Paige Jones"
     },
     {
@@ -70410,7 +70597,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 19,
-      "elo": 1286.3939787180568,
+      "elo": 1281.3367228140214,
+      "skier_name": "Paige Jones"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 30,
+      "elo": 1261.4625850211423,
       "skier_name": "Paige Jones"
     }
   ],
@@ -70720,7 +70918,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 5,
-      "elo": 1417.4983216911028,
+      "elo": 1412.055480521669,
       "skier_name": "Heidi Dyhre Tr\u00e5serud"
     },
     {
@@ -70731,7 +70929,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 2,
-      "elo": 1496.467939780029,
+      "elo": 1486.8985424407203,
       "skier_name": "Heidi Dyhre Tr\u00e5serud"
     },
     {
@@ -70742,7 +70940,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 6,
-      "elo": 1559.9180663116797,
+      "elo": 1548.93025934964,
       "skier_name": "Heidi Dyhre Tr\u00e5serud"
     },
     {
@@ -70753,7 +70951,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 20,
-      "elo": 1524.5496527393475,
+      "elo": 1517.4699337911516,
       "skier_name": "Heidi Dyhre Tr\u00e5serud"
     },
     {
@@ -70764,7 +70962,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 4,
-      "elo": 1573.7592090735857,
+      "elo": 1564.2281087056576,
+      "skier_name": "Heidi Dyhre Tr\u00e5serud"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 12,
+      "elo": 1569.7322581735534,
       "skier_name": "Heidi Dyhre Tr\u00e5serud"
     }
   ],
@@ -71770,7 +71979,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 33,
-      "elo": 1301.8495430209289,
+      "elo": 1301.8229193529537,
       "skier_name": "Lisa Hirner"
     }
   ],
@@ -72223,7 +72432,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 17,
-      "elo": 1338.2002539618331,
+      "elo": 1336.3439883190215,
       "skier_name": "Annika Sieff"
     },
     {
@@ -72234,7 +72443,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 21,
-      "elo": 1338.9827215796008,
+      "elo": 1337.449179948237,
       "skier_name": "Annika Sieff"
     },
     {
@@ -72245,7 +72454,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 25,
-      "elo": 1365.1685784571068,
+      "elo": 1362.5156810204803,
       "skier_name": "Annika Sieff"
     },
     {
@@ -72256,7 +72465,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 13,
-      "elo": 1409.5449848384371,
+      "elo": 1403.9946996667472,
       "skier_name": "Annika Sieff"
     },
     {
@@ -72267,7 +72476,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 21,
-      "elo": 1399.285800943114,
+      "elo": 1395.158548479943,
+      "skier_name": "Annika Sieff"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 31,
+      "elo": 1344.111489632921,
       "skier_name": "Annika Sieff"
     }
   ],
@@ -73362,7 +73582,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 32,
-      "elo": 1255.3452761700069,
+      "elo": 1258.322257758673,
       "skier_name": "Gyda Westvold Hansen"
     },
     {
@@ -73373,7 +73593,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 25,
-      "elo": 1258.6368603979877,
+      "elo": 1260.7241540760097,
       "skier_name": "Gyda Westvold Hansen"
     },
     {
@@ -73384,7 +73604,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 16,
-      "elo": 1362.1628542591689,
+      "elo": 1356.7022846809798,
       "skier_name": "Gyda Westvold Hansen"
     },
     {
@@ -73395,7 +73615,18 @@
       "country": "Sweden",
       "event": "Large",
       "place": 31,
-      "elo": 1317.2632530431042,
+      "elo": 1315.4926284789158,
+      "skier_name": "Gyda Westvold Hansen"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 29,
+      "elo": 1293.1409388187924,
       "skier_name": "Gyda Westvold Hansen"
     }
   ],
@@ -73852,7 +74083,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 12,
-      "elo": 1340.5437619658085,
+      "elo": 1330.7088735135449,
       "skier_name": "Klara Ulrichova"
     },
     {
@@ -73863,7 +74094,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 15,
-      "elo": 1380.8384433881192,
+      "elo": 1370.006612686654,
       "skier_name": "Klara Ulrichova"
     },
     {
@@ -73874,7 +74105,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 17,
-      "elo": 1397.2731611921886,
+      "elo": 1387.2957859589487,
+      "skier_name": "Klara Ulrichova"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 26,
+      "elo": 1363.6002658726263,
       "skier_name": "Klara Ulrichova"
     }
   ],
@@ -76001,7 +76243,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 14,
-      "elo": 1366.985001763537,
+      "elo": 1366.9850017635367,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76045,7 +76287,7 @@
       "country": "Norway",
       "event": "Normal",
       "place": 31,
-      "elo": 1358.8536951488345,
+      "elo": 1358.853695148834,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76056,7 +76298,7 @@
       "country": "Germany",
       "event": "Normal",
       "place": 27,
-      "elo": 1347.917880414738,
+      "elo": 1347.9178804147375,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76067,7 +76309,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 32,
-      "elo": 1326.3845888807305,
+      "elo": 1326.3845888807302,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76078,7 +76320,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 24,
-      "elo": 1322.561497803445,
+      "elo": 1322.5614978034448,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76089,7 +76331,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 14,
-      "elo": 1337.4274728168227,
+      "elo": 1337.4274728168225,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76100,7 +76342,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 24,
-      "elo": 1340.5368012700212,
+      "elo": 1340.536801270021,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76111,7 +76353,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 32,
-      "elo": 1326.1565647630262,
+      "elo": 1326.156564763026,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76122,7 +76364,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 26,
-      "elo": 1323.3736949521688,
+      "elo": 1323.3736949521683,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76133,7 +76375,7 @@
       "country": "South Korea",
       "event": "Normal",
       "place": 33,
-      "elo": 1305.0545156824064,
+      "elo": 1305.0545156824062,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76144,7 +76386,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 40,
-      "elo": 1279.965609008282,
+      "elo": 1279.9656090082815,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76155,7 +76397,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 36,
-      "elo": 1263.825496594858,
+      "elo": 1263.8254965948577,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76166,7 +76408,7 @@
       "country": "Norway",
       "event": "Normal",
       "place": 18,
-      "elo": 1277.7979704234992,
+      "elo": 1277.797970423499,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76177,7 +76419,7 @@
       "country": "Norway",
       "event": "Normal",
       "place": 28,
-      "elo": 1274.4105091599588,
+      "elo": 1274.4105091599586,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76188,7 +76430,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 21,
-      "elo": 1280.442621240516,
+      "elo": 1280.4426212405158,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76199,7 +76441,7 @@
       "country": "France",
       "event": "Normal",
       "place": 37,
-      "elo": 1266.8227199960177,
+      "elo": 1266.8227199960174,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76210,7 +76452,7 @@
       "country": "France",
       "event": "Normal",
       "place": 38,
-      "elo": 1254.0988830786223,
+      "elo": 1254.098883078622,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76221,7 +76463,7 @@
       "country": "Japan",
       "event": "Large",
       "place": 12,
-      "elo": 1270.737008639728,
+      "elo": 1270.7370086397275,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76232,7 +76474,7 @@
       "country": "Japan",
       "event": "Large",
       "place": 9,
-      "elo": 1289.3933584339748,
+      "elo": 1289.3933584339743,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76243,7 +76485,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 31,
-      "elo": 1286.5839324520507,
+      "elo": 1286.5839324520505,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76254,7 +76496,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 15,
-      "elo": 1299.920891470259,
+      "elo": 1299.9208914702588,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76265,7 +76507,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 23,
-      "elo": 1300.8510248524726,
+      "elo": 1300.8510248524724,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76276,7 +76518,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 22,
-      "elo": 1302.3855344937188,
+      "elo": 1302.3855344937183,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76298,7 +76540,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 26,
-      "elo": 1314.7386875553789,
+      "elo": 1314.7386875553786,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76309,7 +76551,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 25,
-      "elo": 1314.824157508598,
+      "elo": 1314.8241575085976,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76320,7 +76562,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 27,
-      "elo": 1312.561211709434,
+      "elo": 1312.5612117094338,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76331,7 +76573,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 36,
-      "elo": 1300.9242993882397,
+      "elo": 1300.9242993882394,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76342,7 +76584,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 10,
-      "elo": 1318.8919289075802,
+      "elo": 1318.89192890758,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76353,7 +76595,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 16,
-      "elo": 1327.8696026331768,
+      "elo": 1327.8696026331766,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76364,7 +76606,7 @@
       "country": "Russia",
       "event": "Normal",
       "place": 28,
-      "elo": 1323.3835048080891,
+      "elo": 1323.383504808089,
       "skier_name": "Elena Runggaldier"
     },
     {
@@ -76909,7 +77151,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 32,
-      "elo": 1232.6948609512133,
+      "elo": 1229.2179901101192,
       "skier_name": "Nicole Konderla"
     }
   ],
@@ -77386,7 +77628,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 33,
-      "elo": 1180.237190352364,
+      "elo": 1181.9306838880275,
       "skier_name": "Hannah Wiegele"
     },
     {
@@ -77397,7 +77639,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 41,
-      "elo": 1189.3324361682053,
+      "elo": 1190.020284751983,
       "skier_name": "Hannah Wiegele"
     },
     {
@@ -77408,7 +77650,18 @@
       "country": "Sweden",
       "event": "Large",
       "place": 35,
-      "elo": 1163.4891834551695,
+      "elo": 1165.438383581671,
+      "skier_name": "Hannah Wiegele"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 40,
+      "elo": 1121.2048181094133,
       "skier_name": "Hannah Wiegele"
     }
   ],
@@ -80232,7 +80485,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 18,
-      "elo": 1371.756821885232,
+      "elo": 1371.0620103994258,
       "skier_name": "Julia M\u00fchlbacher"
     },
     {
@@ -80243,7 +80496,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 17,
-      "elo": 1386.8116314626088,
+      "elo": 1385.20730412019,
       "skier_name": "Julia M\u00fchlbacher"
     },
     {
@@ -80254,7 +80507,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 19,
-      "elo": 1424.251578473348,
+      "elo": 1420.727498552519,
       "skier_name": "Julia M\u00fchlbacher"
     },
     {
@@ -80265,7 +80518,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 12,
-      "elo": 1459.4282804823388,
+      "elo": 1453.767303200967,
       "skier_name": "Julia M\u00fchlbacher"
     },
     {
@@ -80276,7 +80529,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 13,
-      "elo": 1477.770221790308,
+      "elo": 1471.5588768414625,
+      "skier_name": "Julia M\u00fchlbacher"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 11,
+      "elo": 1500.0457885314618,
       "skier_name": "Julia M\u00fchlbacher"
     }
   ],
@@ -80841,7 +81105,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 33,
-      "elo": 1197.2862792984904,
+      "elo": 1199.5157054654364,
       "skier_name": "Emely Torazza"
     },
     {
@@ -80852,7 +81116,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 36,
-      "elo": 1158.7389358616977,
+      "elo": 1163.0892855917405,
       "skier_name": "Emely Torazza"
     },
     {
@@ -80863,7 +81127,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 43,
-      "elo": 1165.7460140503754,
+      "elo": 1168.355442824568,
       "skier_name": "Emely Torazza"
     }
   ],
@@ -81322,7 +81586,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 57,
-      "elo": 1174.2216053351049,
+      "elo": 1181.8637933144057,
       "skier_name": "Delia Anamaria Folea"
     }
   ],
@@ -82219,7 +82483,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 63,
-      "elo": 1123.313566345532,
+      "elo": 1132.0504222783418,
       "skier_name": "Liangyao Wang"
     }
   ],
@@ -83756,7 +84020,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 15,
-      "elo": 1641.4756673320949,
+      "elo": 1644.126677713002,
       "skier_name": "Nika Prevc"
     },
     {
@@ -83767,7 +84031,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 3,
-      "elo": 1669.214187398622,
+      "elo": 1669.514732542783,
       "skier_name": "Nika Prevc"
     },
     {
@@ -83778,7 +84042,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 2,
-      "elo": 1707.3941927208075,
+      "elo": 1704.9347728577834,
       "skier_name": "Nika Prevc"
     },
     {
@@ -83789,7 +84053,18 @@
       "country": "Sweden",
       "event": "Large",
       "place": 1,
-      "elo": 1740.6634205557243,
+      "elo": 1735.8583296157758,
+      "skier_name": "Nika Prevc"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 1,
+      "elo": 1765.2035583746529,
       "skier_name": "Nika Prevc"
     }
   ],
@@ -84099,7 +84374,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 10,
-      "elo": 1313.9513738909675,
+      "elo": 1308.54645781469,
       "skier_name": "Ringo Miyajima"
     },
     {
@@ -84110,7 +84385,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 15,
-      "elo": 1353.1700729483891,
+      "elo": 1346.342364593654,
       "skier_name": "Ringo Miyajima"
     },
     {
@@ -84121,7 +84396,18 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 28,
-      "elo": 1358.7231939349213,
+      "elo": 1354.094896287122,
+      "skier_name": "Ringo Miyajima"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 27,
+      "elo": 1330.519656165924,
       "skier_name": "Ringo Miyajima"
     }
   ],
@@ -86314,7 +86600,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 30,
-      "elo": 1176.1766723506933,
+      "elo": 1176.7379967997167,
       "skier_name": "Daniela Haralambie"
     },
     {
@@ -86325,7 +86611,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 48,
-      "elo": 1151.7859024629156,
+      "elo": 1153.9733283389,
       "skier_name": "Daniela Haralambie"
     },
     {
@@ -86336,7 +86622,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 31,
-      "elo": 1148.926380658321,
+      "elo": 1150.8040769991487,
+      "skier_name": "Daniela Haralambie"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 31,
+      "elo": 1148.7558964246136,
       "skier_name": "Daniela Haralambie"
     }
   ],
@@ -86437,7 +86734,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 40,
-      "elo": 1165.8490823366196,
+      "elo": 1170.264767115457,
       "skier_name": "Martina Zanitzer"
     },
     {
@@ -86448,7 +86745,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 20,
-      "elo": 1285.2684904600385,
+      "elo": 1280.4069644353658,
       "skier_name": "Martina Zanitzer"
     },
     {
@@ -86459,7 +86756,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 29,
-      "elo": 1268.6004149104288,
+      "elo": 1265.4476796296549,
       "skier_name": "Martina Zanitzer"
     }
   ],
@@ -86916,7 +87213,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 20,
-      "elo": 1246.539855216825,
+      "elo": 1244.136603463825,
       "skier_name": "Anezka Indrackova"
     },
     {
@@ -86927,7 +87224,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 18,
-      "elo": 1286.8891898980296,
+      "elo": 1282.3055595004466,
       "skier_name": "Anezka Indrackova"
     },
     {
@@ -86938,7 +87235,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 24,
-      "elo": 1290.256997456347,
+      "elo": 1286.1408822981666,
+      "skier_name": "Anezka Indrackova"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 22,
+      "elo": 1302.6057650575765,
       "skier_name": "Anezka Indrackova"
     }
   ],
@@ -87017,7 +87325,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 20,
-      "elo": 1277.9545398633527,
+      "elo": 1275.9398571880852,
       "skier_name": "Ping Zeng"
     },
     {
@@ -87028,7 +87336,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 51,
-      "elo": 1198.7057745584088,
+      "elo": 1202.85411089693,
       "skier_name": "Ping Zeng"
     },
     {
@@ -87039,7 +87347,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 18,
-      "elo": 1251.480359742684,
+      "elo": 1251.1315388377418,
+      "skier_name": "Ping Zeng"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 13,
+      "elo": 1316.7417097087875,
       "skier_name": "Ping Zeng"
     }
   ],
@@ -88801,7 +89120,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 4,
-      "elo": 1602.5029962760193,
+      "elo": 1600.2369576176573,
       "skier_name": "Anna Odine Str\u00f8m"
     },
     {
@@ -88812,7 +89131,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 8,
-      "elo": 1611.9358886913803,
+      "elo": 1609.318866581785,
       "skier_name": "Anna Odine Str\u00f8m"
     },
     {
@@ -88823,7 +89142,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 4,
-      "elo": 1652.7771460696767,
+      "elo": 1647.8719352063918,
       "skier_name": "Anna Odine Str\u00f8m"
     },
     {
@@ -88834,7 +89153,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 7,
-      "elo": 1664.7904259082554,
+      "elo": 1659.3475529795055,
       "skier_name": "Anna Odine Str\u00f8m"
     },
     {
@@ -88845,7 +89164,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 1,
-      "elo": 1703.014556068394,
+      "elo": 1695.309170103316,
+      "skier_name": "Anna Odine Str\u00f8m"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 6,
+      "elo": 1706.911766378525,
       "skier_name": "Anna Odine Str\u00f8m"
     }
   ],
@@ -88869,7 +89199,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 39,
-      "elo": 1214.6450576453178,
+      "elo": 1219.8351459715884,
       "skier_name": "Sofia Mattila"
     },
     {
@@ -88880,7 +89210,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 35,
-      "elo": 1240.5941331327483,
+      "elo": 1242.3330121411022,
       "skier_name": "Sofia Mattila"
     },
     {
@@ -88891,7 +89221,7 @@
       "country": "Poland",
       "event": "Large",
       "place": 39,
-      "elo": 1179.3898566370133,
+      "elo": 1184.6238553185924,
       "skier_name": "Sofia Mattila"
     }
   ],
@@ -88992,7 +89322,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 38,
-      "elo": 1174.2104893176345,
+      "elo": 1178.1439478104903,
       "skier_name": "Pola Beltowska"
     },
     {
@@ -89003,7 +89333,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 34,
-      "elo": 1150.579475742297,
+      "elo": 1155.3303643956708,
       "skier_name": "Pola Beltowska"
     },
     {
@@ -89014,7 +89344,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 14,
-      "elo": 1305.5185200845913,
+      "elo": 1298.554834993413,
       "skier_name": "Pola Beltowska"
     },
     {
@@ -89025,7 +89355,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 40,
-      "elo": 1229.131230790366,
+      "elo": 1228.3135981936036,
       "skier_name": "Pola Beltowska"
     },
     {
@@ -89036,7 +89366,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 37,
-      "elo": 1180.4339358244615,
+      "elo": 1182.8215952902117,
+      "skier_name": "Pola Beltowska"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 34,
+      "elo": 1163.496574206583,
       "skier_name": "Pola Beltowska"
     }
   ],
@@ -89203,7 +89544,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 31,
-      "elo": 1208.2112305645223,
+      "elo": 1209.7919309166468,
       "skier_name": "Josie Johnson"
     },
     {
@@ -89214,7 +89555,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 38,
-      "elo": 1157.2679340489562,
+      "elo": 1161.919025286718,
       "skier_name": "Josie Johnson"
     },
     {
@@ -89225,7 +89566,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 36,
-      "elo": 1197.306610269144,
+      "elo": 1197.9166088815516,
       "skier_name": "Josie Johnson"
     },
     {
@@ -89236,7 +89577,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 38,
-      "elo": 1154.8542728956536,
+      "elo": 1157.835523054715,
       "skier_name": "Josie Johnson"
     },
     {
@@ -89247,7 +89588,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 32,
-      "elo": 1146.4076737960247,
+      "elo": 1149.3018260565943,
+      "skier_name": "Josie Johnson"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 39,
+      "elo": 1112.5077108735902,
       "skier_name": "Josie Johnson"
     }
   ],
@@ -89623,7 +89975,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 28,
-      "elo": 1187.7938363243263,
+      "elo": 1187.7169792539596,
       "skier_name": "Sina Arnet"
     },
     {
@@ -89634,7 +89986,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 24,
-      "elo": 1211.2934210628423,
+      "elo": 1209.6731319068049,
       "skier_name": "Sina Arnet"
     },
     {
@@ -89645,7 +89997,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 13,
-      "elo": 1348.545374766877,
+      "elo": 1338.5377793528933,
       "skier_name": "Sina Arnet"
     },
     {
@@ -89656,7 +90008,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 22,
-      "elo": 1351.9209843387523,
+      "elo": 1343.4148965173144,
       "skier_name": "Sina Arnet"
     },
     {
@@ -89667,7 +90019,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 23,
-      "elo": 1345.1404707725883,
+      "elo": 1338.5680048253985,
+      "skier_name": "Sina Arnet"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 25,
+      "elo": 1329.979704710225,
       "skier_name": "Sina Arnet"
     }
   ],
@@ -90812,7 +91175,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 55,
-      "elo": 1140.0195706440568,
+      "elo": 1145.105600741129,
       "skier_name": "Emma Chervet"
     }
   ],
@@ -90924,7 +91287,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 60,
-      "elo": 1114.092537536952,
+      "elo": 1120.8069608824203,
       "skier_name": "Tamara Mesikova"
     }
   ],
@@ -91165,7 +91528,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 36,
-      "elo": 1195.55477828079,
+      "elo": 1199.0450862134528,
       "skier_name": "Tinkara Komar"
     },
     {
@@ -91176,7 +91539,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 37,
-      "elo": 1152.3832832762764,
+      "elo": 1158.0479450847772,
       "skier_name": "Tinkara Komar"
     },
     {
@@ -91187,7 +91550,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 29,
-      "elo": 1231.6777081731263,
+      "elo": 1230.356901063952,
       "skier_name": "Tinkara Komar"
     },
     {
@@ -91198,7 +91561,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 39,
-      "elo": 1177.01298397524,
+      "elo": 1179.2175346703991,
       "skier_name": "Tinkara Komar"
     }
   ],
@@ -91420,7 +91783,7 @@
       "country": "Poland",
       "event": "Large",
       "place": 38,
-      "elo": 1165.5493830284486,
+      "elo": 1168.758310922616,
       "skier_name": "Alvine Holz"
     }
   ],
@@ -92031,7 +92394,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 34,
-      "elo": 1270.43627882885,
+      "elo": 1274.615757070642,
       "skier_name": "Ingvild Synn\u00f8ve Midtskogen"
     },
     {
@@ -92042,7 +92405,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 16,
-      "elo": 1315.1602358922437,
+      "elo": 1315.4045442073898,
       "skier_name": "Ingvild Synn\u00f8ve Midtskogen"
     },
     {
@@ -92053,7 +92416,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 34,
-      "elo": 1305.896004253651,
+      "elo": 1306.7461719578723,
       "skier_name": "Ingvild Synn\u00f8ve Midtskogen"
     },
     {
@@ -92064,7 +92427,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 16,
-      "elo": 1349.420009144461,
+      "elo": 1346.7031395819272,
       "skier_name": "Ingvild Synn\u00f8ve Midtskogen"
     },
     {
@@ -92075,7 +92438,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 34,
-      "elo": 1288.2266383000515,
+      "elo": 1289.797903897578,
+      "skier_name": "Ingvild Synn\u00f8ve Midtskogen"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 18,
+      "elo": 1324.1699949698957,
       "skier_name": "Ingvild Synn\u00f8ve Midtskogen"
     }
   ],
@@ -92376,7 +92750,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 21,
-      "elo": 1306.1329825177356,
+      "elo": 1305.354383309035,
       "skier_name": "Yuzuki Sato"
     },
     {
@@ -92387,7 +92761,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 32,
-      "elo": 1262.2569785519229,
+      "elo": 1264.543479978889,
       "skier_name": "Yuzuki Sato"
     },
     {
@@ -92398,7 +92772,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 18,
-      "elo": 1354.329550541947,
+      "elo": 1349.752398722504,
       "skier_name": "Yuzuki Sato"
     },
     {
@@ -92409,7 +92783,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 23,
-      "elo": 1351.3151475792847,
+      "elo": 1347.441985592483,
       "skier_name": "Yuzuki Sato"
     },
     {
@@ -92420,7 +92794,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 25,
-      "elo": 1334.676870380481,
+      "elo": 1332.3738180428006,
+      "skier_name": "Yuzuki Sato"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 36,
+      "elo": 1273.7727591954135,
       "skier_name": "Yuzuki Sato"
     }
   ],
@@ -93442,7 +93827,7 @@
       "country": "Germany",
       "event": "Normal",
       "place": 8,
-      "elo": 1640.4045283981006,
+      "elo": 1640.4045283981004,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93453,7 +93838,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 7,
-      "elo": 1644.0885624288942,
+      "elo": 1644.088562428894,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93475,7 +93860,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 20,
-      "elo": 1610.790624504925,
+      "elo": 1610.7906245049248,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93486,7 +93871,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 11,
-      "elo": 1611.1256405540482,
+      "elo": 1611.125640554048,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93497,7 +93882,7 @@
       "country": "Finland",
       "event": "Normal",
       "place": 3,
-      "elo": 1623.947902017841,
+      "elo": 1623.9479020178408,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93508,7 +93893,7 @@
       "country": "Kazakhstan",
       "event": "Normal",
       "place": 31,
-      "elo": 1589.674333743434,
+      "elo": 1589.6743337434336,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93519,7 +93904,7 @@
       "country": "Kazakhstan",
       "event": "Normal",
       "place": 8,
-      "elo": 1595.28885129393,
+      "elo": 1595.2888512939298,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93541,7 +93926,7 @@
       "country": "Norway",
       "event": "Normal",
       "place": 2,
-      "elo": 1581.0692448848984,
+      "elo": 1581.069244884898,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93552,7 +93937,7 @@
       "country": "Russia",
       "event": "Normal",
       "place": 4,
-      "elo": 1591.9046026295837,
+      "elo": 1591.9046026295832,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93563,7 +93948,7 @@
       "country": "Russia",
       "event": "Normal",
       "place": 8,
-      "elo": 1597.0226569238368,
+      "elo": 1597.0226569238366,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93574,7 +93959,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 3,
-      "elo": 1608.8074851440554,
+      "elo": 1608.8074851440551,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93585,7 +93970,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 4,
-      "elo": 1618.626448255762,
+      "elo": 1618.6264482557615,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93596,7 +93981,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 1,
-      "elo": 1632.1430191380443,
+      "elo": 1632.143019138044,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93618,7 +94003,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 1,
-      "elo": 1655.9224533780002,
+      "elo": 1655.922453378,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93629,7 +94014,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 1,
-      "elo": 1667.9452407846954,
+      "elo": 1667.9452407846952,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93640,7 +94025,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 3,
-      "elo": 1676.0623373192636,
+      "elo": 1676.0623373192634,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93651,7 +94036,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 4,
-      "elo": 1682.4974539020216,
+      "elo": 1682.497453902021,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93662,7 +94047,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 4,
-      "elo": 1688.480879739061,
+      "elo": 1688.4808797390608,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93673,7 +94058,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 7,
-      "elo": 1690.2326679580538,
+      "elo": 1690.2326679580535,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93695,7 +94080,7 @@
       "country": "South Korea",
       "event": "Normal",
       "place": 2,
-      "elo": 1701.3931440948525,
+      "elo": 1701.3931440948522,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93706,7 +94091,7 @@
       "country": "Finland",
       "event": "Normal",
       "place": 2,
-      "elo": 1710.7004234925246,
+      "elo": 1710.7004234925244,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93717,7 +94102,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 1,
-      "elo": 1718.9765139504125,
+      "elo": 1718.976513950412,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93728,7 +94113,7 @@
       "country": "Norway",
       "event": "Normal",
       "place": 5,
-      "elo": 1662.4010679909202,
+      "elo": 1662.40106799092,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93739,7 +94124,7 @@
       "country": "Norway",
       "event": "Normal",
       "place": 3,
-      "elo": 1672.0592495817857,
+      "elo": 1672.0592495817853,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93750,7 +94135,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 5,
-      "elo": 1676.139487131897,
+      "elo": 1676.1394871318969,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93761,7 +94146,7 @@
       "country": "Germany",
       "event": "Normal",
       "place": 5,
-      "elo": 1681.2666696164904,
+      "elo": 1681.2666696164902,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93783,7 +94168,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 5,
-      "elo": 1691.0365534398786,
+      "elo": 1691.0365534398784,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93805,7 +94190,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 2,
-      "elo": 1705.1411462683377,
+      "elo": 1705.1411462683373,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93816,7 +94201,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 11,
-      "elo": 1700.1548408843407,
+      "elo": 1700.1548408843405,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93849,7 +94234,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 9,
-      "elo": 1700.2090089521578,
+      "elo": 1700.2090089521575,
       "skier_name": "Yuki Ito"
     },
     {
@@ -93860,7 +94245,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 19,
-      "elo": 1682.1166402372946,
+      "elo": 1682.1166402372944,
       "skier_name": "Yuki Ito"
     },
     {
@@ -95477,7 +95862,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 8,
-      "elo": 1562.9869885547637,
+      "elo": 1561.737469059582,
       "skier_name": "Yuki Ito"
     },
     {
@@ -95488,7 +95873,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 6,
-      "elo": 1589.8635125182402,
+      "elo": 1586.9455659553164,
       "skier_name": "Yuki Ito"
     },
     {
@@ -95499,7 +95884,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 11,
-      "elo": 1601.2034936674129,
+      "elo": 1598.0802495961304,
       "skier_name": "Yuki Ito"
     },
     {
@@ -95510,7 +95895,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 14,
-      "elo": 1587.598197904113,
+      "elo": 1585.3785467624004,
       "skier_name": "Yuki Ito"
     },
     {
@@ -95521,7 +95906,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 14,
-      "elo": 1574.2674467969978,
+      "elo": 1572.7652893215536,
+      "skier_name": "Yuki Ito"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 15,
+      "elo": 1562.6832848573515,
       "skier_name": "Yuki Ito"
     }
   ],
@@ -96515,7 +96911,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 26,
-      "elo": 1328.7159117197273,
+      "elo": 1326.0027946005914,
       "skier_name": "Sandra Sproch"
     }
   ],
@@ -96583,7 +96979,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 53,
-      "elo": 1164.1289844168846,
+      "elo": 1169.1399573852418,
       "skier_name": "Zhanna Hlukhova"
     }
   ],
@@ -96596,7 +96992,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 27,
-      "elo": 1280.3452761700069,
+      "elo": 1281.6555910920065,
       "skier_name": "Minja Korhonen"
     },
     {
@@ -96607,7 +97003,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 26,
-      "elo": 1272.7019717932114,
+      "elo": 1274.201807131826,
       "skier_name": "Minja Korhonen"
     },
     {
@@ -96618,7 +97014,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 40,
-      "elo": 1250.571199938721,
+      "elo": 1253.1051814087125,
       "skier_name": "Minja Korhonen"
     }
   ],
@@ -96844,7 +97240,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 44,
-      "elo": 1244.3495430209289,
+      "elo": 1248.1562526862867,
       "skier_name": "Maja Kovacic"
     },
     {
@@ -96855,7 +97251,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 32,
-      "elo": 1219.4218831396895,
+      "elo": 1223.6987555338485,
       "skier_name": "Maja Kovacic"
     },
     {
@@ -96866,7 +97262,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 30,
-      "elo": 1207.820020409286,
+      "elo": 1211.811763239631,
+      "skier_name": "Maja Kovacic"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 33,
+      "elo": 1191.7742723053204,
       "skier_name": "Maja Kovacic"
     }
   ],
@@ -97000,7 +97407,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 54,
-      "elo": 1158.0203911868389,
+      "elo": 1163.3176616459175,
       "skier_name": "Yangning Weng"
     },
     {
@@ -97011,7 +97418,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 32,
-      "elo": 1150.7394485693685,
+      "elo": 1155.2932956721595,
       "skier_name": "Yangning Weng"
     },
     {
@@ -97022,7 +97429,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 22,
-      "elo": 1193.0792863157722,
+      "elo": 1193.8861954540998,
+      "skier_name": "Yangning Weng"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 38,
+      "elo": 1153.8731617119695,
       "skier_name": "Yangning Weng"
     }
   ],
@@ -97136,7 +97554,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 59,
-      "elo": 1136.0177876449654,
+      "elo": 1143.109085738232,
       "skier_name": "Shiyu Zhou"
     }
   ],
@@ -97149,7 +97567,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 61,
-      "elo": 1161.8495430209289,
+      "elo": 1171.1562526862867,
       "skier_name": "Alyona Sviridenko"
     }
   ],
@@ -97232,7 +97650,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 25,
-      "elo": 1283.9708690990542,
+      "elo": 1284.4801200180182,
       "skier_name": "Heta Hirvonen"
     },
     {
@@ -97243,7 +97661,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 10,
-      "elo": 1355.4571071547714,
+      "elo": 1351.0584935590875,
       "skier_name": "Heta Hirvonen"
     },
     {
@@ -97254,7 +97672,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 44,
-      "elo": 1277.607126340191,
+      "elo": 1280.0608498996744,
       "skier_name": "Heta Hirvonen"
     },
     {
@@ -97265,7 +97683,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 18,
-      "elo": 1317.701961920296,
+      "elo": 1316.509563152559,
       "skier_name": "Heta Hirvonen"
     }
   ],
@@ -97348,7 +97766,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 52,
-      "elo": 1200.177381564669,
+      "elo": 1206.1944284500694,
       "skier_name": "Kira Maria Kapustikova"
     },
     {
@@ -97359,7 +97777,7 @@
       "country": "Poland",
       "event": "Large",
       "place": 36,
-      "elo": 1162.645571922301,
+      "elo": 1169.8130482906342,
       "skier_name": "Kira Maria Kapustikova"
     }
   ],
@@ -100916,7 +101334,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 56,
-      "elo": 1174.554585264867,
+      "elo": 1181.6606819760057,
       "skier_name": "Qi Liu"
     },
     {
@@ -100927,7 +101345,7 @@
       "country": "Poland",
       "event": "Large",
       "place": 35,
-      "elo": 1147.2513685082583,
+      "elo": 1154.70270582518,
       "skier_name": "Qi Liu"
     }
   ],
@@ -103184,7 +103602,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 13,
-      "elo": 1423.6557727237864,
+      "elo": 1421.8696135879718,
       "skier_name": "Juliane Seyfarth"
     },
     {
@@ -103195,7 +103613,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 11,
-      "elo": 1456.155204015074,
+      "elo": 1452.5167838997452,
       "skier_name": "Juliane Seyfarth"
     },
     {
@@ -103206,7 +103624,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 23,
-      "elo": 1448.1394420818474,
+      "elo": 1446.152772627427,
       "skier_name": "Juliane Seyfarth"
     },
     {
@@ -103217,7 +103635,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 19,
-      "elo": 1442.6567925796242,
+      "elo": 1440.8842165264707,
       "skier_name": "Juliane Seyfarth"
     },
     {
@@ -103228,7 +103646,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 16,
-      "elo": 1449.787851016319,
+      "elo": 1447.4122614312853,
+      "skier_name": "Juliane Seyfarth"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 16,
+      "elo": 1457.597899834638,
       "skier_name": "Juliane Seyfarth"
     }
   ],
@@ -105469,7 +105898,7 @@
       "country": "Sweden",
       "event": "Normal",
       "place": 46,
-      "elo": 1223.6474001738975,
+      "elo": 1227.3807657857813,
       "skier_name": "Anna Rupprecht"
     },
     {
@@ -105480,7 +105909,7 @@
       "country": "Sweden",
       "event": "Large",
       "place": 36,
-      "elo": 1185.7059444229676,
+      "elo": 1190.842484417219,
       "skier_name": "Anna Rupprecht"
     },
     {
@@ -105491,7 +105920,18 @@
       "country": "Poland",
       "event": "Large",
       "place": 26,
-      "elo": 1201.1554447242402,
+      "elo": 1204.1269855889616,
+      "skier_name": "Anna Rupprecht"
+    },
+    {
+      "season": "2026",
+      "race": "6",
+      "date": "2025-12-05",
+      "city": "Wisla",
+      "country": "Poland",
+      "event": "Large",
+      "place": 35,
+      "elo": 1176.2078349480498,
       "skier_name": "Anna Rupprecht"
     }
   ],
@@ -107444,7 +107884,7 @@
       "country": "Russia",
       "event": "Normal",
       "place": 3,
-      "elo": 1635.7481076191689,
+      "elo": 1635.7481076191686,
       "skier_name": "Daniela Iraschko-Stolz"
     },
     {
@@ -107455,7 +107895,7 @@
       "country": "Russia",
       "event": "Normal",
       "place": 15,
-      "elo": 1628.0259619909073,
+      "elo": 1628.025961990907,
       "skier_name": "Daniela Iraschko-Stolz"
     },
     {
@@ -107466,7 +107906,7 @@
       "country": "Norway",
       "event": "Normal",
       "place": 7,
-      "elo": 1632.6800866806636,
+      "elo": 1632.6800866806634,
       "skier_name": "Daniela Iraschko-Stolz"
     },
     {
@@ -107477,7 +107917,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 9,
-      "elo": 1634.492524976924,
+      "elo": 1634.4925249769235,
       "skier_name": "Daniela Iraschko-Stolz"
     },
     {
@@ -107488,7 +107928,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 8,
-      "elo": 1637.5310517229327,
+      "elo": 1637.5310517229325,
       "skier_name": "Daniela Iraschko-Stolz"
     },
     {
@@ -107499,7 +107939,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 6,
-      "elo": 1643.0042327242318,
+      "elo": 1643.0042327242315,
       "skier_name": "Daniela Iraschko-Stolz"
     },
     {
@@ -107510,7 +107950,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 6,
-      "elo": 1647.7231509294638,
+      "elo": 1647.7231509294636,
       "skier_name": "Daniela Iraschko-Stolz"
     },
     {
@@ -107521,7 +107961,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 7,
-      "elo": 1653.2349817057052,
+      "elo": 1653.234981705705,
       "skier_name": "Daniela Iraschko-Stolz"
     },
     {
@@ -107532,7 +107972,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 6,
-      "elo": 1659.9591855663584,
+      "elo": 1659.9591855663582,
       "skier_name": "Daniela Iraschko-Stolz"
     },
     {
@@ -109240,7 +109680,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 29,
-      "elo": 1299.554036800289,
+      "elo": 1299.5540368002887,
       "skier_name": "Taylor Henrich"
     },
     {
@@ -109251,7 +109691,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 25,
-      "elo": 1296.186206150641,
+      "elo": 1296.1862061506408,
       "skier_name": "Taylor Henrich"
     },
     {
@@ -109262,7 +109702,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 45,
-      "elo": 1267.0880843810046,
+      "elo": 1267.0880843810044,
       "skier_name": "Taylor Henrich"
     },
     {
@@ -109273,7 +109713,7 @@
       "country": "South Korea",
       "event": "Normal",
       "place": 32,
-      "elo": 1254.354930396838,
+      "elo": 1254.3549303968375,
       "skier_name": "Taylor Henrich"
     }
   ],
@@ -117036,7 +117476,7 @@
       "country": "Finland",
       "event": "Normal",
       "place": 8,
-      "elo": 1579.873026283892,
+      "elo": 1579.8730262838917,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117047,7 +117487,7 @@
       "country": "Kazakhstan",
       "event": "Normal",
       "place": 7,
-      "elo": 1587.6751184623622,
+      "elo": 1587.675118462362,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117058,7 +117498,7 @@
       "country": "Kazakhstan",
       "event": "Normal",
       "place": 10,
-      "elo": 1590.1133894917812,
+      "elo": 1590.113389491781,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117080,7 +117520,7 @@
       "country": "Norway",
       "event": "Normal",
       "place": 6,
-      "elo": 1545.247815452166,
+      "elo": 1545.2478154521657,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117091,7 +117531,7 @@
       "country": "Russia",
       "event": "Normal",
       "place": 1,
-      "elo": 1562.32138329101,
+      "elo": 1562.3213832910096,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117102,7 +117542,7 @@
       "country": "Russia",
       "event": "Normal",
       "place": 4,
-      "elo": 1574.7232934880606,
+      "elo": 1574.7232934880603,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117124,7 +117564,7 @@
       "country": "Germany",
       "event": "Large",
       "place": 6,
-      "elo": 1581.368031345626,
+      "elo": 1581.3680313456257,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117135,7 +117575,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 3,
-      "elo": 1594.086166245353,
+      "elo": 1594.0861662453528,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117146,7 +117586,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 1,
-      "elo": 1608.748746619554,
+      "elo": 1608.7487466195537,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117157,7 +117597,7 @@
       "country": "Japan",
       "event": "Normal",
       "place": 6,
-      "elo": 1615.9823080924666,
+      "elo": 1615.9823080924664,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117179,7 +117619,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 1,
-      "elo": 1640.0694283818295,
+      "elo": 1640.0694283818293,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117190,7 +117630,7 @@
       "country": "Romania",
       "event": "Normal",
       "place": 2,
-      "elo": 1650.9584785486322,
+      "elo": 1650.958478548632,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117201,7 +117641,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 8,
-      "elo": 1652.710656166674,
+      "elo": 1652.7106561666735,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117212,7 +117652,7 @@
       "country": "Austria",
       "event": "Normal",
       "place": 3,
-      "elo": 1661.6265562843507,
+      "elo": 1661.6265562843505,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117223,7 +117663,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 1,
-      "elo": 1671.0820404227247,
+      "elo": 1671.0820404227245,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117234,7 +117674,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 4,
-      "elo": 1676.048731630269,
+      "elo": 1676.0487316302688,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117245,7 +117685,7 @@
       "country": "South Korea",
       "event": "Normal",
       "place": 4,
-      "elo": 1678.5365345352182,
+      "elo": 1678.536534535218,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117256,7 +117696,7 @@
       "country": "South Korea",
       "event": "Normal",
       "place": 3,
-      "elo": 1682.5252239273468,
+      "elo": 1682.5252239273466,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117267,7 +117707,7 @@
       "country": "Finland",
       "event": "Normal",
       "place": 4,
-      "elo": 1689.8778749237244,
+      "elo": 1689.8778749237242,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117278,7 +117718,7 @@
       "country": "Norway",
       "event": "Large",
       "place": 3,
-      "elo": 1696.0860774972273,
+      "elo": 1696.086077497227,
       "skier_name": "Maren Lundby"
     },
     {
@@ -117883,7 +118323,7 @@
       "country": "Slovenia",
       "event": "Normal",
       "place": 1,
-      "elo": 1824.734360440036,
+      "elo": 1824.7343604400355,
       "skier_name": "Maren Lundby"
     },
     {
