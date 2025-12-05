@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Jonna Sundling",
+      "Sweden",
+      45.7730388423458
+    ],
+    [
+      "Kristine Stavås Skistad",
+      "Norway",
+      44.4021325209444
+    ],
+    [
+      "Maja Dahlqvist",
+      "Sweden",
+      42.041127189642
+    ],
+    [
+      "Nadine Fähndrich",
+      "Switzerland",
+      39.3754760091394
+    ],
+    [
+      "Linn Svahn",
+      "Sweden",
+      28.6367098248286
+    ]
+  ]
+}
