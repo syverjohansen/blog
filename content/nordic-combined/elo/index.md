@@ -5,7 +5,6 @@ image: '/img/spillane.jpg'
 draft: false
 ---
 
-This is for elo scores
 
 
 

@@ -5,7 +5,6 @@ image: '/img/prevc.avif'
 draft: false
 ---
 
-This is for elo scores
 
 
 

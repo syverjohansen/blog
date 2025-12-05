@@ -5,7 +5,6 @@ image: '/img/jeanmonnot.jpg'
 draft: false
 ---
 
-This is for elo scores
 
 
 

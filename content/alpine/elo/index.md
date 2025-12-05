@@ -5,7 +5,6 @@ image: '/img/odermatt.avif'
 draft: false
 ---
 
-This is for elo scores
 
 
 

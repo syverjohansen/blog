@@ -5,7 +5,6 @@ image: '/img/Jessica_Diggins.jpg'
 draft: false
 ---
 
-This is for elo scores
 
 
 
