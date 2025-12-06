@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 2 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Lara Gut-Behrami",
+      "Switzerland",
+      58.3732515424162
+    ],
+    [
+      "Alice Robinson",
+      "NZL",
+      55.2179406482316
+    ],
+    [
+      "Sara Hector",
+      "SWE",
+      35.1731326037489
+    ],
+    [
+      "Julia Scheib",
+      "AUT",
+      30.2507292106634
+    ],
+    [
+      "Lara Colturi",
+      "ALB",
+      26.6467738701199
+    ]
+  ]
+}
