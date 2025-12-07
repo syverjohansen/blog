@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Alice Robinson",
+      "NZL",
+      70.9821428571429
+    ],
+    [
+      "Julia Scheib",
+      "AUT",
+      43.9529220779221
+    ],
+    [
+      "Zrinka Ljutic",
+      "CRO",
+      29.7077922077922
+    ],
+    [
+      "Sara Hector",
+      "SWE",
+      27.7597402597403
+    ],
+    [
+      "Camille Rast",
+      "SUI",
+      23.3766233766234
+    ]
+  ]
+}
