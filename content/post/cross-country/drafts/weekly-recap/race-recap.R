@@ -1,5 +1,5 @@
 # Load required libraries
-library(arrow)  # for reading feather files
+# library(arrow)  # no longer needed for CSV files
 library(readxl) # for reading Excel files
 library(tidyverse)
 
@@ -9,7 +9,7 @@ ladies_chrono_path <- "~/ski/elo/python/ski/polars/excel365/ladies_chrono_elevat
 men_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/men-points.xlsx"
 ladies_points_path <- "~/blog/daehl-e/content/post/drafts/weekly-picks/2025Davos/ladies-points.xlsx"
 
-# Read the feather files
+# Read the CSV files
 men_chrono <- read.csv(men_chrono_path)
 
 ladies_chrono <- read.csv(ladies_chrono_path)
@@ -1056,8 +1056,8 @@ get_race_history <- function(skier_id, race_type, predictions_list, points_type 
     return(all_results)
 
 }
-standings_df <- read_feather("~/ski/elo/python/ski/polars/excel365/men_standings.feather")
-ladies_standings_df <- read_feather("~/ski/elo/python/ski/polars/excel365/ladies_standings.feather")
+standings_df <- read_csv("~/ski/elo/python/ski/polars/excel365/men_standings.csv")
+ladies_standings_df <- read_csv("~/ski/elo/python/ski/polars/excel365/ladies_standings.csv")
 
 
 
@@ -1179,8 +1179,8 @@ rm(temp_histories)
 
 
 # Load standings for both genders
-standings_df <- read_feather("~/ski/elo/python/ski/polars/excel365/men_standings.feather")
-ladies_standings_df <- read_feather("~/ski/elo/python/ski/polars/excel365/ladies_standings.feather")
+standings_df <- read_csv("~/ski/elo/python/ski/polars/excel365/men_standings.csv")
+ladies_standings_df <- read_csv("~/ski/elo/python/ski/polars/excel365/ladies_standings.csv")
 
 # Set up logging
 log_file <- "~/blog/daehl-e/content/post/drafts/weekly-recap/simulation_log.txt"

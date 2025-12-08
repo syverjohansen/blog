@@ -90,6 +90,11 @@ def calculate_elo_percentages(df):
         "Elo", "Small_Elo", "Medium_Elo", "Normal_Elo", "Large_Elo", "Flying_Elo"
     ]
     
+    # Cast all Elo columns to Float64 at the beginning to handle string columns
+    cast_expressions = [pl.col(col).cast(pl.Float64) for col in elo_columns if col in df.columns]
+    if cast_expressions:
+        df = df.with_columns(cast_expressions)
+    
     # Group by Season and Race to find maximum Elo values per race
     grouped_df = df.group_by(["Season", "Race"])
     

@@ -7,8 +7,27 @@ from datetime import datetime
 
 # Load your data
 print("Loading data...")
-L_chrono = pl.read_csv(os.path.expanduser('~/ski/elo/python/ski/polars/excel365/ladies_chrono.csv'))
-M_chrono = pl.read_csv(os.path.expanduser('~/ski/elo/python/ski/polars/excel365/men_chrono.csv'))
+# Define schema overrides to handle mixed data types
+schema_overrides = {
+    'Distance': pl.String,  # Handle mixed values like "Sprint", "7.5", "10", etc.
+    'Event': pl.String,
+    'MS': pl.String,
+    'Technique': pl.String,
+    'Birthday': pl.Datetime,
+    'Age': pl.Float64,
+    'Exp': pl.Int32
+}
+
+L_chrono = pl.read_csv(
+    os.path.expanduser('~/ski/elo/python/ski/polars/excel365/ladies_chrono.csv'),
+    schema_overrides=schema_overrides,
+    null_values=["None", ""]
+)
+M_chrono = pl.read_csv(
+    os.path.expanduser('~/ski/elo/python/ski/polars/excel365/men_chrono.csv'),
+    schema_overrides=schema_overrides,
+    null_values=["None", ""]
+)
 
 # Check for null dates and analyze patterns
 def analyze_null_dates(df, label):
@@ -91,6 +110,11 @@ def calculate_elo_percentages(df):
         "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo", 
         "Classic_Elo", "Freestyle_Elo"
     ]
+    
+    # Cast all Elo columns to Float64 at the beginning to handle string columns
+    cast_expressions = [pl.col(col).cast(pl.Float64) for col in elo_columns if col in df.columns]
+    if cast_expressions:
+        df = df.with_columns(cast_expressions)
     
     # Group by Season and Race to find maximum Elo values per race
     grouped_df = df.group_by(["Season", "Race"])
@@ -175,22 +199,20 @@ def process_balanced_data():
         # Convert to format suitable for JSON
         skier_data = {}
         for col in skier_df.columns:
-            # Convert date columns to string to avoid serialization issues
-            if col == "Date":
-                # Handle both datetime objects and strings
-                skier_data[col] = []
-                for d in skier_df[col].to_list():
-                    if d is None:
-                        skier_data[col].append(None)
-                    elif hasattr(d, 'strftime'):
-                        # It's a datetime object
-                        skier_data[col].append(d.strftime('%Y-%m-%d'))
-                    else:
-                        # It's already a string or something else
-                        skier_data[col].append(str(d))
-            else:
-                # Add this line to include all other columns
-                skier_data[col] = skier_df[col].to_list()
+            # Handle all columns, converting datetime objects to strings
+            skier_data[col] = []
+            for value in skier_df[col].to_list():
+                if value is None:
+                    skier_data[col].append(None)
+                elif hasattr(value, 'strftime'):
+                    # It's a datetime object
+                    skier_data[col].append(value.strftime('%Y-%m-%d'))
+                elif hasattr(value, 'isoformat'):
+                    # It's a date object
+                    skier_data[col].append(value.isoformat())
+                else:
+                    # Everything else (strings, numbers, etc.)
+                    skier_data[col].append(value)
 
         # Add to group
         ladies_groups[group_key][str(id_value)] = skier_data
@@ -237,22 +259,20 @@ def process_balanced_data():
         # Convert to format suitable for JSON
         skier_data = {}
         for col in skier_df.columns:
-            # Convert date columns to string to avoid serialization issues
-            if col == "Date":
-                # Handle both datetime objects and strings
-                skier_data[col] = []
-                for d in skier_df[col].to_list():
-                    if d is None:
-                        skier_data[col].append(None)
-                    elif hasattr(d, 'strftime'):
-                        # It's a datetime object
-                        skier_data[col].append(d.strftime('%Y-%m-%d'))
-                    else:
-                        # It's already a string or something else
-                        skier_data[col].append(str(d))
-            else:
-                # Add this line to include all other columns
-                skier_data[col] = skier_df[col].to_list()
+            # Handle all columns, converting datetime objects to strings
+            skier_data[col] = []
+            for value in skier_df[col].to_list():
+                if value is None:
+                    skier_data[col].append(None)
+                elif hasattr(value, 'strftime'):
+                    # It's a datetime object
+                    skier_data[col].append(value.strftime('%Y-%m-%d'))
+                elif hasattr(value, 'isoformat'):
+                    # It's a date object
+                    skier_data[col].append(value.isoformat())
+                else:
+                    # Everything else (strings, numbers, etc.)
+                    skier_data[col].append(value)
 
         # Add to group
         men_groups[group_key][str(id_value)] = skier_data

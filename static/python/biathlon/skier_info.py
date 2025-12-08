@@ -5,10 +5,36 @@ import json
 import os
 
 
-L_chrono = pl.read_csv(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/ladies_chrono.csv'))
+# Define schema overrides to handle mixed data types
+schema_overrides = {
+    'Distance': pl.String,  # Handle mixed values like "7.5", "10", etc.
+    'Event': pl.String,
+    'RaceType': pl.String,
+    'MassStart': pl.Int64,
+    'Season': pl.Int64,
+    'Race': pl.Int64,
+    'Place': pl.Int64,
+    'Skier': pl.String,
+    'Nation': pl.String,
+    'ID': pl.String,
+    'Birthday': pl.Datetime,
+    'Age': pl.Float64,
+    'Exp': pl.Int32,
+    'Elo': pl.Float64,
+    'Pelo': pl.Float64,
+    'Sprint_Elo': pl.Float64,
+    'Sprint_Pelo': pl.Float64,
+    'Pursuit_Elo': pl.Float64,
+    'Pursuit_Pelo': pl.Float64,
+    'Individual_Elo': pl.Float64,
+    'Individual_Pelo': pl.Float64,
+    'MassStart_Elo': pl.Float64,
+    'MassStart_Pelo': pl.Float64
+}
 
+L_chrono = pl.read_csv(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/ladies_chrono.csv'), schema_overrides=schema_overrides)
 
-M_chrono = pl.read_csv(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/men_chrono.csv'))
+M_chrono = pl.read_csv(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/men_chrono.csv'), schema_overrides=schema_overrides)
 
 #L_chrono = L_chrono.filter(pl.col("City")!="Summer")
 #M_chrono = M_chrono.filter(pl.col("City")!="Summer")

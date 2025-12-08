@@ -5,10 +5,52 @@ import json
 import os
 
 
-L_chrono = pl.read_csv(os.path.expanduser('~/ski/elo/python/ski/polars/excel365/ladies_chrono.csv'))
+# Define schema overrides to handle mixed data types
+schema_overrides = {
+    'Distance': pl.String,  # Handle mixed values like "Sprint", "7.5", "10", etc.
+    'Event': pl.String,
+    'MS': pl.String,  # Mass Start column for cross-country
+    'Technique': pl.String,
+    'Season': pl.Int64,
+    'Race': pl.Int64,
+    'Place': pl.Int64,
+    'Skier': pl.String,
+    'Nation': pl.String,
+    'ID': pl.String,
+    'Birthday': pl.Datetime,
+    'Age': pl.Float64,
+    'Exp': pl.Int32,
+    'Elo': pl.Float64,
+    'Pelo': pl.Float64,
+    'Distance_Elo': pl.Float64,
+    'Distance_Pelo': pl.Float64,
+    'Distance_C_Elo': pl.Float64,
+    'Distance_C_Pelo': pl.Float64,
+    'Distance_F_Elo': pl.Float64,
+    'Distance_F_Pelo': pl.Float64,
+    'Sprint_Elo': pl.Float64,
+    'Sprint_Pelo': pl.Float64,
+    'Sprint_C_Elo': pl.Float64,
+    'Sprint_C_Pelo': pl.Float64,
+    'Sprint_F_Elo': pl.Float64,
+    'Sprint_F_Pelo': pl.Float64,
+    'Classic_Elo': pl.Float64,
+    'Classic_Pelo': pl.Float64,
+    'Freestyle_Elo': pl.Float64,
+    'Freestyle_Pelo': pl.Float64
+}
 
+L_chrono = pl.read_csv(
+    os.path.expanduser('~/ski/elo/python/ski/polars/excel365/ladies_chrono.csv'), 
+    schema_overrides=schema_overrides,
+    null_values=["None", ""]  # Treat "None" strings as null values
+)
 
-M_chrono = pl.read_csv(os.path.expanduser('~/ski/elo/python/ski/polars/excel365/men_chrono.csv'))
+M_chrono = pl.read_csv(
+    os.path.expanduser('~/ski/elo/python/ski/polars/excel365/men_chrono.csv'), 
+    schema_overrides=schema_overrides,
+    null_values=["None", ""]  # Treat "None" strings as null values
+)
 
 #L_chrono = L_chrono.filter(pl.col("City")!="Summer")
 #M_chrono = M_chrono.filter(pl.col("City")!="Summer")

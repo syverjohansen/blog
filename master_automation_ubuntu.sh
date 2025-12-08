@@ -559,43 +559,43 @@ if [[ "$script_results" != *"FAILED"* ]]; then
                 script_results="$script_results ski_git_csv:FAILED"
             fi
             
-            # Second chunk: Feather files
-            log_message "Processing feather files in ski repository..."
-            log_message "========== SKI FEATHER GIT ADD OUTPUT BEGIN =========="
-            if git add "*.feather" 2>&1 | tee -a "$LOG_FILE"; then
-                log_message "========== SKI FEATHER GIT ADD OUTPUT END =========="
-                if git diff --cached --quiet; then
-                    log_message "No feather file changes to commit in ski repository"
-                else
-                    log_message "Committing feather files in ski repository..."
-                    log_message "========== SKI FEATHER GIT COMMIT OUTPUT BEGIN =========="
-                    if git commit -m "$ski_commit_base - Feather files" 2>&1 | tee -a "$LOG_FILE"; then
-                        log_message "========== SKI FEATHER GIT COMMIT OUTPUT END =========="
-                        log_message "✓ Successfully committed feather files to ski repository"
-                        
-                        # Push feather commit
-                        log_message "Pushing feather files to ski repository origin..."
-                        log_message "========== SKI FEATHER GIT PUSH OUTPUT BEGIN =========="
-                        if git push origin main 2>&1 | tee -a "$LOG_FILE"; then
-                            log_message "========== SKI FEATHER GIT PUSH OUTPUT END =========="
-                            log_message "✓ Successfully pushed feather files to ski repository"
-                            script_results="$script_results ski_git_feather:SUCCESS"
-                        else
-                            log_message "========== SKI FEATHER GIT PUSH OUTPUT END =========="
-                            log_message "✗ Failed to push feather files to ski repository"
-                            script_results="$script_results ski_git_feather:FAILED"
-                        fi
-                    else
-                        log_message "========== SKI FEATHER GIT COMMIT OUTPUT END =========="
-                        log_message "✗ Failed to commit feather files to ski repository"
-                        script_results="$script_results ski_git_feather:FAILED"
-                    fi
-                fi
-            else
-                log_message "========== SKI FEATHER GIT ADD OUTPUT END =========="
-                log_message "✗ Failed to add feather files to ski repository"
-                script_results="$script_results ski_git_feather:FAILED"
-            fi
+            # Second chunk: Feather files - NO LONGER NEEDED (using CSV files now)
+            # log_message "Processing feather files in ski repository..."
+            # log_message "========== SKI FEATHER GIT ADD OUTPUT BEGIN =========="
+            # if git add "*.feather" 2>&1 | tee -a "$LOG_FILE"; then
+            #     log_message "========== SKI FEATHER GIT ADD OUTPUT END =========="
+            #     if git diff --cached --quiet; then
+            #         log_message "No feather file changes to commit in ski repository"
+            #     else
+            #         log_message "Committing feather files in ski repository..."
+            #         log_message "========== SKI FEATHER GIT COMMIT OUTPUT BEGIN =========="
+            #         if git commit -m "$ski_commit_base - Feather files" 2>&1 | tee -a "$LOG_FILE"; then
+            #             log_message "========== SKI FEATHER GIT COMMIT OUTPUT END =========="
+            #             log_message "✓ Successfully committed feather files to ski repository"
+            #             
+            #             # Push feather commit
+            #             log_message "Pushing feather files to ski repository origin..."
+            #             log_message "========== SKI FEATHER GIT PUSH OUTPUT BEGIN =========="
+            #             if git push origin main 2>&1 | tee -a "$LOG_FILE"; then
+            #                 log_message "========== SKI FEATHER GIT PUSH OUTPUT END =========="
+            #                 log_message "✓ Successfully pushed feather files to ski repository"
+            #                 script_results="$script_results ski_git_feather:SUCCESS"
+            #             else
+            #                 log_message "========== SKI FEATHER GIT PUSH OUTPUT END =========="
+            #                 log_message "✗ Failed to push feather files to ski repository"
+            #                 script_results="$script_results ski_git_feather:FAILED"
+            #             fi
+            #         else
+            #             log_message "========== SKI FEATHER GIT COMMIT OUTPUT END =========="
+            #             log_message "✗ Failed to commit feather files to ski repository"
+            #             script_results="$script_results ski_git_feather:FAILED"
+            #         fi
+            #     fi
+            # else
+            #     log_message "========== SKI FEATHER GIT ADD OUTPUT END =========="
+            #     log_message "✗ Failed to add feather files to ski repository"
+            #     script_results="$script_results ski_git_feather:FAILED"
+            # fi
             
             # Third chunk: Everything else
             log_message "Processing all other files in ski repository..."
