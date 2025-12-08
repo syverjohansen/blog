@@ -3,26 +3,26 @@ import json
 import os
 
 # Load Ladies (L) alpine skiing data
-L = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L.feather'))
-L_Downhill = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_Downhill.feather'))
-L_SuperG = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_SuperG.feather'))
-L_GS = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_GS.feather'))
-L_SL = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_SL.feather'))
-L_Combined = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_Combined.feather'))
-L_Tech = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_Tech.feather'))
-L_Speed = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_Speed.feather'))
-L_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/ladies_chrono.feather'))
+L = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L.csv'))
+L_Downhill = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_Downhill.csv'))
+L_SuperG = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_SuperG.csv'))
+L_GS = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_GS.csv'))
+L_SL = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_SL.csv'))
+L_Combined = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_Combined.csv'))
+L_Tech = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_Tech.csv'))
+L_Speed = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/L_Speed.csv'))
+L_chrono = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/ladies_chrono.csv'))
 
 # Load Men's (M) alpine skiing data
-M = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M.feather'))
-M_Downhill = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_Downhill.feather'))
-M_SuperG = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_SuperG.feather'))
-M_GS = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_GS.feather'))
-M_SL = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_SL.feather'))
-M_Combined = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_Combined.feather'))
-M_Tech = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_Tech.feather'))
-M_Speed = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_Speed.feather'))
-M_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/men_chrono.feather'))
+M = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M.csv'))
+M_Downhill = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_Downhill.csv'))
+M_SuperG = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_SuperG.csv'))
+M_GS = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_GS.csv'))
+M_SL = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_SL.csv'))
+M_Combined = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_Combined.csv'))
+M_Tech = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_Tech.csv'))
+M_Speed = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/M_Speed.csv'))
+M_chrono = pd.read_csv(os.path.expanduser('~/ski/elo/python/alpine/polars/excel365/men_chrono.csv'))
 
 # List of DataFrames
 dfs = [L, L_Downhill, L_SuperG, L_GS, L_SL, L_Combined, L_Tech, L_Speed,

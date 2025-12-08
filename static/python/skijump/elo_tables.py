@@ -3,22 +3,22 @@ import json
 import os
 
 # Load Ladies (L) ski jumping data
-L = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L.feather'))
-L_Small = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L_Small.feather'))
-L_Medium = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L_Medium.feather'))
-L_Normal = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L_Normal.feather'))
-L_Large = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L_Large.feather'))
-L_Flying = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L_Flying.feather'))
-L_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/ladies_chrono.feather'))
+L = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L.csv'))
+L_Small = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L_Small.csv'))
+L_Medium = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L_Medium.csv'))
+L_Normal = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L_Normal.csv'))
+L_Large = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L_Large.csv'))
+L_Flying = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L_Flying.csv'))
+L_chrono = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/ladies_chrono.csv'))
 
 # Load Men's (M) ski jumping data
-M = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M.feather'))
-M_Small = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M_Small.feather'))
-M_Medium = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M_Medium.feather'))
-M_Normal = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M_Normal.feather'))
-M_Large = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M_Large.feather'))
-M_Flying = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M_Flying.feather'))
-M_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/men_chrono.feather'))
+M = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M.csv'))
+M_Small = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M_Small.csv'))
+M_Medium = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M_Medium.csv'))
+M_Normal = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M_Normal.csv'))
+M_Large = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M_Large.csv'))
+M_Flying = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M_Flying.csv'))
+M_chrono = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/men_chrono.csv'))
 
 # List of DataFrames
 dfs = [L, L_Small, L_Medium, L_Normal, L_Large, L_Flying,

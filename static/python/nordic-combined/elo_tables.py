@@ -3,20 +3,20 @@ import json
 import os
 
 # Load Ladies (L) nordic combined data
-L = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/L.feather'))
-L_Individual = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/L_Individual.feather'))
-L_Individual_Compact = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/L_Individual_Compact.feather'))
-L_Mass_Start = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/L_Mass_Start.feather'))
-L_Sprint = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/L_Sprint.feather'))
-L_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/ladies_chrono.feather'))
+L = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/L.csv'))
+L_Individual = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/L_Individual.csv'))
+L_Individual_Compact = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/L_Individual_Compact.csv'))
+L_Mass_Start = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/L_Mass_Start.csv'))
+L_Sprint = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/L_Sprint.csv'))
+L_chrono = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/ladies_chrono.csv'))
 
 # Load Men's (M) nordic combined data
-M = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/M.feather'))
-M_Individual = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/M_Individual.feather'))
-M_Individual_Compact = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/M_Individual_Compact.feather'))
-M_Mass_Start = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/M_Mass_Start.feather'))
-M_Sprint = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/M_Sprint.feather'))
-M_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/men_chrono.feather'))
+M = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/M.csv'))
+M_Individual = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/M_Individual.csv'))
+M_Individual_Compact = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/M_Individual_Compact.csv'))
+M_Mass_Start = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/M_Mass_Start.csv'))
+M_Sprint = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/M_Sprint.csv'))
+M_chrono = pd.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/men_chrono.csv'))
 
 # List of DataFrames
 dfs = [L, L_Individual, L_Individual_Compact, L_Mass_Start, L_Sprint,

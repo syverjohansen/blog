@@ -1,8 +1,8 @@
 import pandas as pd
 import json
 import os
-L = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L.feather'))
-M = pd.read_feather(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M.feather'))
+L = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/L.csv'))
+M = pd.read_csv(os.path.expanduser('~/ski/elo/python/skijump/polars/excel365/M.csv'))
 
 def current_dict(df, file_path):
 	    # Filter the DataFrame to keep only the rows with the maximum date

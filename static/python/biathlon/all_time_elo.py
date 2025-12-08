@@ -3,9 +3,9 @@ import json
 import os
 import numpy as np
 
-# Load feather files
-L_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/ladies_chrono.feather'))
-M_chrono = pd.read_feather(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/men_chrono.feather'))
+# Load CSV files
+L_chrono = pd.read_csv(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/ladies_chrono.csv'))
+M_chrono = pd.read_csv(os.path.expanduser('~/ski/elo/python/biathlon/polars/excel365/men_chrono.csv'))
 chronos = [L_chrono, M_chrono]
 chronos_str = ["L_chrono", "M_chrono"]
 
