@@ -2,14 +2,14 @@
 library(dplyr)
 library(purrr)
 library(tidyr)
-library(arrow)
+library(readr)
 library(AER)
 library(ggplot2)
 library(effects)
 library(segmented)
 
-M_chrono <- arrow::read_feather('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/men_merged.feather')
-L_chrono <- arrow::read_feather('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/ladies_merged.feather')
+M_chrono <- read_csv('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/men_merged.csv')
+L_chrono <- read_csv('/Users/syverjohansen/ski/elo/python/ski/polars/excel365/ladies_merged.csv')
 
 M_chrono <- M_chrono %>% filter(Distance != "Ts", Distance != "Rel")
 L_chrono <- L_chrono %>% filter(Distance != "Ts", Distance != "Rel")
@@ -2087,11 +2087,11 @@ convert_elo_to_pelo_pct <- function(startlist) {
 
 read_startlist <- function(gender) {
   history_df <- if(gender == "M") men_df else ladies_df
-   path <- sprintf("~/ski/elo/python/ski/polars/excel365/startlist_with_probs_%s.feather", 
+   path <- sprintf("~/ski/elo/python/ski/polars/excel365/startlist_with_probs_%s.csv", 
                   if(gender == "M") "men" else "ladies")
    
    # Read the file and select specific columns
-   startlist <- read_feather(path) %>%
+   startlist <- read_csv(path) %>%
        dplyr::select(Skier, ID, Nation, Price, 
                     matches(".*Elo$"))  # Select columns ending in Elo
    

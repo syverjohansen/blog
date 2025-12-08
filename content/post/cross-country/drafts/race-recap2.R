@@ -1,5 +1,5 @@
 # Load required libraries
-library(arrow)  # for reading feather files
+# library(arrow)  # no longer needed for CSV files
 library(readxl) # for reading Excel files
 library(tidyverse)
 library(dplyr)
@@ -30,10 +30,10 @@ get_output_dir <- function() {
 }
 
 
-# Read the feather files
-men_chrono <- read.csv(men_chrono_path)
+# Read the CSV files
+men_chrono <- read_csv(men_chrono_path)
 
-ladies_chrono <- read.csv(ladies_chrono_path)
+ladies_chrono <- read_csv(ladies_chrono_path)
 
 
 

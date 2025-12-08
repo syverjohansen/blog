@@ -1,6 +1,6 @@
 ```{r relay-load}
 # Load required libraries
-library(arrow)  # for reading feather files
+library(readr)  # for reading CSV files
 library(readxl) # for reading Excel files
 library(tidyverse)
 library(caret)
@@ -12,8 +12,8 @@ men_chrono_path <- "~/ski/elo/python/ski/polars/relay/excel365/men_chrono.csv"
 ladies_chrono_path <- "~/ski/elo/python/ski/polars/relay/excel365/ladies_chrono.csv"
 
 
-men_chrono <- read.csv(men_chrono_path)
-ladies_chrono <- read.csv(ladies_chrono_path)
+men_chrono <- read_csv(men_chrono_path)
+ladies_chrono <- read_csv(ladies_chrono_path)
 
 men_chrono %>%
   filter(Skier == "Johannes Høsflot Klæbo")
