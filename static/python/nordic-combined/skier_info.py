@@ -5,10 +5,50 @@ import json
 import os
 
 
-L_chrono = pl.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/ladies_chrono.csv'))
+# Define schema overrides based on actual column order you provided:
+# Elo, Individual_Elo, IndividualCompact_Elo, Sprint_Elo, MassStart_Elo, Pelo, Individual_Pelo, IndividualCompact_Pelo, Sprint_Pelo, MassStart_Pelo, Date, City, Country, Sex, Distance, RaceType, MassStart, Event, Place, Skier, Nation, ID, Season, Race, Birthday, Age, Exp, Leg
+schema_overrides = {
+    'Elo': pl.Float64,
+    'Individual_Elo': pl.Float64,
+    'IndividualCompact_Elo': pl.Float64,
+    'Sprint_Elo': pl.Float64,
+    'MassStart_Elo': pl.Float64,
+    'Pelo': pl.Float64,
+    'Individual_Pelo': pl.Float64,
+    'IndividualCompact_Pelo': pl.Float64,
+    'Sprint_Pelo': pl.Float64,
+    'MassStart_Pelo': pl.Float64,
+    'Date': pl.Date,
+    'City': pl.String,
+    'Country': pl.String,
+    'Sex': pl.String,
+    'Distance': pl.String,  # Handle mixed values like "7.5", "10", etc.
+    'RaceType': pl.String,
+    'MassStart': pl.Int64,
+    'Event': pl.String,
+    'Place': pl.Int64,
+    'Skier': pl.String,
+    'Nation': pl.String,
+    'ID': pl.String,
+    'Season': pl.Int64,
+    'Race': pl.Int64,
+    'Birthday': pl.Datetime,
+    'Age': pl.Float64,
+    'Exp': pl.Int32,
+    'Leg': pl.Int64
+}
 
+L_chrono = pl.read_csv(
+    os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/ladies_chrono.csv'),
+    schema_overrides=schema_overrides,
+    null_values=["None", "N/A", ""]
+)
 
-M_chrono = pl.read_csv(os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/men_chrono.csv'))
+M_chrono = pl.read_csv(
+    os.path.expanduser('~/ski/elo/python/nordic-combined/polars/excel365/men_chrono.csv'),
+    schema_overrides=schema_overrides,
+    null_values=["None", "N/A", ""]
+)
 
 #L_chrono = L_chrono.filter(pl.col("City")!="Summer")
 #M_chrono = M_chrono.filter(pl.col("City")!="Summer")
