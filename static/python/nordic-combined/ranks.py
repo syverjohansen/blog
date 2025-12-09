@@ -3,6 +3,7 @@ import numpy as np
 import os
 from pathlib import Path
 import logging
+from datetime import datetime, timezone
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -73,6 +74,30 @@ def process_rankings(gender='M'):
         # Convert date columns to datetime
         df['Date'] = pd.to_datetime(df['Date'])
         df['Birthday'] = pd.to_datetime(df['Birthday'])
+        
+        # Check if we should exclude current season standings
+        races_file = os.path.expanduser("~/ski/elo/python/nordic-combined/polars/excel365/races.csv")
+        exclude_current_standings = False
+        
+        if os.path.exists(races_file):
+            races_df = pd.read_csv(races_file)
+            races_df['Date'] = pd.to_datetime(races_df['Date'])
+            
+            current_date = datetime.now(timezone.utc).date()
+            min_race_date = races_df['Date'].min().date()
+            max_race_date = races_df['Date'].max().date()
+            
+            # If current date is within race season, exclude current season standings
+            if min_race_date <= current_date <= max_race_date:
+                exclude_current_standings = True
+                max_season = df['Season'].max()
+                logging.info(f"Excluding current season ({max_season}) standings - season in progress")
+        
+        # Filter out current season standings if needed
+        if exclude_current_standings:
+            max_season = df['Season'].max()
+            df = df[~((df['Event'] == 'Standings') & (df['Season'] == max_season))]
+            logging.info(f"Filtered out {max_season} season standings")
         
         # Calculate points for each row
         df['Points'] = df.apply(calculate_points, axis=1)
