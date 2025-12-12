@@ -242,6 +242,7 @@ create_pelo_pcts <- function(df) {
 
 # Function to process data for sprint races
 process_sprint_data <- function(df_individuals, technique) {
+  
   min_season = max(df_individuals$Season)-11
   # First add points
   df_with_points <- add_points_to_results(df_individuals, is_team_sprint = FALSE)
@@ -264,7 +265,6 @@ process_sprint_data <- function(df_individuals, technique) {
           }
         })
       ) %>%
-      filter(Season > min_season) %>%
       ungroup()
     return(list(sprint = classic_sprint_df))
   }
@@ -287,9 +287,8 @@ process_sprint_data <- function(df_individuals, technique) {
           }
         })
       ) %>%
-      filter(Season > min_season) %>%
       ungroup()
-    
+
     return(list(sprint = freestyle_sprint_df
     ))
   }
@@ -299,21 +298,21 @@ process_sprint_data <- function(df_individuals, technique) {
 process_team_sprint_data <- function(df_team_sprints, sprint_df, technique, min_season = 2014) {
   # Add points to team sprint results
   min_season = max(sprint_df$Season)-11
-  
+
   team_sprint_with_points <- add_points_to_results(df_team_sprints, is_team_sprint = TRUE)
   if(technique=="C"){
-    # Process classic team sprints
-    classic_team_sprints <- team_sprint_with_points %>%
-      filter(Distance == "Ts", Technique == "C", Season > min_season)   
+    # Process classic team sprints - don't filter by season yet
+    classic_team_sprints_all <- team_sprint_with_points %>%
+      filter(Distance == "Ts", Technique == "C")   
     # Combine classic team sprints with classic sprint individual data
     classic_combined <- bind_rows(
-      classic_team_sprints,
+      classic_team_sprints_all,
       sprint_df
     ) %>%
       group_by(ID) %>%
-      arrange(Season, Race) %>%
+      arrange(Date, Season, Race, desc(Distance)) %>%  # Use Date for chronological order, desc(Distance) so Sprint comes before Ts
       fill(Weighted_Last_5, .direction = "down") %>%
-      filter(Distance == "Ts") %>%
+      filter(Distance == "Ts", Season > min_season) %>%  # Apply season filter AFTER filling
       group_by(Season, Race) %>%  # Regroup by race for quartile replacement
       mutate(
         Weighted_Last_5 = ifelse(
@@ -330,30 +329,53 @@ process_team_sprint_data <- function(df_team_sprints, sprint_df, technique, min_
   
   
   else{
-    # Process freestyle team sprints
-    freestyle_team_sprints <- team_sprint_with_points %>%
-      filter(Distance == "Ts", Technique == "F", Season > min_season)
+    # Process freestyle team sprints - don't filter by season yet
+    freestyle_team_sprints_all <- team_sprint_with_points %>%
+      filter(Distance == "Ts", Technique == "F")
+
+
     
+    # Debug: Check which skiers are in both datasets
+    team_sprint_skiers <- unique(freestyle_team_sprints_all$ID)
+    sprint_skiers <- unique(sprint_df$ID)
+    common_skiers <- intersect(team_sprint_skiers, sprint_skiers)
     
+    print(paste("Team sprint skiers:", length(team_sprint_skiers)))
+    print(paste("Sprint skiers:", length(sprint_skiers))) 
+    print(paste("Common skiers:", length(common_skiers)))
     
     # Combine freestyle team sprints with freestyle sprint individual data
-    freestyle_combined <- bind_rows(
-      freestyle_team_sprints,
+    freestyle_combined_debug <- bind_rows(
+      freestyle_team_sprints_all,
       sprint_df
     ) %>%
       group_by(ID) %>%
-      arrange(Season, Race) %>%
+      arrange(Date, Season, Race, desc(Distance))
+    
+    # Debug: Check a sample skier before and after fill
+    sample_skier <- common_skiers[1]
+    print(paste("Sample skier ID:", sample_skier))
+    
+    before_fill <- freestyle_combined_debug %>% 
+      filter(ID == sample_skier) %>%
+      select(ID, Date, Season, Race, Distance, Weighted_Last_5) %>%
+      arrange(Date, Season, Race, desc(Distance))
+    print("Before fill:")
+    print(before_fill)
+    
+    freestyle_combined <- freestyle_combined_debug %>%
       fill(Weighted_Last_5, .direction = "down") %>%
-      filter(Distance == "Ts") %>%
+      filter(Distance == "Ts", Season > min_season) %>%  # Apply season filter AFTER filling
       group_by(Season, Race) %>%  # Regroup by race for quartile replacement
       mutate(
-        Weighted_Last_5 = ifelse(
-          is.na(Weighted_Last_5),
-          quantile(Weighted_Last_5, 0.25, na.rm = TRUE),
-          Weighted_Last_5
-        )
-      ) %>%
+      Weighted_Last_5 = ifelse(
+        is.na(Weighted_Last_5),
+        quantile(Weighted_Last_5, 0.25, na.rm = TRUE),
+        Weighted_Last_5
+      )
+    ) %>%
       ungroup()
+
     return(list(team_sprints = freestyle_combined))
   }
 }
@@ -1288,7 +1310,7 @@ build_optimized_teams <- function(current_skiers, leg_predictions, leg_models, g
         (Top10_Prob - Top5_Prob) * mean(team_sprint_points[6:10])
     ) %>%
     ungroup()
-  View(all_teams)
+
   # Load startlist files to get team names and prices
   gender_suffix <- ifelse(gender == "men", "men", "ladies")
   individuals_file <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_team_sprint_individuals_%s.csv", gender_suffix)
@@ -1770,6 +1792,7 @@ run_team_sprint_predictions <- function() {
   # Step 4: Process sprint data with focus on technique
   # For men
   men_sprint <- process_sprint_data(chrono_data$men_individuals, men_technique)
+
   
   # For ladies
   ladies_sprint <- process_sprint_data(chrono_data$ladies_individuals, ladies_technique)
@@ -1788,6 +1811,7 @@ run_team_sprint_predictions <- function() {
     men_technique
   )
   
+  
   ladies_team_sprint_processed <- process_team_sprint_data(
     ladies_team_sprints_filtered,
     ladies_sprint$sprint,
@@ -1797,7 +1821,7 @@ run_team_sprint_predictions <- function() {
   
   #Step 6: Prepare leg data and train models - focus on appropriate technique
   men_leg_data <- prepare_leg_data(men_team_sprint_processed$team_sprints)
-  
+
   
   ladies_leg_data <- prepare_leg_data(ladies_team_sprint_processed$team_sprints)
   
@@ -1818,6 +1842,7 @@ run_team_sprint_predictions <- function() {
   #   
   # Load men's startlists
   men_startlists <- load_team_sprint_startlists("men")
+
   
   # Check if startlists have valid FIS entries
   men_has_fis <- has_valid_fis_entries(men_startlists$individuals)
@@ -1842,12 +1867,13 @@ run_team_sprint_predictions <- function() {
     }
   }
   
-  
+
   # Generate team predictions
   if(men_has_fis) {
     log_info("Using FIS startlist for men")
     men_team_predictions <- generate_team_predictions(men_startlists$teams, men_leg_predictions, men_leg_models)
-  } else {
+
+     } else {
     log_info("No valid FIS startlist for men, building optimized teams")
     men_team_predictions <- build_optimized_teams(men_current, men_leg_predictions, men_leg_models, "men")
   }

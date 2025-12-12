@@ -1,0 +1,302 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Team_Name",
+    "Member_1",
+    "Member_2",
+    "Win_Prob",
+    "Podium_Prob",
+    "Top5_Prob",
+    "Top10_Prob"
+  ],
+  "rows": [
+    [
+      "NORWAY I",
+      "Erik Valnes",
+      "Johannes Høsflot Klæbo",
+      "0.294076207251153",
+      "0.613180012200919",
+      "0.781017279522491",
+      "0.836050598413358"
+    ],
+    [
+      "ITALY I",
+      "Elia Barp",
+      "Federico Pellegrino",
+      "0.09036762766356",
+      "0.399782156706087",
+      "0.528253308559386",
+      "0.751657250769879"
+    ],
+    [
+      "NORWAY II",
+      "Harald Østberg Amundsen",
+      "Oskar Opstad Vike",
+      "0.143830975827671",
+      "0.368876056519535",
+      "0.517369258154685",
+      "0.654628144095222"
+    ],
+    [
+      "FRANCE I",
+      "Richard Jouve",
+      "Jules Chappaz",
+      "0.0716152076727566",
+      "0.312388368253247",
+      "0.52186598758055",
+      "0.634695660863553"
+    ],
+    [
+      "FINLAND I",
+      "Lauri Vuorinen",
+      "Joni Mäki",
+      "0.0888163589466889",
+      "0.224499223006906",
+      "0.406020451526076",
+      "0.71771641099369"
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "Ben Ogden",
+      "James Clinton Schoonmaker",
+      "0.0756681973478266",
+      "0.210094613363436",
+      "0.343851153997717",
+      "0.637784578392256"
+    ],
+    [
+      "FRANCE II",
+      "Victor Lovera",
+      "Remi Bourdin",
+      "0.0899376953058868",
+      "0.1706044470494",
+      "0.203089339680311",
+      "0.568294342933948"
+    ],
+    [
+      "ITALY II",
+      "Davide Graz",
+      "Martino Carollo",
+      "0.0745454274256704",
+      "0.15850831825631",
+      "0.237486775661914",
+      "0.512191400224148"
+    ],
+    [
+      "SWEDEN I",
+      "Johan Häggström",
+      "Edvin Anger",
+      "0.071142302558787",
+      "0.124727397365175",
+      "0.383932295387924",
+      "0.544074017993484"
+    ],
+    [
+      "POLAND I",
+      "Dominik Bury",
+      "Maciej Starega",
+      "0.0",
+      "0.0908969596839287",
+      "0.111806089157397",
+      "0.299435953750962"
+    ],
+    [
+      "FINLAND II",
+      "Ristomatti Hakola",
+      "Emil Liekari",
+      "0.0",
+      "0.0902116041333846",
+      "0.254303631067317",
+      "0.598438120298402"
+    ],
+    [
+      "SWEDEN II",
+      "Emil Danielsson",
+      "Anton Grahn",
+      "0.0",
+      "0.0806776386668797",
+      "0.19403020668863",
+      "0.351463548786613"
+    ],
+    [
+      "AUSTRIA I",
+      "Michael Föttinger",
+      "Benjamin Moser",
+      "0.0",
+      "0.0794493524258503",
+      "0.123490898785965",
+      "0.345205813544832"
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Jiri Tuz",
+      "Michal Novak",
+      "0.0",
+      "0.0761038523689419",
+      "0.114621557456743",
+      "0.463311366755478"
+    ],
+    [
+      "SLOVENIA I",
+      "Nejc Stern",
+      "Vili Crv",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.20662777659483"
+    ],
+    [
+      "SWITZERLAND I",
+      "Noe Näff",
+      "Janik Riebli",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.227491063261303"
+    ],
+    [
+      "GREAT BRITAIN I",
+      "Andrew Young",
+      "James Clugnet",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.199852106107249"
+    ],
+    [
+      "AUSTRIA II",
+      "Erik Engel",
+      "Lukas Mrkonjic",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.222673554127738"
+    ],
+    [
+      "AUSTRALIA I",
+      "Hugo Hinckfuss",
+      "Lars Young Vik",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.0"
+    ],
+    [
+      "GREAT BRITAIN II",
+      "Andrew Musgrave",
+      "Joe Davies",
+      "0.0",
+      "0.0",
+      "0.112007921602814",
+      "0.177556920482576"
+    ],
+    [
+      "LATVIA I",
+      "Lauris Kaparkalejs",
+      "Raimo Vigants",
+      "0.0",
+      "0.0",
+      "0.0844107300041486",
+      "0.168245009121373"
+    ],
+    [
+      "KAZAKHSTAN I",
+      "Iliyas Issabek",
+      "Yernar Nursbekov",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.0"
+    ],
+    [
+      "PEOPLES REPUBLIC OF CHINA I",
+      "Entemake Maowulietibieke",
+      "Qiang Wang",
+      "0.0",
+      "0.0",
+      "0.0824431151659337",
+      "0.26101121339584"
+    ],
+    [
+      "ESTONIA I",
+      "Marko Kilp",
+      "Henri Roos",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.0"
+    ],
+    [
+      "AUSTRALIA II",
+      "Philip Bellingham",
+      "Bentley Walker-Broose",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.0"
+    ],
+    [
+      "JAPAN II",
+      "Sho Kasahara",
+      "Naoto Baba",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.179314151415128"
+    ],
+    [
+      "SLOVAKIA I",
+      "Andrej Renda",
+      "Peter Lind",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.0"
+    ],
+    [
+      "POLAND II",
+      "Mateusz Haratyk",
+      "Robert Bugara",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.0"
+    ],
+    [
+      "KAZAKHSTAN II",
+      "Vitaliy Pukhkalo",
+      "Amirgali Muratbekov",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.0"
+    ],
+    [
+      "JAPAN I",
+      "Ryo Hirose",
+      "Daito Yamazaki",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.196820720082611"
+    ],
+    [
+      "SWITZERLAND II",
+      "Isai Näff",
+      "Roman Alder",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.0"
+    ],
+    [
+      "GERMANY I",
+      "Jannis Grimmecke",
+      "Jan Stölben",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.245460277595525"
+    ]
+  ]
+}

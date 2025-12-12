@@ -200,7 +200,6 @@ process_sprint_data <- function(df_individuals, technique, min_season = NULL) {
           }
         })
       ) %>%
-      filter(Season > min_season) %>%
       ungroup()
     
     return(list(sprint = sprint_df))
@@ -222,7 +221,6 @@ process_sprint_data <- function(df_individuals, technique, min_season = NULL) {
           }
         })
       ) %>%
-      filter(Season > min_season) %>%
       ungroup()
     
     return(list(sprint = sprint_df))
@@ -240,19 +238,19 @@ process_team_sprint_data <- function(df_team_sprints, sprint_df, technique, min_
   team_sprint_with_points <- add_points_to_results(df_team_sprints, is_team_sprint = TRUE)
   
   if(technique == "C") {
-    # Process classic team sprints
-    classic_team_sprints <- team_sprint_with_points %>%
-      filter(Distance == "Ts", Technique == "C", Season > min_season)
+    # Process classic team sprints - don't filter by season yet
+    classic_team_sprints_all <- team_sprint_with_points %>%
+      filter(Distance == "Ts", Technique == "C")
     
     # Combine classic team sprints with classic sprint individual data
     classic_combined <- bind_rows(
-      classic_team_sprints,
+      classic_team_sprints_all,
       sprint_df
     ) %>%
       group_by(ID) %>%
-      arrange(Season, Race) %>%
+      arrange(Date, Season, Race, desc(Distance)) %>%  # Use Date for chronological order, desc(Distance) so Sprint comes before Ts
       fill(Weighted_Last_5, .direction = "down") %>%
-      filter(Distance == "Ts") %>%
+      filter(Distance == "Ts", Season > min_season) %>%  # Apply season filter AFTER filling
       group_by(Season, Race) %>%  # Regroup by race for quartile replacement
       mutate(
         Weighted_Last_5 = ifelse(
@@ -265,19 +263,19 @@ process_team_sprint_data <- function(df_team_sprints, sprint_df, technique, min_
     
     return(list(team_sprints = classic_combined))
   } else {
-    # Process freestyle team sprints
-    freestyle_team_sprints <- team_sprint_with_points %>%
-      filter(Distance == "Ts", Technique == "F", Season > min_season)
+    # Process freestyle team sprints - don't filter by season yet
+    freestyle_team_sprints_all <- team_sprint_with_points %>%
+      filter(Distance == "Ts", Technique == "F")
     
     # Combine freestyle team sprints with freestyle sprint individual data
     freestyle_combined <- bind_rows(
-      freestyle_team_sprints,
+      freestyle_team_sprints_all,
       sprint_df
     ) %>%
       group_by(ID) %>%
-      arrange(Season, Race) %>%
+      arrange(Date, Season, Race, desc(Distance)) %>%  # Use Date for chronological order, desc(Distance) so Sprint comes before Ts
       fill(Weighted_Last_5, .direction = "down") %>%
-      filter(Distance == "Ts") %>%
+      filter(Distance == "Ts", Season > min_season) %>%  # Apply season filter AFTER filling
       group_by(Season, Race) %>%  # Regroup by race for quartile replacement
       mutate(
         Weighted_Last_5 = ifelse(

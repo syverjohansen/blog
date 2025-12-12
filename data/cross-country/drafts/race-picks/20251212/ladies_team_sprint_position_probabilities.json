@@ -1,0 +1,230 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Team_Name",
+    "Member_1",
+    "Member_2",
+    "Win_Prob",
+    "Podium_Prob",
+    "Top5_Prob",
+    "Top10_Prob"
+  ],
+  "rows": [
+    [
+      "SWEDEN I",
+      "Maja Dahlqvist",
+      "Jonna Sundling",
+      "0.999997556377915",
+      "1.0",
+      "0.961743208775623",
+      "1.0"
+    ],
+    [
+      "NORWAY I",
+      "Kristin Austgulen Fosnæs",
+      "Kristine Stavås Skistad",
+      "0.0",
+      "0.493868493376728",
+      "0.779173590525739",
+      "1.0"
+    ],
+    [
+      "SWEDEN II",
+      "Emma Ribom",
+      "Linn Svahn",
+      "0.0",
+      "0.421157138808827",
+      "0.744688506439147",
+      "1.0"
+    ],
+    [
+      "FINLAND I",
+      "Jasmin Kähärä",
+      "Jasmi Joensuu",
+      "2.44362208493658e-06",
+      "0.353688944433947",
+      "0.595637273941344",
+      "1.0"
+    ],
+    [
+      "NORWAY II",
+      "Astrid Øyre Slind",
+      "Mathilde Myhrvold",
+      "0.0",
+      "0.280438727555414",
+      "0.517177358179708",
+      "1.0"
+    ],
+    [
+      "GERMANY I",
+      "Laura Gimmler",
+      "Coletta Rydzek",
+      "0.0",
+      "0.184101399530418",
+      "0.708063787633767",
+      "1.0"
+    ],
+    [
+      "SWITZERLAND I",
+      "Anja Weber",
+      "Fabienne Alder",
+      "0.0",
+      "0.0660662155621623",
+      "0.242921618252023",
+      "0.551368910096854"
+    ],
+    [
+      "FINLAND II",
+      "Vilma Ryytty",
+      "Vilma Nissinen",
+      "0.0",
+      "0.043208889755811",
+      "0.122588262326199",
+      "0.504196489134652"
+    ],
+    [
+      "ITALY I",
+      "Caterina Ganz",
+      "Federica Cassol",
+      "0.0",
+      "0.0201323240752564",
+      "0.133336156945704",
+      "0.791851370011057"
+    ],
+    [
+      "ESTONIA I",
+      "Mariel Merlii Pulles",
+      "Teiloora Ojaste",
+      "0.0",
+      "0.00668258171088693",
+      "0.0360048330548781",
+      "0.155712253986773"
+    ],
+    [
+      "AUSTRALIA I",
+      "Phoebe Cridland",
+      "Rosie Fordham",
+      "0.0",
+      "0.00511552038333914",
+      "0.0234532040224358",
+      "0.0924148269516713"
+    ],
+    [
+      "SWITZERLAND II",
+      "Desiree Steiner",
+      "Giuliana Werro",
+      "0.0",
+      "0.00350660970559709",
+      "0.0207495112379622",
+      "0.0757596052399896"
+    ],
+    [
+      "ITALY II",
+      "Iris De Martin Pinter",
+      "Nicole Monsorno",
+      "0.0",
+      "0.0030488194810257",
+      "0.0434264144479942",
+      "0.412095345245282"
+    ],
+    [
+      "GREAT BRITAIN I",
+      "Tabitha Williams",
+      "Anna Pryce",
+      "0.0",
+      "0.00213214822947121",
+      "0.0148557173897664",
+      "0.0426660847574305"
+    ],
+    [
+      "JAPAN I",
+      "Chika Kobayashi",
+      "Chika Honda",
+      "0.0",
+      "0.00138671089929007",
+      "0.0167561896506199",
+      "0.0846767765442615"
+    ],
+    [
+      "POLAND I",
+      "Aleksandra Kolodziej",
+      "Andzelika Szyszka",
+      "0.0",
+      "0.00110530353030558",
+      "0.00519518587394234",
+      "0.0138146619572718"
+    ],
+    [
+      "AUSTRIA I",
+      "Heidi BUCHER",
+      "Magdalena Scherz",
+      "0.0",
+      "0.00107761437830307",
+      "0.0161785880541825",
+      "0.080611340235406"
+    ],
+    [
+      "AUSTRALIA II",
+      "Maddi Hooker",
+      "Ellen Søhol Lie",
+      "0.0",
+      "0.000399033948511646",
+      "0.00315026996094563",
+      "0.00471082802050696"
+    ],
+    [
+      "KAZAKHSTAN I",
+      "Anna Melnik",
+      "Angelina Shuryga",
+      "0.0",
+      "0.000390613422241928",
+      "0.00299042004581256",
+      "0.00331523197275791"
+    ],
+    [
+      "KAZAKHSTAN II",
+      "Darya Ryazhko",
+      "Nadezhda Stepashkina",
+      "0.0",
+      "0.00033077306712702",
+      "0.0032593127585448",
+      "0.00393069637607041"
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Anna Marie Jaklova",
+      "Tereza Beranova",
+      "0.0",
+      "0.000292678494033198",
+      "0.00865059048366097",
+      "0.0497715604971673"
+    ],
+    [
+      "FRANCE I",
+      "Julie Pierrel",
+      "Leonie Perry",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.0"
+    ],
+    [
+      "GERMANY II",
+      "Theresa FUERSTENBERG",
+      "Lena Keck",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.0"
+    ],
+    [
+      "FRANCE II",
+      "Melissa Gal",
+      "Justine Gaillard",
+      "0.0",
+      "0.0",
+      "0.0",
+      "0.0"
+    ]
+  ]
+}

@@ -199,7 +199,6 @@ process_discipline_data <- function(df_individuals, min_season = NULL) {
         }
       })
     ) %>%
-    filter(Season > min_season) %>%
     ungroup()
   
   # Process freestyle races
@@ -219,7 +218,6 @@ process_discipline_data <- function(df_individuals, min_season = NULL) {
         }
       })
     ) %>%
-    filter(Season > min_season) %>%
     ungroup()
   
   return(list(
@@ -238,23 +236,23 @@ process_relay_data <- function(df_relays, classic_df, freestyle_df, min_season =
   # Add points to relay results
   relay_with_points <- add_points_to_results(df_relays, is_relay = TRUE)
   
-  # Process classic legs (1-2)
-  classic_legs <- relay_with_points %>%
-    filter(Distance == "Rel", Leg < 3, Season > min_season)
+  # Process classic legs (1-2) - don't filter by season yet
+  classic_legs_all <- relay_with_points %>%
+    filter(Distance == "Rel", Leg < 3)
   
-  # Process freestyle legs (3-4)
-  freestyle_legs <- relay_with_points %>%
-    filter(Distance == "Rel", Leg > 2, Season > min_season)
+  # Process freestyle legs (3-4) - don't filter by season yet
+  freestyle_legs_all <- relay_with_points %>%
+    filter(Distance == "Rel", Leg > 2)
   
   # Combine classic legs with classic individual data
   classic_combined <- bind_rows(
-    classic_legs,
+    classic_legs_all,
     classic_df
   ) %>%
     group_by(ID) %>%
-    arrange(Season, Race) %>%
+    arrange(Date, Season, Race, desc(Distance)) %>%  # Use Date for chronological order
     fill(Weighted_Last_5, .direction = "down") %>%
-    filter(Distance == "Rel") %>%
+    filter(Distance == "Rel", Season > min_season) %>%  # Apply season filter AFTER filling
     group_by(Season, Race) %>%  # Regroup by race for quartile replacement
     mutate(
       Weighted_Last_5 = ifelse(
@@ -267,13 +265,13 @@ process_relay_data <- function(df_relays, classic_df, freestyle_df, min_season =
   
   # Combine freestyle legs with freestyle individual data
   freestyle_combined <- bind_rows(
-    freestyle_legs,
+    freestyle_legs_all,
     freestyle_df
   ) %>%
     group_by(ID) %>%
-    arrange(Season, Race) %>%
+    arrange(Date, Season, Race, desc(Distance)) %>%  # Use Date for chronological order
     fill(Weighted_Last_5, .direction = "down") %>%
-    filter(Distance == "Rel") %>%
+    filter(Distance == "Rel", Season > min_season) %>%  # Apply season filter AFTER filling
     group_by(Season, Race) %>%  # Regroup by race for quartile replacement
     mutate(
       Weighted_Last_5 = ifelse(
