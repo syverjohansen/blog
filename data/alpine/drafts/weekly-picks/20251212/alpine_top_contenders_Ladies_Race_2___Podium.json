@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 2 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Cornelia Hütter",
+      "AUT",
+      43.1883397802579
+    ],
+    [
+      "Sofia Goggia",
+      "ITA",
+      29.6449952125852
+    ],
+    [
+      "Breezy Johnson",
+      "USA",
+      27.884823621838
+    ],
+    [
+      "Emma Aicher",
+      "GER",
+      22.2614808124445
+    ],
+    [
+      "Lara Gut-Behrami",
+      "Switzerland",
+      19.1766062781411
+    ]
+  ]
+}

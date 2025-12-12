@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Cornelia Hütter",
+      "AUT",
+      42.438494934877
+    ],
+    [
+      "Emma Aicher",
+      "GER",
+      41.6787264833575
+    ],
+    [
+      "Breezy Johnson",
+      "USA",
+      32.6700434153401
+    ],
+    [
+      "Sofia Goggia",
+      "ITA",
+      28.2199710564399
+    ],
+    [
+      "Ester Ledecka",
+      "CZE",
+      16.4978292329957
+    ]
+  ]
+}

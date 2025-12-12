@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 3 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Lara Gut-Behrami",
+      "Switzerland",
+      89.4832980836514
+    ],
+    [
+      "Sofia Goggia",
+      "ITA",
+      46.5948534400078
+    ],
+    [
+      "Mikaela Shiffrin",
+      "USA",
+      21.9397678202368
+    ],
+    [
+      "Cornelia Hütter",
+      "AUT",
+      18.0568633669028
+    ],
+    [
+      "Ester Ledecka",
+      "CZE",
+      15.3958519233592
+    ]
+  ]
+}
