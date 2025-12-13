@@ -662,12 +662,16 @@ predict_races <- function(gender) {
   race_dfs <- list()
   position_predictions <- list()
   
-  # Define position thresholds
-  position_thresholds <- c(1, 3, 5, 10, 30)  # Win, Podium, Top 5, Top 10, Top 30
-  
   # Process each race
   for(i in 1:nrow(races)) {
     log_info(sprintf("Processing %s race %d: %s %s", gender, i, races$distance[i], races$technique[i]))
+    
+    # Define position thresholds based on race distance
+    position_thresholds <- if(races$distance[i] == "Sprint") {
+      c(1, 3, 6, 12, 30)  # Win, Podium, Final, Semifinal, Quarterfinal for Sprint races
+    } else {
+      c(1, 3, 5, 10, 30)   # Win, Podium, Top 5, Top 10, Top 30 for other races
+    }
     
     race_info <- today_races %>%
       filter(Sex == ifelse(gender == "men", "M", "L")) %>%
