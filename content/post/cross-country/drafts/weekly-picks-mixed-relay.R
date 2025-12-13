@@ -1257,6 +1257,49 @@ normalize_probabilities <- function(team_predictions) {
     }
   }
   
+  # APPLY MONOTONIC CONSTRAINTS: Ensure Win_Prob <= Podium_Prob <= Top5_Prob <= Top10_Prob
+  log_info("Applying monotonic constraints...")
+  
+  prob_cols <- c("Win_Prob", "Podium_Prob", "Top5_Prob", "Top10_Prob")
+  prob_cols <- prob_cols[prob_cols %in% names(team_predictions)]
+  
+  # For each team, ensure probabilities are monotonically non-decreasing
+  for(i in 1:nrow(team_predictions)) {
+    probs <- numeric(length(prob_cols))
+    for(j in 1:length(prob_cols)) {
+      probs[j] <- team_predictions[[prob_cols[j]]][i]
+    }
+    
+    # Apply monotonic adjustment: each probability should be >= previous one
+    for(j in 2:length(probs)) {
+      if(probs[j] < probs[j-1]) {
+        probs[j] <- probs[j-1]  # Set to previous value
+      }
+    }
+    
+    # Update the team_predictions dataframe
+    for(j in 1:length(prob_cols)) {
+      team_predictions[[prob_cols[j]]][i] <- probs[j]
+    }
+  }
+  
+  # RE-NORMALIZE after monotonic adjustment to maintain target sums
+  log_info("Re-normalizing after monotonic constraints...")
+  for(prob_col in names(targets)) {
+    if(prob_col %in% names(team_predictions)) {
+      current_sum <- sum(team_predictions[[prob_col]], na.rm = TRUE)
+      target_sum <- targets[[prob_col]]
+      
+      if(current_sum > 0) {
+        scaling_factor <- target_sum / current_sum
+        team_predictions[[prob_col]] <- team_predictions[[prob_col]] * scaling_factor
+        
+        # Cap at 1.0 again
+        team_predictions[[prob_col]] <- pmin(team_predictions[[prob_col]], 1.0)
+      }
+    }
+  }
+  
   # Recalculate Expected_Points based on normalized probabilities
   if("Expected_Points" %in% names(team_predictions)) {
     team_predictions <- team_predictions %>%

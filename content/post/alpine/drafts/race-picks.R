@@ -189,8 +189,54 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     }
   }
   
+  # APPLY MONOTONIC CONSTRAINTS: Ensure Win <= Podium <= Top5 <= Top10 <= Top30
+  log_info("Applying monotonic constraints...")
+
+  # Get available probability columns in ascending order
+  prob_cols <- paste0("prob_top", sort(position_thresholds))
+  prob_cols <- prob_cols[prob_cols %in% names(normalized)]
+
+  # For each athlete, ensure probabilities are monotonically non-decreasing
+  for(i in 1:nrow(normalized)) {
+    probs <- numeric(length(prob_cols))
+    for(j in 1:length(prob_cols)) {
+      probs[j] <- normalized[[prob_cols[j]]][i]
+    }
+    
+    # Apply monotonic adjustment: each probability should be >= previous one
+    for(j in 2:length(probs)) {
+      if(probs[j] < probs[j-1]) {
+        probs[j] <- probs[j-1]  # Set to previous value
+      }
+    }
+    
+    # Update the normalized dataframe
+    for(j in 1:length(prob_cols)) {
+      normalized[[prob_cols[j]]][i] <- probs[j]
+    }
+  }
+
+  # RE-NORMALIZE after monotonic adjustment to maintain target sums
+  log_info("Re-normalizing after monotonic constraints...")
+  for(threshold in position_thresholds) {
+    prob_col <- paste0("prob_top", threshold)
+    
+    if(prob_col %in% names(normalized)) {
+      current_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
+      target_sum <- 100 * threshold
+      
+      if(current_sum > 0) {
+        scaling_factor <- target_sum / current_sum
+        normalized[[prob_col]] <- normalized[[prob_col]] * scaling_factor
+        
+        # Cap at 100% again
+        normalized[[prob_col]][normalized[[prob_col]] > 100] <- 100
+      }
+    }
+  }
+  
   # Log final sums after all adjustments
-  log_info("Position probability sums AFTER normalization:")
+  log_info("Position probability sums AFTER normalization and monotonic constraints:")
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
     if(prob_col %in% names(normalized)) {

@@ -429,8 +429,54 @@ normalize_position_probabilities <- function(predictions, position_thresholds) {
     }
   }
   
+  # APPLY MONOTONIC CONSTRAINTS: Ensure Win <= Podium <= Top5 <= Top10 <= Top30
+  log_info("Applying monotonic constraints...")
+  
+  # Get available probability columns in ascending order
+  prob_cols <- paste0("prob_top", sort(position_thresholds))
+  prob_cols <- prob_cols[prob_cols %in% names(normalized)]
+  
+  # For each skier, ensure probabilities are monotonically non-decreasing
+  for(i in 1:nrow(normalized)) {
+    probs <- numeric(length(prob_cols))
+    for(j in 1:length(prob_cols)) {
+      probs[j] <- normalized[[prob_cols[j]]][i]
+    }
+    
+    # Apply monotonic adjustment: each probability should be >= previous one
+    for(j in 2:length(probs)) {
+      if(probs[j] < probs[j-1]) {
+        probs[j] <- probs[j-1]  # Set to previous value
+      }
+    }
+    
+    # Update the normalized dataframe
+    for(j in 1:length(prob_cols)) {
+      normalized[[prob_cols[j]]][i] <- probs[j]
+    }
+  }
+  
+  # RE-NORMALIZE after monotonic adjustment to maintain target sums
+  log_info("Re-normalizing after monotonic constraints...")
+  for(threshold in position_thresholds) {
+    prob_col <- paste0("prob_top", threshold)
+    
+    if(prob_col %in% names(normalized)) {
+      current_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
+      target_sum <- 100 * threshold
+      
+      if(current_sum > 0) {
+        scaling_factor <- target_sum / current_sum
+        normalized[[prob_col]] <- normalized[[prob_col]] * scaling_factor
+        
+        # Cap at 100% again
+        normalized[[prob_col]][normalized[[prob_col]] > 100] <- 100
+      }
+    }
+  }
+  
   # Log final sums after all adjustments
-  log_info("Position probability sums AFTER normalization:")
+  log_info("Position probability sums AFTER normalization and monotonic constraints:")
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
     if(prob_col %in% names(normalized)) {
@@ -589,13 +635,42 @@ create_post_predictions <- function(final_predictions, n_races, gender=NULL) {
 }
 
 # Function to format position probability results
-format_position_results <- function(position_results, current_date, gender) {
-  # Create a more reader-friendly version
-  formatted_results <- position_results %>%
-    dplyr::select(Skier, ID, Nation, Sex, Race, Win = prob_top1, 
-                  Podium = prob_top3, Top5 = prob_top5, 
-                  Top10 = prob_top10, Top30 = prob_top30) %>%
-    arrange(Race, desc(Win))
+format_position_results <- function(position_results, current_date, gender, races) {
+  # Split by race and apply different column headers based on race distance
+  race_list <- list()
+  
+  for(race_num in unique(position_results$Race)) {
+    race_data <- position_results %>% filter(Race == race_num)
+    
+    # Determine if this is a sprint race
+    is_sprint <- races$distance[race_num] == "Sprint"
+    
+    # Create appropriate column headers based on race type
+    if(is_sprint) {
+      # Sprint race: Win, Podium, Final, Semifinal, Quarterfinal
+      # For sprints: thresholds are [1, 3, 6, 12, 30] so columns are prob_top6, prob_top12
+      formatted_race <- race_data %>%
+        dplyr::select(Skier, ID, Nation, Sex, Race, 
+                      Win = prob_top1, Podium = prob_top3, 
+                      Final = prob_top6, Semifinal = prob_top12, 
+                      Quarterfinal = prob_top30) %>%
+        arrange(desc(Win))
+    } else {
+      # Distance race: Win, Podium, Top5, Top10, Top30
+      # For distance: thresholds are [1, 3, 5, 10, 30] so columns are prob_top5, prob_top10
+      formatted_race <- race_data %>%
+        dplyr::select(Skier, ID, Nation, Sex, Race, 
+                      Win = prob_top1, Podium = prob_top3, 
+                      Top5 = prob_top5, Top10 = prob_top10, 
+                      Top30 = prob_top30) %>%
+        arrange(desc(Win))
+    }
+    
+    race_list[[race_num]] <- formatted_race
+  }
+  
+  # Combine all races
+  formatted_results <- bind_rows(race_list)
   
   today_folder <- format(current_date, "%Y%m%d")
   dir_path <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", today_folder)
@@ -662,15 +737,18 @@ predict_races <- function(gender) {
   race_dfs <- list()
   position_predictions <- list()
   
+  # Define position thresholds (keeping consistent column names)
+  position_thresholds <- c(1, 3, 5, 10, 30)  # Win, Podium, Top 5, Top 10, Top 30
+  
   # Process each race
   for(i in 1:nrow(races)) {
     log_info(sprintf("Processing %s race %d: %s %s", gender, i, races$distance[i], races$technique[i]))
     
-    # Define position thresholds based on race distance
-    position_thresholds <- if(races$distance[i] == "Sprint") {
-      c(1, 3, 6, 12, 30)  # Win, Podium, Final, Semifinal, Quarterfinal for Sprint races
+    # Override thresholds for Sprint races (but keep same column names for consistency)
+    if(races$distance[i] == "Sprint") {
+      position_thresholds <- c(1, 3, 6, 12, 30)  # Win, Podium, Final, Semifinal, Quarterfinal
     } else {
-      c(1, 3, 5, 10, 30)   # Win, Podium, Top 5, Top 10, Top 30 for other races
+      position_thresholds <- c(1, 3, 5, 10, 30)   # Win, Podium, Top 5, Top 10, Top 30
     }
     
     race_info <- today_races %>%
@@ -1242,7 +1320,7 @@ predict_races <- function(gender) {
   all_position_predictions <- bind_rows(position_predictions)
   
   # NEW: Create formatted position probabilities
-  formatted_position_results <- format_position_results(all_position_predictions, current_date, gender)
+  formatted_position_results <- format_position_results(all_position_predictions, current_date, gender, races)
   
   # Create folder path based on today's date
   today_folder <- format(current_date, "%Y%m%d")
@@ -1390,11 +1468,17 @@ run_race_day_predictions <- function() {
     if(!is.null(results$men$position_predictions)) {
       cat("\nMen's Position Probabilities Summary (Race 1):\n")
       cat("Top 3 win contenders:\n")
-      win_summary <- results$men$position_predictions %>%
+      win_summary_data <- results$men$position_predictions %>%
         filter(Race == 1) %>%
         arrange(desc(prob_top1)) %>%
-        head(3) %>%
-        dplyr::select(Skier, Nation, Win = prob_top1, Podium = prob_top3, Top5 = prob_top5)
+        head(3)
+      
+      # Select columns based on what's available
+      if("prob_top5" %in% names(win_summary_data)) {
+        win_summary <- win_summary_data %>% dplyr::select(Skier, Nation, Win = prob_top1, Podium = prob_top3, Top5 = prob_top5)
+      } else {
+        win_summary <- win_summary_data %>% dplyr::select(Skier, Nation, Win = prob_top1, Podium = prob_top3, Top6 = prob_top6)
+      }
       print(win_summary)
     }
   }
@@ -1408,11 +1492,17 @@ run_race_day_predictions <- function() {
     if(!is.null(results$ladies$position_predictions)) {
       cat("\nLadies' Position Probabilities Summary (Race 1):\n")
       cat("Top 3 win contenders:\n")
-      win_summary <- results$ladies$position_predictions %>%
+      win_summary_data <- results$ladies$position_predictions %>%
         filter(Race == 1) %>%
         arrange(desc(prob_top1)) %>%
-        head(3) %>%
-        dplyr::select(Skier, Nation, Win = prob_top1, Podium = prob_top3, Top5 = prob_top5)
+        head(3)
+      
+      # Select columns based on what's available
+      if("prob_top5" %in% names(win_summary_data)) {
+        win_summary <- win_summary_data %>% dplyr::select(Skier, Nation, Win = prob_top1, Podium = prob_top3, Top5 = prob_top5)
+      } else {
+        win_summary <- win_summary_data %>% dplyr::select(Skier, Nation, Win = prob_top1, Podium = prob_top3, Top6 = prob_top6)
+      }
       print(win_summary)
     }
   }
@@ -1486,7 +1576,7 @@ display_position_analysis <- function(results) {
       top_contenders <- race_data %>%
         arrange(desc(prob_top1)) %>%
         head(5) %>%
-        dplyr::select(Skier, Nation, prob_top1, prob_top3, prob_top5)
+        {if("prob_top5" %in% names(.)) dplyr::select(., Skier, Nation, prob_top1, prob_top3, prob_top5) else dplyr::select(., Skier, Nation, prob_top1, prob_top3, prob_top6)}
       print(top_contenders)
     }
   }
@@ -1532,7 +1622,7 @@ display_position_analysis <- function(results) {
       top_contenders <- race_data %>%
         arrange(desc(prob_top1)) %>%
         head(5) %>%
-        dplyr::select(Skier, Nation, prob_top1, prob_top3, prob_top5)
+        {if("prob_top5" %in% names(.)) dplyr::select(., Skier, Nation, prob_top1, prob_top3, prob_top5) else dplyr::select(., Skier, Nation, prob_top1, prob_top3, prob_top6)}
       print(top_contenders)
     }
   }
