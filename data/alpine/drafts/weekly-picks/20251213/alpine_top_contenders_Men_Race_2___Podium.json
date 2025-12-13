@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 2 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Timon Haugan",
+      "NOR",
+      59.9903304930008
+    ],
+    [
+      "Henrik Kristoffersen",
+      "NOR",
+      33.6439510009942
+    ],
+    [
+      "Clement Noel",
+      "France",
+      33.3875820672634
+    ],
+    [
+      "Lucas Pinheiro Braathen",
+      "BRA",
+      30.4959789775093
+    ],
+    [
+      "Linus Strasser",
+      "Germany",
+      18.6970459576675
+    ]
+  ]
+}

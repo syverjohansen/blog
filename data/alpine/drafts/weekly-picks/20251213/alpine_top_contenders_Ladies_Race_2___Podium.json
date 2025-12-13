@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 2 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Lara Gut-Behrami",
+      "Switzerland",
+      92.6834326856916
+    ],
+    [
+      "Sofia Goggia",
+      "Italy",
+      48.2611957179932
+    ],
+    [
+      "Mikaela Shiffrin",
+      "USA",
+      22.7243858625516
+    ],
+    [
+      "Cornelia Hütter",
+      "Austria",
+      18.7026195527188
+    ],
+    [
+      "Ester Ledecka",
+      "Czechia",
+      15.9464440396866
+    ]
+  ]
+}

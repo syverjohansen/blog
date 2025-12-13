@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      13832,
+      142.916709699095
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "L",
+      "Sweden",
+      7386,
+      102.934396077409
+    ],
+    [
+      "Katerina Janatova",
+      3198,
+      "L",
+      "Czechia",
+      1566,
+      100.588444973441
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      "L",
+      "Sweden",
+      6951,
+      99.7826001657665
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      3677,
+      91.8840005139776
+    ],
+    [
+      "Linn Svahn",
+      3190,
+      "L",
+      "Sweden",
+      3005,
+      85.1866790353206
+    ],
+    [
+      "Julia Kern",
+      1846,
+      "L",
+      "USA",
+      1638,
+      82.4229787430092
+    ],
+    [
+      "Coletta Rydzek",
+      3254,
+      "L",
+      "Germany",
+      992,
+      81.4010924718412
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      19267,
+      143.531941587227
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "M",
+      "Norway",
+      14900,
+      109.584732629155
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "M",
+      "Italy",
+      6210,
+      105.393065475266
+    ],
+    [
+      "Edvin Anger",
+      14039,
+      "M",
+      "Sweden",
+      11282,
+      92.3245996298765
+    ],
+    [
+      "Michal Novak",
+      3655,
+      "M",
+      "Czechia",
+      1153,
+      86.0347336074906
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      "M",
+      "USA",
+      5095,
+      78.3687959431206
+    ],
+    [
+      "Valerio Grond",
+      12164,
+      "M",
+      "Switzerland",
+      1260,
+      69.8811019830037
+    ],
+    [
+      "Jules Chappaz",
+      12181,
+      "M",
+      "France",
+      1292,
+      62.4356993084733
+    ]
+  ]
+}

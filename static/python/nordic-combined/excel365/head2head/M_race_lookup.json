@@ -1,4 +1,5820 @@
 {
+  "1924_1": {
+    "season": 1924,
+    "race": 1,
+    "date": "1924-01-30",
+    "city": "Chamonix",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1925_1": {
+    "season": 1925,
+    "race": 1,
+    "date": "1925-02-12",
+    "city": "Johannisbad",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "1926_1": {
+    "season": 1926,
+    "race": 1,
+    "date": "1926-02-04",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1927_1": {
+    "season": 1927,
+    "race": 1,
+    "date": "1927-02-02",
+    "city": "Cortina d'Ampezza",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1928_1": {
+    "season": 1928,
+    "race": 1,
+    "date": "1928-02-14",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1929_1": {
+    "season": 1929,
+    "race": 1,
+    "date": "1929-02-05",
+    "city": "Zakopane",
+    "country": "Poland",
+    "event": "Individual"
+  },
+  "1930_1": {
+    "season": 1930,
+    "race": 1,
+    "date": "1930-02-27",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1931_1": {
+    "season": 1931,
+    "race": 1,
+    "date": "1931-02-13",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1932_1": {
+    "season": 1932,
+    "race": 1,
+    "date": "1932-02-10",
+    "city": "Lake Placid NY",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "1933_1": {
+    "season": 1933,
+    "race": 1,
+    "date": "1933-02-08",
+    "city": "Innsbruck",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1934_1": {
+    "season": 1934,
+    "race": 1,
+    "date": "1934-02-20",
+    "city": "Solleftea",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1935_1": {
+    "season": 1935,
+    "race": 1,
+    "date": "1935-02-13",
+    "city": "Vysoke Tatra",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1936_1": {
+    "season": 1936,
+    "race": 1,
+    "date": "1936-02-10",
+    "city": "Garmisch",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1937_1": {
+    "season": 1937,
+    "race": 1,
+    "date": "1937-02-12",
+    "city": "Chamonix",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1938_1": {
+    "season": 1938,
+    "race": 1,
+    "date": "1938-02-24",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1939_1": {
+    "season": 1939,
+    "race": 1,
+    "date": "1939-02-11",
+    "city": "Zakopane",
+    "country": "Poland",
+    "event": "Individual"
+  },
+  "1948_1": {
+    "season": 1948,
+    "race": 1,
+    "date": "1948-02-02",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1950_1": {
+    "season": 1950,
+    "race": 1,
+    "date": "1950-02-01",
+    "city": "Lake Placid NY",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "1952_1": {
+    "season": 1952,
+    "race": 1,
+    "date": "1952-02-18",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1954_1": {
+    "season": 1954,
+    "race": 1,
+    "date": "1954-02-13",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1956_1": {
+    "season": 1956,
+    "race": 1,
+    "date": "1956-01-27",
+    "city": "Cortina d'Ampezza",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1958_1": {
+    "season": 1958,
+    "race": 1,
+    "date": "1958-03-01",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1960_1": {
+    "season": 1960,
+    "race": 1,
+    "date": "1960-02-19",
+    "city": "Squaw Valley CA",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "1962_1": {
+    "season": 1962,
+    "race": 1,
+    "date": "1962-02-18",
+    "city": "Zakopane",
+    "country": "Poland",
+    "event": "Individual"
+  },
+  "1964_1": {
+    "season": 1964,
+    "race": 1,
+    "date": "1964-01-30",
+    "city": "Innsbruck",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1966_1": {
+    "season": 1966,
+    "race": 1,
+    "date": "1966-02-17",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1968_1": {
+    "season": 1968,
+    "race": 1,
+    "date": "1968-02-08",
+    "city": "Grenoble",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1970_1": {
+    "season": 1970,
+    "race": 1,
+    "date": "1970-02-14",
+    "city": "Vysoke Tatra",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1972_1": {
+    "season": 1972,
+    "race": 1,
+    "date": "1972-02-05",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "1974_1": {
+    "season": 1974,
+    "race": 1,
+    "date": "1974-02-16",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1976_1": {
+    "season": 1976,
+    "race": 1,
+    "date": "1976-02-05",
+    "city": "Innsbruck",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1978_1": {
+    "season": 1978,
+    "race": 1,
+    "date": "1978-02-19",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1980_1": {
+    "season": 1980,
+    "race": 1,
+    "date": "1980-02-16",
+    "city": "Lake Placid NY",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "1982_1": {
+    "season": 1982,
+    "race": 1,
+    "date": "1982-02-19",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1984_1": {
+    "season": 1984,
+    "race": 1,
+    "date": "1983-12-17",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1984_2": {
+    "season": 1984,
+    "race": 2,
+    "date": "1983-12-29",
+    "city": "Oberwiesenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1984_3": {
+    "season": 1984,
+    "race": 3,
+    "date": "1984-01-07",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1984_4": {
+    "season": 1984,
+    "race": 4,
+    "date": "1984-02-12",
+    "city": "Sarajevo",
+    "country": "Bosnia&Herzegovina",
+    "event": "Individual"
+  },
+  "1984_5": {
+    "season": 1984,
+    "race": 5,
+    "date": "1984-02-24",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1984_6": {
+    "season": 1984,
+    "race": 6,
+    "date": "1984-03-03",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1984_7": {
+    "season": 1984,
+    "race": 7,
+    "date": "1984-03-08",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1984_9": {
+    "season": 1984,
+    "race": 9,
+    "date": "1984-03-24",
+    "city": "Strbske Pleso",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1985_1": {
+    "season": 1985,
+    "race": 1,
+    "date": "1984-12-15",
+    "city": "Planica",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "1985_2": {
+    "season": 1985,
+    "race": 2,
+    "date": "1984-12-20",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1985_3": {
+    "season": 1985,
+    "race": 3,
+    "date": "1984-12-29",
+    "city": "Oberwiesenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1985_4": {
+    "season": 1985,
+    "race": 4,
+    "date": "1985-01-05",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1985_5": {
+    "season": 1985,
+    "race": 5,
+    "date": "1985-01-18",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1985_7": {
+    "season": 1985,
+    "race": 7,
+    "date": "1985-02-23",
+    "city": "St. Petersburg",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "1985_8": {
+    "season": 1985,
+    "race": 8,
+    "date": "1985-03-02",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1985_9": {
+    "season": 1985,
+    "race": 9,
+    "date": "1985-03-16",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1986_1": {
+    "season": 1986,
+    "race": 1,
+    "date": "1985-12-21",
+    "city": "Tarvisio",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1986_2": {
+    "season": 1986,
+    "race": 2,
+    "date": "1985-12-29",
+    "city": "Oberwiesenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1986_3": {
+    "season": 1986,
+    "race": 3,
+    "date": "1986-01-04",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1986_4": {
+    "season": 1986,
+    "race": 4,
+    "date": "1986-01-18",
+    "city": "Murau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1986_5": {
+    "season": 1986,
+    "race": 5,
+    "date": "1986-02-28",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1986_6": {
+    "season": 1986,
+    "race": 6,
+    "date": "1986-03-14",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1986_7": {
+    "season": 1986,
+    "race": 7,
+    "date": "1986-03-22",
+    "city": "Strbske Pleso",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1987_1": {
+    "season": 1987,
+    "race": 1,
+    "date": "1986-12-13",
+    "city": "Canmore",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "1987_2": {
+    "season": 1987,
+    "race": 2,
+    "date": "1986-12-30",
+    "city": "Oberwiesenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1987_3": {
+    "season": 1987,
+    "race": 3,
+    "date": "1987-01-03",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1987_4": {
+    "season": 1987,
+    "race": 4,
+    "date": "1987-01-10",
+    "city": "Reit im Winkl",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1987_5": {
+    "season": 1987,
+    "race": 5,
+    "date": "1987-01-17",
+    "city": "Autrans",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1987_6": {
+    "season": 1987,
+    "race": 6,
+    "date": "1987-02-13",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1987_8": {
+    "season": 1987,
+    "race": 8,
+    "date": "1987-02-27",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1987_9": {
+    "season": 1987,
+    "race": 9,
+    "date": "1987-03-06",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1987_10": {
+    "season": 1987,
+    "race": 10,
+    "date": "1987-03-13",
+    "city": "St. Petersburg",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "1987_11": {
+    "season": 1987,
+    "race": 11,
+    "date": "1987-03-19",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1988_1": {
+    "season": 1988,
+    "race": 1,
+    "date": "1987-12-18",
+    "city": "Bad Goisern",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1988_2": {
+    "season": 1988,
+    "race": 2,
+    "date": "1988-01-09",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1988_3": {
+    "season": 1988,
+    "race": 3,
+    "date": "1988-01-16",
+    "city": "Le Brassus",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1988_4": {
+    "season": 1988,
+    "race": 4,
+    "date": "1988-01-23",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1988_6": {
+    "season": 1988,
+    "race": 6,
+    "date": "1988-02-27",
+    "city": "Calgary",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "1988_8": {
+    "season": 1988,
+    "race": 8,
+    "date": "1988-03-12",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1988_9": {
+    "season": 1988,
+    "race": 9,
+    "date": "1988-03-18",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1988_10": {
+    "season": 1988,
+    "race": 10,
+    "date": "1988-03-25",
+    "city": "Rovaniemi",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1989_1": {
+    "season": 1989,
+    "race": 1,
+    "date": "1988-12-17",
+    "city": "Saalfelden",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1989_2": {
+    "season": 1989,
+    "race": 2,
+    "date": "1988-12-29",
+    "city": "Oberwiesenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1989_3": {
+    "season": 1989,
+    "race": 3,
+    "date": "1989-01-07",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1989_4": {
+    "season": 1989,
+    "race": 4,
+    "date": "1989-01-14",
+    "city": "Reit im Winkl",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1989_5": {
+    "season": 1989,
+    "race": 5,
+    "date": "1989-01-21",
+    "city": "Breitenwang",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1989_6": {
+    "season": 1989,
+    "race": 6,
+    "date": "1989-02-17",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1989_8": {
+    "season": 1989,
+    "race": 8,
+    "date": "1989-03-03",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1989_9": {
+    "season": 1989,
+    "race": 9,
+    "date": "1989-03-11",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1989_10": {
+    "season": 1989,
+    "race": 10,
+    "date": "1989-03-18",
+    "city": "Lake Placid NY",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "1989_11": {
+    "season": 1989,
+    "race": 11,
+    "date": "1989-03-25",
+    "city": "Thunder Bay",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "1990_1": {
+    "season": 1990,
+    "race": 1,
+    "date": "1989-12-16",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1990_2": {
+    "season": 1990,
+    "race": 2,
+    "date": "1990-01-06",
+    "city": "Reit im Winkl",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1990_3": {
+    "season": 1990,
+    "race": 3,
+    "date": "1990-01-14",
+    "city": "Saalfelden",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1990_4": {
+    "season": 1990,
+    "race": 4,
+    "date": "1990-01-19",
+    "city": "Murau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1990_5": {
+    "season": 1990,
+    "race": 5,
+    "date": "1990-02-10",
+    "city": "St. Petersburg",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "1990_6": {
+    "season": 1990,
+    "race": 6,
+    "date": "1990-02-17",
+    "city": "Strbske Pleso",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1990_7": {
+    "season": 1990,
+    "race": 7,
+    "date": "1990-03-02",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1990_8": {
+    "season": 1990,
+    "race": 8,
+    "date": "1990-03-09",
+    "city": "\u00d6rnsk\u00f6ldsvik",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1990_9": {
+    "season": 1990,
+    "race": 9,
+    "date": "1990-03-16",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1991_1": {
+    "season": 1991,
+    "race": 1,
+    "date": "1990-12-15",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1991_2": {
+    "season": 1991,
+    "race": 2,
+    "date": "1990-12-29",
+    "city": "Oberwiesenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1991_3": {
+    "season": 1991,
+    "race": 3,
+    "date": "1991-01-05",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1991_4": {
+    "season": 1991,
+    "race": 4,
+    "date": "1991-01-12",
+    "city": "Bad Goisern",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1991_5": {
+    "season": 1991,
+    "race": 5,
+    "date": "1991-02-07",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1991_7": {
+    "season": 1991,
+    "race": 7,
+    "date": "1991-03-02",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1991_8": {
+    "season": 1991,
+    "race": 8,
+    "date": "1991-03-08",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1991_9": {
+    "season": 1991,
+    "race": 9,
+    "date": "1991-03-15",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1991_10": {
+    "season": 1991,
+    "race": 10,
+    "date": "1991-03-23",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1992_1": {
+    "season": 1992,
+    "race": 1,
+    "date": "1991-12-14",
+    "city": "Strbske Pleso",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1992_2": {
+    "season": 1992,
+    "race": 2,
+    "date": "1991-12-21",
+    "city": "Courchevel",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1992_3": {
+    "season": 1992,
+    "race": 3,
+    "date": "1992-01-04",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1992_4": {
+    "season": 1992,
+    "race": 4,
+    "date": "1992-01-11",
+    "city": "Breitenwang",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1992_5": {
+    "season": 1992,
+    "race": 5,
+    "date": "1992-01-18",
+    "city": "Murau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1992_6": {
+    "season": 1992,
+    "race": 6,
+    "date": "1992-02-11",
+    "city": "Albertville",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1992_8": {
+    "season": 1992,
+    "race": 8,
+    "date": "1992-02-28",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1992_9": {
+    "season": 1992,
+    "race": 9,
+    "date": "1992-03-10",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1992_10": {
+    "season": 1992,
+    "race": 10,
+    "date": "1992-03-13",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1993_1": {
+    "season": 1993,
+    "race": 1,
+    "date": "1992-12-05",
+    "city": "Vuokatti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1993_2": {
+    "season": 1993,
+    "race": 2,
+    "date": "1992-12-12",
+    "city": "Courchevel",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1993_3": {
+    "season": 1993,
+    "race": 3,
+    "date": "1992-12-19",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1993_4": {
+    "season": 1993,
+    "race": 4,
+    "date": "1993-01-08",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1993_5": {
+    "season": 1993,
+    "race": 5,
+    "date": "1993-01-23",
+    "city": "Saalfelden",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1993_6": {
+    "season": 1993,
+    "race": 6,
+    "date": "1993-02-18",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1993_8": {
+    "season": 1993,
+    "race": 8,
+    "date": "1993-03-05",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1993_9": {
+    "season": 1993,
+    "race": 9,
+    "date": "1993-03-12",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1993_10": {
+    "season": 1993,
+    "race": 10,
+    "date": "1993-03-20",
+    "city": "Strbske Pleso",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1994_1": {
+    "season": 1994,
+    "race": 1,
+    "date": "1993-12-04",
+    "city": "Saalfelden",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1994_2": {
+    "season": 1994,
+    "race": 2,
+    "date": "1993-12-11",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1994_3": {
+    "season": 1994,
+    "race": 3,
+    "date": "1993-12-15",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1994_4": {
+    "season": 1994,
+    "race": 4,
+    "date": "1994-01-08",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1994_5": {
+    "season": 1994,
+    "race": 5,
+    "date": "1994-01-15",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1994_6": {
+    "season": 1994,
+    "race": 6,
+    "date": "1994-01-22",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1994_7": {
+    "season": 1994,
+    "race": 7,
+    "date": "1994-02-18",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1994_9": {
+    "season": 1994,
+    "race": 9,
+    "date": "1994-03-04",
+    "city": "Vuokatti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1994_10": {
+    "season": 1994,
+    "race": 10,
+    "date": "1994-03-12",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "1994_11": {
+    "season": 1994,
+    "race": 11,
+    "date": "1994-03-19",
+    "city": "Thunder Bay",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "1995_1": {
+    "season": 1995,
+    "race": 1,
+    "date": "1994-11-29",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "1995_2": {
+    "season": 1995,
+    "race": 2,
+    "date": "1994-12-10",
+    "city": "Strbske Pleso",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1995_3": {
+    "season": 1995,
+    "race": 3,
+    "date": "1995-01-07",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1995_4": {
+    "season": 1995,
+    "race": 4,
+    "date": "1995-01-10",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1995_5": {
+    "season": 1995,
+    "race": 5,
+    "date": "1995-01-14",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "1995_6": {
+    "season": 1995,
+    "race": 6,
+    "date": "1995-01-28",
+    "city": "Vuokatti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1995_7": {
+    "season": 1995,
+    "race": 7,
+    "date": "1995-02-03",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1995_8": {
+    "season": 1995,
+    "race": 8,
+    "date": "1995-02-09",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1995_9": {
+    "season": 1995,
+    "race": 9,
+    "date": "1995-02-18",
+    "city": "Bad Goisern",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1995_10": {
+    "season": 1995,
+    "race": 10,
+    "date": "1995-03-09",
+    "city": "Thunder Bay",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "1995_12": {
+    "season": 1995,
+    "race": 12,
+    "date": "1995-03-25",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "1996_1": {
+    "season": 1996,
+    "race": 1,
+    "date": "1995-12-06",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "1996_2": {
+    "season": 1996,
+    "race": 2,
+    "date": "1995-12-16",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1996_3": {
+    "season": 1996,
+    "race": 3,
+    "date": "1995-12-19",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1996_4": {
+    "season": 1996,
+    "race": 4,
+    "date": "1996-01-06",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1996_5": {
+    "season": 1996,
+    "race": 5,
+    "date": "1996-01-13",
+    "city": "Strbske Pleso",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1996_6": {
+    "season": 1996,
+    "race": 6,
+    "date": "1996-01-20",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "1996_7": {
+    "season": 1996,
+    "race": 7,
+    "date": "1996-02-04",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1996_8": {
+    "season": 1996,
+    "race": 8,
+    "date": "1996-02-10",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1996_9": {
+    "season": 1996,
+    "race": 9,
+    "date": "1996-02-18",
+    "city": "Murau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1996_10": {
+    "season": 1996,
+    "race": 10,
+    "date": "1996-02-23",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1996_11": {
+    "season": 1996,
+    "race": 11,
+    "date": "1996-03-02",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1996_12": {
+    "season": 1996,
+    "race": 12,
+    "date": "1996-03-08",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "1996_13": {
+    "season": 1996,
+    "race": 13,
+    "date": "1996-03-16",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1997_1": {
+    "season": 1997,
+    "race": 1,
+    "date": "1996-11-22",
+    "city": "Rovaniemi",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1997_2": {
+    "season": 1997,
+    "race": 2,
+    "date": "1996-12-11",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "1997_3": {
+    "season": 1997,
+    "race": 3,
+    "date": "1996-12-29",
+    "city": "Oberwiesenthal",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1997_4": {
+    "season": 1997,
+    "race": 4,
+    "date": "1997-01-05",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1997_5": {
+    "season": 1997,
+    "race": 5,
+    "date": "1997-01-11",
+    "city": "Saalfelden",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1997_6": {
+    "season": 1997,
+    "race": 6,
+    "date": "1997-01-14",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1997_7": {
+    "season": 1997,
+    "race": 7,
+    "date": "1997-01-18",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Individual"
+  },
+  "1997_8": {
+    "season": 1997,
+    "race": 8,
+    "date": "1997-02-01",
+    "city": "Hakuba",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "1997_9": {
+    "season": 1997,
+    "race": 9,
+    "date": "1997-02-22",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1997_11": {
+    "season": 1997,
+    "race": 11,
+    "date": "1997-03-08",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1997_12": {
+    "season": 1997,
+    "race": 12,
+    "date": "1997-03-14",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1997_13": {
+    "season": 1997,
+    "race": 13,
+    "date": "1997-03-15",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1997_14": {
+    "season": 1997,
+    "race": 14,
+    "date": "1997-03-22",
+    "city": "Strbske Pleso",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1998_1": {
+    "season": 1998,
+    "race": 1,
+    "date": "1997-11-28",
+    "city": "Rovaniemi",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1998_2": {
+    "season": 1998,
+    "race": 2,
+    "date": "1997-11-29",
+    "city": "Rovaniemi",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1998_3": {
+    "season": 1998,
+    "race": 3,
+    "date": "1997-12-11",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "1998_4": {
+    "season": 1998,
+    "race": 4,
+    "date": "1997-12-13",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "1998_5": {
+    "season": 1998,
+    "race": 5,
+    "date": "1997-12-29",
+    "city": "Oberwiesenthal",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1998_6": {
+    "season": 1998,
+    "race": 6,
+    "date": "1998-01-03",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1998_7": {
+    "season": 1998,
+    "race": 7,
+    "date": "1998-01-09",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1998_8": {
+    "season": 1998,
+    "race": 8,
+    "date": "1998-01-13",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1998_9": {
+    "season": 1998,
+    "race": 9,
+    "date": "1998-01-18",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1998_10": {
+    "season": 1998,
+    "race": 10,
+    "date": "1998-02-13",
+    "city": "Nagano",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "1998_12": {
+    "season": 1998,
+    "race": 12,
+    "date": "1998-02-28",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "1998_13": {
+    "season": 1998,
+    "race": 13,
+    "date": "1998-03-07",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1998_14": {
+    "season": 1998,
+    "race": 14,
+    "date": "1998-03-10",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "1998_15": {
+    "season": 1998,
+    "race": 15,
+    "date": "1998-03-13",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1998_16": {
+    "season": 1998,
+    "race": 16,
+    "date": "1998-03-14",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1999_1": {
+    "season": 1999,
+    "race": 1,
+    "date": "1998-11-21",
+    "city": "Rovaniemi",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1999_2": {
+    "season": 1999,
+    "race": 2,
+    "date": "1998-11-24",
+    "city": "Rovaniemi",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "1999_3": {
+    "season": 1999,
+    "race": 3,
+    "date": "1998-11-27",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1999_4": {
+    "season": 1999,
+    "race": 4,
+    "date": "1998-11-29",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "1999_5": {
+    "season": 1999,
+    "race": 5,
+    "date": "1998-12-10",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "1999_6": {
+    "season": 1999,
+    "race": 6,
+    "date": "1998-12-12",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "1999_7": {
+    "season": 1999,
+    "race": 7,
+    "date": "1998-12-29",
+    "city": "Oberwiesenthal",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "1999_8": {
+    "season": 1999,
+    "race": 8,
+    "date": "1999-01-03",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "1999_9": {
+    "season": 1999,
+    "race": 9,
+    "date": "1999-01-09",
+    "city": "Strbske Pleso",
+    "country": "Slovakia",
+    "event": "Individual"
+  },
+  "1999_10": {
+    "season": 1999,
+    "race": 10,
+    "date": "1999-01-16",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "1999_11": {
+    "season": 1999,
+    "race": 11,
+    "date": "1999-01-24",
+    "city": "St. Moritz",
+    "country": "Switzerland",
+    "event": "Sprint"
+  },
+  "1999_12": {
+    "season": 1999,
+    "race": 12,
+    "date": "1999-01-26",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "1999_13": {
+    "season": 1999,
+    "race": 13,
+    "date": "1999-01-30",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "1999_14": {
+    "season": 1999,
+    "race": 14,
+    "date": "1999-02-20",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "1999_16": {
+    "season": 1999,
+    "race": 16,
+    "date": "1999-02-27",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "1999_17": {
+    "season": 1999,
+    "race": 17,
+    "date": "1999-03-06",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "1999_18": {
+    "season": 1999,
+    "race": 18,
+    "date": "1999-03-11",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Sprint"
+  },
+  "1999_19": {
+    "season": 1999,
+    "race": 19,
+    "date": "1999-03-12",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "1999_20": {
+    "season": 1999,
+    "race": 20,
+    "date": "1999-03-21",
+    "city": "Zakopane",
+    "country": "Poland",
+    "event": "Individual"
+  },
+  "2000_1": {
+    "season": 2000,
+    "race": 1,
+    "date": "1999-12-09",
+    "city": "Vuokatti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2000_2": {
+    "season": 2000,
+    "race": 2,
+    "date": "1999-12-11",
+    "city": "Vuokatti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2000_3": {
+    "season": 2000,
+    "race": 3,
+    "date": "1999-12-19",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "2000_4": {
+    "season": 2000,
+    "race": 4,
+    "date": "1999-12-21",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2000_5": {
+    "season": 2000,
+    "race": 5,
+    "date": "2000-01-03",
+    "city": "Oberwiesenthal",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2000_6": {
+    "season": 2000,
+    "race": 6,
+    "date": "2000-01-05",
+    "city": "Reit im Winkl",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2000_7": {
+    "season": 2000,
+    "race": 7,
+    "date": "2000-01-08",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2000_8": {
+    "season": 2000,
+    "race": 8,
+    "date": "2000-01-11",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2000_9": {
+    "season": 2000,
+    "race": 9,
+    "date": "2000-01-16",
+    "city": "Breitenwang",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2000_10": {
+    "season": 2000,
+    "race": 10,
+    "date": "2000-01-22",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2000_11": {
+    "season": 2000,
+    "race": 11,
+    "date": "2000-02-05",
+    "city": "Hakuba",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2000_12": {
+    "season": 2000,
+    "race": 12,
+    "date": "2000-02-08",
+    "city": "Nozawa Onsen",
+    "country": "Japan",
+    "event": "Sprint"
+  },
+  "2000_13": {
+    "season": 2000,
+    "race": 13,
+    "date": "2000-02-12",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2000_14": {
+    "season": 2000,
+    "race": 14,
+    "date": "2000-02-26",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2000_15": {
+    "season": 2000,
+    "race": 15,
+    "date": "2000-03-04",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2000_16": {
+    "season": 2000,
+    "race": 16,
+    "date": "2000-03-10",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2000_17": {
+    "season": 2000,
+    "race": 17,
+    "date": "2000-03-11",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2000_19": {
+    "season": 2000,
+    "race": 19,
+    "date": "2000-03-17",
+    "city": "Santa Caterina",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2001_1": {
+    "season": 2001,
+    "race": 1,
+    "date": "2000-12-02",
+    "city": "Kuopio",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2001_2": {
+    "season": 2001,
+    "race": 2,
+    "date": "2000-12-03",
+    "city": "Kuopio",
+    "country": "Finland",
+    "event": "Mass Start"
+  },
+  "2001_3": {
+    "season": 2001,
+    "race": 3,
+    "date": "2000-12-29",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2001_4": {
+    "season": 2001,
+    "race": 4,
+    "date": "2000-12-30",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2001_5": {
+    "season": 2001,
+    "race": 5,
+    "date": "2001-01-03",
+    "city": "Reit im Winkl",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2001_6": {
+    "season": 2001,
+    "race": 6,
+    "date": "2001-01-05",
+    "city": "Reit im Winkl",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2001_7": {
+    "season": 2001,
+    "race": 7,
+    "date": "2001-01-07",
+    "city": "Reit im Winkl",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2001_8": {
+    "season": 2001,
+    "race": 8,
+    "date": "2001-01-19",
+    "city": "Salt Lake City UT",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2001_10": {
+    "season": 2001,
+    "race": 10,
+    "date": "2001-01-25",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "2001_11": {
+    "season": 2001,
+    "race": 11,
+    "date": "2001-01-27",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2001_12": {
+    "season": 2001,
+    "race": 12,
+    "date": "2001-02-10",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2001_13": {
+    "season": 2001,
+    "race": 13,
+    "date": "2001-02-15",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2001_15": {
+    "season": 2001,
+    "race": 15,
+    "date": "2001-02-24",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2001_16": {
+    "season": 2001,
+    "race": 16,
+    "date": "2001-03-01",
+    "city": "Nayoro",
+    "country": "Japan",
+    "event": "Mass Start"
+  },
+  "2001_17": {
+    "season": 2001,
+    "race": 17,
+    "date": "2001-03-03",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2001_18": {
+    "season": 2001,
+    "race": 18,
+    "date": "2001-03-09",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2001_19": {
+    "season": 2001,
+    "race": 19,
+    "date": "2001-03-10",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2002_1": {
+    "season": 2002,
+    "race": 1,
+    "date": "2001-11-23",
+    "city": "Kuopio",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2002_2": {
+    "season": 2002,
+    "race": 2,
+    "date": "2001-11-25",
+    "city": "Kuopio",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2002_3": {
+    "season": 2002,
+    "race": 3,
+    "date": "2001-12-02",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2002_4": {
+    "season": 2002,
+    "race": 4,
+    "date": "2001-12-07",
+    "city": "Zakopane",
+    "country": "Poland",
+    "event": "Mass Start"
+  },
+  "2002_5": {
+    "season": 2002,
+    "race": 5,
+    "date": "2001-12-09",
+    "city": "Strbske Pleso",
+    "country": "Slovakia",
+    "event": "Sprint"
+  },
+  "2002_6": {
+    "season": 2002,
+    "race": 6,
+    "date": "2001-12-16",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "2002_7": {
+    "season": 2002,
+    "race": 7,
+    "date": "2001-12-18",
+    "city": "Steamboat Springs CO",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2002_8": {
+    "season": 2002,
+    "race": 8,
+    "date": "2001-12-29",
+    "city": "Oberwiesenthal",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2002_9": {
+    "season": 2002,
+    "race": 9,
+    "date": "2002-01-03",
+    "city": "Reit im Winkl",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2002_10": {
+    "season": 2002,
+    "race": 10,
+    "date": "2002-01-05",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2002_12": {
+    "season": 2002,
+    "race": 12,
+    "date": "2002-01-11",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2002_13": {
+    "season": 2002,
+    "race": 13,
+    "date": "2002-01-13",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Mass Start"
+  },
+  "2002_14": {
+    "season": 2002,
+    "race": 14,
+    "date": "2002-01-18",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2002_15": {
+    "season": 2002,
+    "race": 15,
+    "date": "2002-01-19",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2002_16": {
+    "season": 2002,
+    "race": 16,
+    "date": "2002-02-09",
+    "city": "Salt Lake City UT",
+    "country": "USA",
+    "event": "Individual"
+  },
+  "2002_18": {
+    "season": 2002,
+    "race": 18,
+    "date": "2002-02-21",
+    "city": "Salt Lake City UT",
+    "country": "USA",
+    "event": "Sprint"
+  },
+  "2002_19": {
+    "season": 2002,
+    "race": 19,
+    "date": "2002-03-01",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2002_20": {
+    "season": 2002,
+    "race": 20,
+    "date": "2002-03-03",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2002_21": {
+    "season": 2002,
+    "race": 21,
+    "date": "2002-03-13",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2002_22": {
+    "season": 2002,
+    "race": 22,
+    "date": "2002-03-15",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2002_23": {
+    "season": 2002,
+    "race": 23,
+    "date": "2002-03-16",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2003_1": {
+    "season": 2003,
+    "race": 1,
+    "date": "2002-11-29",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2003_2": {
+    "season": 2003,
+    "race": 2,
+    "date": "2002-12-06",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2003_3": {
+    "season": 2003,
+    "race": 3,
+    "date": "2002-12-07",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2003_4": {
+    "season": 2003,
+    "race": 4,
+    "date": "2002-12-08",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2003_5": {
+    "season": 2003,
+    "race": 5,
+    "date": "2002-12-14",
+    "city": "Harrachov",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2003_6": {
+    "season": 2003,
+    "race": 6,
+    "date": "2002-12-15",
+    "city": "Harrachov",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2003_7": {
+    "season": 2003,
+    "race": 7,
+    "date": "2003-01-01",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2003_8": {
+    "season": 2003,
+    "race": 8,
+    "date": "2003-01-08",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2003_9": {
+    "season": 2003,
+    "race": 9,
+    "date": "2003-01-12",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2003_10": {
+    "season": 2003,
+    "race": 10,
+    "date": "2003-01-22",
+    "city": "Hakuba",
+    "country": "Japan",
+    "event": "Sprint"
+  },
+  "2003_11": {
+    "season": 2003,
+    "race": 11,
+    "date": "2003-01-25",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Mass Start"
+  },
+  "2003_12": {
+    "season": 2003,
+    "race": 12,
+    "date": "2003-02-21",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2003_14": {
+    "season": 2003,
+    "race": 14,
+    "date": "2003-02-28",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2003_15": {
+    "season": 2003,
+    "race": 15,
+    "date": "2003-03-08",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2003_16": {
+    "season": 2003,
+    "race": 16,
+    "date": "2003-03-09",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2003_17": {
+    "season": 2003,
+    "race": 17,
+    "date": "2003-03-14",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2003_18": {
+    "season": 2003,
+    "race": 18,
+    "date": "2003-03-15",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2004_1": {
+    "season": 2004,
+    "race": 1,
+    "date": "2003-11-29",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2004_2": {
+    "season": 2004,
+    "race": 2,
+    "date": "2003-11-30",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2004_3": {
+    "season": 2004,
+    "race": 3,
+    "date": "2003-12-06",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2004_4": {
+    "season": 2004,
+    "race": 4,
+    "date": "2003-12-12",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2004_5": {
+    "season": 2004,
+    "race": 5,
+    "date": "2003-12-13",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2004_6": {
+    "season": 2004,
+    "race": 6,
+    "date": "2003-12-30",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2004_7": {
+    "season": 2004,
+    "race": 7,
+    "date": "2004-01-02",
+    "city": "Reit im Winkl",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2004_8": {
+    "season": 2004,
+    "race": 8,
+    "date": "2004-01-04",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2004_9": {
+    "season": 2004,
+    "race": 9,
+    "date": "2004-01-10",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2004_10": {
+    "season": 2004,
+    "race": 10,
+    "date": "2004-01-11",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2004_11": {
+    "season": 2004,
+    "race": 11,
+    "date": "2004-01-23",
+    "city": "Nayoro",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2004_12": {
+    "season": 2004,
+    "race": 12,
+    "date": "2004-01-25",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Mass Start"
+  },
+  "2004_13": {
+    "season": 2004,
+    "race": 13,
+    "date": "2004-01-27",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Sprint"
+  },
+  "2004_15": {
+    "season": 2004,
+    "race": 15,
+    "date": "2004-02-15",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2004_16": {
+    "season": 2004,
+    "race": 16,
+    "date": "2004-02-22",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2004_17": {
+    "season": 2004,
+    "race": 17,
+    "date": "2004-02-28",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2004_18": {
+    "season": 2004,
+    "race": 18,
+    "date": "2004-02-29",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2004_19": {
+    "season": 2004,
+    "race": 19,
+    "date": "2004-03-05",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2004_20": {
+    "season": 2004,
+    "race": 20,
+    "date": "2004-03-06",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2005_1": {
+    "season": 2005,
+    "race": 1,
+    "date": "2004-11-27",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2005_2": {
+    "season": 2005,
+    "race": 2,
+    "date": "2004-11-28",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2005_3": {
+    "season": 2005,
+    "race": 3,
+    "date": "2004-12-04",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2005_4": {
+    "season": 2005,
+    "race": 4,
+    "date": "2004-12-05",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2005_5": {
+    "season": 2005,
+    "race": 5,
+    "date": "2004-12-30",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2005_6": {
+    "season": 2005,
+    "race": 6,
+    "date": "2005-01-02",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2005_7": {
+    "season": 2005,
+    "race": 7,
+    "date": "2005-01-06",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2005_8": {
+    "season": 2005,
+    "race": 8,
+    "date": "2005-01-08",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2005_9": {
+    "season": 2005,
+    "race": 9,
+    "date": "2005-01-09",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2005_10": {
+    "season": 2005,
+    "race": 10,
+    "date": "2005-01-23",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2005_11": {
+    "season": 2005,
+    "race": 11,
+    "date": "2005-01-29",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Mass Start"
+  },
+  "2005_12": {
+    "season": 2005,
+    "race": 12,
+    "date": "2005-01-30",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2005_14": {
+    "season": 2005,
+    "race": 14,
+    "date": "2005-02-12",
+    "city": "Pragelato",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2005_15": {
+    "season": 2005,
+    "race": 15,
+    "date": "2005-02-18",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2005_17": {
+    "season": 2005,
+    "race": 17,
+    "date": "2005-02-27",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2005_18": {
+    "season": 2005,
+    "race": 18,
+    "date": "2005-03-04",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2005_19": {
+    "season": 2005,
+    "race": 19,
+    "date": "2005-03-05",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2005_20": {
+    "season": 2005,
+    "race": 20,
+    "date": "2005-03-12",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2005_21": {
+    "season": 2005,
+    "race": 21,
+    "date": "2005-03-13",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2006_1": {
+    "season": 2006,
+    "race": 1,
+    "date": "2005-11-25",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2006_2": {
+    "season": 2006,
+    "race": 2,
+    "date": "2005-11-27",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2006_3": {
+    "season": 2006,
+    "race": 3,
+    "date": "2005-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2006_4": {
+    "season": 2006,
+    "race": 4,
+    "date": "2005-12-04",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2006_5": {
+    "season": 2006,
+    "race": 5,
+    "date": "2005-12-17",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Mass Start"
+  },
+  "2006_6": {
+    "season": 2006,
+    "race": 6,
+    "date": "2005-12-18",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2006_7": {
+    "season": 2006,
+    "race": 7,
+    "date": "2005-12-30",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2006_8": {
+    "season": 2006,
+    "race": 8,
+    "date": "2006-01-03",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2006_9": {
+    "season": 2006,
+    "race": 9,
+    "date": "2006-01-06",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2006_10": {
+    "season": 2006,
+    "race": 10,
+    "date": "2006-01-14",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2006_11": {
+    "season": 2006,
+    "race": 11,
+    "date": "2006-01-15",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2006_12": {
+    "season": 2006,
+    "race": 12,
+    "date": "2006-01-21",
+    "city": "Harrachov",
+    "country": "Czechia",
+    "event": "Sprint"
+  },
+  "2006_13": {
+    "season": 2006,
+    "race": 13,
+    "date": "2006-01-22",
+    "city": "Harrachov",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2006_14": {
+    "season": 2006,
+    "race": 14,
+    "date": "2006-01-28",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2006_15": {
+    "season": 2006,
+    "race": 15,
+    "date": "2006-01-29",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2006_16": {
+    "season": 2006,
+    "race": 16,
+    "date": "2006-02-11",
+    "city": "Pragelato",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2006_18": {
+    "season": 2006,
+    "race": 18,
+    "date": "2006-02-21",
+    "city": "Pragelato",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2006_19": {
+    "season": 2006,
+    "race": 19,
+    "date": "2006-03-04",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2006_20": {
+    "season": 2006,
+    "race": 20,
+    "date": "2006-03-05",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2006_21": {
+    "season": 2006,
+    "race": 21,
+    "date": "2006-03-11",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2006_22": {
+    "season": 2006,
+    "race": 22,
+    "date": "2006-03-12",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2006_23": {
+    "season": 2006,
+    "race": 23,
+    "date": "2006-03-18",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Mass Start"
+  },
+  "2006_24": {
+    "season": 2006,
+    "race": 24,
+    "date": "2006-03-19",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Sprint"
+  },
+  "2007_1": {
+    "season": 2007,
+    "race": 1,
+    "date": "2006-11-25",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2007_2": {
+    "season": 2007,
+    "race": 2,
+    "date": "2006-12-02",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2007_3": {
+    "season": 2007,
+    "race": 3,
+    "date": "2006-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2007_4": {
+    "season": 2007,
+    "race": 4,
+    "date": "2006-12-17",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Mass Start"
+  },
+  "2007_5": {
+    "season": 2007,
+    "race": 5,
+    "date": "2006-12-17",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2007_6": {
+    "season": 2007,
+    "race": 6,
+    "date": "2006-12-30",
+    "city": "Ruhpolding",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2007_8": {
+    "season": 2007,
+    "race": 8,
+    "date": "2007-01-06",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2007_9": {
+    "season": 2007,
+    "race": 9,
+    "date": "2007-01-13",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2007_11": {
+    "season": 2007,
+    "race": 11,
+    "date": "2007-01-20",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2007_12": {
+    "season": 2007,
+    "race": 12,
+    "date": "2007-02-03",
+    "city": "Zakopane",
+    "country": "Poland",
+    "event": "Mass Start"
+  },
+  "2007_13": {
+    "season": 2007,
+    "race": 13,
+    "date": "2007-02-04",
+    "city": "Zakopane",
+    "country": "Poland",
+    "event": "Sprint"
+  },
+  "2007_14": {
+    "season": 2007,
+    "race": 14,
+    "date": "2007-02-23",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Sprint"
+  },
+  "2007_16": {
+    "season": 2007,
+    "race": 16,
+    "date": "2007-03-03",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2007_17": {
+    "season": 2007,
+    "race": 17,
+    "date": "2007-03-09",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2007_18": {
+    "season": 2007,
+    "race": 18,
+    "date": "2007-03-10",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2007_19": {
+    "season": 2007,
+    "race": 19,
+    "date": "2007-03-18",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2008_1": {
+    "season": 2008,
+    "race": 1,
+    "date": "2007-11-30",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2008_2": {
+    "season": 2008,
+    "race": 2,
+    "date": "2007-12-01",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Sprint"
+  },
+  "2008_3": {
+    "season": 2008,
+    "race": 3,
+    "date": "2007-12-08",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2008_4": {
+    "season": 2008,
+    "race": 4,
+    "date": "2007-12-09",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2008_5": {
+    "season": 2008,
+    "race": 5,
+    "date": "2007-12-15",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Mass Start"
+  },
+  "2008_6": {
+    "season": 2008,
+    "race": 6,
+    "date": "2007-12-16",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2008_7": {
+    "season": 2008,
+    "race": 7,
+    "date": "2007-12-30",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2008_8": {
+    "season": 2008,
+    "race": 8,
+    "date": "2008-01-05",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2008_9": {
+    "season": 2008,
+    "race": 9,
+    "date": "2008-01-06",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2008_10": {
+    "season": 2008,
+    "race": 10,
+    "date": "2008-01-12",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2008_11": {
+    "season": 2008,
+    "race": 11,
+    "date": "2008-01-13",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Sprint"
+  },
+  "2008_12": {
+    "season": 2008,
+    "race": 12,
+    "date": "2008-01-19",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2008_13": {
+    "season": 2008,
+    "race": 13,
+    "date": "2008-01-20",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Sprint"
+  },
+  "2008_14": {
+    "season": 2008,
+    "race": 14,
+    "date": "2008-01-26",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2008_15": {
+    "season": 2008,
+    "race": 15,
+    "date": "2008-01-27",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Sprint"
+  },
+  "2008_16": {
+    "season": 2008,
+    "race": 16,
+    "date": "2008-02-16",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Mass Start"
+  },
+  "2008_17": {
+    "season": 2008,
+    "race": 17,
+    "date": "2008-02-24",
+    "city": "Zakopane",
+    "country": "Poland",
+    "event": "Sprint"
+  },
+  "2008_18": {
+    "season": 2008,
+    "race": 18,
+    "date": "2008-02-29",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2008_19": {
+    "season": 2008,
+    "race": 19,
+    "date": "2008-03-08",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2008_20": {
+    "season": 2008,
+    "race": 20,
+    "date": "2008-03-09",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Sprint"
+  },
+  "2009_1": {
+    "season": 2009,
+    "race": 1,
+    "date": "2008-11-29",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2009_2": {
+    "season": 2009,
+    "race": 2,
+    "date": "2008-11-30",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2009_3": {
+    "season": 2009,
+    "race": 3,
+    "date": "2008-12-06",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2009_4": {
+    "season": 2009,
+    "race": 4,
+    "date": "2008-12-07",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2009_5": {
+    "season": 2009,
+    "race": 5,
+    "date": "2008-12-20",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2009_6": {
+    "season": 2009,
+    "race": 6,
+    "date": "2008-12-21",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2009_7": {
+    "season": 2009,
+    "race": 7,
+    "date": "2008-12-27",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2009_8": {
+    "season": 2009,
+    "race": 8,
+    "date": "2008-12-28",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2009_10": {
+    "season": 2009,
+    "race": 10,
+    "date": "2009-01-04",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2009_11": {
+    "season": 2009,
+    "race": 11,
+    "date": "2009-01-10",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Mass Start"
+  },
+  "2009_12": {
+    "season": 2009,
+    "race": 12,
+    "date": "2009-01-11",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2009_13": {
+    "season": 2009,
+    "race": 13,
+    "date": "2009-01-16",
+    "city": "Whistler",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "2009_14": {
+    "season": 2009,
+    "race": 14,
+    "date": "2009-01-17",
+    "city": "Whistler",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "2009_15": {
+    "season": 2009,
+    "race": 15,
+    "date": "2009-01-31",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2009_16": {
+    "season": 2009,
+    "race": 16,
+    "date": "2009-02-01",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2009_17": {
+    "season": 2009,
+    "race": 17,
+    "date": "2009-02-07",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2009_18": {
+    "season": 2009,
+    "race": 18,
+    "date": "2009-02-08",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2009_19": {
+    "season": 2009,
+    "race": 19,
+    "date": "2009-02-14",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2009_20": {
+    "season": 2009,
+    "race": 20,
+    "date": "2009-02-15",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2009_21": {
+    "season": 2009,
+    "race": 21,
+    "date": "2009-02-20",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Mass Start"
+  },
+  "2009_22": {
+    "season": 2009,
+    "race": 22,
+    "date": "2009-02-22",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2009_24": {
+    "season": 2009,
+    "race": 24,
+    "date": "2009-02-28",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2009_25": {
+    "season": 2009,
+    "race": 25,
+    "date": "2009-03-06",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2009_26": {
+    "season": 2009,
+    "race": 26,
+    "date": "2009-03-07",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2009_27": {
+    "season": 2009,
+    "race": 27,
+    "date": "2009-03-14",
+    "city": "Vikersund",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2009_28": {
+    "season": 2009,
+    "race": 28,
+    "date": "2009-03-15",
+    "city": "Vikersund",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2010_1": {
+    "season": 2010,
+    "race": 1,
+    "date": "2009-11-28",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2010_2": {
+    "season": 2010,
+    "race": 2,
+    "date": "2009-11-29",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2010_3": {
+    "season": 2010,
+    "race": 3,
+    "date": "2009-12-05",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2010_4": {
+    "season": 2010,
+    "race": 4,
+    "date": "2009-12-06",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2010_5": {
+    "season": 2010,
+    "race": 5,
+    "date": "2009-12-18",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2010_6": {
+    "season": 2010,
+    "race": 6,
+    "date": "2009-12-19",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2010_7": {
+    "season": 2010,
+    "race": 7,
+    "date": "2009-12-20",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2010_8": {
+    "season": 2010,
+    "race": 8,
+    "date": "2010-01-02",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2010_9": {
+    "season": 2010,
+    "race": 9,
+    "date": "2010-01-03",
+    "city": "Oberhof",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2010_10": {
+    "season": 2010,
+    "race": 10,
+    "date": "2010-01-09",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2010_11": {
+    "season": 2010,
+    "race": 11,
+    "date": "2010-01-10",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2010_12": {
+    "season": 2010,
+    "race": 12,
+    "date": "2010-01-16",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2010_13": {
+    "season": 2010,
+    "race": 13,
+    "date": "2010-01-17",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2010_14": {
+    "season": 2010,
+    "race": 14,
+    "date": "2010-01-23",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2010_16": {
+    "season": 2010,
+    "race": 16,
+    "date": "2010-01-30",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2010_17": {
+    "season": 2010,
+    "race": 17,
+    "date": "2010-01-31",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2010_18": {
+    "season": 2010,
+    "race": 18,
+    "date": "2010-02-14",
+    "city": "Whistler",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "2010_20": {
+    "season": 2010,
+    "race": 20,
+    "date": "2010-02-25",
+    "city": "Whistler",
+    "country": "Canada",
+    "event": "Individual"
+  },
+  "2010_21": {
+    "season": 2010,
+    "race": 21,
+    "date": "2010-03-05",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2010_22": {
+    "season": 2010,
+    "race": 22,
+    "date": "2010-03-06",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2010_24": {
+    "season": 2010,
+    "race": 24,
+    "date": "2010-03-14",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2011_1": {
+    "season": 2011,
+    "race": 1,
+    "date": "2010-11-26",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2011_2": {
+    "season": 2011,
+    "race": 2,
+    "date": "2010-11-27",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2011_3": {
+    "season": 2011,
+    "race": 3,
+    "date": "2010-12-04",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2011_4": {
+    "season": 2011,
+    "race": 4,
+    "date": "2010-12-05",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2011_5": {
+    "season": 2011,
+    "race": 5,
+    "date": "2010-12-18",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2011_6": {
+    "season": 2011,
+    "race": 6,
+    "date": "2010-12-19",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2011_7": {
+    "season": 2011,
+    "race": 7,
+    "date": "2011-01-08",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2011_9": {
+    "season": 2011,
+    "race": 9,
+    "date": "2011-01-15",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2011_10": {
+    "season": 2011,
+    "race": 10,
+    "date": "2011-01-16",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2011_11": {
+    "season": 2011,
+    "race": 11,
+    "date": "2011-01-22",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2011_12": {
+    "season": 2011,
+    "race": 12,
+    "date": "2011-01-23",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2011_13": {
+    "season": 2011,
+    "race": 13,
+    "date": "2011-02-26",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2011_15": {
+    "season": 2011,
+    "race": 15,
+    "date": "2011-03-02",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2011_17": {
+    "season": 2011,
+    "race": 17,
+    "date": "2011-03-11",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2011_18": {
+    "season": 2011,
+    "race": 18,
+    "date": "2011-03-12",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2012_1": {
+    "season": 2012,
+    "race": 1,
+    "date": "2011-11-25",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2012_2": {
+    "season": 2012,
+    "race": 2,
+    "date": "2011-11-26",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2012_3": {
+    "season": 2012,
+    "race": 3,
+    "date": "2011-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2012_4": {
+    "season": 2012,
+    "race": 4,
+    "date": "2011-12-04",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2012_5": {
+    "season": 2012,
+    "race": 5,
+    "date": "2011-12-10",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2012_6": {
+    "season": 2012,
+    "race": 6,
+    "date": "2011-12-11",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2012_8": {
+    "season": 2012,
+    "race": 8,
+    "date": "2011-12-17",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2012_9": {
+    "season": 2012,
+    "race": 9,
+    "date": "2011-12-18",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2012_11": {
+    "season": 2012,
+    "race": 11,
+    "date": "2012-01-08",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2012_12": {
+    "season": 2012,
+    "race": 12,
+    "date": "2012-01-13",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2012_13": {
+    "season": 2012,
+    "race": 13,
+    "date": "2012-01-14",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2012_14": {
+    "season": 2012,
+    "race": 14,
+    "date": "2012-01-15",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2012_15": {
+    "season": 2012,
+    "race": 15,
+    "date": "2012-02-03",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2012_17": {
+    "season": 2012,
+    "race": 17,
+    "date": "2012-02-05",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2012_18": {
+    "season": 2012,
+    "race": 18,
+    "date": "2012-02-11",
+    "city": "Almaty",
+    "country": "Kazakhstan",
+    "event": "Individual"
+  },
+  "2012_19": {
+    "season": 2012,
+    "race": 19,
+    "date": "2012-02-12",
+    "city": "Almaty",
+    "country": "Kazakhstan",
+    "event": "Individual"
+  },
+  "2012_20": {
+    "season": 2012,
+    "race": 20,
+    "date": "2012-02-18",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2012_21": {
+    "season": 2012,
+    "race": 21,
+    "date": "2012-02-19",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2012_22": {
+    "season": 2012,
+    "race": 22,
+    "date": "2012-02-25",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2012_23": {
+    "season": 2012,
+    "race": 23,
+    "date": "2012-02-26",
+    "city": "Liberec",
+    "country": "Czechia",
+    "event": "Individual"
+  },
+  "2012_24": {
+    "season": 2012,
+    "race": 24,
+    "date": "2012-03-03",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2012_25": {
+    "season": 2012,
+    "race": 25,
+    "date": "2012-03-09",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2012_26": {
+    "season": 2012,
+    "race": 26,
+    "date": "2012-03-10",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2013_1": {
+    "season": 2013,
+    "race": 1,
+    "date": "2012-11-24",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2013_2": {
+    "season": 2013,
+    "race": 2,
+    "date": "2012-11-25",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2013_3": {
+    "season": 2013,
+    "race": 3,
+    "date": "2012-12-01",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2013_5": {
+    "season": 2013,
+    "race": 5,
+    "date": "2012-12-15",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2013_6": {
+    "season": 2013,
+    "race": 6,
+    "date": "2012-12-16",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2013_8": {
+    "season": 2013,
+    "race": 8,
+    "date": "2013-01-06",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2013_9": {
+    "season": 2013,
+    "race": 9,
+    "date": "2013-01-12",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2013_11": {
+    "season": 2013,
+    "race": 11,
+    "date": "2013-01-19",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2013_12": {
+    "season": 2013,
+    "race": 12,
+    "date": "2013-01-20",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2013_13": {
+    "season": 2013,
+    "race": 13,
+    "date": "2013-01-26",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2013_14": {
+    "season": 2013,
+    "race": 14,
+    "date": "2013-01-27",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2013_15": {
+    "season": 2013,
+    "race": 15,
+    "date": "2013-02-02",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "2013_17": {
+    "season": 2013,
+    "race": 17,
+    "date": "2013-02-09",
+    "city": "Almaty",
+    "country": "Kazakhstan",
+    "event": "Individual"
+  },
+  "2013_18": {
+    "season": 2013,
+    "race": 18,
+    "date": "2013-02-10",
+    "city": "Almaty",
+    "country": "Kazakhstan",
+    "event": "Individual"
+  },
+  "2013_19": {
+    "season": 2013,
+    "race": 19,
+    "date": "2013-02-22",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2013_21": {
+    "season": 2013,
+    "race": 21,
+    "date": "2013-02-28",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2013_23": {
+    "season": 2013,
+    "race": 23,
+    "date": "2013-03-08",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2013_25": {
+    "season": 2013,
+    "race": 25,
+    "date": "2013-03-15",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2013_26": {
+    "season": 2013,
+    "race": 26,
+    "date": "2013-03-16",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2014_1": {
+    "season": 2014,
+    "race": 1,
+    "date": "2013-11-30",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2014_3": {
+    "season": 2014,
+    "race": 3,
+    "date": "2013-12-07",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2014_4": {
+    "season": 2014,
+    "race": 4,
+    "date": "2013-12-08",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2014_6": {
+    "season": 2014,
+    "race": 6,
+    "date": "2013-12-15",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2014_7": {
+    "season": 2014,
+    "race": 7,
+    "date": "2013-12-21",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2014_8": {
+    "season": 2014,
+    "race": 8,
+    "date": "2013-12-22",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2014_9": {
+    "season": 2014,
+    "race": 9,
+    "date": "2014-01-04",
+    "city": "Chaikovsky",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "2014_10": {
+    "season": 2014,
+    "race": 10,
+    "date": "2014-01-05",
+    "city": "Chaikovsky",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "2014_11": {
+    "season": 2014,
+    "race": 11,
+    "date": "2014-01-11",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2014_13": {
+    "season": 2014,
+    "race": 13,
+    "date": "2014-01-17",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2014_14": {
+    "season": 2014,
+    "race": 14,
+    "date": "2014-01-18",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2014_15": {
+    "season": 2014,
+    "race": 15,
+    "date": "2014-01-19",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2014_17": {
+    "season": 2014,
+    "race": 17,
+    "date": "2014-01-26",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2014_18": {
+    "season": 2014,
+    "race": 18,
+    "date": "2014-02-12",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "2014_19": {
+    "season": 2014,
+    "race": 19,
+    "date": "2014-02-18",
+    "city": "Sochi",
+    "country": "Russia",
+    "event": "Individual"
+  },
+  "2014_21": {
+    "season": 2014,
+    "race": 21,
+    "date": "2014-02-28",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2014_23": {
+    "season": 2014,
+    "race": 23,
+    "date": "2014-03-06",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2014_24": {
+    "season": 2014,
+    "race": 24,
+    "date": "2014-03-08",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2014_25": {
+    "season": 2014,
+    "race": 25,
+    "date": "2014-03-15",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2015_1": {
+    "season": 2015,
+    "race": 1,
+    "date": "2014-11-29",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2015_3": {
+    "season": 2015,
+    "race": 3,
+    "date": "2014-12-06",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2015_4": {
+    "season": 2015,
+    "race": 4,
+    "date": "2014-12-07",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2015_6": {
+    "season": 2015,
+    "race": 6,
+    "date": "2014-12-21",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2015_8": {
+    "season": 2015,
+    "race": 8,
+    "date": "2015-01-04",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2015_9": {
+    "season": 2015,
+    "race": 9,
+    "date": "2015-01-10",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2015_10": {
+    "season": 2015,
+    "race": 10,
+    "date": "2015-01-11",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2015_11": {
+    "season": 2015,
+    "race": 11,
+    "date": "2015-01-16",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2015_12": {
+    "season": 2015,
+    "race": 12,
+    "date": "2015-01-17",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2015_13": {
+    "season": 2015,
+    "race": 13,
+    "date": "2015-01-18",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2015_14": {
+    "season": 2015,
+    "race": 14,
+    "date": "2015-01-23",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2015_15": {
+    "season": 2015,
+    "race": 15,
+    "date": "2015-01-24",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2015_16": {
+    "season": 2015,
+    "race": 16,
+    "date": "2015-01-30",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2015_18": {
+    "season": 2015,
+    "race": 18,
+    "date": "2015-02-01",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2015_19": {
+    "season": 2015,
+    "race": 19,
+    "date": "2015-02-20",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2015_21": {
+    "season": 2015,
+    "race": 21,
+    "date": "2015-02-26",
+    "city": "Falun",
+    "country": "Sweden",
+    "event": "Individual"
+  },
+  "2015_23": {
+    "season": 2015,
+    "race": 23,
+    "date": "2015-03-06",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2015_25": {
+    "season": 2015,
+    "race": 25,
+    "date": "2015-03-12",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2015_26": {
+    "season": 2015,
+    "race": 26,
+    "date": "2015-03-14",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2016_1": {
+    "season": 2016,
+    "race": 1,
+    "date": "2015-12-05",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2016_2": {
+    "season": 2016,
+    "race": 2,
+    "date": "2015-12-06",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2016_3": {
+    "season": 2016,
+    "race": 3,
+    "date": "2015-12-19",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2016_4": {
+    "season": 2016,
+    "race": 4,
+    "date": "2015-12-20",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2016_5": {
+    "season": 2016,
+    "race": 5,
+    "date": "2016-01-23",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2016_6": {
+    "season": 2016,
+    "race": 6,
+    "date": "2016-01-24",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2016_7": {
+    "season": 2016,
+    "race": 7,
+    "date": "2016-01-29",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2016_8": {
+    "season": 2016,
+    "race": 8,
+    "date": "2016-01-30",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2016_9": {
+    "season": 2016,
+    "race": 9,
+    "date": "2016-01-31",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2016_10": {
+    "season": 2016,
+    "race": 10,
+    "date": "2016-02-06",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2016_11": {
+    "season": 2016,
+    "race": 11,
+    "date": "2016-02-09",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2016_12": {
+    "season": 2016,
+    "race": 12,
+    "date": "2016-02-10",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2016_13": {
+    "season": 2016,
+    "race": 13,
+    "date": "2016-02-19",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2016_15": {
+    "season": 2016,
+    "race": 15,
+    "date": "2016-02-21",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2016_16": {
+    "season": 2016,
+    "race": 16,
+    "date": "2016-02-23",
+    "city": "Kuopio",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2016_18": {
+    "season": 2016,
+    "race": 18,
+    "date": "2016-02-27",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2016_19": {
+    "season": 2016,
+    "race": 19,
+    "date": "2016-02-28",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2016_21": {
+    "season": 2016,
+    "race": 21,
+    "date": "2016-03-05",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2016_22": {
+    "season": 2016,
+    "race": 22,
+    "date": "2016-03-06",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2017_1": {
+    "season": 2017,
+    "race": 1,
+    "date": "2016-11-26",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2017_2": {
+    "season": 2017,
+    "race": 2,
+    "date": "2016-11-27",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2017_4": {
+    "season": 2017,
+    "race": 4,
+    "date": "2016-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2017_5": {
+    "season": 2017,
+    "race": 5,
+    "date": "2016-12-04",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2017_6": {
+    "season": 2017,
+    "race": 6,
+    "date": "2016-12-17",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2017_7": {
+    "season": 2017,
+    "race": 7,
+    "date": "2016-12-18",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2017_8": {
+    "season": 2017,
+    "race": 8,
+    "date": "2017-01-07",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2017_9": {
+    "season": 2017,
+    "race": 9,
+    "date": "2017-01-08",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2017_10": {
+    "season": 2017,
+    "race": 10,
+    "date": "2017-01-13",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2017_12": {
+    "season": 2017,
+    "race": 12,
+    "date": "2017-01-15",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2017_13": {
+    "season": 2017,
+    "race": 13,
+    "date": "2017-01-21",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2017_14": {
+    "season": 2017,
+    "race": 14,
+    "date": "2017-01-22",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2017_15": {
+    "season": 2017,
+    "race": 15,
+    "date": "2017-01-27",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2017_16": {
+    "season": 2017,
+    "race": 16,
+    "date": "2017-01-28",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2017_17": {
+    "season": 2017,
+    "race": 17,
+    "date": "2017-01-29",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2017_18": {
+    "season": 2017,
+    "race": 18,
+    "date": "2017-02-04",
+    "city": "PyeongChang",
+    "country": "South Korea",
+    "event": "Individual"
+  },
+  "2017_19": {
+    "season": 2017,
+    "race": 19,
+    "date": "2017-02-05",
+    "city": "PyeongChang",
+    "country": "South Korea",
+    "event": "Individual"
+  },
+  "2017_20": {
+    "season": 2017,
+    "race": 20,
+    "date": "2017-02-10",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2017_21": {
+    "season": 2017,
+    "race": 21,
+    "date": "2017-02-11",
+    "city": "Sapporo",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2017_22": {
+    "season": 2017,
+    "race": 22,
+    "date": "2017-02-24",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2017_24": {
+    "season": 2017,
+    "race": 24,
+    "date": "2017-03-01",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2017_26": {
+    "season": 2017,
+    "race": 26,
+    "date": "2017-03-11",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2017_27": {
+    "season": 2017,
+    "race": 27,
+    "date": "2017-03-15",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2017_28": {
+    "season": 2017,
+    "race": 28,
+    "date": "2017-03-18",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2017_29": {
+    "season": 2017,
+    "race": 29,
+    "date": "2017-03-19",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2018_1": {
+    "season": 2018,
+    "race": 1,
+    "date": "2017-11-24",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2018_2": {
+    "season": 2018,
+    "race": 2,
+    "date": "2017-11-25",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2018_3": {
+    "season": 2018,
+    "race": 3,
+    "date": "2017-11-26",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2018_5": {
+    "season": 2018,
+    "race": 5,
+    "date": "2017-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2018_6": {
+    "season": 2018,
+    "race": 6,
+    "date": "2017-12-16",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2018_7": {
+    "season": 2018,
+    "race": 7,
+    "date": "2017-12-17",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2018_8": {
+    "season": 2018,
+    "race": 8,
+    "date": "2018-01-12",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2018_10": {
+    "season": 2018,
+    "race": 10,
+    "date": "2018-01-14",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2018_11": {
+    "season": 2018,
+    "race": 11,
+    "date": "2018-01-20",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2018_13": {
+    "season": 2018,
+    "race": 13,
+    "date": "2018-01-26",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2018_14": {
+    "season": 2018,
+    "race": 14,
+    "date": "2018-01-27",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2018_15": {
+    "season": 2018,
+    "race": 15,
+    "date": "2018-01-28",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2018_16": {
+    "season": 2018,
+    "race": 16,
+    "date": "2018-02-03",
+    "city": "Hakuba",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2018_17": {
+    "season": 2018,
+    "race": 17,
+    "date": "2018-02-04",
+    "city": "Hakuba",
+    "country": "Japan",
+    "event": "Individual"
+  },
+  "2018_18": {
+    "season": 2018,
+    "race": 18,
+    "date": "2018-02-14",
+    "city": "PyeongChang",
+    "country": "South Korea",
+    "event": "Individual"
+  },
+  "2018_19": {
+    "season": 2018,
+    "race": 19,
+    "date": "2018-02-20",
+    "city": "PyeongChang",
+    "country": "South Korea",
+    "event": "Individual"
+  },
+  "2018_22": {
+    "season": 2018,
+    "race": 22,
+    "date": "2018-03-04",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2018_23": {
+    "season": 2018,
+    "race": 23,
+    "date": "2018-03-10",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2018_24": {
+    "season": 2018,
+    "race": 24,
+    "date": "2018-03-13",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2018_25": {
+    "season": 2018,
+    "race": 25,
+    "date": "2018-03-14",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2018_26": {
+    "season": 2018,
+    "race": 26,
+    "date": "2018-03-17",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2018_27": {
+    "season": 2018,
+    "race": 27,
+    "date": "2018-03-18",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2018_28": {
+    "season": 2018,
+    "race": 28,
+    "date": "2018-03-24",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2018_29": {
+    "season": 2018,
+    "race": 29,
+    "date": "2018-03-25",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2019_1": {
+    "season": 2019,
+    "race": 1,
+    "date": "2018-11-24",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2019_3": {
+    "season": 2019,
+    "race": 3,
+    "date": "2018-11-30",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2019_4": {
+    "season": 2019,
+    "race": 4,
+    "date": "2018-12-01",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Mass Start"
+  },
+  "2019_5": {
+    "season": 2019,
+    "race": 5,
+    "date": "2018-12-02",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2019_6": {
+    "season": 2019,
+    "race": 6,
+    "date": "2018-12-22",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2019_7": {
+    "season": 2019,
+    "race": 7,
+    "date": "2018-12-23",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2019_8": {
+    "season": 2019,
+    "race": 8,
+    "date": "2019-01-05",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Individual"
+  },
+  "2019_9": {
+    "season": 2019,
+    "race": 9,
+    "date": "2019-01-06",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Individual"
+  },
+  "2019_10": {
+    "season": 2019,
+    "race": 10,
+    "date": "2019-01-11",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2019_12": {
+    "season": 2019,
+    "race": 12,
+    "date": "2019-01-13",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2019_13": {
+    "season": 2019,
+    "race": 13,
+    "date": "2019-01-18",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2019_14": {
+    "season": 2019,
+    "race": 14,
+    "date": "2019-01-19",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2019_15": {
+    "season": 2019,
+    "race": 15,
+    "date": "2019-01-20",
+    "city": "Chaux-Neuve",
+    "country": "France",
+    "event": "Individual"
+  },
+  "2019_16": {
+    "season": 2019,
+    "race": 16,
+    "date": "2019-01-26",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2019_17": {
+    "season": 2019,
+    "race": 17,
+    "date": "2019-01-27",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2019_18": {
+    "season": 2019,
+    "race": 18,
+    "date": "2019-02-02",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2019_19": {
+    "season": 2019,
+    "race": 19,
+    "date": "2019-02-03",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2019_21": {
+    "season": 2019,
+    "race": 21,
+    "date": "2019-02-10",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2019_22": {
+    "season": 2019,
+    "race": 22,
+    "date": "2019-02-22",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2019_24": {
+    "season": 2019,
+    "race": 24,
+    "date": "2019-02-28",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2019_26": {
+    "season": 2019,
+    "race": 26,
+    "date": "2019-03-09",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2019_27": {
+    "season": 2019,
+    "race": 27,
+    "date": "2019-03-16",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2019_28": {
+    "season": 2019,
+    "race": 28,
+    "date": "2019-03-17",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2020_1": {
+    "season": 2020,
+    "race": 1,
+    "date": "2019-11-29",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2020_2": {
+    "season": 2020,
+    "race": 2,
+    "date": "2019-11-30",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2020_3": {
+    "season": 2020,
+    "race": 3,
+    "date": "2019-12-01",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2020_4": {
+    "season": 2020,
+    "race": 4,
+    "date": "2019-12-07",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2020_5": {
+    "season": 2020,
+    "race": 5,
+    "date": "2019-12-08",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2020_6": {
+    "season": 2020,
+    "race": 6,
+    "date": "2019-12-21",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2020_7": {
+    "season": 2020,
+    "race": 7,
+    "date": "2019-12-22",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2020_8": {
+    "season": 2020,
+    "race": 8,
+    "date": "2020-01-10",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2020_9": {
+    "season": 2020,
+    "race": 9,
+    "date": "2020-01-11",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2020_12": {
+    "season": 2020,
+    "race": 12,
+    "date": "2020-01-26",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2020_13": {
+    "season": 2020,
+    "race": 13,
+    "date": "2020-01-31",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2020_14": {
+    "season": 2020,
+    "race": 14,
+    "date": "2020-02-01",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2020_15": {
+    "season": 2020,
+    "race": 15,
+    "date": "2020-02-02",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2020_16": {
+    "season": 2020,
+    "race": 16,
+    "date": "2020-02-22",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2020_17": {
+    "season": 2020,
+    "race": 17,
+    "date": "2020-02-23",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2020_19": {
+    "season": 2020,
+    "race": 19,
+    "date": "2020-03-01",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2020_20": {
+    "season": 2020,
+    "race": 20,
+    "date": "2020-03-07",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2021_1": {
+    "season": 2021,
+    "race": 1,
+    "date": "2020-11-27",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2021_2": {
+    "season": 2021,
+    "race": 2,
+    "date": "2020-11-28",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2021_3": {
+    "season": 2021,
+    "race": 3,
+    "date": "2020-11-29",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2021_4": {
+    "season": 2021,
+    "race": 4,
+    "date": "2020-12-19",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2021_5": {
+    "season": 2021,
+    "race": 5,
+    "date": "2020-12-20",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2021_6": {
+    "season": 2021,
+    "race": 6,
+    "date": "2021-01-15",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2021_8": {
+    "season": 2021,
+    "race": 8,
+    "date": "2021-01-17",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2021_10": {
+    "season": 2021,
+    "race": 10,
+    "date": "2021-01-24",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2021_11": {
+    "season": 2021,
+    "race": 11,
+    "date": "2021-01-29",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2021_12": {
+    "season": 2021,
+    "race": 12,
+    "date": "2021-01-30",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2021_13": {
+    "season": 2021,
+    "race": 13,
+    "date": "2021-01-31",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2021_14": {
+    "season": 2021,
+    "race": 14,
+    "date": "2021-02-06",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2021_15": {
+    "season": 2021,
+    "race": 15,
+    "date": "2021-02-07",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2021_16": {
+    "season": 2021,
+    "race": 16,
+    "date": "2021-02-26",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2021_18": {
+    "season": 2021,
+    "race": 18,
+    "date": "2021-03-04",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2021_20": {
+    "season": 2021,
+    "race": 20,
+    "date": "2021-03-20",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2021_21": {
+    "season": 2021,
+    "race": 21,
+    "date": "2021-03-21",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2022_1": {
+    "season": 2022,
+    "race": 1,
+    "date": "2021-11-26",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2022_2": {
+    "season": 2022,
+    "race": 2,
+    "date": "2021-11-27",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2022_3": {
+    "season": 2022,
+    "race": 3,
+    "date": "2021-11-28",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2022_5": {
+    "season": 2022,
+    "race": 5,
+    "date": "2021-12-05",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2022_6": {
+    "season": 2022,
+    "race": 6,
+    "date": "2021-12-11",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Mass Start"
+  },
+  "2022_7": {
+    "season": 2022,
+    "race": 7,
+    "date": "2021-12-12",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Individual"
+  },
+  "2022_8": {
+    "season": 2022,
+    "race": 8,
+    "date": "2021-12-18",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2022_9": {
+    "season": 2022,
+    "race": 9,
+    "date": "2021-12-19",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2022_10": {
+    "season": 2022,
+    "race": 10,
+    "date": "2022-01-08",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2022_11": {
+    "season": 2022,
+    "race": 11,
+    "date": "2022-01-09",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "event": "Individual"
+  },
+  "2022_12": {
+    "season": 2022,
+    "race": 12,
+    "date": "2022-01-15",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2022_13": {
+    "season": 2022,
+    "race": 13,
+    "date": "2022-01-16",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2022_14": {
+    "season": 2022,
+    "race": 14,
+    "date": "2022-01-28",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2022_15": {
+    "season": 2022,
+    "race": 15,
+    "date": "2022-01-29",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2022_16": {
+    "season": 2022,
+    "race": 16,
+    "date": "2022-01-30",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2022_17": {
+    "season": 2022,
+    "race": 17,
+    "date": "2022-02-09",
+    "city": "Taizicheng",
+    "country": "China",
+    "event": "Individual"
+  },
+  "2022_18": {
+    "season": 2022,
+    "race": 18,
+    "date": "2022-02-15",
+    "city": "Taizicheng",
+    "country": "China",
+    "event": "Individual"
+  },
+  "2022_21": {
+    "season": 2022,
+    "race": 21,
+    "date": "2022-02-27",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2022_22": {
+    "season": 2022,
+    "race": 22,
+    "date": "2022-03-05",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2022_23": {
+    "season": 2022,
+    "race": 23,
+    "date": "2022-03-06",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2022_24": {
+    "season": 2022,
+    "race": 24,
+    "date": "2022-03-12",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2022_25": {
+    "season": 2022,
+    "race": 25,
+    "date": "2022-03-13",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2023_1": {
+    "season": 2023,
+    "race": 1,
+    "date": "2022-11-25",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2023_2": {
+    "season": 2023,
+    "race": 2,
+    "date": "2022-11-26",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2023_3": {
+    "season": 2023,
+    "race": 3,
+    "date": "2022-11-27",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Mass Start"
+  },
+  "2023_4": {
+    "season": 2023,
+    "race": 4,
+    "date": "2022-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2023_5": {
+    "season": 2023,
+    "race": 5,
+    "date": "2022-12-04",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2023_6": {
+    "season": 2023,
+    "race": 6,
+    "date": "2022-12-16",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2023_7": {
+    "season": 2023,
+    "race": 7,
+    "date": "2022-12-17",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2023_8": {
+    "season": 2023,
+    "race": 8,
+    "date": "2023-01-07",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Mass Start"
+  },
+  "2023_9": {
+    "season": 2023,
+    "race": 9,
+    "date": "2023-01-08",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Individual"
+  },
+  "2023_10": {
+    "season": 2023,
+    "race": 10,
+    "date": "2023-01-21",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Mass Start"
+  },
+  "2023_11": {
+    "season": 2023,
+    "race": 11,
+    "date": "2023-01-22",
+    "city": "Klingenthal",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2023_12": {
+    "season": 2023,
+    "race": 12,
+    "date": "2023-01-27",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2023_13": {
+    "season": 2023,
+    "race": 13,
+    "date": "2023-01-28",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2023_14": {
+    "season": 2023,
+    "race": 14,
+    "date": "2023-01-29",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2023_15": {
+    "season": 2023,
+    "race": 15,
+    "date": "2023-02-04",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2023_16": {
+    "season": 2023,
+    "race": 16,
+    "date": "2023-02-05",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2023_17": {
+    "season": 2023,
+    "race": 17,
+    "date": "2023-02-11",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2023_18": {
+    "season": 2023,
+    "race": 18,
+    "date": "2023-02-12",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2023_19": {
+    "season": 2023,
+    "race": 19,
+    "date": "2023-02-25",
+    "city": "Planica",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2023_21": {
+    "season": 2023,
+    "race": 21,
+    "date": "2023-03-04",
+    "city": "Planica",
+    "country": "Slovenia",
+    "event": "Individual"
+  },
+  "2023_22": {
+    "season": 2023,
+    "race": 22,
+    "date": "2023-03-11",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2023_23": {
+    "season": 2023,
+    "race": 23,
+    "date": "2023-03-12",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2023_25": {
+    "season": 2023,
+    "race": 25,
+    "date": "2023-03-25",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2023_26": {
+    "season": 2023,
+    "race": 26,
+    "date": "2023-03-26",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2024_1": {
+    "season": 2024,
+    "race": 1,
+    "date": "2023-11-24",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual Compact"
+  },
+  "2024_2": {
+    "season": 2024,
+    "race": 2,
+    "date": "2023-11-25",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2024_3": {
+    "season": 2024,
+    "race": 3,
+    "date": "2023-11-26",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Mass Start"
+  },
+  "2024_4": {
+    "season": 2024,
+    "race": 4,
+    "date": "2023-12-02",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2024_5": {
+    "season": 2024,
+    "race": 5,
+    "date": "2023-12-03",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2024_6": {
+    "season": 2024,
+    "race": 6,
+    "date": "2023-12-15",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Mass Start"
+  },
+  "2024_7": {
+    "season": 2024,
+    "race": 7,
+    "date": "2023-12-16",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual Compact"
+  },
+  "2024_8": {
+    "season": 2024,
+    "race": 8,
+    "date": "2024-01-13",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2024_9": {
+    "season": 2024,
+    "race": 9,
+    "date": "2024-01-14",
+    "city": "Oberstdorf",
+    "country": "Germany",
+    "event": "Individual Compact"
+  },
+  "2024_10": {
+    "season": 2024,
+    "race": 10,
+    "date": "2024-01-27",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2024_11": {
+    "season": 2024,
+    "race": 11,
+    "date": "2024-01-28",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2024_12": {
+    "season": 2024,
+    "race": 12,
+    "date": "2024-02-02",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2024_13": {
+    "season": 2024,
+    "race": 13,
+    "date": "2024-02-03",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2024_14": {
+    "season": 2024,
+    "race": 14,
+    "date": "2024-02-04",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2024_15": {
+    "season": 2024,
+    "race": 15,
+    "date": "2024-02-09",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Mass Start"
+  },
+  "2024_16": {
+    "season": 2024,
+    "race": 16,
+    "date": "2024-02-10",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Individual"
+  },
+  "2024_17": {
+    "season": 2024,
+    "race": 17,
+    "date": "2024-02-11",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Individual"
+  },
+  "2024_19": {
+    "season": 2024,
+    "race": 19,
+    "date": "2024-03-03",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2024_20": {
+    "season": 2024,
+    "race": 20,
+    "date": "2024-03-09",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2024_21": {
+    "season": 2024,
+    "race": 21,
+    "date": "2024-03-10",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2024_22": {
+    "season": 2024,
+    "race": 22,
+    "date": "2024-03-17",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2025_1": {
+    "season": 2025,
+    "race": 1,
+    "date": "2024-11-29",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual Compact"
+  },
+  "2025_2": {
+    "season": 2025,
+    "race": 2,
+    "date": "2024-11-30",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2025_3": {
+    "season": 2025,
+    "race": 3,
+    "date": "2024-12-01",
+    "city": "Kuusamo",
+    "country": "Finland",
+    "event": "Mass Start"
+  },
+  "2025_4": {
+    "season": 2025,
+    "race": 4,
+    "date": "2024-12-07",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2025_5": {
+    "season": 2025,
+    "race": 5,
+    "date": "2024-12-08",
+    "city": "Lillehammer",
+    "country": "Norway",
+    "event": "Individual Compact"
+  },
+  "2025_6": {
+    "season": 2025,
+    "race": 6,
+    "date": "2024-12-20",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Mass Start"
+  },
+  "2025_7": {
+    "season": 2025,
+    "race": 7,
+    "date": "2024-12-21",
+    "city": "Ramsau",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2025_8": {
+    "season": 2025,
+    "race": 8,
+    "date": "2025-01-18",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual"
+  },
+  "2025_9": {
+    "season": 2025,
+    "race": 9,
+    "date": "2025-01-19",
+    "city": "Schonach",
+    "country": "Germany",
+    "event": "Individual Compact"
+  },
+  "2025_10": {
+    "season": 2025,
+    "race": 10,
+    "date": "2025-01-31",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Mass Start"
+  },
+  "2025_11": {
+    "season": 2025,
+    "race": 11,
+    "date": "2025-02-01",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual Compact"
+  },
+  "2025_12": {
+    "season": 2025,
+    "race": 12,
+    "date": "2025-02-02",
+    "city": "Seefeld",
+    "country": "Austria",
+    "event": "Individual"
+  },
+  "2025_13": {
+    "season": 2025,
+    "race": 13,
+    "date": "2025-02-07",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Mass Start"
+  },
+  "2025_14": {
+    "season": 2025,
+    "race": 14,
+    "date": "2025-02-08",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Individual"
+  },
+  "2025_15": {
+    "season": 2025,
+    "race": 15,
+    "date": "2025-02-09",
+    "city": "Otep\u00e4\u00e4",
+    "country": "Estonia",
+    "event": "Individual Compact"
+  },
+  "2025_16": {
+    "season": 2025,
+    "race": 16,
+    "date": "2025-03-01",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual Compact"
+  },
+  "2025_18": {
+    "season": 2025,
+    "race": 18,
+    "date": "2025-03-08",
+    "city": "Trondheim",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2025_19": {
+    "season": 2025,
+    "race": 19,
+    "date": "2025-03-15",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual"
+  },
+  "2025_20": {
+    "season": 2025,
+    "race": 20,
+    "date": "2025-03-16",
+    "city": "Holmenkollen",
+    "country": "Norway",
+    "event": "Individual Compact"
+  },
+  "2025_21": {
+    "season": 2025,
+    "race": 21,
+    "date": "2025-03-21",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
+  "2025_22": {
+    "season": 2025,
+    "race": 22,
+    "date": "2025-03-22",
+    "city": "Lahti",
+    "country": "Finland",
+    "event": "Individual"
+  },
   "2026_1": {
     "season": 2026,
     "race": 1,
