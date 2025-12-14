@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      "USA",
+      100.0
+    ],
+    [
+      "Moa Ilar",
+      "Sweden",
+      55.3738317757009
+    ],
+    [
+      "Astrid Øyre Slind",
+      "Norway",
+      36.6822429906542
+    ],
+    [
+      "Nora Sanness",
+      "Norway",
+      20.7943925233645
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      "Norway",
+      19.392523364486
+    ]
+  ]
+}
