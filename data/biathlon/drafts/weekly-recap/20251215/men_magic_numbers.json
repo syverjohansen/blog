@@ -1,0 +1,481 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Johan-Olav Botn",
+      4479,
+      1,
+      365,
+      1351
+    ],
+    [
+      "Tommaso Giacomel",
+      4387,
+      2,
+      298,
+      1284
+    ],
+    [
+      "Eric Perrot",
+      4591,
+      3,
+      280,
+      1266
+    ],
+    [
+      "Sebastian Samuelsson",
+      1345,
+      4,
+      253,
+      1239
+    ],
+    [
+      "Quentin Fillon Maillet",
+      992,
+      5,
+      242,
+      1228
+    ],
+    [
+      "Sturla Holm Lægreid",
+      2753,
+      6,
+      237,
+      1223
+    ],
+    [
+      "Philipp Horn",
+      1707,
+      7,
+      203,
+      1189
+    ],
+    [
+      "Martin Uldal",
+      4612,
+      8,
+      180,
+      1166
+    ],
+    [
+      "Vetle Sjåstad Christiansen",
+      509,
+      9,
+      173,
+      1159
+    ],
+    [
+      "Campbell Wright",
+      4498,
+      10,
+      160,
+      1146
+    ],
+    [
+      "Martin Ponsiluoma",
+      1135,
+      11,
+      153,
+      1139
+    ],
+    [
+      "Philipp Nawrath",
+      1091,
+      12,
+      142,
+      1128
+    ],
+    [
+      "Sivert Guttorm Bakken",
+      1868,
+      13,
+      130,
+      1116
+    ],
+    [
+      "Justus Strelow",
+      1389,
+      14,
+      119,
+      1105
+    ],
+    [
+      "Emilien Jacquelin",
+      1333,
+      15,
+      118,
+      1104
+    ],
+    [
+      "Isak Leknes Frey",
+      4740,
+      16,
+      106,
+      1092
+    ],
+    [
+      "Jesper Nelin",
+      1266,
+      17,
+      101,
+      1087
+    ],
+    [
+      "Fabien Claude",
+      1089,
+      18,
+      92,
+      1078
+    ],
+    [
+      "Joscha Burkhalter",
+      1401,
+      19,
+      88,
+      1074
+    ],
+    [
+      "Simon Eder",
+      11,
+      20,
+      80,
+      1066
+    ],
+    [
+      "Vitezslav Hornig",
+      1786,
+      21,
+      77,
+      1063
+    ],
+    [
+      "Johannes Dale-Skjevdal",
+      3027,
+      22,
+      75,
+      1061
+    ],
+    [
+      "Vytautas Strolia",
+      1164,
+      23,
+      74,
+      1060
+    ],
+    [
+      "Lukas Hofer",
+      9,
+      24,
+      73,
+      1059
+    ],
+    [
+      "Malte Stefansson",
+      4445,
+      25,
+      71,
+      1057
+    ],
+    [
+      "Vitalii Mandzyn",
+      4760,
+      26,
+      65,
+      1051
+    ],
+    [
+      "Maxime Germain",
+      4448,
+      27,
+      63,
+      1049
+    ],
+    [
+      "Sebastian Stalder",
+      1873,
+      28,
+      59,
+      1045
+    ],
+    [
+      "Sean Doherty",
+      1073,
+      29,
+      47,
+      1033
+    ],
+    [
+      "Victor Brandt",
+      3526,
+      30,
+      42,
+      1028
+    ],
+    [
+      "Jan Gunka",
+      4559,
+      30,
+      42,
+      1028
+    ],
+    [
+      "Andrejs Rastorgujevs",
+      65,
+      30,
+      42,
+      1028
+    ],
+    [
+      "Florent Claude",
+      494,
+      33,
+      39,
+      1025
+    ],
+    [
+      "Vladimir Iliev",
+      123,
+      33,
+      39,
+      1025
+    ],
+    [
+      "Michal Krcmar",
+      477,
+      33,
+      39,
+      1025
+    ],
+    [
+      "Danilo Riethmueller",
+      1871,
+      33,
+      39,
+      1025
+    ],
+    [
+      "Vladislav Kireyev",
+      3528,
+      37,
+      35,
+      1021
+    ],
+    [
+      "Tuomas Harjula",
+      1768,
+      38,
+      30,
+      1016
+    ],
+    [
+      "Mikulas Karlik",
+      3124,
+      38,
+      30,
+      1016
+    ],
+    [
+      "Lovro Planko",
+      3459,
+      38,
+      30,
+      1016
+    ],
+    [
+      "David Zobel",
+      1571,
+      38,
+      30,
+      1016
+    ],
+    [
+      "Jakob Kulbin",
+      4854,
+      42,
+      29,
+      1015
+    ],
+    [
+      "Miha Dovzan",
+      1098,
+      43,
+      28,
+      1014
+    ],
+    [
+      "Niklas Hartweg",
+      3521,
+      43,
+      28,
+      1014
+    ],
+    [
+      "Antonin Guigonnat",
+      903,
+      45,
+      24,
+      1010
+    ],
+    [
+      "Maksim Fomin",
+      3534,
+      46,
+      21,
+      1007
+    ],
+    [
+      "Oscar Lombardot",
+      4524,
+      47,
+      20,
+      1006
+    ],
+    [
+      "Konrad Badacz",
+      4730,
+      48,
+      19,
+      1005
+    ],
+    [
+      "Thierry Langer",
+      917,
+      49,
+      18,
+      1004
+    ],
+    [
+      "Grzegorz Galica",
+      5077,
+      50,
+      17,
+      1003
+    ],
+    [
+      "Olli Hiidensalo",
+      920,
+      50,
+      17,
+      1003
+    ],
+    [
+      "Pavel Magazeev",
+      544,
+      50,
+      17,
+      1003
+    ],
+    [
+      "Paul Schommer",
+      1932,
+      50,
+      17,
+      1003
+    ],
+    [
+      "Tero Seppälä",
+      1427,
+      54,
+      15,
+      1001
+    ],
+    [
+      "Simon Kaiser",
+      4685,
+      55,
+      14,
+      1000
+    ],
+    [
+      "Mark-Markos Kehva",
+      4856,
+      55,
+      14,
+      1000
+    ],
+    [
+      "Renars Birkentals",
+      4452,
+      57,
+      13,
+      999
+    ],
+    [
+      "Jakov Fak",
+      19,
+      57,
+      13,
+      999
+    ],
+    [
+      "Kristo Siimer",
+      1578,
+      59,
+      12,
+      998
+    ],
+    [
+      "Adam Runnalls",
+      1772,
+      60,
+      9,
+      995
+    ],
+    [
+      "Emilien Claude",
+      1773,
+      61,
+      8,
+      994
+    ],
+    [
+      "Elia Zeni",
+      4787,
+      61,
+      8,
+      994
+    ],
+    [
+      "Didier Bionaz",
+      4389,
+      63,
+      5,
+      991
+    ],
+    [
+      "Asset Dyussenov",
+      4838,
+      64,
+      4,
+      990
+    ],
+    [
+      "Fabian Müllauer",
+      4798,
+      64,
+      4,
+      990
+    ],
+    [
+      "Jakub Stvrtecky",
+      1784,
+      64,
+      4,
+      990
+    ],
+    [
+      "Endre Strømsheim",
+      1764,
+      67,
+      3,
+      989
+    ]
+  ]
+}

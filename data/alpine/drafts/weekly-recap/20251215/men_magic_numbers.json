@@ -1,0 +1,761 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Marco Odermatt",
+      3040,
+      1,
+      505,
+      2801
+    ],
+    [
+      "Henrik Kristoffersen",
+      2391,
+      2,
+      302,
+      2598
+    ],
+    [
+      "Timon Haugan",
+      3049,
+      3,
+      281,
+      2577
+    ],
+    [
+      "Loic Meillard",
+      2565,
+      4,
+      258,
+      2554
+    ],
+    [
+      "Alex Vinatzer",
+      4040,
+      5,
+      251,
+      2547
+    ],
+    [
+      "Stefan Brennsteiner",
+      2436,
+      6,
+      245,
+      2541
+    ],
+    [
+      "Lucas Pinheiro Braathen",
+      4748,
+      7,
+      233,
+      2529
+    ],
+    [
+      "Marco Schwarz",
+      2561,
+      8,
+      231,
+      2527
+    ],
+    [
+      "Vincent Kriechmayr",
+      1912,
+      9,
+      227,
+      2523
+    ],
+    [
+      "Raphael Haaser",
+      4221,
+      10,
+      196,
+      2492
+    ],
+    [
+      "Atle Lie McGrath",
+      4711,
+      11,
+      192,
+      2488
+    ],
+    [
+      "Paco Rassat",
+      5371,
+      12,
+      140,
+      2436
+    ],
+    [
+      "River Radamus",
+      2986,
+      13,
+      137,
+      2433
+    ],
+    [
+      "Ryan Cochran-Siegle",
+      1918,
+      14,
+      126,
+      2422
+    ],
+    [
+      "Fredrik Møller",
+      5758,
+      14,
+      126,
+      2422
+    ],
+    [
+      "Dominik Paris",
+      91,
+      16,
+      114,
+      2410
+    ],
+    [
+      "Luca Aerni",
+      2392,
+      17,
+      113,
+      2409
+    ],
+    [
+      "Clement Noel",
+      2758,
+      18,
+      102,
+      2398
+    ],
+    [
+      "Stefan Rogentin",
+      3505,
+      19,
+      100,
+      2396
+    ],
+    [
+      "Sam Maes",
+      3002,
+      20,
+      97,
+      2393
+    ],
+    [
+      "Filip Zubcic",
+      249,
+      21,
+      96,
+      2392
+    ],
+    [
+      "Stefan Babinsky",
+      3039,
+      22,
+      92,
+      2388
+    ],
+    [
+      "Thibaut Favrot",
+      2493,
+      23,
+      90,
+      2386
+    ],
+    [
+      "Armand Marchant",
+      2603,
+      24,
+      89,
+      2385
+    ],
+    [
+      "Zan Kranjec",
+      1942,
+      25,
+      87,
+      2383
+    ],
+    [
+      "Adrian Smiseth Sejersted",
+      2386,
+      26,
+      84,
+      2380
+    ],
+    [
+      "Lukas Feurstein",
+      5336,
+      27,
+      82,
+      2378
+    ],
+    [
+      "Eduard Hallberg",
+      6820,
+      27,
+      82,
+      2378
+    ],
+    [
+      "Franjo Von Allmen",
+      5674,
+      29,
+      79,
+      2375
+    ],
+    [
+      "Steven Amiez",
+      5409,
+      30,
+      77,
+      2373
+    ],
+    [
+      "Stefan Eichberger",
+      5604,
+      31,
+      76,
+      2372
+    ],
+    [
+      "Oscar Andreas Sandvik",
+      6803,
+      32,
+      74,
+      2370
+    ],
+    [
+      "Laurie Taylor",
+      4143,
+      33,
+      72,
+      2368
+    ],
+    [
+      "Thomas Tumler",
+      2409,
+      34,
+      71,
+      2367
+    ],
+    [
+      "Alexis Pinturault",
+      232,
+      35,
+      68,
+      2364
+    ],
+    [
+      "Leo Anguenot",
+      2997,
+      36,
+      61,
+      2357
+    ],
+    [
+      "Victor Muffat-Jeandet",
+      2024,
+      37,
+      60,
+      2356
+    ],
+    [
+      "Fabio Gstrein",
+      3066,
+      38,
+      57,
+      2353
+    ],
+    [
+      "Fabian Gratz",
+      4358,
+      39,
+      56,
+      2352
+    ],
+    [
+      "Tanguy Nef",
+      3065,
+      40,
+      55,
+      2351
+    ],
+    [
+      "Alexis Monney",
+      5493,
+      41,
+      54,
+      2350
+    ],
+    [
+      "Eirik Hystad Solberg",
+      6716,
+      42,
+      52,
+      2348
+    ],
+    [
+      "James Crawford",
+      2720,
+      43,
+      51,
+      2347
+    ],
+    [
+      "Alexander Schmid",
+      2410,
+      44,
+      50,
+      2346
+    ],
+    [
+      "Nils Allegre",
+      2395,
+      45,
+      49,
+      2345
+    ],
+    [
+      "Albert Popov",
+      2597,
+      45,
+      49,
+      2345
+    ],
+    [
+      "Giovanni Franzoni",
+      5497,
+      47,
+      48,
+      2344
+    ],
+    [
+      "Linus Strasser",
+      1932,
+      47,
+      48,
+      2344
+    ],
+    [
+      "Michael Matt",
+      2481,
+      49,
+      45,
+      2341
+    ],
+    [
+      "Patrick Feurstein",
+      5295,
+      50,
+      43,
+      2339
+    ],
+    [
+      "Daniel Yule",
+      2404,
+      50,
+      43,
+      2339
+    ],
+    [
+      "Guglielmo Bosca",
+      2413,
+      52,
+      42,
+      2338
+    ],
+    [
+      "Miha Hrobat",
+      2633,
+      52,
+      42,
+      2338
+    ],
+    [
+      "Dave Ryding",
+      2375,
+      52,
+      42,
+      2338
+    ],
+    [
+      "Tommaso Sala",
+      2588,
+      55,
+      41,
+      2337
+    ],
+    [
+      "Hans Grahl-Madsen",
+      6712,
+      56,
+      40,
+      2336
+    ],
+    [
+      "Dominik Raschner",
+      2639,
+      56,
+      40,
+      2336
+    ],
+    [
+      "Joan Verdu Sanchez",
+      2551,
+      58,
+      37,
+      2333
+    ],
+    [
+      "Anton Grammel",
+      3004,
+      59,
+      36,
+      2332
+    ],
+    [
+      "Flavio Vitale",
+      7093,
+      59,
+      36,
+      2332
+    ],
+    [
+      "Daniel Hemetsberger",
+      4605,
+      61,
+      35,
+      2331
+    ],
+    [
+      "Alban Elezi Cannaferina",
+      5693,
+      62,
+      34,
+      2330
+    ],
+    [
+      "Ryder Sarchett",
+      6284,
+      63,
+      32,
+      2328
+    ],
+    [
+      "Jonas Stockinger",
+      3030,
+      63,
+      32,
+      2328
+    ],
+    [
+      "Aleksander Aamodt Kilde",
+      2393,
+      65,
+      31,
+      2327
+    ],
+    [
+      "Samuel Kolega",
+      3029,
+      66,
+      29,
+      2325
+    ],
+    [
+      "Manuel Feller",
+      2396,
+      67,
+      28,
+      2324
+    ],
+    [
+      "Jan Zabystran",
+      2719,
+      67,
+      28,
+      2324
+    ],
+    [
+      "Cameron Alexander",
+      4306,
+      69,
+      26,
+      2322
+    ],
+    [
+      "Matthias Iten",
+      4712,
+      69,
+      26,
+      2322
+    ],
+    [
+      "Justin Murisier",
+      67,
+      69,
+      26,
+      2322
+    ],
+    [
+      "Billy Major",
+      2607,
+      72,
+      25,
+      2321
+    ],
+    [
+      "Auguste Aulnette",
+      5430,
+      73,
+      24,
+      2320
+    ],
+    [
+      "Mattia Casse",
+      158,
+      74,
+      22,
+      2318
+    ],
+    [
+      "Filippo Della Vite",
+      5526,
+      74,
+      22,
+      2318
+    ],
+    [
+      "Hugo Desgrippes",
+      5508,
+      74,
+      22,
+      2318
+    ],
+    [
+      "Tobias Kastlunger",
+      5321,
+      74,
+      22,
+      2318
+    ],
+    [
+      "Simon Rueland",
+      3725,
+      74,
+      22,
+      2318
+    ],
+    [
+      "Johannes Strolz",
+      2401,
+      74,
+      22,
+      2318
+    ],
+    [
+      "Giovanni Borsotti",
+      114,
+      80,
+      20,
+      2316
+    ],
+    [
+      "Maxence Muzaton",
+      1990,
+      80,
+      20,
+      2316
+    ],
+    [
+      "Luca De Aliprandini",
+      1799,
+      82,
+      19,
+      2315
+    ],
+    [
+      "Florian Schieder",
+      3043,
+      83,
+      18,
+      2314
+    ],
+    [
+      "Joshua Sturm",
+      5399,
+      84,
+      17,
+      2313
+    ],
+    [
+      "Brodie Seger",
+      2711,
+      85,
+      16,
+      2312
+    ],
+    [
+      "Elian Lehto",
+      4054,
+      86,
+      14,
+      2310
+    ],
+    [
+      "Lenz Hächler",
+      6883,
+      87,
+      12,
+      2308
+    ],
+    [
+      "Yohei Koyama",
+      2447,
+      87,
+      12,
+      2308
+    ],
+    [
+      "Niels Hintermann",
+      2768,
+      89,
+      11,
+      2307
+    ],
+    [
+      "Simon Jocher",
+      4305,
+      89,
+      11,
+      2307
+    ],
+    [
+      "Tormis Laine",
+      4056,
+      89,
+      11,
+      2307
+    ],
+    [
+      "Christof Innerhofer",
+      13,
+      92,
+      10,
+      2306
+    ],
+    [
+      "Loevan Parand",
+      5340,
+      92,
+      10,
+      2306
+    ],
+    [
+      "Romed Baumann",
+      10,
+      94,
+      9,
+      2305
+    ],
+    [
+      "William Hansson",
+      5403,
+      95,
+      8,
+      2304
+    ],
+    [
+      "Nicolo Molteni",
+      4296,
+      95,
+      8,
+      2304
+    ],
+    [
+      "Albert Ortega",
+      4313,
+      95,
+      8,
+      2304
+    ],
+    [
+      "Marco Kohler",
+      3045,
+      98,
+      7,
+      2303
+    ],
+    [
+      "Kyle Negomir",
+      4714,
+      98,
+      7,
+      2303
+    ],
+    [
+      "Jared Goldberg",
+      2445,
+      100,
+      6,
+      2302
+    ],
+    [
+      "Ramon Zenhäusern",
+      2427,
+      100,
+      6,
+      2302
+    ],
+    [
+      "Cooper Puckett",
+      5567,
+      102,
+      5,
+      2301
+    ],
+    [
+      "Nejc Naralocnik",
+      3001,
+      103,
+      4,
+      2300
+    ],
+    [
+      "Erik Read",
+      1920,
+      103,
+      4,
+      2300
+    ],
+    [
+      "George Steffey",
+      4295,
+      103,
+      4,
+      2300
+    ],
+    [
+      "Bryce Bennett",
+      2387,
+      106,
+      3,
+      2299
+    ],
+    [
+      "Andreas Zampa",
+      1973,
+      106,
+      3,
+      2299
+    ]
+  ]
+}
