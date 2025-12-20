@@ -22,6 +22,105 @@ replace_na_with_quartile <- function(x) {
   ifelse(is.na(x), q1, x)
 }
 
+# Function to calculate race participation probabilities using exponential decay
+calculate_participation_probabilities <- function(startlist, chrono_data, races) {
+  log_info("Calculating realistic participation probabilities using exponential decay")
+  
+  # Check which race probability columns exist in the startlist
+  race_prob_cols <- grep("^Race\\d+_Prob$", names(startlist), value = TRUE)
+  log_info(paste("Found race probability columns:", paste(race_prob_cols, collapse = ", ")))
+  
+  if(length(race_prob_cols) == 0) {
+    log_info("No race probability columns found, skipping probability calculation")
+    return(startlist)
+  }
+  
+  # Create a copy of startlist to modify
+  startlist_with_probs <- startlist
+  
+  # Process each race probability column
+  for(i in seq_along(race_prob_cols)) {
+    prob_col <- race_prob_cols[i]
+    race_num <- as.numeric(gsub("Race(\\d+)_Prob", "\\1", prob_col))
+    
+    log_info(paste("Processing", prob_col, "for race", race_num))
+    
+    # Get race characteristics for this race
+    if(race_num <= nrow(races)) {
+      race_distance <- races$distance[race_num]
+      race_technique <- races$technique[race_num]
+      
+      log_info(paste("Race", race_num, "characteristics:", race_distance, race_technique))
+      
+      # For skiers with probability = 0, calculate realistic participation probability
+      zero_prob_skiers <- which(startlist_with_probs[[prob_col]] == 0)
+      
+      if(length(zero_prob_skiers) > 0) {
+        log_info(paste("Calculating probabilities for", length(zero_prob_skiers), "skiers with 0 probability"))
+        
+        # Calculate participation probabilities for these skiers
+        for(skier_idx in zero_prob_skiers) {
+          skier_name <- startlist_with_probs$Skier[skier_idx]
+          
+          # Get this skier's race history from chrono data
+          skier_data <- chrono_data %>%
+            filter(Skier == skier_name) %>%
+            arrange(Date, Season, Race)
+          
+          if(nrow(skier_data) > 0) {
+            # Filter for similar races (same distance and technique if specified)
+            similar_races <- skier_data
+            
+            # Filter by distance
+            if(race_distance == "Sprint") {
+              similar_races <- similar_races %>% filter(Distance == "Sprint")
+            } else {
+              similar_races <- similar_races %>% filter(Distance != "Sprint")
+            }
+            
+            # Filter by technique if specified
+            if(race_technique != "" && !is.na(race_technique)) {
+              similar_races <- similar_races %>% filter(Technique == race_technique)
+            }
+            
+            if(nrow(similar_races) > 0) {
+              # Calculate exponential decay probability
+              total_races <- nrow(similar_races)
+              
+              if(total_races > 0) {
+                # Create exponential decay weights (α = 0.1)
+                race_weights <- exp(-0.1 * ((total_races-1):0))
+                
+                # Create participation vector (1 if skier participated, 0 if not)
+                # Since they're all in the chronos data, they all participated
+                participation <- rep(1, total_races)
+                
+                # Calculate weighted probability
+                weighted_participation <- sum(participation * race_weights)
+                total_weight <- sum(race_weights)
+                prob <- weighted_participation / total_weight
+                
+                # Convert to percentage and apply to this race
+                startlist_with_probs[[prob_col]][skier_idx] <- round(prob * 100, 1)
+                
+                if(skier_idx <= 5) {  # Log first few for debugging
+                  log_info(sprintf("Skier %s: calculated %.1f%% participation probability based on %d races", 
+                                   skier_name, prob * 100, total_races))
+                }
+              }
+            }
+          }
+        }
+      } else {
+        log_info(paste("All skiers in", prob_col, "already have non-zero probabilities"))
+      }
+    }
+  }
+  
+  log_info("Completed participation probability calculation")
+  return(startlist_with_probs)
+}
+
 # Set up logging
 log_dir <- "~/ski/elo/python/ski/polars/excel365/race-day-predictions"
 if (!dir.exists(log_dir)) {
@@ -103,6 +202,29 @@ men_startlist$Sex = "M"
 ladies_startlist$Sex = "L"
 
 log_info(paste("Loaded", nrow(men_startlist), "men and", nrow(ladies_startlist), "ladies from startlists"))
+
+# Calculate realistic participation probabilities using exponential decay
+if(nrow(men_startlist) > 0) {
+  # Read men's chronological data for probability calculation
+  men_chrono_path <- "~/ski/elo/python/ski/polars/excel365/men_chrono_elevation.csv"
+  if(file.exists(men_chrono_path)) {
+    men_chrono <- read.csv(men_chrono_path, stringsAsFactors = FALSE) %>%
+      mutate(Date = as.Date(Date))
+    men_startlist <- calculate_participation_probabilities(men_startlist, men_chrono, men_races)
+    log_info("Updated men's startlist with realistic participation probabilities")
+  }
+}
+
+if(nrow(ladies_startlist) > 0) {
+  # Read ladies' chronological data for probability calculation
+  ladies_chrono_path <- "~/ski/elo/python/ski/polars/excel365/ladies_chrono_elevation.csv"
+  if(file.exists(ladies_chrono_path)) {
+    ladies_chrono <- read.csv(ladies_chrono_path, stringsAsFactors = FALSE) %>%
+      mutate(Date = as.Date(Date))
+    ladies_startlist <- calculate_participation_probabilities(ladies_startlist, ladies_chrono, ladies_races)
+    log_info("Updated ladies' startlist with realistic participation probabilities")
+  }
+}
 
 # Utility functions
 get_points <- function(place, points_list) {
@@ -1237,42 +1359,45 @@ predict_races <- function(gender) {
         period_adjustment = period_effect,
         ms_adjustment = ms_effect,
         
-        # Base prediction and adjustments - no race probability needed for race day
+        # Base prediction and adjustments
         Predicted_Points = Base_Prediction + altitude_adjustment + 
           period_adjustment + ms_adjustment,
         Predicted_Points = pmax(pmin(Predicted_Points, 100), 0),
         
-        Final_Prediction = Predicted_Points,
+        # Apply race participation probability weighting
+        Race_Prob = ifelse(
+          paste0("Race", i, "_Prob") %in% names(.),
+          get(paste0("Race", i, "_Prob")) / 100,  # Convert percentage to decimal
+          1.0  # Default to 100% if no probability column
+        ),
+        Race_Prob = pmax(pmin(Race_Prob, 1.0), 0.0),  # Ensure between 0 and 1
+        
+        # Final prediction weighted by participation probability
+        Final_Prediction = Predicted_Points * Race_Prob,
         
         # Different scoring scenarios
         confidence_factor = pmin(n_recent_races / 10, 1),
         scaled_upside_potential = upside_potential * (Predicted_Points/100),
         scaled_downside_potential = downside_risk * (Predicted_Points/100),
         
-        # Safe prediction (downside)
-        Safe_Prediction = pmax(
-          Predicted_Points - (prediction_volatility * 1.5 * confidence_factor), 
-          0
-        ),
-        Safe_Prediction = pmax(
+        # Safe prediction (downside) - also weighted by participation probability
+        Safe_Prediction_Base = pmax(
           Predicted_Points - (abs(scaled_downside_potential) * volatility_ratio * confidence_factor), 
           0
         ),
+        Safe_Prediction = Safe_Prediction_Base * Race_Prob,
         
-        # Upside prediction
-        Upside_Prediction = pmin(
-          Predicted_Points + (prediction_volatility * 1.5 * confidence_factor), 
-          100
-        ),
-        Upside_Prediction = pmin(
+        # Upside prediction - also weighted by participation probability
+        Upside_Prediction_Base = pmin(
           Predicted_Points + (scaled_upside_potential * volatility_ratio * confidence_factor), 
           100
-        )
+        ),
+        Upside_Prediction = Upside_Prediction_Base * Race_Prob
       ) %>%
       dplyr::select(Skier, Nation, 
                     Base_Prediction, altitude_adjustment, 
                     period_adjustment, ms_adjustment,
-                    prediction_volatility, volatility_ratio, confidence_factor,
+                    Race_Prob, prediction_volatility, volatility_ratio, confidence_factor,
                     Final_Prediction, Safe_Prediction, Upside_Prediction)
     
     # Apply pursuit handling if needed
@@ -1289,15 +1414,15 @@ predict_races <- function(gender) {
         ) %>%
         dplyr::select(Skier, startlist_points)
       
-      # Apply pursuit logic - average predicted points with startlist points
+      # Apply pursuit logic - average predicted points with startlist points, then apply race probability
       race_dfs[[i]] <- race_dfs[[i]] %>%
         left_join(startlist_points, by = "Skier") %>%
         mutate(
           startlist_points = replace_na(startlist_points, 0),
-          # Weighted average of predicted points and startlist points
-          Final_Prediction = (Predicted_Points + startlist_points) / 2,
-          Safe_Prediction = (Safe_Prediction + startlist_points) / 2,
-          Upside_Prediction = (Upside_Prediction + startlist_points) / 2
+          # Weighted average of predicted points and startlist points, then apply race probability
+          Final_Prediction = ((Predicted_Points + startlist_points) / 2) * Race_Prob,
+          Safe_Prediction = ((Safe_Prediction_Base + startlist_points) / 2) * Race_Prob,
+          Upside_Prediction = ((Upside_Prediction_Base + startlist_points) / 2) * Race_Prob
         ) %>%
         dplyr::select(-startlist_points)
       

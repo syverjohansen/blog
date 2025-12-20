@@ -210,64 +210,49 @@ calculate_race_probabilities <- function() {
     }
   }
   
-  # Function to get race probability for a skier/team
+  # Function to get race probability for a skier/team using exponential decay
   get_race_probability <- function(chronos, participant, racetype, is_relay = FALSE) {
-    log_debug(paste("Calculating probability for participant:", participant))
+    log_debug(paste("Calculating exponential decay probability for participant:", participant))
     
     # For relay, participant is a Nation
     id_col <- if(is_relay) "Nation" else "Skier"
     
-    # Get participant's first ever race date
-    participant_first_race <- chronos %>%
-      dplyr::filter(get(id_col) == participant) %>%
-      arrange(Date) %>%
-      dplyr::slice(1) %>%
-      pull(Date)
-    
-    # Calculate date from 5 years ago
-    five_years_ago <- Sys.Date() - (5 * 365)
-    
-    # Use 5 years ago or participant's first race, whichever is later
-    start_date <- if(length(participant_first_race) == 0) {
-      five_years_ago
-    } else {
-      max(five_years_ago, as.Date(participant_first_race))
-    }
-    
-    log_debug(paste("Using start date:", format(start_date, "%Y-%m-%d"), "for participant:", participant))
-    
-    # First get all matching races since start_date
-    all_races <- chronos %>%
-      dplyr::filter(
-        Date >= start_date,
-        RaceType == racetype
-      ) %>%
-      distinct(Date, City)
-    
-    # Then get this participant's participations
+    # Get participant's race history for this race type
     participant_races <- chronos %>%
       dplyr::filter(
-        Date >= start_date,
         get(id_col) == participant,
         RaceType == racetype
       ) %>%
-      distinct(Date, City)
+      arrange(Date, Season, Race)
     
-    total_races <- nrow(all_races)
-    
-    if(total_races == 0) {
-      log_debug(paste("No races found for race type:", racetype))
+    if(nrow(participant_races) == 0) {
+      log_debug(paste("No race history found for participant:", participant, "in race type:", racetype))
       return(0)
     }
     
-    races_participated <- nrow(participant_races)
-    # Cap probability at 1
-    prob <- min(1, races_participated / total_races)
+    # Calculate exponential decay probability
+    total_races <- nrow(participant_races)
     
-    log_debug(paste("Probability for", participant, "since", start_date, ":", prob, 
-                    "(", races_participated, "/", total_races, " races)"))
+    if(total_races > 0) {
+      # Create exponential decay weights (α = 0.1)
+      race_weights <- exp(-0.1 * ((total_races-1):0))
+      
+      # Create participation vector (1 if skier participated, 0 if not)
+      # Since they're all in the chronos data, they all participated
+      participation <- rep(1, total_races)
+      
+      # Calculate weighted probability
+      weighted_participation <- sum(participation * race_weights)
+      total_weight <- sum(race_weights)
+      prob <- weighted_participation / total_weight
+      
+      log_debug(paste("Exponential decay probability for", participant, ":", round(prob, 3), 
+                      "based on", total_races, "races"))
+      
+      return(prob)
+    }
     
-    return(prob)
+    return(0)
   }
   
   # Process men's and ladies's race probabilities
@@ -1847,7 +1832,7 @@ predict_races <- function(gender, is_relay = FALSE, relay_type = NULL, startlist
       explanatory_vars <- c("Prev_Points_Weighted", 
                             "Sprint_Pelo_Pct", "Individual_Pelo_Pct", 
                             "MassStart_Pelo_Pct", "Pursuit_Pelo_Pct", 
-                            "Pelo_Pct", "Period", "Elevation_Flag")
+                            "Pelo_Pct")
     }
     # Create and fit model for points
     formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))
@@ -1862,7 +1847,7 @@ predict_races <- function(gender, is_relay = FALSE, relay_type = NULL, startlist
     }, error = function(e) {
       log_warn(paste("Error in model selection:", e$message))
       # Fallback to a simpler model
-      fallback_formula <- as.formula(paste("Points ~ s(", pelo_col, ") + s(Period) + s(Elevation_Flag)"))
+      fallback_formula <- as.formula(paste("Points ~ s(", pelo_col, ")"))
       model <<- gam(fallback_formula, data = race_df_75)
     })
     
@@ -1882,9 +1867,22 @@ predict_races <- function(gender, is_relay = FALSE, relay_type = NULL, startlist
       mutate(
         Prediction_Diff = Points - Initial_Prediction
       ) %>%
-      # Step 2: Calculate Period adjustments
+      # Step 2: Calculate Period adjustments (disabled for relay teams since team compositions change)
       mutate(
-        period_p = purrr::map_dbl(row_id, function(r) {
+        # period_p = purrr::map_dbl(row_id, function(r) {
+        #   if(r <= 1) return(1)
+        #   prior_period_curr <- Prediction_Diff[Period == Period[r] & row_id < r]
+        #   prior_period_other <- Prediction_Diff[Period != Period[r] & row_id < r]
+        #   if(length(prior_period_curr) < 3 || length(prior_period_other) < 3) return(1)
+        #   tryCatch({
+        #     t.test(prior_period_curr, prior_period_other)$p.value
+        #   }, error = function(e) 1)
+        # }),
+        # period_correction = ifelse(period_p < 0.05,
+        #                            mean(Prediction_Diff[Period == Period], na.rm = TRUE),
+        #                            0),
+        # Period adjustments disabled for relay teams - team compositions change between races
+        period_p = if(is_relay) 1 else purrr::map_dbl(row_id, function(r) {
           if(r <= 1) return(1)
           prior_period_curr <- Prediction_Diff[Period == Period[r] & row_id < r]
           prior_period_other <- Prediction_Diff[Period != Period[r] & row_id < r]
@@ -1893,12 +1891,25 @@ predict_races <- function(gender, is_relay = FALSE, relay_type = NULL, startlist
             t.test(prior_period_curr, prior_period_other)$p.value
           }, error = function(e) 1)
         }),
-        period_correction = ifelse(period_p < 0.05,
+        period_correction = if(is_relay) 0 else ifelse(period_p < 0.05,
                                    mean(Prediction_Diff[Period == Period], na.rm = TRUE),
                                    0),
         
-        # Step 3: Calculate Elevation adjustments
-        elevation_p = purrr::map_dbl(row_id, function(r) {
+        # Step 3: Calculate Elevation adjustments (disabled for relay teams since team compositions change)
+        # elevation_p = purrr::map_dbl(row_id, function(r) {
+        #   if(r <= 1) return(1)
+        #   prior_elev_curr <- Prediction_Diff[Elevation_Flag == Elevation_Flag[r] & row_id < r]
+        #   prior_elev_other <- Prediction_Diff[Elevation_Flag != Elevation_Flag[r] & row_id < r]
+        #   if(length(prior_elev_curr) < 3 || length(prior_elev_other) < 3) return(1)
+        #   tryCatch({
+        #     t.test(prior_elev_curr, prior_elev_other)$p.value
+        #   }, error = function(e) 1)
+        # }),
+        # elevation_correction = ifelse(elevation_p < 0.05,
+        #                               mean(Prediction_Diff[Elevation_Flag == Elevation_Flag], na.rm = TRUE),
+        #                               0),
+        # Elevation adjustments disabled for relay teams - team compositions change between races
+        elevation_p = if(is_relay) 1 else purrr::map_dbl(row_id, function(r) {
           if(r <= 1) return(1)
           prior_elev_curr <- Prediction_Diff[Elevation_Flag == Elevation_Flag[r] & row_id < r]
           prior_elev_other <- Prediction_Diff[Elevation_Flag != Elevation_Flag[r] & row_id < r]
@@ -1907,7 +1918,7 @@ predict_races <- function(gender, is_relay = FALSE, relay_type = NULL, startlist
             t.test(prior_elev_curr, prior_elev_other)$p.value
           }, error = function(e) 1)
         }),
-        elevation_correction = ifelse(elevation_p < 0.05,
+        elevation_correction = if(is_relay) 0 else ifelse(elevation_p < 0.05,
                                       mean(Prediction_Diff[Elevation_Flag == Elevation_Flag], na.rm = TRUE),
                                       0),
         
@@ -1979,8 +1990,8 @@ predict_races <- function(gender, is_relay = FALSE, relay_type = NULL, startlist
           mutate(
             prob_diff = as.numeric(position_achieved) - initial_prob,
             
-            # Calculate period adjustments
-            period_p = purrr::map_dbl(row_id, function(r) {
+            # Calculate period adjustments (disabled for relay teams since team compositions change)
+            period_p = if(is_relay) 1 else purrr::map_dbl(row_id, function(r) {
               if(r <= 1) return(1)
               prior_period_curr <- prob_diff[Period == Period[r] & row_id < r]
               prior_period_other <- prob_diff[Period != Period[r] & row_id < r]
@@ -1989,7 +2000,7 @@ predict_races <- function(gender, is_relay = FALSE, relay_type = NULL, startlist
                 t.test(prior_period_curr, prior_period_other)$p.value
               }, error = function(e) 1)
             }),
-            period_correction = ifelse(period_p < 0.05,
+            period_correction = if(is_relay) 0 else ifelse(period_p < 0.05,
                                        mean(prob_diff[Period == Period], na.rm = TRUE),
                                        0),
             period_adjusted = pmin(pmax(initial_prob + period_correction, 0), 1)
@@ -2230,38 +2241,38 @@ predict_races <- function(gender, is_relay = FALSE, relay_type = NULL, startlist
           # Store predictions
           position_preds[[paste0(prob_col, "_base")]] <- base_predictions
           
-          # Apply adjustments if available
-          if(adj_name %in% names(position_adjustments)) {
-            # Get adjustments
-            pos_adj <- position_adjustments[[adj_name]]
-            
-            # Join with predictions
-            position_preds <- position_preds %>%
-              left_join(pos_adj, by = participant_col) %>%
-              mutate(
-                # Replace NAs with zeros
-                period_effect = replace_na(period_effect, 0),
-                
-                # Apply adjustments
-                period_adjustment = period_effect,
-                
-                # Calculate adjusted probabilities
-                adjusted_prob = get(paste0(prob_col, "_base")) + period_adjustment,
-                
-                # Ensure probabilities are between 0 and 1
-                adjusted_prob = pmin(pmax(adjusted_prob, 0), 1)
-              )
-            
-            # Use adjusted probability as final
-            position_preds[[prob_col]] <- position_preds$adjusted_prob
-            
-            # Clean up temporary columns
-            position_preds <- position_preds %>%
-              dplyr::select(-period_effect, -period_adjustment, -adjusted_prob)
-          } else {
-            # Use base prediction if no adjustments
+          # Apply adjustments if available - COMMENTED OUT: Remove double-dipping
+          # if(adj_name %in% names(position_adjustments)) {
+          #   # Get adjustments
+          #   pos_adj <- position_adjustments[[adj_name]]
+          #   
+          #   # Join with predictions
+          #   position_preds <- position_preds %>%
+          #     left_join(pos_adj, by = participant_col) %>%
+          #     mutate(
+          #       # Replace NAs with zeros
+          #       period_effect = replace_na(period_effect, 0),
+          #       
+          #       # Apply adjustments
+          #       period_adjustment = period_effect,
+          #       
+          #       # Calculate adjusted probabilities
+          #       adjusted_prob = get(paste0(prob_col, "_base")) + period_adjustment,
+          #       
+          #       # Ensure probabilities are between 0 and 1
+          #       adjusted_prob = pmin(pmax(adjusted_prob, 0), 1)
+          #     )
+          #   
+          #   # Use adjusted probability as final
+          #   position_preds[[prob_col]] <- position_preds$adjusted_prob
+          #   
+          #   # Clean up temporary columns
+          #   position_preds <- position_preds %>%
+          #     dplyr::select(-period_effect, -period_adjustment, -adjusted_prob)
+          # } else {
+            # Use base prediction without adjustments
             position_preds[[prob_col]] <- position_preds[[paste0(prob_col, "_base")]]
-          }
+          # }
           
           # Clean up base prediction column
           position_preds <- position_preds %>%
@@ -2330,11 +2341,11 @@ predict_races <- function(gender, is_relay = FALSE, relay_type = NULL, startlist
         volatility_ratio = replace_na(volatility_ratio, 1),
         n_recent_races = replace_na(n_recent_races, 0),
         
-        # Using existing adjustment approach
-        period_adjustment = period_effect,
-        elevation_adjustment = elevation_effect,
+        # Using existing adjustment approach (disabled for relay teams since team compositions change)
+        period_adjustment = if(is_relay) 0 else period_effect,
+        elevation_adjustment = if(is_relay) 0 else elevation_effect,
         
-        # Base prediction and adjustments
+        # Base prediction and adjustments (period and elevation adjustments disabled for relay teams)
         Predicted_Points = Base_Prediction + period_adjustment + elevation_adjustment,
         Predicted_Points = pmax(pmin(Predicted_Points, 100), 0),
         

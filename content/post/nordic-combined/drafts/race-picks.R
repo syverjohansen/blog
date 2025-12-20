@@ -223,64 +223,49 @@ calculate_race_probabilities <- function() {
     }
   }
   
-  # Function to get race probability for a skier/team
+  # Function to get race probability for a skier/team using exponential decay
   get_race_probability <- function(chronos, participant, racetype, is_team = FALSE) {
-    log_debug(paste("Calculating probability for participant:", participant))
+    log_debug(paste("Calculating exponential decay probability for participant:", participant))
     
     # For team, participant is a Nation
     id_col <- if(is_team) "Nation" else "Skier"
     
-    # Get participant's first ever race date
-    participant_first_race <- chronos %>%
-      filter(get(id_col) == participant) %>%
-      arrange(Date) %>%
-      slice(1) %>%
-      pull(Date)
-    
-    # Calculate date from 5 years ago
-    five_years_ago <- Sys.Date() - (5 * 365)
-    
-    # Use 5 years ago or participant's first race, whichever is later
-    start_date <- if(length(participant_first_race) == 0) {
-      five_years_ago
-    } else {
-      max(five_years_ago, as.Date(participant_first_race))
-    }
-    
-    log_debug(paste("Using start date:", format(start_date, "%Y-%m-%d"), "for participant:", participant))
-    
-    # First get all matching races since start_date
-    all_races <- chronos %>%
-      filter(
-        Date >= start_date,
-        RaceType == racetype
-      ) %>%
-      distinct(Date, City)
-    
-    # Then get this participant's participations
+    # Get participant's race history for this race type
     participant_races <- chronos %>%
       filter(
-        Date >= start_date,
         get(id_col) == participant,
         RaceType == racetype
       ) %>%
-      distinct(Date, City)
+      arrange(Date, Season, Race)
     
-    total_races <- nrow(all_races)
-    
-    if(total_races == 0) {
-      log_debug(paste("No races found for race type:", racetype))
+    if(nrow(participant_races) == 0) {
+      log_debug(paste("No race history found for participant:", participant, "in race type:", racetype))
       return(0)
     }
     
-    races_participated <- nrow(participant_races)
-    # Cap probability at 1
-    prob <- min(1, races_participated / total_races)
+    # Calculate exponential decay probability
+    total_races <- nrow(participant_races)
     
-    log_debug(paste("Probability for", participant, "since", start_date, ":", prob, 
-                    "(", races_participated, "/", total_races, " races)"))
+    if(total_races > 0) {
+      # Create exponential decay weights (α = 0.1)
+      race_weights <- exp(-0.1 * ((total_races-1):0))
+      
+      # Create participation vector (1 if skier participated, 0 if not)
+      # Since they're all in the chronos data, they all participated
+      participation <- rep(1, total_races)
+      
+      # Calculate weighted probability
+      weighted_participation <- sum(participation * race_weights)
+      total_weight <- sum(race_weights)
+      prob <- weighted_participation / total_weight
+      
+      log_debug(paste("Exponential decay probability for", participant, ":", round(prob, 3), 
+                      "based on", total_races, "races"))
+      
+      return(prob)
+    }
     
-    return(prob)
+    return(0)
   }
   
   # Process men's and ladies' race probabilities
@@ -1067,17 +1052,17 @@ preprocess_data <- function(df, is_team = FALSE) {
     })) %>%
     ungroup()
   
-  # Check if Elo columns exist, if not create them
+  # For training, use Pelo columns (pre-race ELO) but name them as Elo_Pct for consistency
   if(is_team) {
-    elo_cols <- c("Avg_Sprint_Elo", "Avg_Individual_Elo", "Avg_MassStart_Elo", "Avg_IndividualCompact_Elo", "Avg_Elo")
+    pelo_cols <- c("Avg_Sprint_Pelo", "Avg_Individual_Pelo", "Avg_MassStart_Pelo", "Avg_IndividualCompact_Pelo", "Avg_Pelo")
   } else {
-    elo_cols <- c("Sprint_Elo", "Individual_Elo", "MassStart_Elo", "IndividualCompact_Elo", "Elo")
+    pelo_cols <- c("Sprint_Pelo", "Individual_Pelo", "MassStart_Pelo", "IndividualCompact_Pelo", "Pelo")
   }
   
-  # Make sure these columns exist (create if missing)
-  for (col in elo_cols) {
+  # Make sure Pelo columns exist (create if missing)
+  for (col in pelo_cols) {
     if (!col %in% names(df_with_points)) {
-      log_info(paste("Creating missing column:", col))
+      log_info(paste("Creating missing Pelo column:", col))
       df_with_points[[col]] <- 0
     }
   }
@@ -1107,30 +1092,34 @@ preprocess_data <- function(df, is_team = FALSE) {
     group_by(!!sym(id_col), Season) %>%
     mutate(Cumulative_Points = cumsum(Points)) %>%
     ungroup() %>%
-    # Handle NAs and calculate percentages
+    # Handle NAs and calculate percentages using Pelo columns
     group_by(Season, Race) %>%
     mutate(
       across(
-        all_of(elo_cols),
+        all_of(pelo_cols),
         ~replace_na_with_quartile(.x)
       )
     ) %>%
-    # Calculate percentages for each Elo column
+    # Calculate percentages for each Pelo column but name as Elo_Pct for consistency
     mutate(
       across(
-        all_of(elo_cols),
+        all_of(pelo_cols),
         ~{
           max_val <- max(.x, na.rm = TRUE)
           if (max_val == 0) return(rep(0, length(.x)))
           .x / max_val
         },
-        .names = "{.col}_Pct"
+        .names = "{str_replace(.col, 'Pelo', 'Elo')}_Pct"
       )
     ) %>%
     ungroup()
   
-  # Ensure all required Elo_Pct columns exist
-  pct_cols <- paste0(elo_cols, "_Pct")
+  # Ensure all required Elo_Pct columns exist (using Elo naming for consistency)
+  if(is_team) {
+    pct_cols <- paste0(c("Avg_Sprint_Elo", "Avg_Individual_Elo", "Avg_MassStart_Elo", "Avg_IndividualCompact_Elo", "Avg_Elo"), "_Pct")
+  } else {
+    pct_cols <- paste0(c("Sprint_Elo", "Individual_Elo", "MassStart_Elo", "IndividualCompact_Elo", "Elo"), "_Pct")
+  }
   for (col in pct_cols) {
     if (!col %in% names(processed_df)) {
       log_info(paste("Creating missing percentage column:", col))
@@ -1359,39 +1348,39 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       }
     }
     
-    # CRITICAL: Convert Elo columns to Pelo_Pct columns for model prediction
-    # Models are trained on Pelo data but we predict using Elo data from startlist
+    # CRITICAL: Convert Elo columns to Elo_Pct columns for model prediction
+    # Models are trained on Pelo data (named as Elo_Pct) but we predict using Elo data from startlist
     for(i in seq_along(elo_cols)) {
       elo_col <- elo_cols[i]
       pelo_col <- pelo_cols[i]  # corresponding Pelo column name
-      pelo_pct_col <- paste0(pelo_col, "_Pct")
+      elo_pct_col <- paste0(str_replace(elo_col, "_Elo", "_Elo"), "_Pct")
       
       if(elo_col %in% names(result_df)) {
         # Get max value for normalization from race_df (historical Pelo data)
         if(pelo_col %in% names(race_df)) {
           max_val <- max(race_df[[pelo_col]], na.rm = TRUE)
           if(!is.na(max_val) && max_val > 0) {
-            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using max Pelo =", max_val))
-            result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+            log_info(paste("Converting", elo_col, "to", elo_pct_col, "using max Pelo =", max_val))
+            result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
           } else {
             log_warn(paste("No valid max value for", pelo_col, "using default"))
-            result_df[[pelo_pct_col]] <- 0.5
+            result_df[[elo_pct_col]] <- 0.5
           }
         } else {
           # Fallback: normalize within current Elo data
           max_val <- max(result_df[[elo_col]], na.rm = TRUE)
           if(!is.na(max_val) && max_val > 0) {
-            log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using internal max =", max_val))
-            result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+            log_info(paste("Converting", elo_col, "to", elo_pct_col, "using internal max =", max_val))
+            result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
           } else {
             log_warn(paste("No valid data for", elo_col, "using default"))
-            result_df[[pelo_pct_col]] <- 0.5
+            result_df[[elo_pct_col]] <- 0.5
           }
         }
       } else {
-        # If Elo column doesn't exist, create default Pelo_Pct
-        log_info(paste("Creating default", pelo_pct_col, "(missing", elo_col, ")"))
-        result_df[[pelo_pct_col]] <- 0.5
+        # If Elo column doesn't exist, create default Elo_Pct
+        log_info(paste("Creating default", elo_pct_col, "(missing", elo_col, ")"))
+        result_df[[elo_pct_col]] <- 0.5
       }
     }
   } else {
@@ -1475,39 +1464,39 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
     }
   }
   
-  # CRITICAL: Create Pelo_Pct columns from Elo values for model prediction
-  # Models are trained on Pelo data but we predict using Elo data from startlist
+  # CRITICAL: Create Elo_Pct columns from Elo values for model prediction
+  # Models are trained on Pelo data (named as Elo_Pct) but we predict using Elo data from startlist
   for(i in seq_along(elo_columns_to_process)) {
     elo_col <- elo_columns_to_process[i]
     pelo_col <- pelo_columns_to_process[i]  # corresponding Pelo column name
-    pelo_pct_col <- paste0(pelo_col, "_Pct")
+    elo_pct_col <- paste0(str_replace(elo_col, "_Elo", "_Elo"), "_Pct")
     
     if(elo_col %in% names(result_df)) {
       # Get max value for normalization from race_df (historical Pelo data if available)
       if(pelo_col %in% names(race_df)) {
         max_val <- max(race_df[[pelo_col]], na.rm = TRUE)
         if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using max Pelo =", max_val))
-          result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+          log_info(paste("Converting", elo_col, "to", elo_pct_col, "using max Pelo =", max_val))
+          result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
         } else {
           log_warn(paste("No valid max value for", pelo_col, "using default"))
-          result_df[[pelo_pct_col]] <- 0.5
+          result_df[[elo_pct_col]] <- 0.5
         }
       } else {
         # Fallback: normalize within current Elo data
         max_val <- max(result_df[[elo_col]], na.rm = TRUE)
         if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using internal max =", max_val))
-          result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+          log_info(paste("Converting", elo_col, "to", elo_pct_col, "using internal max =", max_val))
+          result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
         } else {
           log_warn(paste("No valid data for", elo_col, "using default"))
-          result_df[[pelo_pct_col]] <- 0.5
+          result_df[[elo_pct_col]] <- 0.5
         }
       }
     } else {
-      # If Elo column doesn't exist, create default Pelo_Pct
-      log_info(paste("Creating default", pelo_pct_col, "(missing", elo_col, ")"))
-      result_df[[pelo_pct_col]] <- 0.5
+      # If Elo column doesn't exist, create default Elo_Pct
+      log_info(paste("Creating default", elo_pct_col, "(missing", elo_col, ")"))
+      result_df[[elo_pct_col]] <- 0.5
     }
   }
   

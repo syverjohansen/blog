@@ -576,6 +576,7 @@ calculate_skier_race_probabilities_skijump <- function(chrono_data, skier_name) 
         City != "Summer",
         !grepl("Team", RaceType, ignore.case = TRUE)  # Exclude team races
       ) %>%
+      arrange(Date, Race) %>%
       distinct(Date, Race)
     
     skier_races <- chrono_data %>%
@@ -586,6 +587,7 @@ calculate_skier_race_probabilities_skijump <- function(chrono_data, skier_name) 
         Skier == skier_name,
         !grepl("Team", RaceType, ignore.case = TRUE)  # Exclude team races
       ) %>%
+      arrange(Date, Race) %>%
       distinct(Date, Race)
     
     total_races <- nrow(all_races)
@@ -594,10 +596,31 @@ calculate_skier_race_probabilities_skijump <- function(chrono_data, skier_name) 
       return(0.5)  # Default probability if no historical data
     }
     
-    races_participated <- nrow(skier_races)
-    prob <- min(1, races_participated / total_races)
+    # Create exponential decay weights (α = 0.1)
+    # Most recent race gets weight = 1, oldest gets weight = exp(-0.1 * (total_races-1))
+    race_weights <- exp(-0.1 * ((total_races-1):0))
     
-    log_debug("Probability for {skier_name} in {discipline}: {prob} ({races_participated}/{total_races})")
+    # Create participation vector (1 if skier participated, 0 if not)
+    participation <- rep(0, total_races)
+    
+    # Mark races where skier participated
+    if(nrow(skier_races) > 0) {
+      # Match skier races to all races by date and race number
+      for(i in 1:nrow(skier_races)) {
+        match_idx <- which(all_races$Date == skier_races$Date[i] & 
+                          all_races$Race == skier_races$Race[i])
+        if(length(match_idx) > 0) {
+          participation[match_idx] <- 1
+        }
+      }
+    }
+    
+    # Calculate weighted probability
+    weighted_participation <- sum(participation * race_weights)
+    total_weight <- sum(race_weights)
+    prob <- weighted_participation / total_weight
+    
+    log_debug("Probability for {skier_name} in {discipline}: {prob} (weighted: {round(weighted_participation, 3)}/{round(total_weight, 3)})")
     
     return(prob)
   }
@@ -643,6 +666,7 @@ create_race_probability_table_skijump <- function(men_chrono, ladies_chrono, top
           City != "Summer",
           !grepl("Team", RaceType, ignore.case = TRUE)  # Exclude team races
         ) %>%
+        arrange(Date, Race) %>%
         distinct(Date, Race)
       
       skier_races <- chrono_data %>%
@@ -653,6 +677,7 @@ create_race_probability_table_skijump <- function(men_chrono, ladies_chrono, top
           Skier == skier_name,
           !grepl("Team", RaceType, ignore.case = TRUE)  # Exclude team races
         ) %>%
+        arrange(Date, Race) %>%
         distinct(Date, Race)
       
       total_races <- nrow(all_races)
@@ -661,8 +686,29 @@ create_race_probability_table_skijump <- function(men_chrono, ladies_chrono, top
         return(0.5)  # Default probability if no historical data
       }
       
-      races_participated <- nrow(skier_races)
-      prob <- min(1, races_participated / total_races)
+      # Create exponential decay weights (α = 0.1)
+      # Most recent race gets weight = 1, oldest gets weight = exp(-0.1 * (total_races-1))
+      race_weights <- exp(-0.1 * ((total_races-1):0))
+      
+      # Create participation vector (1 if skier participated, 0 if not)
+      participation <- rep(0, total_races)
+      
+      # Mark races where skier participated
+      if(nrow(skier_races) > 0) {
+        # Match skier races to all races by date and race number
+        for(i in 1:nrow(skier_races)) {
+          match_idx <- which(all_races$Date == skier_races$Date[i] & 
+                            all_races$Race == skier_races$Race[i])
+          if(length(match_idx) > 0) {
+            participation[match_idx] <- 1
+          }
+        }
+      }
+      
+      # Calculate weighted probability
+      weighted_participation <- sum(participation * race_weights)
+      total_weight <- sum(race_weights)
+      prob <- weighted_participation / total_weight
       
       return(prob)
     }

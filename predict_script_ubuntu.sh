@@ -89,18 +89,101 @@ process_sport_data() {
     if check_date_in_csv "$weekends_csv" "$TODAY_MMDDYYYY"; then
         log_message "✓ Weekend races found for $sport_dir on $TODAY_MMDDYYYY"
         
-        # Run weekend scrape script
-        if [[ -f "$polars_dir/startlist-scrape-weekend.py" ]]; then
-            log_message "Running startlist-scrape-weekend.py for $sport_dir"
-            cd "$polars_dir" && source ~/blog/venv/bin/activate && python startlist-scrape-weekend.py >/dev/null 2>&1
-            log_message "Completed startlist-scrape-weekend.py for $sport_dir"
+        # Special handling for cross-country (ski) - check for Period 2 TdS events
+        if [[ "$sport_dir" == "ski" ]]; then
+            log_message "Cross-country sport detected - checking for Period 2 (Tour de Ski) events"
+            
+            # Filter weekends.csv for Period == 2 and get earliest date
+            if [[ -f "$weekends_csv" ]]; then
+                # Use awk to find Period column and get earliest date where Period == 2
+                earliest_period2_date=$(awk -F',' '
+                    NR==1 {
+                        for(i=1; i<=NF; i++) {
+                            if($i == "Period" || $i == " Period" || $i == "Period ") period_col = i
+                            if($i == "Date" || $i == " Date" || $i == "Date ") date_col = i
+                        }
+                    }
+                    NR>1 && period_col && date_col && $period_col == 2 {
+                        dates[NR] = $date_col
+                    }
+                    END {
+                        earliest = ""
+                        for(i in dates) {
+                            if(earliest == "" || dates[i] < earliest) {
+                                earliest = dates[i]
+                            }
+                        }
+                        print earliest
+                    }
+                ' "$weekends_csv" 2>/dev/null)
+                
+                log_message "Earliest Period 2 date found: '$earliest_period2_date'"
+                log_message "Today's date: '$TODAY_MMDDYYYY'"
+                
+                # Check if earliest Period 2 date matches today
+                if [[ "$earliest_period2_date" == "$TODAY_MMDDYYYY" ]]; then
+                    log_message "✓ Tour de Ski (Period 2) event detected for today - running TdS scraper"
+                    
+                    # Run TdS scrape script instead of regular weekend script
+                    if [[ -f "$polars_dir/startlist-scrape-tds.py" ]]; then
+                        log_message "Running startlist-scrape-tds.py for $sport_dir"
+                        cd "$polars_dir" && source ~/blog/venv/bin/activate && python startlist-scrape-tds.py >/dev/null 2>&1
+                        log_message "Completed startlist-scrape-tds.py for $sport_dir"
+                    else
+                        log_message "Warning: startlist-scrape-tds.py not found for $sport_dir"
+                    fi
+                else
+                    log_message "Not a Tour de Ski start date - running regular weekend scraper"
+                    
+                    # Run regular weekend scrape script
+                    if [[ -f "$polars_dir/startlist-scrape-weekend.py" ]]; then
+                        log_message "Running startlist-scrape-weekend.py for $sport_dir"
+                        cd "$polars_dir" && source ~/blog/venv/bin/activate && python startlist-scrape-weekend.py >/dev/null 2>&1
+                        log_message "Completed startlist-scrape-weekend.py for $sport_dir"
+                    else
+                        log_message "Warning: startlist-scrape-weekend.py not found for $sport_dir"
+                    fi
+                fi
+            else
+                log_message "weekends.csv not found - falling back to regular weekend scraper"
+                
+                # Run regular weekend scrape script as fallback
+                if [[ -f "$polars_dir/startlist-scrape-weekend.py" ]]; then
+                    log_message "Running startlist-scrape-weekend.py for $sport_dir"
+                    cd "$polars_dir" && source ~/blog/venv/bin/activate && python startlist-scrape-weekend.py >/dev/null 2>&1
+                    log_message "Completed startlist-scrape-weekend.py for $sport_dir"
+                else
+                    log_message "Warning: startlist-scrape-weekend.py not found for $sport_dir"
+                fi
+            fi
         else
-            log_message "Warning: startlist-scrape-weekend.py not found for $sport_dir"
+            # Run regular weekend scrape script for non-cross-country sports
+            if [[ -f "$polars_dir/startlist-scrape-weekend.py" ]]; then
+                log_message "Running startlist-scrape-weekend.py for $sport_dir"
+                cd "$polars_dir" && source ~/blog/venv/bin/activate && python startlist-scrape-weekend.py >/dev/null 2>&1
+                log_message "Completed startlist-scrape-weekend.py for $sport_dir"
+            else
+                log_message "Warning: startlist-scrape-weekend.py not found for $sport_dir"
+            fi
         fi
         
-        # Process weekend predictions
-        local weekend_source_dir="$CONTENT_DIR/$content_sport/drafts/weekly-picks/$TODAY_YYYYMMDD"
-        local weekend_output_dir="$BLOG_DIR/data/$content_sport/drafts/weekly-picks/$TODAY_YYYYMMDD"
+        # Process weekend predictions - check if this was a TdS event for cross-country
+        local weekend_source_dir=""
+        local weekend_output_dir=""
+        local weekend_type="weekly-picks"
+        
+        if [[ "$sport_dir" == "ski" && "$earliest_period2_date" == "$TODAY_MMDDYYYY" ]]; then
+            # This was a TdS event - use tds-picks directories
+            weekend_source_dir="$CONTENT_DIR/$content_sport/drafts/tds-picks/$TODAY_YYYYMMDD"
+            weekend_output_dir="$BLOG_DIR/data/$content_sport/drafts/tds-picks/$TODAY_YYYYMMDD"
+            weekend_type="tds-picks"
+            log_message "Using TdS directories for cross-country Period 2 event"
+        else
+            # Regular weekend event - use weekly-picks directories
+            weekend_source_dir="$CONTENT_DIR/$content_sport/drafts/weekly-picks/$TODAY_YYYYMMDD"
+            weekend_output_dir="$BLOG_DIR/data/$content_sport/drafts/weekly-picks/$TODAY_YYYYMMDD"
+            log_message "Using regular weekend directories"
+        fi
         
         # Create weekend source directory if it doesn't exist
         mkdir -p "$weekend_source_dir"
@@ -129,11 +212,11 @@ process_sport_data() {
                 fi
             done
             
-            # Add to data generated
+            # Add to data generated - use the correct type based on whether this was TdS
             if [[ -n "$data_generated" ]]; then
-                data_generated="$data_generated|$content_sport:weekly-picks:true"
+                data_generated="$data_generated|$content_sport:$weekend_type:true"
             else
-                data_generated="$content_sport:weekly-picks:true"
+                data_generated="$content_sport:$weekend_type:true"
             fi
         else
             log_message "Weekend source directory not found: $weekend_source_dir"
@@ -464,6 +547,7 @@ if [[ -n "$sports_with_predictions" ]]; then
     
     # Separate predictions by type
     weekend_predictions=""
+    tds_predictions=""
     race_predictions=""
     
     for prediction in "${prediction_array[@]}"; do
@@ -477,6 +561,13 @@ if [[ -n "$sports_with_predictions" ]]; then
                 weekend_predictions="$prediction"
             fi
             log_message "Added to weekend predictions: $prediction"
+        elif [[ "$pred_type" == "tds-picks" ]]; then
+            if [[ -n "$tds_predictions" ]]; then
+                tds_predictions="$tds_predictions|$prediction"
+            else
+                tds_predictions="$prediction"
+            fi
+            log_message "Added to TdS predictions: $prediction"
         elif [[ "$pred_type" == "race-picks" ]]; then
             if [[ -n "$race_predictions" ]]; then
                 race_predictions="$race_predictions|$prediction"
@@ -490,6 +581,7 @@ if [[ -n "$sports_with_predictions" ]]; then
     done
     
     log_message "Final weekend predictions: '$weekend_predictions'"
+    log_message "Final TdS predictions: '$tds_predictions'"
     log_message "Final race predictions: '$race_predictions'"
     
     # Create weekly picks post if there are weekend predictions
@@ -510,7 +602,7 @@ if [[ -n "$sports_with_predictions" ]]; then
 ---
 title: "$title"
 date: $(date -Iseconds)
-draft: false
+draft: true
 tags: ["predictions", "skiing", "weekend-picks"]
 ---
 
@@ -529,6 +621,45 @@ EOF
         done
         
         log_message "✓ Created weekly picks post: $weekly_post_file"
+    fi
+    
+    # Create TdS picks post if there are TdS predictions
+    if [[ -n "$tds_predictions" ]]; then
+        log_message "Creating TdS picks post"
+        log_message "TdS predictions to process: '$tds_predictions'"
+        
+        tds_post_dir="$CONTENT_DIR/tds-picks"
+        mkdir -p "$tds_post_dir"
+        tds_post_file="$tds_post_dir/$TODAY_YYYYMMDD.md"
+        
+        log_message "TdS post directory: $tds_post_dir (exists: $([ -d "$tds_post_dir" ] && echo "yes" || echo "no"))"
+        log_message "TdS post file: $tds_post_file"
+        
+        title="Tour de Ski Picks for $TODAY_MMDDYYYY"
+        
+        cat > "$tds_post_file" << EOF
+---
+title: "$title"
+date: $(date -Iseconds)
+draft: false
+tags: ["predictions", "skiing", "tour-de-ski", "tds-picks"]
+---
+
+# $title
+
+EOF
+        
+        log_message "Created TdS post header"
+        
+        # Add sections for each sport with TdS predictions
+        IFS='|' read -ra tds_array <<< "$tds_predictions"
+        for prediction in "${tds_array[@]}"; do
+            IFS=':' read -r sport pred_type is_tds_flag <<< "$prediction"
+            log_message "Adding section for TdS sport: $sport"
+            create_sport_section "$sport" "$pred_type" "$tds_post_file"
+        done
+        
+        log_message "✓ Created TdS picks post: $tds_post_file"
     fi
     
     # Create race picks post if there are race predictions

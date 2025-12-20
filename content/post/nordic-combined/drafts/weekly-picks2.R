@@ -1053,7 +1053,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       }
     }
     
-    # CRITICAL: Convert Elo columns to Pelo_Pct columns for model prediction
+    # CRITICAL: Convert Elo columns to Elo_Pct columns for model prediction
     # Models are trained on Pelo data but we predict using Elo data from startlist
     for(i in seq_along(elo_cols)) {
       elo_col <- elo_cols[i]
@@ -1083,7 +1083,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
           }
         }
       } else {
-        # If Elo column doesn't exist, create default Pelo_Pct
+        # If Elo column doesn't exist, create default Elo_Pct
         log_info(paste("Creating default", pelo_pct_col, "(missing", elo_col, ")"))
         result_df[[pelo_pct_col]] <- 0.5
       }
@@ -1169,7 +1169,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
     }
   }
   
-  # CRITICAL: Create Pelo_Pct columns from Elo values for model prediction
+  # CRITICAL: Create Elo_Pct columns from Elo values for model prediction
   # Models are trained on Pelo data but we predict using Elo data from startlist
   for(i in seq_along(elo_columns_to_process)) {
     elo_col <- elo_columns_to_process[i]
@@ -1199,9 +1199,9 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
         }
       }
     } else {
-      # If Elo column doesn't exist, create default Pelo_Pct
-      log_info(paste("Creating default", pelo_pct_col, "(missing", elo_col, ")"))
-      result_df[[pelo_pct_col]] <- 0.5
+      # If Elo column doesn't exist, create default Elo_Pct
+      log_info(paste("Creating default", elo_pct_col, "(missing", elo_col, ")"))
+      result_df[[elo_pct_col]] <- 0.5
     }
   }
   
@@ -1294,17 +1294,18 @@ preprocess_data <- function(df, is_team = FALSE) {
     })) %>%
     ungroup()
   
-  # Check if Elo columns exist, if not create them
+  # Check if Pelo columns exist (for training), if not create them
+  # Training uses Pelo columns (pre-race ELO) but names output as Elo_Pct for consistency
   if(is_team) {
-    elo_cols <- c("Avg_Sprint_Elo", "Avg_Individual_Elo", "Avg_MassStart_Elo", "Avg_IndividualCompact_Elo", "Avg_Elo")
+    pelo_cols <- c("Avg_Sprint_Pelo", "Avg_Individual_Pelo", "Avg_MassStart_Pelo", "Avg_IndividualCompact_Pelo", "Avg_Pelo")
   } else {
-    elo_cols <- c("Sprint_Elo", "Individual_Elo", "MassStart_Elo", "IndividualCompact_Elo", "Elo")
+    pelo_cols <- c("Sprint_Pelo", "Individual_Pelo", "MassStart_Pelo", "IndividualCompact_Pelo", "Pelo")
   }
   
-  # Make sure these columns exist (create if missing)
-  for (col in elo_cols) {
+  # Make sure these Pelo columns exist (create if missing)
+  for (col in pelo_cols) {
     if (!col %in% names(df_with_points)) {
-      log_info(paste("Creating missing column:", col))
+      log_info(paste("Creating missing Pelo column:", col))
       df_with_points[[col]] <- 0
     }
   }
@@ -1338,14 +1339,15 @@ preprocess_data <- function(df, is_team = FALSE) {
     group_by(Season, Race) %>%
     mutate(
       across(
-        all_of(elo_cols),
+        all_of(pelo_cols),
         ~replace_na_with_quartile(.x)
       )
     ) %>%
-    # Calculate percentages for each Elo column
+    # Calculate percentages for each Pelo column (training data)
+    # Use Pelo columns but name output as Elo_Pct for model compatibility
     mutate(
       across(
-        all_of(elo_cols),
+        all_of(pelo_cols),
         ~{
           max_val <- max(.x, na.rm = TRUE)
           if (max_val == 0) return(rep(0, length(.x)))
@@ -1354,9 +1356,16 @@ preprocess_data <- function(df, is_team = FALSE) {
         .names = "{.col}_Pct"
       )
     ) %>%
+    # Rename Pelo_Pct columns to Elo_Pct for model compatibility
+    rename_with(
+      ~ gsub("Pelo_Pct$", "Elo_Pct", .x),
+      ends_with("Pelo_Pct")
+    ) %>%
     ungroup()
   
-  # Ensure all required Elo_Pct columns exist
+  # Ensure all required Elo_Pct columns exist (derived from Pelo training data)
+  # Convert Pelo column names to expected Elo_Pct names
+  elo_cols <- gsub("Pelo", "Elo", pelo_cols)
   pct_cols <- paste0(elo_cols, "_Pct")
   for (col in pct_cols) {
     if (!col %in% names(processed_df)) {

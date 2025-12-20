@@ -1028,13 +1028,14 @@ optimize_weekly_team <- function(men_results, ladies_results, prediction_type = 
 
 # Run this function after running predictions
 run_fantasy_optimization <- function(men_results, ladies_results, weekend_date) {
-  # Create directory for output
-  weekend_folder <- format(next_weekend_date, "%Y%m%d")
-  dir_path <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", weekend_folder)
+  # Create directory for output - use race-picks instead of weekly-picks
+  # Use UTC time for consistent date formatting
+  utc_date <- format(Sys.time(), "%Y%m%d", tz = "UTC")
+  race_picks_dir_path <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", utc_date)
   
   
-  if (!dir.exists(dir_path)) {
-    dir.create(dir_path, recursive = TRUE)
+  if (!dir.exists(race_picks_dir_path)) {
+    dir.create(race_picks_dir_path, recursive = TRUE)
   }
   
   log_info("Optimizing fantasy teams...")
@@ -1050,12 +1051,12 @@ run_fantasy_optimization <- function(men_results, ladies_results, weekend_date) 
   #   "Normal Team" = normal_team %>% rename(`Predicted Points` = Points),
   #   "Safe Team" = safe_team %>% rename(`Safe Points` = Points),
   #   "Upside Team" = upside_team %>% rename(`Upside Points` = Points)
-  # ), file.path(dir_path, "fantasy-teams.xlsx"))
+  # ), file.path(race_picks_dir_path, "fantasy-teams.xlsx"))
   
-  # Save the normal team as the main recommendation
+  # Save the normal team as the main recommendation to race-picks directory
   normal_team %>% 
     rename(`Predicted Points` = Points) %>%
-    write.xlsx(file.path(dir_path, "fantasy_team.xlsx"))
+    write.xlsx(file.path(race_picks_dir_path, "fantasy_team.xlsx"))
   
   log_info("Fantasy optimization complete")
   

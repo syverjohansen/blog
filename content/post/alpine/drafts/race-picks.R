@@ -441,61 +441,46 @@ calculate_race_probabilities <- function() {
     ladies_startlist$Sex = "L"
   }
   
-  # Function to get race probability for a skier
+  # Function to get race probability for a skier using exponential decay
   get_race_probability <- function(chronos, participant, discipline) {
-    log_debug(paste("Calculating probability for participant:", participant))
+    log_debug(paste("Calculating exponential decay probability for participant:", participant))
     
-    # Get participant's first ever race date
-    participant_first_race <- chronos %>%
-      filter(Skier == participant) %>%
-      arrange(Date) %>%
-      slice(1) %>%
-      pull(Date)
-    
-    # Calculate date from 5 years ago
-    five_years_ago <- Sys.Date() - (5 * 365)
-    
-    # Use 5 years ago or participant's first race, whichever is later
-    start_date <- if(length(participant_first_race) == 0) {
-      five_years_ago
-    } else {
-      max(five_years_ago, as.Date(participant_first_race))
-    }
-    
-    log_debug(paste("Using start date:", format(start_date, "%Y-%m-%d"), "for participant:", participant))
-    
-    # First get all matching races since start_date
-    all_races <- chronos %>%
-      filter(
-        Date >= start_date,
-        Distance == discipline
-      ) %>%
-      distinct(Date, City)
-    
-    # Then get this participant's participations
+    # Get participant's race history for this discipline
     participant_races <- chronos %>%
       filter(
-        Date >= start_date,
         Skier == participant,
         Distance == discipline
       ) %>%
-      distinct(Date, City)
+      arrange(Date, Season, Race)
     
-    total_races <- nrow(all_races)
-    
-    if(total_races == 0) {
-      log_debug(paste("No races found for discipline:", discipline))
+    if(nrow(participant_races) == 0) {
+      log_debug(paste("No race history found for participant:", participant, "in discipline:", discipline))
       return(0)
     }
     
-    races_participated <- nrow(participant_races)
-    # Cap probability at 1
-    prob <- min(1, races_participated / total_races)
+    # Calculate exponential decay probability
+    total_races <- nrow(participant_races)
     
-    log_debug(paste("Probability for", participant, "since", start_date, ":", prob, 
-                    "(", races_participated, "/", total_races, " races)"))
+    if(total_races > 0) {
+      # Create exponential decay weights (α = 0.1)
+      race_weights <- exp(-0.1 * ((total_races-1):0))
+      
+      # Create participation vector (1 if skier participated, 0 if not)
+      # Since they're all in the chronos data, they all participated
+      participation <- rep(1, total_races)
+      
+      # Calculate weighted probability
+      weighted_participation <- sum(participation * race_weights)
+      total_weight <- sum(race_weights)
+      prob <- weighted_participation / total_weight
+      
+      log_debug(paste("Exponential decay probability for", participant, ":", round(prob, 3), 
+                      "based on", total_races, "races"))
+      
+      return(prob)
+    }
     
-    return(prob)
+    return(0)
   }
   
   # Process men's and ladies' race probabilities
@@ -730,13 +715,13 @@ preprocess_data <- function(df) {
     })) %>%
     ungroup()
   
-  # Check if Elo columns exist, if not create them
-  elo_cols <- c("Downhill_Elo", "Super.G_Elo", "Giant.Slalom_Elo", "Slalom_Elo", "Combined_Elo", "Tech_Elo", "Speed_Elo", "Elo")
+  # For training, use Pelo columns (pre-race ELO) but name them as Elo_Pct for consistency
+  pelo_cols <- c("Downhill_Pelo", "Super.G_Pelo", "Giant.Slalom_Pelo", "Slalom_Pelo", "Combined_Pelo", "Tech_Pelo", "Speed_Pelo", "Pelo")
   
-  # Make sure these columns exist (create if missing)
-  for (col in elo_cols) {
+  # Make sure Pelo columns exist (create if missing)
+  for (col in pelo_cols) {
     if (!col %in% names(df_with_points)) {
-      log_info(paste("Creating missing column:", col))
+      log_info(paste("Creating missing Pelo column:", col))
       df_with_points[[col]] <- 0
     }
   }
@@ -768,30 +753,30 @@ preprocess_data <- function(df) {
     group_by(!!sym(id_col), Season) %>%
     mutate(Cumulative_Points = cumsum(Points)) %>%
     ungroup() %>%
-    # Handle NAs and calculate percentages
+    # Handle NAs and calculate percentages using Pelo columns
     group_by(Season, Race) %>%
     mutate(
       across(
-        all_of(elo_cols),
+        all_of(pelo_cols),
         ~replace_na_with_quartile(.x)
       )
     ) %>%
-    # Calculate percentages for each Elo column
+    # Calculate percentages for each Pelo column but name as Elo_Pct for consistency
     mutate(
       across(
-        all_of(elo_cols),
+        all_of(pelo_cols),
         ~{
           max_val <- max(.x, na.rm = TRUE)
           if (max_val == 0) return(rep(0, length(.x)))
           .x / max_val
         },
-        .names = "{.col}_Pct"
+        .names = "{str_replace(.col, 'Pelo', 'Elo')}_Pct"
       )
     ) %>%
     ungroup()
   
-  # Ensure all required Elo_Pct columns exist
-  pct_cols <- paste0(elo_cols, "_Pct")
+  # Ensure all required Elo_Pct columns exist (using Elo naming for consistency)
+  pct_cols <- paste0(c("Downhill_Elo", "Super.G_Elo", "Giant.Slalom_Elo", "Slalom_Elo", "Combined_Elo", "Tech_Elo", "Speed_Elo", "Elo"), "_Pct")
   for (col in pct_cols) {
     if (!col %in% names(processed_df)) {
       log_info(paste("Creating missing percentage column:", col))
@@ -1126,7 +1111,8 @@ predict_races <- function(gender, startlist_override = NULL) {
       explanatory_vars <- c("Prev_Points_Weighted", "Super.G_Elo_Pct",
                             "Slalom_Elo_Pct", "Giant.Slalom_Elo_Pct", "Tech_Elo_Pct", "Elo_Pct")
     } else {
-      explanatory_vars <- c("Prev_Points_Weighted", 
+      explanatory_vars <- c("Prev_Points_Weighted", "Downhill_Elo_Pct", "Super.G_Elo_Pct", "Giant.Slalom_Elo_Pct", 
+                            "Slalom_Elo_Pct", "Giant.Slalom_Elo_Pct", 
                             "Combined_Elo_Pct", "Tech_Elo_Pct", "Speed_Elo_Pct", "Elo_Pct")
     }
     # Create and fit model for points
@@ -1208,47 +1194,55 @@ predict_races <- function(gender, startlist_override = NULL) {
         # Store the model
         position_models[[paste0("threshold_", threshold)]] <- position_model
         
-        # Calculate adjustments for period for this threshold
-        position_df <- race_df %>%
-          arrange(Date) %>%
-          group_by(!!sym(participant_col)) %>%
-          mutate(
-            row_id = row_number()
-          ) %>%
-          ungroup()
+        # PERIOD ADJUSTMENTS FOR POSITION PROBABILITIES COMMENTED OUT
+        # These adjustments were removed to improve model stability and prediction accuracy
         
-        # Add predictions separately (outside of mutate)
-        position_df$initial_prob <- predict(position_model, newdata = position_df, type = "response")
+        # # Calculate adjustments for period for this threshold
+        # position_df <- race_df %>%
+        #   arrange(Date) %>%
+        #   group_by(!!sym(participant_col)) %>%
+        #   mutate(
+        #     row_id = row_number()
+        #   ) %>%
+        #   ungroup()
+        # 
+        # # Add predictions separately (outside of mutate)
+        # position_df$initial_prob <- predict(position_model, newdata = position_df, type = "response")
+        # 
+        # # Continue with period adjustment calculations
+        # position_df <- position_df %>%
+        #   group_by(!!sym(participant_col)) %>%
+        #   mutate(
+        #     prob_diff = as.numeric(position_achieved) - initial_prob,
+        #     
+        #     # Calculate period adjustments
+        #     period_p = purrr::map_dbl(row_id, function(r) {
+        #       if(r <= 1) return(1)
+        #       prior_period_curr <- prob_diff[Period == Period[r] & row_id < r]
+        #       prior_period_other <- prob_diff[Period != Period[r] & row_id < r]
+        #       if(length(prior_period_curr) < 3 || length(prior_period_other) < 3) return(1)
+        #       tryCatch({
+        #         t.test(prior_period_curr, prior_period_other)$p.value
+        #       }, error = function(e) 1)
+        #     }),
+        #     period_correction = ifelse(period_p < 0.05,
+        #                                mean(prob_diff[Period == Period], na.rm = TRUE),
+        #                                0),
+        #     period_adjusted = pmin(pmax(initial_prob + period_correction, 0), 1)
+        #   ) %>%
+        #   ungroup()
+        # 
+        # # Get final adjustments for each participant
+        # participant_pos_adjustments <- position_df %>%
+        #   group_by(!!sym(participant_col)) %>%
+        #   summarise(
+        #     period_effect = last(period_correction)
+        #   )
         
-        # Continue with period adjustment calculations
-        position_df <- position_df %>%
-          group_by(!!sym(participant_col)) %>%
-          mutate(
-            prob_diff = as.numeric(position_achieved) - initial_prob,
-            
-            # Calculate period adjustments
-            period_p = purrr::map_dbl(row_id, function(r) {
-              if(r <= 1) return(1)
-              prior_period_curr <- prob_diff[Period == Period[r] & row_id < r]
-              prior_period_other <- prob_diff[Period != Period[r] & row_id < r]
-              if(length(prior_period_curr) < 3 || length(prior_period_other) < 3) return(1)
-              tryCatch({
-                t.test(prior_period_curr, prior_period_other)$p.value
-              }, error = function(e) 1)
-            }),
-            period_correction = ifelse(period_p < 0.05,
-                                       mean(prob_diff[Period == Period], na.rm = TRUE),
-                                       0),
-            period_adjusted = pmin(pmax(initial_prob + period_correction, 0), 1)
-          ) %>%
-          ungroup()
-        
-        # Get final adjustments for each participant
-        participant_pos_adjustments <- position_df %>%
-          group_by(!!sym(participant_col)) %>%
-          summarise(
-            period_effect = last(period_correction)
-          )
+        # Create empty adjustments object since period adjustments are disabled
+        participant_pos_adjustments <- data.frame(x = unique(race_df[[participant_col]]))
+        names(participant_pos_adjustments)[1] <- participant_col
+        participant_pos_adjustments$period_effect <- 0
         
         # Store adjustments for this threshold
         position_adjustments[[paste0("threshold_", threshold)]] <- participant_pos_adjustments
@@ -1271,7 +1265,7 @@ predict_races <- function(gender, startlist_override = NULL) {
             method = "REML"
           )
           
-          # Create empty adjustments object since we can't calculate them for the fallback model
+          # Create empty adjustments object (period adjustments disabled)
           empty_adjustments <- data.frame(x = unique(race_df[[participant_col]]))
           names(empty_adjustments)[1] <- participant_col
           empty_adjustments$period_effect <- 0
@@ -1289,7 +1283,7 @@ predict_races <- function(gender, startlist_override = NULL) {
             method = "REML"
           )
           
-          # Create empty adjustments object
+          # Create empty adjustments object (period adjustments disabled)
           empty_adjustments <- data.frame(x = unique(race_df[[participant_col]]))
           names(empty_adjustments)[1] <- participant_col
           empty_adjustments$period_effect <- 0
@@ -1525,38 +1519,44 @@ predict_races <- function(gender, startlist_override = NULL) {
           # Store predictions
           position_preds[[paste0(prob_col, "_base")]] <- base_predictions
           
-          # Apply adjustments if available
-          if(adj_name %in% names(position_adjustments)) {
-            # Get adjustments
-            pos_adj <- position_adjustments[[adj_name]]
-            
-            # Join with predictions
-            position_preds <- position_preds %>%
-              left_join(pos_adj, by = participant_col) %>%
-              mutate(
-                # Replace NAs with zeros
-                period_effect = replace_na(period_effect, 0),
-                
-                # Apply adjustments
-                period_adjustment = period_effect,
-                
-                # Calculate adjusted probabilities
-                adjusted_prob = get(paste0(prob_col, "_base")) + period_adjustment,
-                
-                # Ensure probabilities are between 0 and 1
-                adjusted_prob = pmin(pmax(adjusted_prob, 0), 1)
-              )
-            
-            # Use adjusted probability as final
-            position_preds[[prob_col]] <- position_preds$adjusted_prob
-            
-            # Clean up temporary columns
-            position_preds <- position_preds %>%
-              select(-period_effect, -period_adjustment, -adjusted_prob)
-          } else {
-            # Use base prediction if no adjustments
-            position_preds[[prob_col]] <- position_preds[[paste0(prob_col, "_base")]]
-          }
+          # PERIOD ADJUSTMENTS APPLICATION COMMENTED OUT
+          # Period adjustments for position probabilities have been disabled
+          
+          # # Apply adjustments if available
+          # if(adj_name %in% names(position_adjustments)) {
+          #   # Get adjustments
+          #   pos_adj <- position_adjustments[[adj_name]]
+          #   
+          #   # Join with predictions
+          #   position_preds <- position_preds %>%
+          #     left_join(pos_adj, by = participant_col) %>%
+          #     mutate(
+          #       # Replace NAs with zeros
+          #       period_effect = replace_na(period_effect, 0),
+          #       
+          #       # Apply adjustments
+          #       period_adjustment = period_effect,
+          #       
+          #       # Calculate adjusted probabilities
+          #       adjusted_prob = get(paste0(prob_col, "_base")) + period_adjustment,
+          #       
+          #       # Ensure probabilities are between 0 and 1
+          #       adjusted_prob = pmin(pmax(adjusted_prob, 0), 1)
+          #     )
+          #   
+          #   # Use adjusted probability as final
+          #   position_preds[[prob_col]] <- position_preds$adjusted_prob
+          #   
+          #   # Clean up temporary columns
+          #   position_preds <- position_preds %>%
+          #     select(-period_effect, -period_adjustment, -adjusted_prob)
+          # } else {
+          #   # Use base prediction if no adjustments
+          #   position_preds[[prob_col]] <- position_preds[[paste0(prob_col, "_base")]]
+          # }
+          
+          # Use base prediction directly (no period adjustments applied)
+          position_preds[[prob_col]] <- position_preds[[paste0(prob_col, "_base")]]
           
           # Clean up base prediction column
           position_preds <- position_preds %>%

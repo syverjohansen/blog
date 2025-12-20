@@ -722,16 +722,14 @@ preprocess_data <- function(df) {
     })) %>%
     ungroup()
   
-  # Check if Elo columns exist, if not create them
-  # Check if Elo columns exist, if not create them
+  # For training, use Pelo columns (pre-race ELO) but name them as Elo_Pct for consistency
   print(names(df_with_points))
-  elo_cols <- c("Downhill_Elo", "Super.G_Elo", "Giant.Slalom_Elo", "Slalom_Elo", "Combined_Elo", "Tech_Elo", "Speed_Elo", "Elo")
+  pelo_cols <- c("Downhill_Pelo", "Super.G_Pelo", "Giant.Slalom_Pelo", "Slalom_Pelo", "Combined_Pelo", "Tech_Pelo", "Speed_Pelo", "Pelo")
   
-  
-  # Make sure these columns exist (create if missing)
-  for (col in elo_cols) {
+  # Make sure Pelo columns exist (create if missing)
+  for (col in pelo_cols) {
     if (!col %in% names(df_with_points)) {
-      log_info(paste("Creating missing column:", col))
+      log_info(paste("Creating missing Pelo column:", col))
       df_with_points[[col]] <- 0
     }
   }
@@ -763,30 +761,30 @@ preprocess_data <- function(df) {
     group_by(!!sym(id_col), Season) %>%
     mutate(Cumulative_Points = cumsum(Points)) %>%
     ungroup() %>%
-    # Handle NAs and calculate percentages
+    # Handle NAs and calculate percentages using Pelo columns
     group_by(Season, Race) %>%
     mutate(
       across(
-        all_of(elo_cols),
+        all_of(pelo_cols),
         ~replace_na_with_quartile(.x)
       )
     ) %>%
-    # Calculate percentages for each Elo column
+    # Calculate percentages for each Pelo column but name as Elo_Pct for consistency
     mutate(
       across(
-        all_of(elo_cols),
+        all_of(pelo_cols),
         ~{
           max_val <- max(.x, na.rm = TRUE)
           if (max_val == 0) return(rep(0, length(.x)))
           .x / max_val
         },
-        .names = "{.col}_Pct"
+        .names = "{str_replace(.col, 'Pelo', 'Elo')}_Pct"
       )
     ) %>%
     ungroup()
   
-  # Ensure all required Elo_Pct columns exist
-  pct_cols <- paste0(elo_cols, "_Pct")
+  # Ensure all required Elo_Pct columns exist (using Elo naming for consistency)
+  pct_cols <- paste0(c("Downhill_Elo", "Super.G_Elo", "Giant.Slalom_Elo", "Slalom_Elo", "Combined_Elo", "Tech_Elo", "Speed_Elo", "Elo"), "_Pct")
   for (col in pct_cols) {
     if (!col %in% names(processed_df)) {
       log_info(paste("Creating missing percentage column:", col))
@@ -1521,38 +1519,38 @@ predict_races <- function(gender, startlist_override = NULL) {
           # Store predictions
           position_preds[[paste0(prob_col, "_base")]] <- base_predictions
           
-          # Apply adjustments if available
-          if(adj_name %in% names(position_adjustments)) {
-            # Get adjustments
-            pos_adj <- position_adjustments[[adj_name]]
-            
-            # Join with predictions
-            position_preds <- position_preds %>%
-              left_join(pos_adj, by = participant_col) %>%
-              mutate(
-                # Replace NAs with zeros
-                period_effect = replace_na(period_effect, 0),
-                
-                # Apply adjustments
-                period_adjustment = period_effect,
-                
-                # Calculate adjusted probabilities
-                adjusted_prob = get(paste0(prob_col, "_base")) + period_adjustment,
-                
-                # Ensure probabilities are between 0 and 1
-                adjusted_prob = pmin(pmax(adjusted_prob, 0), 1)
-              )
-            
-            # Use adjusted probability as final
-            position_preds[[prob_col]] <- position_preds$adjusted_prob
-            
-            # Clean up temporary columns
-            position_preds <- position_preds %>%
-              dplyr::select(-period_effect, -period_adjustment, -adjusted_prob)
-          } else {
-            # Use base prediction if no adjustments
+          # Apply adjustments if available - COMMENTED OUT: Remove position probability adjustments
+          # if(adj_name %in% names(position_adjustments)) {
+          #   # Get adjustments
+          #   pos_adj <- position_adjustments[[adj_name]]
+          #   
+          #   # Join with predictions
+          #   position_preds <- position_preds %>%
+          #     left_join(pos_adj, by = participant_col) %>%
+          #     mutate(
+          #       # Replace NAs with zeros
+          #       period_effect = replace_na(period_effect, 0),
+          #       
+          #       # Apply adjustments
+          #       period_adjustment = period_effect,
+          #       
+          #       # Calculate adjusted probabilities
+          #       adjusted_prob = get(paste0(prob_col, "_base")) + period_adjustment,
+          #       
+          #       # Ensure probabilities are between 0 and 1
+          #       adjusted_prob = pmin(pmax(adjusted_prob, 0), 1)
+          #     )
+          #   
+          #   # Use adjusted probability as final
+          #   position_preds[[prob_col]] <- position_preds$adjusted_prob
+          #   
+          #   # Clean up temporary columns
+          #   position_preds <- position_preds %>%
+          #     dplyr::select(-period_effect, -period_adjustment, -adjusted_prob)
+          # } else {
+            # Use base prediction without adjustments
             position_preds[[prob_col]] <- position_preds[[paste0(prob_col, "_base")]]
-          }
+          # }
           
           # Clean up base prediction column
           position_preds <- position_preds %>%

@@ -1757,7 +1757,7 @@ save_prediction_results <- function(team_predictions, race_date, gender, output_
   
   # Set default output directory if not provided
   if(is.null(output_dir)) {
-    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", date_str)
+    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", date_str)
   }
   
   # Create directory if it doesn't exist
@@ -1826,12 +1826,12 @@ save_prediction_results <- function(team_predictions, race_date, gender, output_
 
 # Function to save fantasy team results to Excel
 save_fantasy_results <- function(fantasy_team, race_date, output_dir = NULL) {
-  # Create formatted date string
-  date_str <- format(race_date, "%Y%m%d")
+  # Use UTC time for consistent date formatting
+  utc_date_str <- format(Sys.time(), "%Y%m%d", tz = "UTC")
   
-  # Set default output directory if not provided
+  # Set default output directory if not provided - use race-picks instead of weekly-picks
   if(is.null(output_dir)) {
-    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", date_str)
+    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", utc_date_str)
   }
   
   # Create directory if it doesn't exist

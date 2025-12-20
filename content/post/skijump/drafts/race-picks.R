@@ -574,64 +574,49 @@ calculate_race_probabilities <- function() {
     }
   }
   
-  # Function to get race probability for a skier/team
+  # Function to get race probability for a skier/team using exponential decay
   get_race_probability <- function(chronos, participant, racetype, is_team = FALSE) {
-    log_debug(paste("Calculating probability for participant:", participant))
+    log_debug(paste("Calculating exponential decay probability for participant:", participant))
     
     # For team, participant is a Nation
     id_col <- if(is_team) "Nation" else "Skier"
     
-    # Get participant's first ever race date
-    participant_first_race <- chronos %>%
-      filter(get(id_col) == participant) %>%
-      arrange(Date) %>%
-      slice(1) %>%
-      pull(Date)
-    
-    # Calculate date from 5 years ago
-    five_years_ago <- Sys.Date() - (5 * 365)
-    
-    # Use 5 years ago or participant's first race, whichever is later
-    start_date <- if(length(participant_first_race) == 0) {
-      five_years_ago
-    } else {
-      max(five_years_ago, as.Date(participant_first_race))
-    }
-    
-    log_debug(paste("Using start date:", format(start_date, "%Y-%m-%d"), "for participant:", participant))
-    
-    # First get all matching races since start_date
-    all_races <- chronos %>%
-      filter(
-        Date >= start_date,
-        RaceType == racetype
-      ) %>%
-      distinct(Date, City)
-    
-    # Then get this participant's participations
+    # Get participant's race history for this race type
     participant_races <- chronos %>%
       filter(
-        Date >= start_date,
         get(id_col) == participant,
         RaceType == racetype
       ) %>%
-      distinct(Date, City)
+      arrange(Date, Season, Race)
     
-    total_races <- nrow(all_races)
-    
-    if(total_races == 0) {
-      log_debug(paste("No races found for race type:", racetype))
+    if(nrow(participant_races) == 0) {
+      log_debug(paste("No race history found for participant:", participant, "in race type:", racetype))
       return(0)
     }
     
-    races_participated <- nrow(participant_races)
-    # Cap probability at 1
-    prob <- min(1, races_participated / total_races)
+    # Calculate exponential decay probability
+    total_races <- nrow(participant_races)
     
-    log_debug(paste("Probability for", participant, "since", start_date, ":", prob, 
-                    "(", races_participated, "/", total_races, " races)"))
+    if(total_races > 0) {
+      # Create exponential decay weights (α = 0.1)
+      race_weights <- exp(-0.1 * ((total_races-1):0))
+      
+      # Create participation vector (1 if skier participated, 0 if not)
+      # Since they're all in the chronos data, they all participated
+      participation <- rep(1, total_races)
+      
+      # Calculate weighted probability
+      weighted_participation <- sum(participation * race_weights)
+      total_weight <- sum(race_weights)
+      prob <- weighted_participation / total_weight
+      
+      log_debug(paste("Exponential decay probability for", participant, ":", round(prob, 3), 
+                      "based on", total_races, "races"))
+      
+      return(prob)
+    }
     
-    return(prob)
+    return(0)
   }
   
   # Process men's and ladies' race probabilities

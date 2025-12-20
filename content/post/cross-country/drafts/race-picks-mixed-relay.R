@@ -1049,7 +1049,7 @@ save_prediction_results <- function(team_predictions, race_date, output_dir = NU
   
   # Set default output directory if not provided
   if(is.null(output_dir)) {
-    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", date_str)
+    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/archive/", date_str)
   }
   
   # Create directory if it doesn't exist
