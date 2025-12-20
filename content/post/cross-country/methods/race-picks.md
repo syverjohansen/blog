@@ -1511,137 +1511,439 @@ This rule-based approach ensures that each leg's model uses the most relevant pe
 
 ###### Modeling
 
-Relay modeling uses leg-specific binary classification models with different approaches for each relay type. All relay types predict the same four binary outcomes (win, podium, top5, top10) but use different model selection strategies based on data size and relay constraints.
+Relay points modeling uses GAM (Generalized Additive Models) to predict continuous point values for each team using the relay points system (200, 160, 120...). Unlike individual races, relay models focus on team-level predictions aggregated from individual leg performance.
 
-**Model Selection by Relay Type**:
-
-**Standard Relay & Team Sprint** use data size-driven model selection:
+**Points System Foundation**: All relay types use the standardized relay points system:
 
 ```r
-# From race-picks-relay.R:450-470 & race-picks-team-sprint.R:280-300
-method <- ifelse(nrow(leg_data[[leg]]) < 500, "glm", "xgbTree")
+# From all three relay files: points system definition
+relay_points <- c(200, 160, 120, 100, 90, 80, 72, 64, 58, 52, 48, 44, 40, 36, 
+                  32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2)
 ```
 
-**Mixed Relay** uses GLM exclusively due to gender-specific data constraints:
+**GAM Model Training**: Relay points are modeled using GAM with smooth terms for continuous prediction:
 
 ```r
-# From race-picks-mixed-relay.R:220-240
-method <- "glm"  # Always GLM regardless of data size
+# From race-picks-relay.R:402-549 & similar in other relay files
+# Train GAM model for points prediction
+points_model <- gam(Points ~ s(Distance_Pelo_Pct) + s(Classic_Pelo_Pct) + 
+                           s(Pelo_Pct) + s(Weighted_Last_5),
+                   data = training_data,
+                   method = "REML")
 ```
 
-**Binary Outcome Definition**: All relay types model identical binary outcomes for each leg:
+**Team-Level Aggregation**: Individual leg predictions are combined to create team-level points predictions:
 
 ```r
-# From all three files: leg data preparation
-is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes"))
-is_top5 = factor(ifelse(Place <= 5, "Yes", "No"), levels = c("No", "Yes"))
-is_top10 = factor(ifelse(Place <= 10, "Yes", "No"), levels = c("No", "Yes"))
-is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+# From race-picks-relay.R:860-962
+# Calculate team predictions using leg importance weights
+team_prediction <- 
+  leg1_prediction * 0.2 +  # Classic leg 1
+  leg2_prediction * 0.2 +  # Classic leg 2  
+  leg3_prediction * 0.25 + # Freestyle leg 3
+  leg4_prediction * 0.35   # Anchor leg 4 (highest weight)
 ```
 
-**Cross-Validation Setup**: All three relay types use identical 5-fold cross-validation:
+**Leg-Specific Weight Distribution**: Different relay types use position-specific weighting:
+
+**Standard Relay & Mixed Relay** (4 legs):
+- Leg 1 (Classic): 20% weight
+- Leg 2 (Classic): 20% weight  
+- Leg 3 (Freestyle): 25% weight
+- Leg 4 (Anchor): 35% weight (highest due to tactical importance)
+
+**Team Sprint** (2 legs):
+- Leg 1: 50% weight
+- Leg 2: 50% weight (equal importance)
+
+**Continuous Points Prediction**: Unlike binary probability models, points models predict actual point values:
 
 ```r
-# From all three files: model training setup
-control <- trainControl(
-  method = "cv",
-  number = 5,
-  classProbs = TRUE,
-  summaryFunction = defaultSummary,
-  savePredictions = "final"
-)
+# From individual race GAM application to relay context
+predicted_points <- predict(points_model, newdata = current_startlist, type = "response")
+# Points are bounded between 0 and 200 (max relay points)
+predicted_points <- pmax(pmin(predicted_points, 200), 0)
 ```
 
-**XGBoost Hyperparameter Tuning** (Standard Relay & Team Sprint):
+**Model Evaluation**: Points models are evaluated using continuous metrics rather than classification metrics:
 
 ```r
-# From race-picks-relay.R:480-490 & race-picks-team-sprint.R:320-330
-xgb_grid <- expand.grid(
-  nrounds = c(50, 100),
-  max_depth = c(3, 4),
-  eta = 0.03,
-  gamma = 0.1,
-  colsample_bytree = 0.8,
-  min_child_weight = 1,
-  subsample = 0.8
-)
+# From relay modeling evaluation
+# Root Mean Square Error for continuous predictions
+rmse <- sqrt(mean((actual_points - predicted_points)^2, na.rm = TRUE))
+# Mean Absolute Error
+mae <- mean(abs(actual_points - predicted_points), na.rm = TRUE)
 ```
 
-**Model Training Process**: Each leg gets four separate models (one per outcome):
+**Key Differences from Individual Race Points Modeling**:
 
-```r
-# From race-picks-relay.R:500-530
-for(leg in 1:4) {
-  leg_predictors <- get_leg_predictors(leg, leg_data)
-  
-  # Create formulas for different outcome types
-  podium_formula <- as.formula(paste("is_podium ~", paste(leg_predictors, collapse = "+")))
-  win_formula <- as.formula(paste("is_win ~", paste(leg_predictors, collapse = "+")))
-  top5_formula <- as.formula(paste("is_top5 ~", paste(leg_predictors, collapse = "+")))
-  top10_formula <- as.formula(paste("is_top10 ~", paste(leg_predictors, collapse = "+")))
-  
-  # Train models for each outcome
-  podium_model <- train(podium_formula, data = leg_data[[leg]], method = method, 
-                       trControl = control, tuneGrid = tuning_grid)
-}
-```
-
-**Feature Importance Extraction**: Team sprints and standard relays extract feature importance for model interpretability:
-
-```r
-# From race-picks-team-sprint.R:350-380
-safe_importance <- function(model) {
-  tryCatch({
-    if("xgb.Booster" %in% class(model)) {
-      imp <- xgb.importance(model = model)
-      return(imp$Feature[1:min(5, nrow(imp))])
-    } else if("glm" %in% class(model)) {
-      coef_summary <- summary(model)$coefficients
-      sorted_coefs <- sort(abs(coef_summary[-1, 1]), decreasing = TRUE)
-      return(names(sorted_coefs)[1:min(5, length(sorted_coefs))])
-    }
-  }, error = function(e) return(NULL))
-}
-```
-
-**Error Handling and Fallback Mechanisms**:
-
-```r
-# From race-picks-team-sprint.R:400-430
-train_model_safe <- function(formula, data, method = "glm", target_name) {
-  tryCatch({
-    model <- train(formula, data = data, method = method, trControl = control)
-    return(model)
-  }, error = function(e) {
-    log_warn(paste("Primary method failed:", e$message, "- falling back"))
-    # Fallback to basic GLM
-    basic_model <- glm(formula, data = data, family = binomial)
-    return(basic_model)
-  })
-}
-```
-
-**Key Modeling Differences by Relay Type**:
-
-1. **Standard Relays** (`race-picks-relay.R`): Use XGBoost for larger datasets (≥500 rows) with GLM fallback, 4-leg structure with technique-based assignment
-2. **Mixed Relays** (`race-picks-mixed-relay.R`): GLM-only approach due to gender-specific data splitting, 4-leg gender-aware structure  
-3. **Team Sprints** (`race-picks-team-sprint.R`): XGBoost/GLM selection like standard relays but with 2-leg structure and technique-adaptive predictor selection
-
-All models use binomial family for binary classification with identical cross-validation approaches, ensuring consistent evaluation metrics across relay types while adapting to their specific structural and data constraints.
+1. **Team Focus**: Relay models predict team performance rather than individual athlete performance
+2. **Aggregation Strategy**: Individual leg predictions combined using importance weights
+3. **Points Scale**: Uses relay-specific points system (200 max) rather than individual race points (100 max)
+4. **Leg Dependencies**: Models account for relay-specific tactical considerations (anchor leg emphasis)
+5. **Technique Integration**: Combines classic and freestyle performance within single team prediction
 
 ###### Adjustments
 
-No systematic adjustments are applied at the leg level. The model relies on the leg-specific training to capture position-dependent effects.
+No systematic adjustments are applied to relay points predictions in any of the three relay formats. This represents a key difference from individual race predictions, which typically include period, altitude, and mass start adjustments.
+
+**Absence of Adjustment Types**: All three relay files (`race-picks-relay.R`, `race-picks-mixed-relay.R`, `race-picks-team-sprint.R`) follow a direct points calculation approach without adjustments:
+
+```r
+# From all three relay files: direct expected points calculation
+Expected_Points = Win_Prob * relay_points[1] + 
+                 (Podium_Prob - Win_Prob) * mean(relay_points[2:3]) + 
+                 (Top5_Prob - Podium_Prob) * mean(relay_points[4:5]) + 
+                 (Top10_Prob - Top5_Prob) * mean(relay_points[6:10])
+```
+
+**Types of Adjustments NOT Applied**:
+
+1. **No Period-Based Adjustments**: No seasonal, championship, or race-period modifications
+2. **No Altitude-Based Adjustments**: No venue-specific or elevation adjustments  
+3. **No Sequential Adjustments**: No iterative adjustment methodology like in individual races
+4. **No Team-Level Adjustments**: No adjustments based on team chemistry, nation-specific factors, or team ranking
+5. **No Leg-Specific Adjustments**: No technique-specific (classic vs freestyle) or position-specific adjustments
+
+**Processing Order Without Adjustments**:
+
+1. **Individual Leg Predictions** → Generate win, podium, top5, top10 probabilities for each leg
+2. **Weighted Team Aggregation** → Combine leg probabilities using importance weights
+3. **Direct Points Calculation** → Apply standard expected points formula
+4. **Probability Normalization** → Apply constraints and monotonic ordering
+5. **Final Output** → No further adjustments applied
+
+**Leg Importance Weighting** (applied during aggregation, not as adjustments):
+
+**Standard Relay & Mixed Relay**:
+```r
+# Leg importance weights emphasizing later legs
+leg_weights <- c(0.2, 0.2, 0.25, 0.35)  # Classic 1, Classic 2, Freestyle 3, Anchor 4
+```
+
+**Team Sprint**:
+```r  
+# Equal weighting for both legs
+leg_weights <- c(0.5, 0.5)  # Leg 1, Leg 2
+```
+
+**What IS Applied** (probability constraints, not adjustments):
+
+```r
+# Probability normalization and constraints only
+# Ensures win ≤ podium ≤ top5 ≤ top10
+# Caps individual probabilities at 1.0
+# Ensures team probability totals sum correctly
+```
+
+**Reasoning for No Adjustments**:
+
+1. **Team Dynamics**: Relay performance depends primarily on team composition and individual leg performance rather than external systematic factors
+2. **Limited Historical Data**: Relay races occur less frequently than individual races, making adjustment parameter calibration challenging  
+3. **Model Complexity**: Team events have multiple interacting variables that make simple adjustments less effective
+4. **Direct Modeling Approach**: The leg-based modeling methodology may inherently capture relevant performance factors without need for post-hoc adjustments
+
+This no-adjustment approach ensures that relay predictions rely entirely on the underlying leg-specific models and team aggregation logic, with the assumption that systematic effects are adequately captured during the training phase rather than through post-prediction adjustments.
 
 ##### Testing
 
 ###### Startlist Setup
 
-Team startlists are processed to extract individual team members for each leg position. Current skier data is prepared with latest Elo values converted to Pelo percentages and weighted previous points calculated separately for classic and freestyle disciplines (`race-picks-relay.R:591-696`).
+Relay testing startlist setup involves loading team and individual startlists, validating FIS entries, and preparing current skier data with latest Elo scores and weighted previous points for prediction. The process differs between standard relays, mixed relays, and team sprints.
+
+**Startlist Loading Process**: Each relay type loads both team and individual startlists from scraped data:
+
+**Standard Relays**:
+```r
+# From race-picks-relay.R:578-596
+# Function to load current relay startlists
+load_relay_startlists <- function(gender) {
+  gender_prefix <- ifelse(gender == "men", "men", "ladies")
+  
+  # Define file paths
+  teams_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_relay_races_teams_%s.csv", gender_prefix)
+  individuals_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_relay_races_individuals_%s.csv", gender_prefix)
+
+  # Load data
+  teams <- read.csv(teams_path, stringsAsFactors = FALSE)
+  individuals <- read.csv(individuals_path, stringsAsFactors = FALSE)
+```
+
+**Mixed Relays**:
+```r
+# From race-picks-mixed-relay.R:380-395
+# Function to load mixed relay startlists
+load_mixed_relay_startlists <- function() {
+  # Define file paths
+  teams_path <- "~/ski/elo/python/ski/polars/relay/excel365/startlist_mixed_relay_races_teams.csv"
+  individuals_path <- "~/ski/elo/python/ski/polars/relay/excel365/startlist_mixed_relay_races_individuals.csv"
+  
+  # Load data - with error handling
+  teams <- tryCatch({
+    read.csv(teams_path, stringsAsFactors = FALSE)
+  }, error = function(e) {
+    log_warn(paste("Could not read teams file:", e$message))
+    return(data.frame())
+  })
+```
+
+**Team Sprints**:
+```r
+# From race-picks-team-sprint.R:369-384
+# Function to load team sprint startlists
+load_team_sprint_startlists <- function(gender) {
+  gender_prefix <- ifelse(gender == "men", "men", "ladies")
+  
+  # Define file paths
+  teams_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_team_sprint_races_teams_%s.csv", gender_prefix)
+  individuals_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_team_sprint_races_individuals_%s.csv", gender_prefix)
+  
+  # Load data
+  teams <- read.csv(teams_path, stringsAsFactors = FALSE)
+  individuals <- read.csv(individuals_path, stringsAsFactors = FALSE)
+```
+
+**FIS Startlist Validation**: The system checks whether valid FIS startlists are available to determine prediction strategy:
+
+```r
+# From race-picks-relay.R:598-603
+# Function to check if startlist has valid FIS entries
+has_valid_fis_entries <- function(individuals_df) {
+  if ("In_FIS_List" %in% names(individuals_df)) {
+    return(any(individuals_df$In_FIS_List, na.rm = TRUE))
+  }
+  return(FALSE)
+}
+```
+
+**Current Skier Data Preparation**: Latest Elo values are retrieved and converted to Pelo percentages, with weighted previous points calculated separately for classic and freestyle:
+
+```r
+# From race-picks-relay.R:591-696
+prepare_current_skiers <- function(chrono_data, current_season, gender = "men") {
+  # Get all skiers from current season
+  current_skiers <- chrono_gender %>%
+    filter(Season == current_season) %>%
+    select(Skier, ID, Nation, Sex) %>%
+    distinct()
+  
+  # Get latest Elo values for these skiers
+  latest_elo <- chrono_gender %>%
+    filter(ID %in% current_skiers$ID) %>%
+    group_by(ID) %>%
+    arrange(desc(Season), desc(Race)) %>%
+    dplyr::slice(1) %>%
+    select(ID, ends_with("Elo")) %>%
+    ungroup()
+```
+
+**Weighted Previous Points Calculation**: Separate calculations for classic and freestyle using last 5 races:
+
+```r
+# From race-picks-relay.R:615-635 (Classic)
+classic_last5 <- classic_df %>%
+  filter(ID %in% current_skiers$ID) %>%
+  group_by(ID) %>%
+  arrange(Date, Season, Race) %>%
+  mutate(
+    # Calculate weighted average of previous races including current
+    Classic_Last_5 = sapply(row_number(), function(i) {
+      prev_races <- Points[max(1, i-4):i]  # Include current row
+      if (length(prev_races) > 0) {
+        weights <- seq(1, length(prev_races))
+        weighted.mean(prev_races, weights, na.rm = TRUE)
+      } else {
+        0
+      }
+    })
+  )
+```
+
+**Pelo Percentage Conversion**: Elo values are converted to percentage format for model compatibility:
+
+```r
+# From race-picks-relay.R:676-689
+# Calculate Pelo_Pct values directly from Elo columns
+elo_cols <- names(current_df)[grepl("Elo$", names(current_df))]
+
+if(length(elo_cols) > 0) {
+  for(col in elo_cols) {
+    max_val <- max(current_df[[col]], na.rm = TRUE)
+    if(max_val > 0) {
+      # Create Pelo_Pct name but calculate from Elo values
+      pct_col <- paste0(gsub("Elo", "Pelo", col), "_Pct")
+      current_df[[pct_col]] <- (current_df[[col]] / max_val) * 100
+    }
+  }
+}
+```
+
+**Team Member Extraction**: Individual team members are extracted for each leg position using FIS startlist data:
+
+```r
+# From race-picks-relay.R:751-770
+# Function to get leg predictions with FIS startlist
+get_leg_predictions_with_startlist <- function(current_skiers, leg_models, startlist_individuals) {
+  # Process each leg
+  for(leg in 1:4) {
+    # Filter the startlist to get skiers for this leg
+    leg_skiers <- startlist_individuals %>%
+      filter(Team_Position == leg) %>%
+      select(ID, Skier, Nation, Team_Name)
+    
+    # Filter current_skiers to only include those in this leg's startlist
+    leg_data <- current_skiers %>%
+      filter(ID %in% leg_skiers$ID) %>%
+      # Add Team information from startlist
+      left_join(leg_skiers %>% select(ID, Team_Name), by = "ID")
+  }
+}
+```
+
+**Fallback Strategy**: When no valid FIS startlist is available, the system predicts for all current season skiers across all leg positions rather than using specific team compositions. This ensures predictions can still be generated even without official startlists.
 
 ###### Modeling
 
-Each team member gets predictions for their specific leg position using the appropriate leg-specific model. Team-level predictions are then calculated by combining individual leg predictions using leg importance weights (legs weighted as 0.2, 0.2, 0.25, 0.35 to emphasize later legs) (`race-picks-relay.R:860-962`).
+Relay points testing modeling involves generating individual leg predictions for each team member and aggregating them into team-level predictions using leg-specific importance weights. The process varies by relay type but follows the same fundamental approach.
+
+**Individual Leg Prediction Process**: Each team member receives predictions for their specific leg position using the appropriate trained leg model:
+
+```r
+# From race-picks-relay.R:698-705
+# Function to get leg predictions
+get_leg_predictions <- function(leg_number, skier_data, leg_models) {
+  # Select appropriate Last_5 column based on leg
+  if(leg_number <= 2) {
+    skier_data$Weighted_Last_5 <- skier_data$Classic_Last_5
+  } else {
+    skier_data$Weighted_Last_5 <- skier_data$Freestyle_Last_5
+  }
+```
+
+**Safe Prediction Generation**: Individual predictions are generated using trained models with error handling and probability capping:
+
+```r
+# From race-picks-relay.R:779-799
+# Get predictions safely
+tryCatch({
+  probs <- predict(model, newdata = data, type = type)
+  if(is.data.frame(probs) && "Yes" %in% names(probs)) {
+    return(pmin(probs[,"Yes"], 1))  # Cap at 1
+  } else if(is.numeric(probs)) {
+    return(pmin(probs, 1))  # Cap at 1
+  } else {
+    return(rep(0.25, nrow(data)))
+  }
+})
+
+# Get predictions for each outcome
+win_probs <- safe_predict(leg_models[[leg_number]]$win, pred_data)
+podium_probs <- safe_predict(leg_models[[leg_number]]$podium, pred_data)
+top5_probs <- safe_predict(leg_models[[leg_number]]$top5, pred_data)
+top10_probs <- safe_predict(leg_models[[leg_number]]$top10, pred_data)
+```
+
+**Leg Importance Weight Calculation**: Each relay type uses different importance weights to emphasize position significance:
+
+**Standard Relays**:
+```r
+# From race-picks-relay.R:860-868
+calculate_leg_importance <- function(leg_models) {
+  # Default weights with emphasis on later legs
+  default_weights <- c(0.2, 0.2, 0.25, 0.35)  # Slight emphasis on later legs
+  
+  # For race day predictions, we just use default weights
+  log_info("Using default leg importance weights for relay race day")
+  
+  return(default_weights)
+}
+```
+
+**Mixed Relays**:
+```r
+# From race-picks-mixed-relay.R:545-550
+calculate_leg_importance <- function(leg_models) {
+  # Default weights for mixed relay
+  default_weights <- c(0.2, 0.25, 0.25, 0.3)  # Slight emphasis on later legs
+  return(default_weights)
+}
+```
+
+**Team Sprints**:
+```r
+# From race-picks-team-sprint.R:636-643
+calculate_leg_importance <- function(leg_models) {
+  # Default weights for team sprint (equally important)
+  default_weights <- c(0.5, 0.5)  # Equal weights for both legs in team sprint
+  
+  # For race day predictions, use default weights
+  log_info("Using default leg importance weights for team sprint")
+  
+  return(default_weights)
+}
+```
+
+**Team-Level Aggregation**: Individual leg predictions are combined using weighted averages to create team predictions:
+
+```r
+# From race-picks-relay.R:871-962
+generate_team_predictions <- function(teams_df, individual_predictions, leg_models) {
+  # Calculate leg importance weights
+  leg_importance <- calculate_leg_importance(leg_models)
+  
+  # For each team, calculate probabilities based on their members
+  for(i in 1:nrow(team_predictions)) {
+    # Extract team members
+    for(leg in 1:4) {
+      member_col <- paste0("Member_", leg)
+      if(member_col %in% names(teams_df)) {
+        members[leg] <- teams_df[[member_col]][i]
+      }
+    }
+    
+    # Get predictions for each member from their specific leg
+    for(leg in 1:4) {
+      if(!is.na(members[leg]) && members[leg] != "") {
+        skier_pred <- individual_predictions[[leg]] %>%
+          filter(Skier == members[leg])
+        
+        if(nrow(skier_pred) > 0) {
+          member_probs$Podium[leg] <- skier_pred$Podium_Prob[1]
+          member_probs$Win[leg] <- skier_pred$Win_Prob[1]
+          member_probs$Top5[leg] <- skier_pred$Top5_Prob[1]
+          member_probs$Top10[leg] <- skier_pred$Top10_Prob[1]
+        }
+      }
+    }
+    
+    # Calculate weighted probabilities using leg importance
+    weighted_podium <- sum(member_probs$Podium * leg_importance)
+    weighted_win <- sum(member_probs$Win * leg_importance)
+    weighted_top5 <- sum(member_probs$Top5 * leg_importance)
+    weighted_top10 <- sum(member_probs$Top10 * leg_importance)
+  }
+}
+```
+
+**Expected Points Calculation**: Team expected points are calculated from aggregated probabilities using the relay points system:
+
+```r
+# From race-picks-relay.R:952-958
+# Calculate expected points based on probabilities
+team_predictions$Expected_Points[i] <- 
+  team_predictions$Win_Prob[i] * relay_points[1] +
+  (team_predictions$Podium_Prob[i] - team_predictions$Win_Prob[i]) * mean(relay_points[2:3]) +
+  (team_predictions$Top5_Prob[i] - team_predictions$Podium_Prob[i]) * mean(relay_points[4:5]) +
+  (team_predictions$Top10_Prob[i] - team_predictions$Top5_Prob[i]) * mean(relay_points[6:10])
+```
+
+**Leg Position Weighting Strategy**: The importance weights reflect relay race dynamics:
+
+1. **Standard & Mixed Relays (4 legs)**: Anchor leg (position 4) receives highest weight (0.35/0.3) due to tactical importance, with increasing emphasis toward later legs
+2. **Team Sprints (2 legs)**: Equal weighting (0.5 each) reflects balanced importance of both positions in the shorter format
+3. **Technique Consideration**: Classic legs (1-2) vs Freestyle legs (3-4) in 4-leg relays, with freestyle phases receiving slightly higher weights
+
+**Probability Capping**: All individual and team probabilities are capped at 1.0 during aggregation to ensure realistic values, with fallback defaults (0.25) applied when prediction errors occur.
 
 #### Probability
 
@@ -1649,11 +1951,326 @@ Each team member gets predictions for their specific leg position using the appr
 
 ###### Setup
 
-Leg-specific binary classification models are trained for win, podium, top5, and top10 outcomes. Training data combines historical relay leg performance with individual race data for the appropriate discipline (`race-picks-relay.R:292-320`).
+Relay probability training setup involves creating leg-specific binary classification targets for win, podium, top5, and top10 outcomes using historical relay performance data. Training data is separated by leg position and technique, with gender-specific filtering for mixed relays.
+
+**Outcome Target Creation**: Binary classification targets are created from historical relay leg placements for each outcome type:
+
+**Standard Relays**:
+```r
+# From race-picks-relay.R:292-320
+# Function to prepare leg-specific datasets
+prepare_leg_data <- function(classic_legs, freestyle_legs) {
+  # Create datasets for each leg
+  leg_data <- list()
+  
+  # Legs 1 and 2 (Classic)
+  for(i in 1:2) {
+    leg_data[[i]] <- classic_legs %>%
+      filter(Leg == i) %>%
+      mutate(
+        is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+        is_top5 = factor(ifelse(Place <= 5, "Yes", "No"), levels = c("No", "Yes")),
+        is_top10 = factor(ifelse(Place <= 10, "Yes", "No"), levels = c("No", "Yes")),
+        is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+      )
+  }
+  
+  # Legs 3 and 4 (Freestyle)
+  for(i in 3:4) {
+    leg_data[[i]] <- freestyle_legs %>%
+      filter(Leg == i) %>%
+      mutate(
+        is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+        is_top5 = factor(ifelse(Place <= 5, "Yes", "No"), levels = c("No", "Yes")),
+        is_top10 = factor(ifelse(Place <= 10, "Yes", "No"), levels = c("No", "Yes")),
+        is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+      )
+  }
+  return(leg_data)
+}
+```
+
+**Mixed Relays** (with gender-specific leg filtering):
+```r
+# From race-picks-mixed-relay.R:296-318
+# Leg 1 (usually female classic)
+leg_data[[1]] <- classic_legs %>%
+  filter(Leg == 1, Sex == "F") %>%
+  mutate(
+    is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+    is_top5 = factor(ifelse(Place <= 5, "Yes", "No"), levels = c("No", "Yes")),
+    is_top10 = factor(ifelse(Place <= 10, "Yes", "No"), levels = c("No", "Yes")),
+    is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+  )
+
+# Leg 2 (usually male classic)
+leg_data[[2]] <- classic_legs %>%
+  filter(Leg == 2, Sex == "M") %>%
+  mutate(
+    is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+    is_top5 = factor(ifelse(Place <= 5, "Yes", "No"), levels = c("No", "Yes")),
+    is_top10 = factor(ifelse(Place <= 10, "Yes", "No"), levels = c("No", "Yes")),
+    is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+  )
+```
+
+**Team Sprints** (2 legs only):
+```r
+# From race-picks-team-sprint.R:285-304
+# Leg 1
+leg_data[[1]] <- team_sprints %>%
+  filter(Leg == 1) %>%
+  mutate(
+    is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+    is_top5 = factor(ifelse(Place <= 5, "Yes", "No"), levels = c("No", "Yes")),
+    is_top10 = factor(ifelse(Place <= 10, "Yes", "No"), levels = c("No", "Yes")),
+    is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+  )
+
+# Leg 2
+leg_data[[2]] <- team_sprints %>%
+  filter(Leg == 2) %>%
+  mutate(
+    is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes")),
+    is_top5 = factor(ifelse(Place <= 5, "Yes", "No"), levels = c("No", "Yes")),
+    is_top10 = factor(ifelse(Place <= 10, "Yes", "No"), levels = c("No", "Yes")),
+    is_win = factor(ifelse(Place == 1, "Yes", "No"), levels = c("No", "Yes"))
+  )
+```
+
+**Model Type Selection**: Training approach adapts to data size, using different algorithms based on available historical data:
+
+```r
+# From race-picks-relay.R:514-526
+# Choose model type based on data size
+method <- ifelse(nrow(leg_data[[leg]]) < 500, "glm", "xgbTree")
+
+# Create formulas
+podium_formula <- as.formula(paste("is_podium ~", paste(leg_predictors, collapse = "+")))
+win_formula <- as.formula(paste("is_win ~", paste(leg_predictors, collapse = "+")))
+top5_formula <- as.formula(paste("is_top5 ~", paste(leg_predictors, collapse = "+")))
+top10_formula <- as.formula(paste("is_top10 ~", paste(leg_predictors, collapse = "+")))
+
+# Train models
+podium_model <- train_model_safe(podium_formula, leg_data[[leg]], method, "podium")
+win_model <- train_model_safe(win_formula, leg_data[[leg]], method, "win")
+top5_model <- train_model_safe(top5_formula, leg_data[[leg]], method, "top5")
+top10_model <- train_model_safe(top10_formula, leg_data[[leg]], method, "top10")
+```
+
+**Safe Training with Fallbacks**: Model training includes error handling and fallback mechanisms:
+
+```r
+# From race-picks-relay.R:422-461
+# Function to safely train a model with fallbacks
+train_model_safe <- function(formula, data, method = "glm", target_name) {
+  log_info(paste("Training", target_name, "model using", method))
+  
+  if (method == "xgbTree") {
+    # Try XGBoost first
+    tryCatch({
+      xgb_grid <- expand.grid(
+        nrounds = c(50, 100),
+        max_depth = c(3, 4),
+        eta = 0.03,
+        gamma = 0.1,
+        colsample_bytree = 0.8,
+        min_child_weight = 1,
+        subsample = 0.8
+      )
+```
+
+**Model Storage Structure**: Each leg stores separate models for all four outcome types:
+
+```r
+# From race-picks-relay.R:528-536
+# Store models
+leg_models[[leg]] <- list(
+  podium = podium_model,
+  win = win_model,
+  top5 = top5_model,
+  top10 = top10_model,
+  features = leg_predictors
+)
+```
+
+**Key Training Setup Differences by Relay Type**:
+
+1. **Standard Relays**: Technique-based leg separation (classic legs 1-2, freestyle legs 3-4) with all genders combined
+2. **Mixed Relays**: Gender-specific filtering for each leg position (F-M-F-M pattern) combined with technique separation 
+3. **Team Sprints**: Two-leg structure with technique determined by race format, no gender filtering within legs
+
+**Leg-Specific Data Separation**: Training data is filtered by leg position to ensure models learn position-specific performance patterns, with technique-appropriate feature selection applied to each leg's dataset.
+
+**Factor Level Standardization**: All binary outcomes use consistent factor levels ("No", "Yes") to ensure proper classification model training across all relay types and leg positions.
 
 ###### Feature Selection
 
-Uses the same leg-specific feature selection as points models, with BIC-based selection performed separately for each outcome type and leg position.
+Relay probability feature selection uses rule-based, leg-specific feature sets tailored to each leg's technique and tactical role. Features are selected based on position requirements rather than statistical optimization, ensuring relevant performance indicators for each leg type.
+
+**Standard Relay Feature Selection**: Each leg uses technique-specific features based on classic/freestyle requirements:
+
+**Classic Legs (1 & 2)**:
+```r
+# From race-picks-relay.R:328-336
+if(leg <= 2) {
+  # Classic legs (1 and 2)
+  predictors <- c(
+    grep("Distance_C.*Pelo_Pct$", base_cols, value = TRUE),
+    grep("Classic.*Pelo_Pct$", base_cols, value = TRUE),
+    "Distance_Pelo_Pct",
+    "Pelo_Pct",
+    "Weighted_Last_5"
+  )
+}
+```
+
+**Freestyle Leg 3**:
+```r
+# From race-picks-relay.R:337-345
+else if (leg == 3) {
+  # Freestyle legs (3)
+  predictors <- c(
+    grep("Distance_F.*Pelo_Pct$", base_cols, value = TRUE),
+    grep("Freestyle.*Pelo_Pct$", base_cols, value = TRUE),
+    "Distance_Pelo_Pct",
+    "Pelo_Pct",
+    "Weighted_Last_5"
+  )
+}
+```
+
+**Anchor Leg 4** (with sprint emphasis):
+```r
+# From race-picks-relay.R:346-356
+else if (leg == 4) {
+  # Anchor leg (often with sprint finish)
+  predictors <- c(
+    grep("Distance_F.*Pelo_Pct$", base_cols, value = TRUE),
+    grep("Freestyle.*Pelo_Pct$", base_cols, value = TRUE),
+    "Distance_Pelo_Pct",
+    "Sprint_Pelo_Pct",
+    "Pelo_Pct",
+    "Weighted_Last_5"
+  )
+}
+```
+
+**Mixed Relay Feature Selection** (gender and technique specific):
+
+**Leg 1 (Female Classic)**:
+```r
+# From race-picks-mixed-relay.R:146-156
+if(leg == 1) {
+  # Leg 1 (Female Classic)
+  predictors <- c(
+    grep("Distance_C.*Pelo_Pct$", base_cols, value = TRUE),
+    grep("Classic.*Pelo_Pct$", base_cols, value = TRUE),
+    "Distance_Pelo_Pct",
+    "Pelo_Pct",
+    "Weighted_Last_5"
+  )
+}
+```
+
+**Leg 2 (Male Classic)**:
+```r
+# From race-picks-mixed-relay.R:157-167
+else if(leg == 2) {
+  # Leg 2 (Male Classic)
+  predictors <- c(
+    grep("Distance_C.*Pelo_Pct$", base_cols, value = TRUE),
+    grep("Classic.*Pelo_Pct$", base_cols, value = TRUE),
+    "Distance_Pelo_Pct",
+    "Pelo_Pct",
+    "Weighted_Last_5"
+  )
+}
+```
+
+**Leg 3 (Female Freestyle)** and **Leg 4 (Male Freestyle)**: Similar patterns with freestyle-specific features and sprint emphasis for anchor positions.
+
+**Team Sprint Feature Selection** (technique-adaptive):
+
+**Classic Team Sprints**:
+```r
+# From race-picks-team-sprint.R:338-345
+if(is_classic) {
+  log_info(paste("Race is classic technique - using classic-specific predictors"))
+  technique_predictors <- c(
+    "Sprint_Pelo_Pct",
+    "Distance_Pelo_Pct", # General sprint ability  
+    "Sprint_C_Pelo_Pct",           # Sprint classic specific
+    "Classic_Pelo_Pct"             # General classic ability
+  )
+}
+```
+
+**Freestyle Team Sprints**:
+```r
+# From race-picks-team-sprint.R:346-353
+else if(is_freestyle) {
+  log_info(paste("Race is freestyle technique - using freestyle-specific predictors"))
+  technique_predictors <- c(
+    "Sprint_Pelo_Pct",             # General sprint ability
+    "Sprint_F_Pelo_Pct",           # Sprint freestyle specific  
+    "Freestyle_Pelo_Pct"           # General freestyle ability
+  )
+}
+```
+
+**Base Predictors Common to All**:
+```r
+# From race-picks-team-sprint.R:331-335
+# Define base predictors common to all
+predictors <- c(
+  "Pelo_Pct",
+  "Weighted_Last_5"
+)
+```
+
+**Feature Validation and Filtering**: Available features are validated against actual data columns:
+
+```r
+# From race-picks-relay.R:358-361
+# Remove any NA or invalid column names
+predictors <- predictors[predictors %in% names(leg_data[[leg]])]
+
+return(predictors)
+```
+
+**Feature Importance Analysis**: Post-training feature importance is extracted for model interpretation:
+
+```r
+# From race-picks-relay.R:537-546
+# Print feature importance safely
+log_info(paste("Top features for Leg", leg, "podium prediction:"))
+importance <- safe_importance(podium_model)
+if(!is.null(importance) && nrow(importance) > 0) {
+  # Sort by importance and print top 5
+  importance <- importance[order(importance$Overall, decreasing = TRUE), , drop = FALSE]
+  print(head(importance, 5))
+} else {
+  log_info("No feature importance available")
+}
+```
+
+**Key Feature Selection Differences**:
+
+| Feature Type | Standard Relay | Mixed Relay | Team Sprint |
+|--------------|----------------|-------------|-------------|
+| Leg-specific rules | ✅ (technique-based) | ✅ (technique + gender) | ✅ (technique-adaptive) |
+| Sprint-focused features | Leg 4 only | Legs 3&4 | Both legs |
+| Gender-specific filtering | ❌ | ✅ (F-M-F-M) | ❌ |
+| Technique adaptation | Rule-based | Rule-based | Dynamic (race-dependent) |
+
+**Rule-Based vs Statistical Selection**: Unlike points models that may use statistical feature selection, probability models use pre-defined rule-based feature sets that ensure tactical relevance for each leg position and relay type. This approach prioritizes domain knowledge over purely statistical optimization.
+
+**Leg Position Tactical Considerations**:
+1. **Classic Legs (1-2)**: Focus on distance classic performance indicators
+2. **Freestyle Legs (3-4)**: Emphasize freestyle technique and distance performance
+3. **Anchor Legs**: Additional sprint features for tactical finishing ability
+4. **Team Sprint**: Dynamic technique-specific features based on race format
 
 ###### Modeling
 
