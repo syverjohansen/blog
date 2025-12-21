@@ -9,6 +9,7 @@ library(logger)
 library(purrr)
 library(lubridate) # For better date handling
 library(slider)    # For sliding window operations
+library(stringr)   # For string manipulation functions like str_replace
 
 # Define points systems for Nordic Combined
 # Individual: Top 50 get points
