@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Marco Odermatt",
+      "SUI",
+      88.2821387940841
+    ],
+    [
+      "Stefan Brennsteiner",
+      "AUT",
+      33.9021615472127
+    ],
+    [
+      "Henrik Kristoffersen",
+      "NOR",
+      27.5312855517633
+    ],
+    [
+      "Loic Meillard",
+      "SUI",
+      26.7349260523322
+    ],
+    [
+      "Alex Vinatzer",
+      "ITA",
+      17.4061433447099
+    ]
+  ]
+}
