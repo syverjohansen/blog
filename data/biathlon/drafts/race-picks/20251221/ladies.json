@@ -1,0 +1,1238 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Sex",
+    "Race1 Points",
+    "Race1 Probability",
+    "Total Points"
+  ],
+  "rows": [
+    [
+      "Franziska Preuß",
+      926,
+      "GER",
+      "L",
+      53.3486538398363,
+      1,
+      53.3486538398363
+    ],
+    [
+      "Lou Jeanmonnot",
+      1769,
+      "FRA",
+      "L",
+      50.676338884766,
+      1,
+      50.676338884766
+    ],
+    [
+      "Elvira Öberg",
+      2266,
+      "SWE",
+      "L",
+      43.0071741547268,
+      1,
+      43.0071741547268
+    ],
+    [
+      "Lisa Vittozzi",
+      1292,
+      "ITA",
+      "L",
+      41.9910645673079,
+      1,
+      41.9910645673079
+    ],
+    [
+      "Oceane Michelon",
+      2736,
+      "FRA",
+      "L",
+      34.4629887351385,
+      1,
+      34.4629887351385
+    ],
+    [
+      "Julia Simon",
+      1300,
+      "FRA",
+      "L",
+      34.4402518684401,
+      1,
+      34.4402518684401
+    ],
+    [
+      "Jeanne Richard",
+      2680,
+      "FRA",
+      "L",
+      33.9210972860169,
+      1,
+      33.9210972860169
+    ],
+    [
+      "Suvi Minkkinen",
+      1233,
+      "FIN",
+      "L",
+      29.8277863499169,
+      1,
+      29.8277863499169
+    ],
+    [
+      "Janina Hettich-Walz",
+      1579,
+      "GER",
+      "L",
+      29.3287399519688,
+      1,
+      29.3287399519688
+    ],
+    [
+      "Hanna Öberg",
+      1384,
+      "SWE",
+      "L",
+      29.247632562057,
+      1,
+      29.247632562057
+    ],
+    [
+      "Justine Braisaz-Bouchet",
+      1217,
+      "FRA",
+      "L",
+      28.308017041314,
+      1,
+      28.308017041314
+    ],
+    [
+      "Vanessa Voigt",
+      2165,
+      "GER",
+      "L",
+      27.5491410610929,
+      1,
+      27.5491410610929
+    ],
+    [
+      "Maren Kirkeeide",
+      2898,
+      "NOR",
+      "L",
+      26.3391204967003,
+      1,
+      26.3391204967003
+    ],
+    [
+      "Lisa Theresa Hauser",
+      1006,
+      "AUT",
+      "L",
+      25.8444053538518,
+      1,
+      25.8444053538518
+    ],
+    [
+      "Dorothea Wierer",
+      54,
+      "ITA",
+      "L",
+      24.8376751121797,
+      1,
+      24.8376751121797
+    ],
+    [
+      "Paulina Batovska Fialkova",
+      947,
+      "SVK",
+      "L",
+      24.4518320997524,
+      1,
+      24.4518320997524
+    ],
+    [
+      "Anna Magnusson",
+      1305,
+      "SWE",
+      "L",
+      23.9280333862225,
+      1,
+      23.9280333862225
+    ],
+    [
+      "Marketa Davidova",
+      1394,
+      "CZE",
+      "L",
+      23.4960481710527,
+      1,
+      23.4960481710527
+    ],
+    [
+      "Karoline Offigstad Knotten",
+      1275,
+      "NOR",
+      "L",
+      23.3723861473909,
+      1,
+      23.3723861473909
+    ],
+    [
+      "Amy Baserga",
+      2261,
+      "SUI",
+      "L",
+      23.1748443680274,
+      1,
+      23.1748443680274
+    ],
+    [
+      "Tereza Vobornikova",
+      2442,
+      "CZE",
+      "L",
+      23.0287674096302,
+      1,
+      23.0287674096302
+    ],
+    [
+      "Ella Halvarsson",
+      2456,
+      "SWE",
+      "L",
+      22.8274424476102,
+      1,
+      22.8274424476102
+    ],
+    [
+      "Maya Cloetens",
+      2588,
+      "BEL",
+      "L",
+      21.2860830100362,
+      1,
+      21.2860830100362
+    ],
+    [
+      "Khrystyna Dmytrenko",
+      1589,
+      "UKR",
+      "L",
+      21.1574747721439,
+      1,
+      21.1574747721439
+    ],
+    [
+      "Anna Weidel",
+      1337,
+      "GER",
+      "L",
+      19.4216537038388,
+      1,
+      19.4216537038388
+    ],
+    [
+      "Lucie Charvatova",
+      1083,
+      "CZE",
+      "L",
+      19.0486599727243,
+      1,
+      19.0486599727243
+    ],
+    [
+      "Marthe Kråkstad Johansen",
+      1802,
+      "NOR",
+      "L",
+      18.5669351421374,
+      1,
+      18.5669351421374
+    ],
+    [
+      "Anna Andexer",
+      2690,
+      "AUT",
+      "L",
+      18.5669351421374,
+      1,
+      18.5669351421374
+    ],
+    [
+      "Rebecca Passler",
+      2533,
+      "ITA",
+      "L",
+      18.5669351421374,
+      1,
+      18.5669351421374
+    ],
+    [
+      "Polona Klemencic",
+      1606,
+      "SLO",
+      "L",
+      18.2115802181016,
+      1,
+      18.2115802181016
+    ],
+    [
+      "Deedra Irwin",
+      2437,
+      "USA",
+      "L",
+      17.9384956252044,
+      1,
+      17.9384956252044
+    ],
+    [
+      "Camille Bened",
+      2166,
+      "FRA",
+      "L",
+      17.7825148056445,
+      1,
+      17.7825148056445
+    ],
+    [
+      "Regina Ermits",
+      1314,
+      "EST",
+      "L",
+      17.5223778673471,
+      1,
+      17.5223778673471
+    ],
+    [
+      "Alina Stremous",
+      2758,
+      "MDA",
+      "L",
+      17.1037620614159,
+      1,
+      17.1037620614159
+    ],
+    [
+      "Ingrid Landmark Tandrevold",
+      1553,
+      "Norway",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anastasiya Kuzmina",
+      12,
+      "Slovakia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Gilonne Guigonnat",
+      1805,
+      "France",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anna Gandler",
+      2264,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Julia Tannheimer",
+      2896,
+      "Germany",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Linn Gestblom",
+      1301,
+      "Sweden",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ragnhild Femsteinevik",
+      1269,
+      "Norway",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Paula Botet",
+      2417,
+      "France",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sara Andersson",
+      2547,
+      "Sweden",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Joanne Reid",
+      1754,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Monika Hojnisz-Staręga",
+      74,
+      "Poland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anna-Karin Heijdenberg",
+      2635,
+      "Sweden",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Selina Grotian",
+      2783,
+      "Germany",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Tuuli Tomingas",
+      1245,
+      "Estonia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Milena Todorova",
+      1598,
+      "Bulgaria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Venla Lehtonen",
+      2309,
+      "Finland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anamarija Lampic",
+      2354,
+      "Slovenia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Samuela Comola",
+      1803,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Kamila Zuk",
+      1554,
+      "Poland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Hannah Auchentaller",
+      2552,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lora Hristova",
+      2569,
+      "Bulgaria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Michela Carrara",
+      1596,
+      "Italy",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Joanna Jakiela",
+      1612,
+      "Poland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Susan Külm",
+      1043,
+      "Estonia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Olena Horodna",
+      2735,
+      "Ukraine",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anna Maka",
+      941,
+      "Poland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Johanna Skottheim",
+      1340,
+      "Sweden",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Darya Klimina",
+      575,
+      "Kazakhstan",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ukaleq Astri Slettemark",
+      2191,
+      "Greenland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lotte Lie",
+      1237,
+      "Belgium",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Jialin Tang",
+      76,
+      "China",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ekaterina Avvakumova",
+      1638,
+      "South Korea",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sonja Leinamo",
+      2793,
+      "Finland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Tereza Vinklarkova",
+      1782,
+      "Czechia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lea Meier",
+      2505,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Margie Freed",
+      3044,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Estere Volfa",
+      2865,
+      "Latvia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anna Juppe",
+      2776,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lena Repinc",
+      2555,
+      "Slovenia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Noora Kaisa Keränen",
+      2469,
+      "Finland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Inka Hämäläinen",
+      2794,
+      "Finland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Valentina Dimitrova",
+      2573,
+      "Bulgaria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Amandine Mengin",
+      2916,
+      "France",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Alina Skripkina",
+      2747,
+      "Kazakhstan",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Maria Remenova",
+      2249,
+      "Slovakia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anna Nedza-Kubiniec",
+      2582,
+      "Poland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Grete Gaim",
+      714,
+      "Estonia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ziva Klemencic",
+      2218,
+      "Slovenia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Polina Yegorova",
+      2508,
+      "Kazakhstan",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Adelina Rimbeu",
+      2789,
+      "Romania",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Marit Øygard",
+      1804,
+      "Norway",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Chloe Levins",
+      1602,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Elza Bleidele",
+      2866,
+      "Latvia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Nadia Moser",
+      1786,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Shilo Rousseau",
+      2262,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Daryna Chalyk",
+      2825,
+      "Ukraine",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Marlene Fichtner",
+      2697,
+      "Germany",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Valeriia Dmytrenko",
+      1779,
+      "Ukraine",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Maria Zdravkova",
+      1398,
+      "Bulgaria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Judita Traubaite",
+      2954,
+      "Lithuania",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Fanqi Meng",
+      1681,
+      "China",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Natalija Kocergina",
+      906,
+      "Lithuania",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Pascale Paradis",
+      2454,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Aisha Rakisheva",
+      3248,
+      "Kazakhstan",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Benita Peiffer",
+      2216,
+      "Canada",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Zuzana Remenova",
+      2428,
+      "Slovakia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lidiia Zhurauskaite",
+      3097,
+      "Lithuania",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Andreea Mezdrea",
+      2419,
+      "Romania",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Oleksandra Merkushyna",
+      2819,
+      "Ukraine",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anastasia Tolmacheva",
+      2072,
+      "Romania",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Shawna Pendry",
+      2527,
+      "Great Britain",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Eve Bouvard",
+      2761,
+      "Belgium",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ema Kapustova",
+      2575,
+      "Slovakia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Susanna Meinen",
+      1310,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lea Rothschopf",
+      2556,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Liliia Steblyna",
+      2757,
+      "Ukraine",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Annija Sabule",
+      1597,
+      "Latvia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ilona Plechacova",
+      2961,
+      "Czechia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sanita Bulina",
+      2459,
+      "Latvia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Johanna Talihärm",
+      894,
+      "Estonia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anika Kozica",
+      1607,
+      "Croatia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Chloe Dupont",
+      2964,
+      "Great Britain",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lydia Mettler",
+      2952,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Darcie Morton",
+      1603,
+      "Australia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Olga Poltoranina",
+      73,
+      "Kazakhstan",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Julia Kink",
+      2917,
+      "Germany",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Milana Geneva",
+      2755,
+      "Kazakhstan",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Luci Anderson",
+      3247,
+      "USA",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Marisa Emonts",
+      2778,
+      "Belgium",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Heda Mikolasova",
+      3021,
+      "Czechia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Coralie Langel",
+      2892,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Åsne Skrede",
+      2629,
+      "Norway",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Aliona Makarova",
+      2779,
+      "Moldova",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sara Urumova",
+      2446,
+      "Lithuania",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ela Sever",
+      3007,
+      "Slovenia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lena Häcki-Gross",
+      1238,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Baiba Bendika",
+      531,
+      "Latvia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Natalia Sidorowicz",
+      2951,
+      "Poland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Dunja Zdouc",
+      1080,
+      "Austria",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Aita Gasparin",
+      1003,
+      "Switzerland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anastasiya Merkushyna",
+      1289,
+      "Ukraine",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Jessica Jislova",
+      958,
+      "Czechia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ]
+  ]
+}
