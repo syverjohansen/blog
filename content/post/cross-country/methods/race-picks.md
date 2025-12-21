@@ -2274,25 +2274,517 @@ if(!is.null(importance) && nrow(importance) > 0) {
 
 ###### Modeling
 
-Binary classification models (XGBoost or GLM) are trained for each leg position and each outcome type. Models use cross-validation and feature importance extraction (`race-picks-relay.R:514-526`).
+Relay probability training modeling uses adaptive binary classification approaches with XGBoost or GLM algorithms selected based on data size. Each leg position trains separate models for win, podium, top5, and top10 outcomes using 5-fold cross-validation with robust error handling.
+
+**Cross-Validation Configuration**: Standardized training control parameters across all relay types:
+
+```r
+# From race-picks-relay.R:404-411
+# Set up control parameters for cross-validation
+control <- trainControl(
+  method = "cv",
+  number = 5,
+  classProbs = TRUE,
+  summaryFunction = defaultSummary,
+  savePredictions = "final"
+)
+```
+
+**Adaptive Algorithm Selection**: Model type selection based on available training data size:
+
+```r
+# From race-picks-relay.R:514 & similar in other relay files
+# Choose model type based on data size
+method <- ifelse(nrow(leg_data[[leg]]) < 500, "glm", "xgbTree")
+```
+
+**XGBoost Hyperparameter Configuration**: When data size permits, XGBoost is used with specific hyperparameters:
+
+```r
+# From race-picks-relay.R:420-428
+# XGBoost hyperparameter grid
+xgb_grid <- expand.grid(
+  nrounds = c(50, 100),
+  max_depth = c(3, 4),
+  eta = 0.03,
+  gamma = 0.1,
+  colsample_bytree = 0.8,
+  min_child_weight = 1,
+  subsample = 0.8
+)
+```
+
+**Safe Training with Fallback Mechanisms**: Robust training process with multiple fallback options:
+
+```r
+# From race-picks-relay.R:414-489
+# Function to safely train a model with fallbacks
+train_model_safe <- function(formula, data, method = "glm", target_name) {
+  log_info(paste("Training", target_name, "model using", method))
+  
+  if (method == "xgbTree") {
+    # Try XGBoost first
+    tryCatch({
+      model <- train(
+        formula,
+        data = data,
+        method = "xgbTree",
+        trControl = control,
+        tuneGrid = xgb_grid,
+        verbose = FALSE
+      )
+      return(model)
+    }, error = function(e) {
+      log_warn(paste("XGBoost training failed:", e$message, "- falling back to glm"))
+      # Fall back to GLM
+      tryCatch({
+        model <- train(
+          formula,
+          data = data,
+          method = "glm",
+          family = "binomial",
+          trControl = control
+        )
+        return(model)
+      }, error = function(e2) {
+        log_warn(paste("GLM training also failed:", e2$message, "- using basic glm"))
+        # Direct GLM as last resort
+        model <- glm(formula, data = data, family = binomial)
+        # Wrap in a caret-compatible structure
+        result <- list(
+          finalModel = model,
+          xNames = attr(terms(model), "term.labels"),
+          method = "glm.basic"
+        )
+        class(result) <- "train"
+        return(result)
+      })
+    })
+  }
+}
+```
+
+**Outcome-Specific Model Training**: Four separate binary classification models per leg:
+
+```r
+# From race-picks-relay.R:516-526
+# Create formulas for different outcomes
+podium_formula <- as.formula(paste("is_podium ~", paste(leg_predictors, collapse = "+")))
+win_formula <- as.formula(paste("is_win ~", paste(leg_predictors, collapse = "+")))
+top5_formula <- as.formula(paste("is_top5 ~", paste(leg_predictors, collapse = "+")))
+top10_formula <- as.formula(paste("is_top10 ~", paste(leg_predictors, collapse = "+")))
+
+# Train models
+podium_model <- train_model_safe(podium_formula, leg_data[[leg]], method, "podium")
+win_model <- train_model_safe(win_formula, leg_data[[leg]], method, "win")
+top5_model <- train_model_safe(top5_formula, leg_data[[leg]], method, "top5")
+top10_model <- train_model_safe(top10_formula, leg_data[[leg]], method, "top10")
+```
+
+**Model Storage and Organization**: Each leg stores all four outcome models with metadata:
+
+```r
+# From race-picks-relay.R:528-536
+# Store models
+leg_models[[leg]] <- list(
+  podium = podium_model,
+  win = win_model,
+  top5 = top5_model,
+  top10 = top10_model,
+  features = leg_predictors
+)
+```
+
+**Mixed Relay Modeling Adaptations**: Simplified approach due to data constraints:
+
+```r
+# From race-picks-mixed-relay.R:417-430
+# Mixed relays typically use GLM due to smaller datasets
+podium_model <- train_model_safe(podium_formula, leg_data[[leg]], "glm", "podium")
+win_model <- train_model_safe(win_formula, leg_data[[leg]], "glm", "win")
+top5_model <- train_model_safe(top5_formula, leg_data[[leg]], "glm", "top5")
+top10_model <- train_model_safe(top10_formula, leg_data[[leg]], "glm", "top10")
+```
+
+**Team Sprint Modeling Strategy**: Technique-specific modeling with dynamic data size assessment:
+
+```r
+# From race-picks-team-sprint.R:396-406
+# Choose model type based on data size
+method <- ifelse(nrow(leg_data[[leg]]) < 500, "glm", "xgbTree")
+
+# Create formulas for different outcomes
+podium_formula <- as.formula(paste("is_podium ~", paste(leg_predictors, collapse = "+")))
+win_formula <- as.formula(paste("is_win ~", paste(leg_predictors, collapse = "+")))
+top5_formula <- as.formula(paste("is_top5 ~", paste(leg_predictors, collapse = "+")))
+top10_formula <- as.formula(paste("is_top10 ~", paste(leg_predictors, collapse = "+")))
+
+# Train models
+podium_model <- train_model_safe(podium_formula, leg_data[[leg]], method, "podium")
+```
+
+**Training Process Error Handling**: Comprehensive error handling with logging and graceful degradation:
+
+1. **Primary Method**: XGBoost with hyperparameter tuning (if data size > 500)
+2. **First Fallback**: Caret GLM with cross-validation 
+3. **Final Fallback**: Basic GLM with manual caret wrapper
+
+**Feature Importance Extraction**: Post-training analysis for model interpretability:
+
+```r
+# From race-picks-relay.R:537-546
+# Print feature importance safely
+log_info(paste("Top features for Leg", leg, "podium prediction:"))
+importance <- safe_importance(podium_model)
+if(!is.null(importance) && nrow(importance) > 0) {
+  # Sort by importance and print top 5
+  importance <- importance[order(importance$Overall, decreasing = TRUE), , drop = FALSE]
+  print(head(importance, 5))
+} else {
+  log_info("No feature importance available")
+}
+```
+
+**Model Training Differences by Relay Type**:
+
+| Aspect | Standard Relay | Mixed Relay | Team Sprint |
+|--------|----------------|-------------|-------------|
+| Algorithm selection | Data-adaptive (XGB/GLM) | Primarily GLM | Data-adaptive (XGB/GLM) |
+| Data size threshold | 500 rows | N/A (GLM default) | 500 rows |
+| Cross-validation | 5-fold CV | 5-fold CV | 5-fold CV |
+| Fallback levels | 3 levels | 2 levels | 3 levels |
+| Hyperparameter tuning | XGBoost grid search | None | XGBoost grid search |
+
+**Binary Classification Setup**: Each outcome uses consistent factor levels with "Yes"/"No" encoding, ensuring proper probability predictions for team aggregation during testing phase.
 
 ###### Adjustments
 
-No systematic adjustments are applied for relay probability models.
+No systematic adjustments are applied during relay probability training. Unlike individual race prediction models, relay probability models rely solely on the training data and feature engineering without post-training calibration or systematic modification.
+
+**Absence of Training-Time Adjustments**: Relay probability models do not employ any of the adjustment mechanisms commonly used in individual race predictions:
+
+**No Period-Based Adjustments**: 
+- No seasonal weighting modifications
+- No championship vs. regular race distinctions
+- No time-of-season calibration factors
+
+**No Venue-Based Adjustments**:
+- No altitude-specific modifications  
+- No course-difficulty calibration
+- No venue-history adjustments
+
+**No Format-Specific Adjustments**:
+- No mass start vs. interval start modifications
+- No distance-specific calibration beyond feature selection
+- No technique-specific post-training adjustments
+
+**Training Data Preprocessing Only**: The only modifications applied are standard data preprocessing steps during training data preparation:
+
+**Missing Value Imputation**:
+```r
+# From race-picks-relay.R:257-264
+mutate(
+  Weighted_Last_5 = ifelse(
+    is.na(Weighted_Last_5),
+    quantile(Weighted_Last_5, 0.25, na.rm = TRUE),
+    Weighted_Last_5
+  )
+)
+```
+
+**Chronological Data Filling**:
+```r
+# From race-picks-relay.R:253-255
+group_by(ID) %>%
+arrange(Date, Season, Race, desc(Distance)) %>%  # Use Date for chronological order
+fill(Weighted_Last_5, .direction = "down") %>%
+```
+
+**Season Filtering**:
+```r
+# From race-picks-relay.R:255 & similar in other files
+filter(Distance == "Rel", Season > min_season) %>%  # Apply season filter AFTER filling
+```
+
+**Rationale for No Training Adjustments**: Several factors contribute to the no-adjustment approach in relay probability training:
+
+1. **Limited Historical Data**: Relay races occur less frequently than individual races, making statistical adjustment parameter estimation challenging
+
+2. **Team Dynamics Complexity**: Relay performance depends heavily on team composition and tactical factors that are difficult to adjust for systematically
+
+3. **Leg-Specific Modeling**: The leg-based approach may inherently capture systematic effects through position-specific feature selection and training
+
+4. **Model Complexity**: The multi-leg, multi-outcome structure already provides substantial model complexity without additional adjustment layers
+
+**Contrast with Individual Race Approaches**: Individual race models typically employ multiple adjustment types:
+- Sequential adjustment methodology (period → altitude → mass start)
+- T-test based significance testing for adjustments
+- Iterative adjustment application to prevent interaction effects
+
+**Post-Training Constraints vs. Adjustments**: While no training adjustments are applied, the testing phase does apply probability constraints and normalization (covered in Testing sections). These constraints ensure mathematical coherence (win ≤ podium ≤ top5 ≤ top10) but do not modify the underlying model predictions based on race characteristics.
+
+**Consistency Across Relay Types**: All three relay types (standard, mixed, team sprint) follow the same no-adjustment approach during training, ensuring consistent methodology across relay formats.
 
 ##### Testing
 
 ###### Startlist Setup
 
-Uses the same team-level startlist preparation as points prediction.
+Relay probability testing uses identical team-level startlist preparation as points prediction, involving comprehensive startlist loading, FIS validation, current skier data preparation, and team member extraction across all relay types.
+
+**Identical Process to Points Testing**: The probability testing startlist setup follows the exact same methodology documented in the Points Testing Startlist Setup section:
+
+1. **Startlist Loading**: Gender-specific and relay-type-specific CSV file loading
+2. **FIS Validation**: Checking for valid FIS entries to determine prediction strategy  
+3. **Current Skier Preparation**: Latest Elo retrieval, Pelo percentage conversion, and weighted points calculation
+4. **Team Member Extraction**: Individual leg member identification and data preparation
+
+**Shared Implementation**: All three relay types use the same startlist preparation functions:
+
+- `load_relay_startlists()` for standard relays
+- `load_mixed_relay_startlists()` for mixed relays  
+- `load_team_sprint_startlists()` for team sprints
+- `prepare_current_skiers()` for individual skier data preparation
+- `has_valid_fis_entries()` for FIS validation
+
+**Fallback Strategy Consistency**: When no valid FIS startlist is available, both points and probability predictions use the same fallback approach of predicting for all current season skiers across all leg positions rather than specific team compositions.
+
+**Data Preparation Uniformity**: The same Elo-to-Pelo conversion, weighted last 5 calculation (classic vs freestyle), and missing value imputation procedures are applied for both prediction types, ensuring consistent input data regardless of the modeling approach (points vs probability).
+
+For detailed code evidence and implementation specifics, refer to the comprehensive Relay Points Testing Startlist Setup section above, as the probability testing uses identical processes.
 
 ###### Modeling
 
-Leg-specific probability predictions are combined using weighted averages based on leg importance. Team probabilities are calculated by aggregating individual leg predictions (`race-picks-relay.R:871-961`).
+Relay probability testing modeling generates individual leg probability predictions using trained binary classification models, then aggregates them into team-level probabilities using leg importance weighting. The process involves outcome-specific predictions, team member extraction, and weighted probability aggregation.
+
+**Individual Leg Probability Generation**: Each team member receives probability predictions for all four outcomes using their leg-specific trained models:
+
+```r
+# From race-picks-relay.R:795-798
+# Get predictions for each outcome using leg-specific models
+win_probs <- safe_predict(leg_models[[leg_number]]$win, pred_data)
+podium_probs <- safe_predict(leg_models[[leg_number]]$podium, pred_data)
+top5_probs <- safe_predict(leg_models[[leg_number]]$top5, pred_data)
+top10_probs <- safe_predict(leg_models[[leg_number]]$top10, pred_data)
+```
+
+**Prediction Size Validation**: Robust checking ensures prediction vectors match input data dimensions:
+
+```r
+# From race-picks-relay.R:801-816
+# Make sure all vectors are the same length as the data
+if(length(win_probs) != nrow(pred_data)) {
+  log_warn(paste("Size mismatch in win_probs:", length(win_probs), "vs", nrow(pred_data)))
+  win_probs <- rep(win_probs[1], nrow(pred_data))
+}
+if(length(podium_probs) != nrow(pred_data)) {
+  log_warn(paste("Size mismatch in podium_probs:", length(podium_probs), "vs", nrow(pred_data)))
+  podium_probs <- rep(podium_probs[1], nrow(pred_data))
+}
+```
+
+**Individual Prediction Results Structure**: Leg predictions are organized with comprehensive metadata:
+
+```r
+# From race-picks-relay.R:819-830
+# Create results dataframe
+return(data.frame(
+  ID = pred_data$ID,
+  Skier = pred_data$Skier,
+  Nation = pred_data$Nation,
+  Sex = pred_data$Sex,
+  Leg = leg_number,
+  Win_Prob = win_probs,
+  Podium_Prob = podium_probs,
+  Top5_Prob = top5_probs,
+  Top10_Prob = top10_probs
+))
+```
+
+**Team Prediction Framework**: Team-level predictions are initialized and structured to accommodate all relay types:
+
+```r
+# From race-picks-relay.R:871-891
+generate_team_predictions <- function(teams_df, individual_predictions, leg_models) {
+  # Find all the exact Member_N columns
+  member_cols <- c()
+  for(i in 1:4) {
+    name_col <- paste0("Member_", i)
+    if(name_col %in% names(teams_df)) {
+      member_cols <- c(member_cols, name_col)
+    }
+  }
+  
+  # Initialize results dataframe with the exact member columns
+  team_predictions <- teams_df %>%
+    select(Team_Name, Nation, Team_Rank, Price, Is_Present, all_of(member_cols)) %>%
+    mutate(
+      Podium_Prob = 0,
+      Win_Prob = 0,
+      Top5_Prob = 0,
+      Top10_Prob = 0,
+      Expected_Points = 0
+    )
+}
+```
+
+**Leg Importance Weight Application**: Team aggregation uses position-specific importance weights:
+
+```r
+# From race-picks-relay.R:893-897
+# Calculate leg importance weights
+leg_importance <- calculate_leg_importance(leg_models)
+
+log_info(paste("Leg importance weights:", 
+               paste(sprintf("Leg %d: %.2f", 1:4, leg_importance), collapse=", ")))
+```
+
+**Team Member Probability Extraction**: Individual leg predictions are extracted for each team member:
+
+```r
+# From race-picks-relay.R:900-918
+# For each team, calculate probabilities based on their members
+for(i in 1:nrow(team_predictions)) {
+  # Extract team members
+  members <- c()
+  for(leg in 1:4) {
+    member_col <- paste0("Member_", leg)
+    if(member_col %in% names(teams_df)) {
+      members[leg] <- teams_df[[member_col]][i]
+    }
+  }
+  
+  # Get predictions for each member
+  member_probs <- list(
+    Podium = numeric(4),
+    Win = numeric(4),
+    Top5 = numeric(4),
+    Top10 = numeric(4)
+  )
+}
+```
+
+**Member Probability Lookup**: Team member predictions are retrieved from leg-specific prediction datasets:
+
+```r
+# From race-picks-relay.R:920-936
+for(leg in 1:4) {
+  if(!is.na(members[leg]) && members[leg] != "") {
+    # Access the specific leg's dataframe and then filter
+    if(!is.null(individual_predictions[[leg]])) {
+      skier_pred <- individual_predictions[[leg]] %>%
+        filter(Skier == members[leg])
+      
+      if(nrow(skier_pred) > 0) {
+        # Store probabilities safely
+        member_probs$Podium[leg] <- skier_pred$Podium_Prob[1]
+        member_probs$Win[leg] <- skier_pred$Win_Prob[1]
+        member_probs$Top5[leg] <- skier_pred$Top5_Prob[1]
+        member_probs$Top10[leg] <- skier_pred$Top10_Prob[1]
+      }
+    }
+  }
+}
+```
+
+**Weighted Team Probability Calculation**: Individual leg probabilities are aggregated using importance weights:
+
+```r
+# From race-picks-relay.R:938-950
+# Calculate weighted probabilities
+if(sum(member_probs$Podium > 0) > 0) {  # Only if we have any valid probabilities
+  # Calculate weighted probabilities using leg importance
+  weighted_podium <- sum(member_probs$Podium * leg_importance)
+  weighted_win <- sum(member_probs$Win * leg_importance)
+  weighted_top5 <- sum(member_probs$Top5 * leg_importance)
+  weighted_top10 <- sum(member_probs$Top10 * leg_importance)
+  
+  # Cap at 1
+  team_predictions$Podium_Prob[i] <- min(weighted_podium, 1)
+  team_predictions$Win_Prob[i] <- min(weighted_win, 1)
+  team_predictions$Top5_Prob[i] <- min(weighted_top5, 1)
+  team_predictions$Top10_Prob[i] <- min(weighted_top10, 1)
+}
+```
+
+**Expected Points Derivation**: Team expected points are calculated from probability aggregations:
+
+```r
+# From race-picks-relay.R:952-958
+# Calculate expected points based on probabilities
+team_predictions$Expected_Points[i] <- 
+  team_predictions$Win_Prob[i] * relay_points[1] +
+  (team_predictions$Podium_Prob[i] - team_predictions$Win_Prob[i]) * mean(relay_points[2:3]) +
+  (team_predictions$Top5_Prob[i] - team_predictions$Podium_Prob[i]) * mean(relay_points[4:5]) +
+  (team_predictions$Top10_Prob[i] - team_predictions$Top5_Prob[i]) * mean(relay_points[6:10])
+```
+
+**Key Differences from Points Testing Modeling**:
+
+1. **Model Type**: Uses trained binary classification models (win/podium/top5/top10) rather than points regression models
+2. **Prediction Output**: Generates probabilities (0-1) rather than continuous point predictions  
+3. **Aggregation Method**: Weighted probability averaging rather than weighted points averaging
+4. **Expected Points**: Derived from probabilities using relay points system rather than direct prediction
+
+**Relay Type Consistency**: All three relay types (standard, mixed, team sprint) use the same team aggregation methodology, with only leg importance weights varying by format (4-leg vs 2-leg structures).
 
 ###### Adjustments
 
-No adjustments applied for relay probabilities.
+No systematic adjustments are applied during relay probability testing. Unlike individual race probability predictions, relay probability testing relies entirely on the trained models and team aggregation without post-prediction modifications based on race characteristics or external factors.
+
+**Absence of Testing-Time Adjustments**: Relay probability testing does not employ any adjustment mechanisms that modify the raw model predictions:
+
+**No Race-Specific Adjustments**:
+- No period-based probability modifications (championship vs regular season)
+- No venue-specific calibration (altitude, weather, course conditions)
+- No format-specific adjustments (relay distance variations, team size differences)
+
+**No Team-Composition Adjustments**:
+- No nation-specific team chemistry modifications
+- No experience-based team adjustments (veteran vs rookie team composition)
+- No ranking-based team performance calibration
+
+**No Historical Performance Adjustments**:
+- No recent team form adjustments
+- No head-to-head team performance modifications
+- No seasonal trend adjustments for relay-specific performance
+
+**Probability Constraints vs. Adjustments**: While no systematic adjustments are applied, probability testing does implement mathematical constraints that ensure logical coherence:
+
+**Capping at Individual Level**:
+```r
+# From race-picks-relay.R:946-950 (during aggregation)
+# Cap at 1
+team_predictions$Podium_Prob[i] <- min(weighted_podium, 1)
+team_predictions$Win_Prob[i] <- min(weighted_win, 1)
+team_predictions$Top5_Prob[i] <- min(weighted_top5, 1)
+team_predictions$Top10_Prob[i] <- min(weighted_top10, 1)
+```
+
+**These constraints are mathematical bounds, not systematic adjustments** - they ensure probabilities remain within valid ranges (0-1) but do not modify predictions based on race-specific factors.
+
+**Normalization and Monotonic Constraints** (detailed in following section): While probability normalization and monotonic ordering are applied post-aggregation, these are mathematical consistency requirements rather than systematic adjustments based on external factors.
+
+**Rationale for No Testing Adjustments**: Several factors support the no-adjustment approach during relay probability testing:
+
+1. **Model Completeness**: The leg-specific binary classification models with comprehensive feature sets may already capture relevant systematic effects
+
+2. **Team Complexity**: Relay performance depends on complex team interactions that are difficult to adjust for systematically without overfitting
+
+3. **Limited Adjustment Precedent**: Unlike individual races where adjustment patterns are well-established, relay-specific adjustment patterns are less clear
+
+4. **Probability Aggregation Robustness**: The weighted aggregation of individual leg probabilities may provide inherent stability that reduces need for adjustments
+
+5. **Data Sparsity**: Lower frequency of relay races compared to individual races makes adjustment parameter estimation less reliable
+
+**Contrast with Individual Race Probability Testing**: Individual race models typically employ:
+- Period adjustments based on race timing and importance
+- Venue adjustments for specific course characteristics  
+- Format adjustments for mass start vs interval start races
+- Sequential adjustment application with significance testing
+
+**Consistency with Training Approach**: The no-adjustment philosophy in testing mirrors the training approach, maintaining methodological consistency where both training and testing rely on model architecture and feature engineering rather than systematic modifications.
+
+**Focus on Model Quality**: The absence of testing adjustments places emphasis on ensuring high-quality training data, appropriate feature selection, and robust model architecture rather than post-hoc correction mechanisms.
 
 #### Normalization and Monotonic Constraints
 
