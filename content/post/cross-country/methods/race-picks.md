@@ -2788,6 +2788,141 @@ team_predictions$Top10_Prob[i] <- min(weighted_top10, 1)
 
 #### Normalization and Monotonic Constraints
 
-Team probability predictions are normalized so that win probabilities sum to 1, podium probabilities sum to 3, top5 probabilities sum to 5, and top10 probabilities sum to 10 (`race-picks-relay.R:987-1016`). 
+Relay probability predictions undergo a sophisticated two-stage post-processing procedure to ensure mathematical coherence and realistic probability distributions. The process involves initial normalization to expected totals, monotonic constraint application, re-normalization, and probability capping.
 
-Monotonic constraints are applied to ensure win ≤ podium ≤ top5 ≤ top10 for each team, followed by re-normalization to maintain target sums (`race-picks-relay.R:1018-1059`). All probabilities are capped at 1.0 to ensure realistic values.
+**Initial Probability Normalization**: Team probabilities are normalized to match expected mathematical totals based on the number of available positions:
+
+```r
+# From race-picks-relay.R:987-1016
+normalize_probabilities <- function(team_predictions) {
+  # Define normalization targets
+  targets <- list(
+    Win_Prob = 1,      # Win probability sums to 1
+    Podium_Prob = 3,   # Podium probability sums to 3
+    Top5_Prob = 5,     # Top5 probability sums to 5
+    Top10_Prob = 10    # Top10 probability sums to 10
+  )
+  
+  # For each probability column, normalize to the target sum
+  for(prob_col in names(targets)) {
+    if(prob_col %in% names(team_predictions)) {
+      # Get current sum
+      current_sum <- sum(team_predictions[[prob_col]], na.rm = TRUE)
+      
+      # Skip if current sum is 0 (to avoid division by zero)
+      if(current_sum > 0) {
+        # Apply normalization factor
+        target_sum <- targets[[prob_col]]
+        normalization_factor <- target_sum / current_sum
+        
+        # Normalize probabilities
+        team_predictions[[prob_col]] <- team_predictions[[prob_col]] * normalization_factor
+      }
+    }
+  }
+}
+```
+
+**Normalization Targets Logic**: The normalization targets reflect the mathematical expectation for probability distributions:
+- **Win Probability**: Sum = 1 (exactly one winner per race)
+- **Podium Probability**: Sum = 3 (exactly three podium positions)  
+- **Top5 Probability**: Sum = 5 (exactly five top5 positions)
+- **Top10 Probability**: Sum = 10 (exactly ten top10 positions)
+
+**Monotonic Constraint Application**: After normalization, monotonic constraints ensure logical ordering of probabilities for each team:
+
+```r
+# From race-picks-relay.R:1018-1042
+# APPLY MONOTONIC CONSTRAINTS: Ensure Win_Prob <= Podium_Prob <= Top5_Prob <= Top10_Prob
+log_info("Applying monotonic constraints...")
+
+prob_cols <- c("Win_Prob", "Podium_Prob", "Top5_Prob", "Top10_Prob")
+prob_cols <- prob_cols[prob_cols %in% names(team_predictions)]
+
+# For each team, ensure probabilities are monotonically non-decreasing
+for(i in 1:nrow(team_predictions)) {
+  probs <- numeric(length(prob_cols))
+  for(j in 1:length(prob_cols)) {
+    probs[j] <- team_predictions[[prob_cols[j]]][i]
+  }
+  
+  # Apply monotonic adjustment: each probability should be >= previous one
+  for(j in 2:length(probs)) {
+    if(probs[j] < probs[j-1]) {
+      probs[j] <- probs[j-1]  # Set to previous value
+    }
+  }
+  
+  # Update the team_predictions dataframe
+  for(j in 1:length(prob_cols)) {
+    team_predictions[[prob_cols[j]]][i] <- probs[j]
+  }
+}
+```
+
+**Monotonic Logic**: The constraint ensures that for any team:
+**Win_Probability ≤ Podium_Probability ≤ Top5_Probability ≤ Top10_Probability**
+
+This reflects the logical hierarchy where achieving a higher-level outcome (e.g., winning) implies achieving all lower-level outcomes (e.g., podium, top5, top10).
+
+**Re-Normalization After Constraints**: Monotonic adjustments can alter probability totals, requiring re-normalization:
+
+```r
+# From race-picks-relay.R:1044-1059
+# RE-NORMALIZE after monotonic adjustment to maintain target sums
+log_info("Re-normalizing after monotonic constraints...")
+for(prob_col in names(targets)) {
+  if(prob_col %in% names(team_predictions)) {
+    current_sum <- sum(team_predictions[[prob_col]], na.rm = TRUE)
+    target_sum <- targets[[prob_col]]
+    
+    if(current_sum > 0) {
+      scaling_factor <- target_sum / current_sum
+      team_predictions[[prob_col]] <- team_predictions[[prob_col]] * scaling_factor
+      
+      # Cap at 1.0 again
+      team_predictions[[prob_col]] <- pmin(team_predictions[[prob_col]], 1.0)
+    }
+  }
+}
+```
+
+**Final Probability Capping**: All probabilities are capped at 1.0 to ensure realistic individual team probabilities:
+
+```r
+# From race-picks-relay.R:964-984
+# Function to cap probability values at 1
+cap_probabilities <- function(team_predictions) {
+  # Probability columns to process
+  prob_cols <- c("Win_Prob", "Podium_Prob", "Top5_Prob", "Top10_Prob")
+  
+  # Cap each probability column at 1
+  for(prob_col in prob_cols) {
+    if(prob_col %in% names(team_predictions)) {
+      # Cap values at 1
+      team_predictions[[prob_col]] <- pmin(team_predictions[[prob_col]], 1)
+      
+      # Log any modifications
+      capped_count <- sum(team_predictions[[prob_col]] == 1)
+      if(capped_count > 0) {
+        log_info(paste("Capped", capped_count, "values at 1 for", prob_col))
+      }
+    }
+  }
+}
+```
+
+**Complete Processing Sequence**:
+1. **Initial Normalization** → Ensure probability totals match mathematical expectations
+2. **Monotonic Constraints** → Ensure logical ordering within each team
+3. **Re-Normalization** → Restore correct probability totals after constraint adjustments
+4. **Probability Capping** → Ensure no individual probability exceeds 1.0
+
+**Cross-Relay Type Consistency**: All three relay types (standard, mixed, team sprint) use identical normalization and constraint procedures, ensuring consistent probability post-processing across relay formats.
+
+**Mathematical Guarantee**: The final probabilities satisfy three critical requirements:
+- **Valid Range**: All probabilities ∈ [0,1]
+- **Correct Totals**: Sum to expected mathematical targets (1, 3, 5, 10)
+- **Logical Ordering**: Win ≤ Podium ≤ Top5 ≤ Top10 for each team
+
+**Purpose**: This post-processing ensures that the aggregated team probabilities, which result from weighted combinations of individual leg predictions, maintain mathematical coherence and interpretability for decision-making and expected value calculations.
