@@ -1,80 +1,10 @@
 [
   {
-    "id": 254,
-    "skier": "Claudia Purker",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 462,
-    "skier": "Paulina Cieslar",
-    "sex": "L",
-    "nation": "pol",
-    "image": "/img/flags/pol.svg"
-  },
-  {
-    "id": 135,
-    "skier": "Linlin Cui",
-    "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
-  },
-  {
-    "id": 23,
-    "skier": "Evelyn Insam",
+    "id": 377,
+    "skier": "Annika Sieff",
     "sex": "L",
     "nation": "ita",
     "image": "/img/flags/ita.svg"
-  },
-  {
-    "id": 122,
-    "skier": "Lucienne H\u00f6ppner",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 253,
-    "skier": "Lara Malsiner",
-    "sex": "L",
-    "nation": "ita",
-    "image": "/img/flags/ita.svg"
-  },
-  {
-    "id": 161,
-    "skier": "Minami Watanabe",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 109,
-    "skier": "Marie Hoyau",
-    "sex": "L",
-    "nation": "fra",
-    "image": "/img/flags/fra.svg"
-  },
-  {
-    "id": 340,
-    "skier": "Julia Tervahartiala",
-    "sex": "L",
-    "nation": "fin",
-    "image": "/img/flags/fin.svg"
-  },
-  {
-    "id": 430,
-    "skier": "Martina Zanitzer",
-    "sex": "L",
-    "nation": "ita",
-    "image": "/img/flags/ita.svg"
-  },
-  {
-    "id": 221,
-    "skier": "Silje Opseth",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
   },
   {
     "id": 416,
@@ -84,270 +14,25 @@
     "image": "/img/flags/aut.svg"
   },
   {
-    "id": 448,
-    "skier": "Sina Arnet",
-    "sex": "L",
-    "nation": "sui",
-    "image": "/img/flags/sui.svg"
-  },
-  {
-    "id": 406,
-    "skier": "Nora Midtsundstad",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 108,
-    "skier": "Lucie Mikova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 478,
-    "skier": "Nika Krasovic",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 49,
-    "skier": "Karoline R\u00f8stad",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 65,
-    "skier": "Sabrina Windm\u00fcller",
-    "sex": "L",
-    "nation": "sui",
-    "image": "/img/flags/sui.svg"
-  },
-  {
-    "id": 547,
-    "skier": "Kira Maria Kapustikova",
-    "sex": "L",
-    "nation": "svk",
-    "image": "/img/flags/svk.svg"
-  },
-  {
-    "id": 501,
-    "skier": "Sandra Sproch",
+    "id": 26,
+    "skier": "Nita Englund",
     "sex": "L",
     "nation": "usa",
     "image": "/img/flags/usa.svg"
   },
   {
-    "id": 245,
-    "skier": "Lidiia Iakovleva",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 98,
-    "skier": "Wendy Vuik",
-    "sex": "L",
-    "nation": "ned",
-    "image": "/img/flags/ned.svg"
-  },
-  {
-    "id": 33,
-    "skier": "Julia Clair",
-    "sex": "L",
-    "nation": "fra",
-    "image": "/img/flags/fra.svg"
-  },
-  {
-    "id": 41,
-    "skier": "Barbora Blazkova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 275,
-    "skier": "Nicole Maurer",
-    "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
-  },
-  {
-    "id": 134,
-    "skier": "Cheng Ji",
-    "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
-  },
-  {
-    "id": 300,
-    "skier": "Astrid Moberg",
-    "sex": "L",
-    "nation": "swe",
-    "image": "/img/flags/swe.svg"
-  },
-  {
-    "id": 315,
-    "skier": "Aleksandra Barantceva",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 268,
-    "skier": "Romane Dieu",
-    "sex": "L",
-    "nation": "fra",
-    "image": "/img/flags/fra.svg"
-  },
-  {
-    "id": 369,
-    "skier": "Sijia Wang",
-    "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
-  },
-  {
-    "id": 522,
-    "skier": "Alyona Sviridenko",
-    "sex": "L",
-    "nation": "kaz",
-    "image": "/img/flags/kaz.svg"
-  },
-  {
-    "id": 104,
-    "skier": "Mizuki Yamaguchi",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 386,
-    "skier": "Tetyana Pylypchuk",
-    "sex": "L",
-    "nation": "ukr",
-    "image": "/img/flags/ukr.svg"
-  },
-  {
-    "id": 91,
-    "skier": "Bigna Windm\u00fcller",
-    "sex": "L",
-    "nation": "sui",
-    "image": "/img/flags/sui.svg"
-  },
-  {
-    "id": 34,
-    "skier": "Michaela Dolezelova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 94,
-    "skier": "Atsuko Tanaka",
-    "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
-  },
-  {
-    "id": 71,
-    "skier": "Oceane Avocat Gros",
-    "sex": "L",
-    "nation": "fra",
-    "image": "/img/flags/fra.svg"
-  },
-  {
-    "id": 438,
-    "skier": "Ping Zeng",
-    "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
-  },
-  {
-    "id": 44,
-    "skier": "Anna Odine Str\u00f8m",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 407,
-    "skier": "Michelle G\u00f6bel",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 74,
-    "skier": "Veronica Gianmoena",
+    "id": 23,
+    "skier": "Evelyn Insam",
     "sex": "L",
     "nation": "ita",
     "image": "/img/flags/ita.svg"
   },
   {
-    "id": 388,
-    "skier": "Klara Ulrichova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 64,
-    "skier": "Mariia Iakovleva",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 143,
-    "skier": "Jun Maruyama",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 55,
-    "skier": "Ayuka Takeda",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 410,
-    "skier": "Delia Anamaria Folea",
-    "sex": "L",
-    "nation": "rou",
-    "image": "/img/flags/rou.svg"
-  },
-  {
-    "id": 73,
-    "skier": "Jasmine Sepandj",
-    "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
-  },
-  {
-    "id": 113,
-    "skier": "Yurika Hirayama",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 96,
-    "skier": "Lisa Demetz",
+    "id": 381,
+    "skier": "Arianna Sieff",
     "sex": "L",
     "nation": "ita",
     "image": "/img/flags/ita.svg"
-  },
-  {
-    "id": 120,
-    "skier": "Tong Ma",
-    "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
   },
   {
     "id": 5,
@@ -357,452 +42,11 @@
     "image": "/img/flags/jpn.svg"
   },
   {
-    "id": 240,
-    "skier": "Luisa G\u00f6rlich",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 29,
-    "skier": "Alexandra Kustova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 297,
-    "skier": "Rio Seto",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 446,
-    "skier": "Josie Johnson",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 336,
-    "skier": "Ayuka Kamoda",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 123,
-    "skier": "Cornelia Roider",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 32,
-    "skier": "Yuka Seto",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 67,
-    "skier": "Anna Rupprecht",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 137,
-    "skier": "Natalie Dejmkova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 389,
-    "skier": "Thea Minyan Bj\u00f8rseth",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 486,
-    "skier": "Jerica Jesenko",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 282,
-    "skier": "Anna Shpyneva",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 62,
-    "skier": "Qi Liu",
-    "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
-  },
-  {
-    "id": 441,
-    "skier": "Sofia Mattila",
-    "sex": "L",
-    "nation": "fin",
-    "image": "/img/flags/fin.svg"
-  },
-  {
-    "id": 95,
-    "skier": "Manuela Malsiner",
-    "sex": "L",
-    "nation": "ita",
-    "image": "/img/flags/ita.svg"
-  },
-  {
-    "id": 515,
-    "skier": "Ziva Andric",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 112,
-    "skier": "Natalia Solovyeva",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 26,
-    "skier": "Nita Englund",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 69,
-    "skier": "Anna H\u00e4fele",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 222,
-    "skier": "Nozomi Maruyama",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 458,
-    "skier": "Tamara Mesikova",
-    "sex": "L",
-    "nation": "svk",
-    "image": "/img/flags/svk.svg"
-  },
-  {
-    "id": 526,
-    "skier": "Ursa Vidmar",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 132,
-    "skier": "Barbara Stuffer",
-    "sex": "L",
-    "nation": "ita",
-    "image": "/img/flags/ita.svg"
-  },
-  {
-    "id": 288,
-    "skier": "Anna Twardosz",
-    "sex": "L",
-    "nation": "pol",
-    "image": "/img/flags/pol.svg"
-  },
-  {
-    "id": 90,
-    "skier": "Helena Olsson Smeby",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 287,
-    "skier": "Oceane Paillard",
-    "sex": "L",
-    "nation": "fra",
-    "image": "/img/flags/fra.svg"
-  },
-  {
-    "id": 364,
-    "skier": "Vanessa Moharitsch",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 513,
-    "skier": "Yangning Weng",
-    "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
-  },
-  {
-    "id": 129,
-    "skier": "Katie Willis",
-    "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
-  },
-  {
-    "id": 81,
-    "skier": "Sonja Schoitsch",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 284,
-    "skier": "Katra Komar",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 401,
-    "skier": "Irma Makhinia",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 59,
-    "skier": "Aki Matsuhashi",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 312,
-    "skier": "Anna Hoffmann",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 347,
-    "skier": "Veronika Shishkina",
-    "sex": "L",
-    "nation": "kaz",
-    "image": "/img/flags/kaz.svg"
-  },
-  {
-    "id": 116,
-    "skier": "Anastasia Veshchikova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 118,
-    "skier": "Liubov Alchikova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 281,
-    "skier": "Jerneja Brecl",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 127,
-    "skier": "Nata De Leeuw",
-    "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
-  },
-  {
-    "id": 131,
-    "skier": "Caroline Rochas",
-    "sex": "L",
-    "nation": "fra",
-    "image": "/img/flags/fra.svg"
-  },
-  {
-    "id": 57,
-    "skier": "Natsuka Sawaya",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 35,
-    "skier": "Kaori Iwabuchi",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 391,
-    "skier": "Lara Logar",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 419,
-    "skier": "Riko Sakurai",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 270,
-    "skier": "Natalie Eilers",
-    "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
-  },
-  {
-    "id": 427,
-    "skier": "Ringo Miyajima",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 21,
-    "skier": "Chiara Kreuzer",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
     "id": 259,
     "skier": "Agnes Reisch",
     "sex": "L",
     "nation": "ger",
     "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 43,
-    "skier": "Daniela Haralambie",
-    "sex": "L",
-    "nation": "rou",
-    "image": "/img/flags/rou.svg"
-  },
-  {
-    "id": 399,
-    "skier": "Astrid Norstedt",
-    "sex": "L",
-    "nation": "swe",
-    "image": "/img/flags/swe.svg"
-  },
-  {
-    "id": 291,
-    "skier": "Valentina Sderzhikova",
-    "sex": "L",
-    "nation": "kaz",
-    "image": "/img/flags/kaz.svg"
-  },
-  {
-    "id": 136,
-    "skier": "Jenny Synn\u00f8ve Hagemoen",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 114,
-    "skier": "Alexandra Pretorius",
-    "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
-  },
-  {
-    "id": 454,
-    "skier": "Nagomi Nakayama",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 479,
-    "skier": "Ingvild Synn\u00f8ve Midtskogen",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 265,
-    "skier": "Arantxa Lancho",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 456,
-    "skier": "Emma Chervet",
-    "sex": "L",
-    "nation": "fra",
-    "image": "/img/flags/fra.svg"
-  },
-  {
-    "id": 79,
-    "skier": "Ramona Straub",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 480,
-    "skier": "Yuzuki Sato",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 552,
-    "skier": "Yutong Pan",
-    "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
-  },
-  {
-    "id": 20,
-    "skier": "Ursa Bogataj",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 80,
-    "skier": "Abby Ringquist",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 477,
-    "skier": "Ajda Kosnjek",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 86,
-    "skier": "Anna Javorsek",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
   },
   {
     "id": 16,
@@ -812,214 +56,46 @@
     "image": "/img/flags/ger.svg"
   },
   {
-    "id": 370,
-    "skier": "Fangyu Zhou",
+    "id": 119,
+    "skier": "Maria Aleksandrova",
     "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
   },
   {
-    "id": 46,
-    "skier": "Jana Mrakotova",
+    "id": 108,
+    "skier": "Lucie Mikova",
     "sex": "L",
     "nation": "cze",
     "image": "/img/flags/cze.svg"
   },
   {
-    "id": 225,
-    "skier": "Logan Sankey",
+    "id": 315,
+    "skier": "Aleksandra Barantceva",
     "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
   },
   {
-    "id": 76,
-    "skier": "Taylor Henrich",
-    "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
-  },
-  {
-    "id": 75,
-    "skier": "Julia Huber",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 455,
-    "skier": "Lilou Zepchi",
-    "sex": "L",
-    "nation": "fra",
-    "image": "/img/flags/fra.svg"
-  },
-  {
-    "id": 7,
-    "skier": "Daniela Iraschko-Stolz",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 54,
-    "skier": "Magdalena Palasz",
-    "sex": "L",
-    "nation": "pol",
-    "image": "/img/flags/pol.svg"
-  },
-  {
-    "id": 138,
-    "skier": "Silje Karlengen",
+    "id": 295,
+    "skier": "Ingebj\u00f8rg Saglien Br\u00e5ten",
     "sex": "L",
     "nation": "nor",
     "image": "/img/flags/nor.svg"
   },
   {
-    "id": 133,
-    "skier": "Maria Zotova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 110,
-    "skier": "Michaela Rajnochova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 267,
-    "skier": "Eleora Hamming",
-    "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
-  },
-  {
-    "id": 45,
-    "skier": "Susanna Forsstr\u00f6m",
-    "sex": "L",
-    "nation": "fin",
-    "image": "/img/flags/fin.svg"
-  },
-  {
-    "id": 58,
-    "skier": "Shihori Oi",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 299,
-    "skier": "Marita Kramer",
+    "id": 364,
+    "skier": "Vanessa Moharitsch",
     "sex": "L",
     "nation": "aut",
     "image": "/img/flags/aut.svg"
   },
   {
-    "id": 273,
-    "skier": "Natasha Bodnarchuk",
+    "id": 15,
+    "skier": "Line Jahr",
     "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
-  },
-  {
-    "id": 8,
-    "skier": "Maja Vtic",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 93,
-    "skier": "Alissa Johnson",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 542,
-    "skier": "Heta Hirvonen",
-    "sex": "L",
-    "nation": "fin",
-    "image": "/img/flags/fin.svg"
-  },
-  {
-    "id": 417,
-    "skier": "Alexandria Loutitt",
-    "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
-  },
-  {
-    "id": 6,
-    "skier": "Irina Avvakumova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 126,
-    "skier": "Magdalena Schnurr",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 66,
-    "skier": "Veronika Zobel",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 22,
-    "skier": "Svenja W\u00fcrth",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 47,
-    "skier": "Joanna Szwab",
-    "sex": "L",
-    "nation": "pol",
-    "image": "/img/flags/pol.svg"
-  },
-  {
-    "id": 338,
-    "skier": "Selina Freitag",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 60,
-    "skier": "Yuka Kobayashi",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 459,
-    "skier": "Noelia Vuerich",
-    "sex": "L",
-    "nation": "ita",
-    "image": "/img/flags/ita.svg"
-  },
-  {
-    "id": 100,
-    "skier": "Melanie Fai\u00dft",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 396,
-    "skier": "Hannah Wiegele",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
   },
   {
     "id": 107,
@@ -1029,55 +105,6 @@
     "image": "/img/flags/rus.svg"
   },
   {
-    "id": 9,
-    "skier": "Maren Lundby",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 449,
-    "skier": "Taja Bodlaj",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 385,
-    "skier": "Elizaveta Mokhova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 124,
-    "skier": "Manja Pograjc",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 311,
-    "skier": "Samantha Macuga",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 395,
-    "skier": "Nika Vetrih",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 546,
-    "skier": "Taja Sitar",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
     "id": 70,
     "skier": "Elisabeth Raudaschl",
     "sex": "L",
@@ -1085,256 +112,39 @@
     "image": "/img/flags/aut.svg"
   },
   {
-    "id": 371,
-    "skier": "Sophie Sorschag",
-    "sex": "L",
-    "nation": "kos",
-    "image": "/img/flags/kos.svg"
-  },
-  {
-    "id": 511,
-    "skier": "Maja Kovacic",
+    "id": 391,
+    "skier": "Lara Logar",
     "sex": "L",
     "nation": "slo",
     "image": "/img/flags/slo.svg"
   },
   {
-    "id": 27,
-    "skier": "Sofya Tikhonova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 375,
-    "skier": "Lisa Hirner",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 298,
-    "skier": "Karoline Skatvedt",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 130,
-    "skier": "Izumi Yamada",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 82,
-    "skier": "Lisa Wiegele",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 392,
-    "skier": "Nicole Konderla",
-    "sex": "L",
-    "nation": "pol",
-    "image": "/img/flags/pol.svg"
-  },
-  {
-    "id": 372,
-    "skier": "Pia Lilian K\u00fcbler",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 77,
-    "skier": "Zdenka Pesatova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 503,
-    "skier": "Zhanna Hlukhova",
-    "sex": "L",
-    "nation": "ukr",
-    "image": "/img/flags/ukr.svg"
-  },
-  {
-    "id": 25,
-    "skier": "Eva Logar",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 374,
-    "skier": "Jerneja Repinc Zupancic",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 296,
-    "skier": "Frida Westman",
-    "sex": "L",
-    "nation": "swe",
-    "image": "/img/flags/swe.svg"
-  },
-  {
-    "id": 17,
-    "skier": "Sarah Hendrickson",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 280,
-    "skier": "Josephine Pagnier",
-    "sex": "L",
-    "nation": "fra",
-    "image": "/img/flags/fra.svg"
-  },
-  {
-    "id": 2,
-    "skier": "Anette Sagen",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 425,
-    "skier": "Alessia Mitu-Cosca",
-    "sex": "L",
-    "nation": "rou",
-    "image": "/img/flags/rou.svg"
-  },
-  {
-    "id": 36,
-    "skier": "Gyda Enger",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 435,
-    "skier": "Diana Toropchenova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 101,
-    "skier": "Seiko Koasa",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 358,
-    "skier": "Rea Kindlimann",
-    "sex": "L",
-    "nation": "sui",
-    "image": "/img/flags/sui.svg"
-  },
-  {
-    "id": 310,
-    "skier": "Sophie Mair",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 283,
-    "skier": "Marta Krepelkova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 248,
-    "skier": "Andreea Diana Trambitas",
-    "sex": "L",
-    "nation": "rou",
-    "image": "/img/flags/rou.svg"
-  },
-  {
-    "id": 487,
-    "skier": "Meghann Wadsak",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 105,
-    "skier": "Haruka Iwasa",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 106,
-    "skier": "Charlotte Mitchell",
+    "id": 129,
+    "skier": "Katie Willis",
     "sex": "L",
     "nation": "can",
     "image": "/img/flags/can.svg"
   },
   {
-    "id": 56,
-    "skier": "Misaki Shigeno",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 339,
-    "skier": "Josephin Laue",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 506,
-    "skier": "Minja Korhonen",
+    "id": 340,
+    "skier": "Julia Tervahartiala",
     "sex": "L",
     "nation": "fin",
     "image": "/img/flags/fin.svg"
   },
   {
-    "id": 320,
-    "skier": "Bing Dong",
+    "id": 273,
+    "skier": "Natasha Bodnarchuk",
     "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
+    "nation": "can",
+    "image": "/img/flags/can.svg"
   },
   {
-    "id": 28,
-    "skier": "Gianina Ernst",
+    "id": 7,
+    "skier": "Daniela Iraschko-Stolz",
     "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 115,
-    "skier": "Vladena Pustkova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 279,
-    "skier": "Lucile Morat",
-    "sex": "L",
-    "nation": "fra",
-    "image": "/img/flags/fra.svg"
-  },
-  {
-    "id": 510,
-    "skier": "Tina Erzar",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
   },
   {
     "id": 507,
@@ -1344,106 +154,36 @@
     "image": "/img/flags/jpn.svg"
   },
   {
-    "id": 418,
-    "skier": "Liangyao Wang",
+    "id": 59,
+    "skier": "Aki Matsuhashi",
     "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
   },
   {
-    "id": 475,
-    "skier": "Alvine Holz",
+    "id": 279,
+    "skier": "Lucile Morat",
     "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
+    "nation": "fra",
+    "image": "/img/flags/fra.svg"
   },
   {
-    "id": 84,
-    "skier": "Veronika Ptackova",
+    "id": 522,
+    "skier": "Alyona Sviridenko",
     "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
+    "nation": "kaz",
+    "image": "/img/flags/kaz.svg"
   },
   {
-    "id": 68,
-    "skier": "Henriette Kraus",
-    "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
-  },
-  {
-    "id": 83,
-    "skier": "Bianca Elena Stefanuta",
-    "sex": "L",
-    "nation": "rou",
-    "image": "/img/flags/rou.svg"
-  },
-  {
-    "id": 357,
-    "skier": "Jessica Malsiner",
+    "id": 253,
+    "skier": "Lara Malsiner",
     "sex": "L",
     "nation": "ita",
     "image": "/img/flags/ita.svg"
   },
   {
-    "id": 226,
-    "skier": "Virag Voros",
-    "sex": "L",
-    "nation": "hun",
-    "image": "/img/flags/hun.svg"
-  },
-  {
-    "id": 42,
-    "skier": "Ayumi Watase",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 31,
-    "skier": "Katja Pozun",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 3,
-    "skier": "Sara Takanashi",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 78,
-    "skier": "Daria Grushina",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 390,
-    "skier": "Machiko Kubota",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 102,
-    "skier": "Anja Tepes",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 249,
-    "skier": "Ksenia Kablukova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 266,
-    "skier": "Nika Kriznar",
+    "id": 477,
+    "skier": "Ajda Kosnjek",
     "sex": "L",
     "nation": "slo",
     "image": "/img/flags/slo.svg"
@@ -1463,53 +203,11 @@
     "image": "/img/flags/ita.svg"
   },
   {
-    "id": 471,
-    "skier": "Tinkara Komar",
+    "id": 93,
+    "skier": "Alissa Johnson",
     "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 518,
-    "skier": "Shiyu Zhou",
-    "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
-  },
-  {
-    "id": 286,
-    "skier": "Kamila Karpiel",
-    "sex": "L",
-    "nation": "pol",
-    "image": "/img/flags/pol.svg"
-  },
-  {
-    "id": 362,
-    "skier": "Alina Borodina",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 382,
-    "skier": "Gyda Westvold Hansen",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 555,
-    "skier": "Kikka Sakamoto",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 85,
-    "skier": "Julija Srsen",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
   },
   {
     "id": 117,
@@ -1519,46 +217,74 @@
     "image": "/img/flags/rus.svg"
   },
   {
-    "id": 50,
-    "skier": "Karolina Indrackova",
+    "id": 118,
+    "skier": "Liubov Alchikova",
     "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
   },
   {
-    "id": 294,
-    "skier": "Fumika Segawa",
+    "id": 361,
+    "skier": "Kristina Prokopieva",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 358,
+    "skier": "Rea Kindlimann",
+    "sex": "L",
+    "nation": "sui",
+    "image": "/img/flags/sui.svg"
+  },
+  {
+    "id": 555,
+    "skier": "Kikka Sakamoto",
     "sex": "L",
     "nation": "jpn",
     "image": "/img/flags/jpn.svg"
   },
   {
-    "id": 289,
-    "skier": "Abigail Strate",
+    "id": 124,
+    "skier": "Manja Pograjc",
     "sex": "L",
-    "nation": "can",
-    "image": "/img/flags/can.svg"
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
   },
   {
-    "id": 18,
-    "skier": "Jacqueline Seifriedsberger",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 4,
-    "skier": "Carina Vogt",
+    "id": 122,
+    "skier": "Lucienne H\u00f6ppner",
     "sex": "L",
     "nation": "ger",
     "image": "/img/flags/ger.svg"
   },
   {
-    "id": 87,
-    "skier": "Xueyao Li",
+    "id": 442,
+    "skier": "Pola Beltowska",
     "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
+    "nation": "pol",
+    "image": "/img/flags/pol.svg"
+  },
+  {
+    "id": 86,
+    "skier": "Anna Javorsek",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 127,
+    "skier": "Nata De Leeuw",
+    "sex": "L",
+    "nation": "can",
+    "image": "/img/flags/can.svg"
+  },
+  {
+    "id": 116,
+    "skier": "Anastasia Veshchikova",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
   },
   {
     "id": 426,
@@ -1568,6 +294,48 @@
     "image": "/img/flags/slo.svg"
   },
   {
+    "id": 63,
+    "skier": "Juliane Seyfarth",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 565,
+    "skier": "Mia Ingolic",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 77,
+    "skier": "Zdenka Pesatova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 84,
+    "skier": "Veronika Ptackova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 14,
+    "skier": "Eva Pinkelnig",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 354,
+    "skier": "Eirin Maria Kvandal",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
     "id": 10,
     "skier": "Coline Mattel",
     "sex": "L",
@@ -1575,43 +343,71 @@
     "image": "/img/flags/fra.svg"
   },
   {
-    "id": 145,
-    "skier": "Jenny Rautionaho",
+    "id": 311,
+    "skier": "Samantha Macuga",
     "sex": "L",
-    "nation": "fin",
-    "image": "/img/flags/fin.svg"
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
   },
   {
-    "id": 128,
-    "skier": "Jenna Mohr",
+    "id": 458,
+    "skier": "Tamara Mesikova",
     "sex": "L",
-    "nation": "ger",
-    "image": "/img/flags/ger.svg"
+    "nation": "svk",
+    "image": "/img/flags/svk.svg"
   },
   {
-    "id": 19,
-    "skier": "Spela Rogelj",
+    "id": 471,
+    "skier": "Tinkara Komar",
     "sex": "L",
     "nation": "slo",
     "image": "/img/flags/slo.svg"
   },
   {
-    "id": 295,
-    "skier": "Ingebj\u00f8rg Saglien Br\u00e5ten",
+    "id": 30,
+    "skier": "Lea Lemare",
     "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
+    "nation": "fra",
+    "image": "/img/flags/fra.svg"
   },
   {
-    "id": 103,
-    "skier": "Yoshiko Yoshiizumi",
+    "id": 137,
+    "skier": "Natalie Dejmkova",
     "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
   },
   {
-    "id": 429,
-    "skier": "Kurumi Ichinohe",
+    "id": 267,
+    "skier": "Eleora Hamming",
+    "sex": "L",
+    "nation": "can",
+    "image": "/img/flags/can.svg"
+  },
+  {
+    "id": 11,
+    "skier": "Julia Kykk\u00e4nen",
+    "sex": "L",
+    "nation": "fin",
+    "image": "/img/flags/fin.svg"
+  },
+  {
+    "id": 339,
+    "skier": "Josephin Laue",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 288,
+    "skier": "Anna Twardosz",
+    "sex": "L",
+    "nation": "pol",
+    "image": "/img/flags/pol.svg"
+  },
+  {
+    "id": 35,
+    "skier": "Kaori Iwabuchi",
     "sex": "L",
     "nation": "jpn",
     "image": "/img/flags/jpn.svg"
@@ -1631,267 +427,43 @@
     "image": "/img/flags/nor.svg"
   },
   {
-    "id": 40,
-    "skier": "Tara Geraghty-Moats",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 544,
-    "skier": "Oosa Thure",
-    "sex": "L",
-    "nation": "fin",
-    "image": "/img/flags/fin.svg"
-  },
-  {
-    "id": 119,
-    "skier": "Maria Aleksandrova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 373,
-    "skier": "Veronika Jencova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 97,
-    "skier": "Roberta D'Agostina",
-    "sex": "L",
-    "nation": "ita",
-    "image": "/img/flags/ita.svg"
-  },
-  {
-    "id": 350,
-    "skier": "Stepanka Ptackova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 481,
-    "skier": "Kjersti Gr\u00e6sli",
+    "id": 221,
+    "skier": "Silje Opseth",
     "sex": "L",
     "nation": "nor",
     "image": "/img/flags/nor.svg"
   },
   {
-    "id": 38,
-    "skier": "Anastasiya Barannikova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 61,
-    "skier": "Yurina Yamada",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 381,
-    "skier": "Arianna Sieff",
-    "sex": "L",
-    "nation": "ita",
-    "image": "/img/flags/ita.svg"
-  },
-  {
-    "id": 354,
-    "skier": "Eirin Maria Kvandal",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 563,
-    "skier": "Lucija Jurgec",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 48,
-    "skier": "Anniken Mork",
-    "sex": "L",
-    "nation": "nor",
-    "image": "/img/flags/nor.svg"
-  },
-  {
-    "id": 14,
-    "skier": "Eva Pinkelnig",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 453,
-    "skier": "Natalia Slowik",
-    "sex": "L",
-    "nation": "pol",
-    "image": "/img/flags/pol.svg"
-  },
-  {
-    "id": 99,
-    "skier": "Katharina Keil",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 92,
-    "skier": "Lindsey Van",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 72,
-    "skier": "Barbara Klinec",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 365,
-    "skier": "Paige Jones",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 436,
-    "skier": "Qingyue Peng",
-    "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
-  },
-  {
-    "id": 402,
-    "skier": "Emely Torazza",
+    "id": 372,
+    "skier": "Pia Lilian K\u00fcbler",
     "sex": "L",
     "nation": "ger",
     "image": "/img/flags/ger.svg"
   },
   {
-    "id": 11,
-    "skier": "Julia Kykk\u00e4nen",
+    "id": 459,
+    "skier": "Noelia Vuerich",
     "sex": "L",
-    "nation": "fin",
-    "image": "/img/flags/fin.svg"
+    "nation": "ita",
+    "image": "/img/flags/ita.svg"
   },
   {
-    "id": 304,
-    "skier": "Kaede Narita",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 337,
-    "skier": "Lisa Eder",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 400,
-    "skier": "Julia M\u00fchlbacher",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 15,
-    "skier": "Line Jahr",
+    "id": 406,
+    "skier": "Nora Midtsundstad",
     "sex": "L",
     "nation": "nor",
     "image": "/img/flags/nor.svg"
   },
   {
-    "id": 63,
-    "skier": "Juliane Seyfarth",
+    "id": 475,
+    "skier": "Alvine Holz",
     "sex": "L",
     "nation": "ger",
     "image": "/img/flags/ger.svg"
   },
   {
-    "id": 565,
-    "skier": "Mia Ingolic",
-    "sex": "L",
-    "nation": "slo",
-    "image": "/img/flags/slo.svg"
-  },
-  {
-    "id": 88,
-    "skier": "Xinyue Chang",
-    "sex": "L",
-    "nation": "chn",
-    "image": "/img/flags/chn.svg"
-  },
-  {
-    "id": 37,
-    "skier": "Nina Lussi",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 111,
-    "skier": "Michaela Kranzl",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 437,
-    "skier": "Anezka Indrackova",
-    "sex": "L",
-    "nation": "cze",
-    "image": "/img/flags/cze.svg"
-  },
-  {
-    "id": 361,
-    "skier": "Kristina Prokopieva",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 250,
-    "skier": "Anna Zhukova",
-    "sex": "L",
-    "nation": "rus",
-    "image": "/img/flags/rus.svg"
-  },
-  {
-    "id": 12,
-    "skier": "Jessica Jerome",
-    "sex": "L",
-    "nation": "usa",
-    "image": "/img/flags/usa.svg"
-  },
-  {
-    "id": 341,
-    "skier": "Katharina Ellmauer",
-    "sex": "L",
-    "nation": "aut",
-    "image": "/img/flags/aut.svg"
-  },
-  {
-    "id": 335,
-    "skier": "Ren Mikase",
-    "sex": "L",
-    "nation": "jpn",
-    "image": "/img/flags/jpn.svg"
-  },
-  {
-    "id": 89,
-    "skier": "Ema Klinec",
+    "id": 85,
+    "skier": "Julija Srsen",
     "sex": "L",
     "nation": "slo",
     "image": "/img/flags/slo.svg"
@@ -1904,32 +476,137 @@
     "image": "/img/flags/ger.svg"
   },
   {
-    "id": 366,
-    "skier": "Heidi Dyhre Tr\u00e5serud",
+    "id": 362,
+    "skier": "Alina Borodina",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 338,
+    "skier": "Selina Freitag",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 389,
+    "skier": "Thea Minyan Bj\u00f8rseth",
     "sex": "L",
     "nation": "nor",
     "image": "/img/flags/nor.svg"
   },
   {
-    "id": 30,
-    "skier": "Lea Lemare",
+    "id": 78,
+    "skier": "Daria Grushina",
     "sex": "L",
-    "nation": "fra",
-    "image": "/img/flags/fra.svg"
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
   },
   {
-    "id": 39,
-    "skier": "Elena Runggaldier",
+    "id": 69,
+    "skier": "Anna H\u00e4fele",
     "sex": "L",
-    "nation": "ita",
-    "image": "/img/flags/ita.svg"
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
   },
   {
-    "id": 346,
-    "skier": "Annika Belshaw",
+    "id": 417,
+    "skier": "Alexandria Loutitt",
+    "sex": "L",
+    "nation": "can",
+    "image": "/img/flags/can.svg"
+  },
+  {
+    "id": 112,
+    "skier": "Natalia Solovyeva",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 454,
+    "skier": "Nagomi Nakayama",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 336,
+    "skier": "Ayuka Kamoda",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 90,
+    "skier": "Helena Olsson Smeby",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 68,
+    "skier": "Henriette Kraus",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 371,
+    "skier": "Sophie Sorschag",
+    "sex": "L",
+    "nation": "kos",
+    "image": "/img/flags/kos.svg"
+  },
+  {
+    "id": 41,
+    "skier": "Barbora Blazkova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 226,
+    "skier": "Virag Voros",
+    "sex": "L",
+    "nation": "hun",
+    "image": "/img/flags/hun.svg"
+  },
+  {
+    "id": 365,
+    "skier": "Paige Jones",
     "sex": "L",
     "nation": "usa",
     "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 40,
+    "skier": "Tara Geraghty-Moats",
+    "sex": "L",
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 60,
+    "skier": "Yuka Kobayashi",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 56,
+    "skier": "Misaki Shigeno",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 546,
+    "skier": "Taja Sitar",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
   },
   {
     "id": 121,
@@ -1939,11 +616,81 @@
     "image": "/img/flags/ned.svg"
   },
   {
-    "id": 377,
-    "skier": "Annika Sieff",
+    "id": 240,
+    "skier": "Luisa G\u00f6rlich",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 446,
+    "skier": "Josie Johnson",
+    "sex": "L",
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 65,
+    "skier": "Sabrina Windm\u00fcller",
+    "sex": "L",
+    "nation": "sui",
+    "image": "/img/flags/sui.svg"
+  },
+  {
+    "id": 79,
+    "skier": "Ramona Straub",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 36,
+    "skier": "Gyda Enger",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 105,
+    "skier": "Haruka Iwasa",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 73,
+    "skier": "Jasmine Sepandj",
+    "sex": "L",
+    "nation": "can",
+    "image": "/img/flags/can.svg"
+  },
+  {
+    "id": 95,
+    "skier": "Manuela Malsiner",
     "sex": "L",
     "nation": "ita",
     "image": "/img/flags/ita.svg"
+  },
+  {
+    "id": 225,
+    "skier": "Logan Sankey",
+    "sex": "L",
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 544,
+    "skier": "Oosa Thure",
+    "sex": "L",
+    "nation": "fin",
+    "image": "/img/flags/fin.svg"
+  },
+  {
+    "id": 281,
+    "skier": "Jerneja Brecl",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
   },
   {
     "id": 252,
@@ -1953,10 +700,1263 @@
     "image": "/img/flags/pol.svg"
   },
   {
-    "id": 442,
-    "skier": "Pola Beltowska",
+    "id": 402,
+    "skier": "Emely Torazza",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 312,
+    "skier": "Anna Hoffmann",
+    "sex": "L",
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 448,
+    "skier": "Sina Arnet",
+    "sex": "L",
+    "nation": "sui",
+    "image": "/img/flags/sui.svg"
+  },
+  {
+    "id": 382,
+    "skier": "Gyda Westvold Hansen",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 350,
+    "skier": "Stepanka Ptackova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 49,
+    "skier": "Karoline R\u00f8stad",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 6,
+    "skier": "Irina Avvakumova",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 131,
+    "skier": "Caroline Rochas",
+    "sex": "L",
+    "nation": "fra",
+    "image": "/img/flags/fra.svg"
+  },
+  {
+    "id": 346,
+    "skier": "Annika Belshaw",
+    "sex": "L",
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 46,
+    "skier": "Jana Mrakotova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 487,
+    "skier": "Meghann Wadsak",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 283,
+    "skier": "Marta Krepelkova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 22,
+    "skier": "Svenja W\u00fcrth",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 481,
+    "skier": "Kjersti Gr\u00e6sli",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 44,
+    "skier": "Anna Odine Str\u00f8m",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 145,
+    "skier": "Jenny Rautionaho",
+    "sex": "L",
+    "nation": "fin",
+    "image": "/img/flags/fin.svg"
+  },
+  {
+    "id": 123,
+    "skier": "Cornelia Roider",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 270,
+    "skier": "Natalie Eilers",
+    "sex": "L",
+    "nation": "can",
+    "image": "/img/flags/can.svg"
+  },
+  {
+    "id": 399,
+    "skier": "Astrid Norstedt",
+    "sex": "L",
+    "nation": "swe",
+    "image": "/img/flags/swe.svg"
+  },
+  {
+    "id": 478,
+    "skier": "Nika Krasovic",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 347,
+    "skier": "Veronika Shishkina",
+    "sex": "L",
+    "nation": "kaz",
+    "image": "/img/flags/kaz.svg"
+  },
+  {
+    "id": 19,
+    "skier": "Spela Rogelj",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 286,
+    "skier": "Kamila Karpiel",
     "sex": "L",
     "nation": "pol",
     "image": "/img/flags/pol.svg"
+  },
+  {
+    "id": 132,
+    "skier": "Barbara Stuffer",
+    "sex": "L",
+    "nation": "ita",
+    "image": "/img/flags/ita.svg"
+  },
+  {
+    "id": 296,
+    "skier": "Frida Westman",
+    "sex": "L",
+    "nation": "swe",
+    "image": "/img/flags/swe.svg"
+  },
+  {
+    "id": 42,
+    "skier": "Ayumi Watase",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 161,
+    "skier": "Minami Watanabe",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 396,
+    "skier": "Hannah Wiegele",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 453,
+    "skier": "Natalia Slowik",
+    "sex": "L",
+    "nation": "pol",
+    "image": "/img/flags/pol.svg"
+  },
+  {
+    "id": 91,
+    "skier": "Bigna Windm\u00fcller",
+    "sex": "L",
+    "nation": "sui",
+    "image": "/img/flags/sui.svg"
+  },
+  {
+    "id": 284,
+    "skier": "Katra Komar",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 410,
+    "skier": "Delia Anamaria Folea",
+    "sex": "L",
+    "nation": "rou",
+    "image": "/img/flags/rou.svg"
+  },
+  {
+    "id": 64,
+    "skier": "Mariia Iakovleva",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 407,
+    "skier": "Michelle G\u00f6bel",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 542,
+    "skier": "Heta Hirvonen",
+    "sex": "L",
+    "nation": "fin",
+    "image": "/img/flags/fin.svg"
+  },
+  {
+    "id": 136,
+    "skier": "Jenny Synn\u00f8ve Hagemoen",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 33,
+    "skier": "Julia Clair",
+    "sex": "L",
+    "nation": "fra",
+    "image": "/img/flags/fra.svg"
+  },
+  {
+    "id": 427,
+    "skier": "Ringo Miyajima",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 54,
+    "skier": "Magdalena Palasz",
+    "sex": "L",
+    "nation": "pol",
+    "image": "/img/flags/pol.svg"
+  },
+  {
+    "id": 304,
+    "skier": "Kaede Narita",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 248,
+    "skier": "Andreea Diana Trambitas",
+    "sex": "L",
+    "nation": "rou",
+    "image": "/img/flags/rou.svg"
+  },
+  {
+    "id": 266,
+    "skier": "Nika Kriznar",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 388,
+    "skier": "Klara Ulrichova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 300,
+    "skier": "Astrid Moberg",
+    "sex": "L",
+    "nation": "swe",
+    "image": "/img/flags/swe.svg"
+  },
+  {
+    "id": 27,
+    "skier": "Sofya Tikhonova",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 369,
+    "skier": "Sijia Wang",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 287,
+    "skier": "Oceane Paillard",
+    "sex": "L",
+    "nation": "fra",
+    "image": "/img/flags/fra.svg"
+  },
+  {
+    "id": 395,
+    "skier": "Nika Vetrih",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 72,
+    "skier": "Barbara Klinec",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 25,
+    "skier": "Eva Logar",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 289,
+    "skier": "Abigail Strate",
+    "sex": "L",
+    "nation": "can",
+    "image": "/img/flags/can.svg"
+  },
+  {
+    "id": 37,
+    "skier": "Nina Lussi",
+    "sex": "L",
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 526,
+    "skier": "Ursa Vidmar",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 115,
+    "skier": "Vladena Pustkova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 275,
+    "skier": "Nicole Maurer",
+    "sex": "L",
+    "nation": "can",
+    "image": "/img/flags/can.svg"
+  },
+  {
+    "id": 515,
+    "skier": "Ziva Andric",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 96,
+    "skier": "Lisa Demetz",
+    "sex": "L",
+    "nation": "ita",
+    "image": "/img/flags/ita.svg"
+  },
+  {
+    "id": 456,
+    "skier": "Emma Chervet",
+    "sex": "L",
+    "nation": "fra",
+    "image": "/img/flags/fra.svg"
+  },
+  {
+    "id": 128,
+    "skier": "Jenna Mohr",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 337,
+    "skier": "Lisa Eder",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 268,
+    "skier": "Romane Dieu",
+    "sex": "L",
+    "nation": "fra",
+    "image": "/img/flags/fra.svg"
+  },
+  {
+    "id": 32,
+    "skier": "Yuka Seto",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 506,
+    "skier": "Minja Korhonen",
+    "sex": "L",
+    "nation": "fin",
+    "image": "/img/flags/fin.svg"
+  },
+  {
+    "id": 43,
+    "skier": "Daniela Haralambie",
+    "sex": "L",
+    "nation": "rou",
+    "image": "/img/flags/rou.svg"
+  },
+  {
+    "id": 34,
+    "skier": "Michaela Dolezelova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 254,
+    "skier": "Claudia Purker",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 480,
+    "skier": "Yuzuki Sato",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 385,
+    "skier": "Elizaveta Mokhova",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 28,
+    "skier": "Gianina Ernst",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 513,
+    "skier": "Yangning Weng",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 61,
+    "skier": "Yurina Yamada",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 436,
+    "skier": "Qingyue Peng",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 486,
+    "skier": "Jerica Jesenko",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 143,
+    "skier": "Jun Maruyama",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 419,
+    "skier": "Riko Sakurai",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 392,
+    "skier": "Nicole Konderla",
+    "sex": "L",
+    "nation": "pol",
+    "image": "/img/flags/pol.svg"
+  },
+  {
+    "id": 98,
+    "skier": "Wendy Vuik",
+    "sex": "L",
+    "nation": "ned",
+    "image": "/img/flags/ned.svg"
+  },
+  {
+    "id": 441,
+    "skier": "Sofia Mattila",
+    "sex": "L",
+    "nation": "fin",
+    "image": "/img/flags/fin.svg"
+  },
+  {
+    "id": 88,
+    "skier": "Xinyue Chang",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 99,
+    "skier": "Katharina Keil",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 9,
+    "skier": "Maren Lundby",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 39,
+    "skier": "Elena Runggaldier",
+    "sex": "L",
+    "nation": "ita",
+    "image": "/img/flags/ita.svg"
+  },
+  {
+    "id": 66,
+    "skier": "Veronika Zobel",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 101,
+    "skier": "Seiko Koasa",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 374,
+    "skier": "Jerneja Repinc Zupancic",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 102,
+    "skier": "Anja Tepes",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 341,
+    "skier": "Katharina Ellmauer",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 106,
+    "skier": "Charlotte Mitchell",
+    "sex": "L",
+    "nation": "can",
+    "image": "/img/flags/can.svg"
+  },
+  {
+    "id": 82,
+    "skier": "Lisa Wiegele",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 17,
+    "skier": "Sarah Hendrickson",
+    "sex": "L",
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 3,
+    "skier": "Sara Takanashi",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 462,
+    "skier": "Paulina Cieslar",
+    "sex": "L",
+    "nation": "pol",
+    "image": "/img/flags/pol.svg"
+  },
+  {
+    "id": 57,
+    "skier": "Natsuka Sawaya",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 111,
+    "skier": "Michaela Kranzl",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 83,
+    "skier": "Bianca Elena Stefanuta",
+    "sex": "L",
+    "nation": "rou",
+    "image": "/img/flags/rou.svg"
+  },
+  {
+    "id": 48,
+    "skier": "Anniken Mork",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 97,
+    "skier": "Roberta D'Agostina",
+    "sex": "L",
+    "nation": "ita",
+    "image": "/img/flags/ita.svg"
+  },
+  {
+    "id": 563,
+    "skier": "Lucija Jurgec",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 425,
+    "skier": "Alessia Mitu-Cosca",
+    "sex": "L",
+    "nation": "rou",
+    "image": "/img/flags/rou.svg"
+  },
+  {
+    "id": 503,
+    "skier": "Zhanna Hlukhova",
+    "sex": "L",
+    "nation": "ukr",
+    "image": "/img/flags/ukr.svg"
+  },
+  {
+    "id": 357,
+    "skier": "Jessica Malsiner",
+    "sex": "L",
+    "nation": "ita",
+    "image": "/img/flags/ita.svg"
+  },
+  {
+    "id": 110,
+    "skier": "Michaela Rajnochova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 294,
+    "skier": "Fumika Segawa",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 297,
+    "skier": "Rio Seto",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 418,
+    "skier": "Liangyao Wang",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 104,
+    "skier": "Mizuki Yamaguchi",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 310,
+    "skier": "Sophie Mair",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 518,
+    "skier": "Shiyu Zhou",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 435,
+    "skier": "Diana Toropchenova",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 130,
+    "skier": "Izumi Yamada",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 29,
+    "skier": "Alexandra Kustova",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 134,
+    "skier": "Cheng Ji",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 299,
+    "skier": "Marita Kramer",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 120,
+    "skier": "Tong Ma",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 103,
+    "skier": "Yoshiko Yoshiizumi",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 250,
+    "skier": "Anna Zhukova",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 20,
+    "skier": "Ursa Bogataj",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 373,
+    "skier": "Veronika Jencova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 280,
+    "skier": "Josephine Pagnier",
+    "sex": "L",
+    "nation": "fra",
+    "image": "/img/flags/fra.svg"
+  },
+  {
+    "id": 58,
+    "skier": "Shihori Oi",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 222,
+    "skier": "Nozomi Maruyama",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 62,
+    "skier": "Qi Liu",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 126,
+    "skier": "Magdalena Schnurr",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 12,
+    "skier": "Jessica Jerome",
+    "sex": "L",
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 501,
+    "skier": "Sandra Sproch",
+    "sex": "L",
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 113,
+    "skier": "Yurika Hirayama",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 81,
+    "skier": "Sonja Schoitsch",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 511,
+    "skier": "Maja Kovacic",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 430,
+    "skier": "Martina Zanitzer",
+    "sex": "L",
+    "nation": "ita",
+    "image": "/img/flags/ita.svg"
+  },
+  {
+    "id": 45,
+    "skier": "Susanna Forsstr\u00f6m",
+    "sex": "L",
+    "nation": "fin",
+    "image": "/img/flags/fin.svg"
+  },
+  {
+    "id": 375,
+    "skier": "Lisa Hirner",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 265,
+    "skier": "Arantxa Lancho",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 18,
+    "skier": "Jacqueline Seifriedsberger",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 455,
+    "skier": "Lilou Zepchi",
+    "sex": "L",
+    "nation": "fra",
+    "image": "/img/flags/fra.svg"
+  },
+  {
+    "id": 320,
+    "skier": "Bing Dong",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 291,
+    "skier": "Valentina Sderzhikova",
+    "sex": "L",
+    "nation": "kaz",
+    "image": "/img/flags/kaz.svg"
+  },
+  {
+    "id": 547,
+    "skier": "Kira Maria Kapustikova",
+    "sex": "L",
+    "nation": "svk",
+    "image": "/img/flags/svk.svg"
+  },
+  {
+    "id": 47,
+    "skier": "Joanna Szwab",
+    "sex": "L",
+    "nation": "pol",
+    "image": "/img/flags/pol.svg"
+  },
+  {
+    "id": 71,
+    "skier": "Oceane Avocat Gros",
+    "sex": "L",
+    "nation": "fra",
+    "image": "/img/flags/fra.svg"
+  },
+  {
+    "id": 510,
+    "skier": "Tina Erzar",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 21,
+    "skier": "Chiara Kreuzer",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 38,
+    "skier": "Anastasiya Barannikova",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 552,
+    "skier": "Yutong Pan",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 438,
+    "skier": "Ping Zeng",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 92,
+    "skier": "Lindsey Van",
+    "sex": "L",
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 401,
+    "skier": "Irma Makhinia",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 2,
+    "skier": "Anette Sagen",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 390,
+    "skier": "Machiko Kubota",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 76,
+    "skier": "Taylor Henrich",
+    "sex": "L",
+    "nation": "can",
+    "image": "/img/flags/can.svg"
+  },
+  {
+    "id": 135,
+    "skier": "Linlin Cui",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 89,
+    "skier": "Ema Klinec",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 282,
+    "skier": "Anna Shpyneva",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 298,
+    "skier": "Karoline Skatvedt",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 100,
+    "skier": "Melanie Fai\u00dft",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 8,
+    "skier": "Maja Vtic",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 80,
+    "skier": "Abby Ringquist",
+    "sex": "L",
+    "nation": "usa",
+    "image": "/img/flags/usa.svg"
+  },
+  {
+    "id": 94,
+    "skier": "Atsuko Tanaka",
+    "sex": "L",
+    "nation": "can",
+    "image": "/img/flags/can.svg"
+  },
+  {
+    "id": 114,
+    "skier": "Alexandra Pretorius",
+    "sex": "L",
+    "nation": "can",
+    "image": "/img/flags/can.svg"
+  },
+  {
+    "id": 449,
+    "skier": "Taja Bodlaj",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 74,
+    "skier": "Veronica Gianmoena",
+    "sex": "L",
+    "nation": "ita",
+    "image": "/img/flags/ita.svg"
+  },
+  {
+    "id": 429,
+    "skier": "Kurumi Ichinohe",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 138,
+    "skier": "Silje Karlengen",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 249,
+    "skier": "Ksenia Kablukova",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 437,
+    "skier": "Anezka Indrackova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 245,
+    "skier": "Lidiia Iakovleva",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 4,
+    "skier": "Carina Vogt",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 479,
+    "skier": "Ingvild Synn\u00f8ve Midtskogen",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 50,
+    "skier": "Karolina Indrackova",
+    "sex": "L",
+    "nation": "cze",
+    "image": "/img/flags/cze.svg"
+  },
+  {
+    "id": 400,
+    "skier": "Julia M\u00fchlbacher",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 109,
+    "skier": "Marie Hoyau",
+    "sex": "L",
+    "nation": "fra",
+    "image": "/img/flags/fra.svg"
+  },
+  {
+    "id": 335,
+    "skier": "Ren Mikase",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 366,
+    "skier": "Heidi Dyhre Tr\u00e5serud",
+    "sex": "L",
+    "nation": "nor",
+    "image": "/img/flags/nor.svg"
+  },
+  {
+    "id": 133,
+    "skier": "Maria Zotova",
+    "sex": "L",
+    "nation": "rus",
+    "image": "/img/flags/rus.svg"
+  },
+  {
+    "id": 87,
+    "skier": "Xueyao Li",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 55,
+    "skier": "Ayuka Takeda",
+    "sex": "L",
+    "nation": "jpn",
+    "image": "/img/flags/jpn.svg"
+  },
+  {
+    "id": 31,
+    "skier": "Katja Pozun",
+    "sex": "L",
+    "nation": "slo",
+    "image": "/img/flags/slo.svg"
+  },
+  {
+    "id": 67,
+    "skier": "Anna Rupprecht",
+    "sex": "L",
+    "nation": "ger",
+    "image": "/img/flags/ger.svg"
+  },
+  {
+    "id": 370,
+    "skier": "Fangyu Zhou",
+    "sex": "L",
+    "nation": "chn",
+    "image": "/img/flags/chn.svg"
+  },
+  {
+    "id": 75,
+    "skier": "Julia Huber",
+    "sex": "L",
+    "nation": "aut",
+    "image": "/img/flags/aut.svg"
+  },
+  {
+    "id": 386,
+    "skier": "Tetyana Pylypchuk",
+    "sex": "L",
+    "nation": "ukr",
+    "image": "/img/flags/ukr.svg"
   }
 ]
