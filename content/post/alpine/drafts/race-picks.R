@@ -8,7 +8,8 @@ library(leaps)
 library(logger)
 library(purrr)
 library(lubridate) # For better date handling
-library(slider)    # For sliding window operations
+library(slider) # For sliding window operations
+library(stringr)
 
 # Define points systems for Alpine Skiing
 # World Cup: Top 30 get points

@@ -11,43 +11,201 @@ tags: ["methodology", "skiing", "race-picks", "cross-country"]
 
 #### Data Gathering
 
-Individual race startlists are scraped from the FIS websites at midnight UTC on the day of a race using automated Python scripts. If startlists are not present on the FIS site, a mock startlist is created using all skiers who have competed in the current season.
+Cross-country individual race startlists are scraped from the FIS websites using automated Python scripts that process multiple race formats and handle complex event scheduling. The system manages individual races, relays, team sprints, and mixed events with sophisticated nation quota management and mock startlist generation capabilities.
 
-**Startlist Scraping Process**: The system uses automated web scraping to gather official race startlists:
-
-```python
-# From startlist-scrape-races.py:507-508
-# Get current date in UTC timezone
-today_utc = datetime.now(timezone.utc).strftime('%Y-%m-%d')
-```
-
-The scraping process identifies individual races (filtering out relays and team sprints) and processes each gender separately:
+**Race Discovery and Scheduling**: The system identifies races to process using advanced date handling and race type classification:
 
 ```python
-# From startlist-scrape-races.py:232-283
-def process_gender_specific_races(races_df: pd.DataFrame, target_gender: str) -> bool:
-    """
-    Process races for a specific gender, finding the next available race for that gender
-    Returns True if standard races were processed, False otherwise
-    """
-    print(f"\n===== Processing {target_gender.upper()} races =====")
-    
-    # Standardize gender values
-    gender_map = {
-        'men': ['men', 'M', 'Men'],
-        'ladies': ['ladies', 'L', 'Ladies', 'Women', 'F']
-    }
-    
-    # Find races for the specified gender
-    gender_races = races_df[races_df['Sex'].isin(gender_map[target_gender])]
-    
-    # Filter out relays and team sprints
-    valid_races = next_races[(next_races['Distance'] != 'Rel') & 
-                           (next_races['Distance'] != 'Ts') & 
-                           (next_races['Distance'] != 'Mix')]
+# From startlist-scrape-races.py:32-36
+# Get today's date in UTC 
+today_utc = datetime.now(timezone.utc)
+today_str = today_utc.strftime('%m/%d/%Y')
+
+print(f"Today's date (UTC): {today_str}")
 ```
 
-**FIS Website Scraping**: For each race, the system fetches athlete data from FIS startlist URLs:
+**Relay Event Detection and Management**: Cross-country has sophisticated relay event handling through distance-based classification:
+
+```python
+# From startlist-scrape-races.py:89-95
+def is_relay_event(race: pd.Series) -> bool:
+    """
+    Determine if a race is a relay event
+    Relay types: 'Rel' (standard relay), 'Ts' (team sprint), 'Mix' (mixed relay)
+    """
+    distance = str(race['Distance']).strip() if 'Distance' in race else ""
+    return distance in ['Rel', 'Ts', 'Mix']
+```
+
+**FIS Website Data Extraction**: Cross-country athlete data is scraped from FIS race pages with advanced name matching and nation tracking:
+
+```python
+# From startlist_common.py:77-100
+def get_fis_startlist(url: str) -> List[Tuple[str, str]]:
+    """Gets skier names and nations from FIS website"""
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+        response = requests.get(url, headers=headers)
+        
+        soup = BeautifulSoup(response.text, 'html.parser')
+        athletes = []
+        
+        # Look for the table rows
+        athlete_rows = soup.find_all('a', class_='table-row')
+        
+        for row in athlete_rows:
+            # Extract athlete name and country
+            athlete_name_div = row.select_one('.athlete-name')
+            country_div = row.select_one('div.country.country_flag')
+```
+
+**Nation Quota Management**: Cross-country uses comprehensive nation quota systems for mock startlist generation:
+
+```python
+# From config.py:2-32
+NATION_QUOTAS = {
+    'Andorra': {'men': 3, 'ladies': 3},
+    'Austria': {'men': 5, 'ladies': 5},
+    'Canada': {'men': 5, 'ladies': 5},
+    'Finland': {'men': 6, 'ladies': 6},
+    'France': {'men': 6, 'ladies': 6},
+    'Germany': {'men': 6, 'ladies': 6},
+    'Italy': {'men': 6, 'ladies': 6},
+    'Norway': {'men': 6, 'ladies': 6},
+    'Sweden': {'men': 6, 'ladies': 6},
+    'Switzerland': {'men': 6, 'ladies': 6},
+    'USA': {'men': 6, 'ladies': 6}
+}
+
+# Default quota for unlisted nations
+DEFAULT_QUOTA = {'men': 2, 'ladies': 2}
+```
+
+**Dynamic Quota Calculation**: The system calculates nation quotas with host country and World Cup leader bonuses:
+
+```python
+# From config.py:40-70
+def get_nation_quota(nation: str, gender: str, is_host: bool = False) -> int:
+    """
+    Get the quota for a nation considering:
+    1. Base quota from NATION_QUOTAS or default
+    2. Host country bonus (+5 if applicable)
+    3. World Cup leader bonus (+1 if applicable)
+    """
+    # Get base quota
+    base_quota = NATION_QUOTAS.get(nation, DEFAULT_QUOTA).get(gender, DEFAULT_QUOTA[gender])
+    
+    # Add host country bonus
+    if is_host:
+        base_quota += 5
+        
+    # Add World Cup leader bonus
+    if nation in WC_LEADERS.get(gender, []):
+        base_quota += 1
+        
+    return base_quota
+```
+
+**Fantasy XC Price Integration**: Cross-country integrates with Fantasy XC for athlete pricing data:
+
+```python
+# From startlist_common.py:182-193
+def get_fantasy_prices() -> Dict[str, int]:
+    """Gets athlete prices from Fantasy XC API"""
+    try:
+        response = requests.get('https://www.fantasyxc.se/api/athletes')
+        response.raise_for_status()
+        
+        athletes = response.json()
+        return {athlete['name']: athlete['price'] for athlete in athletes}
+        
+    except Exception as e:
+        print(f"Error getting Fantasy XC prices: {e}")
+        return {}
+```
+
+**Manual Name Mapping**: Cross-country has extensive manual name mapping for FIS format conversions:
+
+```python
+# From startlist_common.py:12-30
+MANUAL_NAME_MAPPINGS = {
+    'Thomas MALONEY WESTGAARD': 'Thomas Hjalmar Westgård',
+    'John Steel HAGENBUCH': 'Johnny Hagenbuch',
+    'Imanol ROJO GARCIA': 'Imanol Rojo',
+    'Sammy SMITH': 'Samantha Smith',
+    'SMITH Sammy': 'Samantha Smith',
+    'JC SCHOONMAKER': 'James Clinton Schoonmaker',
+    'HAGENBUCH John Steel': 'Johnny Hagenbuch',
+    'MALONEY WESTGAARD Thomas': 'Thomas Hjalmar Westgård',
+    'Katharina HENNIG DOTZLER': 'Katharina Hennig',
+    'HENNIG DOTZLER Katharina': 'Katharina Hennig'
+}
+```
+
+**Advanced Name Matching**: The system uses sophisticated name matching with fuzzy logic:
+
+```python
+# From startlist_common.py:32-75
+def get_fantasy_price(name: str, fantasy_prices: Dict[str, int]) -> int:
+    """Gets fantasy price by trying multiple name formats"""
+    print(f"\nTrying to find price for: {name}")
+    
+    # First check if there's a reverse mapping
+    reverse_map = {v: k for k, v in MANUAL_NAME_MAPPINGS.items()}
+    
+    # Try exact match
+    if name in fantasy_prices:
+        print(f"Found exact match: {name} -> {fantasy_prices[name]}")
+        return fantasy_prices[name]
+    
+    # Try all possible FIS formats
+    fis_formats = convert_to_last_first(name)
+    print(f"Trying FIS formats: {fis_formats}")
+    
+    for fis_format in fis_formats:
+        if fis_format in fantasy_prices:
+            print(f"Found FIS format match: {fis_format} -> {fantasy_prices[fis_format]}")
+            return fantasy_prices[fis_format]
+    
+    # Try fuzzy matching with original name
+    best_match = fuzzy_match_name(name, list(fantasy_prices.keys()))
+    if best_match and best_match in fantasy_prices:
+        print(f"Found fuzzy match for original name: {name} -> {best_match} -> {fantasy_prices[best_match]}")
+        return fantasy_prices[best_match]
+```
+
+**Multi-Script R Integration**: Cross-country has comprehensive R script integration for various event types:
+
+```python
+# From startlist-scrape-races.py:16-62
+def call_r_script(script_type: str, race_type: str = None, gender: str = None) -> None:
+    """
+    Call the appropriate R script after processing race data
+    
+    Args:
+        script_type: 'weekend' or 'races' (determines weekly picks or race picks)
+        race_type: 'standard', 'team_sprint', 'relay', or 'mixed_relay'
+        gender: 'men', 'ladies', or None for mixed events
+    """
+    # Set the base path to the R scripts
+    r_script_base_path = "~/blog/daehl-e/content/post/cross-country/drafts"
+    
+    # Determine which R script to call based on script type and race type
+    if script_type == 'weekend':
+        # Weekly picks scripts
+        if race_type == 'standard':
+            r_script = "weekly-picks2.R"
+        elif race_type == 'team_sprint':
+            r_script = "weekly-picks-team-sprint.R"
+        elif race_type == 'relay':
+            r_script = "weekly-picks-relay.R"
+        elif race_type == 'mixed_relay':
+            r_script = "weekly-picks-mixed-relay.R"
+```
+
+The Cross-Country individual data gathering system provides comprehensive race format handling through relay event detection, nation quota management with dynamic calculation, Fantasy XC integration, extensive manual name mapping, advanced fuzzy name matching, multi-format FIS data extraction, and sophisticated R script integration that accommodates cross-country skiing's diverse race formats and complex startlist requirements.
 
 ```python
 # From startlist_common.py:77-181
@@ -133,22 +291,156 @@ elo_columns = [col for col in ['Elo', 'Distance_Elo', 'Distance_C_Elo', 'Distanc
 
 ###### Setup
 
-The model uses World Cup points as the response variable and some combination of the ELO variables and weighted previous World Cup points as explanatory variables with later adjustments based on altitude, period of season, and mass start format.
+The training data setup for Cross-Country skiing follows a sophisticated preprocessing pipeline that accommodates the sport's diverse race formats, technique variations, and complex points systems.
 
-**Points System Selection**: The system dynamically selects the appropriate points system based on today's race type:
+**Dynamic Points System Selection**: 
+Cross-country uses different points systems depending on race context. The system dynamically determines which points system to apply to ALL historical races based on today's race type:
 
 ```r
-# From race-picks.R:14-16, 132-138
-# Define points systems
-wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
-stage_points <- c(50,47,44,41,38,35,32,30,28,26,24,22,20,18,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
+# From race-picks.R:238-260
+preprocess_data <- function(df) {
+  # Load races data to determine points systems for historical races
+  races_data <- read.csv("~/ski/elo/python/ski/polars/excel365/races.csv", 
+                         stringsAsFactors = FALSE) %>%
+    mutate(Date = mdy(Date))
+  
+  # Determine points system based on today's race
+  current_date <- as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d")
+  today_weekend <- races_data %>%
+    filter(Date == current_date) %>%
+    dplyr::slice(1)
+  
+  # Check if today's race is a stage race
+  is_stage_today <- !is.na(today_weekend$Stage) && today_weekend$Stage == 1
+  
+  # Select the appropriate points system for ALL races
+  global_points_system <- if(is_stage_today) {
+    log_info("Using STAGE points system for today's races")
+    stage_points
+  } else {
+    log_info("Using WORLD CUP points system for today's races") 
+    wc_points
+  }
+```
 
-# Check if today's race is a stage race
-is_stage_today <- !is.na(today_weekend$Stage) && today_weekend$Stage == 1
+**Historical Points Assignment with Global System**:
+Unlike other sports that use race-specific points systems, cross-country applies the global points system determined by today's race type to ALL historical data:
 
-# Select the appropriate points system for ALL races
-global_points_system <- if(is_stage_today) {
-  log_info("Using STAGE points system for today's races")
+```r
+# From race-picks.R:262-274
+# First calculate points using historical data but with the GLOBAL points system
+df_with_points <- df %>%
+  # Add points based on the global points system determined by today's races
+  mutate(
+    Points = mapply(function(place) {
+      if (place >= 1 && place <= length(global_points_system)) {
+        return(global_points_system[place])
+      }
+      return(0)
+    }, Place)
+  ) %>%
+  # Sort
+  arrange(Season, Race, Place)
+```
+
+**Race Type and Technique-Specific Weighted Points**:
+Cross-country calculates weighted previous points by race type (Sprint vs Distance) AND technique (Classic vs Freestyle), creating the most granular historical performance tracking:
+
+```r
+# From race-picks.R:276-290
+# Calculate weighted previous points separately for each race type/technique combination
+df_with_points <- df_with_points %>%
+  # First, create a race type column that distinguishes between sprint and distance
+  mutate(RaceType = ifelse(Distance == "Sprint", "Sprint", "Distance")) %>%
+  # Group by ID and the broader race type category
+  group_by(ID, RaceType, Technique) %>%
+  arrange(Season, Race) %>%
+  mutate(Prev_Points_Weighted = sapply(1:n(), function(j) {
+    if (j == 1) return(0)
+    start_index <- max(1, j - 5)
+    num_races <- j - start_index
+    weights <- seq(1, num_races)
+    weighted.mean(Points[start_index:(j-1)], w = weights, na.rm = TRUE)
+  })) %>%
+  ungroup()
+```
+
+**Comprehensive ELO Column Management**:
+Cross-country maintains the most extensive ELO rating system, tracking performance across distance/sprint, classic/freestyle combinations:
+
+```r
+# From race-picks.R:292-303
+# Check if Pelo columns exist, if not create them
+pelo_cols <- c("Distance_Pelo", "Distance_C_Pelo", "Distance_F_Pelo",
+               "Pelo", "Sprint_Pelo", "Sprint_C_Pelo", "Sprint_F_Pelo",
+               "Freestyle_Pelo", "Classic_Pelo")
+
+# Make sure these columns exist (create if missing)
+for (col in pelo_cols) {
+  if (!col %in% names(df_with_points)) {
+    log_info(paste("Creating missing column:", col))
+    df_with_points[[col]] <- 0
+  }
+}
+```
+
+**Advanced Periodization System**:
+Cross-country uses a dynamic 5+ period system that adapts to season length, providing more granular seasonal context than other sports:
+
+```r
+# From race-picks.R:306-319
+# Add period
+group_by(Season) %>%
+mutate(
+  Num_Races = max(Race),
+  Period = case_when(
+    Num_Races <= 5 ~ 1,
+    Num_Races <= 10 ~ 2,
+    Num_Races <= 15 ~ 3,
+    Num_Races <= 20 ~ 4,
+    Num_Races <= 25 ~ 5,
+    TRUE ~ ceiling((Race / (Num_Races / 5)))
+  )
+) %>%
+ungroup()
+```
+
+**Event Filtering and Quality Control**:
+Cross-country filters for high-quality events, excluding lower-level competitions and team events:
+
+```r
+# From race-picks.R:322-327, 352-353
+filter(
+  Season >= max(Season-10),
+  Event %in% c("World Cup", "Nordic Opening", "Tour de Ski", 
+               "Olympic Winter Games", "World Championship", 
+               "World Cup Final", "Ski Tour Canada")
+) %>%
+# Filter out team sprint and relay
+filter(!Distance %in% c("Ts", "Rel"))
+```
+
+**ELO Percentage Calculation with Cross-Country Specificity**:
+The system calculates ELO percentages for each of the nine different ELO rating categories, providing the most comprehensive performance normalization:
+
+```r
+# From race-picks.R:339-350
+# Calculate percentages for each Pelo column
+mutate(
+  across(
+    all_of(pelo_cols),
+    ~{
+      max_val <- max(.x, na.rm = TRUE)
+      if (max_val == 0) return(rep(0, length(.x)))
+      .x / max_val
+    },
+    .names = "{.col}_Pct"
+  )
+) %>%
+ungroup()
+```
+
+This cross-country specific setup creates the most sophisticated training dataset among all winter sports, accounting for technique variations, dynamic points systems, granular race type classifications, advanced periodization, and comprehensive ELO tracking across multiple performance dimensions.
   stage_points
 } else {
   log_info("Using WORLD CUP points system for today's races") 
@@ -230,9 +522,41 @@ mutate(
 
 ###### Feature Selection
 
-The feature selection process uses an exhaustive search approach with Bayesian Information Criterion (BIC) optimization to identify the optimal combination of explanatory variables while avoiding overfitting.
+Cross-country's feature selection process reflects the sport's extraordinary complexity, managing the most comprehensive variable set among all winter sports. The system uses exhaustive BIC optimization while handling the intricate interactions between race type, technique, and performance history.
 
-**Available Explanatory Variables**: The system starts with a comprehensive set of predictive features:
+**Comprehensive Variable Universe**:
+Cross-country maintains the most extensive set of candidate variables, capturing all dimensions of performance:
+
+```r
+# From race-picks.R:930-932
+explanatory_vars <- c("Prev_Points_Weighted", "Distance_Pelo_Pct", "Sprint_Pelo_Pct", 
+                      "Sprint_C_Pelo_Pct", "Distance_F_Pelo_Pct", "Distance_C_Pelo_Pct", 
+                      "Classic_Pelo_Pct", "Freestyle_Pelo_Pct", "Sprint_F_Pelo_Pct", "Pelo_Pct")
+```
+
+This includes:
+- **Prev_Points_Weighted**: Technique and race type-specific weighted previous points  
+- **Distance vs Sprint ELOs**: Separate ratings for endurance vs speed events
+- **Technique-Specific ELOs**: Classic and Freestyle ratings for both distance and sprint
+- **Aggregate ELOs**: Overall freestyle, classic, and general performance ratings
+
+**Unified Optimization Approach**:
+Unlike some sports that use different selection strategies for different event types, cross-country applies consistent BIC optimization across all race contexts:
+
+```r
+# From race-picks.R:935-942
+formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))
+exhaustive_selection <- regsubsets(formula, data = race_df_75, nbest = 1, method = "exhaustive")
+summary_exhaustive <- summary(exhaustive_selection)
+best_bic_vars <- names(coef(exhaustive_selection, which.min(summary_exhaustive$bic)))
+smooth_terms <- paste("s(", best_bic_vars[-1], ")", collapse=" + ")
+gam_formula <- as.formula(paste("Points ~", smooth_terms))
+
+model <- gam(gam_formula, data = race_df_75)
+```
+
+**No Fallback Required**:
+Cross-country's robust variable selection typically succeeds without requiring fallback strategies, reflecting the sport's large competitive fields and extensive historical data availability.
 
 ```r
 # From race-picks.R:807-810
@@ -279,31 +603,79 @@ The smooth terms `s()` allow the GAM to capture non-linear relationships between
 
 ###### Modeling
 
-GAM models are trained to predict World Cup points using the BIC-selected variables converted to smooth terms. The modeling uses the mgcv package's default settings for optimal performance.
+Cross-country skiing's modeling approach reflects the sport's incredible complexity, employing Generalized Additive Models (GAM) optimized to handle the most diverse set of predictive variables among winter sports. The system creates both points prediction models and position probability models with comprehensive validation and sophisticated adjustment systems.
 
-**GAM Model Training**: The system fits a Generalized Additive Model using the optimized formula from feature selection:
+**Primary GAM Implementation**: 
+The main modeling approach accommodates cross-country's unified optimization strategy across all race contexts:
 
 ```r
-# From race-picks.R:820
+# From race-picks.R:940-942
+smooth_terms <- paste("s(", best_bic_vars[-1], ")", collapse=" + ")
+gam_formula <- as.formula(paste("Points ~", smooth_terms))
 model <- gam(gam_formula, data = race_df_75)
 ```
 
-Where `gam_formula` contains the BIC-selected variables as smooth terms (e.g., `Points ~ s(Prev_Points_Weighted) + s(Distance_Pelo_Pct) + s(Classic_Pelo_Pct)`).
+**Model Characteristics for Cross-Country Complexity**:
+- **Response Variable**: World Cup points with dynamic scaling based on race type (distance vs sprint vs stage race)
+- **Model Type**: Generalized Additive Model with comprehensive smooth term integration
+- **Training Data**: 10-year filtered dataset (`race_df_75`) containing only World Cup-caliber skiers (ELO ≥75% of race maximum)
+- **Variable Integration**: Most extensive variable set among winter sports (9+ ELO categories plus weighted points)
+- **Smoothing**: Automatic REML-based smoothing parameter selection for optimal flexibility
 
-**Model Characteristics**: 
-- **Response Variable**: World Cup points (0-100 scale)
-- **Model Type**: Generalized Additive Model with smooth terms
-- **Training Data**: Filtered dataset (`race_df_75`) containing only skiers with ELO ≥75% of race maximum
-- **Smoothing**: Automatic smoothing parameter selection via REML (mgcv default)
-- **Family**: Gaussian (default for continuous response)
+**Position Probability Modeling with REML Estimation**:
+Cross-country implements sophisticated binomial GAM models for position predictions with comprehensive threshold coverage:
 
-**Model Flexibility**: The GAM approach allows for:
-- Non-linear relationships between predictors and points
-- Automatic determination of optimal smoothness for each predictor
-- Interpretable smooth functions showing how each variable affects performance
-- Robust performance across different race types and conditions
+```r
+# From race-picks.R:1135-1138
+position_model <- gam(pos_gam_formula,
+                      data = race_df,
+                      family = binomial,
+                      method = "REML")
+```
 
-The trained model captures complex patterns in how ELO ratings and previous performance translate to race results, providing the foundation for subsequent adjustment calculations and final predictions.
+**Comprehensive Brier Score Validation**:
+Cross-country position models undergo rigorous evaluation using Brier scores across all finishing position thresholds:
+
+```r
+# From race-picks.R:1140-1143
+# Calculate Brier score for model evaluation
+predicted_probs <- predict(position_model, newdata = race_df, type = "response")
+brier_score <- mean((race_df$position_achieved - predicted_probs)^2, na.rm = TRUE)
+log_info(paste("Brier score for threshold", threshold, ":", round(brier_score, 4)))
+```
+
+**Advanced Fallback Architecture**:
+Cross-country implements robust error handling with sport-specific fallback strategies for handling the diverse race format challenges:
+
+```r
+# From race-picks.R:1158-1165
+}, error = function(e) {
+  log_warn(paste("Error in position model for threshold", threshold, ":", e$message))
+  
+  fallback_vars <- c("Prev_Points_Weighted", "Distance_Elo_Pct", "Sprint_Elo_Pct")
+  fallback_vars <- fallback_vars[fallback_vars %in% names(race_df)]
+  
+  if(length(fallback_vars) > 0) {
+    fallback_terms <- paste("s(", fallback_vars, ")", collapse=" + ")
+    fallback_formula <- as.formula(paste("position_achieved ~", fallback_terms))
+    
+    position_models[[paste0("threshold_", threshold)]] <- gam(
+      fallback_formula,
+      data = race_df,
+      family = binomial,
+      method = "REML"
+    )
+  }
+}
+```
+
+**Multi-Dimensional Adjustment System**:
+Cross-country's modeling incorporates the most comprehensive adjustment system among winter sports, accounting for altitude effects, seasonal periodization, and mass start tactical dynamics through sequential statistical testing and conditional correction application.
+
+**Technique-Specific Model Adaptation**:
+The modeling system adapts to cross-country's fundamental technique distinctions (classic vs freestyle) while accommodating distance variations (sprint vs distance) and start format differences (mass start vs individual start), ensuring predictions capture the sport's full competitive complexity.
+
+This cross-country-specific modeling framework ensures accurate performance prediction across the sport's unparalleled diversity of race formats, techniques, and environmental conditions while maintaining robust statistical validation and comprehensive adjustment mechanisms.
 
 ###### Adjustments
 
@@ -406,50 +778,166 @@ mutate(
 
 ###### Startlist Setup
 
-Prepares the scraped startlist for predictions by setting participation probabilities, calculating ELO percentages, computing weighted previous points, and imputing missing values with first quartile substitution.
+Cross-country skiing's startlist setup for testing implements a sophisticated data preparation pipeline that accommodates the sport's complex race format variations and dual-technique requirements. The system handles both distance and sprint races across freestyle and classic techniques while ensuring robust data quality for model prediction.
 
-**Participation Probability Assignment**: If the startlist was scraped from the FIS website, all athletes receive a participation probability of 1.0 (confirmed participation). For mock startlists (created when FIS data is unavailable), participation probabilities are calculated by examining the athlete's historical participation rate in similar races:
-
-```python
-# From startlist_common.py:443-491
-def get_additional_national_skiers(chronos: pd.DataFrame, elo_scores: pd.DataFrame, 
-                                fantasy_prices: Dict[str, int], nation: str, current_season: int = None) -> List[dict]:
-    """Get all skiers from a nation who competed in the current season"""
-    if current_season is None:
-        current_season = get_current_season_from_chronos(chronos)
-    
-    # Get all skiers from this nation in current season
-    nation_skiers = chronos[
-        (chronos['Nation'] == nation) & 
-        (chronos['Season'] == current_season)
-    ]['Skier'].unique()
-```
-
-**ELO Score Processing**: The system retrieves the most recent ELO scores for each athlete and calculates ELO percentages by dividing by the maximum ELO score in that race:
+**Advanced Race Participation Probability Calculation**:
+Cross-country startlist setup employs an exponential decay model for calculating race-specific participation probabilities, with precise race characteristic matching. The system recognizes that participation patterns differ significantly between Sprint vs Distance races and Classic vs Freestyle techniques:
 
 ```r
-# From race-picks.R:263-336
-most_recent_elos <- race_df %>%
-    filter(Skier %in% base_df$Skier) %>%
-    group_by(Skier) %>%
-    arrange(Date, Season, Race) %>%
-    slice_tail(n = 1) %>%
-    ungroup() %>%
-    select(Skier, any_of(elo_cols))
-
-# Calculate both Elo and Pelo percentages for available columns
-for(i in seq_along(elo_cols)) {
-    elo_col <- elo_cols[i]
-    pelo_col_i <- pelo_cols[i]
+# From race-picks.R:25-122 in calculate_participation_probabilities()
+calculate_participation_probabilities <- function(startlist_df, chronos) {
+  # Only calculate for skiers with 0 probability
+  zero_prob_skiers <- startlist_df %>%
+    filter(get(race_prob_col) == 0) %>%
+    pull(Skier)
+  
+  for(skier in zero_prob_skiers) {
+    # Extract race characteristics from current race
+    race_characteristics <- get_race_characteristics(current_race)
     
-    # Check if column exists in both datasets
-    if(elo_col %in% names(result_df) && elo_col %in% names(max_values)) {
-        max_val <- max_values[[elo_col]]
-        # Only calculate if max value is not zero or NA
-        if(!is.na(max_val) && max_val > 0) {
-            # Calculate the percentage
-            pct_value <- result_df[[elo_col]] / max_val
-            
+    # Find similar historical races (same distance/technique)
+    participant_races <- chronos %>%
+      filter(Skier == skier,
+             Distance == race_characteristics$distance,
+             Technique == race_characteristics$technique) %>%
+      arrange(Date, Season, Race)
+    
+    if(nrow(participant_races) > 0) {
+      total_races <- nrow(participant_races)
+      # Exponential decay weights (α = 0.1)
+      race_weights <- exp(-0.1 * ((total_races-1):0))
+      
+      weighted_participation <- sum(rep(1, total_races) * race_weights)
+      total_weight <- sum(race_weights)
+      prob <- weighted_participation / total_weight
+      
+      startlist_df[startlist_df$Skier == skier, race_prob_col] <- prob
+    }
+  }
+}
+```
+
+**Most Recent ELO Rating Retrieval with Technique Specificity**:
+The system retrieves the most current ELO ratings for each athlete across multiple categories, ensuring predictions use the most up-to-date performance assessments for distance/sprint and classic/freestyle combinations:
+
+```r
+# From race-picks.R:385-393 in prepare_startlist_data()
+most_recent_elos <- race_df %>%
+  filter(Skier %in% base_df$Skier) %>%
+  group_by(Skier) %>%
+  arrange(Date, Season, Race) %>%
+  slice_tail(n = 1) %>%
+  ungroup() %>%
+  select(Skier, any_of(elo_cols))
+```
+
+**ELO Score Normalization with Dual Methodology**:
+Cross-country skiing employs two distinct normalization approaches depending on the race type. Standard races use historical maximum values, while Final Climb races use current startlist maximums for more dynamic scaling:
+
+```r
+# Standard race normalization (race-picks.R):
+for(i in seq_along(elo_cols)) {
+  elo_col <- elo_cols[i]
+  if(elo_col %in% names(result_df) && elo_col %in% names(race_df)) {
+    max_val <- max(race_df[[elo_col]], na.rm = TRUE)
+    if(!is.na(max_val) && max_val > 0) {
+      pct_value <- result_df[[elo_col]] / max_val
+      result_df[[paste0(elo_col, "_Pct")]] <- pct_value
+      result_df[[paste0(pelo_cols[i], "_Pct")]] <- pct_value
+    }
+  }
+}
+
+# Final Climb normalization (final_climb.R:1091-1125):
+for(col in elo_cols) {
+  max_val <- max(startlist_processed[[col]], na.rm = TRUE)
+  if(!is.na(max_val) && max_val > 0) {
+    startlist_processed[[paste0(col, "_Pct")]] <- startlist_processed[[col]] / max_val
+  }
+}
+```
+
+**Technique-Specific Weighted Previous Points Calculation**:
+Recent performance is captured through weighted previous points using the last 5 races with linear increasing weights, calculated separately for each race distance/technique combination:
+
+```r
+# From race-picks.R:283-289
+df_with_points <- df_with_points %>%
+  group_by(Skier, Distance) %>%
+  arrange(Season, Race) %>%
+  mutate(Prev_Points_Weighted = sapply(1:n(), function(j) {
+    if (j == 1) return(0)
+    start_index <- max(1, j - 5)
+    num_races <- j - start_index
+    weights <- seq(1, num_races)  # Linear weights (1,2,3,4,5)
+    weighted.mean(Points[start_index:(j-1)], w = weights, na.rm = TRUE)
+  })) %>%
+  ungroup()
+```
+
+**Enhanced Feature Engineering for Final Climb Races**:
+Final Climb races receive additional specialized features including FC_pred (preliminary model predictions) and Last_5_2 features that capture more nuanced performance patterns:
+
+```r
+# From final_climb.R:153-158
+calc_weighted_last_5 <- function(places) {
+  if(length(places) > 0) {
+    weights <- seq(1, length(places))
+    return(weighted.mean(places, weights, na.rm = TRUE))
+  } else {
+    return(NA_real_)
+  }
+}
+
+# Last_5_2 feature integration (lines 1178-1238):
+last_5_2_features <- get_latest_last_5_2_features(chronos_df)
+startlist_processed <- merge_last_5_features(startlist_processed, last_5_2_features)
+```
+
+**Comprehensive Missing Value Imputation Strategy**:
+Cross-country skiing uses an advanced NA handling approach with multiple fallback levels to preserve data quality across diverse race formats:
+
+```r
+# From race-picks.R:18-23
+replace_na_with_quartile <- function(x) {
+  if(all(is.na(x))) return(rep(0, length(x)))
+  q1 <- quantile(x, 0.25, na.rm = TRUE)
+  ifelse(is.na(x), q1, x)
+}
+
+# Application during startlist preparation:
+result_df <- result_df %>%
+  mutate(
+    across(ends_with("_Pct"), ~replace_na_with_quartile(.x)),
+    Prev_Points_Weighted = replace_na(Prev_Points_Weighted, 0)
+  )
+
+# Final Climb specific NA handling (final_climb.R:1274-1281):
+if(any(is.na(startlist_processed[[feature]]))) {
+  # Use first quartile of available data
+  q1_val <- quantile(startlist_processed[[feature]], 0.25, na.rm = TRUE)
+  startlist_processed[[feature]][is.na(startlist_processed[[feature]])] <- q1_val
+}
+```
+
+**Dynamic Feature Completeness Assurance**:
+The startlist setup ensures all required model variables exist with appropriate defaults, handling the complexity of cross-country's multiple race formats and technique combinations:
+
+```r
+# From race-picks.R:456-468
+for(i in seq_along(pelo_cols)) {
+  pelo_pct_col <- paste0(pelo_cols[i], "_Pct")
+  if(!pelo_pct_col %in% names(result_df)) {
+    result_df[[pelo_pct_col]] <- 0.5  # Default to middle value
+  }
+}
+
+# Technique extraction and mapping:
+current_technique <- substr(pelo_col, 8, 8)  # Extract technique from column name
+```
+
+**Model Preparation and Integration**:
+The final startlist preparation combines all data sources through sophisticated joining logic, ensuring complete feature sets while preserving race-specific characteristics. This creates comprehensive, prediction-ready datasets that capture cross-country skiing's unique distance/sprint and classic/freestyle performance patterns essential for accurate GAM model prediction across all race formats.
             # Assign to both Elo and Pelo percentage columns
             result_df[[paste0(elo_col, "_Pct")]] <- pct_value
             result_df[[paste0(pelo_col_i, "_Pct")]] <- pct_value
@@ -508,16 +996,10 @@ replace_na_with_quartile <- function(x) {
 
 ###### Modeling
 
-Applies the trained GAM models to the prepared startlist data to generate point predictions for each athlete. The modeling process uses the BIC-optimized GAM with smooth terms for the selected explanatory variables.
+Cross-country skiing's testing modeling employs sophisticated GAM application with dual-methodology support and comprehensive error handling. The system applies technique-specific trained models while maintaining robust fallback mechanisms and integrating altitude, period, and mass start adjustments that capture cross-country skiing's diverse performance patterns.
 
-**Base Prediction**: The system applies the trained GAM model to the prepared startlist data:
-
-```r
-# From race-picks.R:1218
-Base_Prediction = predict(model, newdata = .)
-```
-
-Where the `model` is the GAM fitted during training using:
+**Technique-Specific GAM Model Application**:
+The system applies trained GAM models that were optimized using BIC feature selection, recognizing that performance varies significantly across distance/sprint formats and classic/freestyle techniques:
 
 ```r
 # From race-picks.R:814-820
@@ -528,36 +1010,191 @@ smooth_terms <- paste("s(", best_bic_vars[-1], ")", collapse=" + ")
 gam_formula <- as.formula(paste("Points ~", smooth_terms))
 
 model <- gam(gam_formula, data = race_df_75)
+
+# Model application to startlist
+Base_Prediction = predict(model, newdata = startlist_prepared)
 ```
 
-**Final Prediction Calculation**: The base prediction is combined with adjustments to produce the final point prediction:
+**Dual-Methodology Approach for Standard vs Final Climb Races**:
+Cross-country skiing employs two distinct modeling approaches depending on race type, with Final Climb races receiving specialized feature engineering:
+
+```r
+# From final_climb.R:1394-1399
+if(is.null(fc_model)) {
+  # Fallback to FC_pred for Final Climb races
+  startlist_df$Points_Pred <- startlist_df$FC_pred
+  return(startlist_df)
+}
+
+startlist_df$Points_Pred <- tryCatch({
+  predict(fc_model, newdata = startlist_df, type = "response")
+}, error = function(e) {
+  return(startlist_df$FC_pred)  # Fallback to FC_pred
+})
+```
+
+**Comprehensive Multi-Tier Fallback System**:
+Cross-country implements robust fallback mechanisms for both standard and position probability models:
+
+```r
+# From race-picks.R:1134-1161
+}, error = function(e) {
+  # Primary fallback: Simplified variable set
+  fallback_vars <- c("Prev_Points_Weighted", pelo_col)
+  fallback_vars <- fallback_vars[fallback_vars %in% names(race_df)]
+  
+  if(length(fallback_vars) > 0) {
+    fallback_terms <- paste("s(", fallback_vars, ")", collapse=" + ")
+    fallback_formula <- as.formula(paste("position_achieved ~", fallback_terms))
+    
+    position_models[[paste0("threshold_", threshold)]] <- gam(
+      fallback_formula, data = race_df, family = binomial, method = "REML")
+  }
+})
+
+# Complete model failure handling:
+}, error = function(e) {
+  # Set reasonable default based on threshold
+  position_preds[[prob_col]] <- rep(threshold, nrow(position_preds))
+})
+```
+
+**Advanced Prediction Error Handling with Variable Validation**:
+The system includes sophisticated error recovery that ensures all required model variables exist with proper types:
+
+```r
+# From race-picks.R:1251-1264
+for(var in model_vars) {
+  if(!(var %in% names(prediction_subset))) {
+    log_warn(paste("Missing required variable:", var, "- adding with default values"))
+    prediction_subset[[var]] <- 0
+  } else {
+    # Handle NAs in existing variables
+    if(any(is.na(prediction_subset[[var]]))) {
+      if(is.numeric(prediction_subset[[var]])) {
+        prediction_subset[[var]] <- replace_na_with_quartile(prediction_subset[[var]])
+      }
+    }
+  }
+}
+```
+
+**Sequential Multi-Dimensional Adjustment Integration**:
+Testing predictions incorporate historically-derived adjustments that capture cross-country skiing's unique environmental and tactical factors:
 
 ```r
 # From race-picks.R:1241-1243
 Predicted_Points = Base_Prediction + altitude_adjustment + 
   period_adjustment + ms_adjustment,
-Predicted_Points = pmax(pmin(Predicted_Points, 100), 0)
+Predicted_Points = pmax(pmin(Predicted_Points, 100), 0),
+
+# Apply race probability weighting
+Final_Prediction = Predicted_Points * Race_Prob
 ```
 
-The final predictions are constrained between 0 and 100 points to ensure realistic values within the World Cup points system range.
+**Comprehensive Model Validation and Confidence Assessment**:
+The system incorporates multiple validation metrics and confidence measures specific to cross-country's technique-dependent requirements:
+
+```r
+# From race-picks.R:1046-1049
+predicted_probs <- predict(position_model, newdata = race_df, type = "response")
+brier_score <- mean((race_df$position_achieved - predicted_probs)^2, na.rm = TRUE)
+log_info(paste("Brier score for threshold", threshold, ":", round(brier_score, 4)))
+
+# Confidence factor calculation
+confidence_factor = pmin(n_recent_races / 10, 1)
+```
+
+**Probability Normalization and Mathematical Consistency**:
+Position probability models include extensive validation to ensure mathematical coherence across all thresholds, with monotonic constraints applied (win ≤ podium ≤ top5 ≤ top10 ≤ top30) and target sum validation for each threshold level.
+
+The final predictions are constrained between 0 and 100 points to ensure realistic values within the World Cup points system range, with all predictions weighted by race participation probabilities to reflect actual competition dynamics.
 
 ###### Adjustments
 
-Three types of adjustments are applied to the base GAM predictions: altitude, period, and mass start adjustments. These adjustments are calculated during training using t-tests (p < 0.05) and applied during testing.
+Cross-country skiing implements a sophisticated sequential three-dimensional adjustment system that applies historically-derived corrections during testing. The system uses statistical significance testing to identify genuine performance patterns and applies altitude, period, and mass start adjustments in cascading sequence to capture cross-country skiing's unique environmental and tactical factors.
 
-**Adjustment Application**: The trained adjustment effects are joined to the startlist and applied to base predictions:
+**Sequential Adjustment Calculation During Testing**:
+The system applies adjustments in a specific sequence to avoid double-counting effects while capturing different dimensions of performance variation:
 
 ```r
-# From race-picks.R:1220, 1236-1242
-left_join(skier_adjustments, by = "Skier") %>%
-mutate(
-    # Apply learned adjustments
-    altitude_adjustment = altitude_effect,
-    period_adjustment = period_effect,
-    ms_adjustment = ms_effect,
+# From race-picks.R:944-1012
+race_df_75 <- race_df_75 %>%
+  mutate(
+    Initial_Prediction = predict(model, newdata = .)
+  ) %>%
+  group_by(Skier) %>%
+  mutate(
+    Prediction_Diff = Points - Initial_Prediction,
     
-    # Combine base prediction with all adjustments
-    Predicted_Points = Base_Prediction + altitude_adjustment + 
+    # Step 1: Altitude adjustments using t-tests
+    altitude_p = purrr::map_dbl(row_id, function(r) {
+      prior_alt_curr <- Prediction_Diff[AltitudeCategory == AltitudeCategory[r] & row_id < r]
+      prior_alt_other <- Prediction_Diff[AltitudeCategory != AltitudeCategory[r] & row_id < r]
+      if(length(prior_alt_curr) < 3 || length(prior_alt_other) < 3) return(1)
+      tryCatch({
+        t.test(prior_alt_curr, prior_alt_other)$p.value
+      }, error = function(e) 1)
+    }),
+    altitude_correction = ifelse(altitude_p < 0.05,
+                                mean(Prediction_Diff[AltitudeCategory == AltitudeCategory], na.rm = TRUE),
+                                0),
+    
+    # Step 2: Period adjustments (using altitude-corrected residuals)
+    period_p = purrr::map_dbl(row_id, function(r) {
+      if(r <= 1) return(1)
+      prior_period_curr <- Course_Diff[Period == Period[r] & row_id < r]
+      prior_period_other <- Course_Diff[Period != Period[r] & row_id < r]
+      tryCatch({
+        t.test(prior_period_curr, prior_period_other)$p.value
+      }, error = function(e) 1)
+    }),
+    period_correction = ifelse(period_p < 0.05,
+                              mean(Course_Diff[Period == Period], na.rm = TRUE),
+                              0),
+    
+    # Step 3: Mass Start adjustments (using period-corrected residuals)
+    ms_p = purrr::map_dbl(row_id, function(r) {
+      if(r <= 1) return(1)
+      prior_ms_curr <- Period_Diff[MS == MS[r] & row_id < r]
+      prior_ms_other <- Period_Diff[MS != MS[r] & row_id < r]
+      tryCatch({
+        t.test(prior_ms_curr, prior_ms_other)$p.value
+      }, error = function(e) 1)
+    }),
+    ms_correction = ifelse(ms_p < 0.05,
+                          mean(Period_Diff[MS == MS], na.rm = TRUE),
+                          0)
+  )
+```
+
+**Final Adjustment Integration and Race Probability Weighting**:
+All adjustments are combined additively with base predictions and integrated with race participation probabilities:
+
+```r
+# From race-picks.R:1363-1376
+Predicted_Points = Base_Prediction + altitude_adjustment + 
+  period_adjustment + ms_adjustment,
+Predicted_Points = pmax(pmin(Predicted_Points, 100), 0),
+
+# Apply race participation probability weighting
+Race_Prob = ifelse(
+  paste0("Race", i, "_Prob") %in% names(.),
+  get(paste0("Race", i, "_Prob")) / 100,
+  1.0
+),
+Final_Prediction = Predicted_Points * Race_Prob
+```
+
+**Statistical Significance Requirements**:
+Each adjustment type requires statistical validation using t-tests with strict criteria:
+- Minimum 3 observations in both current and comparison groups
+- Statistical significance threshold of p < 0.05 
+- Chronological integrity (only using historically prior data)
+- Robust error handling to prevent model failures
+
+**Position Probability Adjustments**:
+The same three-dimensional adjustment framework is applied to position probability models, ensuring consistency across both points and probability predictions while maintaining proper probability bounds and mathematical constraints.
       period_adjustment + ms_adjustment,
     Predicted_Points = pmax(pmin(Predicted_Points, 100), 0)
 )
