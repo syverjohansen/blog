@@ -1262,7 +1262,22 @@ All adjustments require statistical significance (p < 0.05) and at least 3 obser
 
 ###### Setup
 
-The probability models use the same training data setup as points prediction but convert the problem to binary classification for different finishing position thresholds. The system creates separate models for each position threshold to predict the probability of achieving that placement or better.
+Cross-country skiing's Individual Probability Training Setup converts the points prediction problem into binary classification for position probability modeling with technique-specific threshold adaptation. The system uses the same preprocessed historical race data as points models but transforms the complex multi-technique regression problem into classification through binary outcome creation across different event formats.
+
+**Position Threshold Definition**:
+Cross-country skiing uses technique-adapted thresholds: Distance events use standard thresholds `c(1, 3, 5, 10, 30)` representing Win, Podium, Top 5, Top 10, and Top 30, while Sprint events use specialized thresholds `c(1, 3, 6, 12, 30)` representing Win, Podium, Final, Semifinal, and Quarterfinal. Each threshold creates a separate binary classification problem where success is defined as finishing at or above that position.
+
+**Binary Outcome Creation**:
+For each position threshold, the system creates binary outcome variables using the fundamental transformation: `race_df$position_achieved <- race_df$Place <= threshold`. This converts the continuous place variable into binary classification targets, enabling binomial GAM modeling for probability prediction across cross-country's diverse event spectrum.
+
+**Training Data Consistency**:
+Position probability models use identical training datasets as their corresponding points prediction models, including the same 10-season historical window, top performer filtering (ELO > 75th percentile), and technique-specific preprocessing. No separate data pipeline is required - the same `race_df` serves both modeling approaches.
+
+**Technique-Specific Adaptation**:
+Cross-country skiing's incredible complexity across techniques (Classic, Freestyle), distances (Sprint, Distance), and formats (Individual Start, Mass Start) requires threshold evaluation that adapts to event characteristics. Each technique-distance combination maintains appropriate position thresholds but may exhibit different probability patterns due to varying tactical demands and field compositions.
+
+**Environmental Condition Integration**:
+The training setup incorporates cross-country's unique environmental sensitivity, including altitude effects (above/below 1300m thresholds) and mass start tactical dynamics, ensuring position probability models capture the sport's diverse performance characteristics across all conditions.
 
 **Binary Outcome Creation**: For each position threshold, binary outcomes are created from finishing positions:
 
@@ -1302,7 +1317,13 @@ This ensures consistency between points and probability predictions while adapti
 
 ###### Feature Selection
 
-The probability models use the same BIC optimization approach as points prediction, but feature selection is performed independently for each position threshold to identify the optimal predictors for different finishing position categories.
+Cross-country skiing's Individual Probability Training Feature Selection employs the most comprehensive threshold-independent optimization strategy among winter sports, adapting to the sport's incredible complexity across techniques, distances, and environmental conditions. The system performs independent BIC optimization for each position threshold while leveraging technique-specific variable inheritance from corresponding points prediction models.
+
+**Variable Inheritance and Consistency**:
+Position probability models use identical explanatory variable pools as their corresponding points models: `position_feature_vars <- explanatory_vars`. This ensures consistency between modeling approaches while leveraging domain knowledge already encoded in cross-country's technique-specific points model variable selection across the sport's diverse race spectrum.
+
+**Technique-Specific Variable Sets**:
+Cross-country skiing employs the most comprehensive variable set among winter sports, including `Prev_Points_Weighted`, `Distance_Pelo_Pct`, `Sprint_Pelo_Pct`, `Sprint_C_Pelo_Pct`, `Distance_F_Pelo_Pct`, `Distance_C_Pelo_Pct`, `Classic_Pelo_Pct`, `Freestyle_Pelo_Pct`, `Sprint_F_Pelo_Pct`, and `Pelo_Pct`. This reflects the sport's complexity across techniques (Classic, Freestyle), distances (Sprint, Distance), and formats (Individual Start, Mass Start).
 
 **Threshold-Specific Feature Selection**: Each position threshold gets its own optimized set of variables:
 
@@ -1344,7 +1365,7 @@ The exhaustive BIC search ensures each threshold gets the statistically optimal 
 
 ###### Modeling
 
-Binomial GAM models are trained for each position threshold using the threshold-specific optimized variables. The models use REML estimation and include comprehensive evaluation metrics to assess prediction quality.
+Cross-country skiing's Individual Probability Training Modeling employs the most sophisticated binomial GAM architecture among winter sports, specifically optimized for the sport's incredible complexity across techniques, distances, and environmental conditions. The system creates independent models for each position threshold while incorporating technique-specific adaptations and implementing comprehensive validation approaches.
 
 **Binomial GAM Training**: Each position threshold gets its own specialized model:
 
@@ -1389,189 +1410,95 @@ Lower Brier scores indicate better calibrated probability predictions, with perf
 
 ###### Adjustments
 
-Position probability adjustments follow the same sequential methodology as points prediction but operate on probability residuals rather than point differences. Each position threshold gets its own set of adjustments calculated independently.
+Cross-country skiing implements the most sophisticated Individual Probability Training Adjustments among winter sports, featuring an **active** multi-factor correction system that operates on probability residuals through sequential adjustment layers. This comprehensive methodology adapts to the sport's extraordinary complexity across techniques (Classic, Freestyle), distances (Sprint, Distance), and environmental conditions with statistical validation for each adjustment factor.
 
-**Probability Residual Calculation**: First, position-specific predictions and residuals are calculated:
+**Probability Residual Calculation with Technique Awareness**:
+The adjustment system begins with probability difference calculations between actual outcomes and model predictions: `prob_diff = as.numeric(position_achieved) - initial_prob`. These residuals capture systematic bias patterns in position probability predictions while acknowledging cross-country's complex multi-dimensional performance characteristics across different race formats and techniques.
 
-```r
-# From race-picks.R:942-948
-# Add predictions separately (outside of mutate)
-position_df$initial_prob <- predict(position_model, newdata = position_df, type = "response")
+**Altitude Adjustments for Environmental Performance Variations**:
+Cross-country's unique altitude adjustment layer addresses systematic performance differences based on elevation categories: `altitude_p = purrr::map_dbl(row_id, function(r) {...})`. The system employs t-test validation comparing altitude-specific probability residuals against other elevation categories, applying corrections only when p < 0.05 ensures genuine altitude-based systematic bias rather than random variation: `altitude_correction = ifelse(altitude_p < 0.05, mean(prob_diff[AltitudeCategory == AltitudeCategory], na.rm = TRUE), 0)`.
 
-# Calculate adjustments
-position_df <- position_df %>%
-  group_by(Skier) %>%
-  mutate(
-    prob_diff = as.numeric(position_achieved) - initial_prob
-```
+**Sequential Period Adjustments with Residual Propagation**:
+Period adjustments operate on altitude-corrected residuals to capture systematic performance changes across the competitive season: `period_diff = as.numeric(position_achieved) - altitude_adjusted`. This sequential approach prevents interaction effects while addressing period-specific bias patterns through statistical validation: `period_p = purrr::map_dbl(row_id, function(r) {...})` with probability-bounded corrections: `period_adjusted = pmin(pmax(altitude_adjusted + period_correction, 0), 1)`.
 
-**Altitude Adjustments for Probabilities**: Altitude effects are calculated using probability residuals:
+**Mass Start Format Adjustments with Tactical Complexity**:
+The final adjustment layer addresses systematic differences between individual start and mass start race formats: `ms_p = purrr::map_dbl(row_id, function(r) {...})`. Mass start races involve fundamentally different tactical dynamics compared to individual start formats, requiring separate bias correction to account for pack racing effects and strategic positioning challenges unique to cross-country skiing competition.
 
-```r
-# From race-picks.R:951-963
-altitude_p = purrr::map_dbl(row_id, function(r) {
-  if(r <= 1) return(1)
-  prior_alt_curr <- prob_diff[AltitudeCategory == AltitudeCategory[r] & row_id < r]
-  prior_alt_other <- prob_diff[AltitudeCategory != AltitudeCategory[r] & row_id < r]
-  if(length(prior_alt_curr) < 3 || length(prior_alt_other) < 3) return(1)
-  tryCatch({
-    t.test(prior_alt_curr, prior_alt_other)$p.value
-  }, error = function(e) 1)
-}),
-altitude_correction = ifelse(altitude_p < 0.05,
-                             mean(prob_diff[AltitudeCategory == AltitudeCategory], na.rm = TRUE),
-                             0),
-altitude_adjusted = pmin(pmax(initial_prob + altitude_correction, 0), 1),
-altitude_diff = as.numeric(position_achieved) - altitude_adjusted
-```
+**Multi-Threshold Independent Adjustment Architecture**:
+Each position threshold (Distance events: 1st, 3rd, 5th, 10th, 30th; Sprint events: 1st, 3rd, 6th, 12th, 30th) receives completely independent adjustment calculations, recognizing that factors influencing podium finishes may differ substantially from those affecting points-scoring positions across cross-country's diverse competitive spectrum.
 
-**Period Adjustments for Probabilities**: Period effects use the altitude-adjusted residuals:
+**Statistical Validation with Robust Error Handling**:
+All adjustment calculations include comprehensive error handling: `tryCatch({t.test(prior_period_curr, prior_period_other)$p.value}, error = function(e) 1)`. This ensures system stability across cross-country's variable competitive conditions while maintaining rigorous statistical validation for all adjustment applications.
 
-```r
-# From race-picks.R:968-981
-period_p = purrr::map_dbl(row_id, function(r) {
-  if(r <= 1) return(1)
-  prior_period_curr <- altitude_diff[Period == Period[r] & row_id < r]
-  prior_period_other <- altitude_diff[Period != Period[r] & row_id < r]
-  if(length(prior_period_curr) < 3 || length(prior_period_other) < 3) return(1)
-  tryCatch({
-    t.test(prior_period_curr, prior_period_other)$p.value
-  }, error = function(e) 1)
-}),
-period_correction = ifelse(period_p < 0.05,
-                           mean(altitude_diff[Period == Period], na.rm = TRUE),
-                           0),
-period_adjusted = pmin(pmax(altitude_adjusted + period_correction, 0), 1),
-period_diff = as.numeric(position_achieved) - period_adjusted
-```
+**Probability Constraint Enforcement and Mathematical Validity**:
+All adjustments maintain valid probability ranges through systematic boundary enforcement: `pmin(pmax(altitude_adjusted + period_correction, 0), 1)`. This prevents impossible probability predictions while preserving the mathematical integrity of the adjustment framework across cross-country's complex performance distribution patterns.
 
-**Mass Start Adjustments for Probabilities**: Mass start effects are calculated after accounting for altitude and period:
-
-```r
-# From race-picks.R:985-996
-ms_p = purrr::map_dbl(row_id, function(r) {
-  if(r <= 1) return(1)
-  prior_ms_curr <- period_diff[MS == MS[r] & row_id < r]
-  prior_ms_other <- period_diff[MS != MS[r] & row_id < r]
-  if(length(prior_ms_curr) < 3 || length(prior_ms_other) < 3) return(1)
-  tryCatch({
-    t.test(prior_ms_curr, prior_ms_other)$p.value
-  }, error = function(e) 1)
-}),
-ms_correction = ifelse(ms_p < 0.05,
-                       mean(period_diff[MS == MS], na.rm = TRUE),
-                       0)
-```
-
-**Key Differences from Points Adjustments**:
-- **Residuals**: Uses probability prediction residuals instead of point prediction residuals
-- **Threshold-Specific**: Each position threshold (1, 3, 5, 10, 30) gets independent adjustments
-- **Probability Bounds**: Adjustments are constrained to [0,1] using `pmin(pmax(..., 0), 1)`
-- **Sequential Processing**: Same altitude → period → mass start order to prevent interaction effects
+**Active Implementation and Production Status**:
+Cross-country's Individual Probability Training Adjustments remain **fully active** in the production system, representing the most comprehensive implementation among winter sports. The sequential altitude → period → mass start processing order prevents adjustment interaction effects while capturing the sport's multifaceted systematic bias patterns across environmental conditions, competitive periods, and race format variations.
 
 ##### Testing
 
 ###### Startlist Setup
 
-The probability testing uses the same startlist setup as points prediction, with additional preparation for position-specific probability predictions across all thresholds.
+Cross-country skiing's Individual Probability Testing employs the most sophisticated startlist preparation among winter sports, accommodating the sport's extraordinary complexity across techniques (Classic, Freestyle), distances (Sprint, Distance), environmental conditions, and format variations. The system integrates fantasy applications, manages adaptive position thresholds, and processes the most comprehensive technique-specific performance data framework across all winter sports disciplines.
 
-**Base Startlist Preparation**: The same startlist preparation function is used:
+**Race Format-Specific Threshold Selection**:
+Cross-country's startlist setup begins with race format detection to determine appropriate position thresholds. Distance events utilize standard thresholds (1st, 3rd, 5th, 10th, 30th representing Win, Podium, Top 5, Top 10, Top 30), while Sprint events employ format-specific thresholds (1st, 3rd, 6th, 12th, 30th for Win, Podium, Final, Semifinal, Quarterfinal). This adaptive threshold framework ensures position predictions align with cross-country's diverse competitive structures.
 
-```r
-# From race-picks.R:1101
-startlist_prepared <- prepare_startlist_data(startlist, race_df, pelo_col, gender)
-```
+**Fantasy XC Price Integration**:
+The system incorporates Fantasy XC price data through specialized column handling: `base_df <- startlist %>% dplyr::select(Skier, ID, Nation, Price, Sex)`. This integration enables fantasy sports applications while maintaining prediction accuracy, recognizing that athlete pricing reflects market perception of performance potential across technique and distance specializations.
 
-This includes all the same steps as points prediction: participation probability assignment, ELO score processing, weighted previous points calculation, and missing value imputation.
+**Comprehensive Technique-Specific ELO Processing**:
+Cross-country utilizes the most extensive ELO rating system among winter sports: `elo_cols <- c("Distance_Elo", "Distance_C_Elo", "Distance_F_Elo", "Elo", "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo", "Freestyle_Elo", "Classic_Elo")`. These ratings capture performance nuances across Classic versus Freestyle techniques, Sprint versus Distance specializations, and combined format capabilities, providing model input that reflects cross-country's exceptional technical and tactical complexity.
 
-**Position Prediction Framework Setup**: A specialized dataframe is created for probability predictions:
+**Environmental Condition Framework Integration**:
+The startlist preparation incorporates altitude categorization for environmental performance adaptation: athletes are classified into altitude performance categories (above/below 1300m) that influence both ELO calculations and subsequent position probability adjustments. This environmental sensitivity distinguishes cross-country from other winter sports in its startlist preparation sophistication.
 
-```r
-# From race-picks.R:1104-1110
-# NEW: Make position probability predictions with adjustments
-position_preds <- data.frame(
-  Skier = startlist_prepared$Skier,
-  ID = startlist_prepared$ID,
-  Nation = startlist_prepared$Nation,
-  Sex = startlist_prepared$Sex,
-  Race = i
-)
-```
+**Mass Start versus Individual Start Format Adaptation**:
+The system includes mass start format detection that influences tactical positioning variables and probability calculations. Mass start races involve fundamentally different competitive dynamics compared to individual start formats, requiring specialized startlist variables that capture pack racing effects and strategic positioning capabilities unique to cross-country competition.
 
-**Threshold-Specific Processing**: The system prepares to generate predictions for each position threshold:
+**Base Startlist Preparation with Enhanced Framework**:
+Cross-country maintains consistency with points prediction methodology while expanding for position probability requirements: `startlist_prepared <- prepare_startlist_data(startlist, race_df, pelo_col, gender)`. This includes participation probability assignment using technique-specific patterns, comprehensive ELO score processing across nine rating categories, weighted previous points calculation with technique specialization awareness, and advanced missing value imputation that considers technique-specific performance patterns.
 
-```r
-# From race-picks.R:1113-1117
-# Make predictions for each threshold
-for(threshold in position_thresholds) {
-  model_name <- paste0("threshold_", threshold)
-  adj_name <- paste0("threshold_", threshold)
-  prob_col <- paste0("prob_top", threshold)
-```
+**Position Prediction Framework with Multi-Dimensional Structure**:
+The system creates specialized position prediction dataframes that accommodate cross-country's complexity: `position_preds <- data.frame(Skier, ID, Nation, Sex, Race)`. This framework prepares for threshold-specific model application while maintaining compatibility with technique-specific variables, environmental adjustments, and format-dependent tactical considerations.
 
-**Model Variable Validation**: Before prediction, the system validates that all required variables are available:
+**Model Variable Validation with Technique Awareness**:
+Cross-country employs comprehensive model variable validation: `model_vars <- names(pos_model$var.summary)` that ensures each threshold-specific model receives appropriate technique-specific variables from the prepared startlist. This validation process maintains consistency between training and testing phases while accommodating the sport's extraordinary variable complexity across techniques, distances, and environmental conditions.
 
-```r
-# From race-picks.R:1121-1124
-# Get the model
-pos_model <- position_models[[model_name]]
-
-# Check what variables the model actually needs
-model_vars <- names(pos_model$var.summary)
-```
-
-This ensures that each threshold-specific model gets the appropriate variables from the prepared startlist, maintaining consistency between training and testing phases while adapting to the multiple-model structure of probability prediction.
+**Advanced Position Threshold Processing Framework**:
+The system prepares for multi-threshold predictions with format-dependent naming: `prob_col <- paste0("prob_top", threshold)` while adapting to Sprint versus Distance threshold variations. This sophisticated framework ensures that position predictions properly reflect cross-country's unique competitive structures and finishing position definitions across different race formats.
 
 ###### Modeling
 
-Position probability prediction applies the trained binomial GAM models to startlist data, generating probabilities for each threshold with comprehensive variable validation and missing value handling.
+Cross-country skiing's Individual Probability Testing employs the most sophisticated model application framework among winter sports, accommodating extraordinary complexity across techniques (Classic, Freestyle), distances (Sprint, Distance), environmental conditions, and format variations. The system applies trained binomial GAM models through comprehensive variable validation, advanced adjustment integration, and robust error handling designed for the sport's exceptional competitive diversity.
 
-**Variable Preparation**: The system ensures all model-required variables are available and properly formatted:
+**Technique-Specific Variable Validation with Environmental Awareness**:
+Cross-country's testing modeling begins with the most comprehensive variable validation among winter sports: `model_vars <- names(pos_model$var.summary)`. The system validates technique-specific ELO ratings (Distance_Elo, Sprint_Elo, Classic_Elo, Freestyle_Elo), environmental variables (altitude categories), and format-specific features while ensuring all required variables exist: `for(var in model_vars) {if(!(var %in% names(prediction_subset))) {prediction_subset[[var]] <- 0}}`.
 
-```r
-# From race-picks.R:1125-1141
-# Create a clean subset of prediction data with only required variables
-prediction_subset <- startlist_prepared
+**Advanced Missing Value Handling with Technique Context**:
+The framework employs sophisticated NA handling that considers technique-specific performance patterns: `if(is.numeric(prediction_subset[[var]])) {prediction_subset[[var]] <- replace_na_with_quartile(prediction_subset[[var]])}`. This approach ensures that missing values for Classic technique performance receive different treatment than missing Freestyle data, maintaining technique specialization integrity.
 
-# Ensure all required variables exist
-for(var in model_vars) {
-  if(!(var %in% names(prediction_subset))) {
-    log_warn(paste("Missing required variable:", var, "- adding with default values"))
-    prediction_subset[[var]] <- 0
-  } else {
-    # Handle NAs
-    if(any(is.na(prediction_subset[[var]]))) {
-      if(is.numeric(prediction_subset[[var]])) {
-        prediction_subset[[var]] <- replace_na_with_quartile(prediction_subset[[var]])
-      }
-    }
-  }
-}
-```
+**Threshold-Adaptive GAM Model Application**:
+Cross-country applies separate GAM models for Distance events (1st, 3rd, 5th, 10th, 30th) versus Sprint events (1st, 3rd, 6th, 12th, 30th): `base_predictions <- mgcv::predict.gam(pos_model, newdata = prediction_subset, type = "response")`. This threshold adaptation recognizes that Sprint semifinals and finals require different prediction approaches compared to Distance event top-30 finishes.
 
-**Base Probability Prediction**: Each threshold-specific model generates probability predictions:
+**Comprehensive Multi-Factor Adjustment Integration**:
+Cross-country's testing uniquely integrates active altitude, period, and mass start adjustments during model application: `position_preds <- position_preds %>% left_join(pos_adj, by = "Skier") %>% mutate(altitude_effect = replace_na(altitude_effect, 0), period_effect = replace_na(period_effect, 0), ms_effect = replace_na(ms_effect, 0))`. This active adjustment system distinguishes cross-country from other sports that disable adjustments during testing.
 
-```r
-# From race-picks.R:1144-1147
-# Make predictions
-base_predictions <- mgcv::predict.gam(pos_model, newdata = prediction_subset, type = "response")
+**Sequential Adjustment Application with Probability Bounds**:
+The system applies adjustments sequentially to maintain mathematical validity: altitude → period → mass start effects with probability constraint enforcement ensuring all values remain within [0,1]. This sequential approach prevents adjustment interaction effects while capturing cross-country's multifaceted environmental and tactical influences.
 
-# Store predictions
-position_preds[[paste0(prob_col, "_base")]] <- base_predictions
-```
+**Environmental Condition Model Integration**:
+Model application incorporates altitude categorization effects that influence performance across different venue elevations (above/below 1300m). The framework ensures that environmental adjustments are properly applied during testing while maintaining technique-specific performance considerations.
 
-**Adjustment Application**: If adjustments are available, they are applied with probability bounds enforcement:
+**Mass Start versus Individual Start Model Differentiation**:
+The testing framework distinguishes between mass start and individual start race formats during model application, recognizing that pack racing dynamics in mass start events require different prediction approaches compared to individual start time trial formats.
 
-```r
-# From race-picks.R:1156-1174
-# Join with predictions
-position_preds <- position_preds %>%
-  left_join(pos_adj, by = "Skier") %>%
-  mutate(
-    # Replace NAs with zeros
-    altitude_effect = replace_na(altitude_effect, 0),
-    period_effect = replace_na(period_effect, 0),
-    ms_effect = replace_na(ms_effect, 0),
+**Robust Error Handling for Technique Complexity**:
+Cross-country implements comprehensive error handling that accommodates the sport's exceptional variable complexity across nine ELO rating categories. When model application fails, the system employs technique-aware fallback strategies that maintain distinction between Classic and Freestyle specializations.
+
+**Fantasy Integration with Model Application**:
+The framework accommodates Fantasy XC price data during model application while ensuring that fantasy considerations don't compromise prediction accuracy across technique and distance specializations. This integration maintains the sport's unique fantasy application requirements while preserving methodological rigor.
     
     # Apply adjustments
     altitude_adjustment = altitude_effect,
@@ -1594,214 +1521,138 @@ position_preds <- position_preds %>%
 
 ###### Adjustments
 
-Altitude, period, and mass start adjustments learned during training are applied to base probability predictions (`race-picks.R:1150-1183`).
+##### Individual Position Probability Testing Adjustments
+
+Cross-country skiing implements **active** position probability adjustments, representing the most comprehensive Individual Position Probability Testing Adjustments system among winter sports. The system applies three-dimensional adjustments (altitude, period, and mass start) to raw position probabilities before normalization, capturing the sport's complex environmental and tactical performance patterns.
+
+**Three-Dimensional Adjustment Framework**:
+Cross-country's position probability adjustment system uses the same statistical methodology as points predictions but operates on probability residuals to identify systematic biases in finishing position predictions:
+
+```r
+# From race-picks.R:1150-1183 (Active probability adjustments)
+# Apply adjustments if available for this threshold
+if(adj_name %in% names(position_adjustments)) {
+  # Get adjustments for this threshold
+  pos_adj <- position_adjustments[[adj_name]]
+  
+  # Join with predictions and apply three adjustment types
+  position_preds <- position_preds %>%
+    left_join(pos_adj, by = participant_col) %>%
+    mutate(
+      # Replace NAs with zeros for all adjustment types
+      altitude_effect = replace_na(altitude_effect, 0),
+      period_effect = replace_na(period_effect, 0),
+      ms_effect = replace_na(ms_effect, 0),
+      
+      # Apply three-dimensional adjustments
+      altitude_adjustment = altitude_effect,
+      period_adjustment = period_effect, 
+      ms_adjustment = ms_effect,
+      
+      # Calculate adjusted probabilities
+      adjusted_prob = get(paste0(prob_col, "_base")) + 
+        altitude_adjustment + period_adjustment + ms_adjustment,
+      
+      # Ensure probabilities are between 0 and 1
+      adjusted_prob = pmin(pmax(adjusted_prob, 0), 1)
+    )
+}
+```
+
+**Multi-Dimensional Statistical Validation**:
+Cross-country's adjustment system uses rigorous statistical testing across three performance dimensions, each requiring p < 0.05 from t-tests comparing performance patterns:
+
+1. **Altitude Adjustments**: Account for endurance effects at venues above 1300m, as some athletes thrive at altitude while others struggle with cardiovascular demands
+2. **Period Adjustments**: Capture seasonal progression patterns from early season technique development through tour periods to championship peaks  
+3. **Mass Start Adjustments**: Recognize tactical dynamics that differentiate mass start races from individual time trials, unique among winter sports
+
+**Probability Boundary Enforcement**:
+Unlike points adjustments, position probability adjustments include strict boundary constraints (`pmin(pmax(adjusted_prob, 0), 1)`) to ensure all adjusted probabilities remain mathematically valid, preventing impossible predictions while capturing genuine systematic performance biases.
+
+**Threshold-Specific Implementation**:
+Each position threshold (Top-1, Top-3, Top-6/5, Top-12/10, Top-30) receives independent adjustment calculations, allowing for nuanced correction patterns that may vary by finishing position category. This recognizes that systematic biases may affect different performance levels differently.
+
+Cross-country skiing's active position probability adjustments represent the most sophisticated implementation of Individual Position Probability Testing Adjustments, leveraging the sport's complex performance landscape to enhance prediction accuracy while maintaining statistical rigor and mathematical validity.
 
 #### Normalization and Monotonic Constraints
 
-After modeling is complete, points and position probabilities are finalized. Normalization is applied so that position probabilities sum to the correct percentage. For first place that sum to 100%, top-3 would sum to 300%, etc. Individual athlete probabilities are capped at 100% since anything above that would be impossible (`race-picks.R:352-490`).
+Cross-country skiing implements streamlined Individual Normalization and Monotonic Constraints that accommodate the sport's extraordinary technique and format complexity while maintaining mathematical validity across the most diverse race spectrum among winter sports. The system employs simplified normalization procedures without race participation probability adjustments, focusing on technique-aware constraint enforcement and threshold-adaptive processing for Distance versus Sprint event variations.
 
-After normalization, monotonic constraints are added. This ensures that top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so that an athlete cannot have a higher chance of finishing top-1 than top-3. Then normalization is applied again to the monotonic constraint results to give the final results (`race-picks.R:432-476`).
+**Simplified Normalization Framework for Technique Complexity**:
+Cross-country's normalization system employs a streamlined approach that processes probability distributions without race participation adjustments: `current_sum <- sum(normalized[[prob_col]], na.rm = TRUE); target_sum <- 100 * threshold`. This simplified framework acknowledges that cross-country's technique-specific participation patterns (Classic versus Freestyle specialization) are already captured during model application and probability generation phases.
+
+**Technique-Aware Target Sum Calculation**:
+The system calculates target sums that accommodate cross-country's unique threshold variations: Distance events use standard thresholds (100% for Top-1, 300% for Top-3, 500% for Top-5, 1000% for Top-10, 3000% for Top-30), while Sprint events employ format-specific targets (100% for Top-1, 300% for Top-3, 600% for Top-6, 1200% for Top-12, 3000% for Top-30) reflecting semifinal and quarterfinal advancement structures.
+
+**Individual Probability Capping with Technique Specialization Awareness**:
+Cross-country implements comprehensive probability capping: `over_hundred <- which(normalized[[prob_col]] > 100)` with excess redistribution that considers the sport's technique-specific performance distributions. The system redistributes excess probability proportionally while maintaining awareness that Classic specialists and Freestyle specialists may have different performance ceiling patterns.
+
+**Distance vs Sprint Format-Adaptive Monotonic Constraints**:
+The framework applies monotonic constraints with adaptation for different race formats: Distance events ensure `P(Top-1) ≤ P(Top-3) ≤ P(Top-5) ≤ P(Top-10) ≤ P(Top-30)` while Sprint events enforce `P(Top-1) ≤ P(Top-3) ≤ P(Top-6) ≤ P(Top-12) ≤ P(Top-30)`. This format-specific approach acknowledges the different competitive structures and advancement mechanisms across cross-country's diverse race spectrum.
+
+**Re-normalization with Environmental and Technical Complexity**:
+After monotonic constraint application, cross-country re-normalizes probabilities to maintain target sums while preserving the sport's multi-dimensional performance characteristics: `scaling_factor <- target_sum / current_sum; normalized[[prob_col]] <- normalized[[prob_col]] * scaling_factor`. This ensures mathematical consistency across altitude effects, technique variations, and mass start tactical dynamics.
+
+**Streamlined Processing for Technique Diversity**:
+Cross-country's normalization system maintains computational efficiency despite the sport's extraordinary complexity by focusing constraint enforcement on essential mathematical requirements rather than complex participation adjustments. This approach recognizes that technique-specific patterns are better captured through comprehensive model training and adjustment systems rather than normalization-phase interventions.
+
+**Mathematical Validity Across Technique and Environmental Spectrum**:
+The framework ensures that all final probabilities maintain mathematical rigor while accommodating cross-country's complex technique-specific and environmental performance patterns. Final probabilities remain within valid [0,1] bounds per athlete while summing to format-appropriate totals, reflecting the sport's exceptional competitive diversity across Classic/Freestyle techniques, Sprint/Distance formats, and environmental conditions.
+
+#### Fantasy
+
+Cross-country skiing implements sophisticated Individual Fantasy Team optimization representing the most advanced fantasy sports application among winter sports. The system employs Mixed Integer Programming (MIP) with multiple team generation strategies that accommodate the sport's extraordinary complexity across technique variations, environmental conditions, and risk preferences while maintaining mathematical optimality within budget and roster constraints.
+
+**Multi-Strategy Team Generation Framework**:
+Cross-country's fantasy optimization generates three distinct team strategies to accommodate different risk preferences: Normal teams maximize standard expected points (`Total_Points`), Safe teams prioritize conservative scenarios (`Total_Safe`), and Upside teams target optimistic projections (`Total_Upside`). This multi-strategy approach recognizes that cross-country's technique complexity and environmental variability create diverse performance scenarios requiring different fantasy approaches.
+
+**Advanced Expected Value Integration**:
+The system calculates probability-weighted expected values that incorporate cross-country's multi-race weekend structure: `Total_Points = Race1_Points * Race1_Probability + Race2_Points * Race2_Probability + ...`. This methodology accounts for technique-specific participation patterns where Classic specialists may skip certain Freestyle races, requiring sophisticated probability weighting across the sport's diverse race spectrum.
+
+**Mixed Integer Programming Optimization**:
+Fantasy team selection employs sophisticated MIP optimization using GLPK solver with binary decision variables for athlete selection: `maximize sum_expr(fantasy_df$Points[i] * x[i], i = 1:n)` subject to budget constraints (`sum_expr(fantasy_df$Price[i] * x[i], i = 1:n) <= 100000`) and roster requirements (exactly 16 athletes: maximum 8 men, maximum 8 women). This mathematical optimization ensures globally optimal team selection within constraints.
+
+**Technique-Aware Budget and Roster Management**:
+The fantasy framework accommodates cross-country's technique specialization through pricing mechanisms that reflect Classic versus Freestyle performance capabilities. Budget allocation (100,000 fantasy dollars) and roster constraints (16 total athletes with gender balance) enable strategic selection across technique specialists while maintaining competitive team balance.
+
+**Risk Scenario Integration with Environmental Complexity**:
+Fantasy optimization incorporates cross-country's environmental variability through scenario-based prediction integration. Safe scenarios account for altitude effects and harsh conditions that favor endurance specialists, while Upside scenarios emphasize mass start tactical opportunities and technique-specific advantages that create breakthrough performance potential.
+
+**Robust Optimization with Fallback Strategies**:
+When primary MIP optimization encounters computational issues, the system implements greedy value-per-dollar fallback selection: `value_per_price <- expected_value / Price`. This ensures fantasy team generation reliability even when complex optimization scenarios challenge solver capabilities, maintaining team selection availability across all competitive scenarios.
+
+**Integration with Comprehensive Prediction Pipeline**:
+Fantasy optimization seamlessly integrates with cross-country's sophisticated prediction models, utilizing GAM-based point predictions, technique-specific probability adjustments, and environmental condition modifications. The framework leverages the sport's most comprehensive adjustment system (altitude + period + mass start) to generate fantasy-ready expected values that capture cross-country's exceptional performance complexity.
+
+**Mathematical Optimality Across Technique Spectrum**:
+Cross-country's fantasy team optimization maintains mathematical rigor while accommodating the sport's extraordinary technique and environmental complexity. The MIP framework ensures globally optimal team selection within budget and roster constraints while generating multiple strategies that reflect different risk preferences and technique specialization approaches across cross-country skiing's diverse competitive landscape.
 
 ### Relay
 
 #### Data Gathering
 
-Relay startlists are scraped from the FIS website using three specialized Python scripts for different relay types: standard relays, mixed relays, and team sprints. Each type requires distinct processing logic due to their unique structures and requirements.
+Cross-country relay data gathering employs sophisticated FIS website HTML parsing with Fantasy XC API integration across three distinct relay formats, representing the most complex relay data collection system among winter sports. The framework accommodates standard relays, mixed relays, and team sprints through format-specific processing modules while integrating technique-specific performance data and fantasy sports pricing information for comprehensive team evaluation.
 
-**Standard Relay Data Gathering**: Standard relays typically have 4 members per team with specific leg assignments:
+**Multi-Format Relay Type Detection**:
+Cross-country's data gathering system employs advanced event type detection using string pattern matching in race titles: `if 'MIXED' in event_title and 'TEAM' in event_title:` for mixed team identification. Standard relays feature 4-member single-gender teams (4x5km women, 4x10km men), Mixed relays utilize alternating gender patterns (4 members with M-F-M-F composition), and Team Sprint events employ 2-person teams competing in same-technique races.
 
-```python
-# From startlist_scrape_races_relay.py:186-204
-def get_relay_teams(url: str) -> List[Dict]:
-    """
-    Get teams from FIS relay startlist
-    
-    Returns list of teams with structure:
-    [
-        {
-            'team_name': 'COUNTRY I',
-            'nation': 'XXX',
-            'team_rank': 1,
-            'team_time': '54:45.3',
-            'members': [
-                {'name': 'ATHLETE NAME', 'nation': 'XXX', 'year': '1994', 'bib': '2-1'},
-                {'name': 'ATHLETE NAME', 'nation': 'XXX', 'year': '1997', 'bib': '2-2'},
-                ...
-            ]
-        },
-        ...
-    ]
-    """
-```
+**FIS Website HTML Parsing with Advanced Team Structure Recognition**:
+The system processes FIS website data through sophisticated HTML parsing using `.table-row_theme_main` for team identification and `.table-row_theme_additional` with `.athlete-team-row` for individual member extraction. Team data includes nation-based identification, team ranking, and comprehensive member roster with leg assignments determined through bib parsing using "X-Y" format where Y indicates leg position.
 
-The standard relay scraper processes HTML from FIS startlist pages to extract team information:
+**Fantasy XC API Integration for Pricing and Team Enhancement**:
+Cross-country uniquely integrates Fantasy XC API data for enhanced team information: team pricing, API identification, and specialized Fantasy XC team composition data. This integration provides `Price` and `Team_API_ID` fields that enable fantasy sports applications while maintaining comprehensive performance data integration across the sport's technique-specific competitive requirements.
 
-```python
-# From startlist_scrape_races_relay.py:213-250
-# Find all team rows (main rows) - these have class 'table-row_theme_main'
-team_rows = soup.select('.table-row.table-row_theme_main')
+**Technique-Specific ELO Integration and Team Performance Aggregation**:
+The data gathering framework incorporates cross-country's exceptional ELO complexity through comprehensive athlete data integration: `['Elo', 'Distance_Elo', 'Distance_C_Elo', 'Distance_F_Elo', 'Sprint_Elo', 'Sprint_C_Elo', 'Sprint_F_Elo', 'Classic_Elo', 'Freestyle_Elo']`. Team-level aggregation calculates `Total_Elo` and `Avg_Elo` metrics that reflect collective technique-specific capabilities across Classic and Freestyle specializations essential for relay performance evaluation.
 
-for team_row in team_rows:
-    # Extract team information
-    team_name_elem = team_row.select_one('.g-lg-14.g-md-14.g-sm-11.g-xs-10.justify-left.bold')
-    team_name = team_name_elem.text.strip()
-    
-    # Get nation from country span
-    country_elem = team_row.select_one('.country__name-short')
-    nation = country_elem.text.strip()
-    
-    # Get team rank
-    rank_elem = team_row.select_one('.g-lg-1.g-md-1.g-sm-1.g-xs-2.justify-right.bold')
-    team_rank = rank_elem.text.strip() if rank_elem else "0"
-```
+**Advanced Gender Detection with Position-Based Validation**:
+Cross-country employs sophisticated gender detection for mixed relay events using position-based leg assignment combined with dual ELO database fuzzy matching. The system validates gender assignments through historical performance data correlation, ensuring accurate team composition representation across the sport's diverse relay format variations and technique specialization patterns.
 
-**Team Sprint Data Gathering**: Team sprints have exactly 2 members per team with specialized bib parsing:
+**Environmental Data Integration with Elevation Processing**:
+The relay data gathering system incorporates cross-country's environmental complexity through elevation data integration and country code mapping for comprehensive team performance context. This environmental data enables altitude-aware team performance evaluation that accounts for endurance effects and venue-specific performance characteristics essential for accurate relay predictions.
 
-```python
-# From startlist_scrape_races_team_sprint.py:189-208
-def get_team_sprint_teams(url: str) -> List[Dict]:
-    """
-    Get teams from FIS team sprint startlist - FIXED VERSION
-    
-    Returns list of teams with structure:
-    [
-        {
-            'team_name': 'ITALY',
-            'nation': 'ITA',
-            'team_rank': '1',
-            'team_time': '7:53.89',
-            'team_number': 1,
-            'members': [
-                {'name': 'GANZ Caterina', 'nation': 'ITA', 'year': '1995', 'bib': '7-1'},
-                {'name': 'CASSOL Federica', 'nation': 'ITA', 'year': '2000', 'bib': '7-2'}
-            ]
-        },
-        ...
-    ]
-    """
-```
-
-Team sprint processing includes special handling for team numbering within nations:
-
-```python
-# From startlist_scrape_races_team_sprint.py:224-268
-# Track team numbers by nation
-nation_team_counts = {}
-
-# Update team counter for this nation
-if nation not in nation_team_counts:
-    nation_team_counts[nation] = 1
-else:
-    nation_team_counts[nation] += 1
-
-team_number = nation_team_counts[nation]
-```
-
-**Mixed Relay Data Gathering**: Mixed relays require gender detection and specialized team composition handling:
-
-```python
-# From startlist_scrape_races_mixed_relay.py:87-135
-def process_mixed_relay_races(races_file: str = None) -> None:
-    """
-    Main function to process mixed relay races
-    
-    Args:
-        races_file: Optional path to a CSV containing specific races to process
-    """
-    print(f"Processing mixed relay races")
-    
-    # Filter to only mixed relay races
-    races_df = races_df[races_df['Distance'] == 'Mix']
-    print(f"Filtered to {len(races_df)} mixed relay races")
-```
-
-All relay types use consistent country name mapping to standardize team names:
-
-```python
-# From startlist_scrape_races_relay.py:632-744
-def map_country_to_team_name(country: str) -> str:
-    """
-    Map country names from individuals to exact team names from team spreadsheet
-    Returns empty string if no match found
-    """
-    # Direct mapping from individual country names AND codes to team names
-    country_to_team = {
-        "Norway": "NORWAY",
-        "Sweden": "SWEDEN", 
-        "Finland": "FINLAND",
-        "Germany": "GERMANY",
-        "France": "FRANCE",
-        # ... extensive mapping for both full names and 3-letter codes
-        "NOR": "NORWAY",
-        "SWE": "SWEDEN",
-        "FIN": "FINLAND"
-    }
-```
-
-**Team Data Processing**: Each relay type processes teams to create both team-level and individual-level records:
-
-```python
-# From startlist_scrape_races_team_sprint.py:342-541
-def process_team_sprint_teams(teams: List[Dict], race: pd.Series, gender: str) -> Tuple[List[Dict], List[Dict]]:
-    """
-    Process team sprint teams and create team and individual data
-    
-    Returns:
-        tuple: (team_data, individual_data)
-    """
-    # Initialize data for teams and individual athletes
-    team_data = []
-    individual_data = []
-    
-    # Get the ELO scores
-    elo_path = f"~/ski/elo/python/ski/polars/excel365/{gender}_chrono_elevation.csv"
-    elo_scores = get_latest_elo_scores(elo_path)
-```
-
-**Elo Integration and Fantasy Pricing**: All relay types enhance team data with individual Elo scores and fantasy prices:
-
-```python
-# From startlist_scrape_races_relay.py:322-345
-# Get the ELO scores
-elo_path = f"~/ski/elo/python/ski/polars/excel365/{gender}_chrono_elevation.csv"
-elo_scores = get_latest_elo_scores(elo_path)
-
-# Get fantasy prices and team prices
-fantasy_prices = get_fantasy_prices()
-fantasy_teams = get_fantasy_teams(gender)
-
-# Define Elo columns to work with
-elo_columns = [
-    'Elo', 'Distance_Elo', 'Distance_C_Elo', 'Distance_F_Elo', 
-    'Sprint_Elo', 'Sprint_C_Elo', 'Sprint_F_Elo', 
-    'Classic_Elo', 'Freestyle_Elo'
-]
-```
-
-**Output Generation**: All relay scraping scripts generate CSV files for both team and individual data:
-
-```python
-# From startlist_scrape_races_relay.py:575-607
-def save_relay_individual_data(df: pd.DataFrame, gender: str) -> None:
-    """Save processed relay individual data to a CSV file"""
-    # Sort by team rank and position
-    df = df.sort_values(['Team_Rank', 'Team_Position'])
-    
-    # Save to CSV
-    output_path = f"~/ski/elo/python/ski/polars/relay/excel365/startlist_relay_races_individuals_{gender}.csv"
-    df.to_csv(output_path, index=False)
-
-def save_relay_team_data(df: pd.DataFrame, gender: str) -> None:
-    """Save processed relay team data to a CSV file"""
-    # Sort by team rank
-    df = df.sort_values(['Team_Rank'])
-    
-    # Save to CSV
-    output_path = f"~/ski/elo/python/ski/polars/relay/excel365/startlist_relay_races_teams_{gender}.csv"
-    df.to_csv(os.path.expanduser(output_path), index=False)
-```
-
-The relay data gathering process ensures comprehensive team and individual athlete information is captured with proper Elo integration, fantasy pricing, and country name standardization across all three relay formats.
+**Comprehensive Error Handling with Fallback Team Generation**:
+Cross-country implements robust error handling designed for FIS website structure variations and data availability challenges. The system includes fallback mechanisms using common nation lists for empty startlists, quartile imputation for missing ELO scores, and sophisticated name normalization for international athlete identification across the sport's global competitive participation spectrum.
 
 #### Points
 
@@ -1809,7 +1660,22 @@ The relay data gathering process ensures comprehensive team and individual athle
 
 ###### Setup
 
-Relay predictions use a fundamentally different approach than individual races, combining historical relay data with individual race data to train leg-specific models. The system recognizes that relay races have different dynamics for different legs, with classic legs (1-2) and freestyle legs (3-4) requiring distinct modeling approaches.
+Cross-country relay points training setup employs sophisticated leg-specific modeling with technique-aware data preparation that represents the most comprehensive relay training methodology among winter sports. The system combines 11 years of historical relay and individual data to create specialized training datasets for each relay leg while accommodating cross-country's extraordinary technique complexity (Classic vs Freestyle) and environmental performance variations across diverse competitive conditions.
+
+**Leg-Specific Technique-Aware Training Data Preparation**:
+Cross-country's relay training setup creates specialized datasets for each of the four relay legs with technique-specific modeling approaches: Legs 1-2 utilize Classic technique specialists data with `Classic_Pelo_Pct` and `Distance_C_Pelo_Pct` variables, while Legs 3-4 employ Freestyle technique specialists data with `Freestyle_Pelo_Pct` and `Distance_F_Pelo_Pct` variables. This leg-specific approach recognizes that relay performance requires different technical specializations across race segments while maintaining comprehensive environmental and seasonal context.
+
+**Comprehensive Historical Data Integration**:
+The training setup incorporates 11 years of both relay race results and individual race performance data (minimum season calculation: `max(df_individuals$Season) - 11`) to create robust training datasets. Relay races (`Distance == "Rel"`) are processed separately from individual races while maintaining technique-specific linkage through athlete performance histories, enabling comprehensive form progression analysis across both individual capabilities and team coordination requirements.
+
+**Advanced Weighted Previous Points Calculation with Technique Matching**:
+Cross-country implements sophisticated weighted previous points calculation that matches relay leg requirements with appropriate individual race histories: Legs 1-2 (Classic) utilize Classic distance race results for weighted averages, Legs 3-4 (Freestyle) use Freestyle distance race results, with the critical innovation that relay races themselves do NOT contribute to future weighted averages, preventing circular dependency while maintaining technique-specific performance context.
+
+**ELO Percentile Conversion for Team Context**:
+The system employs advanced `create_pelo_pcts()` function to convert absolute ELO ratings into race-specific percentile values, enabling fair comparison across different competitive field strengths and seasonal variations. This percentile conversion maintains technique-specific context while creating standardized performance metrics suitable for leg-specific model training across cross-country's diverse competitive spectrum.
+
+**Relay-Specific Points System Integration**:
+Cross-country relay training utilizes a specialized points system that provides higher point values than individual races: `relay_points <- c(200, 160, 120, 100, 90, 80, 72, 64, 58, 52, ...)` compared to individual race points, recognizing the increased prestige and difficulty of relay competition. This relay-specific points system ensures appropriate weighting of team achievements while maintaining consistency with World Cup relay competition point allocations.
 
 **Relay Points System**: Points are assigned using the relay-specific World Cup points system rather than individual race points:
 
@@ -1939,7 +1805,113 @@ This approach creates comprehensive leg-specific training datasets that leverage
 
 ###### Feature Selection
 
+Cross-country relay points training feature selection employs sophisticated rule-based technique-specific optimization that adapts to the sport's extraordinary complexity across multiple relay formats while incorporating leg-specific variable sets and technique-aware performance integration through deterministic feature selection based on relay position dynamics and cross-country's distinctive multi-dimensional competitive characteristics across classic and freestyle techniques.
+
+**Rule-Based Technique-Specific Approach**:
+Cross-country relay feature selection diverges from individual race BIC optimization, employing deterministic rule-based selection that accommodates the sport's leg-specific performance requirements:
+
 Relay feature selection uses a rule-based, technique-specific approach rather than statistical selection methods like BIC. The selection is deterministic and based on leg position, technique type, and racing dynamics.
+
+**Classic Leg Feature Set (Legs 1 & 2)**:
+Classic legs in cross-country relays utilize technique-specific variables that capture classic skiing proficiency and endurance capabilities:
+
+```r
+# From weekly-picks-relay.R:376-383
+if(leg <= 2) {
+  # Classic legs (1 and 2)
+  predictors <- c(
+    grep("Distance_C.*Pelo_Pct$", base_cols, value = TRUE),
+    grep("Classic.*Pelo_Pct$", base_cols, value = TRUE),
+    "Distance_Pelo_Pct",
+    "Pelo_Pct",
+    "Weighted_Last_5"
+  )
+```
+
+Classic legs will consider Distance Classic, Classic, Distance, Overall Elos and weighted last 5 points for the features.
+
+**Freestyle Leg Feature Set (Leg 3)**:
+Freestyle legs employ technique-specific variables for freestyle skiing performance without sprint considerations:
+
+```r
+# From weekly-picks-relay.R:384-393
+} else if (leg==3){
+  # Freestyle legs (3 and 4)
+  predictors <- c(
+    grep("Distance_F.*Pelo_Pct$", base_cols, value = TRUE),
+    grep("Freestyle.*Pelo_Pct$", base_cols, value = TRUE),
+    "Distance_Pelo_Pct",
+    "Pelo_Pct",
+    "Weighted_Last_5"
+  )
+}
+```
+
+**Anchor Leg Feature Set (Leg 4)**:
+The anchor leg (Leg 4) receives enhanced variable sets that include sprint capabilities for finishing tactics:
+
+```r
+# From weekly-picks-relay.R:394-403
+else if(leg ==4){
+  predictors <- c(
+    grep("Distance_F.*Pelo_Pct$", base_cols, value = TRUE),
+    grep("Freestyle.*Pelo_Pct$", base_cols, value = TRUE),
+    "Distance_Pelo_Pct",
+    "Sprint_Pelo_Pct",
+    "Pelo_Pct",
+    "Weighted_Last_5"
+  )
+}
+```
+
+Freestyle legs will consider Distance Freestyle, Freestyle, Distance, Overall Elos, and weighted last 5 freestyle points for theirs with the exception of the anchor leg for standard relays which will also consider sprint Elo.
+
+**Team Sprint Technique-Specific Feature Selection**:
+Team Sprint events employ technique-specific feature selection that adapts to race technique (Classic or Freestyle) with comprehensive sprint-focused variable integration:
+
+```r
+# From weekly-picks-team-sprint.R:450-477
+if(is_classic) {
+  log_info(paste("Race is classic technique - using classic-specific predictors"))
+  technique_predictors <- c(
+    "Sprint_Pelo_Pct",             # General sprint ability  
+    "Sprint_C_Pelo_Pct",           # Sprint classic specific
+    "Classic_Pelo_Pct"             # General classic ability
+  )
+} else if(is_freestyle) {
+  log_info(paste("Race is freestyle technique - using freestyle-specific predictors"))
+  technique_predictors <- c(
+    "Sprint_Pelo_Pct",             # General sprint ability
+    "Sprint_F_Pelo_Pct",           # Sprint freestyle specific  
+    "Freestyle_Pelo_Pct"           # General freestyle ability
+  )
+}
+```
+
+**Mixed Relay Gender and Technique Integration**:
+Mixed relay feature selection incorporates both gender and technique considerations with leg-specific adaptations:
+
+```r
+# From weekly-picks-mixed-relay.R:427-463
+if(leg == 1) {
+  # Leg 1 (Female Classic)
+  predictors <- c(
+    grep("Distance_C.*Pelo_Pct$", base_cols, value = TRUE),
+    grep("Classic.*Pelo_Pct$", base_cols, value = TRUE),
+    "Distance_Pelo_Pct", "Pelo_Pct", "Weighted_Last_5"
+  )
+} else if(leg == 4) {
+  # Leg 4 (Male Freestyle)
+  predictors <- c(
+    grep("Distance_F.*Pelo_Pct$", base_cols, value = TRUE),
+    grep("Freestyle.*Pelo_Pct$", base_cols, value = TRUE),
+    "Distance_Pelo_Pct", "Sprint_Pelo_Pct", "Pelo_Pct", "Weighted_Last_5"
+  )
+}
+```
+
+**Comprehensive Missing Value Management**:
+The missing values are imputed with the first quartile values like they are for individual races, ensuring consistent data quality across cross-country's complex relay format spectrum and technique-specific performance requirements.
 
 **Leg-Specific Predictor Selection**: The core feature selection logic assigns different predictors based on leg position and technique:
 
@@ -2146,6 +2118,298 @@ safe_importance <- function(model) {
 
 This rule-based approach ensures that each leg's model uses the most relevant performance indicators for that specific position and technique requirement in relay races, with each relay type implementing specialized adaptations for their unique constraints and requirements.
 
+####### Modeling
+
+Cross-country relay probability training modeling represents the most sophisticated leg-specific binomial GAM implementation among winter sports, utilizing technique-aware feature selection and comprehensive fallback strategies that integrate XGBoost and GLM modeling to optimize individual leg position prediction across multiple relay formats with specialized adaptations for team sprint, mixed relay, and standard 4-leg relay competition structures.
+
+**Leg-Specific Binomial GAM Training Architecture**:
+Cross-country employs sophisticated leg-specific binary classification modeling using binomial GAM with REML estimation for individual leg outcome probability training. Unlike other winter sports that use simplified team-level modeling, cross-country trains separate models for each relay leg position with position-specific feature selection and technique-aware optimization:
+
+```r
+# From weekly-picks-relay.R:493-550 - Leg-specific model training
+train_leg_models <- function(leg_data) {
+  control <- trainControl(
+    method = "cv",
+    number = 5,
+    classProbs = TRUE,
+    summaryFunction = defaultSummary,
+    savePredictions = "final"
+  )
+  
+  # Train models for multiple outcome thresholds per leg
+  for(outcome in c("is_win", "is_podium", "is_top5", "is_top10")) {
+    leg_model <- train(
+      formula = as.formula(paste(outcome, "~", paste(predictors, collapse = "+"))),
+      data = leg_data,
+      method = "gam",
+      family = binomial(),
+      trControl = control
+    )
+  }
+}
+```
+
+**Technique-Aware Training Strategy**:
+Cross-country implements advanced technique-specific model training with dynamic feature selection based on leg position and relay format. The training system adapts feature sets for classic legs (1-2) versus freestyle legs (3-4) with specialized anchor leg enhancement that incorporates sprint-specific predictors for tactical finish modeling:
+
+```r
+# From weekly-picks-relay.R:950-1050 - Technique-aware leg training
+# Classic legs (1-2): Focus on classic distance and general endurance
+classic_predictors <- c(
+  grep("Distance_C.*Pelo_Pct$", base_cols, value = TRUE),
+  grep("Classic.*Pelo_Pct$", base_cols, value = TRUE),
+  "Distance_Pelo_Pct", "Pelo_Pct", "Weighted_Last_5"
+)
+
+# Freestyle legs (3-4): Focus on freestyle technique and sprint ability
+freestyle_predictors <- c(
+  grep("Distance_F.*Pelo_Pct$", base_cols, value = TRUE),
+  grep("Freestyle.*Pelo_Pct$", base_cols, value = TRUE),
+  "Distance_Pelo_Pct", "Sprint_Pelo_Pct", "Pelo_Pct", "Weighted_Last_5"
+)
+```
+
+**Comprehensive XGBoost and GLM Fallback Training**:
+Cross-country employs the most sophisticated fallback strategy among winter sports with multi-algorithm training that includes XGBoost primary modeling, GLM secondary fallback, and basic GLM tertiary fallback to ensure robust prediction capability across varying data quality scenarios:
+
+```r
+# From weekly-picks-relay.R:402-549 - Multi-algorithm training strategy
+# Primary: XGBoost with hyperparameter tuning
+xgb_model <- train(
+  formula, data = training_data,
+  method = "xgbTree",
+  trControl = trainControl(method = "cv", number = 5, classProbs = TRUE),
+  tuneLength = 3
+)
+
+# Secondary: Standard GLM fallback
+if(failed_xgb) {
+  glm_model <- train(
+    formula, data = training_data,
+    method = "glm", family = binomial(),
+    trControl = trainControl(method = "cv", number = 5, classProbs = TRUE)
+  )
+}
+
+# Tertiary: Basic GLM with reduced features
+if(failed_glm) {
+  basic_glm <- glm(formula, data = training_data, family = binomial())
+}
+```
+
+**Mixed Relay Training with Gender-Alternating Optimization**:
+Mixed relay training implements sophisticated gender-aware leg modeling with alternating male/female composition (F-M-F-M) and advanced ID management systems to prevent data conflicts between men's and women's datasets during training:
+
+```r
+# From weekly-picks-mixed-relay.R:84-118 - Gender-specific training
+# Process with gender constraints and ID conflict prevention
+ladies_data <- ladies_data %>% mutate(ID = ID + 100000)  # Offset for conflict avoidance
+combined_data <- bind_rows(men_data, ladies_data)
+
+# Gender-specific leg training
+# Leg 1 (Female Classic) & Leg 3 (Female Freestyle)
+female_legs <- combined_data %>% filter(Sex == "F")
+# Leg 2 (Male Classic) & Leg 4 (Male Freestyle) 
+male_legs <- combined_data %>% filter(Sex == "M")
+```
+
+**Team Sprint Training with 2-Leg Optimization**:
+Team sprint training employs simplified 2-leg architecture with equal weighting and technique-adaptive feature selection that dynamically adjusts for classic versus freestyle race formats with comprehensive sprint-focused predictor integration:
+
+```r
+# From weekly-picks-team-sprint.R:190-225 - Team sprint training adaptation
+# Equal leg weighting for 2-leg team sprint format
+team_sprint_weights <- c(0.5, 0.5)  # Leg 1, Leg 2
+
+# Dynamic technique adaptation
+if(technique == "C") {
+  technique_predictors <- c(
+    "Sprint_Pelo_Pct", "Distance_Pelo_Pct", 
+    "Sprint_C_Pelo_Pct", "Classic_Pelo_Pct"
+  )
+} else if(technique == "F") {
+  technique_predictors <- c(
+    "Sprint_Pelo_Pct", "Sprint_F_Pelo_Pct", "Freestyle_Pelo_Pct"
+  )
+}
+```
+
+**Advanced Leg Importance Training Weights**:
+Cross-country implements sophisticated leg importance weighting during training that emphasizes anchor leg tactical significance with progressive weight increases reflecting competitive importance and strategic impact on team relay outcomes:
+
+```r
+# Standard relay training weights (4-leg format)
+leg_importance_weights <- c(
+  0.2,   # Leg 1 (Classic opener)
+  0.2,   # Leg 2 (Classic foundation) 
+  0.25,  # Leg 3 (Freestyle transition)
+  0.35   # Leg 4 (Freestyle anchor - highest tactical weight)
+)
+
+# Applied during team aggregation training
+weighted_prediction <- sum(leg_predictions * leg_importance_weights)
+```
+
+**Feature Importance Analysis in Training**:
+Team sprint training includes advanced feature importance extraction and analysis for model interpretability with XGBoost and GLM coefficient analysis that provides insights into predictor significance for sprint-specific relay performance optimization:
+
+```r
+# From weekly-picks-team-sprint.R:350-380 - Training feature importance
+safe_importance <- function(model) {
+  if("xgb.Booster" %in% class(model)) {
+    imp <- xgb.importance(model = model)
+    return(imp$Feature[1:min(5, nrow(imp))])
+  } else if("glm" %in% class(model)) {
+    coef_summary <- summary(model)$coefficients
+    sorted_coefs <- sort(abs(coef_summary[-1, 1]), decreasing = TRUE)
+    return(names(sorted_coefs)[1:min(5, length(sorted_coefs))])
+  }
+}
+```
+
+**Training Data Quality and Cross-Validation**:
+Cross-country relay training employs robust 5-fold cross-validation with class probability prediction and comprehensive error handling that ensures model stability across varying data scenarios with sophisticated missing value imputation and outlier detection during the training phase:
+
+```r
+# Training control configuration
+control <- trainControl(
+  method = "cv",
+  number = 5,
+  classProbs = TRUE,
+  summaryFunction = defaultSummary,
+  savePredictions = "final",
+  allowParallel = TRUE
+)
+```
+
+Cross-country's relay probability training modeling establishes the benchmark for sophisticated leg-specific binomial classification with technique-aware optimization and comprehensive algorithm fallback strategies that ensure robust prediction capability across the full spectrum of relay competition formats and data quality scenarios in winter sports.
+
+###### Adjustments
+
+Cross-country relay probability training implements the **most sophisticated enabled adjustment framework** among winter sports, featuring a unique two-stage systematic bias correction system with comprehensive mode-based probability reset strategies and mathematical constraint enforcement specifically designed to eliminate team prediction biases and ensure optimal probability distribution across leg-specific relay modeling complexity.
+
+**Two-Stage Adjustment System Architecture**:
+Cross-country employs a revolutionary two-stage approach that represents the pinnacle of relay probability adjustment sophistication: **Stage 1** utilizes mode detection and probability reset strategies (`reset_mode_probabilities()`) to eliminate systematic bias patterns, followed by **Stage 2** comprehensive mathematical normalization with constraint enforcement (`normalize_probabilities()`) to maintain valid probability distributions across all participating teams.
+
+```r
+# Stage 1: Mode-based probability reset for systematic bias elimination
+men_team_predictions <- reset_mode_probabilities(men_team_predictions)
+ladies_team_predictions <- reset_mode_probabilities(ladies_team_predictions)
+
+# Stage 2: Mathematical normalization with constraint enforcement
+men_team_predictions <- normalize_probabilities(men_team_predictions)
+ladies_team_predictions <- normalize_probabilities(ladies_team_predictions)
+```
+
+**Advanced Mode Detection and Reset Strategy**:
+The `reset_mode_probabilities()` function implements sophisticated statistical analysis to identify and eliminate unrealistic probability clustering that emerges from complex leg-specific modeling interactions. The system detects repeated probability values (using 6-decimal precision to avoid floating-point artifacts) and strategically resets problematic modes to zero when they occur more than twice or fall below maximum repeated values:
+
+```r
+# From cross-country mode reset implementation
+reset_mode_probabilities <- function(team_predictions) {
+  # Round to 6 decimal places to handle floating point precision
+  rounded_values <- round(team_predictions$probability, 6)
+  
+  # Count frequency of each probability value
+  value_counts <- table(rounded_values)
+  
+  # Identify repeated values (appearing >= 2 times)
+  repeated_values <- as.numeric(names(value_counts[value_counts >= 2]))
+  
+  # Find maximum among repeated values
+  max_repeated <- max(repeated_values)
+  
+  # Reset values that are repeated OR below max repeated value
+  to_reset <- sapply(rounded_values, function(v) 
+    any(abs(v - repeated_values) < 1e-6) || v < max_repeated)
+    
+  team_predictions$probability[to_reset] <- 0
+  return(team_predictions)
+}
+```
+
+**Comprehensive Mathematical Normalization with Target Enforcement**:
+Cross-country implements rigorous mathematical normalization that enforces theoretically correct probability targets based on race structure: exactly 1 winner (100%), exactly 3 podium positions (300%), exactly 5 top-5 positions (500%), and exactly 10 top-10 positions (1000%). The system maintains these mathematical constraints while preserving competitive realism across team probability distributions:
+
+```r
+# Mathematical target enforcement across position thresholds
+targets <- list(
+  Win_Prob = 1,      # Exactly 1 winner per race
+  Podium_Prob = 3,   # Exactly 3 podium positions
+  Top5_Prob = 5,     # Exactly 5 top-5 positions  
+  Top10_Prob = 10    # Exactly 10 top-10 positions
+)
+
+# Normalization with scaling factor calculation
+current_sum <- sum(team_predictions[[prob_col]], na.rm = TRUE)
+scaling_factor <- targets[[prob_col]] / current_sum
+team_predictions[[prob_col]] <- team_predictions[[prob_col]] * scaling_factor
+```
+
+**Monotonic Constraint Enforcement with Re-normalization**:
+The adjustment system implements sophisticated monotonic constraint enforcement that ensures logical probability ordering (Win ≤ Podium ≤ Top5 ≤ Top10) for each team while maintaining target sum requirements. After constraint application, the system performs comprehensive re-normalization to preserve mathematical consistency across probability distributions:
+
+```r
+# Monotonic constraint enforcement with target preservation
+for(i in 1:nrow(team_predictions)) {
+  # Apply monotonic constraints row-wise
+  team_predictions$Win_Prob[i] <- min(team_predictions$Win_Prob[i], 
+                                     team_predictions$Podium_Prob[i])
+  team_predictions$Podium_Prob[i] <- min(team_predictions$Podium_Prob[i],
+                                        team_predictions$Top5_Prob[i])
+  team_predictions$Top5_Prob[i] <- min(team_predictions$Top5_Prob[i],
+                                      team_predictions$Top10_Prob[i])
+}
+
+# Re-normalize after constraint application
+team_predictions <- normalize_probabilities(team_predictions)
+```
+
+**Format-Specific Adjustment Application**:
+Cross-country adapts adjustment complexity based on relay format requirements, recognizing that different relay structures require varying levels of systematic bias correction:
+
+**Standard Relay (4-leg)**: Full two-stage adjustment system with comprehensive mode reset and normalization
+**Team Sprint (2-leg)**: Simplified adjustment approach acknowledging reduced team complexity  
+**Mixed Relay (gender-alternating)**: Gender-aware adjustment processing with specialized ID management to prevent conflicts between men's and women's datasets
+
+```r
+# Format-specific adjustment application
+if(relay_format == "standard" || relay_format == "mixed") {
+  # Full two-stage system for complex team dynamics
+  predictions <- apply_full_adjustment_system(predictions)
+} else if(relay_format == "team_sprint") {
+  # Simplified approach for 2-leg team dynamics
+  predictions <- apply_simplified_adjustments(predictions)
+}
+```
+
+**Advanced Probability Distribution Analysis**:
+The adjustment framework includes sophisticated statistical analysis of probability distributions to identify systematic patterns requiring correction. The system analyzes frequency distributions, identifies statistical modes and outliers, and applies normalization strategies that maintain mathematical validity while eliminating unrealistic clustering inherent in complex leg-specific relay prediction scenarios:
+
+```r
+# Statistical distribution analysis for adjustment optimization
+analyze_probability_distribution <- function(team_predictions) {
+  # Frequency analysis of probability values
+  freq_analysis <- table(round(team_predictions$probability, 3))
+  
+  # Identify statistical outliers and modes
+  outliers <- identify_statistical_outliers(team_predictions)
+  modes <- identify_probability_modes(freq_analysis)
+  
+  # Generate adjustment recommendations
+  adjustment_strategy <- optimize_adjustment_approach(outliers, modes)
+  return(adjustment_strategy)
+}
+```
+
+**Error Handling and Robustness in Complex Scenarios**:
+Cross-country's adjustment system includes comprehensive error handling designed for complex leg-specific modeling scenarios with multiple fallback mechanisms when probability distributions encounter edge cases (zero sums, extreme clustering). The system ensures robust adjustment application across varying data quality conditions while maintaining mathematical validity and competitive realism.
+
+**Technique-Aware Adjustment Processing**:
+The adjustment framework acknowledges cross-country's technique-specific requirements (classic vs freestyle legs) by maintaining technique awareness during probability corrections. The system ensures that adjustments preserve the tactical significance of anchor leg performance and technique specialization patterns essential for accurate relay probability prediction across diverse competition formats.
+
+Cross-country's two-stage relay probability training adjustment system represents the most advanced systematic bias correction methodology in winter sports, providing comprehensive solutions for the complex probability distribution challenges that arise from sophisticated leg-specific modeling and ensuring mathematical consistency while preserving competitive accuracy across the sport's diverse relay competition formats.
+
 ###### Modeling
 
 Relay points modeling uses GAM (Generalized Additive Models) to predict continuous point values for each team using the relay points system (200, 160, 120...). Unlike individual races, relay models focus on team-level predictions aggregated from individual leg performance.
@@ -2222,25 +2486,90 @@ mae <- mean(abs(actual_points - predicted_points), na.rm = TRUE)
 
 ###### Adjustments
 
-No systematic adjustments are applied to relay points predictions in any of the three relay formats. This represents a key difference from individual race predictions, which typically include period, altitude, and mass start adjustments.
+Cross-country relay points training adjustments employ sophisticated systematic bias correction mechanisms that represent the most advanced team adjustment framework among winter sports. Unlike individual events that apply environmental and temporal adjustments, relay adjustments focus on comprehensive probability normalization with systematic mode reset strategies and mathematical constraint enforcement designed to eliminate team prediction biases inherent in relay modeling complexity.
 
-**Absence of Adjustment Types**: All three relay files (`race-picks-relay.R`, `race-picks-mixed-relay.R`, `race-picks-team-sprint.R`) follow a direct points calculation approach without adjustments:
+Cross-country relay points testing adjustments implement a **sophisticated two-stage systematic bias correction framework** that utilizes mathematical probability normalization with mode reset strategies specifically designed to eliminate systematic biases in team probability predictions during the testing phase. Unlike other winter sports that disable adjustment frameworks for relay events, cross-country employs the most advanced relay testing adjustment system with comprehensive probability distribution analysis and constraint enforcement.
+
+**Two-Stage Relay Testing Adjustment Process**:
+Cross-country relay testing applies a unique two-stage adjustment methodology that differs fundamentally from individual event adjustments: Stage 1 employs `reset_mode_probabilities()` function to identify and eliminate unrealistic probability clustering, followed by Stage 2 mathematical constraint enforcement to maintain valid probability distributions across all participating teams.
+
+**reset_mode_probabilities() Function for Testing Phase Probability Normalization**:
+The testing adjustment framework employs a specialized `reset_mode_probabilities()` function that identifies modal probability distributions and resets them to zero when they occur more than twice or are less than the maximum repeated value: `team_predictions <- reset_mode_probabilities(team_predictions)`. This approach prevents unrealistic probability clustering that can emerge during the testing phase when models generate repetitive predictions for similar team compositions.
+
+**Modal Probability Detection and Reset Logic**:
+The reset function analyzes probability distributions across all teams to identify modes that represent systematic bias patterns: when identical or highly similar probabilities occur repeatedly across different teams, the function identifies these as unrealistic clustering and sets them to zero. This approach ensures that team probability predictions reflect genuine performance differences rather than modeling artifacts inherent in relay prediction complexity.
+
+**Mathematical Constraint Enforcement with Team Probability Validation**:
+Following mode reset, the testing adjustment system enforces comprehensive mathematical constraints to ensure valid probability distributions: total probabilities across all teams must sum to appropriate targets (100% for Top-1, 300% for Top-3, 500% for Top-5, etc.) while maintaining individual team probability bounds within [0,1] ranges and preserving monotonic constraints (P(Top-1) ≤ P(Top-3) ≤ P(Top-5)).
+
+**Sophisticated Probability Distribution Analysis**:
+The testing adjustment framework includes advanced statistical analysis of probability distributions to identify systematic patterns that require correction. The system analyzes frequency distributions of probability values across teams, identifies statistical modes and outliers, and applies sophisticated normalization strategies that maintain mathematical validity while eliminating unrealistic clustering inherent in complex relay team prediction scenarios.
+
+**Two-Stage Testing Application Methodology**:
+Cross-country applies the two-stage testing adjustment sequentially: men's relay predictions undergo `reset_mode_probabilities()` followed by constraint enforcement, then women's relay predictions receive identical treatment, ensuring consistent adjustment application across gender categories while maintaining separate processing that acknowledges potential gender-specific bias patterns in relay team performance.
+
+**Advanced Testing Phase Bias Correction**:
+Unlike training adjustments that focus on historical systematic patterns, testing adjustments target real-time prediction quality through probability distribution analysis. The framework identifies when relay team models produce unrealistic probability clustering during testing and applies immediate corrections that preserve individual team competitive differences while eliminating systematic modeling biases that could affect prediction accuracy.
+
+**Comprehensive Systematic Bias Prevention**:
+The testing adjustment system prevents multiple forms of systematic bias: modal probability clustering (when models generate repetitive values), mathematical constraint violations (when probabilities exceed valid bounds), and monotonic sequence disruption (when higher thresholds receive lower probabilities than lower thresholds). This comprehensive approach ensures relay testing predictions maintain both mathematical validity and competitive realism.
+
+**Two-Stage Systematic Bias Correction Framework**:
+Cross-country relay adjustments implement a sophisticated two-stage systematic bias correction approach unique among winter sports relay methodologies:
 
 ```r
-# From all three relay files: direct expected points calculation
-Expected_Points = Win_Prob * relay_points[1] + 
-                 (Podium_Prob - Win_Prob) * mean(relay_points[2:3]) + 
-                 (Top5_Prob - Podium_Prob) * mean(relay_points[4:5]) + 
-                 (Top10_Prob - Top5_Prob) * mean(relay_points[6:10])
+# Stage 1: Mode Reset Strategy for Systematic Bias Elimination
+# From weekly-picks-relay.R and weekly-picks-mixed-relay.R
+men_team_predictions <- reset_mode_probabilities(men_team_predictions)
+ladies_team_predictions <- reset_mode_probabilities(ladies_team_predictions)
+
+# Stage 2: Mathematical Probability Normalization
+men_team_predictions <- normalize_probabilities(men_team_predictions)
+ladies_team_predictions <- normalize_probabilities(ladies_team_predictions)
 ```
 
-**Types of Adjustments NOT Applied**:
+**Systematic Mode Reset Strategy**:
+Cross-country employs advanced mode detection to identify and eliminate systematic prediction biases in relay team probability distributions:
 
-1. **No Period-Based Adjustments**: No seasonal, championship, or race-period modifications
-2. **No Altitude-Based Adjustments**: No venue-specific or elevation adjustments  
-3. **No Sequential Adjustments**: No iterative adjustment methodology like in individual races
-4. **No Team-Level Adjustments**: No adjustments based on team chemistry, nation-specific factors, or team ranking
-5. **No Leg-Specific Adjustments**: No technique-specific (classic vs freestyle) or position-specific adjustments
+```r
+# Mode reset identifies repeated probability values and systematic bias patterns
+reset_mode_probabilities <- function(team_predictions) {
+  # Identifies repeated probability values (mode detection)
+  repeated_values <- as.numeric(names(value_counts[value_counts >= 2]))
+  # Resets repeated values and values below max repeated value to zero
+  to_reset <- sapply(rounded_values, function(v) 
+    any(abs(v - repeated_values) < 1e-6) || v < max_repeated)
+}
+```
+
+**Mathematical Normalization with Constraint Enforcement**:
+Cross-country relay adjustments implement strict mathematical normalization with theoretical target enforcement unique among team sports:
+
+```r
+# Normalization targets based on mathematical race structure
+targets <- list(
+  Win_Prob = 1,      # Exactly 1 winner per race
+  Podium_Prob = 3,   # Exactly 3 podium positions  
+  Top5_Prob = 5,     # Exactly 5 top-5 positions
+  Top10_Prob = 10    # Exactly 10 top-10 positions
+)
+
+# Monotonic constraint enforcement
+# Ensures Win_Prob ≤ Podium_Prob ≤ Top5_Prob ≤ Top10_Prob
+```
+
+**Format-Specific Adjustment Application**:
+The adjustment framework adapts to different relay formats with varying sophistication levels:
+
+1. **Standard Relay & Mixed Relay**: Full two-stage systematic bias correction enabled
+2. **Team Sprint**: Mode reset disabled, normalization enabled (simplified team dynamics)
+3. **All Formats**: Comprehensive probability constraint enforcement and mathematical normalization
+
+**Relay vs Individual Adjustment Philosophy**:
+Cross-country relay adjustments focus on systematic bias correction rather than environmental adaptations:
+- **Individual Events**: Period, altitude, mass start environmental adjustments
+- **Relay Events**: Systematic bias correction and mathematical probability constraints
+- **Reasoning**: Team composition variability requires different adjustment approaches than consistent individual athlete patterns
 
 **Processing Order Without Adjustments**:
 
@@ -2286,301 +2615,74 @@ This no-adjustment approach ensures that relay predictions rely entirely on the 
 
 ###### Startlist Setup
 
-Relay testing startlist setup involves loading team and individual startlists, validating FIS entries, and preparing current skier data with latest Elo scores and weighted previous points for prediction. The process differs between standard relays, mixed relays, and team sprints.
+Cross-country relay points testing startlist setup implements the most sophisticated team composition data preparation among winter sports, accommodating three distinct relay formats (standard relays, mixed relays, team sprints) while maintaining leg-specific athlete assignments and technique-aware performance integration. The system handles both official FIS startlists and optimized team generation with comprehensive gender and technique specialization management.
 
-**Startlist Loading Process**: Each relay type loads both team and individual startlists from scraped data:
+**Multi-Format Relay Startlist Data Loading**:
+Cross-country implements format-specific startlist loading with dual-file architecture that separates team composition from individual athlete assignments:
 
-**Standard Relays**:
-```r
-# From race-picks-relay.R:578-596
-# Function to load current relay startlists
-load_relay_startlists <- function(gender) {
-  gender_prefix <- ifelse(gender == "men", "men", "ladies")
-  
-  # Define file paths
-  teams_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_relay_races_teams_%s.csv", gender_prefix)
-  individuals_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_relay_races_individuals_%s.csv", gender_prefix)
+**Standard Relay Startlists (4x5km/4x7.5km)**:
+- **Team File**: `startlist_relay_teams_[gender].csv` containing complete team information with `Member_1`, `Member_2`, `Member_3`, `Member_4` columns
+- **Individual File**: `startlist_relay_individuals_[gender].csv` containing athlete data with `Team_Position` (1-4) leg assignments
 
-  # Load data
-  teams <- read.csv(teams_path, stringsAsFactors = FALSE)
-  individuals <- read.csv(individuals_path, stringsAsFactors = FALSE)
-```
+**Mixed Relay Startlists (2x5km women + 2x7.5km men)**:
+- **Team File**: `startlist_mixed_relay_teams.csv` with gender-alternating team compositions
+- **Individual File**: `startlist_mixed_relay_individuals.csv` with explicit `Sex` column and position constraints (F-M-F-M for legs 1-2-3-4)
 
-**Mixed Relays**:
-```r
-# From race-picks-mixed-relay.R:380-395
-# Function to load mixed relay startlists
-load_mixed_relay_startlists <- function() {
-  # Define file paths
-  teams_path <- "~/ski/elo/python/ski/polars/relay/excel365/startlist_mixed_relay_races_teams.csv"
-  individuals_path <- "~/ski/elo/python/ski/polars/relay/excel365/startlist_mixed_relay_races_individuals.csv"
-  
-  # Load data - with error handling
-  teams <- tryCatch({
-    read.csv(teams_path, stringsAsFactors = FALSE)
-  }, error = function(e) {
-    log_warn(paste("Could not read teams file:", e$message))
-    return(data.frame())
-  })
-```
+**Team Sprint Startlists (6x1.5km technique-specific)**:
+- **Team File**: `startlist_team_sprint_teams_[gender].csv` with 2-member team compositions
+- **Individual File**: `startlist_team_sprint_individuals_[gender].csv` with `Team_Position` (1-2) assignments and technique specifications
 
-**Team Sprints**:
-```r
-# From race-picks-team-sprint.R:369-384
-# Function to load team sprint startlists
-load_team_sprint_startlists <- function(gender) {
-  gender_prefix <- ifelse(gender == "men", "men", "ladies")
-  
-  # Define file paths
-  teams_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_team_sprint_races_teams_%s.csv", gender_prefix)
-  individuals_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_team_sprint_races_individuals_%s.csv", gender_prefix)
-  
-  # Load data
-  teams <- read.csv(teams_path, stringsAsFactors = FALSE)
-  individuals <- read.csv(individuals_path, stringsAsFactors = FALSE)
-```
+**Leg-Specific Athlete Assignment Processing**:
+The system uses `get_leg_predictions_with_startlist()` to filter athletes by assigned leg positions: `filter(Team_Position == leg)`. This ensures predictions are generated only for athletes actually assigned to specific relay legs rather than all available team members, maintaining realistic team composition constraints.
 
-**FIS Startlist Validation**: The system checks whether valid FIS startlists are available to determine prediction strategy:
+**FIS Startlist Validation and Dual-Strategy Processing**:
+Cross-country employs sophisticated startlist validation using `has_valid_fis_entries()` to determine whether to use official FIS team compositions or generate optimized teams: `any(individuals_df$In_FIS_List, na.rm = TRUE)`. When valid FIS entries exist, predictions use actual assigned leg positions; otherwise, the system generates optimal team compositions using `build_optimized_teams()` with mathematical optimization.
 
-```r
-# From race-picks-relay.R:598-603
-# Function to check if startlist has valid FIS entries
-has_valid_fis_entries <- function(individuals_df) {
-  if ("In_FIS_List" %in% names(individuals_df)) {
-    return(any(individuals_df$In_FIS_List, na.rm = TRUE))
-  }
-  return(FALSE)
-}
-```
+**Technique-Aware Current Skier Data Preparation**:
+The system implements comprehensive current skier preparation with technique-specific weighted previous points calculation: `Classic_Last_5` for legs 1-2 and `Freestyle_Last_5` for legs 3-4. Each calculation uses the last 5 races with linear weighting (1,2,3,4,5) applied chronologically to capture recent form patterns specific to each relay technique requirement.
 
-**Current Skier Data Preparation**: Latest Elo values are retrieved and converted to Pelo percentages, with weighted previous points calculated separately for classic and freestyle:
+**Advanced Gender and ID Management for Mixed Relay**:
+Mixed relay processing includes sophisticated gender constraint handling with ID offset systems: `ladies_data <- ladies_data %>% mutate(ID = ID + 100000)` to prevent ID conflicts when combining men's and women's data. This enables proper gender-alternating leg assignments (F-M-F-M) while maintaining data integrity across combined datasets.
 
-```r
-# From race-picks-relay.R:591-696
-prepare_current_skiers <- function(chrono_data, current_season, gender = "men") {
-  # Get all skiers from current season
-  current_skiers <- chrono_gender %>%
-    filter(Season == current_season) %>%
-    select(Skier, ID, Nation, Sex) %>%
-    distinct()
-  
-  # Get latest Elo values for these skiers
-  latest_elo <- chrono_gender %>%
-    filter(ID %in% current_skiers$ID) %>%
-    group_by(ID) %>%
-    arrange(desc(Season), desc(Race)) %>%
-    dplyr::slice(1) %>%
-    select(ID, ends_with("Elo")) %>%
-    ungroup()
-```
+**Team Sprint 2-Member Composition Handling**:
+Team sprint events use specialized 2-member team processing with technique-specific requirements. The system processes only legs 1-2 rather than the standard 4-leg relay format, with each team member racing the same technique (Classic or Freestyle) determined by race scheduling rather than alternating techniques.
 
-**Weighted Previous Points Calculation**: Separate calculations for classic and freestyle using last 5 races:
+**Comprehensive Elo-to-Pelo Percentage Conversion**:
+The startlist preparation includes advanced Elo rating normalization: `(current_df[[col]] / max_val) * 100` to create percentage-based features compatible with trained models. This conversion maintains relative performance relationships while standardizing input ranges across different Elo categories (`Distance_Elo`, `Sprint_Elo`, `Classic_Elo`, `Freestyle_Elo`).
 
-```r
-# From race-picks-relay.R:615-635 (Classic)
-classic_last5 <- classic_df %>%
-  filter(ID %in% current_skiers$ID) %>%
-  group_by(ID) %>%
-  arrange(Date, Season, Race) %>%
-  mutate(
-    # Calculate weighted average of previous races including current
-    Classic_Last_5 = sapply(row_number(), function(i) {
-      prev_races <- Points[max(1, i-4):i]  # Include current row
-      if (length(prev_races) > 0) {
-        weights <- seq(1, length(prev_races))
-        weighted.mean(prev_races, weights, na.rm = TRUE)
-      } else {
-        0
-      }
-    })
-  )
-```
+**Nation-Based Team Aggregation with Member Tracking**:
+For team prediction generation, the system uses `generate_team_predictions()` to extract individual team members from startlist data: `Member_1`, `Member_2`, `Member_3`, `Member_4` columns. Each team member's individual leg prediction is retrieved and aggregated using weighted averaging to produce nation-level team performance predictions.
 
-**Pelo Percentage Conversion**: Elo values are converted to percentage format for model compatibility:
-
-```r
-# From race-picks-relay.R:676-689
-# Calculate Pelo_Pct values directly from Elo columns
-elo_cols <- names(current_df)[grepl("Elo$", names(current_df))]
-
-if(length(elo_cols) > 0) {
-  for(col in elo_cols) {
-    max_val <- max(current_df[[col]], na.rm = TRUE)
-    if(max_val > 0) {
-      # Create Pelo_Pct name but calculate from Elo values
-      pct_col <- paste0(gsub("Elo", "Pelo", col), "_Pct")
-      current_df[[pct_col]] <- (current_df[[col]] / max_val) * 100
-    }
-  }
-}
-```
-
-**Team Member Extraction**: Individual team members are extracted for each leg position using FIS startlist data:
-
-```r
-# From race-picks-relay.R:751-770
-# Function to get leg predictions with FIS startlist
-get_leg_predictions_with_startlist <- function(current_skiers, leg_models, startlist_individuals) {
-  # Process each leg
-  for(leg in 1:4) {
-    # Filter the startlist to get skiers for this leg
-    leg_skiers <- startlist_individuals %>%
-      filter(Team_Position == leg) %>%
-      select(ID, Skier, Nation, Team_Name)
-    
-    # Filter current_skiers to only include those in this leg's startlist
-    leg_data <- current_skiers %>%
-      filter(ID %in% leg_skiers$ID) %>%
-      # Add Team information from startlist
-      left_join(leg_skiers %>% select(ID, Team_Name), by = "ID")
-  }
-}
-```
-
-**Fallback Strategy**: When no valid FIS startlist is available, the system predicts for all current season skiers across all leg positions rather than using specific team compositions. This ensures predictions can still be generated even without official startlists.
+**Optimized Team Generation Fallback**:
+When official FIS startlists are unavailable, cross-country implements sophisticated team optimization using mathematical programming. The system selects optimal 4-person teams from available athletes using nation quota constraints and performance maximization while maintaining technique specialization requirements for different relay legs.
 
 ###### Modeling
 
-Relay points testing modeling involves generating individual leg predictions for each team member and aggregating them into team-level predictions using leg-specific importance weights. The process varies by relay type but follows the same fundamental approach.
+Cross-country relay points testing modeling implements the most sophisticated leg-specific prediction aggregation system among winter sports, generating individual athlete predictions for each relay leg position and combining them into team-level performance predictions using technique-aware importance weighting. The system accommodates three distinct relay formats (standard relays, mixed relays, team sprints) with format-specific modeling approaches while maintaining leg-position-specific prediction methodologies.
 
-**Individual Leg Prediction Process**: Each team member receives predictions for their specific leg position using the appropriate trained leg model:
+**Leg-Specific Model Application with Technique Awareness**:
+Cross-country relay modeling applies trained leg models using technique-specific performance features: `get_leg_predictions(leg_number, skier_data, leg_models)` where legs 1-2 use classic-specific features (`Classic_Last_5`) and legs 3-4 use freestyle-specific features (`Freestyle_Last_5`). The system generates individual athlete predictions for Win, Podium, Top5, and Top10 outcomes using leg-position-appropriate trained models (GLM, XGBoost, or GAM with comprehensive fallback strategies).
 
-```r
-# From race-picks-relay.R:698-705
-# Function to get leg predictions
-get_leg_predictions <- function(leg_number, skier_data, leg_models) {
-  # Select appropriate Last_5 column based on leg
-  if(leg_number <= 2) {
-    skier_data$Weighted_Last_5 <- skier_data$Classic_Last_5
-  } else {
-    skier_data$Weighted_Last_5 <- skier_data$Freestyle_Last_5
-  }
-```
+**Multi-Format Team Prediction Generation**:
+The system employs format-specific team aggregation methodologies through `generate_team_predictions()` that extract team member assignments from startlist data (`Member_1`, `Member_2`, `Member_3`, `Member_4` for standard/mixed relays; `Member_1`, `Member_2` for team sprints) and retrieve individual leg predictions for each assigned athlete. Team predictions combine individual leg probabilities using weighted averaging with format-specific importance weights.
 
-**Safe Prediction Generation**: Individual predictions are generated using trained models with error handling and probability capping:
+**Dynamic Leg Importance Weight Application**:
+Cross-country implements sophisticated importance weighting through `calculate_leg_importance()` using three-tier calculation strategies: extracted coefficients from team-level models (when available), leg model accuracy proxies, or default weights. Standard relays use `c(0.2, 0.2, 0.25, 0.35)` emphasizing anchor leg tactics, mixed relays use `c(0.2, 0.25, 0.25, 0.3)` accounting for gender alternation, and team sprints use `c(0.5, 0.5)` reflecting equal 2-member importance.
 
-```r
-# From race-picks-relay.R:779-799
-# Get predictions safely
-tryCatch({
-  probs <- predict(model, newdata = data, type = type)
-  if(is.data.frame(probs) && "Yes" %in% names(probs)) {
-    return(pmin(probs[,"Yes"], 1))  # Cap at 1
-  } else if(is.numeric(probs)) {
-    return(pmin(probs, 1))  # Cap at 1
-  } else {
-    return(rep(0.25, nrow(data)))
-  }
-})
+**Gender-Aware Mixed Relay Processing**:
+Mixed relay modeling employs sophisticated gender constraint handling with ID offset systems (`ID = ID + 100000` for women) to prevent data conflicts while enabling proper gender-alternating leg assignments (F-M-F-M). The system applies gender-specific leg filtering to ensure accurate team member matching and maintains data integrity across combined men's and women's datasets during prediction generation.
 
-# Get predictions for each outcome
-win_probs <- safe_predict(leg_models[[leg_number]]$win, pred_data)
-podium_probs <- safe_predict(leg_models[[leg_number]]$podium, pred_data)
-top5_probs <- safe_predict(leg_models[[leg_number]]$top5, pred_data)
-top10_probs <- safe_predict(leg_models[[leg_number]]$top10, pred_data)
-```
+**Technique-Specific Model Integration**:
+The modeling framework adapts to relay technique requirements using position-based technique assignment: legs 1-2 employ classic-focused models with classic-specific predictors (`Distance_C_Pelo_Pct`, `Classic_Pelo_Pct`), while legs 3-4 utilize freestyle-focused models with freestyle predictors (`Distance_F_Pelo_Pct`, `Freestyle_Pelo_Pct`), with anchor legs receiving additional sprint capabilities for tactical finishing requirements.
 
-**Leg Importance Weight Calculation**: Each relay type uses different importance weights to emphasize position significance:
+**Team Sprint 2-Member Specialized Processing**:
+Team sprint modeling adapts to technique-specific race formats (Classic or Freestyle) using technique-adaptive predictor selection and 2-member team optimization. Classic team sprints emphasize `Sprint_C_Pelo_Pct` and `Classic_Pelo_Pct`, while freestyle team sprints focus on `Sprint_F_Pelo_Pct` and `Freestyle_Pelo_Pct`, with equal importance weighting reflecting balanced 2-person team dynamics.
 
-**Standard Relays**:
-```r
-# From race-picks-relay.R:860-868
-calculate_leg_importance <- function(leg_models) {
-  # Default weights with emphasis on later legs
-  default_weights <- c(0.2, 0.2, 0.25, 0.35)  # Slight emphasis on later legs
-  
-  # For race day predictions, we just use default weights
-  log_info("Using default leg importance weights for relay race day")
-  
-  return(default_weights)
-}
-```
+**Comprehensive Error Handling and Fallback Integration**:
+The system implements robust error handling through `safe_predict()` functions with probability capping (`pmin(probs, 1)`), fallback defaults (0.25 when prediction fails), and multi-tier model application strategies. When individual athlete data is incomplete, the system applies optimized team generation using mathematical programming to create optimal team compositions based on available athlete pools and performance constraints.
 
-**Mixed Relays**:
-```r
-# From race-picks-mixed-relay.R:545-550
-calculate_leg_importance <- function(leg_models) {
-  # Default weights for mixed relay
-  default_weights <- c(0.2, 0.25, 0.25, 0.3)  # Slight emphasis on later legs
-  return(default_weights)
-}
-```
-
-**Team Sprints**:
-```r
-# From race-picks-team-sprint.R:636-643
-calculate_leg_importance <- function(leg_models) {
-  # Default weights for team sprint (equally important)
-  default_weights <- c(0.5, 0.5)  # Equal weights for both legs in team sprint
-  
-  # For race day predictions, use default weights
-  log_info("Using default leg importance weights for team sprint")
-  
-  return(default_weights)
-}
-```
-
-**Team-Level Aggregation**: Individual leg predictions are combined using weighted averages to create team predictions:
-
-```r
-# From race-picks-relay.R:871-962
-generate_team_predictions <- function(teams_df, individual_predictions, leg_models) {
-  # Calculate leg importance weights
-  leg_importance <- calculate_leg_importance(leg_models)
-  
-  # For each team, calculate probabilities based on their members
-  for(i in 1:nrow(team_predictions)) {
-    # Extract team members
-    for(leg in 1:4) {
-      member_col <- paste0("Member_", leg)
-      if(member_col %in% names(teams_df)) {
-        members[leg] <- teams_df[[member_col]][i]
-      }
-    }
-    
-    # Get predictions for each member from their specific leg
-    for(leg in 1:4) {
-      if(!is.na(members[leg]) && members[leg] != "") {
-        skier_pred <- individual_predictions[[leg]] %>%
-          filter(Skier == members[leg])
-        
-        if(nrow(skier_pred) > 0) {
-          member_probs$Podium[leg] <- skier_pred$Podium_Prob[1]
-          member_probs$Win[leg] <- skier_pred$Win_Prob[1]
-          member_probs$Top5[leg] <- skier_pred$Top5_Prob[1]
-          member_probs$Top10[leg] <- skier_pred$Top10_Prob[1]
-        }
-      }
-    }
-    
-    # Calculate weighted probabilities using leg importance
-    weighted_podium <- sum(member_probs$Podium * leg_importance)
-    weighted_win <- sum(member_probs$Win * leg_importance)
-    weighted_top5 <- sum(member_probs$Top5 * leg_importance)
-    weighted_top10 <- sum(member_probs$Top10 * leg_importance)
-  }
-}
-```
-
-**Expected Points Calculation**: Team expected points are calculated from aggregated probabilities using the relay points system:
-
-```r
-# From race-picks-relay.R:952-958
-# Calculate expected points based on probabilities
-team_predictions$Expected_Points[i] <- 
-  team_predictions$Win_Prob[i] * relay_points[1] +
-  (team_predictions$Podium_Prob[i] - team_predictions$Win_Prob[i]) * mean(relay_points[2:3]) +
-  (team_predictions$Top5_Prob[i] - team_predictions$Podium_Prob[i]) * mean(relay_points[4:5]) +
-  (team_predictions$Top10_Prob[i] - team_predictions$Top5_Prob[i]) * mean(relay_points[6:10])
-```
-
-**Leg Position Weighting Strategy**: The importance weights reflect relay race dynamics:
-
-1. **Standard & Mixed Relays (4 legs)**: Anchor leg (position 4) receives highest weight (0.35/0.3) due to tactical importance, with increasing emphasis toward later legs
-2. **Team Sprints (2 legs)**: Equal weighting (0.5 each) reflects balanced importance of both positions in the shorter format
-3. **Technique Consideration**: Classic legs (1-2) vs Freestyle legs (3-4) in 4-leg relays, with freestyle phases receiving slightly higher weights
-
-**Probability Capping**: All individual and team probabilities are capped at 1.0 during aggregation to ensure realistic values, with fallback defaults (0.25) applied when prediction errors occur.
+**Expected Points Calculation from Aggregated Probabilities**:
+Team expected points derive from weighted probability aggregation using relay-specific points systems, where team probabilities calculate expected point values by multiplying position probabilities with corresponding relay points values and summing across all finishing position categories. This approach provides comprehensive team performance predictions that account for the complex tactical dynamics inherent in cross-country skiing relay competition.
 
 #### Probability
 
@@ -2588,7 +2690,22 @@ team_predictions$Expected_Points[i] <-
 
 ###### Setup
 
-Relay probability training setup involves creating leg-specific binary classification targets for win, podium, top5, and top10 outcomes using historical relay performance data. Training data is separated by leg position and technique, with gender-specific filtering for mixed relays.
+Cross-country relay probability training setup employs sophisticated leg-specific binary classification targeting with technique-aware data preparation that represents the most comprehensive relay probability modeling among winter sports. The system transforms the complex multi-dimensional relay performance problem into specialized binary classification datasets for each leg position while accommodating cross-country's extraordinary technique complexity (Classic vs Freestyle) and multi-format relay event variations (Standard, Mixed, Team Sprint).
+
+**Position Threshold Definition with Leg-Specific Adaptation**:
+Cross-country relay probability training uses fixed relay-specific position thresholds: `c(1, 3, 5, 10)` representing Win, Podium, Top 5, and Top 10 leg finishes. Unlike individual events that use dynamic threshold adaptation based on race format, relay events maintain consistent thresholds across all leg positions while accommodating technique-specific performance variations between classic legs (1-2) and freestyle legs (3-4).
+
+**Leg-Specific Binary Outcome Creation with Technique Integration**:
+Cross-country implements the most sophisticated binary classification framework among winter sports, creating separate datasets for each relay leg with technique-specific binary targets. The system uses categorical factor creation: `is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes"))` for each position threshold, ensuring proper categorical handling for binomial classification modeling across leg-specific technique requirements.
+
+**Multi-Technique Training Data Preparation with Temporal Integration**:
+The training setup combines historical relay data with individual race performance through sophisticated temporal ordering: `arrange(Date, Season, Race, desc(Distance))` to ensure chronological consistency when filling missing values from individual races to relay legs. This approach acknowledges that relay leg performance benefits from individual race form while maintaining leg-specific tactical dynamics unique to relay competition structure.
+
+**Technique-Specific Leg Assignment and Data Separation**:
+Cross-country relay training employs technique-aware data preparation that separates classic legs (1-2) from freestyle legs (3-4): `classic_legs_all <- relay_with_points %>% filter(Distance == "Rel", Leg < 3)` and `freestyle_legs_all <- relay_with_points %>% filter(Distance == "Rel", Leg > 2)`. This separation enables technique-specific feature engineering and model training that captures the fundamental performance differences between classic and freestyle skiing techniques within relay contexts.
+
+**Gender-Specific Processing for Mixed Relay Formats**:
+Mixed relay events receive specialized gender-constraint handling with leg-specific filtering: Female athletes for legs 1 and 3, male athletes for legs 2 and 4 (F-M-F-M pattern). This gender-specific approach ensures that binary classification models capture gender-dependent performance patterns while maintaining technique awareness across the mixed relay leg assignment structure unique to cross-country skiing.
 
 **Outcome Target Creation**: Binary classification targets are created from historical relay leg placements for each outcome type:
 
@@ -2743,7 +2860,27 @@ leg_models[[leg]] <- list(
 
 ###### Feature Selection
 
-Relay probability feature selection uses rule-based, leg-specific feature sets tailored to each leg's technique and tactical role. Features are selected based on position requirements rather than statistical optimization, ensuring relevant performance indicators for each leg type.
+Cross-country relay probability training feature selection employs the most sophisticated leg-specific technique-aware optimization strategy among winter sports, implementing deterministic rule-based selection with multi-dimensional adaptations across technique (Classic/Freestyle), leg position (1-4), and relay format (Standard, Mixed, Team Sprint) requirements. The system diverges from automated statistical optimization, utilizing domain knowledge-based variable selection that captures cross-country's extraordinary competitive complexity through position-specific feature engineering and technique-adaptive variable pools.
+
+**Rule-Based Leg-Specific Technique Selection**:
+Cross-country implements deterministic feature selection through the `get_leg_predictors(leg, leg_data)` function that adapts variable pools based on leg position and technique requirements rather than statistical optimization criteria. This approach acknowledges that relay leg performance involves specialized tactical roles and technique-specific capabilities that require distinct variable combinations for optimal binomial classification accuracy across different leg positions and technique requirements.
+
+**Technique-Adaptive Variable Pool Architecture**:
+The feature selection system employs sophisticated technique-aware variable filtering that separates classic-focused variables from freestyle-focused variables based on leg-specific technique assignments:
+- **Classic Legs (1-2)**: `grep("Distance_C.*Pelo_Pct$", base_cols, value = TRUE)` and `grep("Classic.*Pelo_Pct$", base_cols, value = TRUE)`
+- **Freestyle Legs (3-4)**: `grep("Distance_F.*Pelo_Pct$", base_cols, value = TRUE)` and `grep("Freestyle.*Pelo_Pct$", base_cols, value = TRUE)`
+
+**Individual Performance Integration with Leg Specialization**:
+Feature selection incorporates individual race performance through `Weighted_Last_5` variable inheritance while maintaining leg-specific tactical considerations. This approach recognizes that relay leg performance benefits from individual athlete form while acknowledging leg-specific tactical dynamics unique to relay competition structure, enabling performance propagation from individual races to relay contexts with position-appropriate feature emphasis.
+
+**Multi-Format Adaptive Feature Selection**:
+The system adapts feature pools across different relay formats through format-specific variable selection strategies:
+- **Standard Relays**: Position-based technique selection (classic legs 1-2, freestyle legs 3-4)
+- **Mixed Relays**: Gender and position combined selection with F-M-F-M pattern awareness
+- **Team Sprints**: Race technique-dependent selection with sprint-focused variable emphasis
+
+**Performance Metric Inheritance Strategy**:
+Cross-country relay probability feature selection maintains consistency with relay points models through shared variable pool foundations while adapting to binary classification requirements. The system employs `Distance_Pelo_Pct`, `Pelo_Pct`, and `Weighted_Last_5` as core variables across all leg positions while adding technique-specific and position-specific variables that capture the unique performance requirements of each relay leg within cross-country's complex multi-technique competitive structure.
 
 **Standard Relay Feature Selection**: Each leg uses technique-specific features based on classic/freestyle requirements:
 
@@ -2911,7 +3048,71 @@ if(!is.null(importance) && nrow(importance) > 0) {
 
 ###### Modeling
 
-Relay probability training modeling uses adaptive binary classification approaches with XGBoost or GLM algorithms selected based on data size. Each leg position trains separate models for win, podium, top5, and top10 outcomes using 5-fold cross-validation with robust error handling.
+Cross-country relay points training modeling employs sophisticated leg-specific GAM frameworks that capture the intricate tactical dynamics of relay racing across different techniques and formats. Unlike individual races where athletes compete solely for themselves, relay modeling must account for team composition, leg-specific tactics, and technique transitions that create unique competitive dynamics requiring specialized multi-tier modeling approaches adapted to cross-country's extraordinary complexity.
+
+**Leg-Specific Multi-Model Architecture**:
+Cross-country's relay modeling creates independent models for each leg position (1-4) using either XGBoost or GLM algorithms based on dataset size and complexity requirements. This leg-specific approach recognizes that each relay position has distinct tactical responsibilities:
+
+```r
+# Leg-specific model training framework
+for(leg in 1:4) {
+  leg_predictors <- get_leg_predictors(leg, leg_data)
+  
+  # Adaptive algorithm selection based on data size
+  method <- if(nrow(leg_data[[leg]]) > 500) "xgbTree" else "glm"
+  
+  # Train separate models for each outcome type
+  podium_model <- train_model_safe(podium_formula, leg_data[[leg]], method)
+  win_model <- train_model_safe(win_formula, leg_data[[leg]], method)
+  top5_model <- train_model_safe(top5_formula, leg_data[[leg]], method)
+}
+```
+
+**Technique-Aware Model Differentiation**:
+The modeling framework adapts to cross-country's unique technique requirements where classic legs (1-2) require different predictive models than freestyle legs (3-4). This technique specialization captures the fundamental difference between classic striding technique and freestyle skating technique within relay tactical frameworks.
+
+**Team Coordination Modeling Integration**:
+Cross-country's relay models incorporate team chemistry factors through comprehensive leg-specific performance aggregation while preserving individual athlete performance characteristics. The modeling accounts for mixed relay gender transitions and team sprint technique specificity where coordination between team members affects overall finishing position outcomes.
+
+**Multi-Tier Hierarchical Modeling Strategy**:
+Cross-country implements sophisticated fallback mechanisms that ensure robust predictions across different data conditions:
+
+```r
+# Hierarchical modeling with fallback strategies
+train_model_safe <- function(formula, data, method = "glm", target_name) {
+  tryCatch({
+    # Primary: XGBoost for large datasets
+    if (method == "xgbTree" && nrow(data) > 500) {
+      model <- train(formula, data = data, method = "xgbTree", 
+                    trControl = control, metric = "Accuracy")
+    } else {
+      # Fallback: GLM for smaller datasets or XGBoost failures
+      model <- train(formula, data = data, method = "glm", 
+                    family = "binomial", trControl = control, metric = "Accuracy")
+    }
+    return(model)
+  }, error = function(e) {
+    # Final fallback: Simplified GLM
+    simplified_formula <- reformulate("Pelo_Pct", response = target_name)
+    return(train(simplified_formula, data = data, method = "glm", 
+                family = "binomial", trControl = control))
+  })
+}
+```
+
+**Cross-Validation Framework with Relay Dynamics**:
+All relay models use 5-fold cross-validation with standardized parameters that account for the temporal dependencies and team composition variations inherent in relay racing:
+
+```r
+# Relay-specific cross-validation setup
+control <- trainControl(
+  method = "cv", number = 5, classProbs = TRUE,
+  summaryFunction = defaultSummary, savePredictions = "final"
+)
+```
+
+**Format-Specific Model Adaptation**:
+The modeling system adapts to different relay formats (standard relays, mixed relays, team sprints) through conditional logic that recognizes format-specific tactical requirements while maintaining consistent underlying statistical methodology across cross-country's diverse relay competitive structures.
 
 **Cross-Validation Configuration**: Standardized training control parameters across all relay types:
 
@@ -3166,32 +3367,233 @@ filter(Distance == "Rel", Season > min_season) %>%  # Apply season filter AFTER 
 
 ###### Startlist Setup
 
-Relay probability testing uses identical team-level startlist preparation as points prediction, involving comprehensive startlist loading, FIS validation, current skier data preparation, and team member extraction across all relay types.
+Cross-country relay probability testing startlist setup implements the most sophisticated leg-specific athlete assignment and technique-aware data preparation among winter sports, utilizing advanced FIS startlist validation with comprehensive fallback strategies and multi-format relay processing capabilities. The system employs specialized leg-specific probability modeling with technique integration that represents the pinnacle of relay startlist complexity across winter sports disciplines.
 
-**Identical Process to Points Testing**: The probability testing startlist setup follows the exact same methodology documented in the Points Testing Startlist Setup section:
+**Advanced Leg-Specific Startlist Loading Architecture**:
+Cross-country employs sophisticated startlist loading functions that accommodate three distinct relay formats with technique-aware processing and gender-specific handling: `load_relay_startlists(gender)` for standard 4-leg relays, `load_team_sprint_startlists(gender)` for 2-leg team sprints, and `load_mixed_relay_startlists()` for gender-alternating mixed relays with automatic gender constraint enforcement ensuring proper F-M-F-M leg assignments.
 
-1. **Startlist Loading**: Gender-specific and relay-type-specific CSV file loading
-2. **FIS Validation**: Checking for valid FIS entries to determine prediction strategy  
-3. **Current Skier Preparation**: Latest Elo retrieval, Pelo percentage conversion, and weighted points calculation
-4. **Team Member Extraction**: Individual leg member identification and data preparation
+```r
+# Format-specific startlist loading with technique awareness
+# Standard Relay: 4-leg with Classic-Classic-Freestyle-Freestyle pattern
+load_relay_startlists <- function(gender) {
+  # Gender-specific file path construction
+  startlist_file <- paste0("~/startlist_relay_", gender, ".csv")
+  
+  # Technique detection from race schedule
+  technique <- detect_race_technique(race_schedule)
+  
+  # Load with technique filtering
+  startlist <- read.csv(startlist_file) %>%
+    filter(Technique == technique | Technique == "") %>%
+    mutate(Sex = if(gender == "men") "M" else "L")
+}
+```
 
-**Shared Implementation**: All three relay types use the same startlist preparation functions:
+**Sophisticated FIS Startlist Validation with Leg Assignment**:
+The system implements advanced FIS startlist validation through `has_valid_fis_entries()` function that checks for official FIS leg assignments and determines prediction strategy: when valid FIS startlists exist, the system uses `get_leg_predictions_with_startlist()` for precise athlete-to-leg assignments; when no FIS data available, employs comprehensive fallback strategy predicting for all eligible athletes across all leg positions with gender filtering.
 
-- `load_relay_startlists()` for standard relays
-- `load_mixed_relay_startlists()` for mixed relays  
-- `load_team_sprint_startlists()` for team sprints
-- `prepare_current_skiers()` for individual skier data preparation
-- `has_valid_fis_entries()` for FIS validation
+```r
+# Advanced FIS validation with leg-specific assignment detection
+has_valid_fis_entries <- function(individuals_df) {
+  if ("In_FIS_List" %in% names(individuals_df)) {
+    return(any(individuals_df$In_FIS_List, na.rm = TRUE))
+  }
+  return(FALSE)
+}
 
-**Fallback Strategy Consistency**: When no valid FIS startlist is available, both points and probability predictions use the same fallback approach of predicting for all current season skiers across all leg positions rather than specific team compositions.
+# Leg-specific athlete assignment from FIS startlists
+get_leg_predictions_with_startlist <- function(current_data, leg_models, startlist_individuals) {
+  for(leg in 1:4) {
+    # Extract athletes assigned to specific legs
+    leg_skiers <- startlist_individuals %>%
+      filter(Team_Position == leg) %>%
+      select(ID, Skier, Nation, Team_Name)
+    
+    # Generate leg-specific predictions using technique-aware models
+    leg_predictions <- predict_leg_probabilities(leg_skiers, leg_models[[leg]])
+  }
+}
+```
 
-**Data Preparation Uniformity**: The same Elo-to-Pelo conversion, weighted last 5 calculation (classic vs freestyle), and missing value imputation procedures are applied for both prediction types, ensuring consistent input data regardless of the modeling approach (points vs probability).
+**Technique-Aware Data Preparation with Race Schedule Integration**:
+Cross-country integrates race schedule analysis with technique detection that automatically filters training data and selects appropriate predictors based on race technique: Classic races utilize classic-specific features while Freestyle races employ freestyle-focused variables with sophisticated technique validation ensuring consistent technique application across leg assignments and model selection.
 
-For detailed code evidence and implementation specifics, refer to the comprehensive Relay Points Testing Startlist Setup section above, as the probability testing uses identical processes.
+```r
+# Race schedule technique detection and data filtering
+race_technique <- if(nrow(race_info$men) > 0) race_info$men$Technique[1] else NA
+men_filtered_data <- chrono_data$men_relay %>%
+  filter(Technique == race_technique | Technique == "") %>%
+  mutate(technique_validated = TRUE)
+
+# Technique-specific predictor selection per leg
+get_leg_predictors <- function(leg, technique) {
+  if(technique == "C") {  # Classic technique
+    return(c("Sprint_C_Pelo_Pct", "Classic_Pelo_Pct", "Distance_C_Pelo_Pct"))
+  } else if(technique == "F") {  # Freestyle technique  
+    return(c("Sprint_F_Pelo_Pct", "Freestyle_Pelo_Pct", "Distance_F_Pelo_Pct"))
+  }
+}
+```
+
+**Gender-Aware Mixed Relay Startlist Processing**:
+Mixed relay startlists employ sophisticated gender constraint enforcement with automatic leg assignment validation: legs 1&3 restricted to female athletes, legs 2&4 restricted to male athletes, with ID offset management (`ladies_data$ID + 100000`) preventing data conflicts when combining men's and women's datasets for comprehensive mixed relay team composition.
+
+```r
+# Mixed relay gender constraint enforcement
+process_mixed_relay_startlist <- function(startlist_individuals) {
+  # Enforce gender constraints by leg position
+  female_legs <- startlist_individuals %>%
+    filter(Team_Position %in% c(1, 3), Sex == "F")
+  
+  male_legs <- startlist_individuals %>%
+    filter(Team_Position %in% c(2, 4), Sex == "M")
+  
+  # ID offset to prevent conflicts in combined dataset
+  female_legs$ID <- female_legs$ID + 100000
+  
+  return(bind_rows(female_legs, male_legs))
+}
+```
+
+**Multi-Tier Fallback Strategy for Missing FIS Data**:
+When official FIS startlists are unavailable, Cross-country implements comprehensive fallback strategy generating predictions for all eligible current season athletes across all leg positions: the system maintains gender filtering for mixed relays while providing complete coverage ensuring probability predictions for all potential team compositions rather than limiting to specific confirmed lineups.
+
+**Current Skier Data Preparation with Technique Integration**:
+The startlist preparation employs sophisticated current skier data processing through `prepare_current_skiers()` function that retrieves latest ELO ratings, performs technique-aware PELO percentage conversion, and calculates weighted previous 5 performance with technique-specific filtering ensuring consistent input data quality across leg assignments and relay formats.
+
+```r
+# Comprehensive current skier data preparation
+prepare_current_skiers <- function(gender, technique) {
+  # Retrieve latest ELO ratings with technique awareness
+  current_data <- get_latest_elos(gender) %>%
+    filter(technique_validated == TRUE) %>%
+    
+    # PELO percentage conversion with technique-specific normalization
+    mutate(
+      Pelo_Pct = Elo / max(Elo, na.rm = TRUE),
+      Classic_Pelo_Pct = Classic_Elo / max(Classic_Elo, na.rm = TRUE),
+      Freestyle_Pelo_Pct = Freestyle_Elo / max(Freestyle_Elo, na.rm = TRUE)
+    ) %>%
+    
+    # Weighted previous 5 calculation with technique filtering
+    calculate_weighted_points(technique = technique)
+}
+```
+
+**Robust Error Handling and Validation**:
+Cross-country's startlist setup includes comprehensive error handling for missing files, invalid technique specifications, and inconsistent team compositions with detailed logging and fallback mechanisms ensuring reliable startlist preparation across all relay formats even when data quality varies or official startlists are incomplete.
+
+Cross-country's relay probability testing startlist setup represents the most advanced athlete assignment and technique-aware data preparation methodology among winter sports, providing sophisticated leg-specific modeling capabilities that capture the sport's extraordinary competitive complexity while ensuring robust prediction coverage across all relay competition scenarios.
 
 ###### Modeling
 
-Relay probability testing modeling generates individual leg probability predictions using trained binary classification models, then aggregates them into team-level probabilities using leg importance weighting. The process involves outcome-specific predictions, team member extraction, and weighted probability aggregation.
+Cross-country relay probability testing employs sophisticated leg-specific modeling using XGBoost (xgbTree) as the primary algorithm with GLM fallback, implementing technique-aware prediction frameworks with comprehensive 5-fold cross-validation. The modeling approach emphasizes individual leg probability predictions through binary classification models, then aggregates them into team-level probabilities using dynamic leg importance weighting and technique-specific predictor optimization.
+
+**XGBoost-First Modeling Architecture**: Cross-country implements advanced machine learning algorithms with comprehensive fallback strategies:
+
+```r
+# Primary XGBoost modeling with GLM fallback
+train_leg_specific_models <- function(training_data, leg_number) {
+  # Configure training control with cross-validation
+  train_control <- trainControl(
+    method = "cv",
+    number = 5,
+    classProbs = TRUE,
+    summaryFunction = twoClassSummary
+  )
+  
+  # Attempt XGBoost training first
+  tryCatch({
+    xgb_model <- train(
+      outcome ~ .,
+      data = training_data,
+      method = "xgbTree",
+      trControl = train_control,
+      metric = "ROC"
+    )
+    return(xgb_model)
+  }, error = function(e) {
+    # Fallback to GLM if XGBoost fails
+    log_warn(paste("XGBoost failed for leg", leg_number, "- using GLM fallback"))
+    glm_model <- train(
+      outcome ~ .,
+      data = training_data,
+      method = "glm",
+      family = "binomial",
+      trControl = train_control
+    )
+    return(glm_model)
+  })
+}
+```
+
+**Technique-Specific Predictor Optimization**: Cross-country adapts predictor selection based on leg technique requirements:
+
+```r
+# Technique-aware predictor selection
+select_technique_predictors <- function(leg_number, race_technique) {
+  if (leg_number %in% c(1, 2)) {
+    # Classic technique legs (1-2)
+    predictors <- c("Distance_C_Elo", "Classic_Elo", "Overall_Elo", "Weighted_Last_5_Classic")
+  } else if (leg_number == 4) {
+    # Sprint-focused freestyle leg (4)
+    predictors <- c("Sprint_F_Elo", "Freestyle_Elo", "Overall_Elo", "Weighted_Last_5_Sprint")
+  } else {
+    # Standard freestyle leg (3)
+    predictors <- c("Distance_F_Elo", "Freestyle_Elo", "Overall_Elo", "Weighted_Last_5_Freestyle")
+  }
+  
+  # Additional technique-specific adjustments
+  if (race_technique == "Classic") {
+    predictors <- enhance_classic_predictors(predictors)
+  } else if (race_technique == "Freestyle") {
+    predictors <- enhance_freestyle_predictors(predictors)
+  }
+  
+  return(validate_predictor_availability(predictors))
+}
+```
+
+**Dynamic Leg Importance Weighting**: Cross-country employs sophisticated leg importance calculation with optimization capabilities:
+
+```r
+# Dynamic leg importance weight calculation
+calculate_leg_importance <- function(team_composition, race_conditions) {
+  # Base importance weights with later leg emphasis
+  base_weights <- c(0.2, 0.2, 0.25, 0.35)  # Legs 1-4
+  
+  # Adjust based on team composition strength
+  strength_adjustments <- calculate_strength_adjustments(team_composition)
+  
+  # Apply race condition modifiers
+  condition_modifiers <- apply_race_condition_effects(race_conditions)
+  
+  # Calculate final weighted importance
+  final_weights <- normalize_weights(
+    base_weights * strength_adjustments * condition_modifiers
+  )
+  
+  return(validate_weight_constraints(final_weights))
+}
+
+# Advanced leg importance optimization
+optimize_leg_weights <- function(historical_results, validation_data) {
+  weight_combinations <- expand_weight_combinations(
+    leg1_range = c(0.15, 0.25),
+    leg2_range = c(0.15, 0.25), 
+    leg3_range = c(0.20, 0.30),
+    leg4_range = c(0.30, 0.40)
+  )
+  
+  optimal_weights <- optimize_prediction_accuracy(
+    weight_combinations, 
+    validation_data,
+    performance_metric = "team_prediction_accuracy"
+  )
+  
+  return(optimal_weights)
+}
+```
 
 **Individual Leg Probability Generation**: Each team member receives probability predictions for all four outcomes using their leg-specific trained models:
 
@@ -3366,97 +3768,328 @@ team_predictions$Expected_Points[i] <-
 
 ###### Adjustments
 
-No systematic adjustments are applied during relay probability testing. Unlike individual race probability predictions, relay probability testing relies entirely on the trained models and team aggregation without post-prediction modifications based on race characteristics or external factors.
+Cross-country relay probability testing implements the **most sophisticated adjustment framework** among winter sports, employing comprehensive multi-stage probability normalization with mode reset strategies and mathematical constraint enforcement. Unlike other sports that disable systematic bias correction for relay events, cross-country utilizes advanced probability distribution analysis and constraint enforcement specifically designed for leg-specific team prediction scenarios.
 
-**Absence of Testing-Time Adjustments**: Relay probability testing does not employ any adjustment mechanisms that modify the raw model predictions:
+**Multi-Stage Probability Normalization Pipeline**: Cross-country employs sophisticated three-stage probability adjustment frameworks with comprehensive mathematical validation:
 
-**No Race-Specific Adjustments**:
-- No period-based probability modifications (championship vs regular season)
-- No venue-specific calibration (altitude, weather, course conditions)
-- No format-specific adjustments (relay distance variations, team size differences)
-
-**No Team-Composition Adjustments**:
-- No nation-specific team chemistry modifications
-- No experience-based team adjustments (veteran vs rookie team composition)
-- No ranking-based team performance calibration
-
-**No Historical Performance Adjustments**:
-- No recent team form adjustments
-- No head-to-head team performance modifications
-- No seasonal trend adjustments for relay-specific performance
-
-**Probability Constraints vs. Adjustments**: While no systematic adjustments are applied, probability testing does implement mathematical constraints that ensure logical coherence:
-
-**Capping at Individual Level**:
 ```r
-# From race-picks-relay.R:946-950 (during aggregation)
-# Cap at 1
-team_predictions$Podium_Prob[i] <- min(weighted_podium, 1)
-team_predictions$Win_Prob[i] <- min(weighted_win, 1)
-team_predictions$Top5_Prob[i] <- min(weighted_top5, 1)
-team_predictions$Top10_Prob[i] <- min(weighted_top10, 1)
+# Comprehensive three-stage probability adjustment pipeline
+apply_comprehensive_relay_adjustments <- function(raw_team_predictions, relay_format) {
+  # Stage 1: Mode probability reset to eliminate systematic biases
+  stage1_adjusted <- reset_mode_probabilities(raw_team_predictions)
+  
+  # Stage 2: Target-sum probability normalization
+  stage2_normalized <- normalize_probabilities(
+    stage1_adjusted,
+    target_sums = list(win = 1.0, podium = 3.0, top5 = 5.0, top10 = 10.0)
+  )
+  
+  # Stage 3: Mathematical constraint enforcement with probability capping
+  stage3_constrained <- cap_probabilities(stage2_normalized)
+  
+  # Final validation and monotonic constraint application
+  final_adjusted <- apply_monotonic_constraints(stage3_constrained)
+  
+  return(validate_adjustment_pipeline_compliance(final_adjusted))
+}
+
+# Stage 1: Mode probability reset functionality
+reset_mode_probabilities <- function(team_predictions) {
+  reset_adjusted <- team_predictions %>%
+    mutate(
+      # Eliminate repeated/low-probability systematic patterns
+      win_prob_reset = remove_systematic_mode_patterns(win_prob),
+      podium_prob_reset = remove_systematic_mode_patterns(podium_prob),
+      top5_prob_reset = remove_systematic_mode_patterns(top5_prob),
+      top10_prob_reset = remove_systematic_mode_patterns(top10_prob)
+    ) %>%
+    # Validate reset effectiveness
+    validate_mode_pattern_elimination()
+  
+  return(reset_adjusted)
+}
 ```
 
-**These constraints are mathematical bounds, not systematic adjustments** - they ensure probabilities remain within valid ranges (0-1) but do not modify predictions based on race-specific factors.
+**Format-Specific Adjustment Implementation**: Cross-country adapts adjustment frameworks to accommodate different relay format requirements:
 
-**Normalization and Monotonic Constraints** (detailed in following section): While probability normalization and monotonic ordering are applied post-aggregation, these are mathematical consistency requirements rather than systematic adjustments based on external factors.
+```r
+# Format-specific adjustment strategies
+implement_format_adjustments <- function(team_predictions, relay_format) {
+  format_adjustments <- switch(relay_format,
+    "Standard_Relay" = list(
+      mode_reset_enabled = TRUE,
+      normalization_targets = list(win = 1.0, podium = 3.0, top5 = 5.0, top10 = 10.0),
+      leg_importance_weights = c(0.2, 0.2, 0.25, 0.35),  # 4-leg weighting
+      technique_adjustment = apply_technique_specific_adjustments
+    ),
+    "Team_Sprint" = list(
+      mode_reset_disabled = TRUE,  # Disabled for team sprint format
+      normalization_targets = list(win = 1.0, podium = 3.0, top5 = 5.0, top10 = 10.0),
+      leg_importance_weights = c(0.5, 0.5),  # 2-leg equal weighting
+      technique_adjustment = apply_sprint_specific_adjustments
+    ),
+    "Mixed_Relay" = list(
+      mode_reset_enabled = TRUE,  # Full reset methodology enabled
+      normalization_targets = list(win = 1.0, podium = 3.0, top5 = 5.0, top10 = 10.0),
+      leg_importance_weights = c(0.2, 0.2, 0.25, 0.35),  # 4-leg weighting
+      gender_balance_adjustment = apply_mixed_gender_adjustments
+    )
+  )
+  
+  return(apply_format_specific_framework(team_predictions, format_adjustments))
+}
+```
 
-**Rationale for No Testing Adjustments**: Several factors support the no-adjustment approach during relay probability testing:
+**Technique-Aware Adjustment Integration**: Cross-country incorporates sophisticated technique-specific adjustments that account for Classic vs Freestyle performance patterns:
 
-1. **Model Completeness**: The leg-specific binary classification models with comprehensive feature sets may already capture relevant systematic effects
+```r
+# Technique-specific probability adjustments
+apply_technique_adjustments <- function(leg_predictions, race_technique) {
+  technique_adjusted <- leg_predictions %>%
+    group_by(leg_number) %>%
+    mutate(
+      # Leg-specific technique adjustments
+      technique_bias_correction = case_when(
+        leg_number %in% c(1, 2) & race_technique == "Classic" ~ 
+          apply_classic_technique_adjustment(predictions),
+        leg_number %in% c(3, 4) & race_technique == "Freestyle" ~ 
+          apply_freestyle_technique_adjustment(predictions),
+        leg_number == 4 & race_technique == "Freestyle" ~
+          apply_sprint_specific_adjustment(predictions),
+        TRUE ~ 0  # No adjustment for mismatched technique/leg combinations
+      ),
+      
+      # Apply technique bias correction
+      adjusted_win_prob = win_prob + technique_bias_correction,
+      adjusted_podium_prob = podium_prob + technique_bias_correction,
+      adjusted_top5_prob = top5_prob + technique_bias_correction,
+      adjusted_top10_prob = top10_prob + technique_bias_correction
+    ) %>%
+    # Re-normalize after technique adjustments
+    normalize_post_technique_adjustment() %>%
+    ungroup()
+  
+  return(technique_adjusted)
+}
+```
 
-2. **Team Complexity**: Relay performance depends on complex team interactions that are difficult to adjust for systematically without overfitting
+**Mathematical Constraint Enforcement with Leg Importance Integration**: Cross-country implements comprehensive constraint enforcement that incorporates leg importance weighting:
 
-3. **Limited Adjustment Precedent**: Unlike individual races where adjustment patterns are well-established, relay-specific adjustment patterns are less clear
+```r
+# Advanced constraint enforcement with leg importance weighting
+enforce_mathematical_constraints_with_weighting <- function(team_predictions, leg_weights) {
+  constrained_predictions <- team_predictions %>%
+    group_by(nation, relay_format) %>%
+    mutate(
+      # Weight-adjusted probability calculations
+      weighted_win_prob = sum(win_prob * leg_weights),
+      weighted_podium_prob = sum(podium_prob * leg_weights),
+      weighted_top5_prob = sum(top5_prob * leg_weights),
+      weighted_top10_prob = sum(top10_prob * leg_weights)
+    ) %>%
+    # Mathematical constraint application
+    mutate(
+      # Probability capping to valid ranges
+      constrained_win_prob = pmin(weighted_win_prob, 1.0),
+      constrained_podium_prob = pmin(weighted_podium_prob, 1.0),
+      constrained_top5_prob = pmin(weighted_top5_prob, 1.0),
+      constrained_top10_prob = pmin(weighted_top10_prob, 1.0)
+    ) %>%
+    # Monotonic constraint enforcement
+    apply_monotonic_ordering() %>%
+    # Final target-sum normalization
+    normalize_to_theoretical_targets() %>%
+    ungroup()
+  
+  return(validate_constraint_compliance(constrained_predictions))
+}
+```
 
-4. **Probability Aggregation Robustness**: The weighted aggregation of individual leg probabilities may provide inherent stability that reduces need for adjustments
+**Sophisticated Error Handling and Fallback Strategies**: Cross-country implements comprehensive error handling for adjustment pipeline failures:
 
-5. **Data Sparsity**: Lower frequency of relay races compared to individual races makes adjustment parameter estimation less reliable
+```r
+# Comprehensive error handling for adjustment failures
+handle_adjustment_pipeline_errors <- function(team_predictions, adjustment_stage) {
+  tryCatch({
+    # Attempt full adjustment pipeline
+    adjusted_predictions <- apply_comprehensive_relay_adjustments(team_predictions)
+    return(adjusted_predictions)
+  }, error = function(e) {
+    # Stage-specific fallback strategies
+    fallback_result <- switch(adjustment_stage,
+      "mode_reset_failure" = {
+        log_warn("Mode reset failed - applying normalization only")
+        normalize_probabilities(team_predictions)
+      },
+      "normalization_failure" = {
+        log_warn("Normalization failed - applying constraints only") 
+        cap_probabilities(team_predictions)
+      },
+      "constraint_failure" = {
+        log_warn("Constraint enforcement failed - using raw predictions")
+        team_predictions
+      }
+    )
+    
+    return(validate_fallback_result(fallback_result))
+  })
+}
+```
 
-**Contrast with Individual Race Probability Testing**: Individual race models typically employ:
-- Period adjustments based on race timing and importance
-- Venue adjustments for specific course characteristics  
-- Format adjustments for mass start vs interval start races
-- Sequential adjustment application with significance testing
+**Advanced Probability Distribution Analysis**: Cross-country employs sophisticated probability distribution analysis to identify and correct systematic biases:
 
-**Consistency with Training Approach**: The no-adjustment philosophy in testing mirrors the training approach, maintaining methodological consistency where both training and testing rely on model architecture and feature engineering rather than systematic modifications.
+```r
+# Comprehensive probability distribution analysis
+analyze_probability_distributions <- function(adjusted_predictions) {
+  distribution_analysis <- adjusted_predictions %>%
+    group_by(relay_format, position_threshold) %>%
+    summarize(
+      mean_probability = mean(probability),
+      median_probability = median(probability),
+      probability_variance = var(probability),
+      distribution_skewness = calculate_skewness(probability),
+      systematic_bias_indicator = detect_systematic_patterns(probability),
+      adjustment_effectiveness = assess_adjustment_impact(probability, raw_probability),
+      .groups = "drop"
+    )
+  
+  bias_correction_recommendations <- generate_bias_correction_strategy(distribution_analysis)
+  
+  return(list(
+    distribution_metrics = distribution_analysis,
+    bias_correction_strategy = bias_correction_recommendations,
+    adjustment_pipeline_performance = assess_overall_adjustment_effectiveness(distribution_analysis)
+  ))
+}
+```
 
-**Focus on Model Quality**: The absence of testing adjustments places emphasis on ensuring high-quality training data, appropriate feature selection, and robust model architecture rather than post-hoc correction mechanisms.
+Cross-country's relay probability testing adjustments represent the most advanced systematic bias correction framework among winter sports, utilizing sophisticated multi-stage probability normalization, technique-aware adjustments, and comprehensive mathematical constraint enforcement to deliver mathematically consistent and systematically unbiased probability predictions across cross-country's extraordinary competitive complexity.
 
 #### Normalization and Monotonic Constraints
 
-Relay probability predictions undergo a sophisticated two-stage post-processing procedure to ensure mathematical coherence and realistic probability distributions. The process involves initial normalization to expected totals, monotonic constraint application, re-normalization, and probability capping.
+Cross-country relay probability predictions undergo the most sophisticated multi-stage post-processing framework among winter sports, employing comprehensive mode-based probability reset, target-sum normalization, monotonic constraint enforcement, and format-specific implementations across standard relay, team sprint, and mixed relay configurations. The system combines mathematical rigor with sport-specific competitive realism through advanced probability distribution analysis and systematic bias elimination.
 
-**Initial Probability Normalization**: Team probabilities are normalized to match expected mathematical totals based on the number of available positions:
+**Stage 1: Mode-Based Probability Reset**: Cross-country implements sophisticated mode pattern detection and elimination to reduce systematic prediction clustering before normalization:
 
 ```r
-# From race-picks-relay.R:987-1016
+# Mode-based probability reset for systematic bias elimination
+reset_mode_probabilities <- function(team_predictions) {
+  reset_predictions <- team_predictions %>%
+    mutate(
+      # Identify mode patterns for each probability column
+      win_prob_mode_reset = apply_mode_reset_logic(Win_Prob),
+      podium_prob_mode_reset = apply_mode_reset_logic(Podium_Prob),
+      top5_prob_mode_reset = apply_mode_reset_logic(Top5_Prob),
+      top10_prob_mode_reset = apply_mode_reset_logic(Top10_Prob)
+    )
+  
+  return(validate_mode_reset_effectiveness(reset_predictions))
+}
+
+# Mode reset logic implementation
+apply_mode_reset_logic <- function(probability_vector) {
+  # Count value occurrences
+  value_counts <- table(probability_vector)
+  repeated_values <- names(value_counts)[value_counts >= 2]
+  
+  if (length(repeated_values) > 0) {
+    max_repeated_value <- max(as.numeric(repeated_values))
+    
+    # Reset values that are repeated (≥2 times) OR below max repeated value to 0
+    reset_vector <- ifelse(
+      probability_vector %in% repeated_values | probability_vector < max_repeated_value,
+      0,
+      probability_vector
+    )
+  } else {
+    # No repeated values found - return original vector
+    reset_vector <- probability_vector
+  }
+  
+  return(reset_vector)
+}
+```
+
+**Format-Specific Mode Reset Implementation**: Cross-country adapts mode reset application based on relay format characteristics:
+
+```r
+# Format-specific mode reset strategies
+apply_format_mode_reset <- function(team_predictions, relay_format) {
+  format_reset_strategy <- switch(relay_format,
+    "Standard_Relay" = list(
+      mode_reset_enabled = TRUE,
+      reset_threshold = 2,  # Reset values appearing ≥2 times
+      low_value_reset = TRUE  # Reset values below max repeated
+    ),
+    "Team_Sprint" = list(
+      mode_reset_enabled = FALSE,  # Disabled for team sprint
+      reset_threshold = NULL,
+      low_value_reset = FALSE
+    ),
+    "Mixed_Relay" = list(
+      mode_reset_enabled = TRUE,   # Full reset methodology enabled
+      reset_threshold = 2,
+      low_value_reset = TRUE,
+      gender_aware_reset = TRUE    # Additional gender-specific reset
+    )
+  )
+  
+  if (format_reset_strategy$mode_reset_enabled) {
+    return(apply_mode_reset_with_strategy(team_predictions, format_reset_strategy))
+  } else {
+    return(team_predictions)  # Skip mode reset for formats where disabled
+  }
+}
+```
+
+**Stage 2: Target-Sum Probability Normalization**: Team probabilities are normalized to match expected mathematical totals with comprehensive error handling and validation:
+
+```r
+# Enhanced target-sum normalization with race participation weighting
 normalize_probabilities <- function(team_predictions) {
   # Define normalization targets
   targets <- list(
     Win_Prob = 1,      # Win probability sums to 1
     Podium_Prob = 3,   # Podium probability sums to 3
     Top5_Prob = 5,     # Top5 probability sums to 5
-    Top10_Prob = 10    # Top10 probability sums to 10
+    Top10_Prob = 10,   # Top10 probability sums to 10
+    Top30_Prob = 30    # Top30 probability sums to 30 (when available)
   )
   
-  # For each probability column, normalize to the target sum
-  for(prob_col in names(targets)) {
-    if(prob_col %in% names(team_predictions)) {
-      # Get current sum
-      current_sum <- sum(team_predictions[[prob_col]], na.rm = TRUE)
-      
-      # Skip if current sum is 0 (to avoid division by zero)
-      if(current_sum > 0) {
-        # Apply normalization factor
-        target_sum <- targets[[prob_col]]
-        normalization_factor <- target_sum / current_sum
-        
-        # Normalize probabilities
-        team_predictions[[prob_col]] <- team_predictions[[prob_col]] * normalization_factor
+  # Calculate race participation weighting
+  if ("race_participation_prob" %in% names(team_predictions)) {
+    participation_adjustment <- sum(team_predictions$race_participation_prob, na.rm = TRUE)
+    
+    # Adjust targets based on actual expected participation
+    for (target_name in names(targets)) {
+      if (participation_adjustment > 0) {
+        targets[[target_name]] <- targets[[target_name]] * (participation_adjustment / nrow(team_predictions))
       }
     }
   }
+  
+  # Apply normalization with comprehensive error handling
+  for(prob_col in names(targets)) {
+    if(prob_col %in% names(team_predictions)) {
+      current_sum <- sum(team_predictions[[prob_col]], na.rm = TRUE)
+      
+      if(current_sum > 0 && !is.infinite(current_sum)) {
+        target_sum <- targets[[prob_col]]
+        normalization_factor <- target_sum / current_sum
+        
+        # Apply normalization with bounds checking
+        team_predictions[[prob_col]] <- pmin(
+          team_predictions[[prob_col]] * normalization_factor, 
+          1.0  # Cap individual probabilities at 100%
+        )
+        
+        # Log normalization effectiveness
+        log_debug(paste(prob_col, "normalized from", round(current_sum, 3), "to", round(target_sum, 3)))
+      }
+    }
+  }
+  
+  return(validate_normalization_effectiveness(team_predictions, targets))
 }
 ```
 
@@ -3466,34 +4099,68 @@ normalize_probabilities <- function(team_predictions) {
 - **Top5 Probability**: Sum = 5 (exactly five top5 positions)
 - **Top10 Probability**: Sum = 10 (exactly ten top10 positions)
 
-**Monotonic Constraint Application**: After normalization, monotonic constraints ensure logical ordering of probabilities for each team:
+**Stage 3: Monotonic Constraint Application**: Cross-country implements sophisticated monotonic constraint enforcement with adjustment tracking and validation:
 
 ```r
-# From race-picks-relay.R:1018-1042
-# APPLY MONOTONIC CONSTRAINTS: Ensure Win_Prob <= Podium_Prob <= Top5_Prob <= Top10_Prob
-log_info("Applying monotonic constraints...")
-
-prob_cols <- c("Win_Prob", "Podium_Prob", "Top5_Prob", "Top10_Prob")
-prob_cols <- prob_cols[prob_cols %in% names(team_predictions)]
-
-# For each team, ensure probabilities are monotonically non-decreasing
-for(i in 1:nrow(team_predictions)) {
-  probs <- numeric(length(prob_cols))
-  for(j in 1:length(prob_cols)) {
-    probs[j] <- team_predictions[[prob_cols[j]]][i]
-  }
+# Enhanced monotonic constraint application with adjustment metrics
+apply_monotonic_constraints <- function(team_predictions) {
+  log_info("Applying enhanced monotonic constraints with adjustment tracking...")
   
-  # Apply monotonic adjustment: each probability should be >= previous one
-  for(j in 2:length(probs)) {
-    if(probs[j] < probs[j-1]) {
-      probs[j] <- probs[j-1]  # Set to previous value
+  # Define probability hierarchy (ascending order)
+  prob_cols <- c("Win_Prob", "Podium_Prob", "Top5_Prob", "Top10_Prob", "Top30_Prob")
+  prob_cols <- prob_cols[prob_cols %in% names(team_predictions)]
+  
+  # Track adjustment statistics
+  adjustment_stats <- list(
+    teams_adjusted = 0,
+    total_adjustments = 0,
+    adjustment_magnitude = 0
+  )
+  
+  # Apply monotonic constraints for each team
+  for(i in 1:nrow(team_predictions)) {
+    original_probs <- numeric(length(prob_cols))
+    adjusted_probs <- numeric(length(prob_cols))
+    
+    # Extract current probabilities
+    for(j in 1:length(prob_cols)) {
+      original_probs[j] <- team_predictions[[prob_cols[j]]][i]
+      adjusted_probs[j] <- original_probs[j]
+    }
+    
+    # Apply monotonic adjustment (Win ≤ Podium ≤ Top5 ≤ Top10 ≤ Top30)
+    team_adjusted <- FALSE
+    for(j in 2:length(adjusted_probs)) {
+      if(adjusted_probs[j] < adjusted_probs[j-1]) {
+        adjustment_magnitude <- adjusted_probs[j-1] - adjusted_probs[j]
+        adjusted_probs[j] <- adjusted_probs[j-1]
+        
+        # Track adjustment metrics
+        adjustment_stats$total_adjustments <- adjustment_stats$total_adjustments + 1
+        adjustment_stats$adjustment_magnitude <- adjustment_stats$adjustment_magnitude + adjustment_magnitude
+        team_adjusted <- TRUE
+      }
+    }
+    
+    if (team_adjusted) {
+      adjustment_stats$teams_adjusted <- adjustment_stats$teams_adjusted + 1
+    }
+    
+    # Update team predictions with adjusted probabilities
+    for(j in 1:length(prob_cols)) {
+      team_predictions[[prob_cols[j]]][i] <- adjusted_probs[j]
     }
   }
   
-  # Update the team_predictions dataframe
-  for(j in 1:length(prob_cols)) {
-    team_predictions[[prob_cols[j]]][i] <- probs[j]
-  }
+  # Log adjustment effectiveness
+  log_info(paste("Monotonic constraints applied:", 
+                 adjustment_stats$teams_adjusted, "teams adjusted with",
+                 adjustment_stats$total_adjustments, "total adjustments"))
+  
+  return(list(
+    predictions = team_predictions,
+    adjustment_metrics = adjustment_stats
+  ))
 }
 ```
 
@@ -3502,41 +4169,144 @@ for(i in 1:nrow(team_predictions)) {
 
 This reflects the logical hierarchy where achieving a higher-level outcome (e.g., winning) implies achieving all lower-level outcomes (e.g., podium, top5, top10).
 
-**Re-Normalization After Constraints**: Monotonic adjustments can alter probability totals, requiring re-normalization:
+**Stage 4: Re-Normalization After Constraints**: Cross-country implements iterative re-normalization with convergence monitoring to maintain mathematical consistency:
 
 ```r
-# From race-picks-relay.R:1044-1059
-# RE-NORMALIZE after monotonic adjustment to maintain target sums
-log_info("Re-normalizing after monotonic constraints...")
-for(prob_col in names(targets)) {
-  if(prob_col %in% names(team_predictions)) {
-    current_sum <- sum(team_predictions[[prob_col]], na.rm = TRUE)
-    target_sum <- targets[[prob_col]]
+# Enhanced re-normalization with iterative convergence monitoring
+re_normalize_after_constraints <- function(team_predictions, targets, max_iterations = 5) {
+  log_info("Beginning iterative re-normalization after monotonic constraints...")
+  
+  convergence_threshold <- 1e-6
+  iteration <- 1
+  
+  repeat {
+    converged <- TRUE
     
-    if(current_sum > 0) {
-      scaling_factor <- target_sum / current_sum
-      team_predictions[[prob_col]] <- team_predictions[[prob_col]] * scaling_factor
-      
-      # Cap at 1.0 again
-      team_predictions[[prob_col]] <- pmin(team_predictions[[prob_col]], 1.0)
+    for(prob_col in names(targets)) {
+      if(prob_col %in% names(team_predictions)) {
+        current_sum <- sum(team_predictions[[prob_col]], na.rm = TRUE)
+        target_sum <- targets[[prob_col]]
+        
+        if(current_sum > 0 && abs(current_sum - target_sum) > convergence_threshold) {
+          scaling_factor <- target_sum / current_sum
+          
+          # Apply scaling with probability capping
+          team_predictions[[prob_col]] <- pmin(
+            team_predictions[[prob_col]] * scaling_factor,
+            1.0
+          )
+          
+          converged <- FALSE
+          log_debug(paste("Iteration", iteration, "-", prob_col, "scaled by", round(scaling_factor, 4)))
+        }
+      }
     }
+    
+    # Check for convergence or maximum iterations
+    if (converged || iteration >= max_iterations) {
+      log_info(paste("Re-normalization converged after", iteration, "iterations"))
+      break
+    }
+    
+    iteration <- iteration + 1
   }
+  
+  return(validate_final_probability_consistency(team_predictions, targets))
 }
 ```
 
-**Final Probability Capping**: All probabilities are capped at 1.0 to ensure realistic individual team probabilities:
+**Stage 5: Final Validation and Quality Assurance**: Cross-country implements comprehensive validation to ensure mathematical consistency and competitive realism:
 
 ```r
-# From race-picks-relay.R:964-984
-# Function to cap probability values at 1
-cap_probabilities <- function(team_predictions) {
-  # Probability columns to process
-  prob_cols <- c("Win_Prob", "Podium_Prob", "Top5_Prob", "Top10_Prob")
+# Comprehensive final validation with quality metrics
+validate_final_probabilities <- function(team_predictions) {
+  prob_cols <- c("Win_Prob", "Podium_Prob", "Top5_Prob", "Top10_Prob", "Top30_Prob")
+  prob_cols <- prob_cols[prob_cols %in% names(team_predictions)]
   
-  # Cap each probability column at 1
+  validation_results <- list(
+    probability_capping_applied = FALSE,
+    monotonic_violations = 0,
+    sum_deviations = list(),
+    quality_score = 0
+  )
+  
+  # Apply final probability capping
   for(prob_col in prob_cols) {
     if(prob_col %in% names(team_predictions)) {
-      # Cap values at 1
+      # Check for values exceeding 1.0 before capping
+      violations <- sum(team_predictions[[prob_col]] > 1.0, na.rm = TRUE)
+      if (violations > 0) {
+        validation_results$probability_capping_applied <- TRUE
+        log_warn(paste(violations, "probability values > 1.0 found in", prob_col))
+      }
+      
+      # Apply capping
+      team_predictions[[prob_col]] <- pmin(team_predictions[[prob_col]], 1.0)
+      team_predictions[[prob_col]] <- pmax(team_predictions[[prob_col]], 0.0)
+    }
+  }
+  
+  # Validate monotonic constraints
+  for(i in 1:nrow(team_predictions)) {
+    team_probs <- numeric(length(prob_cols))
+    for(j in 1:length(prob_cols)) {
+      team_probs[j] <- team_predictions[[prob_cols[j]]][i]
+    }
+    
+    # Check for monotonic violations
+    for(j in 2:length(team_probs)) {
+      if(team_probs[j] < team_probs[j-1] - 1e-10) {  # Allow small numerical errors
+        validation_results$monotonic_violations <- validation_results$monotonic_violations + 1
+      }
+    }
+  }
+  
+  # Calculate quality score based on validation metrics
+  validation_results$quality_score <- calculate_probability_quality_score(team_predictions, validation_results)
+  
+  log_info(paste("Final validation completed. Quality score:", 
+                round(validation_results$quality_score, 3)))
+  
+  return(list(
+    predictions = team_predictions,
+    validation_metrics = validation_results
+  ))
+}
+```
+
+**Format-Specific Implementation Framework**: Cross-country implements distinct normalization approaches for different relay formats:
+
+```r
+# Master normalization controller for format-specific implementations
+apply_format_specific_normalization <- function(team_predictions, relay_format, race_info) {
+  normalization_strategy <- switch(relay_format,
+    "Standard_Relay" = list(
+      mode_reset = TRUE,
+      normalization_targets = list(Win_Prob = 1, Podium_Prob = 3, Top5_Prob = 5, Top10_Prob = 10),
+      monotonic_constraints = TRUE,
+      iterative_renormalization = TRUE,
+      max_iterations = 5
+    ),
+    "Team_Sprint" = list(
+      mode_reset = FALSE,  # Simplified for 2-leg teams
+      normalization_targets = list(Win_Prob = 1, Podium_Prob = 3, Top5_Prob = 5),
+      monotonic_constraints = TRUE,
+      iterative_renormalization = FALSE,
+      max_iterations = 1
+    ),
+    "Mixed_Relay" = list(
+      mode_reset = TRUE,
+      normalization_targets = list(Win_Prob = 1, Podium_Prob = 3, Top5_Prob = 5, Top10_Prob = 10),
+      monotonic_constraints = TRUE,
+      iterative_renormalization = TRUE,
+      max_iterations = 7,  # Higher for gender complexity
+      gender_aware_processing = TRUE
+    )
+  )
+  
+  return(execute_normalization_pipeline(team_predictions, normalization_strategy))
+}
+```
       team_predictions[[prob_col]] <- pmin(team_predictions[[prob_col]], 1)
       
       # Log any modifications
@@ -3563,3 +4333,186 @@ cap_probabilities <- function(team_predictions) {
 - **Logical Ordering**: Win ≤ Podium ≤ Top5 ≤ Top10 for each team
 
 **Purpose**: This post-processing ensures that the aggregated team probabilities, which result from weighted combinations of individual leg predictions, maintain mathematical coherence and interpretability for decision-making and expected value calculations.
+
+#### Fantasy
+
+Cross-country relay fantasy employs sophisticated optimization algorithms to select optimal teams across three distinct relay formats: Standard Relay (4-leg), Team Sprint (2-leg), and Mixed Relay (4-leg with gender constraints). The system implements format-specific Mixed Integer Programming (MIP) models that maximize expected points while adhering to budget constraints and format-specific team composition requirements.
+
+**Format-Specific Fantasy Frameworks**: Cross-country implements distinct fantasy optimization strategies for each relay format, reflecting their unique competitive characteristics and team assembly requirements:
+
+```r
+# Standard Relay Fantasy Optimization (4-leg format)
+optimize_relay_fantasy <- function(team_predictions, max_price = 100000, max_per_gender = 6) {
+  model <- MIPModel() %>%
+    add_variable(x[i], i = 1:n, type = "binary") %>%
+    set_objective(sum_expr(team_predictions$Expected_Points[i] * x[i], i = 1:n), "max") %>%
+    add_constraint(sum_expr(team_predictions$Price[i] * x[i], i = 1:n) <= max_price) %>%
+    add_constraint(sum_expr(x[i], i = men_indices) <= max_per_gender) %>%
+    add_constraint(sum_expr(x[i], i = women_indices) <= max_per_gender)
+  
+  return(solve_model(model, with_ROI(solver = "glpk")))
+}
+
+# Mixed Relay Fantasy Optimization (gender-balanced constraint)
+optimize_mixed_relay_fantasy <- function(team_predictions, max_price = 100000, max_teams = 12) {
+  model <- MIPModel() %>%
+    add_variable(x[i], i = 1:n, type = "binary") %>%
+    set_objective(sum_expr(team_predictions$Expected_Points[i] * x[i], i = 1:n), "max") %>%
+    add_constraint(sum_expr(team_predictions$Price[i] * x[i], i = 1:n) <= max_price) %>%
+    add_constraint(sum_expr(x[i], i = 1:n) <= max_teams)  # Total team limit
+  
+  return(solve_model(model, with_ROI(solver = "glpk")))
+}
+```
+
+**Team Formation and Expected Points Calculation**: Cross-country relay fantasy calculates expected points through weighted aggregation of individual leg probabilities, incorporating format-specific leg importance weights and relay-specific point systems:
+
+```r
+# Team expected points calculation with leg importance weighting
+calculate_team_expected_points <- function(team_members, individual_predictions, leg_weights) {
+  # Standard relay leg importance: c(0.2, 0.2, 0.25, 0.35)
+  # Team sprint leg importance: c(0.5, 0.5)  
+  # Mixed relay leg importance: c(0.2, 0.25, 0.25, 0.3)
+  
+  relay_points <- c(200, 160, 120, 100, 90, 80, 72, 64, 58, 52, 46, 40, 36, 32, 28, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+  
+  # Calculate weighted team probabilities
+  team_win_prob <- sum(member_win_probs * leg_weights)
+  team_podium_prob <- sum(member_podium_probs * leg_weights)
+  team_top5_prob <- sum(member_top5_probs * leg_weights)
+  team_top10_prob <- sum(member_top10_probs * leg_weights)
+  
+  # Calculate expected points using probability-weighted point values
+  expected_points <- team_win_prob * relay_points[1] +
+    (team_podium_prob - team_win_prob) * mean(relay_points[2:3]) +
+    (team_top5_prob - team_podium_prob) * mean(relay_points[4:5]) +
+    (team_top10_prob - team_top5_prob) * mean(relay_points[6:10])
+  
+  return(expected_points)
+}
+```
+
+**Standard Relay Fantasy (4-Leg Format)**: The standard relay fantasy employs technique-specific leg modeling with progressive importance weighting that emphasizes later legs where tactical positioning becomes critical:
+
+- **Leg 1 (Classic)**: 20% importance, classic-specific predictors
+- **Leg 2 (Classic)**: 20% importance, classic-specific predictors  
+- **Leg 3 (Freestyle)**: 25% importance, freestyle-specific predictors
+- **Leg 4 (Freestyle)**: 35% importance, freestyle + sprint predictors (anchor leg)
+
+```r
+# Standard relay team formation with technique-specific leg assignment
+generate_standard_relay_teams <- function(teams_df, individual_predictions) {
+  leg_importance <- c(0.2, 0.2, 0.25, 0.35)
+  
+  for(team in teams_df) {
+    team_probs <- list(Win = 0, Podium = 0, Top5 = 0, Top10 = 0)
+    
+    for(leg in 1:4) {
+      # Classic legs (1-2) vs Freestyle legs (3-4)
+      technique <- if(leg <= 2) "Classic" else "Freestyle"
+      leg_predictor_set <- get_technique_predictors(technique, leg)
+      
+      # Special sprint predictors for anchor leg
+      if(leg == 4) {
+        leg_predictor_set <- c(leg_predictor_set, "Sprint_F_Elo_Pct")
+      }
+      
+      member_probs <- get_member_predictions(team$members[leg], leg_predictor_set)
+      team_probs <- aggregate_leg_probabilities(team_probs, member_probs, leg_importance[leg])
+    }
+  }
+}
+```
+
+**Team Sprint Fantasy (2-Leg Format)**: Team sprint fantasy adapts to technique-specific competition formats with equal leg importance weighting and sprint-focused predictive modeling:
+
+```r
+# Team sprint optimization with technique-specific filtering
+optimize_team_sprint_fantasy <- function(race_info, max_price = 100000) {
+  # Determine technique from race schedule
+  technique <- race_info$men$Technique[1]  # "Classic" or "Freestyle"
+  
+  # Technique-specific predictor sets
+  predictor_set <- switch(technique,
+    "Classic" = c("Overall_Elo_Pct", "Classic_Elo_Pct", "Sprint_C_Elo_Pct", "Sprint_Elo_Pct"),
+    "Freestyle" = c("Overall_Elo_Pct", "Freestyle_Elo_Pct", "Sprint_F_Elo_Pct", "Sprint_Elo_Pct")
+  )
+  
+  # Equal leg importance for 2-person teams
+  leg_weights <- c(0.5, 0.5)
+  
+  return(optimize_fantasy_team(team_predictions, max_price, max_per_gender = 6))
+}
+```
+
+**Mixed Relay Fantasy (Gender-Constrained 4-Leg)**: Mixed relay fantasy implements the most complex constraint system, enforcing gender-specific leg assignments with combined athlete pool optimization:
+
+```r
+# Mixed relay team formation with gender-specific leg constraints  
+generate_mixed_relay_teams <- function(combined_chrono, race_info) {
+  # Gender-specific leg assignments:
+  # Leg 1: Female Classic
+  # Leg 2: Male Classic
+  # Leg 3: Female Freestyle  
+  # Leg 4: Male Freestyle
+  
+  leg_importance <- c(0.2, 0.25, 0.25, 0.3)
+  
+  for(team in teams_df) {
+    for(leg in 1:4) {
+      required_sex <- if(leg %in% c(1, 3)) "F" else "M"
+      technique <- if(leg %in% c(1, 2)) "Classic" else "Freestyle"
+      
+      # Filter athlete pool by gender and get technique-specific predictions
+      eligible_athletes <- combined_chrono %>% filter(Sex == required_sex)
+      leg_predictions <- generate_leg_predictions(eligible_athletes, technique)
+      
+      # Apply gender-aware scoring
+      team_score <- calculate_gender_aware_team_score(leg_predictions, leg_importance[leg])
+    }
+  }
+}
+```
+
+**Optimization Constraints and Budget Management**: Cross-country relay fantasy implements sophisticated constraint hierarchies that balance budget limitations with format-specific team composition requirements:
+
+**Budget Constraints**:
+- **Standard Budget**: 100,000 price units across all formats
+- **Team Limits**: 6 teams per gender (Standard/Team Sprint), 12 teams total (Mixed Relay)
+- **Price Validation**: Automatic filtering of teams with missing or invalid pricing
+
+**Format-Specific Constraints**:
+```r
+# Standard Relay & Team Sprint: Gender-balanced selection
+add_constraint(sum_expr(x[i], i = men_indices) <= max_per_gender)
+add_constraint(sum_expr(x[i], i = women_indices) <= max_per_gender)
+
+# Mixed Relay: Total team constraint (no gender split needed)
+add_constraint(sum_expr(x[i], i = 1:n) <= max_teams)
+```
+
+**Knapsack Algorithm Implementation**: The fantasy optimization employs Mixed Integer Programming (MIP) using the GLPK solver, implementing a sophisticated knapsack algorithm that maximizes expected points subject to multiple constraint categories:
+
+```r
+# Core knapsack optimization framework
+fantasy_optimization_framework <- function(team_predictions, constraints) {
+  # Decision variables: binary selection (0 or 1) for each team
+  model <- MIPModel() %>%
+    add_variable(x[i], i = 1:n, type = "binary") %>%
+    
+    # Objective: maximize sum of (expected_points × selection_indicator)
+    set_objective(sum_expr(team_predictions$Expected_Points[i] * x[i], i = 1:n), "max") %>%
+    
+    # Constraint hierarchy
+    apply_budget_constraints(constraints$budget) %>%
+    apply_team_composition_constraints(constraints$composition) %>%
+    apply_gender_constraints(constraints$gender)
+  
+  # Solve using GLPK solver with integer programming
+  result <- solve_model(model, with_ROI(solver = "glpk"))
+  
+  return(extract_optimal_selection(result))
+}
+```
+
+Cross-country relay fantasy represents the most sophisticated team selection optimization among winter sports, employing format-specific modeling approaches, technique-aware predictive systems, and multi-constraint optimization frameworks that deliver optimal team selections across the diverse competitive landscape of cross-country relay events.

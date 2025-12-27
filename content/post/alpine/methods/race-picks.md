@@ -1,7 +1,7 @@
 ---
 title: "Alpine Skiing Race Picks Methodology"
 date: 2023-12-01T01:23:07+00:00
-draft: false
+draft: True
 tags: ["methodology", "skiing", "race-picks", "alpine"]
 ---
 
@@ -766,37 +766,140 @@ The system incorporates confidence factors based on recent race history and vola
 
 ##### Setup
 
-**Evidence from `race-picks.R` lines 1174-1178:**
-Position probability training uses same training data as points models but creates binary outcome variables: `race_df$position_achieved <- race_df$Place <= threshold` for each threshold in `position_thresholds <- c(1, 3, 5, 10, 30)`.
+Alpine skiing's Individual Probability Training Setup converts the points prediction problem into binary classification for position probability modeling across five finishing position thresholds. The system uses the same preprocessed historical race data as points models but transforms the regression problem into classification through binary outcome creation.
+
+**Position Threshold Definition**:
+Alpine skiing uses standard individual event thresholds: `position_thresholds <- c(1, 3, 5, 10, 30)` representing Win, Podium, Top 5, Top 10, and Top 30 finishes. Each threshold creates a separate binary classification problem where success is defined as finishing at or above that position.
+
+**Binary Outcome Creation**:
+For each position threshold, the system creates binary outcome variables using the fundamental transformation: `race_df$position_achieved <- race_df$Place <= threshold`. This converts the continuous place variable into binary classification targets, enabling binomial GAM modeling for probability prediction.
+
+**Training Data Consistency**:
+Position probability models use identical training datasets as their corresponding points prediction models, including the same 10-season historical window, top performer filtering (ELO > 75th percentile), and discipline-specific preprocessing. No separate data pipeline is required - the same `race_df` serves both modeling approaches.
+
+**Discipline-Specific Adaptation**:
+Alpine skiing's unique multi-discipline structure requires threshold evaluation across different event types. Technical disciplines (Giant Slalom, Slalom) and speed disciplines (Downhill, Super-G) maintain the same position thresholds but may exhibit different probability patterns due to varying field sizes and competitive dynamics.
 
 ##### Feature Selection
 
-**Evidence from `race-picks.R` lines 1170-1188:**
-Position models use identical feature selection as points models: `position_feature_vars <- explanatory_vars`. The same `regsubsets()` with BIC optimization is applied: `pos_selection <- regsubsets(pos_formula, data = race_df, nbest = 1, method = "exhaustive")`.
+Alpine skiing's Individual Probability Training Feature Selection employs a sophisticated threshold-independent optimization strategy that adapts to the sport's unique multi-discipline structure. The system performs independent BIC optimization for each position threshold while leveraging discipline-specific variable inheritance from the corresponding points prediction models.
+
+**Variable Inheritance and Consistency**:
+Position probability models use identical explanatory variable pools as their corresponding points models: `position_feature_vars <- explanatory_vars`. This ensures consistency between modeling approaches while leveraging domain knowledge already encoded in discipline-specific points model variable selection.
+
+**Discipline-Specific Variable Sets**:
+Alpine skiing adapts feature pools based on race discipline characteristics. Speed events (Downhill, Super-G) utilize variables including `Prev_Points_Weighted`, `Downhill_Elo_Pct`, `Super.G_Elo_Pct`, `Speed_Elo_Pct`, and `Elo_Pct`. Technical events (Giant Slalom, Slalom) employ `Tech_Elo_Pct`, `Slalom_Elo_Pct`, `Giant.Slalom_Elo_Pct` alongside weighted previous points. Combined events utilize the complete variable set across all disciplines.
+
+**Independent Threshold Optimization**:
+For each position threshold (1, 3, 5, 10, 30), the system performs exhaustive subset selection using BIC optimization: `pos_selection <- regsubsets(pos_formula, data = race_df, nbest = 1, method = "exhaustive")`. This threshold-independent approach recognizes that different finishing position predictions may require different variable combinations for optimal binomial classification accuracy.
+
+**GAM Model Construction**:
+Selected variables are converted to smooth terms for binomial GAM modeling: `pos_smooth_terms <- paste("s(", pos_best_bic_vars[-1], ")", collapse=" + ")`, enabling non-linear relationships between alpine performance predictors and position probability outcomes. This approach accommodates alpine skiing's complex performance patterns across different discipline types.
 
 ##### Modeling
 
-**Evidence from `race-picks.R` lines 1190-1198:**
-Position models use GAM with binomial family: `gam(pos_gam_formula, data = race_df, family = binomial, method = "REML")`. Brier scores are calculated for model evaluation: `brier_score <- mean((race_df$position_achieved - predicted_probs)^2, na.rm = TRUE)`.
+Alpine skiing's Individual Probability Training Modeling employs sophisticated binomial GAM architecture specifically optimized for position probability prediction across the sport's multi-discipline structure. The system creates independent models for each position threshold while maintaining discipline-specific performance characteristics and implementing robust fallback strategies for model stability.
+
+**Binomial GAM Architecture**:
+Alpine skiing uses GAM models with binomial family for position probability prediction: `position_model <- gam(pos_gam_formula, data = race_df, family = binomial, method = "REML")`. This approach provides natural probability bounds (0-1) and proper handling of binary outcomes, with REML estimation ensuring conservative smoothing parameters and better generalization to new data.
+
+**Independent Threshold Modeling**:
+Each position threshold (1, 3, 5, 10, 30) receives its own independently fitted model, allowing optimal variable combinations specific to each finishing position category. This threshold-independence recognizes that predicting wins may require different predictors than predicting top-30 finishes, especially across alpine's diverse discipline spectrum.
+
+**Model Validation and Quality Assurance**:
+Alpine skiing implements comprehensive model evaluation using Brier scores for probabilistic accuracy assessment: `brier_score <- mean((race_df$position_achieved - predicted_probs)^2, na.rm = TRUE)`. This metric penalizes both overconfident and underconfident probability predictions, ensuring well-calibrated probability estimates across technical and speed disciplines.
+
+**Robust Fallback Strategy**:
+Alpine skiing implements a multi-tier fallback system to handle model fitting failures, progressing from full BIC-optimized models to simplified GAM with essential variables, ensuring reliable probability predictions even when data sparsity occurs in specific discipline/athlete combinations.
 
 ##### Adjustments
 
-**Evidence from `race-picks.R` lines 1210-1254:**
-Period adjustments for position models follow same methodology as points models. T-tests compare probability differences across periods, with corrections applied when p < 0.05. Adjustments stored per participant per threshold.
+Alpine skiing implements sophisticated Individual Probability Training Adjustments that are currently **disabled** in the production system, though the comprehensive framework exists for systematic bias correction in finishing position predictions. The methodology was designed to identify and correct systematic performance patterns through statistical analysis of probability residuals across periods and disciplines.
+
+**Probability Residual Calculation**:
+The adjustment system calculates probability differences between actual outcomes and model predictions for each athlete: `prob_diff = as.numeric(position_achieved) - initial_prob`. This residual represents the systematic bias in position probability predictions, capturing whether the model consistently over- or under-predicts an athlete's finishing position probabilities across different competitive contexts.
+
+**Statistical Significance Testing**:
+Alpine employs t-test validation to ensure only statistically meaningful adjustments are applied. For each athlete and position threshold, the system compares probability residuals from the current period against residuals from all other periods using: `t.test(prior_period_curr, prior_period_other)$p.value`. Adjustments are only applied when p < 0.05, ensuring corrections address genuine systematic bias rather than random variation.
+
+**Period-Based Bias Correction**:
+When statistical significance is established, the system calculates period-specific corrections: `period_correction = ifelse(period_p < 0.05, mean(prob_diff[Period == Period], na.rm = TRUE), 0)`. These corrections capture systematic performance changes across different periods of the alpine season, from early season technical preparation through peak World Cup competition periods.
+
+**Discipline-Specific Framework**:
+The adjustment methodology was designed to accommodate alpine skiing's unique discipline structure, with separate adjustment calculations for speed events (Downhill, Super-G) versus technical events (Slalom, Giant Slalom). This recognizes that systematic biases may manifest differently across alpine's diverse skill requirements.
+
+**Probability Constraint Enforcement**:
+All adjustments are bounded within valid probability ranges: `period_adjusted = pmin(pmax(initial_prob + period_correction, 0), 1)`. This ensures that corrected probabilities remain mathematically valid while preventing extreme adjustments that could destabilize the prediction framework.
+
+**Current Status**:
+The Individual Probability Training Adjustments are commented out in the production system (lines 1198-1249 in race-picks.R) with the annotation "removed to improve model stability and prediction accuracy." The system currently relies on base GAM predictions without individual-specific probability adjustments, prioritizing model stability over potential accuracy gains from systematic bias correction.
 
 #### Testing
 
 ##### Startlist Setup
 
-Testing uses same startlist setup as points prediction with addition of position-specific probability columns for each threshold.
+Alpine skiing's Individual Probability Testing employs sophisticated startlist preparation that builds upon the points prediction framework while incorporating position probability-specific enhancements. The system preserves race participation probabilities, manages discipline-specific ELO ratings, and integrates with the comprehensive normalization framework to ensure accurate position probability predictions across alpine's diverse discipline spectrum.
+
+**Base Participant Data Framework**:
+Position probability testing begins with core participant information extraction: `base_df <- startlist %>% select(Skier, ID, Nation, Sex, all_of(race_prob_cols))`. This foundation preserves essential athlete identification while maintaining race participation probability columns (`Race1_Prob`, `Race2_Prob`, etc.) that are critical for subsequent probability normalization and adjustment processes.
+
+**Race Participation Probability Preservation**:
+Alpine's startlist setup specifically preserves race probability columns through dynamic detection: `race_prob_cols <- grep("^Race\\d+_Prob$", names(startlist), value = TRUE)`. These probability values, calculated using the exponential decay model for discipline-specific participation patterns, are maintained throughout the position probability prediction process for accurate normalization.
+
+**Discipline-Specific ELO Rating Integration**:
+The system incorporates alpine's comprehensive ELO rating structure: `elo_cols <- c("Downhill_Elo", "Super.G_Elo", "Giant.Slalom_Elo", "Slalom_Elo", "Combined_Elo", "Tech_Elo", "Speed_Elo", "Elo")`. These ratings are normalized to percentage values relative to the maximum rating in each race, providing model input that reflects relative performance capabilities across speed versus technical disciplines.
+
+**Most Recent Performance Metrics**:
+Alpine maintains consistency with points prediction methodology by retrieving the most recent ELO ratings chronologically: `arrange(Season, Race) %>% slice(n())`. This ensures that position probability models utilize the latest performance information while maintaining the same temporal data handling as points predictions for methodological consistency.
+
+**Weighted Previous Points Integration**:
+The system incorporates discipline-specific weighted previous points using a 5-race window with increasing weights (1, 2, 3, 4, 5): `Prev_Points_Weighted = sapply(1:n(), function(j) {...})`. This metric captures recent form while maintaining discipline specificity, acknowledging that a slalom specialist's recent technical performance differs from downhill recent speed performance.
+
+**Comprehensive Missing Value Imputation**:
+Alpine employs robust NA handling through first quartile replacement: `replace_na_with_quartile <- function(x) {ifelse(is.na(x), quantile(x, 0.25, na.rm = TRUE), x)}`. This conservative approach ensures that athletes with limited recent data receive reasonable baseline performance estimates rather than defaulting to zero values.
+
+**Data Validation and Preparation**:
+The startlist setup includes comprehensive validation ensuring all required ELO percentage columns exist: `for (col in pct_cols) {if (!col %in% names(processed_df)) {processed_df[[col]] <- 0}}`. This prevents model failures due to missing data while maintaining consistent variable structures across different race scenarios and discipline combinations.
+
+**Position Threshold Framework Integration**:
+Alpine's startlist preparation accommodates the standard position threshold structure (1st, 3rd, 5th, 10th, 30th) while ensuring that subsequent binary outcome variables (`position_achieved <- Place <= threshold`) can be properly created during model application. The framework maintains consistency between training and testing data structures for reliable probability predictions.
 
 ##### Modeling
 
-Position probability prediction applies trained binomial GAM models to startlist data, generating probabilities for each threshold.
+Alpine skiing's Individual Probability Testing applies trained binomial GAM models to startlist data through sophisticated variable validation, robust prediction mechanisms, and comprehensive fallback strategies. The system accommodates alpine's discipline-specific performance characteristics while ensuring reliable probability predictions across speed and technical events through multi-tier error handling and model application frameworks.
+
+**Variable Validation and Data Preparation**:
+Alpine's testing modeling begins with comprehensive variable validation to ensure model compatibility: `model_vars <- names(pos_model$var.summary)`. The system explicitly checks for each required variable in the prepared startlist data and adds default values for missing variables: `for(var in model_vars) {if(!(var %in% names(prediction_subset))) {prediction_subset[[var]] <- 0}}`. This prevents model application failures due to missing discipline-specific ELO ratings or other required features.
+
+**Robust GAM Model Application**:
+The framework employs explicit GAM prediction with comprehensive error handling: `mgcv::predict.gam(pos_model, newdata = prediction_subset, type = "response")`. This approach uses direct mgcv package calls to avoid method dispatch issues while generating probabilities for each position threshold (1st, 3rd, 5th, 10th, 30th) across alpine's diverse discipline spectrum.
+
+**Row-by-Row Fallback Mechanism**:
+When batch prediction fails, alpine implements sophisticated row-by-row prediction recovery: `for(j in 1:nrow(prediction_subset)) {single_row <- prediction_subset[j,, drop = FALSE]; result[j] <- tryCatch({mgcv::predict.gam(pos_model, newdata = single_row, type = "response")}, error = function(e2) {threshold/100})}`. This ensures that individual prediction failures don't compromise the entire race prediction process.
+
+**Multi-Tier Fallback Strategy**:
+Alpine maintains the most comprehensive fallback system among winter sports, progressing from full BIC-optimized models to simplified GAM with essential variables: `fallback_vars <- c("Prev_Points_Weighted", elo_col)`. When primary models fail, the system creates simpler models using core predictors: `position_models[[paste0("threshold_", threshold)]] <- gam(fallback_formula, data = race_df, family = binomial, method = "REML")`.
+
+**Discipline-Specific Model Integration**:
+The testing framework accommodates alpine's discipline-specific ELO ratings (Downhill, Super-G, Giant Slalom, Slalom) while ensuring that model predictions reflect appropriate discipline specializations. Speed event models utilize different variable combinations compared to technical event models, acknowledging that downhill specialists and slalom experts require distinct predictive approaches.
+
+**Threshold-Specific Probability Generation**:
+Alpine generates independent probability predictions for each position threshold through separate model applications: `prob_col <- paste0("prob_top", threshold)`. This threshold-independent approach ensures that factors influencing podium predictions (top-3) may differ from those affecting points-scoring predictions (top-30) across alpine's discipline-diverse competitive spectrum.
+
+**Default Value Assignment with Conservative Estimation**:
+When all prediction mechanisms fail, alpine assigns conservative default values based on threshold-specific probability estimates: `threshold/100`. This ensures that the system always provides reasonable probability estimates even in extreme edge cases, maintaining prediction availability across all competitive scenarios while prioritizing model stability over potentially unreliable predictions.
 
 ##### Adjustments
 
-Period and discipline adjustments are applied to raw position probabilities before normalization.
+Alpine skiing's Individual Probability Testing Adjustments are **disabled** in the production system to maintain model stability and prevent overfitting in testing scenarios. Unlike the Individual Points Testing Adjustments which account for systematic biases in points prediction, position probability adjustments have been disabled to prioritize prediction reliability and mathematical consistency.
+
+The system recognizes that probability predictions already incorporate sufficient complexity through the binomial GAM modeling framework with discipline-specific feature selection, comprehensive normalization procedures, and monotonic constraint enforcement. Rather than risk introducing additional systematic bias through sequential adjustment layers, Alpine probability testing maintains base GAM predictions while ensuring mathematically valid probability distributions.
+
+**Framework Design (Currently Disabled)**:
+The disabled adjustment system was designed to mirror points prediction adjustments, using probability residuals to identify systematic patterns: `prob_diff = as.numeric(position_achieved) - initial_prob`. Period-specific and discipline-specific adjustments would be calculated using t-test validation (p < 0.05) and applied with probability bounds enforcement (`pmin(pmax(adjusted_prob, 0), 1)`).
+
+**Current Implementation**:
+Position probability testing uses base GAM predictions directly: `position_preds[[prob_col]] <- position_preds[[paste0(prob_col, "_base")]]`. This approach ensures stable, well-calibrated probability predictions while relying on the comprehensive normalization and monotonic constraint framework to maintain mathematical validity across alpine skiing's diverse discipline spectrum.
 
 #### Normalization and Monotonic Constraints
 

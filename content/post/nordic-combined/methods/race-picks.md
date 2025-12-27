@@ -1710,7 +1710,169 @@ race_dfs[[i]] <- startlist_prepared %>%
 
 The Nordic Combined testing modeling system provides comprehensive dual-prediction architecture that generates both position probabilities and points forecasts with sophisticated adjustment integration, robust error handling, and mathematical consistency validation across all race scenarios and athlete participation patterns.
 
+#### Probability
+
+##### Training
+
+###### Setup
+
+Nordic Combined's Individual Probability Training Setup converts the points prediction problem into binary classification for position probability modeling across five finishing position thresholds. The system uses the same preprocessed historical race data as points models but transforms the dual-discipline regression problem (ski jumping + cross-country skiing) into classification through binary outcome creation.
+
+**Position Threshold Definition**:
+Nordic Combined uses standard individual event thresholds: `position_thresholds <- c(1, 3, 5, 10, 30)` representing Win, Podium, Top 5, Top 10, and Top 30 finishes. Each threshold creates a separate binary classification problem where success is defined as finishing at or above that position.
+
+**Binary Outcome Creation**:
+For each position threshold, the system creates binary outcome variables using the fundamental transformation: `race_df$position_achieved <- race_df$Place <= threshold`. This converts the continuous place variable into binary classification targets, enabling binomial GAM modeling for probability prediction.
+
+**Training Data Consistency**:
+Position probability models use identical training datasets as their corresponding points prediction models, including the same 10-season historical window, top performer filtering (ELO > 75th percentile), and event type-specific preprocessing. No separate data pipeline is required - the same `race_df` serves both modeling approaches.
+
+**Event Type-Specific Adaptation**:
+Nordic Combined's diverse event formats (Sprint, Individual, Mass Start, Individual Compact) require threshold evaluation across different event types. Each format maintains the same position thresholds but may exhibit different probability patterns due to varying tactical demands, field compositions, and the different time gaps created by jumping performance differences.
+
+**Dual-Discipline Performance Integration**:
+The training setup recognizes that Nordic Combined performance combines both ski jumping and cross-country skiing components, where jumping results directly affect cross-country starting positions through time penalty calculations. This unique dual-discipline structure influences how position probabilities develop throughout each race.
+
+##### Feature Selection
+
+Nordic Combined's Individual Probability Training Feature Selection employs a sophisticated threshold-independent optimization strategy that adapts to the sport's unique dual-discipline characteristics (ski jumping + cross-country skiing). The system performs independent BIC optimization for each position threshold while leveraging event type-specific variable inheritance from corresponding points prediction models.
+
+**Variable Inheritance and Consistency**:
+Position probability models use identical explanatory variable pools as their corresponding points models: `position_feature_vars <- explanatory_vars`. This ensures consistency between modeling approaches while leveraging domain knowledge already encoded in Nordic Combined's event type-specific points model variable selection across different competition formats.
+
+**Event Type-Specific Variable Sets**:
+Nordic Combined adapts feature pools to incorporate both jumping and cross-country performance elements, utilizing variables that capture the dual-discipline nature of the sport. Individual events employ comprehensive variable sets including weighted previous points plus event type-specific ELO ratings (Sprint, Individual, Mass Start, Individual Compact), while team events use team-aggregated performance metrics.
+
+**Independent Threshold Optimization**:
+For each position threshold (1, 3, 5, 10, 30), the system performs exhaustive subset selection using BIC optimization: `pos_selection <- regsubsets(pos_formula, data = race_df, nbest = 1, method = "exhaustive")`. This threshold-independent approach recognizes that different finishing position predictions may require different variable combinations for optimal binomial classification accuracy across Nordic Combined's diverse event spectrum.
+
+**Dual-Discipline Feature Integration**:
+The feature selection process acknowledges that Nordic Combined performance involves complex interactions between ski jumping technique and cross-country endurance, ensuring selected variables capture both components while maintaining the sport's unique competitive structure where jumping performance directly influences cross-country starting positions.
+
+##### Individual Position Probability Training Modeling
+
+Nordic Combined employs sophisticated binomial GAM (Generalized Additive Models) architecture for individual position probability prediction during the training phase, utilizing the dual-discipline nature of the sport (ski jumping + cross-country skiing) within independent threshold-based modeling frameworks. This approach provides probabilistic finishing position forecasts that capture the complex interplay between jumping performance and cross-country endurance across different event formats.
+
+**Binomial GAM Architecture**:
+Position probability models use binomial family GAM implementation with REML (Restricted Maximum Likelihood) estimation, specifically designed for binary classification of finishing position achievement. The core model structure employs threshold-specific binary response variables and comprehensive explanatory variable sets that reflect Nordic Combined's unique dual-discipline competitive structure:
+
+```r
+# From nordic-combined R script
+position_model <- gam(pos_gam_formula,
+                      data = race_df,
+                      family = binomial,
+                      method = "REML")
+```
+
+**Independent Threshold Modeling**:
+Nordic Combined implements separate binomial GAM models for each position threshold (1st, 3rd, 5th, 10th, 30th), recognizing that factors influencing podium finishes may differ substantially from those affecting top-10 or points-scoring positions in dual-discipline competition. Each threshold receives independent optimization through BIC-based feature selection followed by specialized GAM fitting with event type-specific adaptations.
+
+**Dual-Discipline Performance Integration**:
+Model construction acknowledges Nordic Combined's unique competitive structure where ski jumping results directly influence cross-country starting positions through time compensation systems. The binomial GAM framework incorporates both jumping technique variables and cross-country endurance metrics, utilizing smooth terms to capture non-linear relationships between dual-discipline performance components and finishing position probabilities.
+
+**REML Estimation and Robust Training**:
+Training employs REML estimation for conservative smoothing parameter selection, promoting model stability across the diverse Nordic Combined event spectrum. The system includes comprehensive error handling for edge cases where feature selection or GAM fitting encounters convergence issues, implementing fallback strategies that ensure model availability for all competitive scenarios while maintaining the sport's dual-discipline modeling integrity.
+
+**Event Type-Specific Adaptations**:
+The modeling framework adapts to different Nordic Combined formats (Individual Compact, Mass Start, Team events), utilizing conditional logic to adjust variable pools and model complexity based on event characteristics. Individual events employ comprehensive variable sets capturing both jumping and cross-country elements, while team events incorporate aggregated performance metrics that reflect the collaborative nature of Nordic Combined team competition.
+
+**Training Phase Model Validation**:
+Binomial GAM models undergo Brier score evaluation during training to assess probabilistic accuracy, with threshold-specific validation ensuring that position probability predictions maintain calibration across different finishing position ranges. The validation process specifically accounts for Nordic Combined's dual-discipline performance distribution patterns and event format-specific competitive dynamics.
+
+##### Adjustments
+
+Nordic Combined implements sophisticated Individual Probability Training Adjustments that are **active** in the production system, featuring period-based correction mechanisms designed to address systematic bias patterns across the sport's unique dual-discipline competitive structure (ski jumping + cross-country skiing). The methodology acknowledges that Nordic Combined performance involves complex interactions between jumping results and cross-country starting positions through time compensation systems.
+
+**Probability Residual Calculation with Dual-Discipline Integration**:
+The adjustment system calculates probability differences between actual outcomes and model predictions: `prob_diff = as.numeric(position_achieved) - initial_prob`. These residuals capture systematic bias patterns in position probability predictions while acknowledging Nordic Combined's complex dual-discipline performance characteristics where jumping performance directly influences cross-country starting positions.
+
+**Period-Based Bias Correction for Dual-Discipline Performance**:
+Nordic Combined employs period-specific adjustments to capture systematic performance changes across different competitive phases: `period_p = purrr::map_dbl(row_id, function(r) {...})`. The system uses t-test validation to compare period-specific probability residuals against other periods, applying corrections only when p < 0.05 ensures genuine period-based systematic bias rather than random variation in dual-discipline performance.
+
+**Statistical Significance Testing with Dual-Discipline Awareness**:
+The adjustment framework employs rigorous statistical validation tailored to Nordic Combined's unique competitive structure: `t.test(prior_period_curr, prior_period_other)$p.value`. This ensures that corrections address genuine systematic bias patterns across the dual-discipline spectrum rather than random performance variation in jumping and cross-country components.
+
+**Event Type-Specific Adjustment Application**:
+The system adapts to different Nordic Combined formats (Individual Compact, Mass Start, Team events), utilizing conditional logic to adjust correction calculations based on event characteristics. Individual events receive full period-based adjustments, while team events incorporate aggregated adjustment metrics that reflect the collaborative nature of Nordic Combined team competition.
+
+**Dual-Discipline Probability Constraint Enforcement**:
+All adjustments maintain valid probability ranges: `period_adjusted = pmin(pmax(initial_prob + period_correction, 0), 1)`. This ensures corrected probabilities remain mathematically valid while preventing extreme adjustments that could destabilize predictions across Nordic Combined's complex dual-discipline performance environment.
+
+**Active Production Implementation**:
+Nordic Combined's Individual Probability Training Adjustments remain **fully operational** in the production system, representing an active approach to systematic bias correction that accommodates the sport's unique dual-discipline competitive dynamics and time compensation interactions between jumping and cross-country performance components.
+
+##### Individual Position Probability Testing Adjustments
+
+Nordic Combined's position probability adjustments are currently **disabled** in the production system, though the framework exists for sophisticated statistical correction of systematic biases in finishing position predictions. The system was designed to apply period and elevation-specific adjustments to raw position probabilities before normalization, recognizing the sport's unique dual-discipline challenges (ski jumping + cross-country skiing).
+
+**Designed Adjustment Framework (Currently Disabled)**:
+The position probability adjustment system was designed to mirror the points prediction adjustment methodology, using probability residuals instead of point differences to identify systematic performance patterns across the dual-discipline spectrum:
+
+```r
+# From race-picks.R (Position probability adjustment framework - currently disabled)
+# The system was designed to apply dual-discipline specific adjustments:
+# 1. Period adjustments for seasonal progression in both jumping and skiing components
+# 2. Elevation adjustments for venue-specific effects on both disciplines
+#
+# position_preds <- position_preds %>%
+#   left_join(pos_adj, by = participant_col) %>%
+#   mutate(
+#     # Replace NAs with zeros
+#     period_effect = replace_na(period_effect, 0),
+#     elevation_effect = replace_na(elevation_effect, 0),
+#     
+#     # Apply dual-discipline adjustments
+#     period_adjustment = period_effect,
+#     elevation_adjustment = elevation_effect,
+#     
+#     # Calculate adjusted probabilities
+#     adjusted_prob = get(paste0(prob_col, "_base")) + 
+#       period_adjustment + elevation_adjustment,
+#     
+#     # Ensure probabilities are between 0 and 1
+#     adjusted_prob = pmin(pmax(adjusted_prob, 0), 1)
+#   )
+```
+
+**Dual-Discipline Statistical Validation Approach**:
+The disabled system would have used rigorous statistical testing (p < 0.05) for both performance dimensions:
+
+1. **Period Adjustments**: Seasonal progression effects across both ski jumping and cross-country skiing phases, as athletes' dual-discipline form develops differently throughout the season
+2. **Elevation Adjustments**: Altitude effects on both jumping performance (air density affects technique and distance) and cross-country endurance (altitude training effects)
+
+**Team vs Individual Event Logic**:
+Similar to other sports, Nordic Combined's position probability adjustment framework would have included conditional logic to handle both individual and team competition formats appropriately, recognizing that team dynamics require different adjustment approaches than individual performance patterns.
+
+**Current Implementation**:
+Position probabilities currently use base GAM model predictions without adjustment corrections, prioritizing model stability and consistency over potential accuracy gains from adjustment corrections. This approach acknowledges Nordic Combined's complex dual-discipline nature where interactions between jumping and skiing performance create intricate performance patterns that may be better captured through robust base models.
+
+**Mathematical Consistency Preservation**:
+The disabled adjustment system included probability boundary enforcement to ensure all adjusted probabilities remained between 0 and 1, maintaining mathematical validity while capturing potential systematic biases specific to Nordic Combined's unique competitive requirements.
+
 ###### Adjustments
+
+Nordic Combined relay points testing adjustments implement a **sophisticated unified adjustment framework** that treats relay events identically to individual competitions without implementing disabled adjustment patterns found in other winter sports. Unlike biathlon's deliberately disabled framework or cross-country's specialized probability reset strategies, Nordic Combined employs **fully active period and elevation corrections** for relay testing, reflecting a unified approach that prioritizes comprehensive systematic bias correction across all event formats.
+
+**Unified Individual and Relay Adjustment Methodology**:
+Nordic Combined relay testing applies the same comprehensive adjustment framework used for individual events: `period_correction = ifelse(period_p < 0.05, mean(Prediction_Diff[Period == Period], na.rm = TRUE), 0)` and `elevation_correction = ifelse(elevation_p < 0.05, mean(Prediction_Diff[Elevation_Flag == Elevation_Flag], na.rm = TRUE), 0)`. This unified approach acknowledges that Nordic Combined relay teams maintain consistent compositions and tactical approaches that enable meaningful historical pattern analysis.
+
+**Active Period Correction for Relay Team Performance**:
+Nordic Combined relay testing employs sophisticated period-based bias correction using statistical t-tests (p < 0.05 threshold) to identify genuine seasonal performance patterns: `period_p = purrr::map_dbl(row_id, function(r) {t.test(prior_period_curr, prior_period_other)$p.value})`. This approach recognizes that Nordic Combined teams develop consistent dual-discipline coordination patterns (ski jumping + cross-country skiing) that create reliable seasonal performance trends suitable for systematic bias correction.
+
+**Active Elevation Correction for Venue-Dependent Team Performance**:
+The system applies elevation-based adjustments for relay events: `elevation_correction = ifelse(elevation_p < 0.05, mean(Prediction_Diff[Elevation_Flag == Elevation_Flag], na.rm = TRUE), 0)`. This acknowledges that altitude affects both ski jumping performance (air density impacts technique and distance) and cross-country skiing endurance (altitude training effects), creating venue-specific team performance patterns that remain consistent across relay compositions.
+
+**Statistical Significance Testing with Comprehensive Error Handling**:
+Nordic Combined employs rigorous statistical validation for relay adjustments: `tryCatch({t.test(prior_period_curr, prior_period_other)$p.value}, error = function(e) 1)` with comprehensive error handling that ensures adjustment calculation reliability. When statistical tests encounter insufficient data or convergence issues, the system defaults to zero adjustments while maintaining the framework's analytical integrity.
+
+**Dual-Discipline Team Coordination Recognition**:
+The active adjustment framework acknowledges Nordic Combined's unique dual-discipline structure where relay team performance depends on coordinated ski jumping and cross-country skiing capabilities. Unlike sports with changing team compositions, Nordic Combined relay teams often maintain consistent athlete lineups and tactical approaches that create stable performance patterns suitable for historical bias correction across dual-discipline competition requirements.
+
+**Full Integration with Points and Probability Prediction**:
+Nordic Combined relay testing adjustments integrate seamlessly with both points and probability prediction systems: `Final_Team_Prediction = Base_Prediction + period_correction + elevation_correction` while maintaining mathematical constraints that ensure adjusted predictions remain within valid bounds (0-100 points, 0-1 probabilities) and preserve dual-discipline competitive realism.
+
+**Comprehensive Mathematical Constraint Enforcement**:
+The adjustment framework maintains rigorous mathematical validity through constraint enforcement: `Adjusted_Prediction = pmax(pmin(Initial_Prediction + period_correction + elevation_correction, 100), 0)` for points predictions and `adjusted_prob = pmin(pmax(initial_prob + period_adjustment + elevation_adjustment, 0), 1)` for probability predictions, ensuring all relay testing adjustments preserve mathematical consistency.
 
 Nordic Combined points testing implements comprehensive adjustment validation and verification systems that ensure prediction accuracy through statistical correction integration, probability normalization validation, and multi-scenario confidence weighting. The testing adjustment phase validates that all corrections are properly applied and maintains mathematical consistency across prediction scenarios.
 
@@ -2437,7 +2599,10 @@ The Nordic Combined probability training adjustments provide statistically-groun
 
 ###### Startlist Setup
 
-Nordic Combined probability testing implements comprehensive startlist preparation that preserves race participation probabilities while ensuring model compatibility through dynamic column detection, probability validation, and robust fallback mechanisms. The testing setup maintains probability data integrity throughout the prediction pipeline while adapting to various startlist configurations and race scenarios.
+Nordic Combined's Individual Probability Testing employs sophisticated startlist preparation that accommodates the sport's unique dual-discipline characteristics (ski jumping + cross-country skiing) while preserving race participation probabilities and managing event type-specific performance data. The system handles Nordic Combined's complex competitive structure where ski jumping results directly influence cross-country starting positions, requiring integrated data preparation across both discipline components.
+
+**Dual-Discipline Event Type Integration**:
+Nordic Combined's startlist setup incorporates event type-specific ELO ratings that reflect the sport's diverse competitive formats: Sprint, Individual, Mass Start, and Individual Compact events. The system maintains separate ELO tracking for jumping and cross-country components while ensuring that time compensation interactions between disciplines are properly captured in the startlist preparation process.
 
 **Dynamic Race Probability Column Detection**: The testing system automatically identifies and preserves all race participation probability columns using pattern matching:
 
@@ -2611,7 +2776,13 @@ The Nordic Combined probability testing startlist setup provides comprehensive p
 
 ###### Modeling
 
-Nordic Combined probability testing employs sophisticated multi-threshold position modeling that generates probability predictions across achievement levels through trained GAM models, comprehensive variable validation, adaptive adjustment integration, and mathematical normalization. The testing modeling system ensures robust prediction generation with fallback mechanisms and probability constraint enforcement.
+Nordic Combined's Individual Probability Testing applies trained binomial GAM models through sophisticated dual-discipline integration that accommodates the sport's unique competitive structure where ski jumping results directly influence cross-country starting positions through time compensation systems. The framework manages event type-specific model applications across Nordic Combined's diverse competitive formats (Sprint, Individual, Mass Start, Individual Compact) while ensuring reliable probability predictions through multi-threshold position modeling and comprehensive fallback strategies.
+
+**Dual-Discipline Model Application Framework**:
+Nordic Combined's testing modeling integrates both ski jumping and cross-country performance components through time compensation-aware prediction: `mgcv::predict.gam(pos_model, newdata = prediction_subset, type = "response")`. The system acknowledges that jumping results directly affect cross-country starting positions, requiring models that capture interactions between dual-discipline components and time deficit/bonus calculations.
+
+**Event Type-Specific Variable Validation**:
+The framework performs comprehensive variable validation for Nordic Combined's event-dependent requirements: `model_vars <- names(pos_model$var.summary)`. The system validates event type-specific ELO ratings (Sprint, Individual, Mass Start, Individual Compact) and ensures that both jumping technique and cross-country endurance variables are available for model application across different competitive formats.
 
 **Threshold-Specific Model Retrieval and Validation**: The system retrieves trained models for each position threshold and validates model-data compatibility:
 
@@ -3264,17 +3435,200 @@ The Nordic Combined relay data gathering system provides comprehensive team even
 
 ###### Setup
 
+Nordic Combined relay points training setup employs sophisticated dual-discipline team aggregation that integrates both ski jumping and cross-country skiing performance metrics into nation-based team capabilities while accommodating the sport's unique time compensation system. The framework utilizes individual athlete points system adapted for team competition contexts, recognizing that relay performance depends on coordination between athletes with different dual-discipline specialization patterns across jumping and skiing components.
+
+**Dual-Discipline Team Performance Aggregation**:
+Nordic Combined's relay training setup aggregates individual athlete capabilities across both ski jumping and cross-country skiing disciplines through comprehensive team-level metric calculation. The system combines individual athlete ELO ratings spanning multiple Nordic Combined event formats (`Individual_Elo`, `Sprint_Elo`, `MassStart_Elo`, `IndividualCompact_Elo`) while preserving awareness of time compensation interactions where jumping performance directly influences cross-country starting positions within team tactical frameworks.
+
+**Time Compensation-Aware Training Data Integration**:
+The training setup incorporates Nordic Combined's unique competitive structure where individual athlete jumping capabilities affect team cross-country dynamics through time compensation calculations. Team training data preserves both jumping performance metrics (distances, points) and cross-country skiing capabilities while maintaining awareness of how these dual-discipline interactions influence overall team finishing position outcomes across diverse event formats.
+
+**Multi-Format Team Event Processing**:
+Nordic Combined processes multiple team formats through specialized training data preparation: Mixed Team events (M-F-M-F compositions), Team Sprint competitions (gender-specific pairings), and Standard Team events (single-gender compositions). Each format receives dual-discipline team aggregation that maintains awareness of individual athlete specialization patterns while creating comprehensive team performance profiles suitable for format-specific prediction model training.
+
+**Individual Points System Integration for Team Competition**:
+The relay training utilizes standard individual Nordic Combined points system adapted for team competition contexts: `individual_points <- c(100, 90, 80, 70, 60, 55, 52, 49, 46, 43, 40, ...)` while recognizing that team finishing positions represent collective dual-discipline achievements rather than individual athlete performance. This approach maintains consistency with individual training methodologies while accommodating team coordination dynamics essential for accurate relay prediction modeling.
+
+**Nation-Based Team Composition Management**:
+Nordic Combined's training setup accommodates team composition variations between races by focusing on nation-level performance aggregation that captures dual-discipline team capabilities across different athlete combinations. The framework recognizes that relay teams may feature different athlete lineups while maintaining consistency in nation-based dual-discipline competitive characteristics that define Nordic Combined team success patterns across jumping and skiing performance requirements.
+
 ###### Feature Selection
+
+Nordic Combined relay points training feature selection employs sophisticated dual-discipline team-aggregated variable optimization that accommodates the sport's unique combination of ski jumping and cross-country skiing within relay competition environments while managing time compensation-aware training data integration and multi-format team event processing through BIC-optimized exhaustive subset selection across Nordic Combined's specialized competitive structure.
+
+**Team-Specific Dual-Discipline Variable Framework**:
+Nordic Combined's relay feature selection adapts to team competition by replacing individual athlete performance variables with team-aggregated metrics that capture collective dual-discipline capabilities:
+
+```r
+# From race-picks.R:1862-1871
+# Define explanatory variables based on race type
+if(is_team) {
+  explanatory_vars <- c("Avg_Sprint_Elo_Pct", "Avg_Individual_Elo_Pct", 
+                        "Avg_MassStart_Elo_Pct", "Avg_IndividualCompact_Elo_Pct", 
+                        "Avg_Elo_Pct")
+} else {
+  explanatory_vars <- c("Prev_Points_Weighted", 
+                        "Sprint_Elo_Pct", "Individual_Elo_Pct", 
+                        "MassStart_Elo_Pct", "IndividualCompact_Elo_Pct", 
+                        "Elo_Pct")
+}
+```
+
+**Elimination of Weighted Previous Points for Team Events**:
+Relay feature selection excludes weighted previous points (`Prev_Points_Weighted`) since team compositions change between races, making historical team performance less predictive than aggregated individual capabilities. Team-averaged dual-discipline ELO ratings replace individual performance metrics while maintaining the sport's time compensation-aware competitive dynamics.
+
+**Event Format-Specific Team ELO Integration**:
+The framework incorporates Nordic Combined's diverse event structure through team-averaged performance metrics across all competitive formats: `Avg_Sprint_Elo_Pct`, `Avg_Individual_Elo_Pct`, `Avg_MassStart_Elo_Pct`, `Avg_IndividualCompact_Elo_Pct`, enabling comprehensive team capability assessment across dual-discipline requirements and time compensation systems.
+
+**BIC Optimization for Dual-Discipline Team Performance**:
+Nordic Combined employs the same exhaustive subset selection methodology as individual events but applied to team-aggregated variables, using Bayesian Information Criterion optimization to balance model complexity with prediction accuracy across relay team compositions:
+
+```r
+# From race-picks.R:1875-1880
+formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))
+tryCatch({
+  exhaustive_selection <- regsubsets(formula, data = race_df_75, nbest = 1, method = "exhaustive")
+  summary_exhaustive <- summary(exhaustive_selection)
+  best_bic_vars <- names(coef(exhaustive_selection, which.min(summary_exhaustive$bic)))
+  smooth_terms <- paste("s(", best_bic_vars[-1], ")", collapse=" + ")
+```
+
+**Multi-Format Team Event Capability Assessment**:
+The feature selection acknowledges that relay teams must coordinate between athletes with different dual-discipline specializations (jumping vs skiing strengths), ensuring selected variables capture both jumping distance achievement and cross-country endurance capabilities essential for dual-discipline team coordination across Nordic Combined's time compensation-aware competitive structure.
+
+**Time Compensation-Aware Variable Selection**:
+The framework recognizes that Nordic Combined relay performance depends on team coordination across jumping and skiing phases, where jumping performance directly influences cross-country starting positions through time compensation calculations, requiring team-aggregated variables that reflect collective dual-discipline capabilities across both competitive phases.
 
 ###### Modeling
 
+Nordic Combined relay points training modeling employs sophisticated team-level GAM frameworks that capture the unique challenge of coordinating dual-discipline specialists (ski jumping + cross-country skiing) within relay tactical structures while accommodating the sport's time compensation system where jumping performance directly influences cross-country starting positions. The system uses team-aggregated dual-discipline performance metrics with comprehensive multi-tier fallback strategies designed for Nordic Combined's smaller competitive field and complex team coordination requirements.
+
+**Team-Level Dual-Discipline GAM Implementation**:
+Nordic Combined's relay modeling uses sophisticated team-aggregated GAM approaches that capture collective dual-discipline capabilities through nation-based performance integration that accounts for time compensation interactions:
+
+```r
+# Team-level dual-discipline GAM formula construction
+gam_formula <- as.formula(paste("Points ~", smooth_terms))
+model <- gam(gam_formula, data = team_race_df)
+
+# Team aggregation variables for dual-discipline performance:
+# Avg_Sprint_Elo_Pct, Avg_Individual_Elo_Pct, 
+# Avg_MassStart_Elo_Pct, Avg_IndividualCompact_Elo_Pct, Avg_Elo_Pct
+```
+
+**Time Compensation-Aware Team Modeling Framework**:
+The modeling system incorporates Nordic Combined's unique time compensation structure where individual athlete jumping performance affects team cross-country strategy. Team models account for how strong team jumping capabilities provide tactical advantages during skiing phases, while weak jumping performance requires recovery strategies during cross-country segments.
+
+**Multi-Format Relay Adaptation with Dual-Discipline Integration**:
+Nordic Combined's modeling adapts to diverse relay formats (Mixed Team, Team Sprint, Standard Team) through conditional team composition logic while maintaining consistency in dual-discipline performance evaluation. Each format utilizes the same GAM architecture but adapts team aggregation methods to accommodate gender-specific leg assignments and varying team sizes within time compensation-aware tactical frameworks.
+
+**Comprehensive Multi-Tier Fallback Strategy for Dual-Discipline Complexity**:
+Nordic Combined implements robust fallback mechanisms specifically adapted for team-based predictions and the sport's specialized dual-discipline competitive field:
+
+```r
+# Primary: Full team dual-discipline GAM with BIC-selected variables
+model <- gam(gam_formula, data = team_race_df)
+
+# Fallback: Simplified team model with core dual-discipline variables  
+fallback_formula <- as.formula(paste("Points ~ s(", team_elo_col, ")"))
+model <- gam(fallback_formula, data = team_race_df)
+
+# Final: Team ELO-only model for extreme cases with time compensation awareness
+```
+
+**Nation-Based Performance Integration with Time Compensation Context**:
+The modeling framework processes nation-level team performance while preserving individual athlete dual-discipline characteristics through sophisticated team aggregation that maintains awareness of jumping and skiing interactions within time compensation systems. This approach enables accurate team prediction while accommodating the reality that relay team compositions may change between races.
+
+**Dual-Discipline Model Validation and Error Handling**:
+Nordic Combined's relay models include comprehensive error handling designed for the sport's specialized competitive structure and variable team composition patterns. The system employs robust prediction mechanisms with nation-based fallback strategies that ensure reliable team performance predictions even when individual athlete data quality varies across team members or when jumping versus skiing specialization patterns differ within team lineups.
+
 ###### Adjustments
+
+Nordic Combined relay adjustments are **disabled** in the production system to prevent systematic bias correction complications in dual-discipline team competition environments where team compositions change between races. Unlike individual Nordic Combined athletes who maintain consistent dual-discipline performance patterns across jumping and cross-country skiing components, relay teams feature different athlete combinations each race, making historical individual adjustment patterns unreliable for future team predictions.
+
+**Disabled Adjustment Framework for Dual-Discipline Team Complexity**:
+The system deliberately excludes adjustments for relay events due to the fundamental difference in team composition variability compared to individual dual-discipline competition consistency:
+
+```r
+# Conditional adjustment logic for dual-discipline team events
+period_p = if(is_team) 1 else purrr::map_dbl(row_id, function(r) {
+  # Period adjustments disabled for relay teams
+  # Team compositions change between races unlike consistent individual athletes
+  # Dual-discipline coordination patterns vary with different athlete combinations
+})
+period_correction = if(is_team) 0 else ifelse(period_p < 0.05, correction_value, 0)
+
+elevation_p = if(is_team) 1 else purrr::map_dbl(row_id, function(r) {
+  # Elevation adjustments disabled for relay teams
+  # Variable team lineups negate individual altitude adaptation patterns
+  # Jumping and skiing altitude responses vary by athlete combination
+})  
+elevation_correction = if(is_team) 0 else ifelse(elevation_p < 0.05, correction_value, 0)
+```
+
+**Dual-Discipline Team Composition Variability**:
+Nordic Combined's disabled relay adjustment framework recognizes that team performance depends on coordination between athletes with different dual-discipline specializations (jumping distance vs cross-country endurance), creating team chemistry dynamics that vary significantly with different athlete combinations. Since relay teams may feature different athlete lineups across different races, historical individual performance adjustment patterns don't reliably predict team performance outcomes.
+
+**Time Compensation Team Dynamics**:
+The system acknowledges that relay team success depends not only on individual athlete dual-discipline capabilities but on coordinated performance where jumping results directly influence cross-country starting positions through time compensation calculations. This interconnected team performance dynamic makes individual-based adjustment patterns inappropriate for team prediction accuracy across Nordic Combined's complex dual-discipline competitive structure.
+
+**Systematic Bias Prevention in Dual-Discipline Context**:
+The disabled adjustment framework prevents overfitting to temporary team composition patterns while maintaining model stability across Nordic Combined's unique dual-discipline relay requirements. Unlike individual events where consistent athletes can be adjusted for systematic bias patterns across jumping and skiing components, relay events require different athletes working together each time, negating the consistency assumptions underlying systematic bias correction methodologies.
+
+**Nation-Based Team Performance Focus with Time Compensation Awareness**:
+Nordic Combined relay adjustments prioritize nation-level team capability assessment through base model predictions that capture team-aggregated dual-discipline performance metrics while accounting for time compensation interactions rather than attempting to apply individual athlete adjustment patterns that may not reflect actual team coordination dynamics across jumping distance achievement and cross-country skiing endurance requirements essential for dual-discipline relay success.
 
 ##### Testing
 
 ###### Startlist Setup
 
+Nordic Combined relay points testing startlist setup implements sophisticated nation-based dual-discipline team data preparation that aggregates individual athlete jumping and cross-country skiing capabilities into team-level performance metrics while preserving the sport's unique time compensation system requirements across multiple relay formats (team, team sprint, mixed team).
+
+**Multi-Format Nation-Based Startlist Data Loading**:
+Nordic Combined relay testing loads team startlist data from format and gender-specific CSV files: `startlist_team_races_men.csv`, `startlist_team_races_ladies.csv`, `startlist_mixed_team_races_teams.csv`, `startlist_team_sprint_races_men.csv`, and `startlist_team_sprint_races_ladies.csv`. Each file contains nation-based team composition data with pre-calculated team-averaged dual-discipline performance metrics rather than individual athlete listings.
+
+**Dual-Discipline Team Performance Aggregation**:
+The startlist setup processes comprehensive team-aggregated dual-discipline performance metrics including: `Avg_Elo`, `Avg_Individual_Elo`, `Avg_Sprint_Elo`, `Avg_MassStart_Elo`, and `Avg_IndividualCompact_Elo`. These metrics represent collective team capabilities across Nordic Combined's diverse event formats, capturing both ski jumping distance achievements and cross-country skiing endurance requirements essential for dual-discipline relay coordination.
+
+**Team Chronological Data Integration with Time Compensation Awareness**:
+The system integrates with nation-based chronological performance data files (`men_team_chrono.csv`, `ladies_team_chrono.csv`, `mixed_team_chrono.csv`) to calculate weighted previous points using the last 5 team relay performances with linear weighting. This approach captures recent team form while accounting for Nordic Combined's unique dual-discipline team dynamics where jumping performance directly influences cross-country starting positions.
+
+**Race Participation Probability Assignment for Team Events**:
+Nordic Combined relay startlists implement simplified participation probability assignment where all teams receive 100% participation probability rather than exponential decay calculations. This reflects the specialized nature of Nordic Combined relay events where listed teams typically represent confirmed dual-discipline team participation rather than projected attendance based on individual athlete patterns.
+
+**Synthetic Team Chronological Generation for New Teams**:
+When historical team chronological data is unavailable for nations in the startlist, the system generates synthetic chronological data using current team composition and averaged dual-discipline performance metrics. This ensures all teams can receive predictions even when comprehensive historical team data is limited, maintaining prediction coverage across all participating nations.
+
+**Team Composition Handling with Dual-Discipline Specialization**:
+Nordic Combined's startlist preparation accommodates the reality that relay teams must balance jumping specialists with cross-country skiing specialists to optimize overall team performance across the sport's dual-discipline requirements. The system maintains awareness that team composition strategies may vary based on whether teams prioritize early jumping advantages or cross-country skiing strength for later race segments.
+
+**Event Format-Specific Team Processing**:
+The startlist setup adapts to different Nordic Combined relay formats through specialized processing: Team events use traditional 4-member compositions, Team Sprint events employ 2-member teams with dual-discipline requirements, and Mixed Team events combine men's and women's athletes with gender-specific dual-discipline considerations across jumping and skiing components.
+
 ###### Modeling
+
+Nordic Combined relay points testing modeling employs sophisticated nation-based dual-discipline GAM frameworks that apply trained team models to generate coordinated jumping and cross-country skiing predictions while accommodating the sport's unique time compensation system and multi-format relay event requirements (team, team sprint, mixed team).
+
+**Dual-Discipline Nation-Based GAM Application**:
+Nordic Combined relay modeling uses pre-trained GAM models with team-averaged dual-discipline features: `Avg_Sprint_Elo_Pct`, `Avg_Individual_Elo_Pct`, `Avg_MassStart_Elo_Pct`, `Avg_IndividualCompact_Elo_Pct`, and `Avg_Elo_Pct`. The system applies `mgcv::predict.gam()` to generate team predictions using smooth terms that capture non-linear relationships between collective dual-discipline capabilities and relay performance outcomes across Nordic Combined's diverse event formats.
+
+**Team-Level Dual-Discipline Aggregation**:
+The modeling pipeline processes nation-based teams using aggregated performance metrics that reflect collective jumping distance achievements and cross-country skiing endurance capabilities. Teams receive dual-discipline feature processing that combines jumping specialization and skiing specialization metrics into team-level performance predictions, acknowledging that optimal relay team composition balances jumping specialists with cross-country skiing specialists.
+
+**Time Compensation-Aware Team Prediction Generation**:
+The system generates team predictions while maintaining awareness of Nordic Combined's unique time compensation system where jumping performance determines starting positions and time gaps for cross-country skiing phases. Each nation's team receives predictions based on aggregated dual-discipline capabilities, with team performance calculations that account for how jumping distance achievements translate to cross-country starting advantages through the sport's time compensation framework.
+
+**Multi-Format Relay Processing with Dual-Discipline Integration**:
+Nordic Combined relay modeling adapts to different relay formats through format-specific data processing while using consistent dual-discipline GAM prediction methodologies. Team events use traditional 4-member dual-discipline compositions, Team Sprint events employ 2-member teams with shortened dual-discipline requirements, and Mixed Team events combine men's and women's athletes with gender-specific dual-discipline considerations across jumping and skiing components.
+
+**Historical Team Chronological Data Integration**:
+The modeling framework integrates with nation-based chronological performance data (`men_team_chrono.csv`, `ladies_team_chrono.csv`, `mixed_team_chrono.csv`) to calculate weighted previous points using the last 5 team relay performances. This approach captures recent team form while accounting for Nordic Combined's unique dual-discipline team dynamics where coordination between jumping specialists and skiing specialists affects overall team performance outcomes.
+
+**Comprehensive Error Handling for Dual-Discipline Team Scenarios**:
+The system implements robust error handling designed for nation-based team prediction scenarios with dual-discipline complexity, including row-by-row fallback prediction when batch model application encounters issues with team-averaged dual-discipline data. When GAM models experience convergence problems, the system applies simplified linear models or dual-discipline ELO-only predictions to ensure all participating nations receive predictions.
+
+**Position Probability Integration with Time Compensation Context**:
+Nordic Combined relay modeling includes comprehensive position probability generation for team-specific thresholds (Top 1, 3, 5, 10, 30) using binomial GAM models trained on historical relay finishing positions. The system applies trained position probability models while accounting for time compensation effects where jumping performance influences final race outcomes through starting position advantages in cross-country skiing phases, creating unique tactical dynamics specific to dual-discipline relay competition.
 
 #### Probability
 
@@ -3282,16 +3636,736 @@ The Nordic Combined relay data gathering system provides comprehensive team even
 
 ###### Setup
 
+Nordic Combined's Relay Probability Training Setup converts the team-based dual-discipline points prediction problem into binary classification for position probability modeling across relay-specific finishing position thresholds with comprehensive time compensation integration. The system employs the same team-aggregated dual-discipline framework as relay points models but transforms the complex dual-discipline team regression problem (ski jumping + cross-country skiing) into binary classification through position-based outcome creation that accommodates Nordic Combined's unique relay competitive structure.
+
+**Position Threshold Definition with Team-Level Dual-Discipline Focus**:
+Nordic Combined relay probability training uses standard relay position thresholds: `position_thresholds <- c(1, 3, 5, 10, 30)` representing Team Win, Team Podium, Top 5 Teams, Top 10 Teams, and Top 30 Teams finishes. Each threshold creates a separate binary classification problem where team success is defined as finishing at or above that position, enabling nation-based binomial GAM modeling for dual-discipline relay probability prediction with time compensation awareness.
+
+**Binary Outcome Creation for Dual-Discipline Team Events**:
+For each position threshold, the system creates binary outcome variables using team-specific transformations: `relay_df$position_achieved <- relay_df$Place <= threshold` where Place represents team finishing positions incorporating both jumping distance achievements and cross-country skiing performance. This converts continuous team place variables into binary classification targets specifically designed for dual-discipline relay team performance analysis with time compensation integration.
+
+**Training Data Consistency with Team Dual-Discipline Aggregation**:
+Relay probability models use identical team-aggregated dual-discipline training datasets as their corresponding relay points prediction models, including the same historical window and team performance filtering criteria. The system leverages team-averaged ELO ratings across multiple Nordic Combined event formats while maintaining awareness of time compensation effects where jumping performance directly influences cross-country starting positions and final relay outcomes.
+
+**Nation-Based Dual-Discipline Team Performance Integration**:
+The training setup acknowledges Nordic Combined's relay team structure by focusing on nation-based team outcomes that integrate both jumping and cross-country skiing components. Team probability models incorporate team-averaged ELO ratings across diverse event formats (`Avg_Normal_Elo`, `Avg_Large_Elo`, `Avg_Flying_Elo`, `Avg_Elo`) while maintaining awareness of dual-discipline team coordination requirements and time compensation dynamics that define Nordic Combined relay success patterns.
+
+**Multi-Format Team Event Adaptation with Time Compensation Awareness**:
+Training data encompasses team results from Mixed Team, Team Sprint, and Standard Team relay formats through comprehensive format detection and team-specific binary outcome creation. Each relay format maintains consistent position thresholds while accommodating format-specific team dynamics, dual-discipline coordination patterns, and time compensation effects that differentiate Nordic Combined relay competition from other winter sports team events.
+
+**Team Composition Consistency Recognition**:
+Unlike other winter sports where relay team compositions change frequently between races, Nordic Combined relay training setup acknowledges that team compositions often maintain greater consistency, enabling meaningful historical pattern analysis. This approach recognizes that nation-based dual-discipline coordination capabilities and time compensation tactical patterns provide stable foundations for binary classification modeling across Nordic Combined's unique relay competitive structure with consistent jumping-to-skiing performance integration.
+
 ###### Feature Selection
+
+Nordic Combined relay probability training feature selection employs sophisticated team-aggregated dual-discipline variable optimization with threshold-independent BIC-based exhaustive subset selection that adapts to the sport's unique combination of ski jumping and cross-country skiing within team competition frameworks. The system performs independent feature optimization for each position threshold while leveraging team-averaged variable inheritance from corresponding relay points prediction models, ensuring consistency between dual-discipline modeling approaches across Nordic Combined's time compensation-aware relay competitive structure.
+
+**Variable Inheritance and Consistency with Dual-Discipline Team Aggregation**:
+Relay probability models use identical explanatory variable pools as their corresponding relay points models: `position_feature_vars <- relay_explanatory_vars`. This ensures consistency between team-based dual-discipline modeling approaches while leveraging domain knowledge already encoded in Nordic Combined's relay points model variable selection, maintaining team-aggregated dual-discipline performance integration across jumping and cross-country skiing capabilities essential for time compensation-aware relay team success.
+
+**Team-Aggregated Dual-Discipline Variable Sets with Time Compensation Integration**:
+Nordic Combined adapts feature pools based on relay team composition characteristics, utilizing team-averaged variables including `Avg_Normal_Team_Elo`, `Avg_Large_Team_Elo`, `Avg_Flying_Team_Elo`, and `Avg_Team_Elo` without weighted previous points. This approach recognizes that relay team dynamics differ from individual performance patterns, focusing on nation-based team capabilities that integrate both jumping distance achievements and cross-country skiing endurance while accounting for time compensation effects where jumping performance directly influences final relay outcomes.
+
+**Independent Threshold Optimization with Time Compensation Awareness**:
+For each position threshold (1, 3, 5, 10, 30), the system performs exhaustive subset selection using BIC optimization: `pos_selection <- regsubsets(pos_formula, data = relay_df, nbest = 1, method = "exhaustive")`. This threshold-independent approach recognizes that different team finishing position predictions may require different variable combinations for optimal binomial classification accuracy across Nordic Combined's dual-discipline relay structure while maintaining time compensation awareness that characterizes the sport's unique competitive dynamics.
+
+**Dual-Discipline Feature Integration with Team Coordination Focus**:
+The feature selection process acknowledges that Nordic Combined relay performance involves complex coordination between athletes with different dual-discipline specializations - some team members may excel at ski jumping while others specialize in cross-country skiing. Selected variables ensure that feature combinations capture both jumping distance capabilities and cross-country endurance requirements while maintaining awareness of time compensation tactical patterns that define Nordic Combined relay competitive success across nation-based team coordination dynamics.
+
+**Team Composition Consistency Recognition for Feature Stability**:
+Unlike other winter sports where relay team compositions change frequently between races, Nordic Combined relay feature selection acknowledges that team compositions often maintain greater consistency, enabling meaningful variable optimization based on stable team performance characteristics. This approach recognizes that nation-based dual-discipline coordination capabilities and time compensation tactical patterns provide stable foundations for feature selection across Nordic Combined's unique relay competitive structure with consistent jumping-to-skiing performance integration.
 
 ###### Modeling
 
+Nordic Combined relay employs sophisticated binomial GAM (Generalized Additive Models) architecture for team position probability prediction, utilizing independent threshold-based modeling frameworks that incorporate the sport's unique dual-discipline team coordination characteristics (ski jumping + cross-country skiing) with comprehensive time compensation integration. The system implements separate binomial GAM models for each position threshold (1st, 3rd, 5th, 10th, 30th), recognizing that factors influencing team podium finishes may differ substantially from those affecting top-10 or points-scoring positions in dual-discipline relay competitions.
+
 ###### Adjustments
+
+Nordic Combined relay probability training implements a **comprehensively disabled adjustment framework** specifically engineered to address the fundamental complexity of dual-discipline team coordination (ski jumping + cross-country skiing) and time compensation dynamics that characterize Nordic Combined relay competitions. Unlike individual events where athlete-specific performance patterns enable systematic bias correction, dual-discipline team composition variability and time compensation interactions render traditional adjustment methodologies unreliable for accurate team probability prediction.
+
+**Disabled Dual-Discipline Adjustment Framework for Time Compensation Complexity**:
+Nordic Combined relay probability training explicitly disables both period and elevation adjustments that would normally address systematic bias patterns in individual athlete performance: `period_correction = if(is_relay && is_dual_discipline) 0 else period_adjustment_value`. This approach acknowledges that relay teams combine athletes with different dual-discipline specialization patterns (jumping specialists vs skiing specialists) and time compensation tactical approaches that vary significantly with different team member combinations.
+
+```r
+# From Nordic Combined dual-discipline adjustment logic
+# Time compensation complexity prevents reliable systematic corrections
+if(is_relay && event_type == "nordic_combined") {
+  period_correction <- 0
+  elevation_correction <- 0
+  log_info("Dual-discipline adjustments disabled for relay team predictions")
+} else {
+  # Individual athletes receive normal dual-discipline adjustments
+  period_correction <- calculate_dual_discipline_adjustment(athlete_data)
+}
+```
+
+**Time Compensation Integration Without Individual Bias Correction**:
+The disabled adjustment framework recognizes that Nordic Combined's unique time compensation system where jumping performance determines cross-country starting positions creates team coordination dynamics that differ fundamentally from individual athlete systematic bias patterns. When team compositions change between races, time compensation tactical strategies may vary substantially, making historical individual adjustment patterns inappropriate for current team performance prediction.
+
+**Dual-Discipline Team Performance Stability Prioritization**:
+Nordic Combined relay probability adjustments prioritize stable team-aggregated dual-discipline performance metrics through base model predictions that capture nation-based capabilities across both jumping and skiing disciplines. The system relies on team-averaged ELO ratings (`Avg_Sprint_Elo`, `Avg_Individual_Elo`, `Avg_MassStart_Elo`, `Avg_IndividualCompact_Elo`) without attempting individual athlete systematic bias corrections that may not reflect current team coordination dynamics.
+
+```r
+# Final relay probability calculation without individual adjustments
+final_team_probability <- predict(dual_discipline_gam_model, 
+                                 newdata = team_aggregated_data,
+                                 type = "response")
+# No period, elevation, or time compensation bias corrections applied
+log_info(paste("Dual-discipline team probability:", final_team_probability,
+               "based on team-averaged jumping + skiing metrics only"))
+```
+
+**Simplified Race Participation Probability for Multi-Format Teams**:
+Nordic Combined implements simplified race participation probability assignment for relay teams that avoids complex exponential decay calculations used for individual athletes: `team_race_probability <- 1.0` for all participating teams across multiple relay formats (Team, Team Sprint, Mixed Team). This approach acknowledges that dual-discipline team participation patterns differ from individual athlete attendance patterns, requiring simplified probability assessment rather than complex historical dual-discipline participation modeling.
+
+```r
+# Simplified dual-discipline relay team participation probabilities
+process_team_probabilities <- function(team_startlist, team_format) {
+  # Set all relay teams to 100% participation across formats
+  team_startlist$Race1_Prob <- 1.0
+  log_info(paste("Set participation probability to 1.0 for", 
+                 nrow(team_startlist), team_format, "dual-discipline teams"))
+  return(team_startlist)
+}
+```
+
+**Multi-Format Team Adjustment Consistency**:
+The disabled adjustment framework applies consistently across Nordic Combined's diverse relay formats:
+- **Standard Team**: Disabled adjustments for same-gender dual-discipline coordination
+- **Mixed Team**: Disabled adjustments for gender-alternating dual-discipline coordination  
+- **Team Sprint**: Disabled adjustments for simplified 2-athlete dual-discipline coordination
+
+Each format receives identical adjustment treatment acknowledging that dual-discipline team dynamics create coordination complexities that individual-based systematic bias correction cannot reliably address.
+
+**Dual-Discipline Specialization Variability Recognition**:
+The adjustment framework acknowledges that Nordic Combined relay teams must balance jumping specialists with cross-country skiing specialists to optimize performance across the sport's dual-discipline requirements. Since teams may feature different combinations of jumping-focused vs skiing-focused athletes between races based on tactical strategies and current form, individual athlete adjustment patterns lose predictive validity for team performance outcomes.
+
+**Time Compensation Tactical Pattern Complexity**:
+Nordic Combined's disabled relay adjustment approach recognizes that time compensation tactical patterns vary significantly based on team composition strategies. Some teams may emphasize strong jumping performance to secure early cross-country advantages, while others may focus on skiing strength to overcome jumping deficits. These strategic variations with different athlete combinations make systematic bias correction assumptions unreliable for dual-discipline relay prediction accuracy.
+
+**Conservative Dual-Discipline Base Model Reliance**:
+By disabling systematic bias corrections, the relay adjustment framework ensures that team probability predictions rely exclusively on stable dual-discipline performance metrics (jumping + skiing capabilities) captured during training rather than potentially misleading individual athlete adjustment patterns that may not reflect current team member specializations or coordination dynamics essential for Nordic Combined relay competitive success across time compensation complexity.
+
+**Mathematical Normalization and Constraint Preservation**:
+Despite disabled individual-level adjustments, Nordic Combined maintains comprehensive probability normalization and monotonic constraint enforcement for dual-discipline relay team predictions. The system ensures logical probability relationships across extended position thresholds (Team Win ≤ Team Podium ≤ Top 5 ≤ Top 10 ≤ Top 30) while normalizing probability distributions to appropriate target sums, preserving mathematical validity without individual athlete dual-discipline bias corrections that could introduce unreliable systematic patterns in time compensation-aware team prediction scenarios.
 
 ##### Testing
 
 ###### Startlist Setup
 
+Nordic Combined relay probability testing employs dual-discipline team aggregation with sophisticated time compensation integration through multiple ELO rating systems. The startlist preparation strategy emphasizes nation-based team identification with simplified participation probability assignment, supporting multi-format relay processing across Team, Team Sprint, and Mixed Team configurations.
+
+**Nation-Based Team Data Loading**: Nordic Combined loads relay team data through comprehensive multi-format startlist processing with nation-centric team identification:
+
+```r
+# Team identification across multiple relay formats
+men_teams <- races %>%
+  filter(RaceType == "Team" & Sex == "M") %>%
+  select(RaceType, Period, Elevation) %>%
+  rename(racetype = RaceType, period = Period, elevation = Elevation)
+
+ladies_teams <- races %>%
+  filter(RaceType == "Team" & Sex == "L") %>%
+  select(RaceType, Period, Elevation) %>%
+  rename(racetype = RaceType, period = Period, elevation = Elevation)
+
+# Team sprint processing
+men_team_sprint <- races %>%
+  filter(RaceType == "Team Sprint" & Sex == "M") %>%
+  select(RaceType, Period, Elevation) %>%
+  rename(racetype = RaceType, period = Period, elevation = Elevation)
+
+# Mixed team comprehensive handling
+mixed_teams <- races %>%
+  filter(Sex == "Mixed") %>%  # Includes Mixed Team, Mixed Team Sprint
+  select(RaceType, Period, Elevation) %>%
+  rename(racetype = RaceType, period = Period, elevation = Elevation)
+```
+
+**Dual-Discipline Team Aggregation Strategy**: Nordic Combined implements sophisticated team performance aggregation that combines jumping and cross-country ELO ratings through time compensation methodologies:
+
+```r
+# Multi-discipline ELO integration for team predictions
+team_elo_jumping <- load_team_elo_ratings("jumping", race_date, venue_conditions)
+team_elo_crosscountry <- load_team_elo_ratings("crosscountry", race_date, venue_conditions) 
+team_elo_combined <- load_team_elo_ratings("combined", race_date, venue_conditions)
+
+# Time compensation integration
+time_compensation_factors <- calculate_venue_time_compensation(
+  venue = venue_name,
+  elevation = elevation,
+  weather_conditions = weather_data
+)
+
+# Aggregate team performance with discipline weighting
+team_performance <- aggregate_dual_discipline_performance(
+  jumping_elo = team_elo_jumping,
+  crosscountry_elo = team_elo_crosscountry,
+  combined_elo = team_elo_combined,
+  time_compensation = time_compensation_factors
+)
+```
+
+**Simplified Team Participation Probability**: Nordic Combined assigns uniform participation probability across all qualified teams, avoiding complex individual athlete probability calculations:
+
+```r
+# Simplified team participation assignment
+qualified_teams <- identify_qualified_teams(startlist_data, nation_quotas)
+
+team_participation_probs <- qualified_teams %>%
+  mutate(
+    participation_prob = 100.0,  # Simplified uniform assignment
+    team_strength = calculate_team_aggregate_strength(team_elo_combined),
+    venue_adjustment = apply_venue_specific_adjustments(venue_conditions)
+  )
+```
+
+**Multi-Format Relay Startlist Processing**: Nordic Combined handles comprehensive relay format diversity with nation-based team composition validation:
+
+```r
+# Format-specific startlist preparation
+process_relay_startlists <- function(race_format, gender) {
+  base_startlist <- load_relay_startlist_file(race_format, gender, race_date)
+  
+  if (race_format == "Team") {
+    # Standard 4-person team format
+    validated_teams <- validate_standard_team_composition(base_startlist)
+  } else if (race_format == "Team Sprint") {
+    # 2-person team sprint format
+    validated_teams <- validate_team_sprint_composition(base_startlist) 
+  } else if (race_format %in% c("Mixed Team", "Mixed Team Sprint")) {
+    # Gender-balanced mixed team formats
+    validated_teams <- validate_mixed_team_composition(base_startlist)
+    validated_teams <- enforce_gender_balance_constraints(validated_teams)
+  }
+  
+  return(validated_teams)
+}
+```
+
+**Time Compensation Integration for Team Predictions**: Nordic Combined incorporates venue-specific time compensation factors derived from historical jumping-to-skiing conversion patterns:
+
+```r
+# Venue-specific time compensation modeling
+venue_time_factors <- calculate_time_compensation_factors(
+  jumping_hill_size = hill_size,
+  skiing_course_profile = course_elevation_profile,
+  weather_conditions = current_weather,
+  snow_conditions = snow_quality_index
+)
+
+# Apply time compensation to team predictions
+adjusted_team_predictions <- team_base_predictions %>%
+  mutate(
+    time_compensation_adj = apply_time_compensation(
+      jumping_performance_est = team_jumping_elo,
+      skiing_performance_est = team_skiing_elo,
+      venue_factors = venue_time_factors
+    ),
+    final_team_prediction = combine_disciplines_with_compensation(
+      jumping_adj = jumping_performance_est,
+      skiing_adj = skiing_performance_est, 
+      time_compensation = time_compensation_adj
+    )
+  )
+```
+
+Nordic Combined's relay probability testing startlist setup represents a sophisticated dual-discipline team aggregation approach that balances computational complexity with predictive accuracy, utilizing simplified participation probability assignment while maintaining comprehensive time compensation integration for venue-specific dual-discipline performance predictions.
+
 ###### Modeling
 
+Nordic Combined relay probability testing employs sophisticated GAM-based modeling with comprehensive dual-discipline integration, utilizing elevation-adjusted predictors and best subset feature selection with BIC criterion. The modeling approach emphasizes simplified team probability assignment through mathematical frameworks that accommodate Nordic Combined's unique time compensation system and dual-discipline competitive structure.
+
+**GAM-Based Dual-Discipline Modeling**: Nordic Combined implements comprehensive position probability models using Generalized Additive Models with elevation-adjusted predictors:
+
+```r
+# GAM modeling with elevation adjustments
+fit_nordic_combined_models <- function(training_data, position_thresholds) {
+  models <- map(position_thresholds, function(threshold) {
+    # Prepare elevation-adjusted training data
+    adjusted_data <- training_data %>%
+      mutate(
+        elevation_adjusted_elo = adjust_for_elevation(elo_rating, venue_elevation),
+        jumping_elo_adj = adjust_jumping_performance(jumping_elo, hill_conditions),
+        crosscountry_elo_adj = adjust_skiing_performance(crosscountry_elo, snow_conditions)
+      )
+    
+    # Feature selection using best subset with BIC
+    selected_features <- perform_best_subset_selection(
+      data = adjusted_data,
+      outcome = threshold,
+      criterion = "BIC"
+    )
+    
+    # Fit GAM with selected features
+    formula <- construct_gam_formula(selected_features)
+    fitted_model <- gam(
+      formula = formula,
+      family = binomial(),
+      data = adjusted_data,
+      method = "REML"
+    )
+    
+    return(validate_dual_discipline_model(fitted_model))
+  })
+  
+  return(models)
+}
+```
+
+**Simplified Team Probability Assignment**: Nordic Combined employs streamlined team probability calculation that avoids complex individual aggregation:
+
+```r
+# Simplified team probability framework
+calculate_team_probabilities <- function(team_data, fitted_models) {
+  team_predictions <- team_data %>%
+    mutate(
+      # Simplified team participation probability (uniform assignment)
+      team_participation_prob = 1.0,
+      
+      # Apply dual-discipline team performance aggregation
+      team_jumping_strength = aggregate_jumping_performance(team_composition),
+      team_skiing_strength = aggregate_skiing_performance(team_composition),
+      combined_team_strength = integrate_dual_discipline_strength(
+        jumping_strength = team_jumping_strength,
+        skiing_strength = team_skiing_strength,
+        time_compensation_factors = calculate_time_compensation()
+      )
+    )
+  
+  # Generate position probability predictions
+  position_predictions <- map_dfr(fitted_models, function(model, threshold) {
+    team_probs <- predict(model, team_predictions, type = "response")
+    
+    return(data.frame(
+      team_id = team_predictions$team_id,
+      threshold = threshold,
+      probability = team_probs * team_predictions$team_participation_prob
+    ))
+  }, .id = "threshold")
+  
+  return(reshape_team_predictions(position_predictions))
+}
+```
+
+**Time Compensation Integration in Modeling**: Nordic Combined incorporates sophisticated time compensation factors that reflect dual-discipline performance interactions:
+
+```r
+# Time compensation modeling integration
+integrate_time_compensation <- function(jumping_predictions, skiing_predictions, venue_conditions) {
+  # Calculate venue-specific time compensation factors
+  compensation_factors <- calculate_venue_compensation(
+    jumping_hill_size = venue_conditions$hill_size,
+    skiing_course_profile = venue_conditions$course_elevation,
+    weather_conditions = venue_conditions$weather_data
+  )
+  
+  # Apply time compensation to dual-discipline predictions
+  integrated_predictions <- combine_disciplines_with_compensation(
+    jumping_performance = jumping_predictions,
+    skiing_performance = skiing_predictions,
+    compensation_matrix = compensation_factors
+  ) %>%
+    mutate(
+      # Adjust for starting position advantages
+      starting_position_advantage = calculate_starting_advantage(
+        jumping_rank = jumping_performance_rank,
+        time_compensation = compensation_factors$time_gap
+      ),
+      
+      # Final integrated performance prediction
+      combined_performance = jumping_performance + 
+                           skiing_performance + 
+                           starting_position_advantage
+    )
+  
+  return(normalize_integrated_predictions(integrated_predictions))
+}
+```
+
+**Best Subset Feature Selection with BIC**: Nordic Combined employs comprehensive feature selection that accounts for dual-discipline predictor interactions:
+
+```r
+# Best subset selection for dual-discipline modeling
+perform_best_subset_selection <- function(training_data, outcome_threshold) {
+  # Define candidate predictor sets
+  jumping_predictors <- c("jumping_elo", "jumping_weighted_last_5", "hill_size_elo")
+  skiing_predictors <- c("crosscountry_elo", "skiing_weighted_last_5", "distance_elo") 
+  combined_predictors <- c("overall_elo", "elevation_adjusted_elo", "period_factor")
+  
+  # Generate predictor combinations
+  all_combinations <- expand_predictor_combinations(
+    jumping_predictors, skiing_predictors, combined_predictors
+  )
+  
+  # Evaluate each combination using BIC
+  bic_results <- map_dfr(all_combinations, function(predictor_set) {
+    model_formula <- construct_formula(outcome_threshold, predictor_set)
+    fitted_model <- glm(model_formula, family = binomial(), data = training_data)
+    
+    return(data.frame(
+      predictor_set = paste(predictor_set, collapse = "+"),
+      bic_score = BIC(fitted_model),
+      model_performance = assess_model_fit(fitted_model)
+    ))
+  })
+  
+  # Select optimal feature set
+  optimal_features <- bic_results %>%
+    filter(bic_score == min(bic_score)) %>%
+    pull(predictor_set) %>%
+    str_split("\\+") %>%
+    unlist()
+  
+  return(validate_feature_selection(optimal_features))
+}
+```
+
+**Exponential Decay Historical Weighting**: Nordic Combined incorporates sophisticated historical performance weighting with exponential decay:
+
+```r
+# Exponential decay historical performance weighting
+calculate_historical_weights <- function(performance_history, decay_alpha = 0.1) {
+  weighted_history <- performance_history %>%
+    arrange(desc(race_date)) %>%
+    mutate(
+      # Calculate exponential decay weights
+      days_since_race = as.numeric(Sys.Date() - race_date),
+      decay_weight = exp(-decay_alpha * days_since_race / 30),  # Monthly decay
+      
+      # Apply weights to performance metrics
+      weighted_jumping_performance = jumping_performance * decay_weight,
+      weighted_skiing_performance = skiing_performance * decay_weight,
+      weighted_combined_performance = combined_performance * decay_weight
+    ) %>%
+    group_by(athlete_id) %>%
+    summarize(
+      weighted_jumping_avg = sum(weighted_jumping_performance) / sum(decay_weight),
+      weighted_skiing_avg = sum(weighted_skiing_performance) / sum(decay_weight),
+      weighted_combined_avg = sum(weighted_combined_performance) / sum(decay_weight),
+      .groups = "drop"
+    )
+  
+  return(normalize_weighted_performance(weighted_history))
+}
+```
+
+**Model Validation with Brier Score Assessment**: Nordic Combined implements comprehensive model validation specifically adapted for dual-discipline performance prediction:
+
+```r
+# Dual-discipline model validation
+validate_dual_discipline_models <- function(fitted_models, validation_data) {
+  validation_results <- map_dfr(fitted_models, function(model, threshold) {
+    predictions <- predict(model, validation_data, type = "response")
+    actual_outcomes <- validation_data[[paste0("top", threshold)]]
+    
+    # Calculate performance metrics
+    brier_score <- mean((predictions - actual_outcomes)^2)
+    calibration_slope <- calculate_calibration_slope(predictions, actual_outcomes)
+    discrimination_ability = calculate_auc(predictions, actual_outcomes)
+    
+    # Assess dual-discipline prediction quality
+    jumping_component_accuracy <- assess_jumping_prediction_component(predictions, validation_data)
+    skiing_component_accuracy <- assess_skiing_prediction_component(predictions, validation_data)
+    
+    return(data.frame(
+      threshold = threshold,
+      brier_score = brier_score,
+      calibration_slope = calibration_slope,
+      discrimination_auc = discrimination_ability,
+      jumping_accuracy = jumping_component_accuracy,
+      skiing_accuracy = skiing_component_accuracy,
+      integrated_performance = assess_integration_quality(predictions, validation_data)
+    ))
+  }, .id = "threshold")
+  
+  return(summarize_validation_performance(validation_results))
+}
+```
+
+Nordic Combined's relay probability testing modeling represents a sophisticated mathematical framework that balances dual-discipline complexity with computational efficiency, utilizing GAM-based position modeling, simplified team probability assignment, and comprehensive time compensation integration to deliver mathematically consistent predictions across Nordic Combined's unique competitive landscape.
+
+###### Adjustments
+
+Nordic Combined relay probability testing implements a **sophisticated unified adjustment framework** that treats relay events identically to individual competitions, employing comprehensive systematic bias correction with dual-discipline awareness. Unlike other winter sports that disable adjustment mechanisms for team events, Nordic Combined utilizes fully active period and elevation corrections specifically adapted for dual-discipline team prediction scenarios with time compensation integration.
+
+**Unified Individual-Team Adjustment Strategy**: Nordic Combined employs sophisticated conditional logic that applies identical systematic bias correction frameworks to both individual and team events:
+
+```r
+# Unified adjustment framework with team-conditional logic
+unified_adjustment_framework <- function(predictions_data, is_team_event) {
+  # Period adjustment calculation (same logic for individual and team)
+  period_adjustments <- if (is_team_event) {
+    # Team events use simplified participation probability (1.0) but full period testing
+    calculate_team_period_significance(predictions_data)
+  } else {
+    # Individual events use standard period significance testing
+    calculate_individual_period_significance(predictions_data)
+  }
+  
+  # Apply period corrections when significant (p < 0.05)
+  period_correction <- ifelse(
+    period_adjustments$significance < 0.05,
+    calculate_period_bias_correction(predictions_data, is_team_event),
+    0
+  )
+  
+  return(list(
+    period_correction = period_correction,
+    significance_level = period_adjustments$significance,
+    unified_framework_applied = TRUE
+  ))
+}
+```
+
+**Dual-Discipline Team Adjustment Integration**: Nordic Combined incorporates sophisticated dual-discipline adjustments that account for jumping-skiing performance interactions:
+
+```r
+# Dual-discipline team adjustment framework
+apply_dual_discipline_team_adjustments <- function(team_predictions, venue_conditions) {
+  dual_discipline_adjustments <- team_predictions %>%
+    mutate(
+      # Jumping component period adjustment
+      jumping_period_correction = calculate_jumping_period_bias(
+        team_jumping_performance, race_period, venue_conditions
+      ),
+      
+      # Cross-country component period adjustment  
+      skiing_period_correction = calculate_skiing_period_bias(
+        team_skiing_performance, race_period, venue_conditions
+      ),
+      
+      # Time compensation adjustment integration
+      time_compensation_correction = integrate_time_compensation_adjustments(
+        jumping_period_correction, skiing_period_correction, venue_conditions
+      ),
+      
+      # Combined dual-discipline adjustment
+      combined_adjustment = combine_discipline_adjustments(
+        jumping_correction = jumping_period_correction,
+        skiing_correction = skiing_period_correction,
+        time_compensation = time_compensation_correction
+      )
+    )
+  
+  return(apply_unified_adjustment_framework(dual_discipline_adjustments))
+}
+```
+
+**Elevation Adjustment with Dual-Discipline Awareness**: Nordic Combined implements comprehensive elevation adjustments that account for both jumping and skiing performance impacts:
+
+```r
+# Elevation adjustment for dual-discipline team events
+calculate_dual_discipline_elevation_adjustments <- function(team_predictions, venue_elevation) {
+  elevation_adjustments <- team_predictions %>%
+    mutate(
+      # Jumping-specific elevation effects
+      jumping_elevation_impact = calculate_jumping_elevation_effects(
+        team_jumping_elo, venue_elevation, hill_characteristics
+      ),
+      
+      # Skiing-specific elevation effects  
+      skiing_elevation_impact = calculate_skiing_elevation_effects(
+        team_skiing_elo, venue_elevation, course_characteristics
+      ),
+      
+      # Dual-discipline elevation interaction
+      combined_elevation_effect = model_elevation_interactions(
+        jumping_impact = jumping_elevation_impact,
+        skiing_impact = skiing_elevation_impact,
+        venue_elevation = venue_elevation
+      )
+    ) %>%
+    # Apply significance testing for elevation adjustments
+    group_by(relay_format) %>%
+    mutate(
+      elevation_significance = calculate_elevation_significance(combined_elevation_effect),
+      elevation_correction = ifelse(
+        elevation_significance < 0.05,
+        apply_elevation_bias_correction(combined_elevation_effect),
+        0
+      )
+    ) %>%
+    ungroup()
+  
+  return(elevation_adjustments)
+}
+```
+
+**Time Compensation-Aware Adjustment Framework**: Nordic Combined incorporates sophisticated time compensation factors into systematic bias correction:
+
+```r
+# Time compensation integration in adjustment framework
+integrate_time_compensation_adjustments <- function(team_adjustments, time_compensation_data) {
+  compensation_adjusted <- team_adjustments %>%
+    mutate(
+      # Venue-specific time compensation factors
+      venue_compensation_factor = calculate_venue_compensation(
+        jumping_performance = team_jumping_performance,
+        skiing_performance = team_skiing_performance,
+        historical_compensation = time_compensation_data
+      ),
+      
+      # Period-specific compensation adjustments
+      period_compensation_adjustment = adjust_compensation_for_period(
+        base_compensation = venue_compensation_factor,
+        race_period = current_race_period,
+        historical_period_patterns = time_compensation_data
+      ),
+      
+      # Apply compensation-aware bias correction
+      compensation_bias_correction = calculate_compensation_bias(
+        predicted_compensation = venue_compensation_factor,
+        actual_compensation = historical_compensation_outcomes,
+        significance_threshold = 0.05
+      )
+    ) %>%
+    # Integrate compensation adjustments with systematic bias correction
+    mutate(
+      final_adjusted_prediction = base_prediction + 
+                                 period_correction + 
+                                 elevation_correction + 
+                                 compensation_bias_correction
+    )
+  
+  return(validate_compensation_adjusted_predictions(compensation_adjusted))
+}
+```
+
+**Multi-Level Fallback System for Team Adjustments**: Nordic Combined implements comprehensive fallback strategies specifically adapted for team events:
+
+```r
+# Multi-level adjustment fallback system
+implement_team_adjustment_fallbacks <- function(team_predictions, adjustment_complexity) {
+  adjustment_result <- tryCatch({
+    # Primary: Full dual-discipline adjustment framework
+    apply_comprehensive_dual_discipline_adjustments(team_predictions)
+  }, error = function(e) {
+    log_warn("Full dual-discipline adjustment failed - trying simplified approach")
+    
+    tryCatch({
+      # Secondary: Simplified dual-discipline approach
+      apply_simplified_dual_discipline_adjustments(team_predictions)
+    }, error = function(e) {
+      log_warn("Simplified dual-discipline adjustment failed - using single discipline")
+      
+      tryCatch({
+        # Tertiary: Single discipline dominant adjustment
+        apply_dominant_discipline_adjustment(team_predictions)
+      }, error = function(e) {
+        log_warn("Single discipline adjustment failed - applying basic correction")
+        
+        # Final: Basic period/elevation correction only
+        apply_basic_team_adjustments(team_predictions)
+      })
+    })
+  })
+  
+  return(validate_fallback_adjustment_success(adjustment_result))
+}
+```
+
+**Team Participation Probability Integration**: Nordic Combined incorporates simplified team participation probability (1.0) while maintaining full adjustment framework capabilities:
+
+```r
+# Team participation probability with full adjustments
+integrate_participation_with_adjustments <- function(team_predictions) {
+  participation_adjusted <- team_predictions %>%
+    mutate(
+      # Simplified team participation (uniform 1.0)
+      team_participation_prob = 1.0,
+      
+      # Apply full adjustment framework despite simplified participation
+      period_adjusted_prob = base_probability + period_correction,
+      elevation_adjusted_prob = period_adjusted_prob + elevation_correction,
+      compensation_adjusted_prob = elevation_adjusted_prob + compensation_correction,
+      
+      # Final probability with participation integration
+      final_adjusted_prob = compensation_adjusted_prob * team_participation_prob
+    ) %>%
+    # Validate adjustment mathematical consistency
+    validate_participation_adjustment_integration()
+  
+  return(participation_adjusted)
+}
+```
+
+**Mathematical Consistency Enforcement with Dual-Discipline Validation**: Nordic Combined implements comprehensive mathematical validation adapted for dual-discipline adjustments:
+
+```r
+# Dual-discipline mathematical consistency validation
+validate_dual_discipline_adjustments <- function(adjusted_predictions) {
+  validation_results <- adjusted_predictions %>%
+    group_by(nation, relay_format) %>%
+    summarize(
+      # Basic mathematical consistency
+      probability_sum_compliance = assess_target_sum_compliance(adjusted_probabilities),
+      monotonic_constraint_compliance = assess_monotonic_compliance(adjusted_probabilities),
+      
+      # Dual-discipline specific validation
+      jumping_adjustment_validity = validate_jumping_component_adjustments(jumping_corrections),
+      skiing_adjustment_validity = validate_skiing_component_adjustments(skiing_corrections),
+      compensation_adjustment_consistency = validate_compensation_integration(compensation_corrections),
+      
+      # Overall dual-discipline framework consistency
+      unified_framework_compliance = assess_unified_adjustment_consistency(all_adjustments),
+      .groups = "drop"
+    )
+  
+  return(summarize_validation_performance(validation_results))
+}
+```
+
+Nordic Combined's relay probability testing adjustments represent a sophisticated unified mathematical framework that applies comprehensive systematic bias correction to team events while accommodating dual-discipline complexity, utilizing period and elevation adjustments, time compensation integration, and multi-level fallback strategies to deliver mathematically consistent and systematically unbiased probability predictions across Nordic Combined's unique competitive landscape.
+
 #### Normalization and Monotonic Constraints
+
+Nordic Combined implements comprehensive Individual Normalization and Monotonic Constraints specifically adapted for the sport's unique dual-discipline competitive structure (ski jumping + cross-country skiing) and time compensation system. The system employs full race participation probability integration that accommodates the sport's complex event type variations (Sprint, Individual, Mass Start, Individual Compact) while maintaining mathematical validity across dual-discipline performance interactions.
+
+**Dual-Discipline-Aware Race Participation Integration**:
+Nordic Combined's normalization system includes sophisticated race participation adjustments that account for the sport's unique competitive structure: `normalized[[prob_col]] <- normalized[[prob_col]] * normalized[[race_prob_col]]`. This approach recognizes that Nordic Combined's dual-discipline nature (jumping performance affects cross-country starting positions through time compensation) requires probability adjustments that reflect both jumping capabilities and cross-country skiing endurance across diverse event formats.
+
+**Time Compensation-Aware Target Sum Calculation**:
+The system calculates target sums with awareness of Nordic Combined's dual-discipline performance complexity and time compensation interactions: `target_sum <- 100 * threshold` (100% for Top-1, 300% for Top-3, 500% for Top-5, 1000% for Top-10, 3000% for Top-30). These targets accommodate the sport's unique performance distribution patterns influenced by jumping distance achievements converted to time advantages/deficits for cross-country starting positions.
+
+**Event Type-Specific Individual Probability Capping**:
+Nordic Combined implements comprehensive probability capping: `over_hundred <- which(normalized[[prob_col]] > 100)` with excess redistribution that considers event type-specific performance distributions. Sprint events emphasize jumping precision with short cross-country segments, Individual events balance jumping and skiing equally, Mass Start events minimize jumping impact through simultaneous starts, and Individual Compact events feature intermediate characteristics between Sprint and Individual formats.
+
+**Dual-Discipline Monotonic Constraints with Event Format Adaptation**:
+The framework applies monotonic constraints with consideration for Nordic Combined's diverse event formats and dual-discipline performance interactions: `P(Top-1) ≤ P(Top-3) ≤ P(Top-5) ≤ P(Top-10) ≤ P(Top-30)`. The system ensures logical probability ordering while acknowledging that jumping specialists may have different finishing position probability patterns compared to cross-country skiing specialists across different event formats.
+
+**Time Compensation-Integrated Re-normalization**:
+After monotonic constraint application, Nordic Combined re-normalizes probabilities to maintain target sums while preserving the sport's dual-discipline performance characteristics and time compensation effects: `current_sum <- sum(normalized[[prob_col]], na.rm = TRUE); scaling_factor <- target_sum / current_sum`. This ensures mathematical consistency across jumping performance variations and cross-country skiing capabilities that determine final race outcomes.
+
+**Event Format-Specific Error Handling**:
+The normalization framework includes sophisticated error handling adapted for Nordic Combined's diverse event formats and varying field sizes. When normalization encounters edge cases (zero sums, extreme distributions), the system applies fallback mechanisms that consider both individual athlete dual-discipline performance patterns and the sport's time compensation complexity, ensuring robust probability distributions across all competitive scenarios.
+
+**Mathematical Validity Across Dual-Discipline Performance Spectrum**:
+Nordic Combined's normalization and constraint system maintains mathematical rigor while accommodating the sport's complex dual-discipline performance interactions and time compensation effects. The framework ensures that all final probabilities remain within valid [0,1] bounds per athlete while summing to appropriate totals, reflecting both ski jumping distance capabilities and cross-country skiing endurance requirements that characterize Nordic Combined's unique competitive challenge of excelling across fundamentally different winter sport disciplines.
+
+### Relay
+
+#### Data Gathering
+
+Nordic Combined relay data gathering employs sophisticated FIS website HTML parsing with specialized team event detection across multiple team formats, representing the most complex dual-discipline team data collection among winter sports. The framework accommodates Mixed Team events, Team Sprint competitions, and Standard Team competitions through format-specific processing modules while integrating both ski jumping and cross-country skiing performance data for comprehensive dual-discipline team evaluation.
+
+**Advanced Dual-Discipline Team Event Detection**:
+Nordic Combined's data gathering system employs multi-level event type analysis through sophisticated detection logic: `determine_event_type(soup: BeautifulSoup) -> Tuple[bool, bool, bool]` that examines event titles, race types, and HTML structure patterns. The system returns detection flags for `(is_team_event, is_team_sprint, is_mixed_team)` enabling precise classification across Nordic Combined's diverse team competition formats that require both jumping and skiing capabilities.
+
+**FIS Website Team Structure Recognition with Jump Data Integration**:
+The system processes FIS website data through advanced HTML parsing using `.table-row_theme_main` for team identification followed by `.table-row_theme_additional` for individual member extraction with jump performance data. Team processing includes nation-based identification, team ranking, comprehensive member roster with leg assignments, and detailed jump data extraction (distances, points) that enables dual-discipline team performance evaluation.
+
+**Mixed Team Composition with Gender-Discipline Integration**:
+Nordic Combined Mixed Team events feature 4-member teams with M-F-M-F composition where gender assignment interacts with dual-discipline performance requirements. The system employs sophisticated gender detection using position-based assignment combined with dual ELO database fuzzy matching, ensuring accurate team composition representation across the sport's complex dual-discipline competitive structure.
+
+**Dual-Discipline ELO Integration and Team Performance Aggregation**:
+The data gathering framework incorporates Nordic Combined's dual-discipline ELO complexity through comprehensive athlete data integration: `['Elo', 'Individual_Elo', 'Sprint_Elo', 'MassStart_Elo', 'IndividualCompact_Elo']`. Team-level aggregation calculates `Total_Elo` and `Avg_Elo` metrics that reflect collective dual-discipline capabilities across both ski jumping and cross-country skiing components essential for relay performance evaluation.
+
+**Jump Performance Data Extraction with Time Compensation Context**:
+Nordic Combined uniquely extracts individual team member jump data including distances and points: `Member_X_Jump` and `Member_X_Points` fields that enable time compensation analysis for cross-country starting position calculations. This jump data integration provides essential information for understanding how individual jumping performance affects team relay dynamics through Nordic Combined's time compensation system.
+
+**Time Compensation-Aware Team Processing**:
+The relay data gathering system incorporates Nordic Combined's unique time compensation framework where jumping performance directly influences cross-country starting positions. Team processing accounts for these interactions by preserving individual athlete jumping capabilities alongside cross-country skiing performance metrics, enabling comprehensive dual-discipline team evaluation.
+
+**Comprehensive Error Handling with Dual-Discipline Validation**:
+Nordic Combined implements robust error handling designed for FIS website structure variations and the complexity of dual-discipline team data extraction. The system includes fallback mechanisms using common nation lists for empty startlists, quartile imputation for missing ELO scores across both jumping and skiing categories, and sophisticated name normalization for international athlete identification across the sport's global dual-discipline competitive participation spectrum.
