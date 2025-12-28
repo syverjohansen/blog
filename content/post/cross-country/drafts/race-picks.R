@@ -400,6 +400,17 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col, gender) {
   base_df <- startlist %>%
     dplyr::select(Skier, ID, Nation, Price, Sex, matches("^Race\\d+_Prob$"))
   
+  # Filter out athletes with zero race probability at the very beginning
+  race_prob_cols <- grep("^Race\\d+_Prob$", names(base_df), value = TRUE)
+  if(length(race_prob_cols) > 0) {
+    initial_count <- nrow(base_df)
+    # Keep athletes who have > 0 in any race probability column
+    base_df <- base_df %>%
+      filter(if_any(all_of(race_prob_cols), ~ .x > 0))
+    final_count <- nrow(base_df)
+    log_info(paste("Filtered startlist from", initial_count, "to", final_count, "athletes with race probability > 0"))
+  }
+  
   # Get all required Elo columns and their corresponding Pelo names
   elo_cols <- c("Distance_Elo", "Distance_C_Elo", "Distance_F_Elo",
                 "Elo", "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo",
@@ -1266,7 +1277,8 @@ predict_races <- function(gender) {
 
     # Keep all athletes for predictions - filtering happens at the end like Alpine
     
-    # NEW: Make position probability predictions with adjustments
+    # NEW: Make position probability predictions with adjustments  
+    # (startlist already filtered to racing athletes in prepare_startlist_data)
     position_preds <- data.frame(
       Skier = startlist_prepared$Skier,
       ID = startlist_prepared$ID,
@@ -1362,7 +1374,7 @@ predict_races <- function(gender) {
           position_preds <- position_preds %>%
             dplyr::select(-paste0(prob_col, "_base"))
 
-          # Apply race participation probability weighting to position probabilities (Alpine approach)
+          # Apply race participation probability weighting to position probabilities
           if(paste0("Race", i, "_Prob") %in% names(startlist_prepared)) {
             race_prob <- startlist_prepared[[paste0("Race", i, "_Prob")]] / 100  # Convert to decimal
             position_preds[[prob_col]] <- position_preds[[prob_col]] * race_prob
