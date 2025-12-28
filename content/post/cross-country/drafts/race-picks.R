@@ -52,6 +52,32 @@ calculate_participation_probabilities <- function(startlist, chrono_data, races)
       
       log_info(paste("Race", race_num, "characteristics:", race_distance, race_technique))
       
+      # Handle In_FIS_List logic: if any athletes have True, set True=1.0 and False=0
+      # If no athletes have True, calculate participation probabilities for all
+      if("In_FIS_List" %in% names(startlist_with_probs)) {
+        # Convert In_FIS_List to logical if it's character
+        if(is.character(startlist_with_probs$In_FIS_List)) {
+          startlist_with_probs$In_FIS_List <- startlist_with_probs$In_FIS_List %in% c("True", "TRUE", "true", "1")
+        }
+        
+        # Debug: log the In_FIS_List values
+        fis_summary <- table(startlist_with_probs$In_FIS_List, useNA = "always")
+        log_info(paste("In_FIS_List summary:", paste(names(fis_summary), fis_summary, sep="=", collapse=", ")))
+        
+        fis_athletes_exist <- any(startlist_with_probs$In_FIS_List == TRUE, na.rm = TRUE)
+        
+        if(fis_athletes_exist) {
+          log_info("FIS athletes found - setting In_FIS_List=True to 100% and In_FIS_List=False to 0%")
+          # Set FIS athletes to 100% probability
+          startlist_with_probs[[prob_col]][startlist_with_probs$In_FIS_List == TRUE] <- 100.0
+          # Set non-FIS athletes to 0% probability  
+          startlist_with_probs[[prob_col]][startlist_with_probs$In_FIS_List == FALSE] <- 0.0
+          next  # Skip to next race - no probability calculation needed
+        } else {
+          log_info("No FIS athletes found - proceeding with participation probability calculation")
+        }
+      }
+      
       # For skiers with probability = 0, calculate realistic participation probability
       zero_prob_skiers <- which(startlist_with_probs[[prob_col]] == 0)
       
@@ -118,6 +144,7 @@ calculate_participation_probabilities <- function(startlist, chrono_data, races)
   }
   
   log_info("Completed participation probability calculation")
+
   return(startlist_with_probs)
 }
 
@@ -369,9 +396,9 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col, gender) {
   log_info(paste("Preparing startlist data for", pelo_col))
   startlist$Sex <- ifelse(gender == "men", "M", "L")
  
-  # Keep only essential columns from startlist
+  # Keep only essential columns from startlist (including race probability columns)
   base_df <- startlist %>%
-    dplyr::select(Skier, ID, Nation, Price, Sex)
+    dplyr::select(Skier, ID, Nation, Price, Sex, matches("^Race\\d+_Prob$"))
   
   # Get all required Elo columns and their corresponding Pelo names
   elo_cols <- c("Distance_Elo", "Distance_C_Elo", "Distance_F_Elo",
@@ -627,7 +654,8 @@ combine_predictions <- function(race_dfs, startlist) {
       Race1_Upside = Upside_Prediction,
       Race1_Volatility = prediction_volatility,
       Race1_Ratio = volatility_ratio,
-      Race1_Confidence = confidence_factor
+      Race1_Confidence = confidence_factor,
+      Race1_Probability = Race_Prob
     ) %>%
     left_join(
       startlist %>% dplyr::select(Skier, ID, Price, Sex),
@@ -652,7 +680,8 @@ combine_predictions <- function(race_dfs, startlist) {
               !!paste0("Race", i, "_Upside") := Upside_Prediction,
               !!paste0("Race", i, "_Volatility") := prediction_volatility,
               !!paste0("Race", i, "_Ratio") := volatility_ratio,
-              !!paste0("Race", i, "_Confidence") := confidence_factor
+              !!paste0("Race", i, "_Confidence") := confidence_factor,
+              !!paste0("Race", i, "_Probability") := Race_Prob
             ) %>%
             dplyr::select(Skier, 
                           !!paste0("Race", i, "_Base"),
@@ -664,7 +693,8 @@ combine_predictions <- function(race_dfs, startlist) {
                           !!paste0("Race", i, "_Upside"),
                           !!paste0("Race", i, "_Volatility"),
                           !!paste0("Race", i, "_Ratio"),
-                          !!paste0("Race", i, "_Confidence")),
+                          !!paste0("Race", i, "_Confidence"),
+                          !!paste0("Race", i, "_Probability")),
           by = "Skier"
         )
     }
@@ -710,7 +740,8 @@ combine_predictions <- function(race_dfs, startlist) {
                      paste0("Race", i, "_Upside"),
                      paste0("Race", i, "_Volatility"),
                      paste0("Race", i, "_Ratio"),
-                     paste0("Race", i, "_Confidence"))
+                     paste0("Race", i, "_Confidence"),
+                     paste0("Race", i, "_Probability"))
   }
   select_cols <- c(select_cols,
                    "Total_Points", "Total_Safe", "Total_Upside",
@@ -729,13 +760,24 @@ create_post_predictions <- function(final_predictions, n_races, gender=NULL) {
     select_cols <- c(select_cols, "Sex")
   }
   
+  # Add race probability columns 
+  for(i in 1:n_races) {
+    race_prob_col <- paste0("Race", i, "_Probability")
+    if(race_prob_col %in% names(final_predictions)) {
+      select_cols <- c(select_cols, race_prob_col)
+      log_info(paste("Including", race_prob_col, "in output"))
+    } else {
+      log_info(paste("Missing", race_prob_col, "in final_predictions"))
+    }
+  }
+  
   for(i in 1:n_races) {
     select_cols <- c(select_cols, paste0("Race", i, "_Points"))
   }
   select_cols <- c(select_cols, "Total_Points")
   
   post_predictions <- final_predictions %>%
-    dplyr::select(all_of(select_cols)) %>%
+    dplyr::select(all_of(intersect(select_cols, names(.)))) %>%
     # Add Sex if not present
     mutate(
       Sex = if("Sex" %in% names(.)) {
@@ -772,7 +814,7 @@ format_position_results <- function(position_results, current_date, gender, race
       # Sprint race: Win, Podium, Final, Semifinal, Quarterfinal
       # For sprints: thresholds are [1, 3, 6, 12, 30] so columns are prob_top6, prob_top12
       formatted_race <- race_data %>%
-        dplyr::select(Skier, ID, Nation, Sex, Race, 
+        dplyr::select(Skier, ID, Nation, Sex, Race,
                       Win = prob_top1, Podium = prob_top3, 
                       Final = prob_top6, Semifinal = prob_top12, 
                       Quarterfinal = prob_top30) %>%
@@ -781,7 +823,7 @@ format_position_results <- function(position_results, current_date, gender, race
       # Distance race: Win, Podium, Top5, Top10, Top30
       # For distance: thresholds are [1, 3, 5, 10, 30] so columns are prob_top5, prob_top10
       formatted_race <- race_data %>%
-        dplyr::select(Skier, ID, Nation, Sex, Race, 
+        dplyr::select(Skier, ID, Nation, Sex, Race,
                       Win = prob_top1, Podium = prob_top3, 
                       Top5 = prob_top5, Top10 = prob_top10, 
                       Top30 = prob_top30) %>%
@@ -1221,6 +1263,8 @@ predict_races <- function(gender) {
     
     # Prepare startlist data
     startlist_prepared <- prepare_startlist_data(startlist, race_df, pelo_col, gender)
+
+    # Keep all athletes for predictions - filtering happens at the end like Alpine
     
     # NEW: Make position probability predictions with adjustments
     position_preds <- data.frame(
@@ -1230,6 +1274,12 @@ predict_races <- function(gender) {
       Sex = startlist_prepared$Sex,
       Race = i
     )
+    
+    # Add race probability column to position_preds
+    race_prob_col <- paste0("Race", i, "_Prob")
+    if(race_prob_col %in% names(startlist_prepared)) {
+      position_preds[[race_prob_col]] <- startlist_prepared[[race_prob_col]]
+    }
     
     # Make predictions for each threshold
     for(threshold in position_thresholds) {
@@ -1311,6 +1361,13 @@ predict_races <- function(gender) {
           # Clean up base prediction column
           position_preds <- position_preds %>%
             dplyr::select(-paste0(prob_col, "_base"))
+
+          # Apply race participation probability weighting to position probabilities (Alpine approach)
+          if(paste0("Race", i, "_Prob") %in% names(startlist_prepared)) {
+            race_prob <- startlist_prepared[[paste0("Race", i, "_Prob")]] / 100  # Convert to decimal
+            position_preds[[prob_col]] <- position_preds[[prob_col]] * race_prob
+            log_info(paste("Applied race participation probability weighting to", prob_col))
+          }
           
           # Convert to percentage and round
           position_preds[[prob_col]] <- round(position_preds[[prob_col]] * 100, 1)
@@ -1333,11 +1390,17 @@ predict_races <- function(gender) {
     
     # Store position predictions for this race
     position_predictions[[i]] <- position_preds
-    
+
     # Prepare startlist points predictions (original functionality)
     race_dfs[[i]] <- startlist_prepared %>%
       mutate(
         Base_Prediction = predict(model, newdata = .),
+        # Preserve race probability before any joins that might affect column access
+        Race_Prob_Raw = if(paste0("Race", i, "_Prob") %in% names(.)) {
+          get(paste0("Race", i, "_Prob"))
+        } else {
+          100.0  # Default to 100% if missing
+        }
       ) %>%
       left_join(skier_adjustments, by = "Skier") %>%
       mutate(
@@ -1365,11 +1428,7 @@ predict_races <- function(gender) {
         Predicted_Points = pmax(pmin(Predicted_Points, 100), 0),
         
         # Apply race participation probability weighting
-        Race_Prob = ifelse(
-          paste0("Race", i, "_Prob") %in% names(.),
-          get(paste0("Race", i, "_Prob")) / 100,  # Convert percentage to decimal
-          1.0  # Default to 100% if no probability column
-        ),
+        Race_Prob = Race_Prob_Raw / 100,  # Convert percentage to decimal
         Race_Prob = pmax(pmin(Race_Prob, 1.0), 0.0),  # Ensure between 0 and 1
         
         # Final prediction weighted by participation probability
@@ -1398,8 +1457,9 @@ predict_races <- function(gender) {
                     Base_Prediction, altitude_adjustment, 
                     period_adjustment, ms_adjustment,
                     Race_Prob, prediction_volatility, volatility_ratio, confidence_factor,
-                    Final_Prediction, Safe_Prediction, Upside_Prediction)
-    
+                    Final_Prediction, Safe_Prediction, Upside_Prediction,
+                    matches("^Race\\d+_Prob$"))  # Include original race probability columns
+
     # Apply pursuit handling if needed
     if(races$Pursuit[i] == 1) {
       # Get startlist points
@@ -1433,16 +1493,39 @@ predict_races <- function(gender) {
   # Get number of races from races dataframe
   n_races <- nrow(races)
   
+  # Debug: Log startlist columns before combining
+  log_info(paste("Startlist columns before combining:", paste(names(startlist), collapse=", ")))
+  
   # Combine all race predictions
   final_predictions <- combine_predictions(race_dfs, startlist)
+  
+  # Debug: Log final_predictions columns after combining
+  log_info(paste("Final predictions columns:", paste(names(final_predictions), collapse=", ")))
   
   log_info(paste("Final predictions calculated for", gender))
   
   # Create post predictions for blog
   post_predictions <- create_post_predictions(final_predictions, n_races, gender)
   
+  # Filter out athletes with zero race probability at the end (Alpine approach)
+  if("Race1 Prob" %in% names(post_predictions)) {
+    initial_count <- nrow(post_predictions)
+    post_predictions <- post_predictions %>% 
+      filter(`Race1 Prob` > 0)
+    final_count <- nrow(post_predictions)
+    log_info(paste("Final filtering: reduced from", initial_count, "to", final_count, "athletes with non-zero race probability"))
+  }
+  
   # NEW: Combine all position predictions into one dataframe
   all_position_predictions <- bind_rows(position_predictions)
+  
+  # Filter position predictions to match filtered athletes (Alpine approach)
+  if(exists("final_count") && final_count < initial_count) {
+    active_skiers <- post_predictions$Skier
+    all_position_predictions <- all_position_predictions %>%
+      filter(Skier %in% active_skiers)
+    log_info(paste("Filtered position predictions to", length(unique(all_position_predictions$Skier)), "active athletes"))
+  }
   
   # NEW: Create formatted position probabilities
   formatted_position_results <- format_position_results(all_position_predictions, current_date, gender, races)
