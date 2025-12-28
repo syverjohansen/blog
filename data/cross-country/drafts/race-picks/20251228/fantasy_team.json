@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Maja Dahlqvist",
+      1673,
+      "L",
+      "Sweden",
+      8286,
+      35.8049060299421
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      4307,
+      35.6219247544969
+    ],
+    [
+      "Coletta Rydzek",
+      3254,
+      "L",
+      "Germany",
+      1353,
+      33.0205541776513
+    ],
+    [
+      "Kristine Stavås Skistad",
+      3207,
+      "L",
+      "Norway",
+      3916,
+      32.7508039995058
+    ],
+    [
+      "Mathilde Myhrvold",
+      2298,
+      "L",
+      "Norway",
+      1208,
+      31.1560927196783
+    ],
+    [
+      "Jasmi Joensuu",
+      1675,
+      "L",
+      "Finland",
+      6084,
+      30.3903733045208
+    ],
+    [
+      "Johanna Hagström",
+      3212,
+      "L",
+      "Sweden",
+      3394,
+      29.5111478991933
+    ],
+    [
+      "Emma Ribom",
+      1844,
+      "L",
+      "Sweden",
+      6094,
+      22.8960306591975
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      19741,
+      35.9060249641325
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "M",
+      "Italy",
+      6556,
+      33.5729102649749
+    ],
+    [
+      "Lucas Chanavat",
+      3582,
+      "M",
+      "France",
+      2307,
+      32.3512383879208
+    ],
+    [
+      "Erik Valnes",
+      5923,
+      "M",
+      "Norway",
+      9545,
+      29.8529789585701
+    ],
+    [
+      "Jules Chappaz",
+      12181,
+      "M",
+      "France",
+      1346,
+      28.561978083632
+    ],
+    [
+      "Valerio Grond",
+      12164,
+      "M",
+      "Switzerland",
+      1256,
+      28.1059294139617
+    ],
+    [
+      "Edvin Anger",
+      14039,
+      "M",
+      "Sweden",
+      11004,
+      26.8874110587425
+    ],
+    [
+      "Ben Ogden",
+      9179,
+      "M",
+      "USA",
+      4705,
+      24.8713400853438
+    ]
+  ]
+}
