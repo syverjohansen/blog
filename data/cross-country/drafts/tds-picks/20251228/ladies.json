@@ -1,0 +1,551 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Points"
+  ],
+  "rows": [
+    [
+      "Heidi Weng",
+      60.0,
+      "Norway",
+      182.957936978752
+    ],
+    [
+      "Ebba Andersson",
+      1789.0,
+      "Sweden",
+      175.566700585473
+    ],
+    [
+      "Frida Karlsson",
+      3998.0,
+      "Sweden",
+      165.972567673928
+    ],
+    [
+      "Jessie Diggins",
+      131.0,
+      "USA",
+      164.933969065776
+    ],
+    [
+      "Astrid Øyre Slind",
+      115.0,
+      "Norway",
+      143.625338907259
+    ],
+    [
+      "Moa Ilar",
+      1866.0,
+      "Sweden",
+      134.95146213767
+    ],
+    [
+      "Krista Pärmäkoski",
+      13.0,
+      "Finland",
+      132.930671063513
+    ],
+    [
+      "Kristin Austgulen Fosnæs",
+      4268.0,
+      "Norway",
+      129.609629313993
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      2300.0,
+      "Norway",
+      125.975748749403
+    ],
+    [
+      "Nora Sanness",
+      6324.0,
+      "Norway",
+      121.630887567292
+    ],
+    [
+      "Teresa Stadlober",
+      529.0,
+      "Austria",
+      119.699139760005
+    ],
+    [
+      "Jasmi Joensuu",
+      1675.0,
+      "Finland",
+      114.873175872334
+    ],
+    [
+      "Kerttu Niskanen",
+      37.0,
+      "Finland",
+      111.799884500567
+    ],
+    [
+      "Pia Fink",
+      4004.0,
+      "Germany",
+      109.83505455
+    ],
+    [
+      "Helen Hoffmann",
+      6691.0,
+      "Germany",
+      100.216766803958
+    ],
+    [
+      "Emma Ribom",
+      1844.0,
+      "Sweden",
+      98.2575104031698
+    ],
+    [
+      "Nadja Kälin",
+      6639.0,
+      "Switzerland",
+      98.1726902143624
+    ],
+    [
+      "Julie Bjervig Drivenes",
+      3357.0,
+      "Norway",
+      93.680125162586
+    ],
+    [
+      "Johanna Matintalo",
+      1761.0,
+      "Finland",
+      88.157274101712
+    ],
+    [
+      "Märta Rosenberg",
+      6689.0,
+      "Sweden",
+      85.6045032794074
+    ],
+    [
+      "Katherine Sauerbrey",
+      1727.0,
+      "Germany",
+      84.2619451471003
+    ],
+    [
+      "Caterina Ganz",
+      1721.0,
+      "Italy",
+      83.2470190331019
+    ],
+    [
+      "Katerina Janatova",
+      3198.0,
+      "Czechia",
+      80.7029820893584
+    ],
+    [
+      "Maja Dahlqvist",
+      1673.0,
+      "Sweden",
+      76.9032199700063
+    ],
+    [
+      "Anja Weber",
+      6338.0,
+      "Switzerland",
+      76.6491136192654
+    ],
+    [
+      "Dariya Nepryaeva",
+      6555.0,
+      "Russia",
+      75.9851578567369
+    ],
+    [
+      "Liliane Gagnon",
+      7427.0,
+      "Canada",
+      68.9828950081134
+    ],
+    [
+      "Moa Lundgren",
+      3211.0,
+      "Sweden",
+      66.5374254370043
+    ],
+    [
+      "Vilma Nissinen",
+      3034.0,
+      "Finland",
+      65.0087910346488
+    ],
+    [
+      "Patricijia Eiduka",
+      3240.0,
+      "Latvia",
+      63.5235880538041
+    ],
+    [
+      "Sofie Krehl",
+      1695.0,
+      "Germany",
+      63.4393734639563
+    ],
+    [
+      "Katharina Hennig",
+      "",
+      "GER",
+      61.5349550035485
+    ],
+    [
+      "Eliza RUCKA-MICHALEK",
+      "",
+      "POL",
+      61.5349550035485
+    ],
+    [
+      "Virginia CENA",
+      "",
+      "ITA",
+      61.5349550035485
+    ],
+    [
+      "Mathilde Myhrvold",
+      2298.0,
+      "Norway",
+      60.5487995866745
+    ],
+    [
+      "Nadine Fähndrich",
+      1590.0,
+      "Switzerland",
+      57.7498759784576
+    ],
+    [
+      "Vilma Ryytty",
+      6607.0,
+      "Finland",
+      57.71896555455
+    ],
+    [
+      "Jasmin Kähärä",
+      3528.0,
+      "Finland",
+      57.6578964639442
+    ],
+    [
+      "Coletta Rydzek",
+      3254.0,
+      "Germany",
+      54.9678791698572
+    ],
+    [
+      "Luci Anderson",
+      4706.0,
+      "USA",
+      53.2295210123509
+    ],
+    [
+      "Juliette Ducordeau",
+      3218.0,
+      "France",
+      53.0021434765093
+    ],
+    [
+      "Kaidy Kaasiku",
+      4943.0,
+      "Estonia",
+      52.3166383825559
+    ],
+    [
+      "Anna Comarella",
+      1724.0,
+      "Italy",
+      52.3085390564308
+    ],
+    [
+      "Eva Ingebrigtsen",
+      10145.0,
+      "Norway",
+      52.2688483562636
+    ],
+    [
+      "Leonie Perry",
+      10413.0,
+      "France",
+      51.9858805929362
+    ],
+    [
+      "Julie Pierrel",
+      7444.0,
+      "France",
+      48.8278130930723
+    ],
+    [
+      "Julia Kern",
+      1846.0,
+      "USA",
+      43.9864771454077
+    ],
+    [
+      "Melissa Gal",
+      4034.0,
+      "France",
+      43.6690808881894
+    ],
+    [
+      "Gina del Rio",
+      10313.0,
+      "Andorra",
+      42.9358397036882
+    ],
+    [
+      "Martina di Centa",
+      9084.0,
+      "Italy",
+      42.5135085289489
+    ],
+    [
+      "Marina Kälin",
+      7433.0,
+      "Switzerland",
+      41.2199949424199
+    ],
+    [
+      "Katharina Brudermann",
+      5040.0,
+      "Austria",
+      41.0634990390563
+    ],
+    [
+      "Evelina Crusell",
+      10880.0,
+      "Sweden",
+      40.3684715039441
+    ],
+    [
+      "Federica Cassol",
+      9082.0,
+      "Italy",
+      38.3824961560966
+    ],
+    [
+      "Keidy Kaasiku",
+      4942.0,
+      "Estonia",
+      38.027845853041
+    ],
+    [
+      "Iris De Martin Pinter",
+      7422.0,
+      "Italy",
+      37.3070712088945
+    ],
+    [
+      "Alison Mackie",
+      10185.0,
+      "Canada",
+      37.0491218895602
+    ],
+    [
+      "Izabela Marcisz",
+      6327.0,
+      "Poland",
+      35.038088645464
+    ],
+    [
+      "Giuliana Werro",
+      3230.0,
+      "Switzerland",
+      34.9043494164058
+    ],
+    [
+      "Olivia Bouffard-Nesbitt",
+      1685.0,
+      "Canada",
+      29.8809292637987
+    ],
+    [
+      "Francesca Franchi",
+      4009.0,
+      "Italy",
+      28.2497456203747
+    ],
+    [
+      "Alayna Sonnesyn",
+      1872.0,
+      "USA",
+      26.3256231599399
+    ],
+    [
+      "Chika Kobayashi",
+      3524.0,
+      "Japan",
+      25.9635074606878
+    ],
+    [
+      "Lisa Eriksson",
+      9318.0,
+      "Sweden",
+      25.5245187334399
+    ],
+    [
+      "Margot Tirloy",
+      10829.0,
+      "France",
+      24.819172353543
+    ],
+    [
+      "Kristine Stavås Skistad",
+      3207.0,
+      "Norway",
+      24.1215483037738
+    ],
+    [
+      "Johanna Hagström",
+      3212.0,
+      "Sweden",
+      24.1106071363621
+    ],
+    [
+      "Clemence Didierlaurent",
+      10690.0,
+      "France",
+      23.9724492869445
+    ],
+    [
+      "Anja Mandeljc",
+      1868.0,
+      "Slovenia",
+      23.2628874598351
+    ],
+    [
+      "Nicole Monsorno",
+      6631.0,
+      "Italy",
+      23.2615423728177
+    ],
+    [
+      "Jasmine Drolet",
+      6656.0,
+      "Canada",
+      22.4868161958755
+    ],
+    [
+      "Nadine Laurent",
+      9319.0,
+      "Italy",
+      21.6078476235592
+    ],
+    [
+      "Lea Fischer",
+      2284.0,
+      "Switzerland",
+      21.3600894547046
+    ],
+    [
+      "Monika Skinder",
+      6335.0,
+      "Poland",
+      20.8957856774284
+    ],
+    [
+      "Mariel Merlii Pulles",
+      1969.0,
+      "Estonia",
+      20.6855921727988
+    ],
+    [
+      "Lisa Achleitner",
+      3255.0,
+      "Austria",
+      20.6105733089938
+    ],
+    [
+      "Magdalena Scherz",
+      6707.0,
+      "Austria",
+      20.608284040367
+    ],
+    [
+      "Hanna Karaliova",
+      3225.0,
+      "Belarus",
+      19.7925428658725
+    ],
+    [
+      "Anna Pryce",
+      6640.0,
+      "Great Britain",
+      18.8008284493524
+    ],
+    [
+      "Chika Honda",
+      7087.0,
+      "Japan",
+      17.8509054818992
+    ],
+    [
+      "Aleksandra Kolodziej",
+      8064.0,
+      "Poland",
+      17.5002010679318
+    ],
+    [
+      "Teesi Tuul",
+      3328.0,
+      "Estonia",
+      14.9304433914343
+    ],
+    [
+      "Hanna Machakhina",
+      7439.0,
+      "Belarus",
+      13.9715636799934
+    ],
+    [
+      "Magdalena Kobielusz",
+      6458.0,
+      "Poland",
+      13.9672904048008
+    ],
+    [
+      "Tabitha Williams",
+      7360.0,
+      "Great Britain",
+      13.8395383245757
+    ],
+    [
+      "Sofiia Shkatula",
+      10768.0,
+      "Ukraine",
+      7.59537265628175
+    ],
+    [
+      "Anastasiia Nikon",
+      6954.0,
+      "Ukraine",
+      7.5485402359565
+    ],
+    [
+      "Heidi Bucher",
+      10823.0,
+      "Austria",
+      7.00251048491702
+    ],
+    [
+      "Ingrid Bergene Aabrekk",
+      6828.0,
+      "Norway",
+      6.90464656738335
+    ],
+    [
+      "Theresa Fürstenberg",
+      6801.0,
+      "Germany",
+      5.20203870473684
+    ]
+  ]
+}

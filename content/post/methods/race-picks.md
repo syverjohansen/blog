@@ -46,57 +46,44 @@ Then using an exhaustive approach, the explanatory variables are selected by fin
 
 ###### Modeling
 
-Alpine skiing uses sophisticated Generalized Additive Models (GAM) that capture non-linear relationships between skiing performance and race results. The models adapt to alpine's fundamental challenge: speed disciplines (Downhill, Super-G) versus technical disciplines (Giant Slalom, Slalom) require completely different predictive approaches.
+The models used to predict points are Generalized Additive Models (GAM) that capture non-linear relationships between Elo scores/prior performances and World Cup points.
 
-The system creates both points prediction models and position probability models. Points models predict how many World Cup points a skier will earn, while position models predict the probability of finishing in top-1, top-3, top-5, etc. The position models use binomial regression with REML estimation and are validated using Brier scores to ensure accurate probability predictions.
-
-Alpine implements the most comprehensive fallback system among winter sports to handle the challenges of predicting across diverse disciplines:
+In the case that there is insufficient data, the following fallback measures are in store:
 
   1. Full GAM with all BIC-selected variables and flexible smoothing
   2. Simplified GAM with reduced complexity and discipline-specific terms
   3. Linear regression if GAM approaches encounter fitting issues
   4. Simple ELO-only model as the ultimate fallback
 
-This multi-tier approach ensures reliable predictions even when data sparsity occurs in specific discipline/athlete combinations.
-
 
 ###### Adjustments
 
-Alpine skiing implements the most sophisticated adjustment system in winter sports, recognizing that skiers often have consistent patterns in how they perform relative to their base skill level. The system captures two critical alpine-specific patterns: seasonal performance variations and the fundamental difference between technical disciplines (Giant Slalom, Slalom) versus speed disciplines (Downhill, Super-G).
+While the modeling captures the majority of the accuracy in points predictions, additional adjustments are applied to individual skiers depending on their trends and how they typically overperform/underperform the predictions.  
 
-Seasonal adjustments account for skiers who consistently over- or under-perform during specific periods of the World Cup season. Some athletes excel early in the season when conditions are challenging, while others peak during major championship periods. The system uses statistical testing (p < 0.05) to identify these patterns and applies corrections accordingly.
+There are two post-model adjustments applied to skiers for the points prediction.  The first is World Cup period and the second is differences between technical disciplines.  The period adjustment is for the different stages of the World Cup season as some skiers perform better earlier or later in the season than others.  The technical adjustment is if skiers perform better or worse in a specific discipline than they're predicted for, they will get an adjustment.  The determination if an adjustment is needed Actual Points - Predicted Points with a p-value of p < 0.05.
 
-The discipline-specific adjustments are unique to alpine skiing, capturing that some skiers are "technical specialists" who excel in slalom and giant slalom but struggle in downhill and super-G, while others are "speed specialists" with the opposite pattern. This reflects the fundamentally different skill sets required for technical precision versus high-speed racing.
-
-The system also incorporates advanced volatility tracking, analyzing each skier's recent consistency and potential for both upside and downside performance. This helps identify skiers who are prone to breakthrough results or surprise disappointments, enhancing prediction accuracy across alpine's diverse discipline spectrum.
 
 ##### Testing
 
 ###### Startlist Setup
 
-Alpine skiing's startlist setup transforms raw race data into prediction-ready datasets through sophisticated probability modeling and comprehensive feature engineering. The system integrates multiple data sources while handling the complexities of alpine's multi-discipline structure.
+After the model training is performed, the startlist must be setup in a way that has all the features from the model as well as race participation probability if no startlist data was present on the FIS site.
 
 Race participation probabilities use exponential decay weighting that gives more importance to recent participation patterns. For confirmed FIS startlists, athletes receive 1.0 probability. For mock startlists, the system calculates probabilities using historical participation rates with exponential decay (α = 0.1), where recent races count more heavily than older ones.
 
-ELO score processing retrieves the most current performance ratings for each skier and normalizes them to percentages by dividing by historical maximum values. This creates standardized 0-1 scale features across all discipline-specific ELO categories (Downhill, Super-G, Giant Slalom, Slalom, Technical, Speed, Overall).
+ELO score processing retrieves the most current performance ratings for each skier and normalizes them to percentages by dividing by the startlist's maximum values. This creates standardized 0-1 scale features across all discipline-specific ELO categories (Downhill, Super-G, Giant Slalom, Slalom, Technical, Speed, Overall).
 
-Weighted previous points capture recent form using the last 5 races with linear increasing weights (1,2,3,4,5), giving more emphasis to the most recent performances. This helps identify athletes in peak form versus those struggling with current conditions.
+Weighted previous points capture recent form using the last 5 races with linear increasing weights (1,2,3,4,5), giving more emphasis to the most recent performances.
 
 Missing value imputation uses first quartile replacement for numeric variables and mode replacement for categorical variables, ensuring complete datasets while accounting for the fact that inexperienced athletes typically perform worse than established competitors.
 
 ###### Modeling
 
-Alpine skiing's testing modeling applies sophisticated GAM models with comprehensive error handling and Individual Points Testing Adjustments that account for systematic biases in discipline-specific performance prediction. The system uses discipline-specific trained models while implementing statistical significance testing to identify genuine performance patterns during the testing phase.
-
-**Individual Points Testing Adjustments for Discipline-Specific Performance**: Alpine testing employs a sophisticated sequential adjustment framework that accounts for the sport's unique multi-discipline structure and seasonal progression effects. The system uses rigorous statistical testing (p < 0.05 threshold with t-tests) to identify genuine patterns that require correction during the testing phase.
-
-**Sequential Testing Adjustment Framework**: Adjustments are calculated and applied sequentially to avoid double-counting effects while maintaining chronological integrity:
-1. **Period Adjustments**: Account for seasonal performance patterns as athletes' technical and speed capabilities develop throughout the alpine season
-2. **Discipline Adjustments**: Capture the fundamental differences between technical disciplines (Giant Slalom, Slalom) and speed disciplines (Downhill, Super-G)
-
-Each adjustment requires minimum 3 observations per category and uses comprehensive error handling with tryCatch blocks. The system combines adjustments additively while enforcing bounds (0-100 points) and integrating with race participation probability weighting for final predictions that balance historical bias correction with athlete participation likelihood.
+The models from the training phase are applied to the startlist data to provide the initial points predictions.
 
 ###### Adjustments
+
+The adjustments for each skier found during training are applied the points prediction to get a final result.
 
 #### Probability
 
@@ -104,35 +91,46 @@ Each adjustment requires minimum 3 observations per category and uses comprehens
 
 ###### Setup
 
-Alpine skiing's Individual Probability Training Setup converts the points prediction problem into binary classification for position probability modeling across five finishing position thresholds. The system uses the same preprocessed historical race data as points models but transforms the regression problem into classification through binary outcome creation.
+For probability predictions, the places from the training dataframe are converted into binary classification for position probability modeling across five finishing position thresholds. The system uses the same preprocessed historical race data as points models but transforms the regression problem into classification through binary outcome creation.
 
-Position thresholds are defined as `c(1, 3, 5, 10, 30)` representing Win, Podium, Top 5, Top 10, and Top 30 finishes. Each threshold creates a separate binary classification problem where success is defined as finishing at or above that position using the transformation: `race_df$position_achieved <- race_df$Place <= threshold`. This enables binomial GAM modeling while maintaining consistency with discipline-specific performance characteristics across technical and speed events. 
+Position thresholds are defined as Win, Podium, Top 5, Top 10, and Top 30 finishes. Each threshold creates a separate binary classification problem where success is defined as finishing at or better than that position. This enables binomial GAM modeling while maintaining consistency with discipline-specific performance characteristics across technical and speed events. 
+
+Elo percentages, weighted previous points, missing value imputation, and data filtering are all performed the same way as the points predictions.
 
 ###### Feature Selection
 
-Alpine skiing's Individual Probability Training Feature Selection employs threshold-independent optimization with discipline-specific adaptation. The system uses identical explanatory variable pools as points models (`position_feature_vars <- explanatory_vars`) while performing independent BIC optimization for each position threshold (1, 3, 5, 10, 30). Speed events utilize variables including `Downhill_Elo_Pct`, `Super.G_Elo_Pct`, and `Speed_Elo_Pct`, while technical events employ `Slalom_Elo_Pct`, `Giant.Slalom_Elo_Pct`, and `Tech_Elo_Pct`. Selected variables are converted to smooth terms for binomial GAM modeling, accommodating alpine skiing's complex performance patterns across discipline types.
+Position probability feature selection employs threshold-independent optimization with discipline-specific adaptation. The system uses the same explanatory variable pools as the points model while performing independent BIC optimization for each position threshold (1, 3, 5, 10, 30). Speed events use variables including Downhill, Super-G, and Speed elos, while technical events employ Slalom, Giant Slalom, and Tech elos. Selected variables are converted to smooth terms for binomial GAM modeling.
 
 ###### Modeling
 
-Alpine skiing employs sophisticated binomial GAM (Generalized Additive Models) architecture for position probability prediction, utilizing independent threshold-based modeling frameworks that adapt to the sport's unique discipline-specific performance characteristics. The system implements separate binomial GAM models for each position threshold (1st, 3rd, 5th, 10th, 30th), recognizing that factors influencing podium finishes in speed disciplines may differ substantially from technical event performance patterns. Each model uses binomial family GAM implementation with REML estimation for conservative smoothing parameter selection, promoting stability across alpine's diverse discipline spectrum. The framework incorporates discipline-specific variable optimization through smooth terms that capture non-linear relationships between ELO ratings, weighted previous points, and finishing position probabilities, with comprehensive fallback strategies ensuring model availability across all alpine skiing competitive scenarios. Model validation employs Brier score evaluation to assess probabilistic accuracy across different position thresholds and discipline types.
+The models for position probabilities are binomial GAM models that use the independent threshold-based features from the feature selection and adapt to the specific discipline performance characteristics.  The binomial GAM models are for each position threshold (1st, 3rd, 5th, 10th, and 30th).  Each model uses binomial family GAM implementation with REML estimation for conservtive smoothing parameter selection, promoting stability and capturing non-linear relationships between Elo ratings, weighted previous points, and finishing position probabilities.  Model validation employs Brier score evlauation to assess probablistic accuracy across the different position thresholds and discipline types.
 
 ###### Adjustments
 
-Alpine skiing implements sophisticated Individual Probability Training Adjustments that are currently **disabled** in the production system, though the comprehensive framework exists for systematic bias correction through statistical analysis of probability residuals across periods and disciplines. The system calculates probability differences between actual outcomes and model predictions (`prob_diff = as.numeric(position_achieved) - initial_prob`) and employs t-test validation to ensure only statistically meaningful adjustments are applied (p < 0.05). Period-specific corrections capture systematic performance changes across alpine's competitive season with discipline-specific adaptations for speed versus technical events. All adjustments are bounded within valid probability ranges (`period_adjusted = pmin(pmax(initial_prob + period_correction, 0), 1)`) to ensure mathematical validity. The framework is commented out in production with the annotation "removed to improve model stability and prediction accuracy," prioritizing model stability over potential accuracy gains from systematic bias correction.
+Adjustments for probability predictions are disabled as testing showed larger inaccuracies after adjustments were performed.
 
 ##### Testing
 
 ###### Startlist Setup
 
-Alpine skiing's Individual Probability Testing employs sophisticated startlist preparation that preserves race participation probabilities and manages discipline-specific ELO ratings across speed versus technical events. The system maintains discipline-specific data structures (`Downhill_Elo`, `Super.G_Elo`, `Giant.Slalom_Elo`, `Slalom_Elo`, `Combined_Elo`, `Tech_Elo`, `Speed_Elo`) while preserving race probability columns (`Race1_Prob`, `Race2_Prob`) through dynamic detection. The framework incorporates weighted previous points with discipline specificity, robust missing value imputation via first quartile replacement, and comprehensive data validation ensuring model compatibility across alpine's diverse discipline spectrum. Position threshold integration accommodates standard thresholds (1st, 3rd, 5th, 10th, 30th) while maintaining consistency between training and testing data structures for reliable probability predictions across technical and speed disciplines.
+After the model training is performed, the startlist must be setup in a way that has all the features from the model as well as race participation probability if no startlist data was present on the FIS site.
+
+Race participation probabilities use exponential decay weighting that gives more importance to recent participation patterns. For confirmed FIS startlists, athletes receive 1.0 probability. For mock startlists, the system calculates probabilities using historical participation rates with exponential decay (α = 0.1), where recent races count more heavily than older ones.
+
+ELO score processing retrieves the most current performance ratings for each skier and normalizes them to percentages by dividing by the startlist's maximum values. This creates standardized 0-1 scale features across all discipline-specific ELO categories (Downhill, Super-G, Giant Slalom, Slalom, Technical, Speed, Overall).
+
+Weighted previous points capture recent form using the last 5 races with linear increasing weights (1,2,3,4,5), giving more emphasis to the most recent performances.
+
+Missing value imputation uses first quartile replacement for numeric variables and mode replacement for categorical variables, ensuring complete datasets while accounting for the fact that inexperienced athletes typically perform worse than established competitors.
 
 ###### Modeling
 
-Alpine skiing's Individual Probability Testing applies trained binomial GAM models through sophisticated variable validation, robust prediction mechanisms, and multi-tier fallback strategies. The system accommodates discipline-specific performance characteristics (speed vs technical events) while ensuring reliable probability predictions through comprehensive error handling (`mgcv::predict.gam(pos_model, newdata = prediction_subset, type = "response")`). The framework employs row-by-row fallback mechanisms when batch prediction fails, maintains discipline-specific model integration, and generates threshold-independent probability predictions (1st, 3rd, 5th, 10th, 30th) with conservative default assignment ensuring prediction availability across all alpine skiing competitive scenarios.
+The binomial GAM models with the chosen features from training are applied to the startlist data using direct mgcv package calls to generate threshold-independent probability predictions (1st, 3rd, 5th, 10th, and 30th). If needed, fallback measures are performed to handle prediction failures.
+
 
 ###### Adjustments
 
-Alpine skiing implements **disabled** Individual Probability Testing Adjustments with a comprehensive framework that exists but is currently commented out in production to prevent overfitting concerns. The system was designed to apply discipline-specific corrections (speed vs technical events) and seasonal pattern adjustments but currently uses base GAM predictions without probability adjustments to maintain prediction stability across alpine's diverse competitive disciplines and varying snow conditions.
+Adjustments for probability predictions are disabled as testing showed larger inaccuracies after adjustments were performed.
 
 #### Normalization and Monotonic Constraints
 
@@ -142,19 +140,20 @@ Normalization is first applied so that the position probabilities all add up to 
 
 After normalization, monotonic constraints are added.  This ensures that top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so that an athlete cannot have a higher chance of finishing top-1 than top-3.  Then normalization is applied again to the monotonic constraint results to give the final results.
 
+At this time, normalization and monotonic constraints are not applied to points predictions.
+
 ## Biathlon
 
 ### Individual
 
 #### Data Gathering
 
-Biathlon required a completely different approach to data collection because the IBU (International Biathlon Union) uses a modern web application structure that's fundamentally different from FIS websites. While most winter sports serve traditional HTML pages, the IBU website loads athlete data dynamically through JavaScript, requiring specialized extraction techniques.
+Each day at midnight UTC, an automated Python scrape is performed on the IBU website to identify upcoming World Cup/World Championship/Olympic races.  When upcoming races are found, the startlist is scraped and saved.  Alpine skiing data collection focuses on individual events only, as team events are too new and infrequent to generate predictions for.  
 
-The breakthrough came when I discovered that biathlon startlist data is embedded as JSON within the webpage's JavaScript code. This actually provides richer, more structured data than traditional HTML scraping - including detailed athlete information like IBU IDs, family names, given names, and precise startlist positions. The challenge was building robust parsing that could handle incomplete or truncated JSON data when network issues occur.
+When official startlists aren't available (common due to weather delays and last-minute changes, IBU laziness), the system generates comprehensive mock startlists using all athletes who competed in the current season in order to maintain prediction capabilities.
 
-Biathlon's event structure is more complex than other sports, featuring individual races (Sprint, Pursuit, Individual, Mass Start) alongside various relay formats (standard relays, mixed relays, single mixed relays). The system automatically categorizes these event types and routes them to appropriate processing pipelines, ensuring that individual athlete data isn't contaminated with team performance metrics.
+In addition to the startlist roster, each skier is matched with historical skier data to get their most recent Elo scores for Overall, Sprint, Pursuit, Individual, and Mass Start.
 
-The sport's unique scoring system also required special handling. Unlike alpine skiing where disciplines are clearly distinct, biathlon events are interconnected - pursuit races use sprint results for starting positions, creating dependencies that needed to be tracked. I maintain separate ELO ratings for each race format while understanding their relationships, allowing the system to predict how a strong sprinter might perform in a subsequent pursuit race.
 
 #### Points
 
@@ -162,71 +161,62 @@ The sport's unique scoring system also required special handling. Unlike alpine 
 
 ###### Setup
 
-Biathlon training data setup reflects the sport's unique interconnected race structure. Unlike alpine skiing where each race stands alone, biathlon events flow into each other - sprint results determine pursuit starting positions, and athletes who excel in short sprints might struggle in longer individual races.
+The basis for our training dataset is to predict World Cup points for an upcoming race using historical Elo data and race performance data.  For this reason, we need to setup a dataframe that contains a column for Points, all the Elo data, and information about recent race performance.
 
-The system builds historical training data by recognizing these race type relationships. When calculating weighted previous points, I group by race type (Sprint, Pursuit, Individual, Mass Start) rather than treating all races equally. This captures that a biathlete's sprint form is more predictive of future sprint performance than their individual race results.
+The points column is created by mapping place to World Cup points for that place, so 1st place is 100, 2nd is 80, etc.
 
-Biathlon also has environmental factors that significantly impact performance. Altitude affects both skiing endurance and shooting accuracy, so I include venue elevation data (venues above 1300 meters get flagged). The system tracks seasonal patterns too - some athletes struggle early in the season when conditions are harsh, while others peak during major championship periods.
+The Elo data is transformed so that the skier's elo prior to the race is turned into a percentage of the maximum elo for the participants in that race. This is so it is easier to predict results based on who is on the race vs an arbitrary elo score that is often subject to inflation throughout the course of the season.
 
-The training data uses different point systems depending on race format. Regular races award points to top 40 finishers, while mass start races use a compressed scale for the top 30. Like other sports, I use pre-race ELO ratings to avoid data leakage, but biathlon's ELO system tracks race-type-specific performance: Sprint ELO, Individual ELO, Pursuit ELO, and Mass Start ELO, recognizing that excellence in one format doesn't guarantee success in another.
+Additionally, a column for weighted previous points is created that takes the last 5 points for a specific discipline (Sprint, Pursuit, Individual, Mass Start). So in a row for a Sprint result, the weighted previous points will have that skiers last five results weighted so the most recent has a weight of 5, the one before 4, etc. 
 
-Given biathlon's smaller field sizes compared to alpine or cross-country, the system filters to the last 10 years and includes athletes with ELO ratings above 75% of the race leader, ensuring the models focus on World Cup-caliber competition while having enough data for robust training.
+At this time, there is no factoring in sprint results for pursuit predictions. 
+
+Lastly, the training data is filtered to the last 10 seasons, skiers who have an Elo percentage of 75% or greater, and missing values are imputed with the first quartile value for the given race.
 
 ###### Feature Selection
 
-Biathlon's feature selection reflects the sport's interconnected race format structure. The system adapts to whether we're predicting individual or relay events, since these require different performance metrics. For individual events, we consider weighted previous points plus race type-specific ELO ratings (Sprint, Pursuit, Individual, Mass Start). For relay events, we use team-averaged ELO ratings without weighted points.
+To decide what variables to use in the model, we use all the Elo percent columns as well as the weighted previous points.
 
-Using an exhaustive search approach, the explanatory variables are selected by finding the combination that yields the lowest Bayesian Information Criterion (BIC), which balances model accuracy with simplicity to avoid overfitting by penalizing models with too many variables. The selected variables are then converted to smooth terms for Generalized Additive Models (GAM), which allows the model to capture non-linear relationships between predictors and performance. 
+Then using an exhaustive approach, the explanatory variables are selected by finding the combination that yields the lowest Bayesian Information Criterion (BIC), which balances model accuracy with simplicity to avoid overfitting by penalizing models with too many variables.  The selected variables are then converted to smooth terms for Generalized Additive Models (GAM), which allows the model to capture non-linear relationships between predictors and performance. 
 
 ###### Modeling
 
-Biathlon modeling reflects the sport's unique interconnected race structure, where sprint results directly affect pursuit starting positions and different race types require different tactical approaches. The system uses Generalized Additive Models optimized for biathlon's dual-discipline nature (skiing + shooting) and environmental factors like altitude.
+The models used to predict points are Generalized Additive Models (GAM) that capture non-linear relationships between Elo scores/prior performances and World Cup points.
 
-The models adapt to whether we're predicting individual or relay events. Individual models incorporate race type-specific ELO ratings and weighted previous points, while relay models use team-aggregated performance metrics since team dynamics differ from individual competition patterns.
+In the case that there is insufficient data, the following fallback measures are in store:
 
-Biathlon implements a streamlined but effective fallback approach that reflects the sport's specialized nature and smaller competitive field compared to other winter sports. If the primary GAM model encounters fitting issues, the system falls back to a simplified model using only the most relevant ELO rating for that race type.
-
-Position probability models use binomial GAM with REML estimation and are validated using Brier scores. The system includes sophisticated conditional adjustment calculations that differentiate between individual and relay events, ensuring appropriate treatment of each competition format.  
+  1. Full GAM with all BIC-selected variables and flexible smoothing
+  2. Simplified GAM with reduced complexity and discipline-specific terms
+  3. Linear regression if GAM approaches encounter fitting issues
+  4. Simple ELO-only model as the ultimate fallback 
 
 ###### Adjustments
 
-Biathlon implements a sophisticated conditional adjustment system that recognizes the fundamental difference between individual and relay events. For individual competitions, the system tracks both seasonal performance patterns and altitude effects, since biathlon's dual-discipline nature (skiing + shooting) means altitude affects both cardiovascular performance and shooting accuracy differently for each athlete.
+While the modeling captures the majority of the accuracy in points predictions, additional adjustments are applied to individual skiers depending on their trends and how they typically overperform/underperform the predictions.  
 
-The seasonal adjustments capture patterns where certain athletes consistently excel or struggle during specific periods of the biathlon season - early season when conditions are harsh, mid-season during tour events, or late season during championship periods. The system uses rigorous statistical testing (p < 0.05) to identify genuine patterns rather than random variations.
-
-The altitude adjustments are unique to biathlon among winter sports, recognizing that venues above 1300 meters affect both skiing endurance and shooting precision. Some athletes thrive at altitude due to superior fitness, while others struggle with the breathing challenges and shooting stability at elevation.
-
-Critically, the system excludes adjustments for relay events since relay teams can change composition between races. Unlike individual athletes who maintain consistent performance patterns, relay performance depends on team chemistry and tactical decisions that vary with different lineups. 
+There are two post-model adjustments applied to skiers for the points prediction.  The first is World Cup period and the second is for elevation.  The period adjustment is for the different stages (1-4) of the World Cup season as some skiers perform better earlier or later in the season than others.  The elevation adjustment is if skiers perform better or worse at altitude (≥1300) than they're predicted for, they will get an adjustment.  The determination if an adjustment is needed Actual Points - Predicted Points with a p-value of p < 0.05.
 
 ##### Testing
 
 ###### Startlist Setup
 
-Biathlon's startlist setup accommodates the sport's unique dual-discipline requirements and diverse competition formats through sophisticated race-type-specific probability modeling and comprehensive feature engineering. The system handles both individual and relay formats while capturing biathlon's complex performance patterns.
+After the model training is performed, the startlist must be setup in a way that has all the features from the model as well as race participation probability if no startlist data was present on the IBU site.
 
-Race participation probabilities are calculated separately for each race type (Sprint, Individual, Pursuit, Mass Start, Relay) using exponential decay weighting (α = 0.3) that considers the last 10 races. This recognizes that participation patterns differ significantly across biathlon's diverse event formats. Confirmed IBU startlists receive 1.0 probability, while mock startlists use historical participation rates with stronger recent weighting.
+Race participation probabilities use exponential decay weighting that gives more importance to recent participation patterns. For confirmed IBU startlists, athletes receive 1.0 probability. For mock startlists, the system calculates probabilities using historical participation rates with exponential decay (α = 0.3), where recent races count more heavily than older ones.
 
-PELO (biathlon-specific ELO) score processing retrieves the most current performance ratings and normalizes them to percentages using historical maximum values. This ensures consistent model input across all race types while maintaining the sport's unique performance tracking requirements.
+Elo score processing retrieves the most current performance ratings for each skier and normalizes them to percentages by dividing by the startlist's maximum values. This creates standardized 0-1 scale features across all discipline-specific ELO categories (Overall, Sprint, Pursuit, Individual, Mass Start).
 
-Race type-specific weighted previous points are calculated separately for each competition format, using the last 5 races with linear increasing weights (1,2,3,4,5). This captures how athletes perform differently across Sprint versus Distance events, recognizing that biathlon specialists often excel in specific formats.
+Weighted previous points capture recent form using the last 5 races with linear increasing weights (1,2,3,4,5), giving more emphasis to the most recent performances.
 
-The system adapts dynamically between individual and relay formats, using appropriate identification systems (Skier vs Nation) and performance metrics. Missing value imputation uses first quartile replacement with comprehensive fallback mechanisms, ensuring robust data quality across biathlon's complex competition structure.
+Missing value imputation uses first quartile replacement for numeric variables and mode replacement for categorical variables, ensuring complete datasets while accounting for the fact that inexperienced athletes typically perform worse than established competitors.
 
 ###### Modeling
 
-Biathlon's testing modeling applies race-type-specific GAM models with Individual Points Testing Adjustments that account for systematic biases in dual-discipline performance prediction. The system uses trained models optimized for each competition format while implementing statistical significance testing to identify genuine performance patterns during the testing phase.
-
-**Individual Points Testing Adjustments for Dual-Discipline Performance**: Biathlon testing employs a sophisticated conditional adjustment framework that differentiates between individual and relay events. The system uses rigorous statistical testing (p < 0.05 threshold with t-tests) to identify genuine patterns while recognizing that relay teams change composition between races.
-
-**Sequential Testing Adjustment Framework**: Adjustments are calculated and applied sequentially for individual events only:
-1. **Period Adjustments**: Account for seasonal performance patterns in biathlon's interconnected race structure (Sprint, Pursuit, Individual, Mass Start)
-2. **Elevation Adjustments**: Capture altitude effects on both skiing endurance and shooting accuracy (1300m threshold)
-
-The system deliberately excludes adjustments for relay events due to changing team compositions. All adjustments require minimum 3 observations per category and use comprehensive error handling. Combined adjustments are integrated with race participation probability weighting to balance historical bias correction with dual-discipline performance prediction requirements.
+The models from the training phase are applied to the startlist data to provide the initial points predictions.
 
 ###### Adjustments
 
-Period and altitude adjustments learned during training are applied to base predictions.
+The adjustments for each skier found during training are applied the points prediction to get a final result.
 
 #### Probability
 
@@ -234,13 +224,15 @@ Period and altitude adjustments learned during training are applied to base pred
 
 ###### Setup
 
-Biathlon's Individual Probability Training Setup converts the points prediction problem into binary classification for position probability modeling across five finishing position thresholds with conditional logic for individual versus relay events. The system uses the same preprocessed historical race data as points models but transforms the dual-discipline regression problem into classification through binary outcome creation.
+For probability predictions, the places from the training dataframe are converted into binary classification for position probability modeling across five finishing position thresholds. The system uses the same preprocessed historical race data as points models but transforms the regression problem into classification through binary outcome creation.
 
-Position thresholds are defined as `c(1, 3, 5, 10, 30)` representing Win, Podium, Top 5, Top 10, and Top 30 finishes. Each threshold creates a separate binary classification problem where success is defined as finishing at or above that position using the transformation: `race_df$position_achieved <- race_df$Place <= threshold`. This enables binomial GAM modeling while incorporating biathlon's unique race type interconnectedness and conditional relay exclusions. 
+Position thresholds are defined as Win, Podium, Top 5, Top 10, and Top 30 finishes. Each threshold creates a separate binary classification problem where success is defined as finishing at or better than that position. This enables binomial GAM modeling while maintaining consistency with discipline-specific performance characteristics. 
+
+Elo percentages, weighted previous points, missing value imputation, and data filtering are all performed the same way as the points predictions.
 
 ###### Feature Selection
 
-Biathlon's Individual Probability Training Feature Selection employs threshold-independent optimization with race format-specific adaptation. The system uses identical explanatory variable pools as points models (`position_feature_vars <- explanatory_vars`) while performing independent BIC optimization for each position threshold (1, 3, 5, 10, 30). Individual events utilize variables including `Sprint_Pelo_Pct`, `Individual_Pelo_Pct`, `MassStart_Pelo_Pct`, `Pursuit_Pelo_Pct`, and `Prev_Points_Weighted`, while relay events employ team-averaged variables without weighted points. The feature selection includes conditional logic differentiating between individual and relay events, ensuring appropriate variable sets for each competition format while maintaining dual-discipline awareness.
+Position probability feature selection employs threshold-independent optimization with discipline-specific adaptation. The system uses the same explanatory variable pools as the points model while performing an exhaustive independent BIC optimization for each position threshold (1, 3, 5, 10, 30).  Selected variables are converted to smooth terms for binomial GAM modeling.
 
 ###### Modeling
 

@@ -97,23 +97,19 @@ process_sport_data() {
             if [[ -f "$weekends_csv" ]]; then
                 # Use awk to find Period column and get earliest date where Period == 2
                 earliest_period2_date=$(awk -F',' '
-                    NR==1 {
-                        for(i=1; i<=NF; i++) {
-                            if($i == "Period" || $i == " Period" || $i == "Period ") period_col = i
-                            if($i == "Date" || $i == " Date" || $i == "Date ") date_col = i
-                        }
+                    function convert_date(mmddyyyy) {
+                        split(mmddyyyy, parts, "/")
+                        return sprintf("%04d-%02d-%02d", parts[3], parts[1], parts[2])
                     }
-                    NR>1 && period_col && date_col && $period_col == 2 {
-                        dates[NR] = $date_col
+                    NR>1 && $10 == 2 && length($1) > 0 {
+                        converted_date = convert_date($1)
+                        if(earliest_converted == "" || converted_date < earliest_converted) {
+                            earliest_converted = converted_date
+                            earliest_original = $1
+                        }
                     }
                     END {
-                        earliest = ""
-                        for(i in dates) {
-                            if(earliest == "" || dates[i] < earliest) {
-                                earliest = dates[i]
-                            }
-                        }
-                        print earliest
+                        print earliest_original
                     }
                 ' "$weekends_csv" 2>/dev/null)
                 

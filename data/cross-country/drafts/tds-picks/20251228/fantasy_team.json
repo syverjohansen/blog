@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Sex",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "Norway",
+      "M",
+      13510,
+      206.83670977191
+    ],
+    [
+      "Simen Hegstad Krüger",
+      2355,
+      "Norway",
+      "M",
+      4345,
+      201.570640340583
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "Norway",
+      "L",
+      8331,
+      182.957936978752
+    ],
+    [
+      "Mattis Stenshagen",
+      5165,
+      "Norway",
+      "M",
+      5388,
+      177.899071112322
+    ],
+    [
+      "Ebba Andersson",
+      1789,
+      "Sweden",
+      "L",
+      9166,
+      175.566700585473
+    ],
+    [
+      "William Poromaa",
+      12573,
+      "Sweden",
+      "M",
+      2066,
+      173.495048981956
+    ],
+    [
+      "Frida Karlsson",
+      3998,
+      "Sweden",
+      "L",
+      8879,
+      165.972567673928
+    ],
+    [
+      "Andreas Fjorden Ree",
+      8678,
+      "Norway",
+      "M",
+      6314,
+      165.171762742199
+    ],
+    [
+      "Jessie Diggins",
+      131,
+      "USA",
+      "L",
+      14941,
+      164.933969065776
+    ],
+    [
+      "Iivo Niskanen",
+      1470,
+      "Finland",
+      "M",
+      5771,
+      159.750033012674
+    ],
+    [
+      "Emil Iversen",
+      1467,
+      "Norway",
+      "M",
+      2809,
+      146.560762201497
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "France",
+      "M",
+      3331,
+      143.711773287292
+    ],
+    [
+      "Astrid Øyre Slind",
+      115,
+      "Norway",
+      "L",
+      5281,
+      143.625338907259
+    ],
+    [
+      "Krista Pärmäkoski",
+      13,
+      "Finland",
+      "L",
+      2749,
+      132.930671063513
+    ],
+    [
+      "Kristin Austgulen Fosnæs",
+      4268,
+      "Norway",
+      "L",
+      3126,
+      129.609629313993
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      2300,
+      "Norway",
+      "L",
+      3958,
+      125.975748749403
+    ]
+  ]
+}
