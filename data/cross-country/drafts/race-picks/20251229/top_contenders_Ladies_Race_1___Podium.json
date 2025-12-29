@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Ebba Andersson",
+      "Sweden",
+      65.9557968204731
+    ],
+    [
+      "Frida Karlsson",
+      "Sweden",
+      57.3478092283831
+    ],
+    [
+      "Heidi Weng",
+      "Norway",
+      43.9705312136487
+    ],
+    [
+      "Astrid Øyre Slind",
+      "Norway",
+      39.5502132609539
+    ],
+    [
+      "Teresa Stadlober",
+      "Austria",
+      26.5219077161691
+    ]
+  ]
+}

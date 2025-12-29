@@ -1,0 +1,831 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Mikaela Shiffrin",
+      72,
+      1,
+      698,
+      2201
+    ],
+    [
+      "Camille Rast",
+      3229,
+      2,
+      503,
+      2006
+    ],
+    [
+      "Alice Robinson",
+      3891,
+      3,
+      484,
+      1987
+    ],
+    [
+      "Sofia Goggia",
+      331,
+      4,
+      404,
+      1907
+    ],
+    [
+      "Emma Aicher",
+      4194,
+      5,
+      381,
+      1884
+    ],
+    [
+      "Julia Scheib",
+      2970,
+      6,
+      380,
+      1883
+    ],
+    [
+      "Lara Colturi",
+      5268,
+      7,
+      362,
+      1865
+    ],
+    [
+      "Lindsey Vonn",
+      2,
+      8,
+      350,
+      1853
+    ],
+    [
+      "Paula Moltzan",
+      294,
+      9,
+      312,
+      1815
+    ],
+    [
+      "Sara Hector",
+      133,
+      10,
+      304,
+      1807
+    ],
+    [
+      "Lena Dürr",
+      28,
+      11,
+      300,
+      1803
+    ],
+    [
+      "Zrinka Ljutic",
+      4175,
+      12,
+      270,
+      1773
+    ],
+    [
+      "Wendy Holdener",
+      78,
+      13,
+      259,
+      1762
+    ],
+    [
+      "Cornelia Hütter",
+      94,
+      14,
+      224,
+      1727
+    ],
+    [
+      "Katharina Liensberger",
+      2921,
+      15,
+      189,
+      1692
+    ],
+    [
+      "Romane Miradoli",
+      196,
+      16,
+      187,
+      1690
+    ],
+    [
+      "Katharina Truppe",
+      1345,
+      17,
+      186,
+      1689
+    ],
+    [
+      "Thea Louise Stjernesund",
+      3019,
+      18,
+      184,
+      1687
+    ],
+    [
+      "Valerie Grenier",
+      460,
+      19,
+      176,
+      1679
+    ],
+    [
+      "Kira Weidle-Winkelmann",
+      1340,
+      20,
+      164,
+      1667
+    ],
+    [
+      "Laura Pirovano",
+      2916,
+      21,
+      163,
+      1666
+    ],
+    [
+      "Magdalena Egger",
+      3962,
+      22,
+      152,
+      1655
+    ],
+    [
+      "Lara Della Mea",
+      3580,
+      23,
+      151,
+      1654
+    ],
+    [
+      "Anna Swenn-Larsson",
+      76,
+      24,
+      135,
+      1638
+    ],
+    [
+      "Ilka Stuhec",
+      43,
+      25,
+      126,
+      1629
+    ],
+    [
+      "Mirjam Puchner",
+      175,
+      26,
+      119,
+      1622
+    ],
+    [
+      "Nina Ortlieb",
+      386,
+      27,
+      118,
+      1621
+    ],
+    [
+      "Kajsa Vickhoff Lie",
+      2963,
+      28,
+      117,
+      1620
+    ],
+    [
+      "Maryna Gasienica Daniel",
+      289,
+      29,
+      110,
+      1613
+    ],
+    [
+      "Elena Curtoni",
+      33,
+      30,
+      107,
+      1610
+    ],
+    [
+      "Ester Ledecka",
+      2957,
+      30,
+      107,
+      1610
+    ],
+    [
+      "Marion Chevrier",
+      4203,
+      32,
+      103,
+      1606
+    ],
+    [
+      "Ariane Rädler",
+      3633,
+      32,
+      103,
+      1606
+    ],
+    [
+      "Breezy Johnson",
+      497,
+      34,
+      102,
+      1605
+    ],
+    [
+      "Mina Fürst Holtmann",
+      480,
+      35,
+      98,
+      1601
+    ],
+    [
+      "Nina O'Brien",
+      1346,
+      36,
+      95,
+      1598
+    ],
+    [
+      "Malorie Blanc",
+      4978,
+      37,
+      88,
+      1591
+    ],
+    [
+      "Brett Richardson",
+      4212,
+      37,
+      88,
+      1591
+    ],
+    [
+      "Laurence St-Germain",
+      379,
+      39,
+      82,
+      1585
+    ],
+    [
+      "Dzenifera Germane",
+      4080,
+      40,
+      80,
+      1583
+    ],
+    [
+      "Cornelia Öhlund",
+      5016,
+      41,
+      73,
+      1576
+    ],
+    [
+      "Katharina Gallhuber",
+      2829,
+      42,
+      71,
+      1574
+    ],
+    [
+      "Clara Direz",
+      252,
+      43,
+      68,
+      1571
+    ],
+    [
+      "Hanna Aronsson Elfman",
+      4063,
+      44,
+      65,
+      1568
+    ],
+    [
+      "Laura Gauche",
+      388,
+      44,
+      65,
+      1568
+    ],
+    [
+      "Camille Cerutti",
+      2964,
+      46,
+      63,
+      1566
+    ],
+    [
+      "Asja Zenere",
+      1325,
+      46,
+      63,
+      1566
+    ],
+    [
+      "Keely Cashman",
+      2975,
+      48,
+      62,
+      1565
+    ],
+    [
+      "Stephanie Brunner",
+      234,
+      49,
+      61,
+      1564
+    ],
+    [
+      "Lara Gut-Behrami",
+      10,
+      50,
+      60,
+      1563
+    ],
+    [
+      "Estelle Alphand",
+      197,
+      51,
+      59,
+      1562
+    ],
+    [
+      "Eliane Christen",
+      4471,
+      51,
+      59,
+      1562
+    ],
+    [
+      "Katharina Huber",
+      1324,
+      53,
+      57,
+      1560
+    ],
+    [
+      "Lisa Hörhager",
+      4176,
+      54,
+      54,
+      1557
+    ],
+    [
+      "Melanie Meillard",
+      1322,
+      55,
+      52,
+      1555
+    ],
+    [
+      "Nicol Delago",
+      461,
+      56,
+      51,
+      1554
+    ],
+    [
+      "Nina Astner",
+      3959,
+      57,
+      50,
+      1553
+    ],
+    [
+      "Marte Monsen",
+      3793,
+      58,
+      49,
+      1552
+    ],
+    [
+      "Ana Bucik Jogan",
+      180,
+      59,
+      48,
+      1551
+    ],
+    [
+      "Jasmina Suter",
+      262,
+      60,
+      46,
+      1549
+    ],
+    [
+      "Roberta Melesi",
+      428,
+      61,
+      44,
+      1547
+    ],
+    [
+      "Asa Ando",
+      427,
+      62,
+      42,
+      1545
+    ],
+    [
+      "Natalie Falch",
+      4280,
+      62,
+      42,
+      1545
+    ],
+    [
+      "Jasmine Flury",
+      201,
+      62,
+      42,
+      1545
+    ],
+    [
+      "Caitlin McFarlane",
+      4104,
+      62,
+      42,
+      1545
+    ],
+    [
+      "Neja Dvornik",
+      3890,
+      66,
+      41,
+      1544
+    ],
+    [
+      "Jacqueline Wiles",
+      378,
+      67,
+      40,
+      1543
+    ],
+    [
+      "Franziska Gritsch",
+      3694,
+      68,
+      39,
+      1542
+    ],
+    [
+      "Isabella Wright",
+      3934,
+      69,
+      35,
+      1538
+    ],
+    [
+      "Anuk Brändli",
+      5277,
+      70,
+      32,
+      1535
+    ],
+    [
+      "AJ Hurt",
+      3886,
+      71,
+      30,
+      1533
+    ],
+    [
+      "Vanessa Kasper",
+      3023,
+      72,
+      28,
+      1531
+    ],
+    [
+      "Martina Peterlini",
+      3892,
+      73,
+      27,
+      1530
+    ],
+    [
+      "Delia Durrer",
+      4074,
+      74,
+      26,
+      1529
+    ],
+    [
+      "Haley Cutler",
+      5280,
+      75,
+      23,
+      1526
+    ],
+    [
+      "Joana Hählen",
+      169,
+      75,
+      23,
+      1526
+    ],
+    [
+      "Katie Hensien",
+      3887,
+      77,
+      22,
+      1525
+    ],
+    [
+      "Allison Mollin",
+      4773,
+      77,
+      22,
+      1525
+    ],
+    [
+      "Erika Pykäläinen",
+      3894,
+      79,
+      21,
+      1524
+    ],
+    [
+      "Madeline Sylvester-Davik",
+      5486,
+      80,
+      19,
+      1522
+    ],
+    [
+      "Marie Lamure",
+      3993,
+      81,
+      18,
+      1521
+    ],
+    [
+      "Bianca Bakke Westhoff",
+      4160,
+      81,
+      18,
+      1521
+    ],
+    [
+      "Tricia Mangan",
+      1341,
+      83,
+      17,
+      1520
+    ],
+    [
+      "Aline Danioth",
+      1321,
+      84,
+      15,
+      1518
+    ],
+    [
+      "Sue Piller",
+      5832,
+      85,
+      14,
+      1517
+    ],
+    [
+      "Amelia Smart",
+      2983,
+      85,
+      14,
+      1517
+    ],
+    [
+      "Mary Bocock",
+      4764,
+      87,
+      13,
+      1516
+    ],
+    [
+      "Hilma Lövblom",
+      3985,
+      87,
+      13,
+      1516
+    ],
+    [
+      "Carla Mijares Ruf",
+      4106,
+      87,
+      13,
+      1516
+    ],
+    [
+      "Elisabeth Bocock",
+      4761,
+      90,
+      12,
+      1515
+    ],
+    [
+      "Janine Schmitt",
+      4140,
+      90,
+      12,
+      1515
+    ],
+    [
+      "Ricarda Haaser",
+      260,
+      92,
+      11,
+      1514
+    ],
+    [
+      "Aline Höpli",
+      4226,
+      92,
+      11,
+      1514
+    ],
+    [
+      "Lena Wechner",
+      4141,
+      92,
+      11,
+      1514
+    ],
+    [
+      "Nicole Good",
+      3782,
+      95,
+      10,
+      1513
+    ],
+    [
+      "llaria Ghisalberti",
+      4151,
+      96,
+      9,
+      1512
+    ],
+    [
+      "Jessica Hilzinger",
+      1339,
+      96,
+      9,
+      1512
+    ],
+    [
+      "Chisaki Maeda",
+      2985,
+      96,
+      9,
+      1512
+    ],
+    [
+      "Victoria Olivier",
+      4232,
+      96,
+      9,
+      1512
+    ],
+    [
+      "Leona Popovic",
+      1193,
+      96,
+      9,
+      1512
+    ],
+    [
+      "Fabiana Dorigo",
+      4130,
+      101,
+      8,
+      1511
+    ],
+    [
+      "Nadine Fest",
+      2969,
+      101,
+      8,
+      1511
+    ],
+    [
+      "Priska Ming-Nufer",
+      170,
+      101,
+      8,
+      1511
+    ],
+    [
+      "Cande Moreno Becerra",
+      3777,
+      101,
+      8,
+      1511
+    ],
+    [
+      "Christina Ager",
+      390,
+      105,
+      7,
+      1510
+    ],
+    [
+      "Jana Fritz",
+      5269,
+      105,
+      7,
+      1510
+    ],
+    [
+      "Elvedina Muzaferija",
+      2989,
+      105,
+      7,
+      1510
+    ],
+    [
+      "Viktoria Bürgler",
+      4323,
+      108,
+      6,
+      1509
+    ],
+    [
+      "Nadia Delago",
+      3013,
+      108,
+      6,
+      1509
+    ],
+    [
+      "Zita Toth",
+      3970,
+      108,
+      6,
+      1509
+    ],
+    [
+      "Sara Allemand",
+      4144,
+      111,
+      5,
+      1508
+    ],
+    [
+      "Justine Lamontagne",
+      4286,
+      111,
+      5,
+      1508
+    ],
+    [
+      "Cassidy Gray",
+      4154,
+      113,
+      4,
+      1507
+    ],
+    [
+      "Emilia Mondinelli",
+      4987,
+      113,
+      4,
+      1507
+    ],
+    [
+      "Alice Pazzaglia",
+      4303,
+      113,
+      4,
+      1507
+    ],
+    [
+      "Rosa Pohjolainen",
+      4060,
+      116,
+      3,
+      1506
+    ],
+    [
+      "Simone Wild",
+      397,
+      117,
+      2,
+      1505
+    ]
+  ]
+}
