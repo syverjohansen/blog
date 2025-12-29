@@ -1,0 +1,901 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      1,
+      685,
+      1451
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      2,
+      660,
+      1426
+    ],
+    [
+      "Jonna Sundling",
+      1486,
+      3,
+      537,
+      1303
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      4,
+      498,
+      1264
+    ],
+    [
+      "Ebba Andersson",
+      1789,
+      5,
+      412,
+      1178
+    ],
+    [
+      "Jasmi Joensuu",
+      1675,
+      6,
+      381,
+      1147
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      2300,
+      7,
+      380,
+      1146
+    ],
+    [
+      "Heidi Weng",
+      60,
+      8,
+      375,
+      1141
+    ],
+    [
+      "Frida Karlsson",
+      3998,
+      9,
+      368,
+      1134
+    ],
+    [
+      "Emma Ribom",
+      1844,
+      10,
+      360,
+      1126
+    ],
+    [
+      "Anja Weber",
+      6338,
+      11,
+      338,
+      1104
+    ],
+    [
+      "Kristin Austgulen Fosnæs",
+      4268,
+      12,
+      334,
+      1100
+    ],
+    [
+      "Johanna Hagström",
+      3212,
+      13,
+      327,
+      1093
+    ],
+    [
+      "Astrid Øyre Slind",
+      115,
+      14,
+      322,
+      1088
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      15,
+      311,
+      1077
+    ],
+    [
+      "Pia Fink",
+      4004,
+      16,
+      301,
+      1067
+    ],
+    [
+      "Helen Hoffmann",
+      6691,
+      17,
+      295,
+      1061
+    ],
+    [
+      "Mathilde Myhrvold",
+      2298,
+      18,
+      284,
+      1050
+    ],
+    [
+      "Teresa Stadlober",
+      529,
+      19,
+      283,
+      1049
+    ],
+    [
+      "Coletta Rydzek",
+      3254,
+      20,
+      262,
+      1028
+    ],
+    [
+      "Julie Bjervig Drivenes",
+      3357,
+      21,
+      246,
+      1012
+    ],
+    [
+      "Johanna Matintalo",
+      1761,
+      22,
+      240,
+      1006
+    ],
+    [
+      "Katerina Janatova",
+      3198,
+      23,
+      237,
+      1003
+    ],
+    [
+      "Nora Sanness",
+      6324,
+      24,
+      234,
+      1000
+    ],
+    [
+      "Nadja Kälin",
+      6639,
+      25,
+      222,
+      988
+    ],
+    [
+      "Kerttu Niskanen",
+      37,
+      26,
+      200,
+      966
+    ],
+    [
+      "Kristine Stavås Skistad",
+      3207,
+      26,
+      200,
+      966
+    ],
+    [
+      "Gina del Rio",
+      10313,
+      28,
+      195,
+      961
+    ],
+    [
+      "Laura Gimmler",
+      1495,
+      28,
+      195,
+      961
+    ],
+    [
+      "Vilma Ryytty",
+      6607,
+      30,
+      192,
+      958
+    ],
+    [
+      "Julia Kern",
+      1846,
+      31,
+      190,
+      956
+    ],
+    [
+      "Caterina Ganz",
+      1721,
+      32,
+      188,
+      954
+    ],
+    [
+      "Linn Svahn",
+      3190,
+      32,
+      188,
+      954
+    ],
+    [
+      "Jasmin Kähärä",
+      3528,
+      34,
+      180,
+      946
+    ],
+    [
+      "Vilma Nissinen",
+      3034,
+      35,
+      179,
+      945
+    ],
+    [
+      "Patricijia Eiduka",
+      3240,
+      36,
+      175,
+      941
+    ],
+    [
+      "Krista Pärmäkoski",
+      13,
+      37,
+      164,
+      930
+    ],
+    [
+      "Ingrid Bergene Aabrekk",
+      6828,
+      38,
+      160,
+      926
+    ],
+    [
+      "Moa Lundgren",
+      3211,
+      39,
+      150,
+      916
+    ],
+    [
+      "Anne Kjersti Kalvå",
+      1498,
+      40,
+      148,
+      914
+    ],
+    [
+      "Federica Cassol",
+      9082,
+      41,
+      147,
+      913
+    ],
+    [
+      "Ane Appelkvist Stenseth",
+      1829,
+      42,
+      142,
+      908
+    ],
+    [
+      "Katherine Sauerbrey",
+      1727,
+      43,
+      139,
+      905
+    ],
+    [
+      "Milla Grosberghaugen Andreassen",
+      10424,
+      44,
+      136,
+      902
+    ],
+    [
+      "Rosie Brennan",
+      627,
+      45,
+      129,
+      895
+    ],
+    [
+      "Lotta Udnes Weng",
+      1671,
+      46,
+      127,
+      893
+    ],
+    [
+      "Hilla Niemelä",
+      6296,
+      47,
+      120,
+      886
+    ],
+    [
+      "Tiril Udnes Weng",
+      1668,
+      47,
+      120,
+      886
+    ],
+    [
+      "Iris De Martin Pinter",
+      7422,
+      49,
+      115,
+      881
+    ],
+    [
+      "Katharina Hennig Dotzler",
+      1618,
+      50,
+      112,
+      878
+    ],
+    [
+      "Maria Gismondi",
+      10867,
+      51,
+      111,
+      877
+    ],
+    [
+      "Kathrine Stewart-Jones",
+      1676,
+      52,
+      110,
+      876
+    ],
+    [
+      "Lea Fischer",
+      2284,
+      53,
+      105,
+      871
+    ],
+    [
+      "Sofie Krehl",
+      1695,
+      54,
+      103,
+      869
+    ],
+    [
+      "Amanda Saari",
+      7905,
+      55,
+      102,
+      868
+    ],
+    [
+      "Rosie Fordham",
+      6450,
+      56,
+      98,
+      864
+    ],
+    [
+      "Alayna Sonnesyn",
+      1872,
+      57,
+      88,
+      854
+    ],
+    [
+      "Leonie Perry",
+      10413,
+      58,
+      85,
+      851
+    ],
+    [
+      "Nicole Monsorno",
+      6631,
+      59,
+      83,
+      849
+    ],
+    [
+      "Magdalena Scherz",
+      6707,
+      60,
+      80,
+      846
+    ],
+    [
+      "Hedda Bakkemo",
+      6437,
+      61,
+      75,
+      841
+    ],
+    [
+      "Märta Rosenberg",
+      6689,
+      62,
+      71,
+      837
+    ],
+    [
+      "Anna Comarella",
+      1724,
+      63,
+      68,
+      834
+    ],
+    [
+      "Anja Mandeljc",
+      1868,
+      64,
+      63,
+      829
+    ],
+    [
+      "Izabela Marcisz",
+      6327,
+      64,
+      63,
+      829
+    ],
+    [
+      "Delphine Claudel",
+      1694,
+      66,
+      61,
+      827
+    ],
+    [
+      "Marina Kälin",
+      7433,
+      67,
+      59,
+      825
+    ],
+    [
+      "Katri Lylynperä",
+      1494,
+      68,
+      58,
+      824
+    ],
+    [
+      "Dariya Nepryaeva",
+      6555,
+      69,
+      55,
+      821
+    ],
+    [
+      "Monika Skinder",
+      6335,
+      70,
+      53,
+      819
+    ],
+    [
+      "Margrete Røssum Dyrhovd",
+      1778,
+      71,
+      52,
+      818
+    ],
+    [
+      "Alina Meier",
+      1680,
+      71,
+      52,
+      818
+    ],
+    [
+      "Silje Øyre Slind",
+      458,
+      71,
+      52,
+      818
+    ],
+    [
+      "Lena Quintin",
+      3252,
+      74,
+      51,
+      817
+    ],
+    [
+      "Eva Ingebrigtsen",
+      10145,
+      75,
+      48,
+      814
+    ],
+    [
+      "Tereza Beranova",
+      3618,
+      76,
+      47,
+      813
+    ],
+    [
+      "Luci Anderson",
+      4706,
+      77,
+      43,
+      809
+    ],
+    [
+      "Giuliana Werro",
+      3230,
+      77,
+      43,
+      809
+    ],
+    [
+      "Elina Rönnlund",
+      1674,
+      79,
+      40,
+      806
+    ],
+    [
+      "Vilma Jylhä",
+      3050,
+      80,
+      36,
+      802
+    ],
+    [
+      "Marte Mikkelsplass",
+      6793,
+      81,
+      33,
+      799
+    ],
+    [
+      "Keidy Kaasiku",
+      4942,
+      82,
+      32,
+      798
+    ],
+    [
+      "Chika Kobayashi",
+      3524,
+      83,
+      30,
+      796
+    ],
+    [
+      "Anna-Kaisa Saari",
+      3085,
+      83,
+      30,
+      796
+    ],
+    [
+      "Melissa Gal",
+      4034,
+      85,
+      29,
+      795
+    ],
+    [
+      "Nora Kytäjä",
+      6993,
+      86,
+      28,
+      794
+    ],
+    [
+      "Verena Veit",
+      9317,
+      87,
+      27,
+      793
+    ],
+    [
+      "Fabienne Alder",
+      11191,
+      88,
+      26,
+      792
+    ],
+    [
+      "Mariel Merlii Pulles",
+      1969,
+      89,
+      24,
+      790
+    ],
+    [
+      "Eliza Rucka",
+      6328,
+      89,
+      24,
+      790
+    ],
+    [
+      "Kaidy Kaasiku",
+      4943,
+      91,
+      23,
+      789
+    ],
+    [
+      "Masae Tsuchiya",
+      3498,
+      91,
+      23,
+      789
+    ],
+    [
+      "Katharina Brudermann",
+      5040,
+      93,
+      22,
+      788
+    ],
+    [
+      "Anna-Maria Dietze",
+      3214,
+      93,
+      22,
+      788
+    ],
+    [
+      "Nora Christine Hansen",
+      10467,
+      93,
+      22,
+      788
+    ],
+    [
+      "Kendall Kramer",
+      6650,
+      93,
+      22,
+      788
+    ],
+    [
+      "Anna Pryce",
+      6640,
+      97,
+      21,
+      787
+    ],
+    [
+      "Heidi Bucher",
+      10823,
+      98,
+      20,
+      786
+    ],
+    [
+      "Lena Keck",
+      4825,
+      99,
+      18,
+      784
+    ],
+    [
+      "Evelina Crusell",
+      10880,
+      100,
+      17,
+      783
+    ],
+    [
+      "Maiken Min Midtskogen",
+      3375,
+      100,
+      17,
+      783
+    ],
+    [
+      "Anni Alakoski",
+      3037,
+      102,
+      16,
+      782
+    ],
+    [
+      "Nora Elisabeth Falster",
+      8959,
+      102,
+      16,
+      782
+    ],
+    [
+      "Julie Myhre",
+      1841,
+      102,
+      16,
+      782
+    ],
+    [
+      "Barbora Antosova",
+      6633,
+      105,
+      15,
+      781
+    ],
+    [
+      "Anne Kyllönen",
+      45,
+      105,
+      15,
+      781
+    ],
+    [
+      "Sophia Laukli",
+      7369,
+      105,
+      15,
+      781
+    ],
+    [
+      "Phoebe Cridland",
+      5184,
+      108,
+      13,
+      779
+    ],
+    [
+      "Theresa Fürstenberg",
+      6801,
+      109,
+      12,
+      778
+    ],
+    [
+      "Juliette Ducordeau",
+      3218,
+      110,
+      10,
+      776
+    ],
+    [
+      "Margot Tirloy",
+      10829,
+      111,
+      9,
+      775
+    ],
+    [
+      "Oona Kettunen",
+      1914,
+      112,
+      8,
+      774
+    ],
+    [
+      "Kate Oldham",
+      6453,
+      112,
+      8,
+      774
+    ],
+    [
+      "Selene Rossi",
+      10816,
+      112,
+      8,
+      774
+    ],
+    [
+      "Desiree Steiner",
+      3220,
+      112,
+      8,
+      774
+    ],
+    [
+      "Clemence Didierlaurent",
+      10690,
+      116,
+      6,
+      772
+    ],
+    [
+      "Anna Marie Jaklova",
+      10190,
+      116,
+      6,
+      772
+    ],
+    [
+      "Hanna Ray",
+      6472,
+      116,
+      6,
+      772
+    ],
+    [
+      "Nadine Laurent",
+      9319,
+      119,
+      5,
+      771
+    ],
+    [
+      "Olivia Bouffard-Nesbitt",
+      1685,
+      120,
+      4,
+      770
+    ],
+    [
+      "Heidi Convard",
+      11395,
+      120,
+      4,
+      770
+    ],
+    [
+      "Julie Pierrel",
+      7444,
+      122,
+      3,
+      769
+    ],
+    [
+      "Teesi Tuul",
+      3328,
+      122,
+      3,
+      769
+    ],
+    [
+      "Justine Gaillard",
+      11576,
+      124,
+      2,
+      768
+    ],
+    [
+      "Chika Honda",
+      7087,
+      124,
+      2,
+      768
+    ],
+    [
+      "Liv Coupat",
+      9321,
+      126,
+      1,
+      767
+    ],
+    [
+      "Elsa Torvinen",
+      9382,
+      126,
+      1,
+      767
+    ]
+  ]
+}
