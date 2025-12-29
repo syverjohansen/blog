@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Ebba Andersson",
+      1789,
+      "L",
+      "Sweden",
+      9166,
+      41.5822583781505
+    ],
+    [
+      "Frida Karlsson",
+      3998,
+      "L",
+      "Sweden",
+      8879,
+      37.7478310735343
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "L",
+      "Norway",
+      8331,
+      35.1201085776648
+    ],
+    [
+      "Astrid Øyre Slind",
+      115,
+      "L",
+      "Norway",
+      5281,
+      34.0961293213143
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "L",
+      "Sweden",
+      9779,
+      31.7165407939608
+    ],
+    [
+      "Teresa Stadlober",
+      529,
+      "L",
+      "Austria",
+      3112,
+      30.7160243660106
+    ],
+    [
+      "Kerttu Niskanen",
+      37,
+      "L",
+      "Finland",
+      4412,
+      25.787391222014
+    ],
+    [
+      "Kristin Austgulen Fosnæs",
+      4268,
+      "L",
+      "Norway",
+      3126,
+      22.8080531598449
+    ],
+    [
+      "Iivo Niskanen",
+      1470,
+      "M",
+      "Finland",
+      5771,
+      35.661806530644
+    ],
+    [
+      "William Poromaa",
+      12573,
+      "M",
+      "Sweden",
+      2066,
+      32.8860805416769
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "M",
+      "Norway",
+      13510,
+      29.0852758025024
+    ],
+    [
+      "Erik Valnes",
+      5923,
+      "M",
+      "Norway",
+      9545,
+      27.3152904229205
+    ],
+    [
+      "Simen Hegstad Krüger",
+      2355,
+      "M",
+      "Norway",
+      4345,
+      25.5831132213438
+    ],
+    [
+      "Andreas Fjorden Ree",
+      8678,
+      "M",
+      "Norway",
+      6314,
+      25.5091822003685
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "M",
+      "France",
+      3331,
+      22.1249300813243
+    ],
+    [
+      "Emil Iversen",
+      1467,
+      "M",
+      "Norway",
+      2809,
+      14.0407625373801
+    ]
+  ]
+}

@@ -1,0 +1,2120 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Sex",
+    "Race1 Points",
+    "Race1 Probability",
+    "Total Points"
+  ],
+  "rows": [
+    [
+      "Johannes Høsflot Klæbo",
+      5164.0,
+      "Norway",
+      "M",
+      36.831930746621,
+      1,
+      36.831930746621
+    ],
+    [
+      "Iivo Niskanen",
+      1470.0,
+      "Finland",
+      "M",
+      35.661806530644,
+      1,
+      35.661806530644
+    ],
+    [
+      "William Poromaa",
+      12573.0,
+      "Sweden",
+      "M",
+      32.8860805416769,
+      1,
+      32.8860805416769
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449.0,
+      "Norway",
+      "M",
+      29.0852758025024,
+      1,
+      29.0852758025024
+    ],
+    [
+      "Erik Valnes",
+      5923.0,
+      "Norway",
+      "M",
+      27.3152904229205,
+      1,
+      27.3152904229205
+    ],
+    [
+      "Simen Hegstad Krüger",
+      2355.0,
+      "Norway",
+      "M",
+      25.5831132213438,
+      1,
+      25.5831132213438
+    ],
+    [
+      "Andreas Fjorden Ree",
+      8678.0,
+      "Norway",
+      "M",
+      25.5091822003685,
+      1,
+      25.5091822003685
+    ],
+    [
+      "Hugo Lapalus",
+      6018.0,
+      "France",
+      "M",
+      22.1249300813243,
+      1,
+      22.1249300813243
+    ],
+    [
+      "Edvin Anger",
+      14039.0,
+      "Sweden",
+      "M",
+      21.8483856711344,
+      1,
+      21.8483856711344
+    ],
+    [
+      "Mattis Stenshagen",
+      5165.0,
+      "Norway",
+      "M",
+      17.2282339877023,
+      1,
+      17.2282339877023
+    ],
+    [
+      "Emil Iversen",
+      1467.0,
+      "Norway",
+      "M",
+      14.0407625373801,
+      1,
+      14.0407625373801
+    ],
+    [
+      "Ristomatti Hakola",
+      2553.0,
+      "Finland",
+      "M",
+      14.0147401257254,
+      1,
+      14.0147401257254
+    ],
+    [
+      "Federico Pellegrino",
+      44.0,
+      "Italy",
+      "M",
+      13.3796955358234,
+      1,
+      13.3796955358234
+    ],
+    [
+      "Gus Schumacher",
+      9172.0,
+      "USA",
+      "M",
+      11.1396530238219,
+      1,
+      11.1396530238219
+    ],
+    [
+      "Antoine Cyr",
+      9225.0,
+      "Canada",
+      "M",
+      11.0118444508178,
+      1,
+      11.0118444508178
+    ],
+    [
+      "Alvar Myhlback",
+      19652.0,
+      "Sweden",
+      "M",
+      9.93735946467402,
+      1,
+      9.93735946467402
+    ],
+    [
+      "Gustaf Berglund",
+      12178.0,
+      "Sweden",
+      "M",
+      9.82237523623325,
+      1,
+      9.82237523623325
+    ],
+    [
+      "Richard Jouve",
+      2768.0,
+      "France",
+      "M",
+      9.57427887463717,
+      1,
+      9.57427887463717
+    ],
+    [
+      "Friedrich Moch",
+      9323.0,
+      "Germany",
+      "M",
+      9.31678239811841,
+      1,
+      9.31678239811841
+    ],
+    [
+      "Michal Novak",
+      3655.0,
+      "Czechia",
+      "M",
+      9.13647985809299,
+      1,
+      9.13647985809299
+    ],
+    [
+      "Zak Ketterson",
+      5988.0,
+      "USA",
+      "M",
+      8.65224830924329,
+      1,
+      8.65224830924329
+    ],
+    [
+      "Andrew Musgrave",
+      277.0,
+      "Great Britain",
+      "M",
+      8.14465315504201,
+      1,
+      8.14465315504201
+    ],
+    [
+      "Jules Chappaz",
+      12181.0,
+      "France",
+      "M",
+      7.82310128961398,
+      1,
+      7.82310128961398
+    ],
+    [
+      "Perttu Hyvärinen",
+      1441.0,
+      "Finland",
+      "M",
+      7.65536361182825,
+      1,
+      7.65536361182825
+    ],
+    [
+      "Janosch Brugger",
+      3657.0,
+      "Germany",
+      "M",
+      6.5271975983809,
+      1,
+      6.5271975983809
+    ],
+    [
+      "Valerio Grond",
+      12164.0,
+      "Switzerland",
+      "M",
+      6.2002391872193,
+      1,
+      6.2002391872193
+    ],
+    [
+      "Niko Anttola",
+      17474.0,
+      "Finland",
+      "M",
+      5.96818625198402,
+      1,
+      5.96818625198402
+    ],
+    [
+      "Remi Bourdin",
+      17445.0,
+      "France",
+      "M",
+      5.89762175162669,
+      1,
+      5.89762175162669
+    ],
+    [
+      "Clement Parisse",
+      2353.0,
+      "France",
+      "M",
+      5.666406769427,
+      1,
+      5.666406769427
+    ],
+    [
+      "Ben Ogden",
+      9179.0,
+      "USA",
+      "M",
+      5.55848188386527,
+      1,
+      5.55848188386527
+    ],
+    [
+      "Elia Barp",
+      14042.0,
+      "Italy",
+      "M",
+      5.39288177910345,
+      1,
+      5.39288177910345
+    ],
+    [
+      "Davide Graz",
+      12165.0,
+      "Italy",
+      "M",
+      5.29493774631253,
+      1,
+      5.29493774631253
+    ],
+    [
+      "Truls Gisselman",
+      12782.0,
+      "Sweden",
+      "M",
+      3.88848321410135,
+      1,
+      3.88848321410135
+    ],
+    [
+      "Francesco De Fabiani",
+      1496.0,
+      "Italy",
+      "M",
+      3.82084129252765,
+      1,
+      3.82084129252765
+    ],
+    [
+      "Theo Schely",
+      12166.0,
+      "France",
+      "M",
+      3.62827013419917,
+      1,
+      3.62827013419917
+    ],
+    [
+      "Thomas Hjalmar Westgård",
+      5553.0,
+      "Ireland",
+      "M",
+      3.46482963687434,
+      1,
+      3.46482963687434
+    ],
+    [
+      "Lauri Vuorinen",
+      2874.0,
+      "Finland",
+      "M",
+      3.40056099585332,
+      1,
+      3.40056099585332
+    ],
+    [
+      "Joni Mäki",
+      3586.0,
+      "Finland",
+      "M",
+      3.03703149804344,
+      1,
+      3.03703149804344
+    ],
+    [
+      "Alvar Johannes Alev",
+      1996.0,
+      "Estonia",
+      "M",
+      3.02804920532838,
+      1,
+      3.02804920532838
+    ],
+    [
+      "Irineu Esteve Altimiras",
+      3632.0,
+      "Andorra",
+      "M",
+      3.02306014769793,
+      1,
+      3.02306014769793
+    ],
+    [
+      "Eric Rosjö",
+      5940.0,
+      "Sweden",
+      "M",
+      2.55836616104064,
+      1,
+      2.55836616104064
+    ],
+    [
+      "Jiri Tuz",
+      17348.0,
+      "Czechia",
+      "M",
+      2.3592790732044,
+      1,
+      2.3592790732044
+    ],
+    [
+      "Jason Rüesch",
+      2732.0,
+      "Switzerland",
+      "M",
+      2.33971917638246,
+      1,
+      2.33971917638246
+    ],
+    [
+      "James Clinton Schoonmaker",
+      9201.0,
+      "USA",
+      "M",
+      2.18921345300405,
+      1,
+      2.18921345300405
+    ],
+    [
+      "Niilo Moilanen",
+      12446.0,
+      "Finland",
+      "M",
+      1.95096401394012,
+      1,
+      1.95096401394012
+    ],
+    [
+      "Benjamin Moser",
+      5989.0,
+      "Austria",
+      "M",
+      1.92012206596717,
+      1,
+      1.92012206596717
+    ],
+    [
+      "Ansgar Evensen",
+      8246.0,
+      "Norway",
+      "M",
+      1.88306436632385,
+      1,
+      1.88306436632385
+    ],
+    [
+      "Lucas Chanavat",
+      3582.0,
+      "France",
+      "M",
+      1.82519181741507,
+      1,
+      1.82519181741507
+    ],
+    [
+      "Simone Mocellini",
+      12168.0,
+      "Italy",
+      "M",
+      1.77580373821126,
+      1,
+      1.77580373821126
+    ],
+    [
+      "Martino Carollo",
+      19980.0,
+      "Italy",
+      "M",
+      1.74469084202625,
+      1,
+      1.74469084202625
+    ],
+    [
+      "Victor Lovera",
+      17106.0,
+      "France",
+      "M",
+      1.6643891467864,
+      1,
+      1.6643891467864
+    ],
+    [
+      "Jan Stölben",
+      14033.0,
+      "Germany",
+      "M",
+      1.4776493061173,
+      1,
+      1.4776493061173
+    ],
+    [
+      "Xavier McKeever",
+      12676.0,
+      "Canada",
+      "M",
+      1.31689495509526,
+      1,
+      1.31689495509526
+    ],
+    [
+      "Joe Davies",
+      14110.0,
+      "Great Britain",
+      "M",
+      1.13312114908004,
+      1,
+      1.13312114908004
+    ],
+    [
+      "Jules Lapierre",
+      3646.0,
+      "France",
+      "M",
+      1.08632351077183,
+      1,
+      1.08632351077183
+    ],
+    [
+      "Paolo Ventura",
+      6009.0,
+      "Italy",
+      "M",
+      0.932813714516231,
+      1,
+      0.932813714516231
+    ],
+    [
+      "Janik Riebli",
+      7725.0,
+      "Switzerland",
+      "M",
+      0.911037952393647,
+      1,
+      0.911037952393647
+    ],
+    [
+      "Miha Simenc",
+      2808.0,
+      "Slovenia",
+      "M",
+      0.883509487283482,
+      1,
+      0.883509487283482
+    ],
+    [
+      "Michael Föttinger",
+      5978.0,
+      "Austria",
+      "M",
+      0.835750657546224,
+      1,
+      0.835750657546224
+    ],
+    [
+      "Martin Himma",
+      8092.0,
+      "Estonia",
+      "M",
+      0.761296520161751,
+      1,
+      0.761296520161751
+    ],
+    [
+      "Kevin Bolger",
+      9159.0,
+      "USA",
+      "M",
+      0.675223139516749,
+      1,
+      0.675223139516749
+    ],
+    [
+      "Ryo Hirose",
+      12172.0,
+      "Japan",
+      "M",
+      0.563929741474654,
+      1,
+      0.563929741474654
+    ],
+    [
+      "Graham Ritchie",
+      9217.0,
+      "Canada",
+      "M",
+      0.414979122657292,
+      1,
+      0.414979122657292
+    ],
+    [
+      "Anian Sossau",
+      9340.0,
+      "Germany",
+      "M",
+      0.319898054266079,
+      1,
+      0.319898054266079
+    ],
+    [
+      "Michael Hellweger",
+      5979.0,
+      "Italy",
+      "M",
+      0.319636451706847,
+      1,
+      0.319636451706847
+    ],
+    [
+      "Jonas Eriksson",
+      5590.0,
+      "Sweden",
+      "M",
+      0.261578549204356,
+      1,
+      0.261578549204356
+    ],
+    [
+      "Nejc Stern",
+      18932.0,
+      "Slovenia",
+      "M",
+      0.169897185659168,
+      1,
+      0.169897185659168
+    ],
+    [
+      "Johan Ekberg",
+      13290.0,
+      "Sweden",
+      "M",
+      0.142880830313642,
+      1,
+      0.142880830313642
+    ],
+    [
+      "Sebastian Bryja",
+      12700.0,
+      "Poland",
+      "M",
+      0.077792546710246,
+      1,
+      0.077792546710246
+    ],
+    [
+      "Bernat Selles Gasch",
+      17556.0,
+      "Spain",
+      "M",
+      0.0639943313007132,
+      1,
+      0.0639943313007132
+    ],
+    [
+      "Florian Notz",
+      1488.0,
+      "Germany",
+      "M",
+      0.0289140234015377,
+      1,
+      0.0289140234015377
+    ],
+    [
+      "Martin Løwstrøm Nyenget",
+      2295.0,
+      "Norway",
+      "M",
+      35.3264855892711,
+      0,
+      0.0
+    ],
+    [
+      "Mika Vermeulen",
+      12673.0,
+      "Austria",
+      "M",
+      27.3203971964739,
+      0,
+      0.0
+    ],
+    [
+      "Einar Hedegart",
+      20631.0,
+      "Norway",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Saveliy Korostelev",
+      13188.0,
+      "Russia",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Mathis Desloges",
+      12767.0,
+      "France",
+      "M",
+      11.0175531498363,
+      0,
+      0.0
+    ],
+    [
+      "Lars Heggen",
+      19104.0,
+      "Norway",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Even Northug",
+      3590.0,
+      "Norway",
+      "M",
+      2.61216715341591,
+      0,
+      0.0
+    ],
+    [
+      "Jan Thomas Jenssen",
+      5406.0,
+      "Norway",
+      "M",
+      15.7018719039039,
+      0,
+      0.0
+    ],
+    [
+      "Iver Tildheim Andersen",
+      8590.0,
+      "Norway",
+      "M",
+      13.447066673923,
+      0,
+      0.0
+    ],
+    [
+      "Oskar Opstad Vike",
+      19279.0,
+      "Norway",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Didrik Tønseth",
+      1446.0,
+      "Norway",
+      "M",
+      24.2946219183063,
+      0,
+      0.0
+    ],
+    [
+      "Arsi Ruuskanen",
+      8120.0,
+      "Finland",
+      "M",
+      12.8908826636539,
+      0,
+      0.0
+    ],
+    [
+      "Anton Grahn",
+      18667.0,
+      "Sweden",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Johan Häggström",
+      4399.0,
+      "Sweden",
+      "M",
+      3.49800932103453,
+      0,
+      0.0
+    ],
+    [
+      "Zanden McMullen",
+      12698.0,
+      "USA",
+      "M",
+      1.70353826321959,
+      0,
+      0.0
+    ],
+    [
+      "Jack Young",
+      14687.0,
+      "USA",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Beda Klee",
+      3651.0,
+      "Switzerland",
+      "M",
+      2.43438471605542,
+      0,
+      0.0
+    ],
+    [
+      "Leo Johansson",
+      8047.0,
+      "Sweden",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Giacomo Gabrielli",
+      5181.0,
+      "Italy",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Christopher Kalev",
+      6469.0,
+      "Estonia",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Adam Fellner",
+      2162.0,
+      "Czechia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Franco Dal Farra",
+      8039.0,
+      "Argentina",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Mikayel Mikayelyan",
+      5226.0,
+      "Armenia",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Dmytro Drahun",
+      8058.0,
+      "Ukraine",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Olli Ahonen",
+      5652.0,
+      "Finland",
+      "M",
+      0.0467339297863249,
+      0,
+      0.0
+    ],
+    [
+      "Valeriy Gontar",
+      5765.0,
+      "Slovenia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sho Kasahara",
+      13540.0,
+      "Japan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Kalle Parantainen",
+      9714.0,
+      "Finland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lukas Mrkonjic",
+      9689.0,
+      "Austria",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Paul Constantin Pepene",
+      219.0,
+      "Romania",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Gabriel Gledhill",
+      14200.0,
+      "Great Britain",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Markus Vuorela",
+      5635.0,
+      "Finland",
+      "M",
+      5.08746291291745,
+      0,
+      0.0
+    ],
+    [
+      "Simone Dapra",
+      6019.0,
+      "Italy",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Naoto Baba",
+      5186.0,
+      "Japan",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Marius Kastner",
+      14055.0,
+      "Germany",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Noe Näff",
+      19984.0,
+      "Switzerland",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "James Clugnet",
+      3615.0,
+      "Great Britain",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Isai Näff",
+      18916.0,
+      "Switzerland",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Eero Rantala",
+      17230.0,
+      "Finland",
+      "M",
+      2.66250556787887,
+      0,
+      0.0
+    ],
+    [
+      "Jesper Persson",
+      14715.0,
+      "Sweden",
+      "M",
+      0.20312289400386,
+      0,
+      0.0
+    ],
+    [
+      "Karl Sebastian Dremljuga",
+      12667.0,
+      "Estonia",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Hugo Hinckfuss",
+      12412.0,
+      "Australia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Tomas Dufek",
+      8114.0,
+      "Czechia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Tautvydas Strolia",
+      2281.0,
+      "Lithuania",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Mark Chanloung",
+      5172.0,
+      "Thailand",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Thomas Stephen",
+      12678.0,
+      "Canada",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "George Ersson",
+      12790.0,
+      "Sweden",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Simeon Deyanov",
+      1664.0,
+      "Bulgaria",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Oleksandr Lisohor",
+      13173.0,
+      "Ukraine",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Edvard Sandvik",
+      12332.0,
+      "Norway",
+      "M",
+      11.0312400664242,
+      0,
+      0.0
+    ],
+    [
+      "Petteri Koivisto",
+      8104.0,
+      "Finland",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Antonin Savary",
+      12775.0,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Johnny Hagenbuch",
+      12699.0,
+      "USA",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Filip Skari",
+      19114.0,
+      "Norway",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Daito Yamazaki",
+      18669.0,
+      "Japan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Amund Korsæth",
+      8597.0,
+      "Norway",
+      "M",
+      5.60383868546818,
+      0,
+      0.0
+    ],
+    [
+      "Jesse Kahara",
+      19944.0,
+      "Finland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Max Hollmann",
+      18737.0,
+      "Canada",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Emil Liekari",
+      12440.0,
+      "Finland",
+      "M",
+      2.1030925515214,
+      0,
+      0.0
+    ],
+    [
+      "Luke Jager",
+      9176.0,
+      "USA",
+      "M",
+      0.204451929795591,
+      0,
+      0.0
+    ],
+    [
+      "Vitaliy Pukhkalo",
+      5195.0,
+      "Kazakhstan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Entemake Maowulietibieke",
+      11992.0,
+      "China",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Remi Lindholm",
+      5702.0,
+      "Finland",
+      "M",
+      1.03896976629299,
+      0,
+      0.0
+    ],
+    [
+      "Florian Knopf",
+      9319.0,
+      "Germany",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Tobias Ganner",
+      19084.0,
+      "Austria",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Miha Licef",
+      5911.0,
+      "Slovenia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Rikard Vestin",
+      14807.0,
+      "Sweden",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lars Young Vik",
+      12386.0,
+      "Australia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Maciej Starega",
+      139.0,
+      "Poland",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Mateusz Haratyk",
+      5942.0,
+      "Poland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Andrew Young",
+      1642.0,
+      "Great Britain",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Qiang Wang",
+      11198.0,
+      "China",
+      "M",
+      0.520196370947826,
+      0,
+      0.0
+    ],
+    [
+      "Marc Colell Pantebre",
+      17552.0,
+      "Spain",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Nicola Wigger",
+      12697.0,
+      "Switzerland",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Takatsugu Uda",
+      2877.0,
+      "Japan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Candide Pralong",
+      1538.0,
+      "Switzerland",
+      "M",
+      1.0516632633155,
+      0,
+      0.0
+    ],
+    [
+      "Matyas Bauer",
+      18927.0,
+      "Czechia",
+      "M",
+      1.43899421944946,
+      0,
+      0.0
+    ],
+    [
+      "Raimo Vigants",
+      4153.0,
+      "Latvia",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Vladislav Kovalyov",
+      5203.0,
+      "Kazakhstan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ville Ahonen",
+      2754.0,
+      "Finland",
+      "M",
+      10.8247457710441,
+      0,
+      0.0
+    ],
+    [
+      "Giovanni Ticco",
+      12675.0,
+      "Italy",
+      "M",
+      2.48876007326439,
+      0,
+      0.0
+    ],
+    [
+      "Alexander Ståhlberg",
+      12449.0,
+      "Finland",
+      "M",
+      0.136535959019821,
+      0,
+      0.0
+    ],
+    [
+      "Veeti Pyykko",
+      13223.0,
+      "Finland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Lucas Bögl",
+      1540.0,
+      "Germany",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Erik Engel",
+      14049.0,
+      "Austria",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Lauris Kaparkalejs",
+      14054.0,
+      "Latvia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Philip Bellingham",
+      1951.0,
+      "Australia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Emil Danielsson",
+      12801.0,
+      "Sweden",
+      "M",
+      1.9727981080738,
+      0,
+      0.0
+    ],
+    [
+      "Remi Drolet",
+      8051.0,
+      "Canada",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Alexander Brandner",
+      9896.0,
+      "Austria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Henri Roos",
+      5317.0,
+      "Estonia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Thomas Linnebo Mollestad",
+      18958.0,
+      "Norway",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Vili Crv",
+      5931.0,
+      "Slovenia",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Ike Melnits",
+      15495.0,
+      "Finland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Roman Alder",
+      19983.0,
+      "Switzerland",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Kamil Bury",
+      5182.0,
+      "Poland",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Dominik Bury",
+      3623.0,
+      "Poland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Cyril Fähndrich",
+      9975.0,
+      "Switzerland",
+      "M",
+      4.46631729269351,
+      0,
+      0.0
+    ],
+    [
+      "Anze Gros",
+      12796.0,
+      "Slovenia",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Jakob Elias Moch",
+      19936.0,
+      "Germany",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Jaume Pueyo",
+      12682.0,
+      "Spain",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Elias Keck",
+      14056.0,
+      "Germany",
+      "M",
+      0.124726994069407,
+      0,
+      0.0
+    ],
+    [
+      "Seve De Campo",
+      8036.0,
+      "Australia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Jachym Cenek",
+      15531.0,
+      "Slovakia",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Cla-Ursin Nufer",
+      12786.0,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Pierrick Cottier",
+      18909.0,
+      "Switzerland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Imanol Rojo",
+      2225.0,
+      "Spain",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Mario Matikanov",
+      16167.0,
+      "Bulgaria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Leevi Tarjanne",
+      17573.0,
+      "Finland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Peter Hinds",
+      14864.0,
+      "Slovakia",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Gabriel Cojocaru",
+      16169.0,
+      "Romania",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Manex Silva",
+      12689.0,
+      "Brazil",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ralf Kivil",
+      18890.0,
+      "Estonia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Piotr Jarecki",
+      15530.0,
+      "Poland",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Andriy Dotsenko",
+      20563.0,
+      "Ukraine",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Amirgali Muratbekov",
+      17590.0,
+      "Kazakhstan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Dagur Benediktsson",
+      5956.0,
+      "Iceland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Strahinja Eric",
+      8126.0,
+      "Bosnia&Herzegovina",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Yernur Bexultan",
+      13128.0,
+      "Kazakhstan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Matej Horniak",
+      15538.0,
+      "Slovakia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Abderrahim Kemmissa",
+      17604.0,
+      "Morocco",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Andrej Renda",
+      12475.0,
+      "Slovakia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Nicolas Claveau-Laviolette",
+      18755.0,
+      "Canada",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Micha Büchel",
+      12800.0,
+      "Liechtenstein",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Samuel Maes",
+      20006.0,
+      "Belgium",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Mihail Carpov",
+      20907.0,
+      "Moldova",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Degen Chen",
+      18831.0,
+      "China",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Jekabs Skolnieks",
+      19618.0,
+      "Latvia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Daniel Peshkov",
+      17082.0,
+      "Bulgaria",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Iulian Luchin",
+      19898.0,
+      "Moldova",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Stevenson Stavart",
+      19979.0,
+      "Haiti",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Victor Sendrea",
+      19888.0,
+      "Moldova",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Dinu Belevac",
+      19899.0,
+      "Moldova",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Yernar Nursbekov",
+      13114.0,
+      "Kazakhstan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ruslan Denysenko",
+      17447.0,
+      "Ukraine",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Rongsheng Liu",
+      18832.0,
+      "China",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Stavre Jada",
+      5957.0,
+      "North Macedonia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Robert Bugara",
+      12770.0,
+      "Poland",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Samer Tawk",
+      12177.0,
+      "Lebanon",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Minglin Li",
+      18931.0,
+      "China",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Iliyas Issabek",
+      13111.0,
+      "Kazakhstan",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Niks Saulitis",
+      8270.0,
+      "Latvia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Guillermo Racero",
+      18950.0,
+      "Venezuela",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Milos Milosavljevic",
+      12094.0,
+      "Serbia",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Klaus Jungbluth Rodriguez",
+      8141.0,
+      "Ecuador",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Dmytro Romanchenko",
+      13179.0,
+      "Ukraine",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Jaime Luis Huerta Osorio",
+      17238.0,
+      "Peru",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Fredrik Gerardo Fodstad",
+      13076.0,
+      "Colombia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Bentley Walker-Broose",
+      9894.0,
+      "Australia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Mathis Poutot",
+      12809.0,
+      "Belgium",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Attila Mihaly Kertesz",
+      21619.0,
+      "Israel",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Ji-Yeong Byun",
+      9429.0,
+      "South Korea",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Fedele De Campo",
+      9897.0,
+      "Australia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Adam Konya",
+      2259.0,
+      "Hungary",
+      "M",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Spartak Voskanyan",
+      13221.0,
+      "Armenia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Sebastian Kristoffer Endrestad",
+      12661.0,
+      "Chile",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Joon-Seo Lee",
+      13376.0,
+      "South Korea",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Marko Skender",
+      8034.0,
+      "Croatia",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Nicholas Lau",
+      12108.0,
+      "Trinidad & Tobago",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Victor Olsgard",
+      21603.0,
+      "Peru",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Tucker Murphy",
+      1854.0,
+      "Bermuda",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Edward Limbaga",
+      22639.0,
+      "Philippines",
+      "M",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Fredrik FODSTAD",
+      "",
+      "COL",
+      "M",
+      0.0,
+      1,
+      0.0
+    ]
+  ]
+}
