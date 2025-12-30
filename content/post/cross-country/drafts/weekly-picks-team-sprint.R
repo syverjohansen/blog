@@ -1999,6 +1999,7 @@ run_team_sprint_predictions <- function() {
     combined_teams$Price <- 0
   }
   
+  
   if(!"Expected_Points" %in% names(combined_teams)) {
     log_warn("Expected_Points column missing - calculating from probabilities")
     combined_teams <- combined_teams %>%

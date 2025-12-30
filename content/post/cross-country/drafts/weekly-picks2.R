@@ -744,20 +744,18 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col) {
         }
     }
     
-    # Calculate max values for normalization - only for available columns
-    available_elo_cols <- intersect(names(race_df), elo_cols)
+    # Calculate max values for normalization using startlist maximum (consistent with race-picks.R)
+    available_elo_cols <- intersect(names(result_df), elo_cols)
     if(length(available_elo_cols) > 0) {
-        max_values <- race_df %>%
-            summarise(across(all_of(available_elo_cols), ~max(.x, na.rm = TRUE)))
-        
         # Calculate both Elo and Pelo percentages for available columns
         for(i in seq_along(elo_cols)) {
             elo_col <- elo_cols[i]
             pelo_col_i <- pelo_cols[i]
             
-            # Check if column exists in both datasets
-            if(elo_col %in% names(result_df) && elo_col %in% names(max_values)) {
-                max_val <- max_values[[elo_col]]
+            # Check if column exists in startlist data
+            if(elo_col %in% names(result_df)) {
+                # Use startlist maximum instead of historical maximum
+                max_val <- max(result_df[[elo_col]], na.rm = TRUE)
                 # Only calculate if max value is not zero or NA
                 if(!is.na(max_val) && max_val > 0) {
                     # Calculate the percentage
@@ -767,7 +765,7 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col) {
                     result_df[[paste0(elo_col, "_Pct")]] <- pct_value
                     result_df[[paste0(pelo_col_i, "_Pct")]] <- pct_value
                     
-                    log_info(paste("Calculated percentage for", elo_col))
+                    log_info(paste("Calculated percentage for", elo_col, "using startlist maximum"))
                 }
             }
         }
@@ -2090,6 +2088,8 @@ if(adj_name %in% names(position_adjustments)) {
   if (!dir.exists(dir_path)) {
     dir.create(dir_path, recursive = TRUE)
   }
+  
+  
   
   # Save points predictions to Excel
   points_file_path <- file.path(dir_path, paste0(ifelse(gender == "men", "men", "ladies"), ".xlsx"))

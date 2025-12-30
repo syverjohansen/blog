@@ -464,35 +464,37 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col, gender) {
     }
   }
   
-  # Calculate max values for normalization - only for available columns
-  available_elo_cols <- intersect(names(race_df), elo_cols)
-  if(length(available_elo_cols) > 0) {
-    max_values <- race_df %>%
-      summarise(across(all_of(available_elo_cols), ~max(.x, na.rm = TRUE)))
+  # Calculate max values for normalization using startlist data (like Alpine's approach)
+  # This matches how training data is normalized (by race maximum)
+  available_elo_cols <- intersect(names(result_df), elo_cols)
+  
+  # Calculate both Elo and Pelo percentages for available columns
+  for(i in seq_along(elo_cols)) {
+    elo_col <- elo_cols[i]
+    pelo_col_i <- pelo_cols[i]
     
-    # Calculate both Elo and Pelo percentages for available columns
-    for(i in seq_along(elo_cols)) {
-      elo_col <- elo_cols[i]
-      pelo_col_i <- pelo_cols[i]
+    # Check if column exists in startlist data
+    if(elo_col %in% names(result_df)) {
+      # Use maximum from current startlist (consistent with training normalization)
+      max_val <- max(result_df[[elo_col]], na.rm = TRUE)
       
-      # Check if column exists in both datasets
-      if(elo_col %in% names(result_df) && elo_col %in% names(max_values)) {
-        max_val <- max_values[[elo_col]]
-        # Only calculate if max value is not zero or NA
-        if(!is.na(max_val) && max_val > 0) {
-          # Calculate the percentage
-          pct_value <- result_df[[elo_col]] / max_val
-          
-          # Assign to both Elo and Pelo percentage columns
-          result_df[[paste0(elo_col, "_Pct")]] <- pct_value
-          result_df[[paste0(pelo_col_i, "_Pct")]] <- pct_value
-          
-          log_info(paste("Calculated percentage for", elo_col))
-        }
+      # Only calculate if max value is not zero or NA
+      if(!is.na(max_val) && max_val > 0) {
+        # Calculate the percentage
+        pct_value <- result_df[[elo_col]] / max_val
+        
+        # Assign to both Elo and Pelo percentage columns
+        result_df[[paste0(elo_col, "_Pct")]] <- pct_value
+        result_df[[paste0(pelo_col_i, "_Pct")]] <- pct_value
+        
+        log_info(paste("Calculated", elo_col, "percentage using startlist max:", max_val))
+      } else {
+        # Fallback to default middle value
+        result_df[[paste0(elo_col, "_Pct")]] <- 0.5
+        result_df[[paste0(pelo_col_i, "_Pct")]] <- 0.5
+        log_info(paste("Using default 0.5 for", elo_col, "percentage (max value issue)"))
       }
     }
-  } else {
-    log_info("No Elo columns available in race data for percentage calculation")
   }
   
   # Replace NAs with first quartile

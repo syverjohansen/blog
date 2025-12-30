@@ -127,7 +127,6 @@ Missing value imputation uses first quartile replacement for numeric variables a
 
 The binomial GAM models with the chosen features from training are applied to the startlist data using direct mgcv package calls to generate threshold-independent probability predictions (1st, 3rd, 5th, 10th, and 30th). If needed, fallback measures are performed to handle prediction failures.
 
-
 ###### Adjustments
 
 Adjustments for probability predictions are disabled as testing showed larger inaccuracies after adjustments were performed.
@@ -236,25 +235,33 @@ Position probability feature selection employs threshold-independent optimizatio
 
 ###### Modeling
 
-Biathlon employs sophisticated binomial GAM (Generalized Additive Models) architecture for position probability prediction, utilizing independent threshold-based modeling frameworks that incorporate the sport's unique dual-discipline characteristics (shooting + skiing). The system implements separate binomial GAM models for each position threshold (1st, 3rd, 5th, 10th, 30th), recognizing that factors influencing podium finishes may differ substantially from those affecting top-10 or points-scoring positions across biathlon's diverse event formats. Each model uses binomial family GAM implementation with REML estimation for conservative smoothing parameter selection, promoting stability across biathlon's complex race format spectrum. The framework incorporates shooting technique and skiing endurance variables through smooth terms that capture non-linear relationships between dual-discipline performance components and finishing position probabilities, with event type-specific adaptations for individual versus relay competitions. Model validation employs Brier score evaluation to assess probabilistic accuracy across different position thresholds and event format combinations.
+The models for position probabilities are binomial GAM models that use the independent threshold-based features from the feature selection and adapt to the specific discipline performance characteristics.  The binomial GAM models are for each position threshold (1st, 3rd, 5th, 10th, and 30th).  Each model uses binomial family GAM implementation with REML estimation for conservtive smoothing parameter selection, promoting stability and capturing non-linear relationships between Elo ratings, weighted previous points, and finishing position probabilities.  Model validation employs Brier score evaluation to assess probablistic accuracy across the different position thresholds and discipline types.
 
 ###### Adjustments
 
-Biathlon implements sophisticated Individual Probability Training Adjustments that are currently **disabled** in the production system to prevent "double-dipping" and overfitting concerns. The comprehensive framework exists for systematic bias correction with conditional logic designed to accommodate biathlon's unique dual-discipline characteristics (skiing + shooting) and race format complexity. The system calculates probability differences between actual outcomes and model predictions (`prob_diff = as.numeric(position_achieved) - initial_prob`) with sophisticated conditional logic differentiating between individual and relay events (`period_p = if(is_relay) 1 else purrr::map_dbl(row_id, function(r) {...})`). Statistical validation employs t-test validation with robust error handling (`tryCatch({t.test(prior_period_curr, prior_period_other)$p.value}, error = function(e) 1)`) and period-specific corrections for individual events while maintaining zero adjustments for relay events. All adjustments are bounded within valid probability ranges to ensure mathematical validity. The framework is disabled in production with the annotation "Remove double-dipping" to prevent applying adjustments multiple times, prioritizing model stability over potential accuracy gains in biathlon's complex dual-discipline performance environment.
+Adjustments for position probabilities are currently disabled in the production system to prevent "double-dipping" and overfitting concerns.
 
 ##### Testing
 
 ###### Startlist Setup
 
-Biathlon's Individual Probability Testing employs sophisticated startlist preparation with conditional race format logic that accommodates both individual and relay events through dual-discipline performance frameworks. The system manages race format detection (`participant_col <- if(is_relay) "Nation" else "Skier"`), race format-specific ELO ratings (`Sprint_Elo`, `Individual_Elo`, `Pursuit_Elo`, `MassStart_Elo`), and nation-based relay team processing (`base_df <- startlist %>% select(Nation, all_of(race_prob_cols))`). The framework acknowledges biathlon's unique dual-discipline structure where shooting accuracy influences skiing strategy, maintains chronological ELO rating retrieval with dual-discipline context, and employs robust error handling with row-by-row fallback strategies. Position threshold integration accommodates standard thresholds (1st, 3rd, 5th, 10th, 30th) while ensuring compatibility with different race formats and the complex interactions between skiing speed and shooting precision that characterize biathlon's competitive challenges.
+After the model training is performed, the startlist must be setup in a way that has all the features from the model as well as race participation probability if no startlist data was present on the IBU site.
+
+Race participation probabilities use exponential decay weighting that gives more importance to recent participation patterns. For confirmed IBU startlists, athletes receive 1.0 probability. For mock startlists, the system calculates probabilities using historical participation rates with exponential decay (α = 0.3), where recent races count more heavily than older ones.
+
+ELO score processing retrieves the most current performance ratings for each skier and normalizes them to percentages by dividing by the startlist's maximum values. This creates standardized 0-1 scale features across all discipline-specific ELO categories (Overall, Sprint, Pursuit, Individual, and Mass Start).
+
+Weighted previous points capture recent form using the last 5 races with linear increasing weights (1,2,3,4,5), giving more emphasis to the most recent performances.
+
+Missing value imputation uses first quartile replacement for numeric variables and mode replacement for categorical variables, ensuring complete datasets while accounting for the fact that inexperienced athletes typically perform worse than established competitors.
 
 ###### Modeling
 
-Biathlon's Individual Probability Testing applies trained binomial GAM models through conditional race format logic accommodating both individual athlete predictions and nation-based relay team predictions. The system employs sophisticated error handling for dual-discipline complexity (skiing + shooting) with race format-specific model applications (`mgcv::predict.gam(pos_model, newdata = prediction_subset, type = "response")`). The framework differentiates between individual and relay prediction failures, integrates shooting accuracy considerations with skiing endurance requirements, and implements multi-tier fallback strategies maintaining dual-discipline performance considerations to ensure prediction availability across biathlon's varying competitive conditions and field sizes.
+The binomial GAM models with the chosen features from training are applied to the startlist data using direct mgcv package calls to generate threshold-independent probability predictions (1st, 3rd, 5th, 10th, and 30th). If needed, fallback measures are performed to handle prediction failures.
 
 ###### Adjustments
 
-Biathlon implements **conditional** Individual Probability Testing Adjustments that are active for individual events but disabled for relay events to accommodate the sport's dual-discipline competitive structure. The system applies period-based corrections (`period_p = if(is_relay) 1 else purrr::map_dbl(row_id, function(r) {...})`) with statistical validation (p < 0.05) designed for systematic bias patterns across skiing and shooting performance interactions. Individual athletes receive comprehensive probability residual corrections while relay events use base model predictions to prevent overfitting from changing team compositions between races.
+Adjustments for position probabilities are currently disabled in the production system to prevent "double-dipping" and overfitting concerns.
 
 #### Normalization and Monotonic Constraints
 
@@ -264,11 +271,18 @@ Normalization is first applied so that the position probabilities all add up to 
 
 After normalization, monotonic constraints are added.  This ensures that top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so that an athlete cannot have a higher chance of finishing top-1 than top-3.  Then normalization is applied again to the monotonic constraint results to give the final results.
 
+At this time, normalization and monotonic constraints are not applied to points predictions.
+
 ### Relay
 
 #### Data Gathering
 
-Biathlon relay data gathering employs sophisticated IBU JSON extraction with specialized dual-discipline team composition management across three relay formats (Standard, Mixed, Single Mixed). The system utilizes advanced JSON extraction from embedded script tags (`entry.get('IsTeam', False)`) for precise team/individual separation while accommodating biathlon's unique M-F-M-F leg patterns with comprehensive gender detection using position-based assignment and dual ELO database fuzzy matching that validates team composition across dual-discipline competitive requirements (skiing + shooting).
+Similar to the individual data gathering, a web scraper is employed at midnight UTC daily to see if there are any upcoming races for that day.  If there is a relay race, it checks to see if the race is a normal relay, a mixed relay, or a single mixed relay.  
+
+For the relays, the skiers and their legs are extracted.  The names are matched with skiers from local databases and latest Elo scores are paired with them to go in the final startlist data frame. For mixed relays, sex assignments are obtained through fuzzy matching names from the startlist to historical results.
+
+In addition to individual elo assignment, average elos for the team are created by summing the Elos of the skiers scraped and dividing by the number of legs.  
+
 
 #### Points
 
@@ -276,63 +290,47 @@ Biathlon relay data gathering employs sophisticated IBU JSON extraction with spe
 
 ###### Setup
 
-Biathlon relay points training setup employs sophisticated dual-discipline team aggregation that accommodates the sport's unique combination of skiing endurance and shooting precision within relay competition formats while managing IBU-specific race format variations and comprehensive team-level ELO integration. The framework handles biathlon's distinctive competitive structure through team performance aggregation and race format-aware training data preparation across the sport's interconnected relay event spectrum.
+The goal of the training setup for relays is to create a dataframe that measures historical success of relay teams based on the Elo scores.
 
-**IBU-Specific Team Training Data Integration**:
-Biathlon's training setup utilizes IBU JSON-based data sources that reflect the sport's specialized dual-discipline competitive structure through comprehensive team composition and performance integration:
+To accomplish this, the points column is created by assigning place of the team to World Cup points.  Then the average Elo scores for each team are made by averaging each skiers Elo score prior to the race and then taking the percentage of the maximum Elo score.  Since we're most interested in the top-end of the races and want to account for any trends in relay results, the results are filtered to Elo percentages greater than 75% and for the last 10 years.  
 
-```r
-# From race-picks.R:2030-2042
-# Individual Probability Testing Adjustments (Conditional)
-if(race_type %in% c("Relay", "Mixed Relay", "Single Mixed Relay")) {
-  is_relay <- TRUE
-  period_p <- 1  # Skip adjustments for relay races
-  period_correction <- 0
-  altitude_p <- 1  # Skip altitude adjustments
-  altitude_correction <- 0
-  log_info("Skipping adjustments for relay race type")
-} else {
-  is_relay <- FALSE
-  # Apply normal adjustment calculations for individual races
-  period_p <- purrr::map_dbl(row_id, function(r) {
-    # ... adjustment logic for individual races
-```
+At this time, weighted average World Cup points are not included in the model, however, that is something that may change in the future.
 
-**Dual-Discipline Team Performance Aggregation**:
-The system combines biathlon's unique skiing and shooting requirements through team-level ELO integration that acknowledges both endurance performance and precision shooting capabilities across relay team compositions:
-
-Similar to the Individual, World Cup points are used as response variable. Explanatory variables are set up as the average prior to the race Elo scores for each discipline for the skiers on each team. Then those averages are converted to the percentage of the maximum value for the Elo type for the given race.
-
-**Team-Specific ELO Calculation with Dual-Discipline Integration**:
-The framework processes team ELO calculations that capture dual-discipline performance patterns across biathlon's specialized competitive structure: `Avg_Sprint_Elo`, `Avg_Individual_Elo`, `Avg_Pursuit_Elo`, `Avg_Mass_Start_Elo`. This acknowledges that relay teams require coordination between athletes with varying skiing endurance and shooting precision capabilities.
-
-**Race Format-Aware Team Training Data Management**:
-Biathlon's training setup accommodates Standard Relays (4x6km women, 4x7.5km men), Mixed Relays (2x6km women + 2x7.5km men with W-M-W-M patterns), and Single Mixed Relays through comprehensive format detection and dual-discipline team performance integration.
-
-**Comprehensive Team Performance Timeline Integration**:
-Finally, the same filtering is performed for last 10 seasons of results and average Elo score being at least 75% of the maximum Elo score, ensuring training data quality across biathlon's dual-discipline relay competitive requirements and IBU-specific performance standards.
 
 ###### Feature Selection
 
-Biathlon relay points training feature selection employs sophisticated dual-discipline team-aggregated variable optimization that accommodates the sport's unique combination of skiing endurance and shooting precision requirements within relay competition environments. The system replaces individual athlete performance variables with team-aggregated metrics (`Avg_Sprint_Pelo_Pct`, `Avg_Individual_Pelo_Pct`, `Avg_MassStart_Pelo_Pct`, `Avg_Pursuit_Pelo_Pct`) while excluding weighted previous points since team compositions change between races. BIC optimization ensures optimal variable selection for team performance prediction across biathlon's interconnected race format structure.
+To decide what variables to use in the model, we use all the Elo percent columns.
+
+Then using an exhaustive approach, the explanatory variables are selected by finding the combination that yields the lowest Bayesian Information Criterion (BIC), which balances model accuracy with simplicity to avoid overfitting by penalizing models with too many variables.  The selected variables are then converted to smooth terms for Generalized Additive Models (GAM), which allows the model to capture non-linear relationships between predictors and performance. 
 
 ###### Modeling
 
-Relay points models use the same GAM approach as individuals.
+The models used to predict points are Generalized Additive Models (GAM) that capture non-linear relationships between Elo scores and World Cup points.
+
+In the case that there is insufficient data, the following fallback measures are in store:
+
+  1. Full GAM with all BIC-selected variables and flexible smoothing
+  2. Simplified GAM with reduced complexity and discipline-specific terms
+  3. Linear regression if GAM approaches encounter fitting issues
+  4. Simple ELO-only model as the ultimate fallback 
 
 ###### Adjustments
 
-No adjustments are made for relay races.
+No adjustments are made for relay races as lineups change between races and sample sizes of relays are too small to identify trends for adjustments.
 
 ##### Testing
 
 ###### Startlist Setup
 
-Biathlon relay points testing startlist setup implements sophisticated nation-based team data preparation that transforms individual athlete startlists into team-aggregated prediction datasets while preserving biathlon's dual-discipline competitive requirements and multi-format relay event handling capabilities. The system handles three distinct relay formats (Standard Relay, Mixed Relay, Single Mixed Relay) with nation-based identification and simplified participation probability assignment where all teams receive 100% participation probability rather than exponential decay calculations used for individual events.
+Because the average team elos for the team are already created during the data gathering phase and weighted point averages are not used as features, the only thing done during startlist setup is calculating the Average Elo percentage for each of the teams.  Participation probability is not needed for relay as predictions are not made if there is no startlist scraped.
 
 ###### Modeling
 
-Biathlon relay points testing modeling employs sophisticated nation-based GAM frameworks that apply trained team models to generate dual-discipline team predictions while accommodating the sport's unique combination of skiing endurance and shooting precision requirements across multiple relay formats (Standard Relay, Mixed Relay, Single Mixed Relay). The system uses team-averaged dual-discipline features with disabled historical adjustments, processing teams as aggregated entities rather than individual athlete combinations to account for changing team composition dynamics.
+The models from the training phase are applied to the startlist data to provide the initial points predictions.
+
+###### Adjustments
+
+No adjustments are made for relay races as lineups change between races and sample sizes of relays are too small to identify trends for adjustments.
 
 #### Probability
 
@@ -340,75 +338,52 @@ Biathlon relay points testing modeling employs sophisticated nation-based GAM fr
 
 ###### Setup
 
-Biathlon's Relay Probability Training Setup converts the team-based points prediction problem into binary classification for position probability modeling across relay-specific finishing position thresholds with nation-based team composition awareness. The system employs the same team-aggregated dual-discipline framework as relay points models but transforms the complex team regression problem into binary classification through position-based outcome creation.
+For probability predictions, the places from the points training dataframe are converted into binary classification for position probability modeling across five finishing position thresholds. The system uses the same preprocessed historical race data as points models but transforms the regression problem into classification through binary outcome creation.
 
-**Position Threshold Definition with Team-Level Focus**: Biathlon relay probability training uses standard relay position thresholds `c(1, 3, 5, 10, 30)` representing Team Win, Team Podium, Top 5 Teams, Top 10 Teams, and Top 30 Teams finishes, creating separate binary classification problems for each threshold with nation-based binomial GAM modeling for relay probability prediction.
+Position thresholds are defined as Win, Podium, Top 5, Top 10, and Top 30 finishes. Each threshold creates a separate binary classification problem where success is defined as finishing at or better than that position. This enables binomial GAM modeling while maintaining consistency with discipline-specific performance characteristics. 
 
-**Binary Outcome Creation for Team Events**: The system creates binary outcome variables using team-specific transformations `relay_df$position_achieved <- relay_df$Place <= threshold` where Place represents team finishing positions rather than individual athlete placements, converting continuous team place variables into binary classification targets specifically designed for relay team performance analysis.
+Elo percentages, weighted previous points, missing value imputation, and data filtering are all performed the same way as the points predictions
 
-**Nation-Based Team Performance Integration**: Training setup acknowledges biathlon's relay team structure by focusing on nation-based team outcomes with team-averaged ELO ratings across multiple race formats while maintaining awareness of dual-discipline team coordination requirements that define biathlon relay success patterns.  
+At this time, weighted average World Cup points are not included in the model, however, that is something that may change in the future.
 
 ###### Feature Selection
 
-Biathlon's Relay Probability Training Feature Selection employs sophisticated threshold-independent optimization strategy with automated BIC-based exhaustive subset selection that adapts to the sport's unique dual-discipline characteristics and nation-based team competition structure. The system performs independent feature optimization for each position threshold while leveraging team-aggregated variable inheritance from corresponding relay points prediction models.
+To decide what variables to use in the model, we use all the Elo percent columns.
 
-**Variable Inheritance and Team Aggregation**: Relay probability models use identical explanatory variable pools as their corresponding relay points models, ensuring consistency between team-based modeling approaches while leveraging domain knowledge already encoded in biathlon's relay points model variable selection with team-aggregated dual-discipline performance integration.
+Then using an exhaustive approach, the explanatory variables are selected by finding the combination that yields the lowest Bayesian Information Criterion (BIC), which balances model accuracy with simplicity to avoid overfitting by penalizing models with too many variables.  The selected variables are then converted to smooth terms for Generalized Additive Models (GAM), which allows the model to capture non-linear relationships between predictors and performance. 
 
-**Team-Aggregated Dual-Discipline Variable Sets**: Biathlon adapts feature pools based on relay team composition characteristics, utilizing team-averaged variables including `Avg_Sprint_Pelo_Pct`, `Avg_Individual_Pelo_Pct`, `Avg_MassStart_Pelo_Pct`, `Avg_Pursuit_Pelo_Pct`, and `Avg_Pelo_Pct` without weighted previous points, focusing on nation-based team capabilities rather than individual athlete historical performance metrics.
-
-**Automated Exhaustive BIC Selection for Team Events**: Biathlon implements the most sophisticated automated feature selection among winter sports relay probability models through comprehensive BIC optimization, ensuring optimal variable combinations for each position threshold while maintaining awareness of team-aggregated dual-discipline performance characteristics.
 
 ###### Modeling
 
-Team position models use GAM with REML with team-aggregated smooth terms.  Brier score evlauation applied to team-level predictions.
+The models for position probabilities are binomial GAM models that use the independent threshold-based features from the feature selection and adapt to the specific discipline performance characteristics.  The binomial GAM models are for each position threshold (1st, 3rd, 5th, 10th, and 30th).  Each model uses binomial family GAM implementation with REML estimation for conservtive smoothing parameter selection, promoting stability and capturing non-linear relationships between Elo ratings and finishing position probabilities.  Model validation employs Brier score evaluation to assess probablistic accuracy across the different position thresholds and discipline types.
 
 ###### Adjustments
 
-**Biathlon relay adjustments are disabled** in the production system to prevent systematic bias correction complications in team competition environments where team compositions change between races. Unlike individual biathlon competitions where consistent athlete performance patterns (shooting accuracy under specific conditions, skiing speed on certain terrains) can be statistically validated across multiple races, relay teams feature different athlete combinations each race, making historical adjustment patterns unreliable for future team predictions.
-
-The system recognizes that biathlon relay performance depends on team chemistry, tactical coordination, and leg-specific role execution that varies significantly with different athlete combinations. Each leg requires different skills - opening legs demand consistent shooting under pressure, middle legs need tactical positioning abilities, and anchor legs require clutch performance under intense competition pressure. These role-specific requirements change with different athlete lineups.
-
-Moreover, biathlon relay tactics evolve dynamically based on shooting performance and race situations. Teams may employ conservative shooting strategies when leading (prioritizing accuracy over speed) or aggressive approaches when trailing (accepting higher penalty risk for faster lap times). The disabled adjustment framework prevents overfitting to temporary team composition patterns while maintaining model stability across biathlon's unique combination of shooting precision and skiing endurance in team environments.
+No adjustments are made for relay races as lineups change between races and sample sizes of relays are too small to identify trends for adjustments.
 
 ##### Testing
 
 ###### Startlist Setup
 
-Biathlon relay probability testing employs nation-based team aggregation with simplified participation probability assignment, supporting multi-format relay processing across standard Relay, Mixed Relay, and Single Mixed Relay configurations. The startlist preparation strategy emphasizes team-aggregated performance metrics with comprehensive IBU-specific data integration.
-
-**Nation-Based Team Data Loading**: Biathlon loads relay team data through multi-format startlist processing with nation-centric team identification that consolidates team performance across four distinct relay formats (Relay, Mixed Relay, Single Mixed Relay, and Team events) using IBU-specific JSON data extraction methodologies.
-
-**Team-Aggregated Performance Metrics**: The system implements sophisticated team performance aggregation that combines individual athlete ELO ratings into nation-level team metrics, incorporating shooting accuracy factors, skiing speed components, and relay-specific coordination elements into unified team performance predictions.
-
-**Simplified Uniform Participation Probability**: Biathlon assigns uniform 100% participation probability across all qualified teams, avoiding complex individual athlete probability calculations while maintaining mathematical consistency through comprehensive probability normalization and monotonic constraint enforcement.
-
-**Multi-Format Relay Processing**: The methodology handles comprehensive relay format diversity with nation-based team composition validation, including gender constraint enforcement for mixed relay formats (Female-Male-Female-Male patterns) and standardized 4-person team composition for standard relay events.
-
-**IBU-Specific Integration**: The startlist preparation incorporates specialized IBU data structures with JSON-based athlete extraction, nation quota management, and team member organization that accounts for biathlon's unique dual-discipline performance requirements while maintaining simplified team-level probability assignment across all relay formats.
+Because the average team elos for the team are already created during the data gathering phase and weighted point averages are not used as features, the only thing done during startlist setup is calculating the Average Elo percentage for each of the teams.  Participation probability is not needed for relay as predictions are not made if there is no startlist scraped.
 
 ###### Modeling
 
-Biathlon relay probability testing employs sophisticated Generalized Additive Models (GAM) with binomial family distributions and comprehensive individual-to-team aggregation frameworks. The modeling approach emphasizes position threshold prediction through GAM implementations with backward stepwise feature selection, Brier score validation, and mathematical constraint enforcement to ensure logical probability relationships across multiple relay formats.
-
-The framework utilizes GAM-based position threshold modeling for comprehensive coverage (win, podium, top 5, top 10, top 30) with individual athlete probability aggregation that converts athlete-level predictions into team outcomes through sophisticated coordination modeling. Team probability calculations incorporate shooting correlation, skiing correlation, and relay exchange efficiency factors specific to biathlon's dual-discipline requirements.
-
-Mathematical constraint enforcement ensures probability normalization to theoretical target sums and monotonic constraint compliance (Win ≤ Podium ≤ Top 5 ≤ Top 10 ≤ Top 30). The system includes period-specific temporal adjustments and multi-format relay adaptations that account for standard relay endurance coordination, mixed relay gender-alternating tactics, and single mixed relay simplified coordination dynamics while maintaining comprehensive Brier score validation across all modeling components.
+The models from the training phase are applied to the startlist data to provide the initial points predictions.
 
 ###### Adjustments
 
-Biathlon relay probability testing implements a **deliberately disabled adjustment framework** specifically designed to address the fundamental challenge of changing team compositions between relay events. Unlike individual competitions where athlete-specific historical patterns enable meaningful systematic bias correction, relay team composition variability makes traditional period and elevation adjustments unreliable for team prediction accuracy and mathematical consistency.
-
-**Conditional Relay Adjustment Disabling**: Biathlon employs sophisticated conditional logic that explicitly disables systematic bias corrections (period adjustments = 0, elevation adjustments = 0) for relay events while maintaining full adjustment capabilities for individual competitions. The framework recognizes team composition volatility assessment patterns where mean stability <0.7 justifies disabled adjustments.
-
-**Team Composition Volatility Recognition**: The disabled framework acknowledges that relay teams frequently change athlete lineups between competitions based on form, tactics, and availability, making historical individual-based adjustment patterns inappropriate for current team composition prediction scenarios.
-
-**Mathematical Robustness Through Conservative Approach**: Biathlon's disabled adjustment framework prioritizes prediction reliability over systematic bias correction, utilizing probability normalization without period/elevation corrections, multi-format relay adaptations, and comprehensive mathematical consistency validation while avoiding potentially unreliable systematic bias correction in team environments.
-
-**Conservative Base Model Prioritization**: With disabled adjustments, biathlon relay testing relies exclusively on base GAM model predictions, prioritizing model stability and acknowledging that team-aggregated performance metrics captured during training provide more reliable prediction foundations than individual athlete adjustment patterns that may no longer apply to current team compositions.
+No adjustments are made for relay races as lineups change between races and sample sizes of relays are too small to identify trends for adjustments.
 
 #### Normalization and Monotonic Constraints
 
-Same as individual.
+After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, normalization and monotonic constraints are applied.
+
+Normalization is first applied so that the position probabilities all add up to the correct percentage.  For first place that sum to 100%, top-3 would sum to 300%, etc.  Individual athlete probabilities are capped at 100% since anything above that would be impossible.  
+
+After normalization, monotonic constraints are added.  This ensures that top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so that an athlete cannot have a higher chance of finishing top-1 than top-3.  Then normalization is applied again to the monotonic constraint results to give the final results.
+
+At this time, normalization and monotonic constraints are not applied to points predictions.
 
 ## Cross-Country
 
@@ -416,13 +391,14 @@ Same as individual.
 
 #### Data Gathering
 
-Cross-country skiing presented the most complex data gathering challenge due to the sport's incredible diversity of race formats and the need for sophisticated mock startlist generation. The sport includes distance races, sprints, relays, team sprints, mixed relays, and even special events like Final Climb competitions, each requiring different handling approaches.
+Each day at midnight UTC, an automated Python scrape is performed on the FIS website to identify upcoming World Cup/World Championship/Olympic races.  When upcoming races are found, the startlist is scraped and saved.
 
-The key innovation for cross-country was developing a comprehensive nation quota system for mock startlists. When official FIS startlists aren't available, I can't simply include all athletes who've competed recently - that would create startlists with hundreds of participants. Instead, I built a quota system that mirrors real FIS World Cup qualification rules, allocating spots by nation based on their skiing strength and current World Cup standings, plus bonus allocations for host countries and World Cup leaders.
+When official startlists aren't available (common due to weather delays and last-minute changes, FIS laziness), the system generates comprehensive mock startlists using all athletes who competed in the current season in order to maintain prediction capabilities.  Moreover, FIS quota data for the nations are registered to be used later for participation probability.
 
-Name matching became particularly complex in cross-country because of the integration with Fantasy XC, a popular prediction game that uses slightly different name formats. I developed sophisticated fuzzy matching algorithms that can connect FIS names (often in "LASTNAME Firstname" format) with Fantasy names, manual mappings for common edge cases, and multiple fallback strategies when exact matches aren't found.
+For integration with Noah Hoffman's Fantasy XC, the prices for each of the athletes on the startlist are entered. 
 
-The sport's technical/classical technique distinction required building dual rating systems. Cross-country races can be freestyle (skating), classical (traditional), or mixed format, and athlete performance varies dramatically between techniques. I maintain separate ELO ratings for classical and freestyle events within each race distance category, plus aggregate ratings for athletes' overall distance and sprint capabilities. This granular approach captures that some athletes excel in classical distance races but struggle with freestyle sprints. 
+In addition to the startlist roster, each skier is matched with historical skier data to get their most recent Elo scores for Overall, Distance, Distance Freestyle, Distance Classic, Sprint, Sprint Freestyle, Sprint Classic, Freestyle, and Classic.  
+
 
 #### Points
 
@@ -430,66 +406,65 @@ The sport's technical/classical technique distinction required building dual rat
 
 ###### Setup
 
-Cross-country skiing presents the most complex training data challenge among winter sports because of its incredible diversity. The sport combines multiple race distances (sprint versus distance), two completely different techniques (classic versus freestyle), various start formats (mass start versus individual start), and different point systems (World Cup versus stage races like Tour de Ski).
+The basis for our training dataset is to predict World Cup points for an upcoming race using historical Elo data and recent race performance data.  To this, we need to establish a dataframe that has columns for points, Elo data, and information about recent race performance.
 
-The key insight is that these factors interact in meaningful ways. A skier who excels in freestyle sprints might struggle with classic distance races. Someone who thrives in mass start chaos might perform differently in time trial-style individual starts. The training data setup captures these nuances by calculating weighted previous points based on both race type AND technique combinations.
+To create the points column, the places of the skiers in the historical dataframe are mapped to points.  Since we predict for many different types of events that use different points systems (relay, World Cup, stage, Tour de Ski), the mappings are done based on which one we are predicting.  For example, if we are predicting a stage race, we the points column will be using the stage points system.  
 
-This creates the most granular performance tracking system among all winter sports. When predicting a freestyle sprint, the model looks primarily at previous freestyle sprint results, giving recent performances more weight. For classic distance races, it focuses on classic distance history. This technique-specific approach is crucial because classic and freestyle skiing are almost different sports entirely.
+To handle Elo data, the historical elo data is calculated so that we use the percentage of the maximum pre-race elo for a given race.  So if there is a race on January, 1, 2018, we find the maximum pre-race elos for each type and then divide each athletes score by that amount.  
 
-The system also handles cross-country's unique points complexity. Tour de Ski stage races use different point scales than regular World Cup races, and the system dynamically selects which point system to apply to ALL historical data based on what type of race is being predicted today. This ensures consistent scoring across the training dataset.
+For recent race performances, we use weighted average for the given discipline.  For example, if we are predicting a Distance Classic race, we filter the historic dataframe down to Distance Classic races, and then we take the weighted average of a given skier's points over their most recent 5 performances with the most recent being given a weight of 5 and the 5th most recent given a weight of 1.  
 
-Environmental factors matter enormously in cross-country. Altitude affects endurance performance, mass start formats create different tactical dynamics than individual starts, and certain periods of the season see different competitive dynamics (early season versus Tour de Ski versus World Championships). The system tracks all these contextual factors and filters to high-quality events (World Cup, Olympics, World Championships) from the past 10 years, focusing on athletes competitive enough to score points.
+After the points, weighted points, and elo columns are created, we filter down to the last 10 seasons and for skiers who are at least 75% of the maximum Elo.  Missing data values are imputed with first quartile values.
+
+
 
 ###### Feature Selection
 
-Cross-country skiing requires the most comprehensive feature selection among winter sports due to the sport's incredible diversity. The system considers an extensive set of variables: weighted previous points and ELO percentages for Overall, Distance, Distance Freestyle, Distance Classic, Sprint, Sprint Freestyle, Sprint Classic, Freestyle, and Classic performance. This captures how athletes might excel in freestyle sprints but struggle with classic distance races, or vice versa.
+To decide what variables to use in the model, we use all the Elo percent columns as well as the weighted previous points.
 
-Unlike other sports that adapt their variable sets to race conditions, cross-country uses a unified optimization approach across all race contexts. Using an exhaustive search approach, explanatory variables are selected by finding the combination that yields the lowest Bayesian Information Criterion (BIC), which balances model accuracy with simplicity to avoid overfitting by penalizing models with too many variables. The chosen variables are then converted to smooth terms for the Generalized Additive Model (GAM) to capture non-linear relationships.
+Then using an exhaustive approach, the explanatory variables are selected by finding the combination that yields the lowest Bayesian Information Criterion (BIC), which balances model accuracy with simplicity to avoid overfitting by penalizing models with too many variables.  The selected variables are then converted to smooth terms for Generalized Additive Models (GAM), which allows the model to capture non-linear relationships between predictors and performance. 
 
 ###### Modeling
 
-Cross-country skiing employs the most sophisticated modeling approach among winter sports due to the sport's incredible complexity. The system uses Generalized Additive Models that must handle the most diverse set of predictive variables across multiple race formats, techniques, and environmental conditions.
+The models used to predict points are Generalized Additive Models (GAM) that capture non-linear relationships between Elo scores/prior performances and World Cup points.
 
-The modeling reflects cross-country's unique challenges: athletes who excel in freestyle sprints might struggle with classic distance races, someone who thrives in mass start chaos might perform differently in time trial-style individual starts, and altitude affects endurance performance significantly. The GAM models capture these complex non-linear relationships through comprehensive smooth term integration.
+In the case that there is insufficient data, the following fallback measures are in store:
 
-Cross-country implements both points prediction and position probability models with extensive validation. The models use dynamic point scaling based on race type (distance vs sprint vs stage races like Tour de Ski), accommodating the sport's varying scoring systems. Position models use binomial GAM with REML estimation and comprehensive Brier score validation across all finishing position thresholds.
-
-The system includes the most comprehensive adjustment mechanism among winter sports, accounting for altitude effects, seasonal periodization, and mass start tactical dynamics through sequential statistical testing. This multi-dimensional approach ensures predictions capture the full complexity of cross-country competition while maintaining robust statistical validation.
+  1. Full GAM with all BIC-selected variables and flexible smoothing
+  2. Simplified GAM with reduced complexity and discipline-specific terms
+  3. Linear regression if GAM approaches encounter fitting issues
+  4. Simple ELO-only model as the ultimate fallback 
 
 ###### Adjustments
 
-Cross-country skiing implements the most comprehensive adjustment system among winter sports, reflecting the sport's incredible complexity across race formats, techniques, and environmental conditions. The system uses a sophisticated sequential approach to avoid double-counting effects while capturing three critical performance dimensions.
+Cross-country uses three types of adjustments for the initial predictions: altitude, seasonal period, and mass start.  Adjustments add or subtract points depending on if an athlete has a history of statitically significant difference (p<0.05) in their results versus the predicted value given the presence of one of the three defined factors.
 
-First, altitude adjustments account for the significant endurance effects of racing at venues above 1300 meters. Some athletes thrive at altitude due to superior fitness and adaptation, while others struggle with the cardiovascular demands. The system identifies these patterns through rigorous statistical testing.
+First, altitude adjustments are for athletes who show significantly different results at altitude (1300m) vs not.
 
-Second, seasonal period adjustments capture how athletes perform during different phases of the World Cup season - early season when technique development matters most, tour periods when consistency is key, and championship periods when peak fitness determines outcomes. Some skiers are "early season specialists" while others peak for major events.
+Second, seasonal period adjustments capture how athletes perform during different phases of the World Cup season.  The five periods of the World Cup season are pre-Tour de Ski (I), Tour de Ski (II), between Tour de Ski and championships (or February 15 if no champs) (III), championships (IV), and post-championships (V). 
 
-Third, mass start format adjustments recognize the tactical dynamics that differentiate mass start races from individual time trials. Some athletes excel in the pack dynamics and tactical positioning of mass starts, while others prefer the pure time trial format of individual starts. This adjustment is unique to cross-country among winter sports, reflecting the sport's diverse race format spectrum.
+Third, mass start versus individual start in distance races.
+
+All adjustments require statistical significance, a minimum of 3 observations in the comparison category, sequential calculation to prevent interaction effects, and temporal ordering (only using prior race data for each calculation).
 
 ##### Testing
 
 ###### Startlist Setup
 
-Cross-country skiing's startlist setup employs advanced probability modeling with precise race characteristic matching and dual-methodology normalization. The system handles both distance and sprint races across freestyle and classic techniques while ensuring robust data quality.
+The objective of the startlist setup is to transform the scraped startlist into a dataframe that can use the selected features to predict points.  Elo percentages are created, weighted point averages are added, and race participation probability is performed if a mock startlist is being used.
 
-Race participation probabilities use exponential decay weighting with technique-specific matching. ELO score processing employs dual normalization approaches - standard races use historical maximums while Final Climb races use current startlist maximums. Weighted previous points are calculated separately for each distance/technique combination, and missing values are imputed using first quartile replacement.
+To do this Elo percentages are created by dividing the Elo columns divided by the maximum value in that column.  Weighted point averages are calculated by finding the previous races of the technique and distance for the race we're predicting and calculating the weighted average (5 for most recent, 1 for 5th most recent). Furthermore, missing values are imputed with first quartile values. 
+
+Lastly, if a mock startlist is being used, race participation probabilities are calculated using exponential decay weighting with technique-specific matching meaning skiers who have competed in more races for a given discipline recently, they will have a higher participation probability.
+
 
 ###### Modeling
 
-Cross-country's testing modeling applies technique-specific GAM models with comprehensive Individual Points Testing Adjustments that account for systematic biases in the most complex winter sport prediction challenge. The system implements statistical significance testing to identify genuine performance patterns across multiple race dimensions during the testing phase.
-
-**Individual Points Testing Adjustments for Multi-Dimensional Performance**: Cross-country testing employs the most sophisticated sequential adjustment framework among winter sports, accounting for the sport's incredible diversity across techniques, distances, and environmental conditions. The system uses rigorous statistical testing (p < 0.05 threshold with t-tests) to identify genuine patterns requiring correction.
-
-**Sequential Testing Adjustment Framework**: Adjustments are calculated and applied sequentially across three dimensions:
-1. **Altitude Adjustments**: Account for endurance effects at venues above 1300m, as some athletes thrive at altitude while others struggle with cardiovascular demands
-2. **Period Adjustments**: Capture seasonal progression patterns from early season technique development through tour periods to championship peaks
-3. **Mass Start Adjustments**: Recognize tactical dynamics that differentiate mass start races from individual time trials, unique among winter sports
-
-Each adjustment requires minimum 3 observations per category and uses comprehensive error handling with tryCatch blocks. The three-dimensional adjustment system avoids double-counting through sequential application and integrates with race participation probability weighting to balance historical bias correction with technique-specific performance prediction requirements across cross-country's diverse race spectrum.
+The models from the training phase are applied to the startlist data to provide the initial points predictions.
 
 ###### Adjustments
 
-Cross-country skiing implements **active** Individual Probability Testing Adjustments representing the most comprehensive three-dimensional adjustment system among winter sports. The system applies sequential corrections for altitude effects (above/below 1300m venues), period-based seasonal progression patterns, and mass start tactical dynamics (`altitude_effect + period_effect + ms_effect`) with probability bounds enforcement ensuring all adjusted probabilities remain between 0 and 1 while capturing systematic performance biases across cross-country's complex competitive landscape.
+Points adjustments from the training data are applied to the athletes who qualify for them.
 
 #### Probability
 
@@ -497,49 +472,60 @@ Cross-country skiing implements **active** Individual Probability Testing Adjust
 
 ###### Setup
 
-Cross-country skiing's Individual Probability Training Setup converts the points prediction problem into binary classification for position probability modeling with technique-specific threshold adaptation. The system uses the same preprocessed historical race data as points models but transforms the complex multi-technique regression problem into classification through binary outcome creation across different event formats.
-
-Position thresholds adapt to event type: Distance events use standard thresholds `c(1, 3, 5, 10, 30)` representing Win, Podium, Top 5, Top 10, and Top 30, while Sprint events use specialized thresholds `c(1, 3, 6, 12, 30)` representing Win, Podium, Final, Semifinal, and Quarterfinal. Each threshold creates a separate binary classification problem using the transformation: `race_df$position_achieved <- race_df$Place <= threshold`. This enables binomial GAM modeling while accommodating cross-country's incredible complexity across techniques, distances, and environmental conditions.  
+The training dataset for probability predictions is nearly identical to the points one.  The only difference is creating binary position thresholds to identify when a skier in the training set met the threshold.  First we filter down to the type of race we are predicting and then apply the the threshold.  For distance races the thresholds are top-1, 3, 5, 10, and 30.  For sprint races, we use top-1, 3, 6, 12, and 30 to reflect winning, podium, final, semi-final, and quarterfinal.
+ 
 
 ###### Feature Selection
 
-Cross-country skiing's Individual Probability Training Feature Selection employs the most comprehensive threshold-independent optimization among winter sports, adapting to the sport's incredible complexity across techniques, distances, and environmental conditions. The system uses identical explanatory variable pools as points models (`position_feature_vars <- explanatory_vars`) while performing independent BIC optimization for each position threshold (Distance events: 1, 3, 5, 10, 30; Sprint events: 1, 3, 6, 12, 30). The comprehensive variable set includes `Distance_Pelo_Pct`, `Sprint_Pelo_Pct`, `Sprint_C_Pelo_Pct`, `Distance_F_Pelo_Pct`, `Distance_C_Pelo_Pct`, `Classic_Pelo_Pct`, `Freestyle_Pelo_Pct`, `Sprint_F_Pelo_Pct`, reflecting the sport's complexity across techniques (Classic, Freestyle), distances (Sprint, Distance), and formats (Individual Start, Mass Start).  
+Position probability feature selection employs threshold-independent optimization with discipline-specific adaptation. The system uses the same explanatory variable pools as the points model while performing an exhaustive independent BIC optimization for each position threshold.  Selected variables are converted to smooth terms for binomial GAM modeling.
 
 ###### Modeling
 
-Cross-country skiing employs the most sophisticated binomial GAM (Generalized Additive Models) architecture among winter sports for position probability prediction, utilizing independent threshold-based modeling frameworks that incorporate the sport's extraordinary complexity across techniques, distances, and environmental conditions. The system implements separate binomial GAM models for each position threshold (Distance events: 1st, 3rd, 5th, 10th, 30th; Sprint events: 1st, 3rd, 6th, 12th, 30th), recognizing that factors influencing success vary dramatically across classic versus freestyle techniques, sprint versus distance formats, and individual start versus mass start competitions. Each model uses binomial family GAM implementation with REML estimation for conservative smoothing parameter selection, promoting stability across cross-country's exceptionally diverse competitive spectrum. The framework incorporates technique-specific and distance-specific variables through sophisticated smooth terms that capture non-linear relationships between Classic/Freestyle performance, sprint/distance capabilities, and finishing position probabilities across different race formats. Model validation employs comprehensive Brier score evaluation to assess probabilistic accuracy across different position thresholds, techniques, and distance categories.  
+The binomial GAM models with the chosen features from training are applied to the startlist data using direct mgcv package calls to generate threshold-independent probability predictions (1st, 3rd, 5th, 10th, and 30th). If needed, fallback measures are performed to handle prediction failures.  
 
 ###### Adjustments
 
-Cross-country skiing implements the most sophisticated Individual Probability Training Adjustments among winter sports, featuring an **active** multi-factor correction system that operates on probability residuals through sequential adjustment layers. The comprehensive methodology adapts to the sport's extraordinary complexity across techniques (Classic, Freestyle), distances (Sprint, Distance), and environmental conditions with statistical validation for each adjustment factor. The system begins with probability residual calculations (`prob_diff = as.numeric(position_achieved) - initial_prob`) and employs sequential altitude → period → mass start processing to capture environmental performance variations, competitive season changes, and tactical race format differences. Each adjustment layer uses t-test validation (p < 0.05) with comprehensive error handling (`tryCatch({t.test(prior_period_curr, prior_period_other)$p.value}, error = function(e) 1)`) and maintains valid probability ranges through systematic boundary enforcement (`pmin(pmax(altitude_adjusted + period_correction, 0), 1)`). The active implementation represents the most comprehensive adjustment system among winter sports, capturing cross-country's multifaceted systematic bias patterns across environmental conditions, competitive periods, and race format variations.
+Adjustments are performed for altitude, period, and mass start for the position probablilities in the same way that they are for points.  
 
 ##### Testing
 
 ###### Startlist Setup
 
-Cross-country skiing's Individual Probability Testing employs the most sophisticated startlist preparation among winter sports, accommodating extraordinary complexity across techniques (Classic, Freestyle), distances (Sprint, Distance), environmental conditions, and format variations. The system features race format-specific threshold selection (Distance: 1st, 3rd, 5th, 10th, 30th; Sprint: 1st, 3rd, 6th, 12th, 30th), Fantasy XC price integration (`base_df <- startlist %>% dplyr::select(Skier, ID, Nation, Price, Sex)`), and the most extensive ELO rating system (`Distance_Elo`, `Distance_C_Elo`, `Distance_F_Elo`, `Sprint_Elo`, `Sprint_C_Elo`, `Sprint_F_Elo`, `Freestyle_Elo`, `Classic_Elo`). The framework incorporates altitude categorization for environmental adaptation (above/below 1300m), mass start versus individual start format detection, and comprehensive model variable validation with technique awareness. Position threshold processing adapts to format-dependent naming while maintaining consistency across cross-country's extraordinary variable complexity and competitive structure variations.
+The startlist for probability predictions is the exact same one as used for the points predictions.
 
 ###### Modeling
 
-Cross-country skiing's Individual Probability Testing employs the most sophisticated model application framework among winter sports, accommodating extraordinary complexity across techniques, distances, environmental conditions, and format variations. The system applies trained binomial GAM models through comprehensive variable validation, active multi-factor adjustment integration (`altitude_effect`, `period_effect`, `ms_effect`), and threshold-adaptive processing for Distance versus Sprint events. The framework incorporates environmental condition integration, mass start versus individual start model differentiation, and technique-aware error handling while maintaining fantasy integration requirements and sequential adjustment application with probability bounds enforcement across cross-country's exceptional competitive diversity.
+The models from the training phase are applied to the startlist data to provide the initial points predictions.
 
 ###### Adjustments
 
-Cross-country skiing implements **active** Individual Probability Testing Adjustments representing the most comprehensive three-dimensional adjustment system among winter sports. The system applies sequential corrections for altitude effects (above/below 1300m venues), period-based seasonal progression patterns, and mass start tactical dynamics (`altitude_effect + period_effect + ms_effect`) with probability bounds enforcement ensuring all adjusted probabilities remain between 0 and 1 while capturing systematic performance biases across cross-country's complex competitive landscape.
+Points adjustments from the training data are applied to the athletes who qualify for them.
 
 #### Normalization and Monotonic Constraints
 
-Cross-country skiing implements streamlined Individual Normalization and Monotonic Constraints that accommodate the sport's extraordinary technique and format complexity while maintaining mathematical validity across the most diverse race spectrum among winter sports. The system employs simplified normalization procedures without race participation probability adjustments, focusing on technique-aware constraint enforcement and threshold-adaptive processing for Distance versus Sprint event variations with format-specific target sum calculations (Distance events: 100%/300%/500%/1000%/3000%, Sprint events: 100%/300%/600%/1200%/3000%) that reflect semifinal and quarterfinal advancement structures.
+After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, normalization and monotonic constraints are applied.
+
+Normalization is first applied so that the position probabilities all add up to the correct percentage.  For first place that sum to 100%, top-3 would sum to 300%, etc.  Individual athlete probabilities are capped at 100% since anything above that would be impossible.  
+
+After normalization, monotonic constraints are added.  This ensures that top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so that an athlete cannot have a higher chance of finishing top-1 than top-3.  Then normalization is applied again to the monotonic constraint results to give the final results.
+
+At this time, normalization and monotonic constraints are not applied to points predictions.
 
 #### Fantasy
 
-Cross-country skiing implements sophisticated Individual Fantasy Team optimization representing the most advanced fantasy sports application among winter sports. The system employs Mixed Integer Programming with multiple team generation strategies (Normal/Safe/Upside) that accommodate technique complexity and environmental variability through probability-weighted expected value calculations (`Total_Points = Race1_Points * Race1_Probability + Race2_Points * Race2_Probability`). Fantasy optimization uses mathematical optimization (GLPK solver) with budget constraints (100,000 fantasy dollars) and roster requirements (16 athletes: max 8 men, max 8 women) while integrating comprehensive prediction models and technique-specific adjustments to generate globally optimal team selections across cross-country's diverse competitive landscape.
+Cross-country has the unique aspect of using the results to optimize a fantasy team for Noah Hoffman's Fantasy XC.  For individual races, one must optimize am 8-man/8-woman roster for points while remaining in the 100,000 budget.  To do this Mixed Integer Programming (MIP) is employed using a GLPK with the points output to optimize the budget.  
 
 ### Relay
 
 #### Data Gathering
 
-Cross-country relay data gathering employs sophisticated FIS website HTML parsing with Fantasy XC API integration across three distinct relay formats (Standard, Mixed, Team Sprint). The system utilizes advanced event type detection through string pattern matching (`'MIXED' in event_title and 'TEAM' in event_title`) while integrating technique-specific ELO ratings across nine performance categories and Fantasy XC pricing data for comprehensive team evaluation that accommodates the sport's extraordinary technique complexity (Classic/Freestyle) and environmental variability.  
+Similar to the individual data gathering, a web scraper is employed at midnight UTC daily to see if there are any upcoming races for that day.  If there is a relay race, it checks to see if the race is a normal relay, a mixed relay, or a single mixed relay.  
+
+For the relays, the skiers and their legs are extracted.  The names are matched with skiers from local databases and latest Elo scores are paired with them to go in the final startlist data frame. For mixed relays, sex assignments are obtained through fuzzy matching names from the startlist to historical results.
+
+In addition to individual elo assignment, average elos for the team are created by summing the Elos of the skiers scraped and dividing by the number of legs.  
+
+Like individual data gathering, integration with the Fantasy XC API is performed to gather prices for the teams.
 
 #### Points
 
@@ -547,93 +533,17 @@ Cross-country relay data gathering employs sophisticated FIS website HTML parsin
 
 ###### Setup
 
-Cross-country relay points training setup employs sophisticated multi-dimensional data integration that accommodates the sport's extraordinary technique complexity (Classic/Freestyle) across three distinct relay formats while incorporating comprehensive individual athlete performance aggregation. The framework manages relay-specific training data preparation through technique-aware leg assignment and environmental condition integration that reflects cross-country's most complex competitive structure among winter sports.
+Training data setup for cross-country relays and team sprint is perhaps the most sophisticated of all prediction types.  In contrast to biathlon, nordic combined and ski jumping, cross-country does not use average elos on the team as a predictor, but rather trains on the individuals who make up the team to created an expected value for probability from which expected points are extracted.  If no startlist is present, a team is made which optimizes for podium probability.
 
-**Technique-Specific Relay Format Management**:
-Cross-country's training setup accommodates Standard Relays (4x5km women, 4x7.5km men with Classic-Classic-Freestyle-Freestyle leg assignments), Mixed Relays (2x5km women + 2x7.5km men with F-M-F-M patterns), and Team Sprints (6x1.5km with single technique per race) through comprehensive format detection and leg-specific data integration:
+To prepare the startlist for feature section, each skier gets its own individual pre-race elo percentage columns and weighted last five.  The weighted last five for relays is distance classic races for legs 1 and 2, and distance freestyle races for legs 3 and 4.  For team sprints weighted last 5 is sprint races in the technique for which the race takes place.  Lastly, the dataset adds relay points based on place and puts binary position thresholds for places 1, 3, 5, and 10.  
 
-```r
-# From weekly-picks-relay.R:61-76
-# Filter to only relay races
-relay_races <- tomorrow_races %>%
-  filter(Distance == "Rel")
-
-# Split into men and ladies races
-men_races <- relay_races %>%
-  filter(Sex == "M")
-
-ladies_races <- relay_races %>%
-  filter(Sex == "L")
-
-log_info(paste("Found", nrow(men_races), "men's relay races and", 
-               nrow(ladies_races), "ladies' relay races"))
-```
-
-**Historical Relay Performance Integration with Individual Athlete Aggregation**:
-The system combines relay team performance with individual athlete capabilities through comprehensive data integration that acknowledges both team dynamics and individual technique-specific performance patterns:
-
-```r
-# From champs-predictions.R:25-64
-# Read chronological data
-log_info("Reading chronological data files")
-
-men_chrono <- read.csv("~/ski/elo/python/ski/polars/excel365/men_chrono_elevation.csv", 
-                      stringsAsFactors = FALSE) %>%
-  mutate(Date = as.Date(Date))
-
-ladies_chrono <- read.csv("~/ski/elo/python/ski/polars/excel365/ladies_chrono_elevation.csv", 
-                         stringsAsFactors = FALSE) %>%
-  mutate(Date = as.Date(Date))
-
-log_info(paste("Loaded", nrow(men_chrono), "men's chronological records"))
-log_info(paste("Loaded", nrow(ladies_chrono), "ladies' chronological records"))
-```
-
-**Technique-Specific Weighted Previous Points Calculation**:
-Cross-country implements the most sophisticated technique-aware points aggregation among winter sports, calculating separate weighted averages for Classic and Freestyle performance based on leg assignment requirements:
-
-```r
-# From champs-predictions.R:69-100
-calculate_weighted_prev_points <- function(chrono_data) {
-  chrono_data %>%
-    arrange(ID, Date) %>%
-    group_by(ID) %>%
-    mutate(
-      prev_points_weighted = sapply(1:n(), function(i) {
-        if (i == 1) return(0)  # First race has no previous races
-        
-        current_distance <- Distance[i]
-        current_technique <- Technique[i]
-        
-        # Get all races up to (but not including) current race
-        prev_distances <- Distance[1:(i-1)]
-        prev_techniques <- Technique[1:(i-1)]
-        prev_points_values <- points[1:(i-1)]
-        
-        # Filter for matching race type
-        if (current_distance == "Sprint" && current_technique == "C") {
-          # Previous Sprint Classic races
-          matching <- prev_distances == "Sprint" & prev_techniques == "C"
-        } else if (current_distance == "Sprint" && current_technique == "F") {
-          # Previous Sprint Freestyle races  
-          matching <- prev_distances == "Sprint" & prev_techniques == "F"
-        }
-```
-
-**Mixed Relay Gender Assignment with Technique Integration**:
-The training setup accommodates cross-country's unique mixed relay format with alternating gender assignments (Female legs 1&3, Male legs 2&4) while maintaining technique-specific performance tracking:
-
-Mixed relays set the female legs for 1 and 3, while the mens legs for 2 and 4. Team Sprints filter individual races down to the technique that will be used in the race, ensuring technique-specific training data integrity across cross-country's diverse relay format spectrum.
-
-**Environmental Condition and Altitude Integration**:
-The framework incorporates cross-country's unique environmental sensitivity through altitude categorization and venue-specific performance adjustments that acknowledge the sport's extraordinary sensitivity to environmental conditions compared to other winter sports.
-
-**Comprehensive Training Data Filtering and Timeline Management**:
-Cross-country employs extensive historical data preservation (11+ years) while maintaining technique-specific data integrity and environmental condition tracking that enables robust model training across the sport's complex competitive landscape.
+Missing data is imputted with first quartile values and the seasons are filtered to the last 11 years.  
 
 ###### Feature Selection
 
-Cross-country relay points training feature selection employs sophisticated rule-based technique-specific optimization that adapts to the sport's extraordinary complexity across multiple relay formats. The system uses deterministic feature selection based on leg position and technique type rather than BIC optimization. Classic legs utilize technique-specific variables (`Distance_C_Pelo_Pct`, `Classic_Pelo_Pct`, `Distance_Pelo_Pct`) while freestyle legs employ freestyle-focused variables with anchor legs receiving additional sprint capabilities. Team Sprint events use technique-adaptive selection, and Mixed Relays incorporate gender-aware leg filtering with position-specific features for alternating male/female legs.
+For relays, feature selection is broken into classic legs (1 & 2), freestyle chase leg (3), and anchor leg (4).  The available explanatory variables for the classic legs are pre-race elos for Distance Classic, Classic, Overall, and weighted last 5 distance classic races.  For the freestyle leg it is Distance Freestyle, Freestyle, Overall, and weighted last 5 distance freestyle races.  Then for anchor it is Distance Freestyle, Freestyle, Sprint, Overall, and Weighted Last 5 for freestyle. 
+
+For team sprints it is dependent on the technique of the race.  For classic races it is Elos for Sprint, Sprint Classic, and Classic, while for freestyle it is Sprint, Sprint Freestyle and Freestyle.
 
 
 ###### Modeling
