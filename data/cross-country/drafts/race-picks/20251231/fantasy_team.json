@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Ebba Andersson",
+      1789,
+      "L",
+      "Sweden",
+      9166,
+      41.9711168289443
+    ],
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      14941,
+      40.800978891648
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "L",
+      "Sweden",
+      9779,
+      40.2935810885564
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "L",
+      "Norway",
+      8331,
+      39.0354556258805
+    ],
+    [
+      "Frida Karlsson",
+      3998,
+      "L",
+      "Sweden",
+      8879,
+      36.5803736710506
+    ],
+    [
+      "Astrid Øyre Slind",
+      115,
+      "L",
+      "Norway",
+      5281,
+      33.171635579674
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      2300,
+      "L",
+      "Norway",
+      3958,
+      32.1645215968366
+    ],
+    [
+      "Pia Fink",
+      4004,
+      "L",
+      "Germany",
+      1927,
+      26.0368336404216
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "M",
+      "Norway",
+      13510,
+      48.3349445595167
+    ],
+    [
+      "Andreas Fjorden Ree",
+      8678,
+      "M",
+      "Norway",
+      6314,
+      30.6315099214423
+    ],
+    [
+      "Mattis Stenshagen",
+      5165,
+      "M",
+      "Norway",
+      5388,
+      29.1982372479758
+    ],
+    [
+      "Emil Iversen",
+      1467,
+      "M",
+      "Norway",
+      2809,
+      25.0882663628791
+    ],
+    [
+      "Simen Hegstad Krüger",
+      2355,
+      "M",
+      "Norway",
+      4345,
+      22.3662606865956
+    ],
+    [
+      "Jules Lapierre",
+      3646,
+      "M",
+      "France",
+      353,
+      18.5256389948115
+    ],
+    [
+      "William Poromaa",
+      12573,
+      "M",
+      "Sweden",
+      2066,
+      16.8802946595257
+    ],
+    [
+      "Elia Barp",
+      14042,
+      "M",
+      "Italy",
+      2209,
+      15.998837912203
+    ]
+  ]
+}
