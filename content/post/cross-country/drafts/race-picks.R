@@ -1471,6 +1471,7 @@ predict_races <- function(gender) {
                     Base_Prediction, altitude_adjustment, 
                     period_adjustment, ms_adjustment,
                     Race_Prob, prediction_volatility, volatility_ratio, confidence_factor,
+                    Predicted_Points, Safe_Prediction_Base, Upside_Prediction_Base,
                     Final_Prediction, Safe_Prediction, Upside_Prediction,
                     matches("^Race\\d+_Prob$"))  # Include original race probability columns
 

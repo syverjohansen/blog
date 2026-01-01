@@ -548,35 +548,32 @@ For team sprints it is dependent on the technique of the race.  For classic race
 
 ###### Modeling
 
-Cross-country relay modeling employs sophisticated leg-specific GAM frameworks that capture the intricate tactical dynamics of relay racing across different techniques. Unlike individual races where athletes compete solely for themselves, relay performance depends on team composition, leg-specific tactics, and technique transitions that create unique competitive dynamics.
+Modeling for cross-country relays differs from the other sports in that trains seperate models for each relay leg position with position-specific feature selection.  Using the features chosen from the section above, the leg models are trained using a bionomial GAM with REML estimation for winning, podium, top-5, and top-10. 
 
-The system implements comprehensive leg position-specific modeling that recognizes the different roles each leg plays in relay strategy. Classic legs (typically 1st and 2nd in standard relays) require strong pacing and tactical positioning skills, while freestyle legs (3rd and 4th) demand speed and finishing capabilities. The anchor leg receives special consideration since finishing tactics differ significantly from earlier legs.
+Then to estimate final results, leg importance is trained where certain legs are given more importance to final results than others.  Points are then predicted by multiplying the predicted points for each leg by the importance of the leg.
 
-Relay models incorporate team chemistry factors through aggregated ELO ratings while preserving individual athlete performance characteristics. The modeling accounts for mixed relay gender transitions (female legs 1 and 3, male legs 2 and 4 in mixed relays) and team sprint technique specificity where both team members race the same technique.
+Additionally, cross-country relays have XGBoost and GLM fallbacks if the binomial GAM fails.
 
-The GAM framework uses leg-specific feature sets with technique awareness, accommodating the complex interactions between individual athlete capabilities and team tactical requirements. Multi-tier fallback strategies ensure robust predictions even when individual athlete data is sparse, utilizing team-level performance aggregation and historical relay-specific performance patterns. 
 
 ###### Adjustments
 
-Cross-country relay adjustments employ the **most sophisticated systematic bias correction framework** in winter sports, utilizing a two-stage adjustment process specifically designed for team prediction environments. The system implements advanced mode reset probability corrections followed by mathematical normalization to address systematic prediction biases while preserving team chemistry dynamics.
-
-**Two-Stage Systematic Bias Correction Framework**: Cross-country relay employs sophisticated statistical bias correction through mode probability reset followed by mathematical normalization. The system identifies prediction probability distributions that deviate from expected patterns and applies `reset_mode_probabilities()` corrections that eliminate systematic biases while preserving relative team performance rankings.
-
-**Mode Reset Strategy**: The framework detects when team prediction probabilities exhibit statistical modes that don't align with historical team performance patterns, applying reset corrections that distribute probabilities more evenly while maintaining mathematical validity. This captures complex relay dynamics where team chemistry effects create systematic prediction patterns.
-
-**Mathematical Probability Normalization**: Following mode reset corrections, the system applies comprehensive probability normalization to ensure team prediction distributions sum correctly across all threshold categories (1st, 3rd, 5th, 10th, 30th) while maintaining constraint enforcement that preserves logical ordering and prevents impossible probability assignments.
-
-The active adjustment framework represents the most advanced bias correction methodology among winter sports relay events, acknowledging that cross-country relay team performance involves complex tactical coordination that benefits from sophisticated statistical correction while maintaining prediction reliability across diverse team compositions and race formats.
+No adjustments are applied to relay races.
 
 ##### Testing
 
 ###### Startlist Setup
 
-Cross-country relay points testing startlist setup implements the most sophisticated team composition data preparation among winter sports, accommodating three distinct relay formats (standard relays, mixed relays, team sprints) while maintaining leg-specific athlete assignments and technique-aware performance integration. The system handles both official FIS startlists and optimized team generation with comprehensive gender and technique specialization management through dual-file architecture that separates team composition from individual athlete assignments. Multi-format relay startlist data loading employs format-specific processing with leg-specific athlete assignment using `get_leg_predictions_with_startlist()` to filter athletes by assigned leg positions, ensuring predictions are generated only for athletes actually assigned to specific relay legs rather than all available team members. Advanced gender and ID management for mixed relay includes sophisticated gender constraint handling with ID offset systems to prevent conflicts when combining men's and women's data, enabling proper gender-alternating leg assignments (F-M-F-M) while maintaining data integrity across combined datasets.
+The startlist dataframe is loaded in and Elo percentages and weighted previous points are made for each skier on the startlist depending on the type of relay and the technique the skier will be performing.  
+
+If there is no startlist scraped, the optimal 4-person team for a podium position for each nation is created from available skiers.
 
 ###### Modeling
 
-Cross-country relay points testing modeling implements the most sophisticated leg-specific prediction aggregation system among winter sports, generating individual athlete predictions for each relay leg position and combining them into team-level performance predictions using technique-aware importance weighting. The system accommodates three distinct relay formats (standard relays, mixed relays, team sprints) with leg-specific model application, multi-format team aggregation methodologies, and dynamic leg importance weight application. Technique-specific model integration adapts to relay requirements using position-based technique assignment where legs 1-2 employ classic-focused models while legs 3-4 utilize freestyle-focused models, with gender-aware mixed relay processing using ID offset systems to prevent data conflicts while enabling proper gender-alternating leg assignments.
+The models from the training phase are applied to the startlist data to provide the initial points predictions.
+
+###### Adjustments
+
+No adjustments are made for relay races.
 
 #### Probability
 
@@ -584,67 +581,53 @@ Cross-country relay points testing modeling implements the most sophisticated le
 
 ###### Setup
 
-Cross-country relay probability training setup employs sophisticated leg-specific binary classification targeting with technique-aware data preparation that represents the most comprehensive relay probability modeling among winter sports. The system transforms the complex multi-dimensional relay performance problem into specialized binary classification datasets for each leg position while accommodating cross-country's extraordinary technique complexity (Classic vs Freestyle) and multi-format relay event variations.
-
-**Position Threshold Definition with Leg-Specific Adaptation**: Cross-country relay probability training uses fixed relay-specific position thresholds `c(1, 3, 5, 10)` representing Win, Podium, Top 5, and Top 10 leg finishes, maintaining consistent thresholds across all leg positions while accommodating technique-specific performance variations between classic legs (1-2) and freestyle legs (3-4).
-
-**Leg-Specific Binary Outcome Creation with Technique Integration**: Cross-country implements the most sophisticated binary classification framework among winter sports, creating separate datasets for each relay leg with technique-specific binary targets using categorical factor creation: `is_podium = factor(ifelse(Place <= 3, "Yes", "No"), levels = c("No", "Yes"))` for proper categorical handling across leg-specific technique requirements.
-
-**Technique-Specific Leg Assignment and Data Separation**: Cross-country relay training employs technique-aware data preparation separating classic legs (1-2) from freestyle legs (3-4) with sophisticated temporal ordering to ensure chronological consistency when filling missing values from individual races to relay legs, enabling technique-specific feature engineering that captures fundamental performance differences between classic and freestyle skiing techniques within relay contexts.
+The same dataset is used for training probability predictions as points predictions.  However, binary classification for position thresholds for top-1, 3, 5, 10, and 30 are added.  Furthermore, models are selected based on the amount of training data.  Training datasets with fewer than 500 observations use GLM, while larger ones use an xgbTree.  
 
 ###### Feature Selection
 
-Cross-country relay probability training feature selection employs the most sophisticated leg-specific technique-aware optimization strategy among winter sports, implementing deterministic rule-based selection with multi-dimensional adaptations across technique (Classic/Freestyle), leg position (1-4), and relay format (Standard, Mixed, Team Sprint) requirements. The system diverges from automated statistical optimization, utilizing domain knowledge-based variable selection that captures cross-country's extraordinary competitive complexity.
+For relays, feature selection is broken into classic legs (1 & 2), freestyle chase leg (3), and anchor leg (4).  The available explanatory variables for the classic legs are pre-race elos for Distance Classic, Classic, Overall, and weighted last 5 distance classic races.  For the freestyle leg it is Distance Freestyle, Freestyle, Overall, and weighted last 5 distance freestyle races.  Then for anchor it is Distance Freestyle, Freestyle, Sprint, Overall, and Weighted Last 5 for freestyle. 
 
-**Rule-Based Leg-Specific Technique Selection**: Cross-country implements deterministic feature selection through the `get_leg_predictors(leg, leg_data)` function that adapts variable pools based on leg position and technique requirements rather than statistical optimization criteria, acknowledging that relay leg performance involves specialized tactical roles and technique-specific capabilities.
+For team sprints it is dependent on the technique of the race.  For classic races it is Elos for Sprint, Sprint Classic, and Classic, while for freestyle it is Sprint, Sprint Freestyle and Freestyle.
 
-**Technique-Adaptive Variable Pool Architecture**: The feature selection system employs sophisticated technique-aware variable filtering that separates classic-focused variables from freestyle-focused variables based on leg-specific technique assignments, with classic legs (1-2) using distance classic and classic-specific variables while freestyle legs (3-4) utilize distance freestyle and freestyle-specific variables.
-
-**Multi-Format Adaptive Feature Selection**: The system adapts feature pools across different relay formats through format-specific variable selection strategies including standard relays (position-based technique selection), mixed relays (gender and position combined selection), and team sprints (race technique-dependent selection with sprint-focused variable emphasis).
 
 ###### Modeling
 
-Cross-country relay employs sophisticated binomial GAM (Generalized Additive Models) architecture for team position probability prediction, utilizing independent threshold-based modeling frameworks that incorporate the sport's complex relay team dynamics and leg-specific tactical interactions. The system implements separate binomial GAM models for each position threshold (1st, 3rd, 5th, 10th, 30th), recognizing that factors influencing team podium finishes may differ substantially from those affecting top-10 or points-scoring positions in relay competitions. Each model uses binomial family GAM implementation with REML estimation for conservative smoothing parameter selection, promoting stability across cross-country's diverse relay formats (standard, mixed, team sprint). The framework acknowledges that relay performance depends on team chemistry, leg-specific role execution, and tactical coordination that varies significantly with different athlete combinations, incorporating team-aggregated performance metrics and relay format-specific variables through smooth terms that capture non-linear relationships between collective team capabilities and team finishing position probabilities. Model validation employs comprehensive Brier score evaluation to assess probabilistic accuracy across different team position thresholds and relay format combinations while accounting for team composition variability.
+Unlike other models, the position probability models for cross-country use XGBoost for large datasets (n>500), and a glm for smaller ones.  Moreover, 5-fold cross-validation with standardized parameters are used to account for the temporal dependencies and team composition variations within each team.  Formulas are created for win, podium, top-5, and top-10 and stored to be used for the testing.  
 
 ###### Adjustments
 
-Cross-country relay implements **disabled** Individual Probability Training Adjustments to prevent systematic bias correction complications in team competition environments where team compositions change between races. Unlike individual events where consistent athlete performance patterns can be statistically validated across multiple competitions, relay teams feature different athlete combinations each race, making historical adjustment patterns unreliable for future team predictions. The disabled framework prevents overfitting to temporary team composition patterns and maintains model stability by avoiding systematic bias correction assumptions that don't apply to dynamic team environments. The system prioritizes model consistency over potential accuracy gains from adjustments that cannot account for changing team chemistry and tactical variations inherent in relay competitions.
+No adjustments are applied for relay position probability.
 
 ##### Testing
 
 ###### Startlist Setup
 
-Cross-country relay probability testing employs sophisticated nation-level startlist preparation with leg-specific probability modeling and team-based threshold integration. The system accommodates the most complex relay structure among winter sports through relay format detection (standard, mixed, team sprint) and comprehensive team composition management with leg-specific ELO integration.
+The startlist dataframe is loaded in and Elo percentages and weighted previous points are made for each skier on the startlist depending on the type of relay and the technique the skier will be performing.  
 
-The framework incorporates position threshold adaptation for relay competitions (1st, 3rd, 5th, 10th, 30th) while maintaining team-level data structures and nation-based identification systems. Team probability columns are dynamically detected and preserved throughout the prediction pipeline, ensuring mathematical consistency across different relay formats.
-
-Leg-specific attribute management preserves individual athlete performance characteristics while enabling team-level aggregation for probability modeling. Missing value imputation employs team-specific first quartile replacement with comprehensive fallback mechanisms designed for relay competition requirements.
+If there is no startlist scraped, the optimal 4-person team for a podium position for each nation is created from available skiers.
 
 ###### Modeling
 
-Cross-country relay probability testing employs sophisticated leg-specific modeling using XGBoost (xgbTree) as the primary algorithm with GLM fallback, implementing technique-aware prediction frameworks with comprehensive 5-fold cross-validation. The modeling approach emphasizes individual leg probability predictions through binary classification models, then aggregates them into team-level probabilities using dynamic leg importance weighting and technique-specific predictor optimization.
-
-The framework utilizes XGBoost-first modeling architecture with comprehensive fallback strategies, technique-specific predictor optimization based on leg technique requirements (Classic vs Freestyle), and dynamic leg importance weighting with later leg emphasis (default: [0.2, 0.2, 0.25, 0.35]). Team probability calculations incorporate leg-specific technique adaptations with sophisticated aggregation methodologies.
-
-Mathematical modeling includes comprehensive 5-fold cross-validation with class probabilities enabled, technique-aware predictor selection (Distance_C_Elo/Classic_Elo for legs 1-2, Distance_F_Elo/Freestyle_Elo for leg 3, Sprint_F_Elo for leg 4), and advanced leg importance optimization with team composition strength adjustments. The system accommodates multiple relay formats (standard relay, team sprint, mixed relay) while maintaining sophisticated individual-to-team aggregation frameworks across cross-country's extraordinary competitive complexity.
+The models from the training phase are applied to the startlist data to provide the initial points predictions.
 
 ###### Adjustments
 
-Cross-country relay probability testing implements the **most sophisticated adjustment framework** among winter sports, employing comprehensive multi-stage probability normalization with mode reset strategies, technique-aware adjustments, and format-specific implementations. Unlike other sports that disable systematic bias correction for relay events, cross-country utilizes advanced probability distribution analysis and constraint enforcement specifically designed for leg-specific team prediction scenarios.
-
-**Multi-Stage Probability Normalization Pipeline**: Cross-country employs sophisticated three-stage probability adjustment frameworks (mode reset → normalization → constraint enforcement) with format-specific implementations across standard relay, team sprint, and mixed relay events. The system combines `reset_mode_probabilities()` functionality with comprehensive mathematical constraint enforcement and technique-aware bias correction.
-
-**Format-Specific Adjustment Implementation**: Cross-country adapts adjustment frameworks to accommodate different relay format requirements: Standard relay (mode reset enabled, 4-leg weighting), Team Sprint (mode reset disabled, 2-leg equal weighting), and Mixed Relay (full reset methodology enabled, gender-balance adjustments). Each format receives specialized adjustment strategies optimized for competitive requirements.
-
-**Technique-Aware Adjustment Integration**: The system incorporates sophisticated technique-specific adjustments that account for Classic vs Freestyle performance patterns across leg assignments, with leg-specific technique bias corrections and specialized sprint-focused adjustments for final legs in freestyle segments.
-
-**Advanced Probability Distribution Analysis**: Cross-country employs comprehensive probability distribution analysis to identify and correct systematic biases through sophisticated error handling, fallback strategies, and mathematical consistency validation specifically adapted for leg-specific team prediction scenarios.
+No adjustments are made for relay races.
 
 #### Normalization and Monotonic Constraints
 
-#### Setup
+After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, normalization and monotonic constraints are applied.
 
-#### Predictions
+Normalization is first applied so that the position probabilities all add up to the correct percentage.  For first place that sum to 100%, top-3 would sum to 300%, etc.  Individual athlete probabilities are capped at 100% since anything above that would be impossible.  
+
+After normalization, monotonic constraints are added.  This ensures that top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so that an athlete cannot have a higher chance of finishing top-1 than top-3.  Then normalization is applied again to the monotonic constraint results to give the final results.
+
+At this time, normalization and monotonic constraints are not applied to points predictions.
+
+#### Fantasy
+
+Cross-country has the unique aspect of using the results to optimize a fantasy team for Noah Hoffman's Fantasy XC.  For relay races and team sprints, one must optimize am 6-mens team/6-womens team roster for points while remaining in the 100,000 budget.  For mixed relays, it is 8 teams.  To do this Mixed Integer Programming (MIP) is employed using a GLPK with the points output to optimize the budget.  
+
 
 ## Nordic-Combined
 
