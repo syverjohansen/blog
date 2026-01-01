@@ -2013,6 +2013,7 @@ if(adj_name %in% names(position_adjustments)) {
                    Base_Prediction, altitude_adjustment, 
                    period_adjustment, ms_adjustment,
                    prediction_volatility, volatility_ratio, confidence_factor,
+                   Predicted_Points,
                    Final_Prediction, Safe_Prediction, Upside_Prediction,
                    race_prob_col)
     
