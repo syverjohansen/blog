@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Johanna Hagström",
+      3212,
+      "L",
+      "Sweden",
+      3394,
+      41.316989821518
+    ],
+    [
+      "Kristine Stavås Skistad",
+      3207,
+      "L",
+      "Norway",
+      3916,
+      38.0837697276655
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      "L",
+      "Sweden",
+      8286,
+      37.163481333288
+    ],
+    [
+      "Jasmi Joensuu",
+      1675,
+      "L",
+      "Finland",
+      6084,
+      32.115759131968
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      4307,
+      26.8797391842129
+    ],
+    [
+      "Johanna Matintalo",
+      1761,
+      "L",
+      "Finland",
+      1847,
+      20.1725110837256
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "L",
+      "Sweden",
+      9779,
+      19.9287673130671
+    ],
+    [
+      "Frida Karlsson",
+      3998,
+      "L",
+      "Sweden",
+      8879,
+      19.2060225827569
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      19741,
+      48.9192168174557
+    ],
+    [
+      "Ansgar Evensen",
+      8246,
+      "M",
+      "Norway",
+      1575,
+      33.5800211225199
+    ],
+    [
+      "Lars Heggen",
+      19104,
+      "M",
+      "Norway",
+      2142,
+      24.7253162223697
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "M",
+      "Italy",
+      6556,
+      23.5234570276071
+    ],
+    [
+      "Edvin Anger",
+      14039,
+      "M",
+      "Sweden",
+      11004,
+      22.4689586261415
+    ],
+    [
+      "Ben Ogden",
+      9179,
+      "M",
+      "USA",
+      4705,
+      21.6677101408401
+    ],
+    [
+      "Jules Chappaz",
+      12181,
+      "M",
+      "France",
+      1346,
+      20.3839410621777
+    ],
+    [
+      "Lucas Chanavat",
+      3582,
+      "M",
+      "France",
+      2307,
+      19.4050716348352
+    ]
+  ]
+}
