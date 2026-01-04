@@ -95,6 +95,29 @@ ladies_startlist$Sex = "L"
 log_info(paste("Loaded", nrow(men_startlist), "men in Final Climb startlist"))
 log_info(paste("Loaded", nrow(ladies_startlist), "ladies in Final Climb startlist"))
 
+# Filter out athletes with 0% race participation probability
+filter_zero_probability_athletes <- function(startlist_df, gender) {
+  # Find race probability columns
+  race_prob_cols <- grep("^Race\\d+_Prob$", names(startlist_df), value = TRUE)
+  
+  if(length(race_prob_cols) > 0) {
+    initial_count <- nrow(startlist_df)
+    # Keep athletes who have > 0 in any race probability column
+    startlist_df <- startlist_df %>%
+      filter(if_any(all_of(race_prob_cols), ~ .x > 0))
+    final_count <- nrow(startlist_df)
+    log_info(paste("Filtered", gender, "startlist from", initial_count, "to", final_count, "athletes with race probability > 0"))
+  } else {
+    log_info(paste("No race probability columns found for", gender, "- keeping all athletes"))
+  }
+  
+  return(startlist_df)
+}
+
+# Apply filtering to both startlists
+men_startlist <- filter_zero_probability_athletes(men_startlist, "men")
+ladies_startlist <- filter_zero_probability_athletes(ladies_startlist, "ladies")
+
 # Create combined chronological data with proper points assignment
 log_info("Assigning points based on race type...")
 
@@ -1486,7 +1509,69 @@ normalize_points_predictions <- function(startlist_df, gender) {
   return(startlist_df)
 }
 
-# Apply normalization to both genders
+# ============================================================================
+# APPLY RACE PROBABILITY WEIGHTING (BEFORE NORMALIZATION)
+# ============================================================================
+
+log_info("=== APPLYING RACE PROBABILITY WEIGHTING ===")
+
+# Function to apply race participation probability weighting to predictions
+apply_race_probability_weighting <- function(startlist_df, gender) {
+  log_info(paste("Applying race probability weighting for", gender))
+  
+  # Find race probability columns
+  race_prob_cols <- grep("^Race\\d+_Prob$", names(startlist_df), value = TRUE)
+  
+  if(length(race_prob_cols) > 0) {
+    log_info(paste("Found race probability columns for", gender, ":", paste(race_prob_cols, collapse = ", ")))
+    
+    # For Final Climb, we should only have Race1_Prob (single race)
+    race_prob_col <- race_prob_cols[1]  # Use first race probability column
+    
+    startlist_df <- startlist_df %>%
+      mutate(
+        # Convert percentage to decimal and ensure bounds
+        Race_Prob = get(race_prob_col) / 100,
+        Race_Prob = pmax(pmin(Race_Prob, 1.0), 0.0),
+        
+        # Store unweighted prediction for reference
+        Unweighted_Points = Points_Pred,
+        
+        # Apply race probability weighting to points prediction
+        Points_Pred = Points_Pred * Race_Prob,
+        
+        # Store weighted prediction as final prediction
+        Final_Prediction = Points_Pred
+      )
+    
+    # Calculate weighting statistics
+    avg_race_prob <- mean(startlist_df$Race_Prob, na.rm = TRUE)
+    zero_prob_count <- sum(startlist_df$Race_Prob == 0, na.rm = TRUE)
+    
+    log_info(paste("Race probability weighting for", gender, ":"))
+    log_info(paste("  Average race probability:", round(avg_race_prob * 100, 1), "%"))
+    log_info(paste("  Athletes with 0% probability:", zero_prob_count))
+    log_info(paste("  Weighted points range:", round(min(startlist_df$Points_Pred), 2), "-", 
+                 round(max(startlist_df$Points_Pred), 2)))
+    
+  } else {
+    log_info(paste("No race probability columns found for", gender, "- no weighting applied"))
+    startlist_df$Final_Prediction <- startlist_df$Points_Pred
+  }
+  
+  return(startlist_df)
+}
+
+# Apply race probability weighting to both genders BEFORE normalization
+log_info("Applying race probability weighting to men...")
+men_startlist <- apply_race_probability_weighting(men_startlist, "men")
+
+log_info("Applying race probability weighting to ladies...")
+ladies_startlist <- apply_race_probability_weighting(ladies_startlist, "ladies")
+
+log_info("=== RACE PROBABILITY WEIGHTING COMPLETE ===")
+
+# Apply normalization to both genders AFTER race probability weighting
 log_info("Normalizing men's predictions...")
 men_startlist <- normalize_points_predictions(men_startlist, "men")
 
@@ -2003,6 +2088,57 @@ normalize_startlist_probabilities <- function(predictions_df, gender) {
   
   return(normalized_df)
 }
+
+# Function to apply race probability weighting to position probabilities
+apply_race_prob_to_position_probs <- function(startlist_df, gender) {
+  log_info(paste("Applying race probability weighting to position probabilities for", gender))
+  
+  # Find race probability columns
+  race_prob_cols <- grep("^Race\\d+_Prob$", names(startlist_df), value = TRUE)
+  
+  if(length(race_prob_cols) > 0) {
+    # For Final Climb, we should only have Race1_Prob (single race)
+    race_prob_col <- race_prob_cols[1]  # Use first race probability column
+    
+    # Position probability columns
+    position_prob_cols <- c("prob_top1", "prob_top3", "prob_top5", "prob_top10", "prob_top30")
+    existing_prob_cols <- position_prob_cols[position_prob_cols %in% names(startlist_df)]
+    
+    if(length(existing_prob_cols) > 0) {
+      log_info(paste("Found position probability columns:", paste(existing_prob_cols, collapse = ", ")))
+      
+      startlist_df <- startlist_df %>%
+        mutate(
+          # Convert race probability to decimal
+          Race_Prob_Decimal = get(race_prob_col) / 100,
+          Race_Prob_Decimal = pmax(pmin(Race_Prob_Decimal, 1.0), 0.0)
+        )
+      
+      # Apply race probability to each position probability column  
+      for(prob_col in existing_prob_cols) {
+        startlist_df <- startlist_df %>%
+          mutate(
+            !!prob_col := get(prob_col) * Race_Prob_Decimal
+          )
+      }
+      
+      # Remove temporary column
+      startlist_df <- startlist_df %>% select(-Race_Prob_Decimal)
+      
+      log_info(paste("Applied race probability weighting to position probabilities for", gender))
+    } else {
+      log_info(paste("No position probability columns found for", gender))
+    }
+  } else {
+    log_info(paste("No race probability columns found for", gender, "- no weighting applied to position probabilities"))
+  }
+  
+  return(startlist_df)
+}
+
+# Apply race probability weighting to position probabilities
+men_startlist_with_probs <- apply_race_prob_to_position_probs(men_startlist_with_probs, "men")
+ladies_startlist_with_probs <- apply_race_prob_to_position_probs(ladies_startlist_with_probs, "ladies")
 
 # Apply normalization to both startlists
 men_startlist_normalized <- normalize_startlist_probabilities(men_startlist_with_probs, "men")
