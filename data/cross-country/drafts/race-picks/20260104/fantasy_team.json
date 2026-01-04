@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Sex",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "USA",
+      "L",
+      14941,
+      21.5697260076882
+    ],
+    [
+      "Simen Hegstad Krüger",
+      2355,
+      "Norway",
+      "M",
+      4345,
+      21.4364958082692
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "Sweden",
+      "L",
+      9779,
+      19.0003409527775
+    ],
+    [
+      "Ebba Andersson",
+      1789,
+      "Sweden",
+      "L",
+      9166,
+      18.9449107378142
+    ],
+    [
+      "Einar Hedegart",
+      20631,
+      "Norway",
+      "M",
+      4521,
+      18.4318280741826
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "Norway",
+      "M",
+      13510,
+      18.1037465384608
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "France",
+      "M",
+      3331,
+      17.0465205294802
+    ],
+    [
+      "Martin Løwstrøm Nyenget",
+      2295,
+      "Norway",
+      "M",
+      8177,
+      16.8737984895709
+    ],
+    [
+      "Jules Lapierre",
+      3646,
+      "France",
+      "M",
+      353,
+      16.798531838109
+    ],
+    [
+      "Friedrich Moch",
+      9323,
+      "Germany",
+      "M",
+      2087,
+      16.7826224030754
+    ],
+    [
+      "Mika Vermeulen",
+      12673,
+      "Austria",
+      "M",
+      6573,
+      16.5184213008026
+    ],
+    [
+      "Astrid Øyre Slind",
+      115,
+      "Norway",
+      "L",
+      5281,
+      16.3749876388039
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "Norway",
+      "L",
+      8331,
+      16.2898920045908
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      2300,
+      "Norway",
+      "L",
+      3958,
+      13.9804265081985
+    ],
+    [
+      "Pia Fink",
+      4004,
+      "Germany",
+      "L",
+      1927,
+      13.3411406559164
+    ],
+    [
+      "Kristin Austgulen Fosnæs",
+      4268,
+      "Norway",
+      "L",
+      3126,
+      12.8451902864708
+    ]
+  ]
+}

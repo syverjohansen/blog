@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Mikaela Shiffrin",
+      "USA",
+      88.6246122026887
+    ],
+    [
+      "Camille Rast",
+      "SUI",
+      48.5005170630817
+    ],
+    [
+      "Lara Colturi",
+      "ALB",
+      39.2967942088935
+    ],
+    [
+      "Katharina Truppe",
+      "AUT",
+      27.1975180972079
+    ],
+    [
+      "Wendy Holdener",
+      "SUI",
+      24.7156153050672
+    ]
+  ]
+}
