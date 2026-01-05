@@ -42,8 +42,28 @@ check_races_yesterday() {
     
     echo "  Checking $races_file for date $YESTERDAY"
     
-    # Check if yesterday's date exists in the races.csv file
-    # Handle both comma-separated and space-separated formats
+    # Special handling for ski jump: check Final_Date column instead of Date column
+    if [[ "$sport" == "skijump" ]]; then
+        # Check if Final_Date column exists and contains yesterday's date
+        if head -n 1 "$races_file" | grep -q "Final_Date"; then
+            echo "  Using Final_Date column for ski jump"
+            # Check Final_Date column (2nd column after Date)
+            if awk -F',' -v date="$YESTERDAY" 'NR>1 && $2 == date {found=1; exit} END {exit !found}' "$races_file"; then
+                echo "✓ Ski jump finals found for $sport on $YESTERDAY"
+                return 0
+            else
+                echo "- No ski jump finals found for $sport on $YESTERDAY"
+                # Debug: show what final dates are in the file
+                echo "  Available final dates in file:"
+                awk -F',' 'NR>1 {print $2}' "$races_file" | grep -o '[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]' | sort | uniq | head -n 10
+                return 1
+            fi
+        else
+            echo "  Final_Date column not found, falling back to Date column"
+        fi
+    fi
+    
+    # Standard check for other sports or fallback for ski jump
     if grep -q "$YESTERDAY" "$races_file"; then
         echo "✓ Races found for $sport on $YESTERDAY"
         return 0
