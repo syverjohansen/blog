@@ -10537,5 +10537,23 @@
     "country": "Italy",
     "distance": "Sprint",
     "technique": "C"
+  },
+  "2026_15": {
+    "season": 2026,
+    "race": 15,
+    "date": "2026-01-04",
+    "city": "Val di Fiemme",
+    "country": "Italy",
+    "distance": "10",
+    "technique": "F"
+  },
+  "2026_16": {
+    "season": 2026,
+    "race": 16,
+    "date": "2026-01-04",
+    "city": "Tour de Ski",
+    "country": "FIS",
+    "distance": "0",
+    "technique": "Unknown"
   }
 }

@@ -1,0 +1,425 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Domen Prevc",
+      1868,
+      1,
+      1130,
+      1601
+    ],
+    [
+      "Ryoyu Kobayashi",
+      1637,
+      2,
+      762,
+      1233
+    ],
+    [
+      "Ren Nikaido",
+      2283,
+      3,
+      629,
+      1100
+    ],
+    [
+      "Philipp Raimund",
+      2401,
+      4,
+      603,
+      1074
+    ],
+    [
+      "Anze Lanisek",
+      1166,
+      5,
+      588,
+      1059
+    ],
+    [
+      "Felix Hoffmann",
+      1893,
+      6,
+      550,
+      1021
+    ],
+    [
+      "Daniel Tschofenig",
+      2542,
+      7,
+      505,
+      976
+    ],
+    [
+      "Jan Hörl",
+      2416,
+      8,
+      495,
+      966
+    ],
+    [
+      "Stephan Embacher",
+      2638,
+      9,
+      453,
+      924
+    ],
+    [
+      "Stefan Kraft",
+      432,
+      10,
+      422,
+      893
+    ],
+    [
+      "Kacper Tomasiak",
+      2673,
+      11,
+      284,
+      755
+    ],
+    [
+      "Vladimir Zografski",
+      61,
+      12,
+      252,
+      723
+    ],
+    [
+      "Kristoffer Eriksen Sundal",
+      2575,
+      13,
+      250,
+      721
+    ],
+    [
+      "Valentin Foubert",
+      2423,
+      14,
+      233,
+      704
+    ],
+    [
+      "Manuel Fettner",
+      17,
+      15,
+      226,
+      697
+    ],
+    [
+      "Naoki Nakamura",
+      1845,
+      16,
+      215,
+      686
+    ],
+    [
+      "Johann Forfang",
+      902,
+      17,
+      196,
+      667
+    ],
+    [
+      "Timi Zajc",
+      2106,
+      18,
+      187,
+      658
+    ],
+    [
+      "Jonas Schuster",
+      2579,
+      19,
+      185,
+      656
+    ],
+    [
+      "Marius Lindvik",
+      1920,
+      20,
+      163,
+      634
+    ],
+    [
+      "Gregor Deschwanden",
+      273,
+      21,
+      139,
+      610
+    ],
+    [
+      "Halvor Egner Granerud",
+      1828,
+      22,
+      136,
+      607
+    ],
+    [
+      "Kamil Stoch",
+      40,
+      23,
+      135,
+      606
+    ],
+    [
+      "Pius Paschke",
+      1556,
+      24,
+      134,
+      605
+    ],
+    [
+      "Jason Colby",
+      2679,
+      25,
+      128,
+      599
+    ],
+    [
+      "Maximilian Ortner",
+      2556,
+      26,
+      105,
+      576
+    ],
+    [
+      "Piotr Zyla",
+      98,
+      27,
+      96,
+      567
+    ],
+    [
+      "Artti Aigro",
+      1871,
+      28,
+      80,
+      551
+    ],
+    [
+      "Niko Kytösaho",
+      1830,
+      28,
+      80,
+      551
+    ],
+    [
+      "Antti Aalto",
+      924,
+      30,
+      78,
+      549
+    ],
+    [
+      "Yukiya Sato",
+      881,
+      31,
+      67,
+      538
+    ],
+    [
+      "Tomofumi Naito",
+      2404,
+      32,
+      56,
+      527
+    ],
+    [
+      "Andreas Wellinger",
+      553,
+      33,
+      48,
+      519
+    ],
+    [
+      "Sandro Hauswirth",
+      2116,
+      34,
+      47,
+      518
+    ],
+    [
+      "Pawel Wasek",
+      2189,
+      35,
+      46,
+      517
+    ],
+    [
+      "Rok Oblak",
+      2576,
+      36,
+      39,
+      510
+    ],
+    [
+      "Sakutaro Kobayashi",
+      2637,
+      37,
+      37,
+      508
+    ],
+    [
+      "Maciej Kot",
+      103,
+      38,
+      36,
+      507
+    ],
+    [
+      "Dawid Kubacki",
+      69,
+      39,
+      32,
+      503
+    ],
+    [
+      "Ilya Mizernykh",
+      2685,
+      40,
+      31,
+      502
+    ],
+    [
+      "Kevin Bickner",
+      1644,
+      41,
+      21,
+      492
+    ],
+    [
+      "Danil Vassilyev",
+      2476,
+      41,
+      21,
+      492
+    ],
+    [
+      "Benjamin Østvold",
+      2546,
+      43,
+      20,
+      491
+    ],
+    [
+      "Simon Ammann",
+      4,
+      44,
+      18,
+      489
+    ],
+    [
+      "Robin Pedersen",
+      1933,
+      45,
+      16,
+      487
+    ],
+    [
+      "Giovanni Bresadola",
+      2277,
+      46,
+      15,
+      486
+    ],
+    [
+      "Roman Koudelka",
+      24,
+      47,
+      14,
+      485
+    ],
+    [
+      "Karl Geiger",
+      554,
+      48,
+      12,
+      483
+    ],
+    [
+      "Alex Insam",
+      915,
+      49,
+      11,
+      482
+    ],
+    [
+      "Juri Kesseli",
+      2585,
+      50,
+      9,
+      480
+    ],
+    [
+      "Felix Trunz",
+      2654,
+      51,
+      8,
+      479
+    ],
+    [
+      "Tate Frantz",
+      2628,
+      52,
+      5,
+      476
+    ],
+    [
+      "Andrew Urlaub",
+      2426,
+      52,
+      5,
+      476
+    ],
+    [
+      "Yannick Wasser",
+      2514,
+      52,
+      5,
+      476
+    ],
+    [
+      "Luca Roth",
+      2397,
+      55,
+      3,
+      474
+    ],
+    [
+      "Vitaliy Kalinichenko",
+      1839,
+      56,
+      2,
+      473
+    ],
+    [
+      "Isak Andreas Langmo",
+      2677,
+      56,
+      2,
+      473
+    ],
+    [
+      "Killian Peier",
+      882,
+      56,
+      2,
+      473
+    ],
+    [
+      "Mackenzie Boyd-Clowes",
+      95,
+      59,
+      1,
+      472
+    ]
+  ]
+}

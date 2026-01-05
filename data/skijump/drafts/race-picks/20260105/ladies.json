@@ -1,0 +1,752 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Sex",
+    "Race1 Points",
+    "Race1 Probability",
+    "Total Points"
+  ],
+  "rows": [
+    [
+      "Sophie Kothbauer",
+      416,
+      "AUT",
+      "L",
+      100.0,
+      1,
+      100.0
+    ],
+    [
+      "Elena Runggaldier",
+      39,
+      "ITA",
+      "L",
+      100.0,
+      1,
+      100.0
+    ],
+    [
+      "Nika Prevc",
+      426,
+      "SLO",
+      "L",
+      32.9636292317442,
+      1,
+      32.9636292317442
+    ],
+    [
+      "Lisa Eder",
+      337,
+      "AUT",
+      "L",
+      19.3507392872343,
+      1,
+      19.3507392872343
+    ],
+    [
+      "Anna Odine Strøm",
+      44,
+      "NOR",
+      "L",
+      13.8828404280243,
+      1,
+      13.8828404280243
+    ],
+    [
+      "Abigail Strate",
+      289,
+      "CAN",
+      "L",
+      13.5013808547783,
+      1,
+      13.5013808547783
+    ],
+    [
+      "Nozomi Maruyama",
+      222,
+      "JPN",
+      "L",
+      12.5573153386687,
+      1,
+      12.5573153386687
+    ],
+    [
+      "Selina Freitag",
+      338,
+      "GER",
+      "L",
+      11.745151233268,
+      1,
+      11.745151233268
+    ],
+    [
+      "Nika Vodan",
+      266,
+      "SLO",
+      "L",
+      8.32611045424254,
+      1,
+      8.32611045424254
+    ],
+    [
+      "Sara Takanashi",
+      3,
+      "JPN",
+      "L",
+      5.94173755496938,
+      1,
+      5.94173755496938
+    ],
+    [
+      "Katharina Schmid",
+      13,
+      "GER",
+      "L",
+      5.22576699798468,
+      1,
+      5.22576699798468
+    ],
+    [
+      "Agnes Reisch",
+      259,
+      "GER",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Yuki Ito",
+      5,
+      "JPN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Yuka Seto",
+      32,
+      "JPN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Heidi Dyhre Tråserud",
+      366,
+      "NOR",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Julia Mühlbacher",
+      400,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Silje Opseth",
+      221,
+      "NOR",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Juliane Seyfarth",
+      63,
+      "GER",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Ping Zeng",
+      438,
+      "CHN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Chiara Kreuzer",
+      21,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Ringo Miyajima",
+      427,
+      "JPN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Josephine Pagnier",
+      280,
+      "FRA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Annika Sieff",
+      377,
+      "ITA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Anezka Indrackova",
+      437,
+      "CZE",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Jenny Rautionaho",
+      145,
+      "FIN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Anna Twardosz",
+      288,
+      "POL",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Gyda Westvold Hansen",
+      382,
+      "NOR",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Lisa Hirner",
+      375,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Ingvild Synnøve Midtskogen",
+      479,
+      "NOR",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Oosa Thure",
+      544,
+      "FIN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Heta Hirvonen",
+      542,
+      "FIN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Julina Kreibich",
+      545,
+      "GER",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Minja Korhonen",
+      506,
+      "FIN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Meghann Wadsak",
+      487,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Sandra Sproch",
+      501,
+      "USA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Sina Arnet",
+      448,
+      "SUI",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Klara Ulrichova",
+      388,
+      "CZE",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Caroline Rochas",
+      131,
+      "FRA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Annika Belshaw",
+      346,
+      "USA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Delia Anamaria Folea",
+      410,
+      "ROU",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Rea Kindlimann",
+      358,
+      "SUI",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Sofia Mattila",
+      441,
+      "FIN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Maja Kovacic",
+      511,
+      "SLO",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Qi Liu",
+      62,
+      "CHN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Paige Jones",
+      365,
+      "USA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Katra Komar",
+      284,
+      "SLO",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Martina Zanitzer",
+      430,
+      "ITA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Yuzuki Sato",
+      480,
+      "JPN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Nicole Maurer",
+      275,
+      "CAN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Kira Maria Kapustikova",
+      547,
+      "SVK",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Josie Johnson",
+      446,
+      "USA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Zhanna Hlukhova",
+      503,
+      "UKR",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Liangyao Wang",
+      418,
+      "CHN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Yangning Weng",
+      513,
+      "CHN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Shiyu Zhou",
+      518,
+      "CHN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Pola Beltowska",
+      442,
+      "POL",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Bing Dong",
+      320,
+      "CHN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Martina Ambrosi",
+      355,
+      "ITA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Tamara Mesikova",
+      458,
+      "SVK",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Emely Torazza",
+      402,
+      "GER",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Emma Chervet",
+      456,
+      "FRA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Hannah Wiegele",
+      396,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Tinkara Komar",
+      471,
+      "SLO",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Natalie Eilers",
+      270,
+      "CAN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Jessica Malsiner",
+      357,
+      "ITA",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "TRITSCHER Luise",
+      264697,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "POKORNY Sara",
+      262601,
+      "AUT",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "TOTH Daniela Vasilica",
+      166476,
+      "ROU",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "BUFF Simone",
+      204199,
+      "SUI",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "TERBOVSEK Taja",
+      280749,
+      "SLO",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "AIKIA Julia",
+      261709,
+      "FIN",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "KOZLOVA Karina",
+      296896,
+      "UKR",
+      "L",
+      0.0,
+      1,
+      0.0
+    ],
+    [
+      "Eirin Maria Kvandal",
+      354,
+      "Norway",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Frida Westman",
+      296,
+      "Sweden",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Jerica Jesenko",
+      486,
+      "Slovenia",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Julia Kykkänen",
+      11,
+      "Finland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Alyona Sviridenko",
+      522,
+      "Kazakhstan",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Veronika Shishkina",
+      347,
+      "Kazakhstan",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Anna Rupprecht",
+      67,
+      "Germany",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Nicole Konderla",
+      392,
+      "Poland",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Alvine Holz",
+      475,
+      "Germany",
+      "L",
+      0.0,
+      0,
+      0.0
+    ],
+    [
+      "Daniela Haralambie",
+      43,
+      "Romania",
+      "L",
+      0.0,
+      0,
+      0.0
+    ]
+  ]
+}
