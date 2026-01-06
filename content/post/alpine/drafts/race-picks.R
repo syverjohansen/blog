@@ -628,8 +628,8 @@ prepare_startlist_data <- function(startlist, race_df, elo_col) {
           log_info(paste("Calculating", pct_col, "from", col))
           result_df[[pct_col]] <- result_df[[col]] / max_val
         } else {
-          log_info(paste("Using default value for", pct_col, "(max value issue)"))
-          result_df[[pct_col]] <- 0.5
+          log_info(paste("Using first quartile for", pct_col, "(max value issue)"))
+          result_df[[pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
         }
       } else {
         # If not available in race_df, normalize within the current dataset
@@ -638,14 +638,14 @@ prepare_startlist_data <- function(startlist, race_df, elo_col) {
           log_info(paste("Calculating", pct_col, "from", col, "(internal max)"))
           result_df[[pct_col]] <- result_df[[col]] / max_val
         } else {
-          log_info(paste("Using default value for", pct_col, "(internal max issue)"))
-          result_df[[pct_col]] <- 0.5
+          log_info(paste("Using first quartile for", pct_col, "(internal max issue)"))
+          result_df[[pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
         }
       }
     } else if(!pct_col %in% names(result_df)) {
       # If we don't have the Elo column and the PCT doesn't exist yet
       log_info(paste("Creating missing Elo Pct column:", pct_col))
-      result_df[[pct_col]] <- 0.5  # Default to 0.5 (middle value)
+      result_df[[pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))  # Default to first quartile
     }
   }
   
@@ -1115,6 +1115,14 @@ predict_races <- function(gender, startlist_override = NULL) {
       explanatory_vars <- c("Prev_Points_Weighted", "Downhill_Elo_Pct", "Super.G_Elo_Pct", "Giant.Slalom_Elo_Pct", 
                             "Slalom_Elo_Pct", "Giant.Slalom_Elo_Pct", 
                             "Combined_Elo_Pct", "Tech_Elo_Pct", "Speed_Elo_Pct", "Elo_Pct")
+    }
+    
+    # Apply quartile imputation to the selected explanatory variables
+    for(var in explanatory_vars) {
+      if(var %in% names(race_df_75)) {
+        race_df_75[[var]] <- replace_na_with_quartile(race_df_75[[var]])
+      }
+    }
     }
     # Create and fit model for points
     formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))

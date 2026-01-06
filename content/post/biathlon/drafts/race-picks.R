@@ -963,7 +963,7 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col, is_relay = FALS
           result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
         } else {
           log_info(paste("Using default value for", pelo_pct_col, "(max value issue)"))
-          result_df[[pelo_pct_col]] <- 0.5
+          result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
         }
       } else {
         # If not available in race_df, normalize within the current dataset
@@ -973,7 +973,7 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col, is_relay = FALS
           result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
         } else {
           log_info(paste("Using default value for", pelo_pct_col, "(internal max issue)"))
-          result_df[[pelo_pct_col]] <- 0.5
+          result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
         }
       }
     } else if(!pelo_pct_col %in% names(result_df)) {
@@ -1870,6 +1870,14 @@ predict_races <- function(gender, is_relay = FALSE, relay_type = NULL, startlist
                             "MassStart_Pelo_Pct", "Pursuit_Pelo_Pct", 
                             "Pelo_Pct")
     }
+    
+    # Apply quartile imputation to the selected explanatory variables
+    for(var in explanatory_vars) {
+      if(var %in% names(race_df_75)) {
+        race_df_75[[var]] <- replace_na_with_quartile(race_df_75[[var]])
+      }
+    }
+    
     # Create and fit model for points
     formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))
     tryCatch({

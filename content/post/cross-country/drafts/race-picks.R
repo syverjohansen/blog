@@ -460,7 +460,7 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col, gender) {
     pelo_pct_col <- paste0(pelo_cols[i], "_Pct")
     if(!pelo_pct_col %in% names(result_df)) {
       log_info(paste("Creating missing Pelo Pct column:", pelo_pct_col))
-      result_df[[pelo_pct_col]] <- 0.5  # Default to 0.5 (middle value)
+      result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))  # Default to first quartile
     }
   }
   
@@ -490,8 +490,8 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col, gender) {
         log_info(paste("Calculated", elo_col, "percentage using startlist max:", max_val))
       } else {
         # Fallback to default middle value
-        result_df[[paste0(elo_col, "_Pct")]] <- 0.5
-        result_df[[paste0(pelo_col_i, "_Pct")]] <- 0.5
+        result_df[[paste0(elo_col, "_Pct")]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
+        result_df[[paste0(pelo_col_i, "_Pct")]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
         log_info(paste("Using default 0.5 for", elo_col, "percentage (max value issue)"))
       }
     }
@@ -985,6 +985,13 @@ predict_races <- function(gender) {
     explanatory_vars <- c("Prev_Points_Weighted", "Distance_Pelo_Pct", "Sprint_Pelo_Pct", 
                           "Sprint_C_Pelo_Pct", "Distance_F_Pelo_Pct", "Distance_C_Pelo_Pct", 
                           "Classic_Pelo_Pct", "Freestyle_Pelo_Pct", "Sprint_F_Pelo_Pct", "Pelo_Pct")
+    
+    # Apply quartile imputation to the selected explanatory variables
+    for(var in explanatory_vars) {
+      if(var %in% names(race_df_75)) {
+        race_df_75[[var]] <- replace_na_with_quartile(race_df_75[[var]])
+      }
+    }
     
     # Create and fit model for points
     formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))

@@ -1303,7 +1303,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
             result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
           } else {
             log_warn(paste("No valid max value for", elo_col, "using default"))
-            result_df[[pelo_pct_col]] <- 0.5
+            result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
           }
         } else {
           # Fallback: normalize within current Elo data
@@ -1313,13 +1313,13 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
             result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
           } else {
             log_warn(paste("No valid data for", elo_col, "using default"))
-            result_df[[pelo_pct_col]] <- 0.5
+            result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
           }
         }
       } else {
         # If Elo column doesn't exist, create default Pelo_Pct
         log_info(paste("Creating default", pelo_pct_col, "(missing", elo_col, ")"))
-        result_df[[pelo_pct_col]] <- 0.5
+        result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
       }
     }
   } else {
@@ -1416,8 +1416,8 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
             log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using max Pelo =", max_val))
             result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
           } else {
-            log_warn(paste("No valid max value for", pelo_col, "using default"))
-            result_df[[pelo_pct_col]] <- 0.5
+            log_warn(paste("No valid max value for", pelo_col, "using first quartile"))
+            result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
           }
         } else {
           # Fallback: normalize within current Elo data
@@ -1426,14 +1426,14 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
             log_info(paste("Converting", elo_col, "to", pelo_pct_col, "using internal max =", max_val))
             result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
           } else {
-            log_warn(paste("No valid data for", elo_col, "using default"))
-            result_df[[pelo_pct_col]] <- 0.5
+            log_warn(paste("No valid data for", elo_col, "using first quartile"))
+            result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
           }
         }
       } else {
         # If Elo column doesn't exist, create default Pelo_Pct
         log_info(paste("Creating default", pelo_pct_col, "(missing", elo_col, ")"))
-        result_df[[pelo_pct_col]] <- 0.5
+        result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
       }
     }
   }  # End of if(!is_team)
@@ -1609,7 +1609,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     }
     participant_col <- "Skier"
   }
-
+  
   
   # Log the size of the startlist to track if it's being modified
   log_info(paste("Selected startlist has", nrow(startlist), "entries"))
@@ -1761,11 +1761,13 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     
     # Filter for top performers and add previous points
     race_df_75 <- race_df %>%
-      filter(get(elo_col) > 0.75) %>%
+      #filter(get(elo_col) > 0.75) %>%
+      filter(get(elo_col) > 0) %>%
       group_by(!!sym(participant_col)) %>%
       arrange(Season, Race) %>%
       ungroup()
 
+    
     # Feature selection and model fitting for points prediction
     response_variable <- "Points"
     
@@ -1780,6 +1782,13 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
                             "Flying_Pelo_Pct", "Pelo_Pct")
     }
     
+    # Apply quartile imputation to the selected explanatory variables
+    for(var in explanatory_vars) {
+      if(var %in% names(race_df_75)) {
+        race_df_75[[var]] <- replace_na_with_quartile(race_df_75[[var]])
+      }
+    }
+
     # Create and fit model for points
     formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))
     log_info(paste("Initial formula with all variables:", paste(response_variable, "~", paste(explanatory_vars, collapse = " + "))))
@@ -1822,7 +1831,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
         })
       })
     })
-    
+
     # NEW CODE: Create position probability models using the same variables as points model
     position_models <- list()
     position_adjustments <- list()  # To store adjustments for each threshold

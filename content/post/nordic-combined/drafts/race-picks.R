@@ -1365,7 +1365,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
             result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
           } else {
             log_warn(paste("No valid max value for", pelo_col, "using default"))
-            result_df[[elo_pct_col]] <- 0.5
+            result_df[[elo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
           }
         } else {
           # Fallback: normalize within current Elo data
@@ -1375,7 +1375,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
             result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
           } else {
             log_warn(paste("No valid data for", elo_col, "using default"))
-            result_df[[elo_pct_col]] <- 0.5
+            result_df[[elo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
           }
         }
       } else {
@@ -1445,7 +1445,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
           result_df[[pct_col]] <- result_df[[col]] / max_val
         } else {
           log_info(paste("Using default value for", pct_col, "(max value issue)"))
-          result_df[[pct_col]] <- 0.5
+          result_df[[pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
         }
       } else {
         # If not available in race_df, normalize within the current dataset
@@ -1455,7 +1455,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
           result_df[[pct_col]] <- result_df[[col]] / max_val
         } else {
           log_info(paste("Using default value for", pct_col, "(internal max issue)"))
-          result_df[[pct_col]] <- 0.5
+          result_df[[pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
         }
       }
     } else if(!pct_col %in% names(result_df)) {
@@ -1868,6 +1868,13 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
                             "Sprint_Elo_Pct", "Individual_Elo_Pct", 
                             "MassStart_Elo_Pct", "IndividualCompact_Elo_Pct", 
                             "Elo_Pct")#, "Period", "Elevation_Flag")
+    }
+    
+    # Apply quartile imputation to the selected explanatory variables
+    for(var in explanatory_vars) {
+      if(var %in% names(race_df_75)) {
+        race_df_75[[var]] <- replace_na_with_quartile(race_df_75[[var]])
+      }
     }
     
     # Create and fit model for points
