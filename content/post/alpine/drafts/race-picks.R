@@ -1123,7 +1123,7 @@ predict_races <- function(gender, startlist_override = NULL) {
         race_df_75[[var]] <- replace_na_with_quartile(race_df_75[[var]])
       }
     }
-    }
+    
     # Create and fit model for points
     formula <- as.formula(paste(response_variable, "~", paste(explanatory_vars, collapse = " + ")))
     tryCatch({
