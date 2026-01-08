@@ -1349,41 +1349,6 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       }
     }
     
-    # CRITICAL: Convert Elo columns to Elo_Pct columns for model prediction
-    # Models are trained on Pelo data (named as Elo_Pct) but we predict using Elo data from startlist
-    for(i in seq_along(elo_cols)) {
-      elo_col <- elo_cols[i]
-      pelo_col <- pelo_cols[i]  # corresponding Pelo column name
-      elo_pct_col <- paste0(str_replace(elo_col, "_Elo", "_Elo"), "_Pct")
-      
-      if(elo_col %in% names(result_df)) {
-        # Get max value for normalization from race_df (historical Pelo data)
-        if(pelo_col %in% names(race_df)) {
-          max_val <- max(race_df[[pelo_col]], na.rm = TRUE)
-          if(!is.na(max_val) && max_val > 0) {
-            log_info(paste("Converting", elo_col, "to", elo_pct_col, "using max Pelo =", max_val))
-            result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
-          } else {
-            log_warn(paste("No valid max value for", pelo_col, "using default"))
-            result_df[[elo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
-          }
-        } else {
-          # Fallback: normalize within current Elo data
-          max_val <- max(result_df[[elo_col]], na.rm = TRUE)
-          if(!is.na(max_val) && max_val > 0) {
-            log_info(paste("Converting", elo_col, "to", elo_pct_col, "using internal max =", max_val))
-            result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
-          } else {
-            log_warn(paste("No valid data for", elo_col, "using default"))
-            result_df[[elo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
-          }
-        }
-      } else {
-        # If Elo column doesn't exist, create default Elo_Pct
-        log_info(paste("Creating default", elo_pct_col, "(missing", elo_col, ")"))
-        result_df[[elo_pct_col]] <- 0.5
-      }
-    }
   } else {
     # For individual races, use the original approach
     base_df <- startlist %>%
@@ -1422,82 +1387,47 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       left_join(recent_points, by = "Skier")
   }
   
-  # For both team and individual: create Elo and Pelo percentage columns
-  # Determine which Elo columns to work with
+  # For both team and individual: create Pelo percentage columns
+  # Ensure we have all the required Pelo_Pct columns for model prediction
   if(is_team) {
-    elo_columns_to_process <- c("Avg_Sprint_Elo", "Avg_Individual_Elo", "Avg_MassStart_Elo", "Avg_IndividualCompact_Elo", "Avg_Elo")
-    pelo_columns_to_process <- c("Avg_Sprint_Pelo", "Avg_Individual_Pelo", "Avg_MassStart_Pelo", "Avg_IndividualCompact_Pelo", "Avg_Pelo")
+    elo_cols <- c("Avg_Sprint_Elo", "Avg_Individual_Elo", "Avg_MassStart_Elo", "Avg_IndividualCompact_Elo", "Avg_Elo")
+    pelo_cols <- c("Avg_Sprint_Pelo", "Avg_Individual_Pelo", "Avg_MassStart_Pelo", "Avg_IndividualCompact_Pelo", "Avg_Pelo")
   } else {
-    elo_columns_to_process <- c("Sprint_Elo", "Individual_Elo", "MassStart_Elo", "IndividualCompact_Elo", "Elo")
-    pelo_columns_to_process <- c("Sprint_Pelo", "Individual_Pelo", "MassStart_Pelo", "IndividualCompact_Pelo", "Pelo")
+    elo_cols <- c("Sprint_Elo", "Individual_Elo", "MassStart_Elo", "IndividualCompact_Elo", "Elo")
+    pelo_cols <- c("Sprint_Pelo", "Individual_Pelo", "MassStart_Pelo", "IndividualCompact_Pelo", "Pelo")
   }
   
-  # Create percentage columns for each Elo column
-  for(col in elo_columns_to_process) {
-    pct_col <- paste0(col, "_Pct")
+  for(i in seq_along(pelo_cols)) {
+    pelo_pct_col <- paste0(pelo_cols[i], "_Pct")
     
-    if(col %in% names(result_df)) {
+    # First check if we have the corresponding Elo column to map from
+    elo_col <- elo_cols[i]
+    if(elo_col %in% names(result_df)) {
       # If we have race_df with this column, get max values for normalization
-      if(col %in% names(race_df)) {
-        max_val <- max(race_df[[col]], na.rm = TRUE)
+      if(elo_col %in% names(race_df)) {
+        max_val <- max(race_df[[elo_col]], na.rm = TRUE)
         if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Calculating", pct_col, "from", col))
-          result_df[[pct_col]] <- result_df[[col]] / max_val
+          log_info(paste("Calculating", pelo_pct_col, "from", elo_col))
+          result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
         } else {
-          log_info(paste("Using default value for", pct_col, "(max value issue)"))
-          result_df[[pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
+          log_info(paste("Using default value for", pelo_pct_col, "(max value issue)"))
+          result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
         }
       } else {
         # If not available in race_df, normalize within the current dataset
-        max_val <- max(result_df[[col]], na.rm = TRUE)
-        if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Calculating", pct_col, "from", col, "(internal max)"))
-          result_df[[pct_col]] <- result_df[[col]] / max_val
-        } else {
-          log_info(paste("Using default value for", pct_col, "(internal max issue)"))
-          result_df[[pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
-        }
-      }
-    } else if(!pct_col %in% names(result_df)) {
-      # If we don't have the Elo column and the PCT doesn't exist yet
-      log_info(paste("Creating missing Elo Pct column:", pct_col))
-      result_df[[pct_col]] <- 0.5  # Default to 0.5 (middle value)
-    }
-  }
-  
-  # CRITICAL: Create Elo_Pct columns from Elo values for model prediction
-  # Models are trained on Pelo data (named as Elo_Pct) but we predict using Elo data from startlist
-  for(i in seq_along(elo_columns_to_process)) {
-    elo_col <- elo_columns_to_process[i]
-    pelo_col <- pelo_columns_to_process[i]  # corresponding Pelo column name
-    elo_pct_col <- paste0(str_replace(elo_col, "_Elo", "_Elo"), "_Pct")
-    
-    if(elo_col %in% names(result_df)) {
-      # Get max value for normalization from race_df (historical Pelo data if available)
-      if(pelo_col %in% names(race_df)) {
-        max_val <- max(race_df[[pelo_col]], na.rm = TRUE)
-        if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Converting", elo_col, "to", elo_pct_col, "using max Pelo =", max_val))
-          result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
-        } else {
-          log_warn(paste("No valid max value for", pelo_col, "using default"))
-          result_df[[elo_pct_col]] <- 0.5
-        }
-      } else {
-        # Fallback: normalize within current Elo data
         max_val <- max(result_df[[elo_col]], na.rm = TRUE)
         if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Converting", elo_col, "to", elo_pct_col, "using internal max =", max_val))
-          result_df[[elo_pct_col]] <- result_df[[elo_col]] / max_val
+          log_info(paste("Calculating", pelo_pct_col, "from", elo_col, "(internal max)"))
+          result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
         } else {
-          log_warn(paste("No valid data for", elo_col, "using default"))
-          result_df[[elo_pct_col]] <- 0.5
+          log_info(paste("Using default value for", pelo_pct_col, "(internal max issue)"))
+          result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
         }
       }
-    } else {
-      # If Elo column doesn't exist, create default Elo_Pct
-      log_info(paste("Creating default", elo_pct_col, "(missing", elo_col, ")"))
-      result_df[[elo_pct_col]] <- 0.5
+    } else if(!pelo_pct_col %in% names(result_df)) {
+      # If we don't have the Elo column and the PCT doesn't exist yet
+      log_info(paste("Creating missing Pelo Pct column:", pelo_pct_col))
+      result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
     }
   }
   
@@ -1764,7 +1694,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
       mutate(Date = as.Date(Date)) %>%
       preprocess_data(is_team = is_team)
   }
-  
+
   # For debugging
   log_info(paste("Chronological data dimensions:", nrow(df), "x", ncol(df)))
   log_info(paste("First few columns:", paste(names(df)[1:min(10, length(names(df)))], collapse=", ")))
@@ -1847,7 +1777,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
         elo_col <- "Elo_Pct"
       }
     }
-    
+
     # Filter for top performers and add previous points
     race_df_75 <- race_df %>%
       filter(get(elo_col) > 0.75) %>%
@@ -1855,25 +1785,49 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
       arrange(Season, Race) %>%
       ungroup()
     
+    # Debug: Check if we have enough data
+    log_info(paste("race_df_75 has", nrow(race_df_75), "rows after filtering"))
+    
+
+
+    
     # Feature selection and model fitting for points prediction
     response_variable <- "Points"
     
     # Define explanatory variables based on race type
     if(is_team) {
-      explanatory_vars <- c("Avg_Sprint_Elo_Pct", "Avg_Individual_Elo_Pct", 
-                            "Avg_MassStart_Elo_Pct", "Avg_IndividualCompact_Elo_Pct", 
-                            "Avg_Elo_Pct")
+      explanatory_vars <- c("Avg_Sprint_Pelo_Pct", "Avg_Individual_Pelo_Pct", 
+                            "Avg_MassStart_Pelo_Pct", "Avg_IndividualCompact_Pelo_Pct", 
+                            "Avg_Pelo_Pct")
     } else {
       explanatory_vars <- c("Prev_Points_Weighted", 
-                            "Sprint_Elo_Pct", "Individual_Elo_Pct", 
-                            "MassStart_Elo_Pct", "IndividualCompact_Elo_Pct", 
-                            "Elo_Pct")#, "Period", "Elevation_Flag")
+                            "Sprint_Pelo_Pct", "Individual_Pelo_Pct", 
+                            "MassStart_Pelo_Pct", "IndividualCompact_Pelo_Pct", 
+                            "Pelo_Pct")#, "Period", "Elevation_Flag")
     }
     
     # Apply quartile imputation to the selected explanatory variables
     for(var in explanatory_vars) {
       if(var %in% names(race_df_75)) {
         race_df_75[[var]] <- replace_na_with_quartile(race_df_75[[var]])
+      }
+    }
+    
+    # Additional data validation before model fitting
+    # Remove rows with NA Points (response variable)
+    race_df_75 <- race_df_75 %>% filter(!is.na(Points))
+    log_info(paste("After removing NA Points:", nrow(race_df_75), "rows remain"))
+    
+    # Check if we have enough complete cases for the explanatory variables
+    complete_cases <- race_df_75[complete.cases(race_df_75[explanatory_vars]), ]
+    log_info(paste("Complete cases for explanatory variables:", nrow(complete_cases)))
+    
+    # If we don't have enough complete cases, use a minimal variable set
+    if(nrow(complete_cases) < 10) {
+      log_warn("Insufficient complete cases, using minimal variable set")
+      explanatory_vars <- c(elo_col)
+      if(!elo_col %in% names(race_df_75)) {
+        explanatory_vars <- c("Elo_Pct")  # fallback to basic Elo_Pct
       }
     }
     
