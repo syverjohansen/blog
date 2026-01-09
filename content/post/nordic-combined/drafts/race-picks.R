@@ -1053,11 +1053,13 @@ preprocess_data <- function(df, is_team = FALSE) {
     })) %>%
     ungroup()
   
-  # For training, use Pelo columns (pre-race ELO) but name them as Elo_Pct for consistency
+  # Define both Pelo columns (pre-race ELO) and Elo columns (post-race ELO)
   if(is_team) {
     pelo_cols <- c("Avg_Sprint_Pelo", "Avg_Individual_Pelo", "Avg_MassStart_Pelo", "Avg_IndividualCompact_Pelo", "Avg_Pelo")
+    elo_cols <- c("Avg_Sprint_Elo", "Avg_Individual_Elo", "Avg_MassStart_Elo", "Avg_IndividualCompact_Elo", "Avg_Elo")
   } else {
     pelo_cols <- c("Sprint_Pelo", "Individual_Pelo", "MassStart_Pelo", "IndividualCompact_Pelo", "Pelo")
+    elo_cols <- c("Sprint_Elo", "Individual_Elo", "MassStart_Elo", "IndividualCompact_Elo", "Elo")
   }
   
   # Make sure Pelo columns exist (create if missing)
@@ -1101,7 +1103,19 @@ preprocess_data <- function(df, is_team = FALSE) {
         ~replace_na_with_quartile(.x)
       )
     ) %>%
-    # Calculate percentages for each Pelo column but name as Elo_Pct for consistency
+    # Calculate Elo_Pct columns from Elo columns grouped by Season, Race
+    mutate(
+      across(
+        all_of(elo_cols),
+        ~{
+          max_val <- max(.x, na.rm = TRUE)
+          if (max_val == 0) return(rep(0, length(.x)))
+          .x / max_val
+        },
+        .names = "{.col}_Pct"
+      )
+    ) %>%
+    # Calculate Pelo_Pct columns from Pelo columns grouped by Season, Race
     mutate(
       across(
         all_of(pelo_cols),
@@ -1110,7 +1124,7 @@ preprocess_data <- function(df, is_team = FALSE) {
           if (max_val == 0) return(rep(0, length(.x)))
           .x / max_val
         },
-        .names = "{str_replace(.col, 'Pelo', 'Elo')}_Pct"
+        .names = "{.col}_Pct"
       )
     ) %>%
     ungroup()
@@ -1431,6 +1445,18 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
     }
   }
   
+  # Also create Elo_Pct columns as aliases of Pelo_Pct columns for model compatibility
+  # Some models might have been trained with Elo_Pct column names
+  for(i in seq_along(pelo_cols)) {
+    pelo_pct_col <- paste0(pelo_cols[i], "_Pct")
+    elo_pct_col <- str_replace(pelo_pct_col, "Pelo_Pct", "Elo_Pct")
+    
+    if(pelo_pct_col %in% names(result_df)) {
+      result_df[[elo_pct_col]] <- result_df[[pelo_pct_col]]
+      log_info(paste("Created", elo_pct_col, "as alias of", pelo_pct_col))
+    }
+  }
+  
   # Replace NAs with first quartile
   result_df <- result_df %>%
     mutate(
@@ -1455,7 +1481,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
   
   # Ensure result_df has all the columns needed by the model
   log_info(paste("Final columns in result_df:", paste(names(result_df), collapse=", ")))
-  
+
   return(result_df)
 }
 
@@ -1762,19 +1788,19 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
 
     # Get relevant Elo column based on race type
     if(is_team) {
-      # For team races, use general average ELO
-      elo_col <- "Avg_Elo_Pct"
+      # For team races, use general average PELO (pre-race ratings for training)
+      elo_col <- "Avg_Pelo_Pct"
     } else {
       if(races$racetype[i] == "Sprint") {
-        elo_col <- "Sprint_Elo_Pct"
+        elo_col <- "Sprint_Pelo_Pct"
       } else if(races$racetype[i] == "Individual") {
-        elo_col <- "Individual_Elo_Pct"
+        elo_col <- "Individual_Pelo_Pct"
       } else if(races$racetype[i] == "MassStart") {
-        elo_col <- "MassStart_Elo_Pct"
+        elo_col <- "MassStart_Pelo_Pct"
       } else if(races$racetype[i] == "Individual Compact") {
-        elo_col <- "IndividualCompact_Elo_Pct"
+        elo_col <- "IndividualCompact_Pelo_Pct"
       } else {
-        elo_col <- "Elo_Pct"
+        elo_col <- "Pelo_Pct"
       }
     }
 
@@ -1784,7 +1810,8 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
       group_by(!!sym(participant_col)) %>%
       arrange(Season, Race) %>%
       ungroup()
-    
+
+
     # Debug: Check if we have enough data
     log_info(paste("race_df_75 has", nrow(race_df_75), "rows after filtering"))
     
@@ -1817,7 +1844,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     # Remove rows with NA Points (response variable)
     race_df_75 <- race_df_75 %>% filter(!is.na(Points))
     log_info(paste("After removing NA Points:", nrow(race_df_75), "rows remain"))
-    
+
     # Check if we have enough complete cases for the explanatory variables
     complete_cases <- race_df_75[complete.cases(race_df_75[explanatory_vars]), ]
     log_info(paste("Complete cases for explanatory variables:", nrow(complete_cases)))
@@ -1966,12 +1993,24 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
           fallback_terms <- paste("s(", fallback_vars, ")", collapse=" + ")
           fallback_formula <- as.formula(paste("position_achieved ~", fallback_terms))
           
-          position_models[[paste0("threshold_", threshold)]] <- gam(
-            fallback_formula,
-            data = race_df,
-            family = binomial,
-            method = "REML"
-          )
+          log_info(paste("DEBUG: About to create GAM model for threshold", threshold))
+          log_info(paste("DEBUG: Formula:", as.character(fallback_formula)[2], "~", as.character(fallback_formula)[3]))
+          log_info(paste("DEBUG: Data dimensions:", nrow(race_df), "x", ncol(race_df)))
+          
+          tryCatch({
+            model_result <- gam(
+              fallback_formula,
+              data = race_df,
+              family = binomial,
+              method = "REML"
+            )
+            model_key <- paste0("threshold_", threshold)
+            position_models[[model_key]] <<- model_result  # Use <<- for proper assignment
+            log_info(paste("DEBUG: Successfully stored model for threshold", threshold, "with key", model_key))
+            log_info(paste("DEBUG: position_models now has length:", length(position_models)))
+          }, error = function(e) {
+            log_warn(paste("DEBUG: Failed to create GAM model for threshold", threshold, ":", e$message))
+          })
           
           # Create empty adjustments object since we can't calculate them for the fallback model
           empty_adjustments <- data.frame(x = unique(race_df[[participant_col]]))
@@ -1984,12 +2023,14 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
         } else {
           # Last resort fallback - just use the elo column
           fallback_formula <- as.formula(paste("position_achieved ~ s(", elo_col, ")"))
-          position_models[[paste0("threshold_", threshold)]] <- gam(
+          model_key <- paste0("threshold_", threshold)
+          position_models[[model_key]] <<- gam(
             fallback_formula,
             data = race_df,
             family = binomial,
             method = "REML"
           )
+          log_info(paste("DEBUG: Stored last resort model for threshold", threshold, "with key", model_key))
           
           # Create empty adjustments object
           empty_adjustments <- data.frame(x = unique(race_df[[participant_col]]))
@@ -2002,6 +2043,10 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
         }
       })
     }
+    
+    # DEBUG: Check position_models immediately after creation
+    log_info(paste("DEBUG: After model creation - position_models length:", length(position_models)))
+    log_info(paste("DEBUG: After model creation - position_models names:", paste(names(position_models), collapse=", ")))
     
     # Calculate adjustments for historical data step by step
     race_df_75 <- race_df_75 %>%
@@ -2112,7 +2157,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     
     # Prepare startlist data
     startlist_prepared <- prepare_startlist_data(startlist, race_df, elo_col, is_team = is_team)
-    
+
     # Ensure race probability column exists
     if(!(race_prob_col %in% names(startlist_prepared))) {
       log_warn(paste("Race probability column missing:", race_prob_col))
@@ -2147,12 +2192,18 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
     }
     
     # Make predictions for each threshold
+    log_info(paste("DEBUG: position_models exists?", exists("position_models")))
+    if(exists("position_models")) {
+      log_info(paste("DEBUG: position_models length:", length(position_models)))
+      log_info(paste("DEBUG: position_models names:", paste(names(position_models), collapse=", ")))
+    }
+    
     for(threshold in position_thresholds) {
       model_name <- paste0("threshold_", threshold)
       adj_name <- paste0("threshold_", threshold)
       prob_col <- paste0("prob_top", threshold)
       
-      if(model_name %in% names(position_models)) {
+      if(exists("position_models") && model_name %in% names(position_models)) {
         tryCatch({
           # Get the model
           pos_model <- position_models[[model_name]]
