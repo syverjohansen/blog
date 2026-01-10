@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Lindsey Vonn",
+      "USA",
+      37.4764002517306
+    ],
+    [
+      "Emma Aicher",
+      "GER",
+      36.3436123348018
+    ],
+    [
+      "Cornelia Hütter",
+      "AUT",
+      34.2668344870988
+    ],
+    [
+      "Sofia Goggia",
+      "ITA",
+      23.3165512901196
+    ],
+    [
+      "Kira Weidle-Winkelmann",
+      "GER",
+      20.9565764631844
+    ]
+  ]
+}
