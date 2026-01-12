@@ -147,7 +147,7 @@ At this time, normalization and monotonic constraints are not applied to points 
 
 #### Data Gathering
 
-Each day at midnight UTC, an automated Python scrape is performed on the IBU website to identify upcoming World Cup/World Championship/Olympic races.  When upcoming races are found, the startlist is scraped and saved.  Alpine skiing data collection focuses on individual events only, as team events are too new and infrequent to generate predictions for.  
+Each day at midnight UTC, an automated Python scrape is performed on the IBU website to identify upcoming World Cup/World Championship/Olympic races.  When upcoming races are found, the startlist is scraped and saved.  
 
 When official startlists aren't available (common due to weather delays and last-minute changes, IBU laziness), the system generates comprehensive mock startlists using all athletes who competed in the current season in order to maintain prediction capabilities.
 
@@ -635,13 +635,12 @@ Cross-country has the unique aspect of using the results to optimize a fantasy t
 
 #### Data Gathering
 
-Nordic Combined represents perhaps the most technically complex data gathering challenge because it's essentially two sports combined into one competition. Athletes compete in both ski jumping and cross-country skiing, with jumping results determining starting positions and time delays for the cross-country portion. This dual-sport nature required building systems that could capture both jumping and skiing performance data from FIS race results.
+Each day at midnight UTC, an automated Python scrape is performed on the FIS website to identify upcoming World Cup/World Championship/Olympic races.  When upcoming races are found, the startlist is scraped and saved.  
 
-The complexity multiplies when considering Nordic Combined's various event formats. Beyond individual competitions, the sport features team events, team sprints, and mixed team competitions, each with different team composition rules and scoring systems. I developed specialized processing pipelines that can automatically detect event types and route data appropriately - individual athlete data goes to individual prediction models, while team data gets aggregated at the nation level for team predictions.
+When official startlists aren't available (common due to weather delays and last-minute changes, FIS laziness), the system generates comprehensive mock startlists using all athletes who competed in the current season in order to maintain prediction capabilities.
 
-Data extraction for Nordic Combined required understanding the unique result formats used by FIS for combined events. Results pages include both jumping scores (distance, points, jump rank) and cross-country times (finish time, time behind leader), plus the complex calculations that convert jumping results into cross-country start time penalties. The system parses all these components to build comprehensive athlete performance profiles.
+In addition to the startlist roster, each skier is matched with historical skier data to get their most recent Elo scores for Overall, Sprint, Pursuit, Individual, and Mass Start.
 
-The challenge extended to mock startlist generation for Nordic Combined. Unlike pure cross-country or pure jumping events, creating realistic Nordic Combined startlists requires understanding which athletes actually compete in combined events (many top cross-country skiers never do Nordic Combined, and vice versa). I built historical participation tracking that identifies the actual Nordic Combined athlete pool, ensuring mock startlists reflect realistic competitive fields rather than including athletes who would never actually participate.
 
 #### Points
 
@@ -649,15 +648,15 @@ The challenge extended to mock startlist generation for Nordic Combined. Unlike 
 
 ###### Setup
 
-Nordic Combined training data setup handles one of the most unique challenges in winter sports: predicting performance in a sport that's actually two sports combined. Athletes must excel at both ski jumping and cross-country skiing, with jumping performance directly affecting cross-country starting positions through a complex time penalty system.
+The basis for our training dataset is to predict World Cup points for an upcoming race using historical Elo data and race performance data.  For this reason, we need to setup a dataframe that contains a column for Points, all the Elo data, and information about recent race performance.
 
-The training approach recognizes that Nordic Combined athletes are specialists in this specific dual-discipline format. Unlike pure ski jumpers or cross-country skiers, Nordic Combined athletes optimize their training for the unique demands of competing in both disciplines on the same day. This specialization means the system uses Nordic Combined-specific ELO ratings rather than trying to combine separate jumping and skiing ratings.
+The points column is created by mapping place to World Cup points for that place, so 1st place is 100, 2nd is 80, etc.
 
-The sport uses a standardized 40-position point system across all race formats (Individual, Sprint, Mass Start), which simplifies the training data setup compared to sports with varying point scales. However, the complexity comes from handling both individual and team events within the same framework. Team events require aggregating individual athlete performance to team-level metrics while preserving the dual-discipline performance characteristics.
+The Elo data is transformed so that the skier's elo prior to the race is turned into a percentage of the maximum elo for the participants in that race. This is so it is easier to predict results based on who is on the race vs an arbitrary elo score that is often subject to inflation throughout the course of the season.
 
-Training data spans 10 years and includes both elevation effects (venues above 1300m affect both jumping and skiing performance differently) and seasonal periodization. The system tracks race type-specific performance since Sprint Nordic Combined events have different tactical dynamics than longer Individual races, where jumping performance has more time to be overcome or extended during the skiing portion.
+Additionally, a column for weighted previous points is created that takes the last 5 points for a specific discipline (Sprint, Individual, Individual Compact, and Mass Start). So in a row for a Sprint result, the weighted previous points will have that skiers last five results weighted so the most recent has a weight of 5, the one before 4, etc. 
 
-The filtering focuses on athletes with ELO ratings above 75% of the race leader, but Nordic Combined's smaller competitive field means this includes a broader range of athletes compared to more popular sports. This ensures sufficient training data while maintaining focus on World Cup-level competition.
+Lastly, the training data is filtered to the last 10 seasons and missing values are imputed with the first quartile value for the given race. However, unlike the other sports the data is not filtered down to skiers who have an Elo percentage of 75% or greater, and missing values are imputed with the first quartile value for the given race.
 
 ###### Feature Selection
 

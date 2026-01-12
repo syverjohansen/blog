@@ -1,0 +1,439 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Nika Prevc",
+      426,
+      1,
+      1266,
+      1701
+    ],
+    [
+      "Nozomi Maruyama",
+      222,
+      2,
+      966,
+      1401
+    ],
+    [
+      "Lisa Eder",
+      337,
+      3,
+      819,
+      1254
+    ],
+    [
+      "Abigail Strate",
+      289,
+      4,
+      664,
+      1099
+    ],
+    [
+      "Anna Odine Strøm",
+      44,
+      5,
+      657,
+      1092
+    ],
+    [
+      "Selina Freitag",
+      338,
+      6,
+      618,
+      1053
+    ],
+    [
+      "Katharina Schmid",
+      13,
+      7,
+      529,
+      964
+    ],
+    [
+      "Nika Vodan",
+      266,
+      8,
+      483,
+      918
+    ],
+    [
+      "Agnes Reisch",
+      259,
+      9,
+      470,
+      905
+    ],
+    [
+      "Sara Takanashi",
+      3,
+      10,
+      446,
+      881
+    ],
+    [
+      "Heidi Dyhre Tråserud",
+      366,
+      11,
+      406,
+      841
+    ],
+    [
+      "Ping Zeng",
+      438,
+      12,
+      352,
+      787
+    ],
+    [
+      "Julia Mühlbacher",
+      400,
+      13,
+      343,
+      778
+    ],
+    [
+      "Yuka Seto",
+      32,
+      14,
+      307,
+      742
+    ],
+    [
+      "Eirin Maria Kvandal",
+      354,
+      15,
+      274,
+      709
+    ],
+    [
+      "Yuki Ito",
+      5,
+      16,
+      247,
+      682
+    ],
+    [
+      "Juliane Seyfarth",
+      63,
+      17,
+      237,
+      672
+    ],
+    [
+      "Silje Opseth",
+      221,
+      18,
+      171,
+      606
+    ],
+    [
+      "Ringo Miyajima",
+      427,
+      19,
+      158,
+      593
+    ],
+    [
+      "Jenny Rautionaho",
+      145,
+      20,
+      153,
+      588
+    ],
+    [
+      "Annika Sieff",
+      377,
+      21,
+      146,
+      581
+    ],
+    [
+      "Frida Westman",
+      296,
+      22,
+      142,
+      577
+    ],
+    [
+      "Anna Twardosz",
+      288,
+      23,
+      122,
+      557
+    ],
+    [
+      "Gyda Westvold Hansen",
+      382,
+      24,
+      120,
+      555
+    ],
+    [
+      "Anezka Indrackova",
+      437,
+      25,
+      105,
+      540
+    ],
+    [
+      "Sina Arnet",
+      448,
+      26,
+      97,
+      532
+    ],
+    [
+      "Annika Belshaw",
+      346,
+      27,
+      96,
+      531
+    ],
+    [
+      "Paige Jones",
+      365,
+      28,
+      76,
+      511
+    ],
+    [
+      "Ingvild Synnøve Midtskogen",
+      479,
+      28,
+      76,
+      511
+    ],
+    [
+      "Katra Komar",
+      284,
+      30,
+      74,
+      509
+    ],
+    [
+      "Josie Johnson",
+      446,
+      31,
+      73,
+      508
+    ],
+    [
+      "Klara Ulrichova",
+      388,
+      32,
+      70,
+      505
+    ],
+    [
+      "Yuzuki Sato",
+      480,
+      33,
+      58,
+      493
+    ],
+    [
+      "Bing Dong",
+      320,
+      34,
+      54,
+      489
+    ],
+    [
+      "Maja Kovacic",
+      511,
+      35,
+      53,
+      488
+    ],
+    [
+      "Minja Korhonen",
+      506,
+      36,
+      50,
+      485
+    ],
+    [
+      "Heta Hirvonen",
+      542,
+      37,
+      48,
+      483
+    ],
+    [
+      "Anna Rupprecht",
+      67,
+      37,
+      48,
+      483
+    ],
+    [
+      "Qi Liu",
+      62,
+      39,
+      46,
+      481
+    ],
+    [
+      "Josephine Pagnier",
+      280,
+      39,
+      46,
+      481
+    ],
+    [
+      "Nicole Maurer",
+      275,
+      41,
+      43,
+      478
+    ],
+    [
+      "Daniela Haralambie",
+      43,
+      42,
+      41,
+      476
+    ],
+    [
+      "Jerica Jesenko",
+      486,
+      43,
+      31,
+      466
+    ],
+    [
+      "Taja Terbovsek",
+      574,
+      44,
+      28,
+      463
+    ],
+    [
+      "Julia Kykkänen",
+      11,
+      45,
+      25,
+      460
+    ],
+    [
+      "Sofia Mattila",
+      441,
+      46,
+      23,
+      458
+    ],
+    [
+      "Kira Maria Kapustikova",
+      547,
+      47,
+      21,
+      456
+    ],
+    [
+      "Liangyao Wang",
+      418,
+      48,
+      19,
+      454
+    ],
+    [
+      "Pola Beltowska",
+      442,
+      49,
+      18,
+      453
+    ],
+    [
+      "Martina Zanitzer",
+      430,
+      50,
+      17,
+      452
+    ],
+    [
+      "Emely Torazza",
+      402,
+      51,
+      13,
+      448
+    ],
+    [
+      "Meghann Wadsak",
+      487,
+      52,
+      11,
+      446
+    ],
+    [
+      "Yangning Weng",
+      513,
+      53,
+      9,
+      444
+    ],
+    [
+      "Shiyu Zhou",
+      518,
+      54,
+      7,
+      442
+    ],
+    [
+      "Julia Aikia",
+      470,
+      55,
+      5,
+      440
+    ],
+    [
+      "Julina Kreibich",
+      545,
+      55,
+      5,
+      440
+    ],
+    [
+      "Sandra Sproch",
+      501,
+      55,
+      5,
+      440
+    ],
+    [
+      "Hannah Wiegele",
+      396,
+      58,
+      4,
+      439
+    ],
+    [
+      "Karina Kozlova",
+      577,
+      59,
+      3,
+      438
+    ],
+    [
+      "Tinkara Komar",
+      471,
+      60,
+      2,
+      437
+    ],
+    [
+      "Lisa Hirner",
+      375,
+      61,
+      1,
+      436
+    ]
+  ]
+}

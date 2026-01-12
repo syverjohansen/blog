@@ -144,4 +144,4 @@ for a in range(2):
 	with open(file_path, "w") as json_file:
 	    json.dump(json_data, json_file, indent=2)
 
-	print(json.dumps(json_data, indent=2))
+	#print(json.dumps(json_data, indent=2))

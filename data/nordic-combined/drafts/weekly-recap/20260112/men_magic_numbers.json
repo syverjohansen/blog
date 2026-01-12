@@ -13,112 +13,441 @@
       1469,
       1,
       747,
-      501
+      801
     ],
     [
       "Julian Schmid",
       1348,
       2,
       597,
-      351
+      651
     ],
     [
       "Thomas Rettenegger",
       1467,
       3,
       585,
-      339
+      639
     ],
     [
       "Jens Lurås Oftebro",
       1329,
       4,
       509,
-      263
+      563
     ],
     [
       "Ilkka Herola",
       97,
       5,
       490,
-      244
+      544
     ],
     [
       "Johannes Rydzek",
       14,
       6,
       488,
-      242
+      542
     ],
     [
       "Einar Lurås Oftebro",
       1217,
       7,
       476,
-      230
+      530
     ],
     [
       "Stefan Rettenegger",
       1775,
       8,
       429,
-      183
+      483
     ],
     [
       "Wendelin Thannheimer",
       1461,
       9,
       415,
-      169
+      469
     ],
     [
       "Vinzenz Geiger",
       1182,
       10,
       375,
-      129
+      429
     ],
     [
       "Franz-Josef Rehrl",
       72,
       11,
       348,
-      102
+      402
     ],
     [
       "Martin Fritz",
       1090,
       12,
       333,
-      87
+      387
     ],
     [
       "Andreas Skoglund",
       1449,
       13,
       306,
-      60
+      360
     ],
     [
       "Kristjan Ilves",
       403,
       14,
       295,
-      49
+      349
     ],
     [
       "Eero Hirvonen",
       1155,
       15,
       261,
-      15
+      315
     ],
     [
       "David Mach",
       1468,
       16,
       254,
-      8
+      308
+    ],
+    [
+      "Paul Walcher",
+      1988,
+      17,
+      220,
+      274
+    ],
+    [
+      "Ryota Yamamoto",
+      1154,
+      18,
+      207,
+      261
+    ],
+    [
+      "Richard Stenzel",
+      2351,
+      19,
+      199,
+      253
+    ],
+    [
+      "Laurent Muhlethaler",
+      1146,
+      20,
+      184,
+      238
+    ],
+    [
+      "Lukas Greiderer",
+      1088,
+      21,
+      169,
+      223
+    ],
+    [
+      "Samuel Costa",
+      84,
+      22,
+      168,
+      222
+    ],
+    [
+      "Marco Heinis",
+      1903,
+      23,
+      161,
+      215
+    ],
+    [
+      "Aleksander Skoglund",
+      1220,
+      24,
+      157,
+      211
+    ],
+    [
+      "Eidar Johan Strøm",
+      2344,
+      25,
+      154,
+      208
+    ],
+    [
+      "Simon Mach",
+      1981,
+      26,
+      151,
+      205
+    ],
+    [
+      "Florian Kolb",
+      1982,
+      27,
+      146,
+      200
+    ],
+    [
+      "Espen Andersen",
+      345,
+      28,
+      138,
+      192
+    ],
+    [
+      "Fabio Obermeyr",
+      1777,
+      28,
+      138,
+      192
+    ],
+    [
+      "Akito Watabe",
+      3,
+      30,
+      122,
+      176
+    ],
+    [
+      "Jan Vytrval",
+      1239,
+      31,
+      121,
+      175
+    ],
+    [
+      "Niklas Malacinski",
+      1429,
+      32,
+      111,
+      165
+    ],
+    [
+      "Terence Weber",
+      1137,
+      33,
+      110,
+      164
+    ],
+    [
+      "Vid Vrhovnik",
+      1196,
+      34,
+      88,
+      142
+    ],
+    [
+      "Sora Yachi",
+      1774,
+      35,
+      87,
+      141
+    ],
+    [
+      "Jiri Konvalinka",
+      2037,
+      36,
+      69,
+      123
+    ],
+    [
+      "Aaron Kostner",
+      1193,
+      37,
+      56,
+      110
+    ],
+    [
+      "Ben Loomis",
+      1179,
+      38,
+      53,
+      107
+    ],
+    [
+      "Edgar Vallet",
+      1317,
+      39,
+      49,
+      103
+    ],
+    [
+      "Manuel Faißt",
+      36,
+      40,
+      42,
+      96
+    ],
+    [
+      "Kodai Kimura",
+      1459,
+      40,
+      42,
+      96
+    ],
+    [
+      "Alessandro Pittin",
+      8,
+      42,
+      39,
+      93
+    ],
+    [
+      "Jens Dahlseide Kvamme",
+      2364,
+      43,
+      38,
+      92
+    ],
+    [
+      "Yoshito Watabe",
+      32,
+      44,
+      37,
+      91
+    ],
+    [
+      "Atsushi Narita",
+      2388,
+      45,
+      35,
+      89
+    ],
+    [
+      "Mael Tyrode",
+      1318,
+      46,
+      32,
+      86
+    ],
+    [
+      "Andreas Gfrerer",
+      2378,
+      47,
+      31,
+      85
+    ],
+    [
+      "Mario Seidl",
+      88,
+      47,
+      31,
+      85
+    ],
+    [
+      "Herman Happonen",
+      2346,
+      49,
+      30,
+      84
+    ],
+    [
+      "Gael Blondeau",
+      1485,
+      50,
+      28,
+      82
+    ],
+    [
+      "Tristan Sommerfeldt",
+      1992,
+      51,
+      22,
+      76
+    ],
+    [
+      "Kasper Moen Flatla",
+      1230,
+      52,
+      19,
+      73
+    ],
+    [
+      "Pascal Müller",
+      1475,
+      53,
+      16,
+      70
+    ],
+    [
+      "Simen Tiller",
+      370,
+      54,
+      15,
+      69
+    ],
+    [
+      "Matteo Baud",
+      1765,
+      55,
+      12,
+      66
+    ],
+    [
+      "Jørgen Berget Storsveen",
+      2419,
+      55,
+      12,
+      66
+    ],
+    [
+      "Lukas Dolezal",
+      2060,
+      57,
+      9,
+      63
+    ],
+    [
+      "Eemeli Kurttila",
+      2455,
+      58,
+      8,
+      62
+    ],
+    [
+      "Gašper Brecl",
+      1295,
+      59,
+      7,
+      61
+    ],
+    [
+      "Erik Lynch",
+      372,
+      59,
+      7,
+      61
+    ],
+    [
+      "Henry Johnstone",
+      1432,
+      61,
+      6,
+      60
+    ],
+    [
+      "Jiawen Zhao",
+      1705,
+      62,
+      5,
+      59
+    ],
+    [
+      "Otto Niittykoski",
+      1347,
+      63,
+      2,
+      56
     ]
   ]
 }

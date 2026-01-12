@@ -1027,13 +1027,19 @@ calculate_remaining_races_nc <- function(races_file) {
   
   # Get current date in UTC
   today_utc <- as.Date(Sys.time(), tz = "UTC")
+  cat("Today's date (UTC):", as.character(today_utc), "\n")
+  
+  # Show all races with dates for debugging
+  cat("All races with dates:\n")
+  print(races %>% select(Date, Sex, RaceType, Championship) %>% head(10))
   
   # Filter for remaining races (excluding team events)
   remaining <- races %>%
     filter(Date >= today_utc, 
            Sex %in% c("M", "L"), Championship!=1,
            !RaceType %in% c("Team", "Team Sprint"))
-  
+  cat("Remaining races after filtering:\n")
+  print(remaining)
   # Initialize counts
   counts <- list(
     M = list(
@@ -1057,7 +1063,7 @@ calculate_remaining_races_nc <- function(races_file) {
       # Create race type categories
       race_category = case_when(
         RaceType == "Individual" ~ "Individual",
-        RaceType == "Individual Compact" ~ "Individual_Compact",
+        RaceType == "IndividualCompact" ~ "Individual_Compact",  # Fixed: no space in data
         RaceType == "Sprint" ~ "Sprint",
         RaceType == "Mass Start" ~ "Mass_Start",
         TRUE ~ "Other"
@@ -1085,8 +1091,16 @@ calculate_remaining_races_nc <- function(races_file) {
       if(category != "Other") {
         category_count <- sum(gender_races$race_category == category)
         counts[[gender]][[category]] <- counts[[gender]][[category]] + category_count
+        cat("  ", gender, category, ":", category_count, "\n")
       }
     }
+  }
+  
+  # Print final summary
+  cat("\nFinal counts:\n")
+  for(gender in c("M", "L")) {
+    total_gender <- sum(unlist(counts[[gender]]))
+    cat(gender, "total:", total_gender, "\n")
   }
   
   return(counts)
