@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Nika Prevc",
+      "SLO",
+      100.0
+    ],
+    [
+      "Selina Freitag",
+      "GER",
+      68.5714285714286
+    ],
+    [
+      "Ping Zeng",
+      "CHN",
+      46.0952380952381
+    ],
+    [
+      "Lisa Eder",
+      "AUT",
+      36.3809523809524
+    ],
+    [
+      "Katharina Schmid",
+      "GER",
+      27.8095238095238
+    ]
+  ]
+}
