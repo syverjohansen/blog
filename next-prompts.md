@@ -203,4 +203,10 @@ Edit `~/blog/daehl-e/content/post/methods/race-picks.md` one section at a time t
 - **Reader-friendly** - informative but accessible
 
 ### Current Progress:
-**Starting with**: Alpine → Individual → Data Gathering
+**Completed**:
+- ✅ Alpine → Individual (complete: Data Gathering, Points, Probability, Normalization and Monotonic Constraints)
+- ✅ Biathlon → Individual (complete: Data Gathering, Points, Probability, Normalization and Monotonic Constraints) 
+- ✅ Biathlon → Relay (complete: Data Gathering, Points, Probability, Normalization and Monotonic Constraints)
+- 🔄 Cross-Country → Individual → Fantasy (just completed)
+
+**Currently working on**: Cross-Country → Individual → Probability
