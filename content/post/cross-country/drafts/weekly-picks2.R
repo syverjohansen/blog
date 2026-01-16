@@ -395,17 +395,29 @@ if("Config_Nation" %in% names(startlist) && "In_Config" %in% names(startlist)) {
           # Calculate probabilities for all skiers
           for(j in 1:nrow(nation_skiers)) {
             skier <- nation_skiers$Skier[j]
-            startlist[startlist$Skier == skier, race_prob_col] <- 
+            # Check if probability is already preset (0 or 1 from config/startlist)
+            existing_prob <- startlist[startlist$Skier == skier, race_prob_col]
+            if(!is.na(existing_prob) && existing_prob %in% c(0, 1)) {
+              log_debug(paste("Using preset probability", existing_prob, "for", skier))
+              next  # Skip calculation, keep preset value
+            }
+            startlist[startlist$Skier == skier, race_prob_col] <-
               get_race_probability(chronos, skier, races$distance[i], races$technique[i])
           }
         } else {
           # For non-config nations, get all active skiers
           additional_skiers <- get_additional_nation_skiers(chronos, startlist, nation)
-          
+
           # Calculate probabilities for startlist skiers
           for(j in 1:nrow(nation_skiers)) {
             skier <- nation_skiers$Skier[j]
-            startlist[startlist$Skier == skier, race_prob_col] <- 
+            # Check if probability is already preset (0 or 1 from config/startlist)
+            existing_prob <- startlist[startlist$Skier == skier, race_prob_col]
+            if(!is.na(existing_prob) && existing_prob %in% c(0, 1)) {
+              log_debug(paste("Using preset probability", existing_prob, "for", skier))
+              next  # Skip calculation, keep preset value
+            }
+            startlist[startlist$Skier == skier, race_prob_col] <-
               get_race_probability(chronos, skier, races$distance[i], races$technique[i])
           }
           
