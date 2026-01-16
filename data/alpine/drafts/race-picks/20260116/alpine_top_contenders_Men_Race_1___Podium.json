@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Marco Odermatt",
+      "SUI",
+      74.4525547445256
+    ],
+    [
+      "Franjo Von Allmen",
+      "SUI",
+      30.9002433090024
+    ],
+    [
+      "Vincent Kriechmayr",
+      "AUT",
+      27.6155717761557
+    ],
+    [
+      "Dominik Paris",
+      "ITA",
+      21.8978102189781
+    ],
+    [
+      "Alexis Monney",
+      "SUI",
+      17.8832116788321
+    ]
+  ]
+}

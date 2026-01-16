@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Jan Hörl",
+      "AUT",
+      42.4851848159594
+    ],
+    [
+      "Domen Prevc",
+      "SLO",
+      39.829860764962
+    ],
+    [
+      "Daniel Tschofenig",
+      "AUT",
+      37.1745367139645
+    ],
+    [
+      "Anze Lanisek",
+      "SLO",
+      31.9660164600849
+    ],
+    [
+      "Ryoyu Kobayashi",
+      "JPN",
+      30.7404822827014
+    ]
+  ]
+}
