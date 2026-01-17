@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jonna Sundling",
+      1486,
+      "L",
+      "Sweden",
+      11744,
+      88.5930090258422
+    ],
+    [
+      "Coletta Rydzek",
+      3254,
+      "L",
+      "Germany",
+      1286,
+      83.7386806066619
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      "L",
+      "Sweden",
+      7155,
+      83.7351830433084
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      3525,
+      78.9018185592032
+    ],
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      17227,
+      62.4394625916567
+    ],
+    [
+      "Julie Myhre",
+      1841,
+      "L",
+      "Norway",
+      590,
+      58.8794250258756
+    ],
+    [
+      "Laura Gimmler",
+      1495,
+      "L",
+      "Germany",
+      1048,
+      57.8883877025383
+    ],
+    [
+      "Moa Lundgren",
+      3211,
+      "L",
+      "Sweden",
+      827,
+      53.8355009936245
+    ],
+    [
+      "Lars Heggen",
+      19104,
+      "M",
+      "Norway",
+      6277,
+      73.4714701416547
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "M",
+      "Italy",
+      9471,
+      70.6183580404023
+    ],
+    [
+      "Valerio Grond",
+      12164,
+      "M",
+      "Switzerland",
+      924,
+      66.1003977834965
+    ],
+    [
+      "Håvard Moseby",
+      6103,
+      "M",
+      "Norway",
+      221,
+      63.2505938623422
+    ],
+    [
+      "Janik Riebli",
+      7725,
+      "M",
+      "Switzerland",
+      421,
+      57.7928298222757
+    ],
+    [
+      "Jack Young",
+      14687,
+      "M",
+      "USA",
+      308,
+      45.7452127314811
+    ],
+    [
+      "Lauri Vuorinen",
+      2874,
+      "M",
+      "Finland",
+      1388,
+      44.2386782847759
+    ],
+    [
+      "Even Northug",
+      3590,
+      "M",
+      "Norway",
+      1545,
+      43.727473709086
+    ]
+  ]
+}
