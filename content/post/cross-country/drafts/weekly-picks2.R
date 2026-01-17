@@ -334,22 +334,25 @@ if("Config_Nation" %in% names(startlist) && "In_Config" %in% names(startlist)) {
   if(!is.logical(startlist$In_Config)) {
     startlist$In_Config <- as.logical(startlist$In_Config)
   }
-  
-  # Now use the logical columns
-  config_non_included <- which(startlist$Config_Nation & !startlist$In_Config)
+  if("In_FIS_List" %in% names(startlist) && !is.logical(startlist$In_FIS_List)) {
+    startlist$In_FIS_List <- as.logical(startlist$In_FIS_List)
+  }
+
+  # Set prob=0 for config nation skiers NOT in config AND NOT in FIS list
+  # These are athletes from major nations who aren't confirmed to race
+  in_fis_list <- if("In_FIS_List" %in% names(startlist)) startlist$In_FIS_List else FALSE
+  config_non_included <- which(startlist$Config_Nation & !startlist$In_Config & !in_fis_list)
   if(length(config_non_included) > 0) {
-    # For these skiers, ensure all race probability columns are set to 0
     for(i in 1:nrow(races)) {
       race_prob_col <- paste0("Race", i, "_Prob")
       if(race_prob_col %in% names(startlist)) {
         startlist[config_non_included, race_prob_col] <- 0
       } else {
-        # Create column if it doesn't exist
         startlist[[race_prob_col]] <- NA
         startlist[config_non_included, race_prob_col] <- 0
       }
     }
-    log_info(paste("Set race probabilities to 0 for", length(config_non_included), 
+    log_info(paste("Set race probabilities to 0 for", length(config_non_included),
                   "skiers from config nations not in configuration"))
   }
 }
@@ -395,11 +398,28 @@ if("Config_Nation" %in% names(startlist) && "In_Config" %in% names(startlist)) {
           # Calculate probabilities for all skiers
           for(j in 1:nrow(nation_skiers)) {
             skier <- nation_skiers$Skier[j]
-            # Check if probability is already preset (0 or 1 from config/startlist)
+            # Check if probability is already preset from confirmed source
             existing_prob <- startlist[startlist$Skier == skier, race_prob_col]
-            if(!is.na(existing_prob) && existing_prob %in% c(0, 1)) {
-              log_debug(paste("Using preset probability", existing_prob, "for", skier))
-              next  # Skip calculation, keep preset value
+            skier_in_fis <- startlist[startlist$Skier == skier, "In_FIS_List"]
+            skier_in_config <- startlist[startlist$Skier == skier, "In_Config"]
+            skier_config_nation <- startlist[startlist$Skier == skier, "Config_Nation"]
+
+            # Preserve prob==1 (confirmed racing via FIS or config yes list)
+            if(!is.na(existing_prob) && existing_prob == 1) {
+              log_debug(paste("Using preset probability 1 for", skier))
+              next
+            }
+            # Preserve prob==0 only for config nation athletes not in config
+            # (these were explicitly set to 0 and should not race)
+            # Also preserve if In_Config with explicit no list (prob==0)
+            if(!is.na(existing_prob) && existing_prob == 0 &&
+               (isTRUE(skier_config_nation) && !isTRUE(skier_in_config) && !isTRUE(skier_in_fis))) {
+              log_debug(paste("Using preset probability 0 (config nation not in config) for", skier))
+              next
+            }
+            if(!is.na(existing_prob) && existing_prob == 0 && isTRUE(skier_in_config)) {
+              log_debug(paste("Using preset probability 0 (explicit config no list) for", skier))
+              next
             }
             startlist[startlist$Skier == skier, race_prob_col] <-
               get_race_probability(chronos, skier, races$distance[i], races$technique[i])
@@ -411,11 +431,28 @@ if("Config_Nation" %in% names(startlist) && "In_Config" %in% names(startlist)) {
           # Calculate probabilities for startlist skiers
           for(j in 1:nrow(nation_skiers)) {
             skier <- nation_skiers$Skier[j]
-            # Check if probability is already preset (0 or 1 from config/startlist)
+            # Check if probability is already preset from confirmed source
             existing_prob <- startlist[startlist$Skier == skier, race_prob_col]
-            if(!is.na(existing_prob) && existing_prob %in% c(0, 1)) {
-              log_debug(paste("Using preset probability", existing_prob, "for", skier))
-              next  # Skip calculation, keep preset value
+            skier_in_fis <- startlist[startlist$Skier == skier, "In_FIS_List"]
+            skier_in_config <- startlist[startlist$Skier == skier, "In_Config"]
+            skier_config_nation <- startlist[startlist$Skier == skier, "Config_Nation"]
+
+            # Preserve prob==1 (confirmed racing via FIS or config yes list)
+            if(!is.na(existing_prob) && existing_prob == 1) {
+              log_debug(paste("Using preset probability 1 for", skier))
+              next
+            }
+            # Preserve prob==0 only for config nation athletes not in config
+            # (these were explicitly set to 0 and should not race)
+            # Also preserve if In_Config with explicit no list (prob==0)
+            if(!is.na(existing_prob) && existing_prob == 0 &&
+               (isTRUE(skier_config_nation) && !isTRUE(skier_in_config) && !isTRUE(skier_in_fis))) {
+              log_debug(paste("Using preset probability 0 (config nation not in config) for", skier))
+              next
+            }
+            if(!is.na(existing_prob) && existing_prob == 0 && isTRUE(skier_in_config)) {
+              log_debug(paste("Using preset probability 0 (explicit config no list) for", skier))
+              next
             }
             startlist[startlist$Skier == skier, race_prob_col] <-
               get_race_probability(chronos, skier, races$distance[i], races$technique[i])
