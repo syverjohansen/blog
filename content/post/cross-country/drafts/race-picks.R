@@ -393,13 +393,26 @@ preprocess_data <- function(df) {
 
 # Function to prepare startlist data with ELO information
 prepare_startlist_data <- function(startlist, race_df, pelo_col, gender) {
+
   log_info(paste("Preparing startlist data for", pelo_col))
   startlist$Sex <- ifelse(gender == "men", "M", "L")
  
-  # Keep only essential columns from startlist (including race probability columns)
+  # Get all required Elo columns and their corresponding Pelo names
+  elo_cols <- c("Distance_Elo", "Distance_C_Elo", "Distance_F_Elo",
+                "Elo", "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo",
+                "Freestyle_Elo", "Classic_Elo")
+
+  pelo_cols <- c("Distance_Pelo", "Distance_C_Pelo", "Distance_F_Pelo",
+                 "Pelo", "Sprint_Pelo", "Sprint_C_Pelo", "Sprint_F_Pelo",
+                 "Freestyle_Pelo", "Classic_Pelo")
+
+  # Keep essential columns from startlist including Elo columns (already from chrono_pred via Python)
+  available_elo_cols <- intersect(elo_cols, names(startlist))
+  log_info(paste("Using Elo columns from startlist:", paste(available_elo_cols, collapse=", ")))
+
   base_df <- startlist %>%
-    dplyr::select(Skier, ID, Nation, Price, Sex, matches("^Race\\d+_Prob$"))
-  
+    dplyr::select(Skier, ID, Nation, Price, Sex, matches("^Race\\d+_Prob$"), any_of(elo_cols))
+
   # Filter out athletes with zero race probability at the very beginning
   race_prob_cols <- grep("^Race\\d+_Prob$", names(base_df), value = TRUE)
   if(length(race_prob_cols) > 0) {
@@ -410,25 +423,7 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col, gender) {
     final_count <- nrow(base_df)
     log_info(paste("Filtered startlist from", initial_count, "to", final_count, "athletes with race probability > 0"))
   }
-  
-  # Get all required Elo columns and their corresponding Pelo names
-  elo_cols <- c("Distance_Elo", "Distance_C_Elo", "Distance_F_Elo",
-                "Elo", "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo",
-                "Freestyle_Elo", "Classic_Elo")
-  
-  pelo_cols <- c("Distance_Pelo", "Distance_C_Pelo", "Distance_F_Pelo",
-                 "Pelo", "Sprint_Pelo", "Sprint_C_Pelo", "Sprint_F_Pelo",
-                 "Freestyle_Pelo", "Classic_Pelo")
-  
-  # Get most recent Elo values
-  most_recent_elos <- race_df %>%
-    filter(Skier %in% base_df$Skier) %>%
-    group_by(Skier) %>%
-    arrange(Date, Season, Race) %>%
-    slice_tail(n = 1) %>%
-    ungroup() %>%
-    dplyr::select(Skier, any_of(elo_cols))
-  
+
   # Get recent points for specific race type
   recent_points <- race_df %>%
     filter(Skier %in% base_df$Skier) %>%
@@ -450,9 +445,8 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col, gender) {
       else 0
     )
   
-  # Combine all data
+  # Combine all data (Elos already in base_df from startlist, just add points)
   result_df <- base_df %>%
-    left_join(most_recent_elos, by = "Skier") %>%
     left_join(recent_points, by = "Skier")
   
   # Ensure we have all the required Pelo_Pct columns for model prediction

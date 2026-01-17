@@ -946,23 +946,34 @@ has_valid_fis_entries <- function(individuals_df) {
 }
 
 # Function to prepare current skier data for prediction
-prepare_current_skiers <- function(chrono_data, current_season) {
+prepare_current_skiers <- function(chrono_data, current_season, startlist_individuals = NULL) {
   log_info("Preparing current skier data for mixed relay")
-  
+
   # Get all skiers from current season
   current_skiers <- chrono_data$combined_chrono %>%
     filter(Season == current_season) %>%
     select(ID, Skier, Nation, Sex) %>%
     distinct()
-  
-  # Get latest Elo values for these skiers
-  latest_elo <- chrono_data$combined_chrono %>%
-    filter(ID %in% current_skiers$ID) %>%
-    group_by(ID) %>%
-    arrange(desc(Season), desc(Race)) %>%
-    dplyr::slice(1) %>%
-    select(ID, ends_with("Elo"), Sex) %>%
-    ungroup()
+
+  # Get latest Elo values - prefer startlist (from chrono_pred), fallback to chrono_data
+  if (!is.null(startlist_individuals) && any(grepl("Elo$", names(startlist_individuals)))) {
+    log_info("Using Elo values from startlist (chrono_pred source)")
+    elo_cols <- names(startlist_individuals)[grepl("Elo$", names(startlist_individuals))]
+    # For mixed relay, need to preserve Sex column
+    latest_elo <- startlist_individuals %>%
+      filter(ID %in% current_skiers$ID) %>%
+      select(ID, any_of(elo_cols), any_of("Sex")) %>%
+      distinct()
+  } else {
+    log_info("Falling back to chrono_data for Elo values")
+    latest_elo <- chrono_data$combined_chrono %>%
+      filter(ID %in% current_skiers$ID) %>%
+      group_by(ID) %>%
+      arrange(desc(Season), desc(Race)) %>%
+      dplyr::slice(1) %>%
+      select(ID, ends_with("Elo"), Sex) %>%
+      ungroup()
+  }
   
   # Get latest classic Weighted_Last_5 values
   discipline_data <- process_discipline_data(chrono_data$individuals)
@@ -1916,8 +1927,8 @@ run_mixed_relay_predictions <- function() {
   # Check if startlists have valid FIS entries
   has_fis <- has_valid_fis_entries(mixed_startlists$individuals)
   
-  # Prepare current skier data
-  current_skiers <- prepare_current_skiers(chrono_data, current_season)
+  # Prepare current skier data (pass startlist for Elo values from chrono_pred)
+  current_skiers <- prepare_current_skiers(chrono_data, current_season, mixed_startlists$individuals)
   
   
   # Get leg predictions

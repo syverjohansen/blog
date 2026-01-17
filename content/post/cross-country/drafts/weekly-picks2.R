@@ -717,45 +717,36 @@ combine_predictions <- function(race_dfs, startlist) {
 prepare_startlist_data <- function(startlist, race_df, pelo_col) {
     # Print some debug info
     log_info(paste("Preparing startlist data for", pelo_col))
-    
+
     # Dynamically get race probability columns - important to preserve these!
     race_prob_cols <- grep("^Race\\d+_Prob$", names(startlist), value = TRUE)
     log_info(paste("Race probability columns found:", paste(race_prob_cols, collapse=", ")))
-    
-    # Keep only essential columns from startlist
-    base_df <- startlist %>%
-        dplyr::select(Skier, ID, Nation, Sex, Price, all_of(race_prob_cols))
-    
+
     # Get all required Elo columns and their corresponding Pelo names
     elo_cols <- c("Distance_Elo", "Distance_C_Elo", "Distance_F_Elo",
                   "Elo", "Sprint_Elo", "Sprint_C_Elo", "Sprint_F_Elo",
                   "Freestyle_Elo", "Classic_Elo")
-    
+
     pelo_cols <- c("Distance_Pelo", "Distance_C_Pelo", "Distance_F_Pelo",
                    "Pelo", "Sprint_Pelo", "Sprint_C_Pelo", "Sprint_F_Pelo",
                    "Freestyle_Pelo", "Classic_Pelo")
-    
-    # Get most recent Elo values
-    most_recent_elos <- race_df %>%
-        filter(Skier %in% base_df$Skier) %>%
-        group_by(Skier) %>%
-        arrange(Date, Season, Race) %>%
-        slice_tail(n = 1) %>%
-        ungroup() %>%
-        dplyr::select(Skier, any_of(elo_cols))
-    
-    # Debug: Check elo columns
-    log_info(paste("Available elo columns:", paste(names(most_recent_elos), collapse=", ")))
-    
+
+    # Keep essential columns from startlist including Elo columns (already from chrono_pred via Python)
+    available_elo_cols <- intersect(elo_cols, names(startlist))
+    log_info(paste("Using Elo columns from startlist:", paste(available_elo_cols, collapse=", ")))
+
+    base_df <- startlist %>%
+        dplyr::select(Skier, ID, Nation, Sex, Price, all_of(race_prob_cols), any_of(elo_cols))
+
     # Get recent points for specific race type
     recent_points <- race_df %>%
         filter(Skier %in% base_df$Skier) %>%
         filter(
             if(grepl("^Sprint", pelo_col)) {
-                Distance == "Sprint" & 
+                Distance == "Sprint" &
                 Technique == substr(pelo_col, 8, 8)
             } else {
-                Distance != "Sprint" & 
+                Distance != "Sprint" &
                 (Technique == substr(pelo_col, 10, 10) | substr(pelo_col, 10, 10) == "")  # Allow empty technique
             }
         ) %>%
@@ -763,24 +754,13 @@ prepare_startlist_data <- function(startlist, race_df, pelo_col) {
         arrange(Season, Race) %>%
         slice_tail(n = 5) %>%
         summarise(
-            Prev_Points_Weighted = if(n() > 0) 
-                weighted.mean(Points, w = seq_len(n()), na.rm = TRUE) 
+            Prev_Points_Weighted = if(n() > 0)
+                weighted.mean(Points, w = seq_len(n()), na.rm = TRUE)
                 else 0
         )
-    # print(race_df  %>% filter(Skier=="Therese Johaug") %>% filter(
-    #         if(grepl("^Sprint", pelo_col)) {
-    #             Distance == "Sprint" & 
-    #             Technique == substr(pelo_col, 8, 8)
-    #         } else {
-    #             Distance != "Sprint" & 
-    #             (Technique == substr(pelo_col, 10, 10) | substr(pelo_col, 10, 10) == "")  # Allow empty technique
-    #         }
-    #     ))
-    # print(recent_points  %>% filter(Skier=="Therese Johaug"))
-    
-    # Combine all data
+
+    # Combine all data (Elos already in base_df from startlist, just add points)
     result_df <- base_df %>%
-        left_join(most_recent_elos, by = "Skier") %>%
         left_join(recent_points, by = "Skier")
     
     # Ensure we have all the required Pelo_Pct columns for model prediction

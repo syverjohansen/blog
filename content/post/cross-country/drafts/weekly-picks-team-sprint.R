@@ -904,29 +904,39 @@ has_valid_fis_entries <- function(individuals_df) {
 }
 
 # Function to prepare current skier data for prediction
-prepare_current_skiers <- function(chrono_data, current_season, technique, gender = "men") {
+prepare_current_skiers <- function(chrono_data, current_season, technique, gender = "men", startlist_individuals = NULL) {
   log_info(paste("Preparing current", gender, "skier data"))
-  
+
   # Use the appropriate gender data
   gender_prefix <- ifelse(gender == "men", "men", "ladies")
   print(gender_prefix)
   chrono_gender <- chrono_data[[paste0(gender_prefix, "_chrono")]]
   sprint_df <- chrono_data$processed[[gender_prefix]]
-  
+
   # Get all skiers from current season
   current_skiers <- chrono_gender %>%
     filter(Season == current_season) %>%
     select(ID, Skier, Nation) %>%
     distinct()
-  
-  # Get latest Elo values for these skiers
-  latest_elo <- chrono_gender %>%
-    filter(ID %in% current_skiers$ID) %>%
-    group_by(ID) %>%
-    arrange(desc(Season), desc(Race)) %>%
-    dplyr::slice(1) %>%
-    select(ID, ends_with("Elo")) %>%
-    ungroup()
+
+  # Get latest Elo values - prefer startlist (from chrono_pred), fallback to chrono_data
+  if (!is.null(startlist_individuals) && any(grepl("Elo$", names(startlist_individuals)))) {
+    log_info("Using Elo values from startlist (chrono_pred source)")
+    elo_cols <- names(startlist_individuals)[grepl("Elo$", names(startlist_individuals))]
+    latest_elo <- startlist_individuals %>%
+      filter(ID %in% current_skiers$ID) %>%
+      select(ID, any_of(elo_cols)) %>%
+      distinct()
+  } else {
+    log_info("Falling back to chrono_data for Elo values")
+    latest_elo <- chrono_gender %>%
+      filter(ID %in% current_skiers$ID) %>%
+      group_by(ID) %>%
+      arrange(desc(Season), desc(Race)) %>%
+      dplyr::slice(1) %>%
+      select(ID, ends_with("Elo")) %>%
+      ungroup()
+  }
   
   # Recalculate Weighted_Last_5 for classic sprint races
   sprint_last5 <- sprint_df$sprint %>%
@@ -1890,8 +1900,8 @@ run_team_sprint_predictions <- function() {
   # Check if startlists have valid FIS entries
   men_has_fis <- has_valid_fis_entries(men_startlists$individuals)
   
-  # Prepare current skier data
-  men_current <- prepare_current_skiers(chrono_data, current_season)
+  # Prepare current skier data (pass startlist for Elo values from chrono_pred)
+  men_current <- prepare_current_skiers(chrono_data, current_season, men_technique, "men", men_startlists$individuals)
   
   
   # Get leg predictions for all current skiers
@@ -1932,8 +1942,8 @@ run_team_sprint_predictions <- function() {
   # Check if startlists have valid FIS entries
   ladies_has_fis <- has_valid_fis_entries(ladies_startlists$individuals)
   
-  # Prepare current skier data
-  ladies_current <- prepare_current_skiers(chrono_data, current_season, ladies_technique, "ladies")
+  # Prepare current skier data (pass startlist for Elo values from chrono_pred)
+  ladies_current <- prepare_current_skiers(chrono_data, current_season, ladies_technique, "ladies", ladies_startlists$individuals)
   print(ladies_current)
   # Get leg predictions for all current skiers
   if(ladies_has_fis) {
