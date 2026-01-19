@@ -1,0 +1,117 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Johannes Lamparter",
+      1469,
+      1,
+      907,
+      601
+    ],
+    [
+      "Julian Schmid",
+      1348,
+      2,
+      723,
+      417
+    ],
+    [
+      "Jens Lurås Oftebro",
+      1329,
+      3,
+      709,
+      403
+    ],
+    [
+      "Thomas Rettenegger",
+      1467,
+      4,
+      686,
+      380
+    ],
+    [
+      "Einar Lurås Oftebro",
+      1217,
+      5,
+      646,
+      340
+    ],
+    [
+      "Johannes Rydzek",
+      14,
+      6,
+      600,
+      294
+    ],
+    [
+      "Ilkka Herola",
+      97,
+      7,
+      594,
+      288
+    ],
+    [
+      "Stefan Rettenegger",
+      1775,
+      8,
+      559,
+      253
+    ],
+    [
+      "Wendelin Thannheimer",
+      1461,
+      9,
+      481,
+      175
+    ],
+    [
+      "Vinzenz Geiger",
+      1182,
+      10,
+      433,
+      127
+    ],
+    [
+      "Franz-Josef Rehrl",
+      72,
+      11,
+      413,
+      107
+    ],
+    [
+      "Kristjan Ilves",
+      403,
+      12,
+      396,
+      90
+    ],
+    [
+      "Martin Fritz",
+      1090,
+      13,
+      376,
+      70
+    ],
+    [
+      "Andreas Skoglund",
+      1449,
+      14,
+      358,
+      52
+    ],
+    [
+      "Eero Hirvonen",
+      1155,
+      15,
+      325,
+      19
+    ]
+  ]
+}

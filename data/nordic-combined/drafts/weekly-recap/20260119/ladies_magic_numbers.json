@@ -1,0 +1,68 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Ida Marie Hagen",
+      60,
+      1,
+      890,
+      501
+    ],
+    [
+      "Alexa Brabec",
+      81,
+      2,
+      690,
+      301
+    ],
+    [
+      "Minja Korhonen",
+      200,
+      3,
+      679,
+      290
+    ],
+    [
+      "Nathalie Armbruster",
+      168,
+      4,
+      590,
+      201
+    ],
+    [
+      "Katharina Gruber",
+      219,
+      5,
+      532,
+      143
+    ],
+    [
+      "Yuna Kasai",
+      161,
+      6,
+      502,
+      113
+    ],
+    [
+      "Lisa-Marie Hirner",
+      52,
+      7,
+      435,
+      46
+    ],
+    [
+      "Marte Leinan Lund",
+      7,
+      8,
+      432,
+      43
+    ]
+  ]
+}
