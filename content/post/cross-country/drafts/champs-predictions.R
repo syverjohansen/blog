@@ -3503,30 +3503,30 @@ process_ts_races <- function() {
 log_info("=== CROSS-COUNTRY CHAMPIONSHIPS PREDICTIONS ===")
 
 # Process individual races
-#individual_results <- process_individual_races()
+individual_results <- process_individual_races()
 
 # Process relay races
-#relay_results <- process_relay_races()
+relay_results <- process_relay_races()
 
 # Extract trained relay models, leg importance, and prepared startlists
-# if (!is.null(relay_results)) {
-#   men_relay_models <- relay_results$men_models
-#   ladies_relay_models <- relay_results$ladies_models
-#   men_leg_importance <- relay_results$men_leg_importance
-#   ladies_leg_importance <- relay_results$ladies_leg_importance
-#   men_relay_startlist <- relay_results$men_relay_startlist
-#   ladies_relay_startlist <- relay_results$ladies_relay_startlist
-#   
-#   log_info("Relay models, leg importance weights, and startlists successfully prepared")
-# } else {
-#   log_warn("No relay models were trained")
-#   men_relay_models <- NULL
-#   ladies_relay_models <- NULL
-#   men_leg_importance <- rep(0.25, 4)  # Equal weights fallback
-#   ladies_leg_importance <- rep(0.25, 4)  # Equal weights fallback
-#   men_relay_startlist <- NULL
-#   ladies_relay_startlist <- NULL
-# }
+if (!is.null(relay_results)) {
+  men_relay_models <- relay_results$men_models
+  ladies_relay_models <- relay_results$ladies_models
+  men_leg_importance <- relay_results$men_leg_importance
+  ladies_leg_importance <- relay_results$ladies_leg_importance
+  men_relay_startlist <- relay_results$men_relay_startlist
+  ladies_relay_startlist <- relay_results$ladies_relay_startlist
+
+  log_info("Relay models, leg importance weights, and startlists successfully prepared")
+} else {
+  log_warn("No relay models were trained")
+  men_relay_models <- NULL
+  ladies_relay_models <- NULL
+  men_leg_importance <- rep(0.25, 4)  # Equal weights fallback
+  ladies_leg_importance <- rep(0.25, 4)  # Equal weights fallback
+  men_relay_startlist <- NULL
+  ladies_relay_startlist <- NULL
+}
 
 # Process team sprint races
 team_sprint_results <- process_ts_races()
