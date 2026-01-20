@@ -441,21 +441,16 @@ prepare_startlist_data <- function(startlist, race_df, elo_col) {
     })
   } else {
     # For individual races
-    base_df <- startlist %>%
-      dplyr::select(Skier, Nation, Price, all_of(race_prob_cols))
-    
     # For biathlon races - check if Elo columns exist
     elo_cols <- c("Individual_Elo", "Sprint_Elo", "Pursuit_Elo", "MassStart_Elo", "Elo")
-    
-    # Get most recent Elo values
-    most_recent_elos <- race_df %>%
-      filter(Skier %in% base_df$Skier) %>%
-      group_by(Skier) %>%
-      arrange(Date, Season, Race) %>%
-      slice_tail(n = 1) %>%
-      ungroup() %>%
-      dplyr::select(Skier, any_of(elo_cols))
-    
+
+    # Keep essential columns from startlist including Elo columns (already from chrono_pred via Python)
+    available_elo_cols <- intersect(elo_cols, names(startlist))
+    log_info(paste("Available Elo columns in startlist:", paste(available_elo_cols, collapse=", ")))
+
+    base_df <- startlist %>%
+      dplyr::select(Skier, Nation, Price, all_of(race_prob_cols), any_of(elo_cols))
+
     # Get recent points for individuals
     recent_points <- race_df %>%
       filter(Skier %in% base_df$Skier) %>%
@@ -463,15 +458,14 @@ prepare_startlist_data <- function(startlist, race_df, elo_col) {
       arrange(Season, Race) %>%
       slice_tail(n = 5) %>%
       summarise(
-        Prev_Points_Weighted = if(n() > 0) 
+        Prev_Points_Weighted = if(n() > 0)
           weighted.mean(Points, w = seq(n(), 1), na.rm = TRUE)  # Most recent gets highest weight
         else 0,
         .groups = 'drop'
       )
-    
-    # Combine individual data
+
+    # Combine individual data - Elos already in base_df from startlist, just add points
     result_df <- base_df %>%
-      left_join(most_recent_elos, by = "Skier") %>%
       left_join(recent_points, by = "Skier")
   }
   

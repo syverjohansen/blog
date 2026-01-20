@@ -481,6 +481,88 @@ log_message "  BLOG_DIR: $BLOG_DIR (exists: $([ -d "$BLOG_DIR" ] && echo "yes" |
 log_message "  SKI_DIR: $SKI_DIR (exists: $([ -d "$SKI_DIR" ] && echo "yes" || echo "no"))"
 log_message "  CONTENT_DIR: $CONTENT_DIR (exists: $([ -d "$CONTENT_DIR" ] && echo "yes" || echo "no"))"
 
+# ======================================
+# Phase 0: Run scrapes, ELO predictions, and chrono predictions
+# ======================================
+log_message "======================================="
+log_message "Running all_update_scrape for all sports"
+log_message "======================================="
+
+for sport_dir in alpine biathlon nordic-combined ski skijump; do
+    polars_dir="$SKI_DIR/$sport_dir/polars"
+    relay_dir="$polars_dir/relay"
+
+    # Run all_update_scrape.py
+    if [[ -f "$polars_dir/all_update_scrape.py" ]]; then
+        log_message "Running all_update_scrape.py for $sport_dir"
+        cd "$polars_dir" && source ~/blog/venv/bin/activate && python all_update_scrape.py >/dev/null 2>&1
+    fi
+
+    # For cross-country (ski), run russia_update_scrape.py and merge_scrape.py
+    if [[ "$sport_dir" == "ski" ]]; then
+        if [[ -f "$polars_dir/russia_update_scrape.py" ]]; then
+            log_message "Running russia_update_scrape.py for $sport_dir"
+            cd "$polars_dir" && source ~/blog/venv/bin/activate && python russia_update_scrape.py >/dev/null 2>&1
+        fi
+        if [[ -f "$polars_dir/merge_scrape.py" ]]; then
+            log_message "Running merge_scrape.py for $sport_dir"
+            cd "$polars_dir" && source ~/blog/venv/bin/activate && python merge_scrape.py >/dev/null 2>&1
+        fi
+    fi
+
+    # Run relay all_update_scrape.py (skip alpine - no relay)
+    if [[ "$sport_dir" != "alpine" && -f "$relay_dir/all_update_scrape.py" ]]; then
+        log_message "Running relay all_update_scrape.py for $sport_dir"
+        cd "$relay_dir" && source ~/blog/venv/bin/activate && python all_update_scrape.py >/dev/null 2>&1
+    fi
+done
+
+log_message "======================================="
+log_message "Running ELO predictions for all sports"
+log_message "======================================="
+
+for sport_dir in alpine biathlon nordic-combined ski skijump; do
+    polars_dir="$SKI_DIR/$sport_dir/polars"
+    relay_dir="$polars_dir/relay"
+
+    # Run elo_predict_script.sh
+    if [[ -f "$polars_dir/elo_predict_script.sh" ]]; then
+        log_message "Running elo_predict_script.sh for $sport_dir"
+        cd "$polars_dir" && ./elo_predict_script.sh >/dev/null 2>&1
+    fi
+
+    # Run relay elo_predict_script.sh (skip alpine - no relay)
+    if [[ "$sport_dir" != "alpine" && -f "$relay_dir/elo_predict_script.sh" ]]; then
+        log_message "Running relay elo_predict_script.sh for $sport_dir"
+        cd "$relay_dir" && ./elo_predict_script.sh >/dev/null 2>&1
+    fi
+done
+
+log_message "======================================="
+log_message "Running chrono predictions for all sports"
+log_message "======================================="
+
+for sport_dir in alpine biathlon nordic-combined ski skijump; do
+    polars_dir="$SKI_DIR/$sport_dir/polars"
+    relay_dir="$polars_dir/relay"
+
+    # Run chrono_predict.py
+    if [[ -f "$polars_dir/chrono_predict.py" ]]; then
+        log_message "Running chrono_predict.py for $sport_dir"
+        cd "$polars_dir" && source ~/blog/venv/bin/activate && python chrono_predict.py >/dev/null 2>&1
+    fi
+
+    # Run relay chrono_predict.py (skip alpine - no relay)
+    if [[ "$sport_dir" != "alpine" && -f "$relay_dir/chrono_predict.py" ]]; then
+        log_message "Running relay chrono_predict.py for $sport_dir"
+        cd "$relay_dir" && source ~/blog/venv/bin/activate && python chrono_predict.py >/dev/null 2>&1
+    fi
+done
+
+log_message "======================================="
+log_message "Scrapes and predictions complete"
+log_message "======================================="
+
 # Array to store sports with predictions
 sports_with_predictions=""
 
@@ -702,4 +784,38 @@ fi
 
 log_message "======================================="
 log_message "Prediction script completed successfully"
+log_message "======================================="
+
+# ======================================
+# Cleanup: Remove oversized prediction files
+# ======================================
+log_message "======================================="
+log_message "Cleaning up oversized prediction files"
+log_message "======================================="
+
+for sport_dir in alpine biathlon nordic-combined ski skijump; do
+    excel_dir="$SKI_DIR/$sport_dir/polars/excel365"
+    relay_excel_dir="$SKI_DIR/$sport_dir/polars/relay/excel365"
+
+    # Remove oversized files from main excel365 directory
+    if [[ -d "$excel_dir" ]]; then
+        log_message "Cleaning up $excel_dir"
+        rm -f "$excel_dir"/dyn_M*.csv "$excel_dir"/dyn_L*.csv
+        rm -f "$excel_dir"/pred_M*.csv "$excel_dir"/pred_L*.csv
+        rm -f "$excel_dir"/men_chrono_pred*.csv "$excel_dir"/ladies_chrono_pred*.csv
+        rm -f "$excel_dir"/men_chrono_dyn*.csv "$excel_dir"/ladies_chrono_dyn*.csv
+    fi
+
+    # Remove oversized files from relay excel365 directory (skip alpine - no relay)
+    if [[ "$sport_dir" != "alpine" && -d "$relay_excel_dir" ]]; then
+        log_message "Cleaning up $relay_excel_dir"
+        rm -f "$relay_excel_dir"/dyn_M*.csv "$relay_excel_dir"/dyn_L*.csv
+        rm -f "$relay_excel_dir"/pred_M*.csv "$relay_excel_dir"/pred_L*.csv
+        rm -f "$relay_excel_dir"/men_chrono_pred*.csv "$relay_excel_dir"/ladies_chrono_pred*.csv
+        rm -f "$relay_excel_dir"/men_chrono_dyn*.csv "$relay_excel_dir"/ladies_chrono_dyn*.csv
+    fi
+done
+
+log_message "======================================="
+log_message "Cleanup complete"
 log_message "======================================="
