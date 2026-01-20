@@ -287,10 +287,13 @@ format_position_results <- function(position_results, race_date, gender) {
   select_cols <- c("Skier", "ID", "Nation", "Sex", "Race", "Participation", "Win", "Podium", "Top5", "Top10", "Top30")
   
   formatted_results <- formatted_results[, select_cols]
-  
+
+  # Filter out rows where Participation is 0 (skiers not actually participating)
+  formatted_results <- formatted_results[formatted_results$Participation != 0, ]
+
   # Sort results by Race and Win
   formatted_results <- formatted_results[order(formatted_results$Race, -formatted_results$Win),]
-  
+
   race_folder <- format(race_date, "%Y%m%d")
   dir_path <- paste0(
     "~/blog/daehl-e/content/post/alpine/drafts/race-picks/", 
@@ -961,7 +964,15 @@ create_post_predictions <- function(final_predictions, n_races, gender) {
   # Make sure Sex is in the right position (after Nation)
   post_predictions <- post_predictions %>%
     select(Skier, ID, Nation, Sex, everything())
-  
+
+  # Filter out rows where total probability across all races is 0 (skiers not participating)
+  prob_cols <- paste0("Race", 1:n_races, "_Probability")
+  prob_cols <- prob_cols[prob_cols %in% names(post_predictions)]
+  if(length(prob_cols) > 0) {
+    post_predictions <- post_predictions %>%
+      filter(rowSums(select(., all_of(prob_cols)), na.rm = TRUE) > 0)
+  }
+
   # Arrange by total points
   post_predictions <- post_predictions %>%
     arrange(desc(Total_Points))

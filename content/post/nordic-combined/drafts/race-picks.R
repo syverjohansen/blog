@@ -834,10 +834,13 @@ format_position_results <- function(position_results, race_date, gender, is_team
   select_cols <- c(select_cols, "Race", "Participation", "Win", "Podium", "Top5", "Top10", "Top30")
   
   formatted_results <- formatted_results[, select_cols]
-  
+
+  # Filter out rows where Participation is 0 (skiers not actually participating)
+  formatted_results <- formatted_results[formatted_results$Participation != 0, ]
+
   # Sort results by Race and Win
   formatted_results <- formatted_results[order(formatted_results$Race, -formatted_results$Win),]
-  
+
   race_folder <- format(race_date, "%Y%m%d")
   dir_path <- paste0(
     "~/blog/daehl-e/content/post/nordic-combined/drafts/race-picks/", 
@@ -1513,15 +1516,23 @@ create_post_predictions <- function(final_predictions, n_races, gender=NULL, is_
     post_predictions <- post_predictions %>%
       select(Skier, ID, Nation, Sex, everything())
   }
-  
+
+  # Filter out rows where total probability across all races is 0 (skiers not participating)
+  prob_cols <- paste0("Race", 1:n_races, "_Probability")
+  prob_cols <- prob_cols[prob_cols %in% names(post_predictions)]
+  if(length(prob_cols) > 0) {
+    post_predictions <- post_predictions %>%
+      filter(rowSums(select(., all_of(prob_cols)), na.rm = TRUE) > 0)
+  }
+
   # Arrange by total points
   post_predictions <- post_predictions %>%
     arrange(desc(Total_Points))
-  
+
   # Replace underscores with spaces in column names
   post_predictions <- post_predictions %>%
     rename_with(~ gsub("_", " ", .x), .cols = contains("_"))
-  
+
   return(post_predictions)
 }
 
@@ -1531,7 +1542,7 @@ predict_races <- function(gender, is_team = FALSE, team_type = NULL, startlist_o
   if(!is.null(startlist_override)) {
     log_info(paste("Using provided startlist_override with", nrow(startlist_override), "entries"))
   }
-  
+
   # Determine the race type and paths based on gender and is_team
   if(is_team) {
     participant_col <- "Nation"
