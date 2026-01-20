@@ -39,7 +39,14 @@ run_season_processing() {
         else
             echo "    Warning: scrape.py not found for $sport"
         fi
-        
+
+        echo "    Running all_scrape.py (all competitions data scraping)..."
+        if [[ -f "all_scrape.py" ]]; then
+            python3 all_scrape.py
+        else
+            echo "    Warning: all_scrape.py not found for $sport"
+        fi
+
         echo "    Running elo_script.sh (complete elo calculations)..."
         if [[ -f "elo_script.sh" ]]; then
             bash elo_script.sh
@@ -79,7 +86,14 @@ run_season_processing() {
         else
             echo "      Warning: relay scrape.py not found for $sport"
         fi
-        
+
+        echo "      Running all_scrape.py (relay all competitions data scraping)..."
+        if [[ -f "all_scrape.py" ]]; then
+            python3 all_scrape.py
+        else
+            echo "      Warning: relay all_scrape.py not found for $sport"
+        fi
+
         echo "      Running elo_script.sh (relay elo calculations)..."
         if [[ -f "elo_script.sh" ]]; then
             bash elo_script.sh
