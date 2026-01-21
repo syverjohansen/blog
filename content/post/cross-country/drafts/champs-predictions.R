@@ -449,14 +449,14 @@ if (nrow(champs_races) == 0) {
 }
 
 # Read championship startlists
-men_startlist <- read.csv("~/ski/elo/python/ski/polars/excel365/startlist_champs_men.csv", 
+men_startlist <- read.csv("~/ski/elo/python/ski/polars/excel365/startlist_champs_men.csv",
                          stringsAsFactors = FALSE)
 
-# ladies_startlist <- read.csv("~/ski/elo/python/ski/polars/excel365/startlist_champs_ladies.csv", 
-#                            stringsAsFactors = FALSE)
+ladies_startlist <- read.csv("~/ski/elo/python/ski/polars/excel365/startlist_champs_ladies.csv",
+                           stringsAsFactors = FALSE)
 
 log_info(paste("Loaded", nrow(men_startlist), "men on championship startlist"))
-# log_info(paste("Loaded", nrow(ladies_startlist), "ladies on championship startlist"))
+log_info(paste("Loaded", nrow(ladies_startlist), "ladies on championship startlist"))
 
 # Display championship race schedule
 log_info("Championship race schedule:")
@@ -491,14 +491,14 @@ create_test_pelo_pct_columns <- function(startlist_data) {
 
 # Apply to both startlists
 men_startlist <- create_test_pelo_pct_columns(men_startlist)
-# ladies_startlist <- create_test_pelo_pct_columns(ladies_startlist)
+ladies_startlist <- create_test_pelo_pct_columns(ladies_startlist)
 log_info("Created test PELO percentage columns")
-log_info(paste("Men test PELO_pct range:", 
+log_info(paste("Men test PELO_pct range:",
                round(min(men_startlist$Pelo_pct, na.rm = TRUE), 3), "to",
                round(max(men_startlist$Pelo_pct, na.rm = TRUE), 3)))
-# log_info(paste("Ladies test PELO_pct range:", 
-#               round(min(ladies_startlist$Pelo_pct, na.rm = TRUE), 3), "to", 
-#               round(max(ladies_startlist$Pelo_pct, na.rm = TRUE), 3)))
+log_info(paste("Ladies test PELO_pct range:",
+              round(min(ladies_startlist$Pelo_pct, na.rm = TRUE), 3), "to",
+              round(max(ladies_startlist$Pelo_pct, na.rm = TRUE), 3)))
 
 log_info("Individual test setup - loaded data and created test PELO percentage columns")
 
@@ -705,7 +705,7 @@ process_individual_races <- function() {
 
   # Update startlist with race-specific prev_points_weighted
   test_data <- startlist_clean %>%
-    select(-prev_points_weighted) %>%  # Remove the placeholder column first
+    select(-any_of("prev_points_weighted")) %>%  # Remove the placeholder column if it exists
     left_join(prev_points_data_clean, by = "ID")
   
   # Calculate position probabilities using the position threshold models
@@ -766,6 +766,13 @@ process_individual_races <- function() {
 
 # Step 3: Calculate start probabilities and apply quota constraints
 log_info("=== STEP 3: START PROBABILITY CALCULATIONS ===")
+
+# Define individual races for start probability calculation
+individual_races <- champs_races %>%
+  filter(!Distance %in% c("Rel", "Ts"), Sex %in% c("M", "L")) %>%
+  mutate(race_type = mapply(determine_race_type, Distance, Technique, MS))
+
+log_info(paste("Defined", nrow(individual_races), "individual races for start probability calculation"))
 
 # Function to calculate base race participation probability (same as biathlon approach)
 get_base_race_probability <- function(chronos, participant, race_type) {
@@ -1443,7 +1450,7 @@ process_relay_races <- function() {
   
   men_relay_chrono <- create_relay_pelo_percentages(men_relay_chrono)
   ladies_relay_chrono <- create_relay_pelo_percentages(ladies_relay_chrono)
-  View(men_relay_chrono %>% filter(Skier == "Erik Valnes"))
+  #View(men_relay_chrono %>% filter(Skier == "Erik Valnes"))
   log_info("Created PELO percentage columns")
   log_info(paste("Men relay PELO_pct range:", round(min(men_relay_chrono$Pelo_pct, na.rm = TRUE), 3), 
                  "to", round(max(men_relay_chrono$Pelo_pct, na.rm = TRUE), 3)))

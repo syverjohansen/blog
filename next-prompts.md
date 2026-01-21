@@ -210,3 +210,314 @@ Edit `~/blog/daehl-e/content/post/methods/race-picks.md` one section at a time t
 - 🔄 Cross-Country → Individual → Fantasy (just completed)
 
 **Currently working on**: Cross-Country → Individual → Probability
+
+---
+
+## Winter Olympics Championship Prediction Blog Posts (2026-01-20)
+
+### Objective
+Create two comprehensive blog posts for Winter Olympics predictions:
+1. **Team Predictions Post**: Country-by-country breakdown showing athletes competing and performance predictions
+2. **Calendar Post**: Race-by-race breakdown with participation, winning, and podium probabilities
+
+### Data Flow Pipeline
+
+**Stage 1: Python Startlist Scraping**
+```
+~/ski/elo/python/{sport}/polars/startlist-scrape-champs.py
+```
+Where `{sport}` = alpine, biathlon, ski (cross-country), nordic-combined, skijump
+
+**Stage 2: R Probability Predictions**
+```
+~/blog/daehl-e/content/post/{sport}/drafts/champs-predictions.R
+```
+Where `{sport}` = alpine, biathlon, cross-country, nordic-combined, skijump
+
+**Outputs** (stored in `~/blog/daehl-e/content/post/{sport}/drafts/champs-predictions/{YYYYMMDD}/`):
+- `{gender}.xlsx` - Summary stats per athlete/team
+- `{gender}_position_probabilities.xlsx` - Race-by-race detailed predictions
+
+### Current Status by Sport
+
+| Sport | Python Scraper | R Script | Individual | Relay | Latest Output |
+|-------|---------------|----------|------------|-------|---------------|
+| Alpine | ✅ Complete | ✅ Complete | ✅ Active | N/A | 20251104 |
+| Biathlon | ✅ Complete | ⚠️ Partial | ✅ Active | ⚠️ Commented out | 20251105 |
+| Cross-Country | ✅ Complete | ✅ Complete | ✅ Active | ✅ Active | 20260120 |
+| Nordic Combined | ✅ Complete | ⚠️ Partial | ⚠️ Commented out | ✅ Active | 20251105 |
+| Ski Jumping | ✅ Complete | ✅ Complete | ✅ Active | ✅ Active | 20251104 |
+
+### Known Issues to Troubleshoot
+
+1. **Biathlon champs-predictions.R** (~lines 1677-1708): Relay predictions are commented out/deactivated in main execution
+2. **Nordic Combined champs-predictions.R** (~lines 1485-1493): Individual predictions are commented out; only team predictions active
+3. **Output dates are old**: Most outputs from November 2025; need to rerun with current data for Olympics
+4. **Missing ladies team outputs**: Nordic Combined missing ladies teams (may be intentional - check Olympic program)
+
+### Workflow Understanding
+
+**Python Scrapers Generate:**
+- Athlete startlists with ELO columns (discipline-specific)
+- Team compositions for relays (based on top N athletes by ELO)
+- Initial Race_Prob columns set to 0.0
+
+**R Scripts Calculate:**
+- Participation probabilities (quota-constrained: typically 4 athletes/nation)
+- Position probabilities at 5 thresholds: Top1, Top3, Top5, Top10, Top30
+- GAM-based modeling with feature selection (regsubsets → gam)
+- Normalization ensuring probabilities sum correctly
+
+### Planned Blog Post Structure
+
+**Post 1: Team Predictions**
+- Introduction explaining methodology
+- Country sections (major nations first: Norway, Sweden, France, Germany, USA, etc.)
+- Per country: athletes selected, strength by discipline, medal predictions
+- Tables showing top medal contenders aggregated from probability data
+
+**Post 2: Calendar/Race-by-Race**
+- Race schedule with dates/locations
+- Per race: favorites (top win probabilities), podium contenders, dark horses
+- Relay predictions with team compositions
+- Interactive elements (sortable tables if possible)
+
+### Next Steps
+
+1. **Troubleshoot Issues**: Fix commented-out sections in biathlon and nordic-combined R scripts
+2. **Rerun Pipeline**: Execute Python scrapers then R scripts for all sports with current data
+3. **Verify Outputs**: Ensure all xlsx files generated correctly in 20260120 folders
+4. **Design Post Templates**: Create markdown templates for both post types
+5. **Data Integration**: Write scripts to pull data from xlsx into markdown format
+6. **Content Writing**: Draft narrative content for each section
+
+### Key Files Reference
+
+**Python Scrapers:**
+- `~/ski/elo/python/alpine/polars/startlist-scrape-champs.py`
+- `~/ski/elo/python/biathlon/polars/startlist-scrape-champs.py`
+- `~/ski/elo/python/ski/polars/startlist-scrape-champs.py` (cross-country)
+- `~/ski/elo/python/nordic-combined/polars/startlist-scrape-champs.py`
+- `~/ski/elo/python/skijump/polars/startlist-scrape-champs.py`
+
+**R Prediction Scripts:**
+- `~/blog/daehl-e/content/post/alpine/drafts/champs-predictions.R`
+- `~/blog/daehl-e/content/post/biathlon/drafts/champs-predictions.R`
+- `~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions.R`
+- `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions.R`
+- `~/blog/daehl-e/content/post/skijump/drafts/champs-predictions.R`
+
+**Current Output Locations:**
+- Alpine: `~/blog/daehl-e/content/post/alpine/drafts/champs-predictions/20251104/`
+- Biathlon: `~/blog/daehl-e/content/post/biathlon/drafts/champs-predictions/20251105/`
+- Cross-Country: `~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions/20260120/`
+- Nordic Combined: `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions/20251105/`
+- Ski Jumping: `~/blog/daehl-e/content/post/skijump/drafts/champs-predictions/20251104/`
+
+### Session Resume Instructions
+
+If connection is lost, read this file and:
+1. User wants to create 2 blog posts: Team Predictions + Calendar/Race-by-Race
+2. First troubleshoot issues with biathlon relay and nordic combined individual predictions
+3. Then rerun full pipeline to generate fresh predictions
+4. Finally help structure and write the blog posts
+
+---
+
+## Cross-Country Team Selection Logic (Explored 2026-01-20)
+
+### Source Files
+- **Python Scraper**: `~/ski/elo/python/ski/polars/startlist-scrape-champs.py`
+- **Config File**: `~/ski/elo/python/ski/polars/config.py` (contains `CHAMPS_ATHLETES_MEN_XC` and `CHAMPS_ATHLETES_LADIES_XC`)
+
+### Team Selection Algorithm
+
+#### 1. Relay Teams (4-person)
+**Function**: `create_relay_championships_startlist()` (lines 420-529)
+
+**Selection Logic**:
+1. Filter nations from config with **≥4 athletes** configured
+2. For each nation:
+   - Get all configured athletes
+   - Match each athlete to ELO scores (exact match or fuzzy match)
+   - Get ELO priority based on race technique using `get_race_specific_elo_priority('Rel', technique)`
+   - For technique 'C' (Classic): prioritize `Classic_Elo > Distance_C_Elo > Sprint_C_Elo > Elo`
+   - For technique 'F' (Freestyle): prioritize `Freestyle_Elo > Distance_F_Elo > Sprint_F_Elo > Elo`
+3. **Sort athletes by best available ELO (highest first)**
+4. **Select top 4 athletes** for the relay team
+
+**Output**: Teams CSV + Individuals CSV with all 9 ELO columns aggregated
+
+#### 2. Team Sprint (2-person)
+**Function**: `create_team_sprint_championships_startlist()` (lines 302-418)
+
+**Selection Logic**:
+1. Filter nations from config with **≥2 athletes** configured
+2. For each nation:
+   - Get all configured athletes
+   - Use ELO priority for Team Sprint: `get_race_specific_elo_priority('Ts', technique)`
+   - Same technique prioritization as relay
+3. **Sort athletes by sprint-relevant ELO (highest first)**
+4. **Select top 2 athletes** for the team sprint
+
+#### 3. Mixed Relay (2M + 2L)
+**Function**: `create_mixed_relay_championships_startlist()` (lines 531-661)
+
+**Selection Logic**:
+1. Find nations with athletes in **both** men's and ladies' configs
+2. Filter for nations with **≥2 men AND ≥2 ladies**
+3. For each qualifying nation:
+   - Get top 2 men by overall ELO
+   - Get top 2 ladies by overall ELO
+4. Team composition: 2 men + 2 ladies (order: men first, then ladies)
+
+### ELO Columns Used (9 total)
+```
+Elo, Distance_Elo, Distance_F_Elo, Distance_C_Elo,
+Sprint_Elo, Sprint_C_Elo, Sprint_F_Elo, Classic_Elo, Freestyle_Elo
+```
+
+### Key Points
+- **Athletes come from config.py** - manually curated per nation
+- **ELO-based ranking** determines team composition
+- **Technique-specific** ELO prioritization (Classic vs Freestyle events)
+- **No quota enforcement in Python** - all athletes included, R handles quotas for individual events
+- Team outputs include both aggregated team ELO (Total_*, Avg_*) and individual member ELO
+
+### Current Progress
+- ✅ Explored cross-country Python scraper team selection logic
+- ✅ Documented relay, team sprint, and mixed relay selection algorithms
+- ✅ Reviewed R script champs-predictions.R structure
+
+---
+
+## Cross-Country champs-predictions.R Structure (Explored 2026-01-20)
+
+### File Location
+`~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions.R`
+
+### Overall Structure (~3555 lines)
+```
+PART 1: INDIVIDUAL RACES - TRAIN SETUP (lines 22-232)
+  - Load chronological data
+  - Add world cup points
+  - Calculate weighted prev_points by discipline
+  - Calculate ELO/PELO percentage columns
+  - Quartile imputation for missing values
+
+PART 2: INDIVIDUAL RACES - TRAIN EXECUTION (lines 234-430)
+  - Race type classification (Sprint_C, Sprint_F, Distance_C_Ind, etc.)
+  - Feature selection using regsubsets()
+  - GAM model training for each race type + threshold
+
+PART 3: INDIVIDUAL RACES - TEST SETUP (lines 431-504)
+  - Create PELO percentage columns for startlist
+
+PART 4: INDIVIDUAL RACES - TEST EXECUTION (lines 505-628)
+  - Apply trained models to championship startlist
+  - Calculate position probabilities
+
+process_individual_races() - line 629
+  - Orchestrates individual race prediction pipeline
+
+process_relay_races() - line 1181
+  - Reads relay chronological data (separate from individual)
+  - Leg-specific feature selection (Legs 1-2 Classic, Legs 3-4 Freestyle)
+  - Trains GAM models per leg + threshold
+  - Calculates team probabilities by combining leg probabilities
+  - Leg importance weights from historical data
+  - Hierarchy enforcement + normalization
+
+process_ts_races() - line 2313
+  - Team Sprint processing (2 legs instead of 4)
+  - Technique-specific models (Classic vs Freestyle team sprints)
+  - Same GAM approach as relay
+
+MAIN EXECUTION (lines 3502-3555)
+  - process_individual_races()
+  - process_relay_races()
+  - process_ts_races()
+```
+
+### Key Relay Processing Logic
+
+**Leg-Specific Variables** (`get_relay_explanatory_vars()` at line 1459):
+- Leg 1: Classic with sprint options (`Sprint_C_Pelo_pct`, `Classic_Pelo_pct`)
+- Leg 2: Classic distance only (`Distance_C_Pelo_pct`, `Classic_Pelo_pct`)
+- Leg 3: Freestyle distance only (`Distance_F_Pelo_pct`, `Freestyle_Pelo_pct`)
+- Leg 4: Freestyle with sprint options (`Sprint_F_Pelo_pct`, `Freestyle_Pelo_pct`)
+
+**Weighted Previous Points** (`calculate_relay_weighted_prev_points()` at line 1251):
+- Relay results do NOT contribute to future averages (avoids circular dependency)
+- Legs 1-2: Use Distance Classic history
+- Legs 3-4: Use Distance Freestyle history
+
+**Position Thresholds**: 1 (win), 3 (podium), 5 (top5), 10 (top10)
+
+**Team Probability Calculation**:
+1. Get individual leg probabilities from GAM models
+2. Weight by leg importance (learned from historical data)
+3. Combine across 4 legs: `team_prob = weighted.mean(leg_probs, leg_importance)`
+4. Normalize so probabilities sum to expected totals
+
+### Key Team Sprint Processing Logic
+
+**Technique-Specific Models** (`get_ts_explanatory_vars()` at line 2591):
+- Classic team sprint: `Sprint_C_Pelo_pct`, `Classic_Pelo_pct`
+- Freestyle team sprint: `Sprint_F_Pelo_pct`, `Freestyle_Pelo_pct`
+
+**2-Leg Structure**: Team sprints only have 2 legs (vs 4 for relay)
+
+### Output Files (to `champs-predictions/{YYYYMMDD}/`)
+- `team_sprint_optimization.xlsx` - Team composition optimization
+- `team_sprint_all_threshold_predictions.xlsx` - All threshold predictions
+- `team_sprint_final_predictions.xlsx` - Hierarchy-enforced normalized predictions
+
+### Current Status
+- ✅ Individual processing: Complete
+- ✅ Relay processing: Complete
+- ✅ Team Sprint processing: Complete
+- ⚠️ Missing: Mixed Relay processing (not yet implemented in R script)
+
+### Next Steps
+- Check if mixed relay is needed for championships
+- Review output xlsx files for accuracy
+- Integrate outputs into blog post templates
+
+---
+
+## Troubleshooting Log (2026-01-20)
+
+### Issue 1: `prev_points_weighted` column doesn't exist (FIXED)
+**Error**:
+```
+Error in `select()`:
+! Can't select columns that don't exist.
+✖ Column `prev_points_weighted` doesn't exist.
+```
+
+**Location**: `champs-predictions.R` line 708 in `process_individual_races()`
+
+**Cause**: Code assumed startlist from Python scraper had `prev_points_weighted` column
+
+**Fix**: Changed `select(-prev_points_weighted)` to `select(-any_of("prev_points_weighted"))`
+
+**Status**: ✅ Fixed
+
+### Issue 2: Ladies startlist not loaded / PELO_pct columns missing (FIXED)
+**Error**:
+```
+WARN Error predicting for threshold 3 : object 'Distance_Pelo_pct' not found
+WARN Error predicting for threshold 5 : object 'Distance_Pelo_pct' not found
+```
+
+**Location**: `champs-predictions.R` lines 455-456 and 494
+
+**Cause**: Ladies startlist loading and PELO_pct column creation were commented out
+
+**Fix**: Uncommented:
+- Line 455-456: `ladies_startlist <- read.csv(...)`
+- Line 494: `ladies_startlist <- create_test_pelo_pct_columns(ladies_startlist)`
+- Lines 499-501: Logging for ladies PELO_pct range
+
+**Status**: ✅ Fixed
