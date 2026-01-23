@@ -521,3 +521,276 @@ WARN Error predicting for threshold 5 : object 'Distance_Pelo_pct' not found
 - Lines 499-501: Logging for ladies PELO_pct range
 
 **Status**: ✅ Fixed
+
+### Issue 3: `individual_races` not defined for start probability calculation (FIXED)
+**Error**: All `Race_Prob` columns were 0 because race probability calculation code was silently failing
+
+**Location**: `champs-predictions.R` line 882 - code references `individual_races` but it wasn't defined
+
+**Cause**: The race probability calculation code at lines 875-909 uses `individual_races`, but that variable was only defined inside `process_individual_races()` function, not in the global setup section where the probability code runs.
+
+**Fix**: Added `individual_races` definition before line 877:
+```r
+individual_races <- champs_races %>%
+  filter(!Distance %in% c("Rel", "Ts"), Sex %in% c("M", "L")) %>%
+  mutate(race_type = mapply(determine_race_type, Distance, Technique, MS))
+```
+
+**Status**: ✅ Fixed (but superseded by Issue 4)
+
+### Issue 4: Step 3 ran AFTER position predictions instead of BEFORE (FIXED)
+**Error**: All position probabilities (Win, Podium, etc.) were 0 because Race_Prob columns didn't exist when predictions were made
+
+**Symptoms**:
+- Start probabilities calculated correctly (Mean: 0.257, etc.)
+- But normalization showed `Win: 0 → 0` for all races
+- Warning: "Start probability column RaceX_Prob not found in startlist"
+
+**Cause**: Code structure issue - inside `process_individual_races()`:
+1. Prediction for-loop (lines 650-765) ran FIRST
+2. Step 3 (lines 767-1002) calculated Race_Prob columns AFTER
+3. So when predictions tried to multiply by start_prob, the columns didn't exist yet
+
+**Fix**: Restructured `process_individual_races()` to run Step 3 BEFORE the prediction loop:
+1. Moved Step 3 logic (with local function `get_base_race_probability_local`) to run right after the early return check
+2. Used `<<-` for global assignment to modify startlists from within function scope
+3. Removed the old duplicate Step 3 code that ran too late (lines 920-1155)
+
+**Status**: ✅ Fixed
+
+### Issue 5: Start probabilities above 1.0 after quota scaling (FIXED)
+**Error**: Some athletes had Race_Prob values > 1.0 (e.g., 2.0, 3.5)
+
+**Cause**: Quota scaling formula `scaling_factor = 4 / current_sum` can produce large multipliers when `current_sum` is small. Example:
+- Nation has 2 athletes with base probs 0.2 each → `current_sum = 0.4`
+- `scaling_factor = 4 / 0.4 = 10`
+- Each athlete gets `0.2 * 10 = 2.0` → above 1!
+
+**Fix**: Added `pmin(scaled_probs, 1.0)` to cap individual probabilities at 1.0 after scaling:
+```r
+scaled_probs <- nation_probs * scaling_factor
+scaled_probs <- pmin(scaled_probs, 1.0)  # Cap at 1.0
+men_startlist[nation_mask, race_col] <<- scaled_probs
+```
+
+Applied to both men's and ladies' quota constraint loops (lines 752-755 and 779-782).
+
+**Status**: ✅ Fixed
+
+---
+
+## Methodology Improvements to Adopt Across Sports
+
+### Weighted Participation Probability (Implemented in Cross-Country 2026-01-20)
+
+**What**: Replace flat participation rate with exponential decay weighted participation for calculating start/race probabilities.
+
+**Why**: Recent race participation is more predictive of future participation than older races. An athlete who raced 3 months ago is more likely to race again than one who last raced 2 years ago.
+
+**Implementation**:
+```r
+# Time window: later of 5 years ago OR athlete's first race date
+five_years_ago <- Sys.Date() - (5 * 365)
+athlete_first_race <- chronos %>%
+  filter(Skier == participant) %>%
+  summarise(first_date = min(Date, na.rm = TRUE)) %>%
+  pull(first_date)
+cutoff_date <- max(five_years_ago, athlete_first_race)
+
+# Exponential decay weighting (alpha = 0.1)
+# Most recent race gets weight 1.0, older races get exponentially less weight
+race_weights <- exp(-0.1 * ((n_races - 1):0))
+
+# Calculate weighted participation probability
+weighted_participation <- sum(participation * race_weights)
+total_weight <- sum(race_weights)
+prob <- weighted_participation / total_weight
+```
+
+**Key Detail**: The cutoff date uses `max(five_years_ago, athlete_first_race)` so newer athletes are only compared against races since they started competing, not penalized for races before their career began.
+
+**Reference Implementation**:
+- **Alpine** (original): `~/blog/daehl-e/content/post/alpine/drafts/race-picks.R` lines 448-488
+- **Cross-Country** (updated): `~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions.R` lines 651-706
+
+**Sports to Update**:
+| Sport | Script | Status |
+|-------|--------|--------|
+| Alpine | `race-picks.R` | ✅ Already uses weighted approach |
+| Cross-Country | `champs-predictions.R` | ✅ Updated 2026-01-20 |
+| Biathlon | `champs-predictions.R` | ⏳ Needs update |
+| Nordic Combined | `champs-predictions.R` | ⏳ Needs update |
+| Ski Jumping | `champs-predictions.R` | ⏳ Needs update |
+
+**Key Changes Required**:
+1. Find the `get_base_race_probability` or equivalent function
+2. Replace flat `races_done / total_races` calculation with exponential decay weighting
+3. Ensure the function gets all races of the type sorted by date
+4. Apply weights where most recent race index gets highest weight
+
+---
+
+## Championship Prediction Blog Posts (2026-01-22)
+
+### Overview
+
+Create two championship prediction blog posts for the 2026 Winter Olympics:
+
+1. **Nations Post**: Country-by-country breakdown showing athletes and performance predictions
+2. **Race-by-Race Post**: Calendar view with participation, winning, and podium probabilities per race
+
+### Post Location
+```
+~/blog/daehl-e/content/post/champs-predictions/2026/
+├── nations.md          # Country-by-country predictions
+└── race-by-race.md     # Race calendar predictions
+```
+
+### Data Flow Pipeline
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│ STAGE 1: Python Scraper                                                  │
+│ ~/ski/elo/python/{sport}/polars/startlist-scrape-champs.py              │
+│ → Creates startlists with ELO columns                                    │
+│ → Outputs: excel365/startlist_champs_{gender}.csv                       │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌─────────────────────────────────────────────────────────────────────────┐
+│ STAGE 2: R Prediction Script                                             │
+│ ~/blog/daehl-e/content/post/{sport}/drafts/champs-predictions.R         │
+│ → Calculates position probabilities (Win, Podium, Top5, Top10, Top30)   │
+│ → Optimizes relay/team sprint rosters                                    │
+│ → Outputs: drafts/champs-predictions/{YYYYMMDD}/*.xlsx                  │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌─────────────────────────────────────────────────────────────────────────┐
+│ STAGE 3: Excel → JSON Conversion                                         │
+│ ~/blog/daehl-e/static/python/excel_to_hugo_multiple_sheets.py           │
+│ → Converts Excel sheets to JSON format for Hugo datatables              │
+│ → Outputs: data/{sport}/drafts/champs-predictions/{YYYYMMDD}/*.json    │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌─────────────────────────────────────────────────────────────────────────┐
+│ STAGE 4: Hugo Blog Post                                                  │
+│ Uses shortcode: {{< {sport}/datatable "path/to/json" >}}                │
+│ → Renders interactive datatables from JSON                              │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Excel Output Structure Requirements
+
+The R scripts need to generate Excel files with specific naming conventions:
+
+**For Nations Post** (aggregated by country):
+- `nations_summary.xlsx` - Overall medal predictions by nation
+- `{gender}_by_nation.xlsx` - Athletes grouped by nation with probabilities
+
+**For Race-by-Race Post** (per race):
+- `{gender}.xlsx` - Summary points/stats per athlete
+- `{gender}_position_probabilities.xlsx` - Multiple sheets, one per race
+  - Sheet names like: "Men Race 1", "Ladies Race 2", etc.
+
+### JSON Conversion Details
+
+From `excel_to_hugo_multiple_sheets.py`:
+- Single-sheet Excel → `filename.json`
+- Multi-sheet Excel → `filename_SheetName.json` (one file per sheet)
+
+JSON structure:
+```json
+{
+  "sheet_name": "Men Race 1",
+  "headers": ["Skier", "Nation", "Win_Prob", "Podium_Prob", ...],
+  "rows": [["Johannes Klaebo", "NOR", "15.2%", "42.1%", ...], ...]
+}
+```
+
+### Datatable Shortcode Usage
+
+In markdown posts:
+```markdown
+## Cross-Country
+
+### Men
+
+#### Individual Races
+
+##### Skiathlon
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/20260122/men_position_probabilities_Skiathlon" >}}
+```
+
+### Data Directory Structure
+
+```
+~/blog/daehl-e/data/{sport}/drafts/champs-predictions/{YYYYMMDD}/
+├── men.json
+├── men_position_probabilities_Race_1.json
+├── men_position_probabilities_Race_2.json
+├── ladies.json
+├── ladies_position_probabilities_Race_1.json
+├── nations_summary.json
+└── ...
+```
+
+### Implementation Plan
+
+#### Phase 1: R Script Excel Output Enhancement
+For each sport's `champs-predictions.R`:
+
+1. **Individual Races Output**:
+   - `{gender}.xlsx` - Summary with columns: Skier, Nation, Total_Expected_Points, Win_Count, Podium_Count, etc.
+   - `{gender}_position_probabilities.xlsx` - Multi-sheet with per-race probabilities
+
+2. **Relay/Team Output**:
+   - `{gender}_relay.xlsx` - Team compositions and probabilities
+   - `{gender}_team_sprint.xlsx` - Team sprint compositions
+
+3. **Nations Summary Output**:
+   - `nations_summary.xlsx` - Aggregated predictions by country
+
+#### Phase 2: Excel → JSON Conversion
+Run conversion script:
+```bash
+~/blog/daehl-e/static/python/convert_all_excel_to_json.sh \
+  ~/blog/daehl-e/content/post/{sport}/drafts/champs-predictions/{YYYYMMDD} \
+  ~/blog/daehl-e/data/{sport}/drafts/champs-predictions/{YYYYMMDD}
+```
+
+#### Phase 3: Blog Post Creation
+Create markdown files with datatable shortcodes referencing the JSON files.
+
+### Current Understanding of Relay Selection
+
+#### Python Scraper (startlist-scrape-champs.py)
+- Selects top 4 athletes per nation by ELO (technique-prioritized)
+- Does NOT assign athletes to specific legs
+- Outputs to `relay/excel365/startlist_champs_relay_*.csv`
+
+#### R Script (champs-predictions.R)
+- Reads general individual startlist (ALL athletes per nation)
+- Brute-force tries all permutations of 4 athletes across 4 legs
+- Leg-specific models: Legs 1-2 use Classic features, Legs 3-4 use Freestyle features
+- Selects permutation with highest team probability
+
+#### Team Sprint
+- Same approach but 2 athletes, 2 legs
+- Single technique per race (either all Classic OR all Freestyle)
+- Uses sprint-specific PELO variables
+
+### Relay Selection Improvements (To Discuss)
+
+Potential improvements to relay team selection:
+1. **Python-side**: Pre-filter athletes by technique specialty
+2. **R-side**: Consider limiting permutations to top N athletes per technique
+3. **Leg assignment**: Explicit technique-based pre-assignment before optimization
+
+### Next Steps
+
+1. ⏳ Review/fix relay selection in Python scraper (technique-aware pre-selection)
+2. ⏳ Review/fix R script relay loading (use relay-specific startlists?)
+3. ⏳ Ensure R scripts output correct Excel format for conversion
+4. ⏳ Run full pipeline: Python → R → Excel → JSON
+5. ⏳ Create blog post templates with datatable shortcodes
+6. ⏳ Write narrative content for nations and race-by-race posts

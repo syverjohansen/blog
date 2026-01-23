@@ -641,6 +641,181 @@ process_individual_races <- function() {
     return(NULL)
   }
 
+  # ============================================
+  # STEP 3: Calculate start probabilities FIRST
+  # (Moved here so Race_Prob columns exist before position prediction loop)
+  # ============================================
+  log_info("=== STEP 3: START PROBABILITY CALCULATIONS ===")
+  log_info(paste("Processing", nrow(individual_races), "individual races for start probability calculation"))
+
+  # Function to calculate base race participation probability using exponential decay
+  # Recent races are weighted more heavily (alpha = 0.1)
+  # Time window: later of 5 years ago OR athlete's first race date (fairer for newer athletes)
+  get_base_race_probability_local <- function(chronos, participant, race_type) {
+    five_years_ago <- Sys.Date() - (5 * 365)
+
+    # Get athlete's first race date (any race type)
+    athlete_first_race <- chronos %>%
+      filter(Skier == participant) %>%
+      summarise(first_date = min(Date, na.rm = TRUE)) %>%
+      pull(first_date)
+
+    # Use the later of: 5 years ago OR athlete's first race date
+    # This prevents penalizing newer athletes for races before they started
+    if (is.na(athlete_first_race) || length(athlete_first_race) == 0) {
+      cutoff_date <- five_years_ago
+    } else {
+      cutoff_date <- max(five_years_ago, athlete_first_race)
+    }
+
+    # Get all races of this type in the time window, sorted by date
+    if (race_type == "Sprint_C") {
+      all_type_races <- chronos %>% filter(Date >= cutoff_date, Distance == "Sprint", Technique == "C") %>% distinct(Date, City) %>% arrange(Date)
+      participant_type_races <- chronos %>% filter(Date >= cutoff_date, Skier == participant, Distance == "Sprint", Technique == "C") %>% distinct(Date, City)
+    } else if (race_type == "Sprint_F") {
+      all_type_races <- chronos %>% filter(Date >= cutoff_date, Distance == "Sprint", Technique == "F") %>% distinct(Date, City) %>% arrange(Date)
+      participant_type_races <- chronos %>% filter(Date >= cutoff_date, Skier == participant, Distance == "Sprint", Technique == "F") %>% distinct(Date, City)
+    } else if (race_type == "Distance_C_Ind") {
+      all_type_races <- chronos %>% filter(Date >= cutoff_date, Distance != "Sprint", Technique == "C", MS == 0) %>% distinct(Date, City) %>% arrange(Date)
+      participant_type_races <- chronos %>% filter(Date >= cutoff_date, Skier == participant, Distance != "Sprint", Technique == "C", MS == 0) %>% distinct(Date, City)
+    } else if (race_type == "Distance_C_Ms") {
+      all_type_races <- chronos %>% filter(Date >= cutoff_date, Distance != "Sprint", Technique == "C", MS == 1) %>% distinct(Date, City) %>% arrange(Date)
+      participant_type_races <- chronos %>% filter(Date >= cutoff_date, Skier == participant, Distance != "Sprint", Technique == "C", MS == 1) %>% distinct(Date, City)
+    } else if (race_type == "Distance_F_Ind") {
+      all_type_races <- chronos %>% filter(Date >= cutoff_date, Distance != "Sprint", Technique == "F", MS == 0) %>% distinct(Date, City) %>% arrange(Date)
+      participant_type_races <- chronos %>% filter(Date >= cutoff_date, Skier == participant, Distance != "Sprint", Technique == "F", MS == 0) %>% distinct(Date, City)
+    } else if (race_type == "Distance_F_Ms") {
+      all_type_races <- chronos %>% filter(Date >= cutoff_date, Distance != "Sprint", Technique == "F", MS == 1) %>% distinct(Date, City) %>% arrange(Date)
+      participant_type_races <- chronos %>% filter(Date >= cutoff_date, Skier == participant, Distance != "Sprint", Technique == "F", MS == 1) %>% distinct(Date, City)
+    } else if (race_type == "Distance_Ind") {
+      all_type_races <- chronos %>% filter(Date >= cutoff_date, Distance != "Sprint", MS == 0) %>% distinct(Date, City) %>% arrange(Date)
+      participant_type_races <- chronos %>% filter(Date >= cutoff_date, Skier == participant, Distance != "Sprint", MS == 0) %>% distinct(Date, City)
+    } else if (race_type == "Distance_Ms") {
+      all_type_races <- chronos %>% filter(Date >= cutoff_date, Distance != "Sprint", MS == 1) %>% distinct(Date, City) %>% arrange(Date)
+      participant_type_races <- chronos %>% filter(Date >= cutoff_date, Skier == participant, Distance != "Sprint", MS == 1) %>% distinct(Date, City)
+    } else {
+      all_type_races <- chronos %>% filter(Date >= cutoff_date) %>% distinct(Date, City) %>% arrange(Date)
+      participant_type_races <- chronos %>% filter(Date >= cutoff_date, Skier == participant) %>% distinct(Date, City)
+    }
+
+    n_races <- nrow(all_type_races)
+    if(n_races == 0) return(0)
+
+    # Create participation vector: 1 if athlete participated in that race, 0 if not
+    participation <- sapply(1:n_races, function(i) {
+      race_date <- all_type_races$Date[i]
+      race_city <- all_type_races$City[i]
+      as.numeric(any(participant_type_races$Date == race_date & participant_type_races$City == race_city))
+    })
+
+    # Apply exponential decay weights (alpha = 0.1)
+    # Most recent race gets weight 1.0, older races get exponentially less weight
+    race_weights <- exp(-0.1 * ((n_races - 1):0))
+
+    # Calculate weighted participation probability
+    weighted_participation <- sum(participation * race_weights)
+    total_weight <- sum(race_weights)
+    prob <- weighted_participation / total_weight
+
+    return(prob)
+  }
+
+  # Calculate base race probabilities
+  log_info("Calculating base race participation probabilities")
+  men_race_counter_step3 <- 0
+  ladies_race_counter_step3 <- 0
+
+  for (i in 1:nrow(individual_races)) {
+    race <- individual_races[i, ]
+
+    if (race$Sex == "M") {
+      men_race_counter_step3 <- men_race_counter_step3 + 1
+      race_col <- paste0("Race", men_race_counter_step3, "_Prob")
+      log_info(paste("Calculating probabilities for men's race", men_race_counter_step3, ":", race$Distance, race$Technique))
+      men_startlist[[race_col]] <<- sapply(men_startlist$Skier, function(skier) {
+        get_base_race_probability_local(men_chrono, skier, race$race_type)
+      })
+      log_info(paste("Men's", race_col, "calculated. Mean:", round(mean(men_startlist[[race_col]], na.rm = TRUE), 3)))
+    } else if (race$Sex == "L") {
+      ladies_race_counter_step3 <- ladies_race_counter_step3 + 1
+      race_col <- paste0("Race", ladies_race_counter_step3, "_Prob")
+      log_info(paste("Calculating probabilities for ladies' race", ladies_race_counter_step3, ":", race$Distance, race$Technique))
+      ladies_startlist[[race_col]] <<- sapply(ladies_startlist$Skier, function(skier) {
+        get_base_race_probability_local(ladies_chrono, skier, race$race_type)
+      })
+      log_info(paste("Ladies'", race_col, "calculated. Mean:", round(mean(ladies_startlist[[race_col]], na.rm = TRUE), 3)))
+    }
+  }
+
+  # Apply 4-person quota constraint per nation per race
+  log_info("Applying 4-person quota constraints per nation")
+  men_race_counter_step3 <- 0
+  ladies_race_counter_step3 <- 0
+
+  for (i in 1:nrow(individual_races)) {
+    race <- individual_races[i, ]
+
+    if (race$Sex == "M") {
+      men_race_counter_step3 <- men_race_counter_step3 + 1
+      race_col <- paste0("Race", men_race_counter_step3, "_Prob")
+      log_info(paste("Applying quota constraint for men's race", men_race_counter_step3, ":", race$Distance, race$Technique))
+
+      nations <- unique(men_startlist$Nation[!is.na(men_startlist$Nation)])
+      for (nation in nations) {
+        nation_mask <- men_startlist$Nation == nation & !is.na(men_startlist$Nation)
+        if (sum(nation_mask) > 0) {
+          nation_probs <- men_startlist[nation_mask, race_col]
+          current_sum <- sum(nation_probs, na.rm = TRUE)
+          if (current_sum > 0) {
+            scaling_factor <- 4 / current_sum
+            scaled_probs <- nation_probs * scaling_factor
+            # Cap individual probabilities at 1.0
+            scaled_probs <- pmin(scaled_probs, 1.0)
+            men_startlist[nation_mask, race_col] <<- scaled_probs
+          }
+        }
+      }
+
+      n_nations <- length(nations)
+      final_mean <- mean(men_startlist[[race_col]], na.rm = TRUE)
+      final_sum <- sum(men_startlist[[race_col]], na.rm = TRUE)
+      expected_sum <- n_nations * 4
+      log_info(paste("Final stats for men's", race_col, "- Mean prob:", round(final_mean, 3), "Total sum:", round(final_sum, 1), "Expected:", expected_sum))
+
+    } else if (race$Sex == "L") {
+      ladies_race_counter_step3 <- ladies_race_counter_step3 + 1
+      race_col <- paste0("Race", ladies_race_counter_step3, "_Prob")
+      log_info(paste("Applying quota constraint for ladies' race", ladies_race_counter_step3, ":", race$Distance, race$Technique))
+
+      nations <- unique(ladies_startlist$Nation[!is.na(ladies_startlist$Nation)])
+      for (nation in nations) {
+        nation_mask <- ladies_startlist$Nation == nation & !is.na(ladies_startlist$Nation)
+        if (sum(nation_mask) > 0) {
+          nation_probs <- ladies_startlist[nation_mask, race_col]
+          current_sum <- sum(nation_probs, na.rm = TRUE)
+          if (current_sum > 0) {
+            scaling_factor <- 4 / current_sum
+            scaled_probs <- nation_probs * scaling_factor
+            # Cap individual probabilities at 1.0
+            scaled_probs <- pmin(scaled_probs, 1.0)
+            ladies_startlist[nation_mask, race_col] <<- scaled_probs
+          }
+        }
+      }
+
+      n_nations <- length(nations)
+      final_mean <- mean(ladies_startlist[[race_col]], na.rm = TRUE)
+      final_sum <- sum(ladies_startlist[[race_col]], na.rm = TRUE)
+      expected_sum <- n_nations * 4
+      log_info(paste("Final stats for ladies'", race_col, "- Mean prob:", round(final_mean, 3), "Total sum:", round(final_sum, 1), "Expected:", expected_sum))
+    }
+  }
+
+  log_info("Start probability calculations complete - Race_Prob columns now exist in startlists")
+  # ============================================
+  # END STEP 3
+  # ============================================
+
   results_list <- list()
 
   # Reset counters for prediction loop
@@ -760,246 +935,12 @@ process_individual_races <- function() {
   race_name <- paste(gender, race$Distance, race$Technique)
   results_list[[race_name]] <- race_results
   
-  log_info(paste("Completed predictions for", race_name, "- Top prediction:", 
+  log_info(paste("Completed predictions for", race_name, "- Top prediction:",
                  race_results$Skier[1], "with", round(race_results$win_prob[1], 3), "win probability"))
 }
 
-# Step 3: Calculate start probabilities and apply quota constraints
-log_info("=== STEP 3: START PROBABILITY CALCULATIONS ===")
-
-# Define individual races for start probability calculation
-individual_races <- champs_races %>%
-  filter(!Distance %in% c("Rel", "Ts"), Sex %in% c("M", "L")) %>%
-  mutate(race_type = mapply(determine_race_type, Distance, Technique, MS))
-
-log_info(paste("Defined", nrow(individual_races), "individual races for start probability calculation"))
-
-# Function to calculate base race participation probability (same as biathlon approach)
-get_base_race_probability <- function(chronos, participant, race_type) {
-  # Get participant's first ever race date
-  participant_first_race <- chronos %>%
-    filter(Skier == participant) %>%
-    arrange(Date) %>%
-    slice(1) %>%
-    pull(Date)
-  
-  # Calculate date from 5 years ago
-  five_years_ago <- Sys.Date() - (5 * 365)
-  
-  # Use 5 years ago or participant's first race, whichever is later
-  start_date <- if(length(participant_first_race) == 0) {
-    five_years_ago
-  } else {
-    max(five_years_ago, participant_first_race, na.rm = TRUE)
-  }
-  
-  # Map cross-country race types to filter chronos data
-  if (race_type == "Sprint_C") {
-    type_races <- chronos %>%
-      filter(Date >= start_date, Distance == "Sprint", Technique == "C") %>%
-      distinct(Date, City)
-    
-    participant_type_races <- chronos %>%
-      filter(Date >= start_date, Skier == participant, Distance == "Sprint", Technique == "C") %>%
-      distinct(Date, City)
-  } else if (race_type == "Sprint_F") {
-    type_races <- chronos %>%
-      filter(Date >= start_date, Distance == "Sprint", Technique == "F") %>%
-      distinct(Date, City)
-    
-    participant_type_races <- chronos %>%
-      filter(Date >= start_date, Skier == participant, Distance == "Sprint", Technique == "F") %>%
-      distinct(Date, City)
-  } else if (race_type == "Distance_C_Ind") {
-    type_races <- chronos %>%
-      filter(Date >= start_date, Distance != "Sprint", Technique == "C", MS == 0) %>%
-      distinct(Date, City)
-    
-    participant_type_races <- chronos %>%
-      filter(Date >= start_date, Skier == participant, Distance != "Sprint", Technique == "C", MS == 0) %>%
-      distinct(Date, City)
-  } else if (race_type == "Distance_C_Ms") {
-    type_races <- chronos %>%
-      filter(Date >= start_date, Distance != "Sprint", Technique == "C", MS == 1) %>%
-      distinct(Date, City)
-    
-    participant_type_races <- chronos %>%
-      filter(Date >= start_date, Skier == participant, Distance != "Sprint", Technique == "C", MS == 1) %>%
-      distinct(Date, City)
-  } else if (race_type == "Distance_F_Ind") {
-    type_races <- chronos %>%
-      filter(Date >= start_date, Distance != "Sprint", Technique == "F", MS == 0) %>%
-      distinct(Date, City)
-    
-    participant_type_races <- chronos %>%
-      filter(Date >= start_date, Skier == participant, Distance != "Sprint", Technique == "F", MS == 0) %>%
-      distinct(Date, City)
-  } else if (race_type == "Distance_F_Ms") {
-    type_races <- chronos %>%
-      filter(Date >= start_date, Distance != "Sprint", Technique == "F", MS == 1) %>%
-      distinct(Date, City)
-    
-    participant_type_races <- chronos %>%
-      filter(Date >= start_date, Skier == participant, Distance != "Sprint", Technique == "F", MS == 1) %>%
-      distinct(Date, City)
-  } else if (race_type == "Distance_Ind") {
-    type_races <- chronos %>%
-      filter(Date >= start_date, Distance != "Sprint", MS == 0) %>%
-      distinct(Date, City)
-    
-    participant_type_races <- chronos %>%
-      filter(Date >= start_date, Skier == participant, Distance != "Sprint", MS == 0) %>%
-      distinct(Date, City)
-  } else if (race_type == "Distance_Ms") {
-    type_races <- chronos %>%
-      filter(Date >= start_date, Distance != "Sprint", MS == 1) %>%
-      distinct(Date, City)
-    
-    participant_type_races <- chronos %>%
-      filter(Date >= start_date, Skier == participant, Distance != "Sprint", MS == 1) %>%
-      distinct(Date, City)
-  } else {
-    # Default: all races
-    type_races <- chronos %>%
-      filter(Date >= start_date) %>%
-      distinct(Date, City)
-    
-    participant_type_races <- chronos %>%
-      filter(Date >= start_date, Skier == participant) %>%
-      distinct(Date, City)
-  }
-  
-  all_races <- nrow(type_races)
-  participant_races <- nrow(participant_type_races)
-  
-  # Calculate base probability (capped at 1)
-  if(all_races == 0) return(0)
-  base_prob <- min(1, participant_races / all_races)
-  
-  return(base_prob)
-}
-
-# Add race probability columns to startlists with gender-specific numbering
-log_info("Calculating base race participation probabilities")
-
-# Create separate counters for each gender
-men_race_counter <- 0
-ladies_race_counter <- 0
-
-  for (i in 1:nrow(individual_races)) {
-  race <- individual_races[i, ]
-  
-  if (race$Sex == "M") {
-    men_race_counter <- men_race_counter + 1
-    race_col <- paste0("Race", men_race_counter, "_Prob")
-    
-    log_info(paste("Calculating probabilities for men's race", men_race_counter, ":", race$Distance, race$Technique))
-    
-    # Add to men's startlist
-    men_startlist[[race_col]] <- sapply(men_startlist$Skier, function(skier) {
-      get_base_race_probability(men_chrono, skier, race$race_type)
-    })
-    log_info(paste("Men's", race_col, "calculated. Mean:", round(mean(men_startlist[[race_col]], na.rm = TRUE), 3)))
-    
-  } else if (race$Sex == "L") {
-    ladies_race_counter <- ladies_race_counter + 1
-    race_col <- paste0("Race", ladies_race_counter, "_Prob")
-    
-    log_info(paste("Calculating probabilities for ladies' race", ladies_race_counter, ":", race$Distance, race$Technique))
-    
-    # Add to ladies' startlist
-    ladies_startlist[[race_col]] <- sapply(ladies_startlist$Skier, function(skier) {
-      get_base_race_probability(ladies_chrono, skier, race$race_type)
-    })
-    log_info(paste("Ladies'", race_col, "calculated. Mean:", round(mean(ladies_startlist[[race_col]], na.rm = TRUE), 3)))
-  }
-}
-
-# Apply 4-person quota constraint per nation per race
-log_info("Applying 4-person quota constraints per nation")
-
-# Reset counters for quota application
-men_race_counter <- 0
-ladies_race_counter <- 0
-
-  for (i in 1:nrow(individual_races)) {
-  race <- individual_races[i, ]
-  
-  if (race$Sex == "M") {
-    men_race_counter <- men_race_counter + 1
-    race_col <- paste0("Race", men_race_counter, "_Prob")
-    
-    log_info(paste("Applying quota constraint for men's race", men_race_counter, ":", race$Distance, race$Technique))
-    
-    # Apply quota to men's startlist
-    nations <- unique(men_startlist$Nation[!is.na(men_startlist$Nation)])
-    
-    for (nation in nations) {
-      nation_mask <- men_startlist$Nation == nation & !is.na(men_startlist$Nation)
-      
-      if (sum(nation_mask) > 0) {
-        nation_probs <- men_startlist[nation_mask, race_col]
-        current_sum <- sum(nation_probs, na.rm = TRUE)
-        
-        if (current_sum > 0) {
-          # Scale to target 4 participants per nation
-          scaling_factor <- 4 / current_sum
-          scaled_probs <- nation_probs * scaling_factor
-          # Cap individual probabilities at 1.0
-          scaled_probs <- pmin(scaled_probs, 1.0)
-          men_startlist[nation_mask, race_col] <- scaled_probs
-        }
-      }
-    }
-    
-    # Log final statistics for this race
-    final_mean <- mean(men_startlist[[race_col]], na.rm = TRUE)
-    final_sum <- sum(men_startlist[[race_col]], na.rm = TRUE)
-    n_nations <- length(nations)
-    expected_sum <- n_nations * 4
-    
-    log_info(paste("Final stats for men's", race_col, "- Mean prob:", round(final_mean, 3), 
-                   "Total sum:", round(final_sum, 1), "Expected:", expected_sum))
-                   
-  } else if (race$Sex == "L") {
-    ladies_race_counter <- ladies_race_counter + 1
-    race_col <- paste0("Race", ladies_race_counter, "_Prob")
-    
-    log_info(paste("Applying quota constraint for ladies' race", ladies_race_counter, ":", race$Distance, race$Technique))
-    
-    # Apply quota to ladies' startlist
-    nations <- unique(ladies_startlist$Nation[!is.na(ladies_startlist$Nation)])
-    
-    for (nation in nations) {
-      nation_mask <- ladies_startlist$Nation == nation & !is.na(ladies_startlist$Nation)
-      
-      if (sum(nation_mask) > 0) {
-        nation_probs <- ladies_startlist[nation_mask, race_col]
-        current_sum <- sum(nation_probs, na.rm = TRUE)
-        
-        if (current_sum > 0) {
-          # Scale to target 4 participants per nation
-          scaling_factor <- 4 / current_sum
-          scaled_probs <- nation_probs * scaling_factor
-          # Cap individual probabilities at 1.0
-          scaled_probs <- pmin(scaled_probs, 1.0)
-          ladies_startlist[nation_mask, race_col] <- scaled_probs
-        }
-      }
-    }
-    
-    # Log final statistics for this race
-    final_mean <- mean(ladies_startlist[[race_col]], na.rm = TRUE)
-    final_sum <- sum(ladies_startlist[[race_col]], na.rm = TRUE)
-    n_nations <- length(nations)
-    expected_sum <- n_nations * 4
-    
-    log_info(paste("Final stats for ladies'", race_col, "- Mean prob:", round(final_mean, 3), 
-                   "Total sum:", round(final_sum, 1), "Expected:", expected_sum))
-  }
-}
-
-log_info("Start probability calculations complete")
+# NOTE: Step 3 (start probability calculations) was moved to run BEFORE the prediction loop above
+# This ensures Race_Prob columns exist when we make position predictions
 
 # Step 4: Enforce probability hierarchy (win <= podium <= top5 <= top10 <= top30)
 log_info("Enforcing probability hierarchy constraints")
@@ -1133,8 +1074,8 @@ log_info("Probability normalization complete")
 log_info("Saving individual race results to Excel files")
 
 # Create output directory with today's date
-today_date <- format(Sys.Date(), "%Y%m%d")
-output_dir <- file.path("~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions", today_date)
+current_year <- format(Sys.Date(), "%Y")
+output_dir <- file.path("~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions", current_year)
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }
@@ -1179,8 +1120,132 @@ if (length(ladies_results) > 0) {
   log_info(paste("Ladies' tabs:", paste(names(ladies_results), collapse = ", ")))
 }
 
+# ============================================================================
+# CREATE NATIONS EXCEL FILE (for Nations blog post)
+# ============================================================================
+log_info("=== Creating Nations Excel File ===")
+
+# Combine all results into one data frame with Race column
+all_individual_results <- data.frame()
+
+# Process men's results
+for (race_name in names(men_results)) {
+  race_data <- men_results[[race_name]]
+  race_data$Race <- paste("Men", race_name)
+  all_individual_results <- bind_rows(all_individual_results, race_data)
+}
+
+# Process ladies' results
+for (race_name in names(ladies_results)) {
+  race_data <- ladies_results[[race_name]]
+  race_data$Race <- paste("Ladies", race_name)
+  all_individual_results <- bind_rows(all_individual_results, race_data)
+}
+
+log_info(paste("Combined", nrow(all_individual_results), "total rows from individual races"))
+
+# Count unique athletes per nation (across all races)
+nation_athlete_counts <- all_individual_results %>%
+  filter(start_prob > 0) %>%
+  group_by(Nation) %>%
+  summarise(n_athletes = n_distinct(ID), .groups = "drop")
+
+# Nations with 4+ athletes get their own sheet
+main_nations <- nation_athlete_counts %>%
+  filter(n_athletes >= 4) %>%
+  pull(Nation) %>%
+  sort()
+
+# Nations with <4 athletes go into "Other"
+other_nations <- nation_athlete_counts %>%
+  filter(n_athletes < 4) %>%
+  pull(Nation)
+
+log_info(paste("Nations with 4+ athletes:", paste(main_nations, collapse = ", ")))
+log_info(paste("Nations with <4 athletes (Other):", length(other_nations)))
+
+# Select and rename columns for reader-friendly output
+select_and_rename_cols <- function(df, include_nation = FALSE) {
+  if (include_nation) {
+    df %>%
+      select(Race, Nation, Athlete = Skier, ID,
+             `Start Prob` = start_prob,
+             `Win Prob` = win_prob,
+             `Podium Prob` = podium_prob,
+             `Top 5 Prob` = top5_prob,
+             `Top 10 Prob` = top10_prob,
+             `Top 30 Prob` = top30_prob) %>%
+      arrange(Race, Nation, desc(`Start Prob`))
+  } else {
+    df %>%
+      select(Race, Athlete = Skier, ID,
+             `Start Prob` = start_prob,
+             `Win Prob` = win_prob,
+             `Podium Prob` = podium_prob,
+             `Top 5 Prob` = top5_prob,
+             `Top 10 Prob` = top10_prob,
+             `Top 30 Prob` = top30_prob) %>%
+      arrange(Race, desc(`Start Prob`))
+  }
+}
+
+# Create nations workbook
+nations_wb <- list()
+
+# Process each main nation (alphabetical order)
+for (nation in main_nations) {
+  nation_data <- all_individual_results %>%
+    filter(Nation == nation, start_prob > 0)
+
+  if (nrow(nation_data) > 0) {
+    nations_wb[[nation]] <- select_and_rename_cols(nation_data, include_nation = FALSE)
+    log_info(paste("Added", nation, "sheet with", nrow(nation_data), "rows"))
+  }
+}
+
+# Create "Other" sheet for nations with <4 athletes
+other_data <- all_individual_results %>%
+  filter(Nation %in% other_nations, start_prob > 0)
+
+if (nrow(other_data) > 0) {
+  nations_wb[["Other"]] <- select_and_rename_cols(other_data, include_nation = TRUE)
+  log_info(paste("Added Other sheet with", nrow(other_data), "rows from",
+                 length(unique(other_data$Nation)), "nations"))
+}
+
+# Create Summary sheet
+summary_data <- all_individual_results %>%
+  filter(start_prob > 0) %>%
+  mutate(
+    Nation_Group = ifelse(Nation %in% main_nations, Nation, "Other")
+  ) %>%
+  group_by(Nation_Group) %>%
+  summarise(
+    `Total Win Prob` = sum(win_prob, na.rm = TRUE),
+    `Total Podium Prob` = sum(podium_prob, na.rm = TRUE),
+    `Total Top 10 Prob` = sum(top10_prob, na.rm = TRUE),
+    `Athletes` = n_distinct(ID),
+    .groups = "drop"
+  ) %>%
+  rename(Nation = Nation_Group) %>%
+  # Put main nations first (alphabetical), then Other at bottom
+  mutate(sort_order = ifelse(Nation == "Other", 2, 1)) %>%
+  arrange(sort_order, Nation) %>%
+  select(-sort_order)
+
+nations_wb[["Summary"]] <- summary_data
+log_info("Added Summary sheet")
+
+# Save nations Excel file
+if (length(nations_wb) > 0) {
+  nations_file <- file.path(output_dir, "nations_individual.xlsx")
+  write.xlsx(nations_wb, nations_file)
+  log_info(paste("Saved nations individual results to", nations_file))
+  log_info(paste("Nations tabs:", paste(names(nations_wb), collapse = ", ")))
+}
+
   log_info("Individual test execution complete - all race predictions generated and saved")
-  
+
   return(list(men_results = men_results, ladies_results = ladies_results))
 }
 
@@ -1990,8 +2055,8 @@ process_relay_races <- function() {
   ladies_excel_data <- format_relay_results_for_excel(ladies_relay_optimization)
   
   # Save to Excel file
-  today_date <- format(Sys.Date(), "%Y%m%d")
-  output_dir <- file.path("~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions", today_date)
+  current_year <- format(Sys.Date(), "%Y")
+  output_dir <- file.path("~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions", current_year)
   if (!dir.exists(output_dir)) {
     dir.create(output_dir, recursive = TRUE)
   }
@@ -3158,8 +3223,8 @@ process_ts_races <- function() {
   ladies_ts_excel_data <- format_ts_results_for_excel(ladies_ts_optimization)
   
   # Save to Excel file
-  today_date <- format(Sys.Date(), "%Y%m%d")
-  output_dir <- file.path("~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions", today_date)
+  current_year <- format(Sys.Date(), "%Y")
+  output_dir <- file.path("~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions", current_year)
   if (!dir.exists(output_dir)) {
     dir.create(output_dir, recursive = TRUE)
   }
