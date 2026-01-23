@@ -314,11 +314,15 @@ process_gender_probabilities <- function(startlist, chronos, races) {
   
   # Handle Race1_Prob based on FIS startlist existence
   if(has_fis_startlist) {
-    log_info("FIS startlist exists (at least one In_FIS_List=True), keeping existing Race1_Prob values")
-    # Keep existing Race1_Prob if it exists, otherwise set based on In_FIS_List
+    log_info("FIS startlist exists (at least one In_FIS_List=True)")
+    # When FIS startlist exists: In_FIS_List=True → 1, In_FIS_List=False → 0
+    # This overrides whatever Python set, because FIS list is authoritative for Race 1
     if(!"Race1_Prob" %in% names(startlist)) {
-      startlist$Race1_Prob <- ifelse(startlist$In_FIS_List, 1, 0)
+      startlist$Race1_Prob <- NA_real_
     }
+    startlist$Race1_Prob <- ifelse(startlist$In_FIS_List, 1, 0)
+    log_info(paste("Set Race1_Prob: ", sum(startlist$Race1_Prob == 1), "athletes with prob=1,",
+                   sum(startlist$Race1_Prob == 0), "with prob=0"))
   } else {
     log_info("No FIS startlist (all In_FIS_List=False), will calculate Race1_Prob")
     # Race1_Prob will be calculated like other races below
@@ -339,9 +343,12 @@ if("Config_Nation" %in% names(startlist) && "In_Config" %in% names(startlist)) {
   }
 
   # Set prob=0 for config nation skiers NOT in config AND NOT in FIS list
-  # These are athletes from major nations who aren't confirmed to race
+  # These are athletes from nations that announced squads but weren't included
+  # Note: In_FIS_List=True athletes are NOT included here, so their Race2+ probs
+  # will be calculated from history (they're at the venue, might race)
   in_fis_list <- if("In_FIS_List" %in% names(startlist)) startlist$In_FIS_List else FALSE
   config_non_included <- which(startlist$Config_Nation & !startlist$In_Config & !in_fis_list)
+
   if(length(config_non_included) > 0) {
     for(i in 1:nrow(races)) {
       race_prob_col <- paste0("Race", i, "_Prob")
@@ -421,6 +428,8 @@ if("Config_Nation" %in% names(startlist) && "In_Config" %in% names(startlist)) {
               log_debug(paste("Using preset probability 0 (explicit config no list) for", skier))
               next
             }
+
+            # Calculate probability from history for athletes with NA prob
             startlist[startlist$Skier == skier, race_prob_col] <-
               get_race_probability(chronos, skier, races$distance[i], races$technique[i])
           }

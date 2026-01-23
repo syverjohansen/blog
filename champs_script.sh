@@ -117,40 +117,45 @@ post_dir="$CONTENT_DIR/champs-predictions/$CURRENT_YEAR"
 mkdir -p "$post_dir"
 log_message "Created post directory: $post_dir"
 
-# Create placeholder files if they don't exist
-if [[ ! -f "$post_dir/nations.md" ]]; then
-    cat > "$post_dir/nations.md" << 'EOF'
+# Create one placeholder post per sport (with Calendar and Nation sections)
+for sport in "${SPORTS[@]}"; do
+    # Get display name for sport
+    case "$sport" in
+        "alpine") sport_display="Alpine Skiing" ;;
+        "biathlon") sport_display="Biathlon" ;;
+        "cross-country") sport_display="Cross-Country Skiing" ;;
+        "nordic-combined") sport_display="Nordic Combined" ;;
+        "skijump") sport_display="Ski Jumping" ;;
+        *) sport_display="$sport" ;;
+    esac
+
+    post_file="$post_dir/$sport.md"
+
+    if [[ ! -f "$post_file" ]]; then
+        cat > "$post_file" << EOF
 ---
-title: "2026 Winter Olympics - Nations Preview"
-date: 2026-01-22T00:00:00+00:00
+title: "$CURRENT_YEAR Winter Olympics - $sport_display Predictions"
+date: $(date -Iseconds)
 draft: true
-tags: ["predictions", "olympics", "2026", "nations"]
+tags: ["predictions", "olympics", "$CURRENT_YEAR", "$sport"]
 ---
 
-# 2026 Winter Olympics - Nations Preview
+# $CURRENT_YEAR Winter Olympics - $sport_display Predictions
 
-[Content to be written]
+## Calendar
+
+[Position probability tables for each event]
+
+## Nation
+
+[Nation breakdown tables]
 
 EOF
-    log_message "Created placeholder: nations.md"
-fi
-
-if [[ ! -f "$post_dir/race-by-race.md" ]]; then
-    cat > "$post_dir/race-by-race.md" << 'EOF'
----
-title: "2026 Winter Olympics - Race by Race Predictions"
-date: 2026-01-22T00:00:00+00:00
-draft: true
-tags: ["predictions", "olympics", "2026", "race-predictions"]
----
-
-# 2026 Winter Olympics - Race by Race Predictions
-
-[Content to be written]
-
-EOF
-    log_message "Created placeholder: race-by-race.md"
-fi
+        log_message "Created placeholder: $sport.md"
+    else
+        log_message "Skipped $sport.md (already exists)"
+    fi
+done
 
 log_message ""
 log_message "======================================="
