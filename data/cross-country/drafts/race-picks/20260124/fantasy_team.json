@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      17493,
+      145.33262409931
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "L",
+      "Sweden",
+      12793,
+      138.762502561542
+    ],
+    [
+      "Emma Ribom",
+      1844,
+      "L",
+      "Sweden",
+      4606,
+      126.254707393859
+    ],
+    [
+      "Jasmi Joensuu",
+      1675,
+      "L",
+      "Finland",
+      6626,
+      123.773005829995
+    ],
+    [
+      "Linn Svahn",
+      3190,
+      "L",
+      "Sweden",
+      3088,
+      123.371997996579
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      5956,
+      118.42133897697
+    ],
+    [
+      "Johanna Matintalo",
+      1761,
+      "L",
+      "Finland",
+      3721,
+      116.480462638107
+    ],
+    [
+      "Laura Gimmler",
+      1495,
+      "L",
+      "Germany",
+      2107,
+      106.11617534119
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      18045,
+      185.883955547893
+    ],
+    [
+      "Erik Valnes",
+      5923,
+      "M",
+      "Norway",
+      7840,
+      141.973091386446
+    ],
+    [
+      "Edvin Anger",
+      14039,
+      "M",
+      "Sweden",
+      9128,
+      127.428674361189
+    ],
+    [
+      "Jules Chappaz",
+      12181,
+      "M",
+      "France",
+      1375,
+      96.5451095712865
+    ],
+    [
+      "Calle Halfvarsson",
+      73,
+      "M",
+      "Sweden",
+      497,
+      94.4813656636342
+    ],
+    [
+      "Håvard Moseby",
+      6103,
+      "M",
+      "Norway",
+      1597,
+      88.2095314602675
+    ],
+    [
+      "Lauri Vuorinen",
+      2874,
+      "M",
+      "Finland",
+      2190,
+      81.5224726354762
+    ],
+    [
+      "Saveliy Korostelev",
+      13188,
+      "M",
+      "Russia",
+      2594,
+      77.9310531849186
+    ]
+  ]
+}

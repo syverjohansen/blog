@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Top5",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Top5%"
+  ],
+  "rows": [
+    [
+      "Alice Robinson",
+      "NZL",
+      71.4727085478888
+    ],
+    [
+      "Camille Rast",
+      "SUI",
+      66.8383110195675
+    ],
+    [
+      "Mikaela Shiffrin",
+      "USA",
+      62.3069001029866
+    ],
+    [
+      "Julia Scheib",
+      "AUT",
+      61.7919670442842
+    ],
+    [
+      "Sara Hector",
+      "SWE",
+      56.2306900102987
+    ]
+  ]
+}
