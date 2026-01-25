@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Men Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Johannes Høsflot Klæbo",
+      "Norway",
+      100.0
+    ],
+    [
+      "Harald Østberg Amundsen",
+      "Norway",
+      32.8657314629259
+    ],
+    [
+      "Erik Valnes",
+      "Norway",
+      28.0561122244489
+    ],
+    [
+      "Mattis Stenshagen",
+      "Norway",
+      26.7201068804275
+    ],
+    [
+      "Edvin Anger",
+      "Sweden",
+      23.6472945891784
+    ]
+  ]
+}
