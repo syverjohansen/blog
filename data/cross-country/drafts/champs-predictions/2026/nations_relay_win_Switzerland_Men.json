@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Switzerland Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Valerio Grond",
+      12164,
+      "Switzerland",
+      1,
+      0.014,
+      0.004,
+      0.0654,
+      0.2805,
+      0.0127,
+      0.068,
+      0.1155,
+      0.4813
+    ],
+    [
+      "Jonas Baumann",
+      1534,
+      "Switzerland",
+      2,
+      0.0373,
+      0.1648,
+      0.1501,
+      0.6346,
+      0.0127,
+      0.068,
+      0.1155,
+      0.4813
+    ],
+    [
+      "Jason Rüesch",
+      2732,
+      "Switzerland",
+      3,
+      0.0053,
+      0.0497,
+      0.1458,
+      0.7031,
+      0.0127,
+      0.068,
+      0.1155,
+      0.4813
+    ],
+    [
+      "Janik Riebli",
+      7725,
+      "Switzerland",
+      4,
+      0.0013,
+      0.062,
+      0.1067,
+      0.3683,
+      0.0127,
+      0.068,
+      0.1155,
+      0.4813
+    ]
+  ]
+}

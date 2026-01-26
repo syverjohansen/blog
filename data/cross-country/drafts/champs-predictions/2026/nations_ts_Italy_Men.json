@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Italy Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Davide Graz",
+      12165,
+      "Italy",
+      1,
+      0.0384,
+      0.1753,
+      0.2717,
+      0.531,
+      0.1548,
+      0.4891,
+      0.7225,
+      1
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "Italy",
+      2,
+      0.2419,
+      0.6798,
+      0.8489,
+      0.8637,
+      0.1548,
+      0.4891,
+      0.7225,
+      1
+    ]
+  ]
+}

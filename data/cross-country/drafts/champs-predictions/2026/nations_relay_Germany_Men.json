@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Germany Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Friedrich Moch",
+      9323,
+      "Germany",
+      1,
+      0.0054,
+      0.0384,
+      0.0682,
+      0.5009,
+      0.0159,
+      0.094,
+      0.2073,
+      1
+    ],
+    [
+      "Janosch Brugger",
+      3657,
+      "Germany",
+      2,
+      0.0339,
+      0.1483,
+      0.1746,
+      0.6657,
+      0.0159,
+      0.094,
+      0.2073,
+      1
+    ],
+    [
+      "Florian Notz",
+      1488,
+      "Germany",
+      3,
+      0.0076,
+      0.0757,
+      0.2226,
+      0.8117,
+      0.0159,
+      0.094,
+      0.2073,
+      1
+    ],
+    [
+      "Jan Stölben",
+      14033,
+      "Germany",
+      4,
+      0.0023,
+      0.0455,
+      0.0799,
+      0.3587,
+      0.0159,
+      0.094,
+      0.2073,
+      1
+    ]
+  ]
+}

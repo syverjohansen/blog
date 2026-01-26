@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Estonia Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Mariel Merlii Pulles",
+      1969,
+      "Estonia",
+      1,
+      0.0012,
+      0.0074,
+      0.0716,
+      0.0025,
+      0.0003,
+      0.0053,
+      0.0393,
+      0.0394
+    ],
+    [
+      "Keidy Kaasiku",
+      4942,
+      "Estonia",
+      2,
+      0.0,
+      0.0027,
+      0.0046,
+      0.0313,
+      0.0003,
+      0.0053,
+      0.0393,
+      0.0394
+    ]
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Switzerland Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Nadine Fähndrich",
+      1590,
+      "Switzerland",
+      1,
+      0.4027,
+      0.3141,
+      0.9376,
+      0.9311,
+      0.0946,
+      0.1956,
+      0.6709,
+      1
+    ],
+    [
+      "Anja Weber",
+      6338,
+      "Switzerland",
+      2,
+      0.0014,
+      0.0613,
+      0.3413,
+      0.9036,
+      0.0946,
+      0.1956,
+      0.6709,
+      1
+    ]
+  ]
+}

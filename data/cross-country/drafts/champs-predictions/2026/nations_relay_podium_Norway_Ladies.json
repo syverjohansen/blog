@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Norway Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Milla Grosberghaugen Andreassen",
+      10424,
+      "Norway",
+      1,
+      0.0053,
+      0.558,
+      0.1982,
+      0,
+      0.2654,
+      0.8183,
+      0.7081,
+      0.8028
+    ],
+    [
+      "Astrid Øyre Slind",
+      115,
+      "Norway",
+      2,
+      0.139,
+      0.9291,
+      0.9953,
+      1,
+      0.2654,
+      0.8183,
+      0.7081,
+      0.8028
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "Norway",
+      3,
+      0.4175,
+      0.9073,
+      1.0,
+      1,
+      0.2654,
+      0.8183,
+      0.7081,
+      0.8028
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      2300,
+      "Norway",
+      4,
+      0.4455,
+      0.8006,
+      0.4605,
+      1,
+      0.2654,
+      0.8183,
+      0.7081,
+      0.8028
+    ]
+  ]
+}

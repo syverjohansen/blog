@@ -1,0 +1,500 @@
+{
+  "sheet_name": "Ladies Team Sprint Teams",
+  "headers": [
+    "Country",
+    "Leg",
+    "Athlete",
+    "Nation",
+    "ID",
+    "Leg Win",
+    "Team Win"
+  ],
+  "rows": [
+    [
+      "Argentina",
+      1,
+      "Agustina Groetzner",
+      "Argentina",
+      7428,
+      0.0001,
+      0.0
+    ],
+    [
+      "Argentina",
+      2,
+      "Nahiara Diaz Gonzalez",
+      "Argentina",
+      10264,
+      0.0,
+      0.0
+    ],
+    [
+      "Australia",
+      1,
+      "Rosie Fordham",
+      "Australia",
+      6450,
+      0.0001,
+      0.0001
+    ],
+    [
+      "Australia",
+      2,
+      "Ellen Søhol Lie",
+      "Australia",
+      6627,
+      0.0,
+      0.0001
+    ],
+    [
+      "Austria",
+      1,
+      "Magdalena Scherz",
+      "Austria",
+      6707,
+      0.0033,
+      0.0016
+    ],
+    [
+      "Austria",
+      2,
+      "Teresa Stadlober",
+      "Austria",
+      529,
+      0.0,
+      0.0016
+    ],
+    [
+      "Brazil",
+      1,
+      "Eduarda Ribera",
+      "Brazil",
+      7448,
+      0.0001,
+      0.0001
+    ],
+    [
+      "Brazil",
+      2,
+      "Bruna Moura",
+      "Brazil",
+      3180,
+      0.0,
+      0.0001
+    ],
+    [
+      "Canada",
+      1,
+      "Sonjaa Schmidt",
+      "Canada",
+      7874,
+      0.0011,
+      0.0005
+    ],
+    [
+      "Canada",
+      2,
+      "Olivia Bouffard-Nesbitt",
+      "Canada",
+      1685,
+      0.0,
+      0.0005
+    ],
+    [
+      "China",
+      1,
+      "Bayani Jialin",
+      "China",
+      6652,
+      0.0003,
+      0.0001
+    ],
+    [
+      "China",
+      2,
+      "Dinigeer Yilamujiang",
+      "China",
+      6575,
+      0.0,
+      0.0001
+    ],
+    [
+      "Croatia",
+      1,
+      "Ema Sobol",
+      "Croatia",
+      10875,
+      0.0001,
+      0.0
+    ],
+    [
+      "Croatia",
+      2,
+      "Leona Garac",
+      "Croatia",
+      10325,
+      0.0,
+      0.0
+    ],
+    [
+      "Czechia",
+      1,
+      "Katerina Janatova",
+      "Czechia",
+      3198,
+      0.0105,
+      0.005
+    ],
+    [
+      "Czechia",
+      2,
+      "Tereza Beranova",
+      "Czechia",
+      3618,
+      0.0,
+      0.005
+    ],
+    [
+      "Estonia",
+      1,
+      "Mariel Merlii Pulles",
+      "Estonia",
+      1969,
+      0.0012,
+      0.0006
+    ],
+    [
+      "Estonia",
+      2,
+      "Kaidy Kaasiku",
+      "Estonia",
+      4943,
+      0.0,
+      0.0006
+    ],
+    [
+      "Finland",
+      1,
+      "Jasmi Joensuu",
+      "Finland",
+      1675,
+      0.2653,
+      0.127
+    ],
+    [
+      "Finland",
+      2,
+      "Jasmin Kähärä",
+      "Finland",
+      3528,
+      0.0002,
+      0.127
+    ],
+    [
+      "France",
+      1,
+      "Lena Quintin",
+      "France",
+      3252,
+      0.011,
+      0.0053
+    ],
+    [
+      "France",
+      2,
+      "France Pignot",
+      "France",
+      10314,
+      0.0,
+      0.0053
+    ],
+    [
+      "Germany",
+      1,
+      "Coletta Rydzek",
+      "Germany",
+      3254,
+      0.8311,
+      0.4039
+    ],
+    [
+      "Germany",
+      2,
+      "Laura Gimmler",
+      "Germany",
+      1495,
+      0.0121,
+      0.4039
+    ],
+    [
+      "Greece",
+      1,
+      "Konstantina Charalampidou",
+      "Greece",
+      8340,
+      0.0001,
+      0.0
+    ],
+    [
+      "Greece",
+      2,
+      "Maria Dimitra Tsiarka",
+      "Greece",
+      10256,
+      0.0,
+      0.0
+    ],
+    [
+      "Hungary",
+      1,
+      "Evelin Vivien Laczko",
+      "Hungary",
+      6647,
+      0.0001,
+      0.0
+    ],
+    [
+      "Hungary",
+      2,
+      "Larissza Vanda Bere",
+      "Hungary",
+      10909,
+      0.0,
+      0.0
+    ],
+    [
+      "Italy",
+      1,
+      "Federica Cassol",
+      "Italy",
+      9082,
+      0.1101,
+      0.0527
+    ],
+    [
+      "Italy",
+      2,
+      "Nicole Monsorno",
+      "Italy",
+      6631,
+      0.0001,
+      0.0527
+    ],
+    [
+      "Japan",
+      1,
+      "Masae Tsuchiya",
+      "Japan",
+      3498,
+      0.0001,
+      0.0
+    ],
+    [
+      "Japan",
+      2,
+      "Chika Honda",
+      "Japan",
+      7087,
+      0.0,
+      0.0
+    ],
+    [
+      "Kazakhstan",
+      1,
+      "Darya Ryazhko",
+      "Kazakhstan",
+      3468,
+      0.0001,
+      0.0001
+    ],
+    [
+      "Kazakhstan",
+      2,
+      "Yelizaveta Tolmachyova",
+      "Kazakhstan",
+      9324,
+      0.0,
+      0.0001
+    ],
+    [
+      "Latvia",
+      1,
+      "Patricijia Eiduka",
+      "Latvia",
+      3240,
+      0.009,
+      0.0043
+    ],
+    [
+      "Latvia",
+      2,
+      "Adriana Suminska",
+      "Latvia",
+      10845,
+      0.0,
+      0.0043
+    ],
+    [
+      "Lithuania",
+      1,
+      "Egle Savickaite",
+      "Lithuania",
+      7450,
+      0.0001,
+      0.0
+    ],
+    [
+      "Lithuania",
+      2,
+      "Ieva Dainyte",
+      "Lithuania",
+      9326,
+      0.0,
+      0.0
+    ],
+    [
+      "Norway",
+      1,
+      "Kristine Stavås Skistad",
+      "Norway",
+      3207,
+      0.879,
+      0.4212
+    ],
+    [
+      "Norway",
+      2,
+      "Ingrid Bergene Aabrekk",
+      "Norway",
+      6828,
+      0.0015,
+      0.4212
+    ],
+    [
+      "Poland",
+      1,
+      "Monika Skinder",
+      "Poland",
+      6335,
+      0.0009,
+      0.0004
+    ],
+    [
+      "Poland",
+      2,
+      "Andzelika Szyszka",
+      "Poland",
+      8097,
+      0.0,
+      0.0004
+    ],
+    [
+      "Slovenia",
+      1,
+      "Eva Urevc",
+      "Slovenia",
+      3192,
+      0.0009,
+      0.0004
+    ],
+    [
+      "Slovenia",
+      2,
+      "Anja Mandeljc",
+      "Slovenia",
+      1868,
+      0.0,
+      0.0004
+    ],
+    [
+      "South Korea",
+      1,
+      "Eui Jin Lee",
+      "South Korea",
+      6644,
+      0.0001,
+      0.0
+    ],
+    [
+      "South Korea",
+      2,
+      "Da-Som Han",
+      "South Korea",
+      1519,
+      0.0,
+      0.0
+    ],
+    [
+      "Sweden",
+      1,
+      "Maja Dahlqvist",
+      "Sweden",
+      1673,
+      0.7707,
+      0.835
+    ],
+    [
+      "Sweden",
+      2,
+      "Jonna Sundling",
+      "Sweden",
+      1486,
+      0.894,
+      0.835
+    ],
+    [
+      "Switzerland",
+      1,
+      "Nadine Fähndrich",
+      "Switzerland",
+      1590,
+      0.4027,
+      0.1934
+    ],
+    [
+      "Switzerland",
+      2,
+      "Anja Weber",
+      "Switzerland",
+      6338,
+      0.0014,
+      0.1934
+    ],
+    [
+      "USA",
+      1,
+      "Jessie Diggins",
+      "USA",
+      131,
+      0.1432,
+      0.0697
+    ],
+    [
+      "USA",
+      2,
+      "Julia Kern",
+      "USA",
+      1846,
+      0.0023,
+      0.0697
+    ],
+    [
+      "Ukraine",
+      1,
+      "Yelizaveta Nopriienko",
+      "Ukraine",
+      10799,
+      0.0001,
+      0.0
+    ],
+    [
+      "Ukraine",
+      2,
+      "Sofiia Shkatula",
+      "Ukraine",
+      10768,
+      0.0,
+      0.0
+    ]
+  ]
+}

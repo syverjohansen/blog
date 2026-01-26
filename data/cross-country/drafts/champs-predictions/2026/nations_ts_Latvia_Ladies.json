@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Latvia Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Patricijia Eiduka",
+      3240,
+      "Latvia",
+      1,
+      0.009,
+      0.0434,
+      0.1908,
+      0.5991,
+      0.0021,
+      0.0235,
+      0.0994,
+      0.3595
+    ],
+    [
+      "Linda Kaparkaleja",
+      10843,
+      "Latvia",
+      2,
+      0.0,
+      0.0022,
+      0.0029,
+      0.0329,
+      0.0021,
+      0.0235,
+      0.0994,
+      0.3595
+    ]
+  ]
+}

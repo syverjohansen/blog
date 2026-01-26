@@ -1,0 +1,554 @@
+{
+  "sheet_name": "Ladies Relay Teams",
+  "headers": [
+    "Country",
+    "Leg",
+    "Athlete",
+    "Nation",
+    "ID",
+    "Leg Win",
+    "Team Win"
+  ],
+  "rows": [
+    [
+      "Australia",
+      1,
+      "Tuva Bygrave",
+      "Australia",
+      6448,
+      0.0001,
+      0.0045
+    ],
+    [
+      "Australia",
+      2,
+      "Phoebe Cridland",
+      "Australia",
+      5184,
+      0.0003,
+      0.0045
+    ],
+    [
+      "Australia",
+      3,
+      "Ellen Søhol Lie",
+      "Australia",
+      6627,
+      0.0,
+      0.0045
+    ],
+    [
+      "Australia",
+      4,
+      "Rosie Fordham",
+      "Australia",
+      6450,
+      0.0179,
+      0.0045
+    ],
+    [
+      "Austria",
+      1,
+      "Lisa Achleitner",
+      "Austria",
+      3255,
+      0.0008,
+      0.0535
+    ],
+    [
+      "Austria",
+      2,
+      "Magdalena Scherz",
+      "Austria",
+      6707,
+      0.0037,
+      0.0535
+    ],
+    [
+      "Austria",
+      3,
+      "Teresa Stadlober",
+      "Austria",
+      529,
+      0.1795,
+      0.0535
+    ],
+    [
+      "Austria",
+      4,
+      "Katharina Brudermann",
+      "Austria",
+      5040,
+      0.0095,
+      0.0535
+    ],
+    [
+      "Canada",
+      1,
+      "Katherine Weaver",
+      "Canada",
+      4251,
+      0.0012,
+      0.0197
+    ],
+    [
+      "Canada",
+      2,
+      "Kathrine Stewart-Jones",
+      "Canada",
+      1676,
+      0.0022,
+      0.0197
+    ],
+    [
+      "Canada",
+      3,
+      "Liliane Gagnon",
+      "Canada",
+      7427,
+      0.0001,
+      0.0197
+    ],
+    [
+      "Canada",
+      4,
+      "Alison Mackie",
+      "Canada",
+      10185,
+      0.0766,
+      0.0197
+    ],
+    [
+      "Czechia",
+      1,
+      "Tereza Beranova",
+      "Czechia",
+      3618,
+      0.0081,
+      0.0097
+    ],
+    [
+      "Czechia",
+      2,
+      "Barbora Antosova",
+      "Czechia",
+      6633,
+      0.0014,
+      0.0097
+    ],
+    [
+      "Czechia",
+      3,
+      "Anna Marie Jaklova",
+      "Czechia",
+      10190,
+      0.0001,
+      0.0097
+    ],
+    [
+      "Czechia",
+      4,
+      "Katerina Janatova",
+      "Czechia",
+      3198,
+      0.0314,
+      0.0097
+    ],
+    [
+      "Estonia",
+      1,
+      "Mariel Merlii Pulles",
+      "Estonia",
+      1969,
+      0.0013,
+      0.0017
+    ],
+    [
+      "Estonia",
+      2,
+      "Keidy Kaasiku",
+      "Estonia",
+      4942,
+      0.0004,
+      0.0017
+    ],
+    [
+      "Estonia",
+      3,
+      "Teiloora Ojaste",
+      "Estonia",
+      1970,
+      0.0,
+      0.0017
+    ],
+    [
+      "Estonia",
+      4,
+      "Kaidy Kaasiku",
+      "Estonia",
+      4943,
+      0.0052,
+      0.0017
+    ],
+    [
+      "Finland",
+      1,
+      "Jasmi Joensuu",
+      "Finland",
+      1675,
+      0.2322,
+      0.1138
+    ],
+    [
+      "Finland",
+      2,
+      "Johanna Matintalo",
+      "Finland",
+      1761,
+      0.0598,
+      0.1138
+    ],
+    [
+      "Finland",
+      3,
+      "Kerttu Niskanen",
+      "Finland",
+      37,
+      0.0655,
+      0.1138
+    ],
+    [
+      "Finland",
+      4,
+      "Krista Pärmäkoski",
+      "Finland",
+      13,
+      0.135,
+      0.1138
+    ],
+    [
+      "France",
+      1,
+      "Melissa Gal",
+      "France",
+      4034,
+      0.0028,
+      0.051
+    ],
+    [
+      "France",
+      2,
+      "Delphine Claudel",
+      "France",
+      1694,
+      0.0058,
+      0.051
+    ],
+    [
+      "France",
+      3,
+      "France Pignot",
+      "France",
+      10314,
+      0.0001,
+      0.051
+    ],
+    [
+      "France",
+      4,
+      "Flora Dolci",
+      "France",
+      2483,
+      0.1986,
+      0.051
+    ],
+    [
+      "Germany",
+      1,
+      "Laura Gimmler",
+      "Germany",
+      1495,
+      0.1421,
+      0.0748
+    ],
+    [
+      "Germany",
+      2,
+      "Coletta Rydzek",
+      "Germany",
+      3254,
+      0.0131,
+      0.0748
+    ],
+    [
+      "Germany",
+      3,
+      "Pia Fink",
+      "Germany",
+      4004,
+      0.042,
+      0.0748
+    ],
+    [
+      "Germany",
+      4,
+      "Helen Hoffmann",
+      "Germany",
+      6691,
+      0.1279,
+      0.0748
+    ],
+    [
+      "Italy",
+      1,
+      "Nicole Monsorno",
+      "Italy",
+      6631,
+      0.016,
+      0.0186
+    ],
+    [
+      "Italy",
+      2,
+      "Caterina Ganz",
+      "Italy",
+      1721,
+      0.0222,
+      0.0186
+    ],
+    [
+      "Italy",
+      3,
+      "Anna Comarella",
+      "Italy",
+      1724,
+      0.0002,
+      0.0186
+    ],
+    [
+      "Italy",
+      4,
+      "Maria Gismondi",
+      "Italy",
+      10867,
+      0.0373,
+      0.0186
+    ],
+    [
+      "Kazakhstan",
+      1,
+      "Darya Ryazhko",
+      "Kazakhstan",
+      3468,
+      0.0001,
+      0.0008
+    ],
+    [
+      "Kazakhstan",
+      2,
+      "Laura Kinybaeyeva",
+      "Kazakhstan",
+      6958,
+      0.0004,
+      0.0008
+    ],
+    [
+      "Kazakhstan",
+      3,
+      "Yelizaveta Tolmachyova",
+      "Kazakhstan",
+      9324,
+      0.0,
+      0.0008
+    ],
+    [
+      "Kazakhstan",
+      4,
+      "Angelina Shuryga",
+      "Kazakhstan",
+      1509,
+      0.0026,
+      0.0008
+    ],
+    [
+      "Norway",
+      1,
+      "Kristine Stavås Skistad",
+      "Norway",
+      3207,
+      0.2161,
+      0.307
+    ],
+    [
+      "Norway",
+      2,
+      "Astrid Øyre Slind",
+      "Norway",
+      115,
+      0.139,
+      0.307
+    ],
+    [
+      "Norway",
+      3,
+      "Heidi Weng",
+      "Norway",
+      60,
+      0.4175,
+      0.307
+    ],
+    [
+      "Norway",
+      4,
+      "Karoline Simpson-Larsen",
+      "Norway",
+      2300,
+      0.4455,
+      0.307
+    ],
+    [
+      "Poland",
+      1,
+      "Monika Skinder",
+      "Poland",
+      6335,
+      0.0034,
+      0.0016
+    ],
+    [
+      "Poland",
+      2,
+      "Andzelika Szyszka",
+      "Poland",
+      8097,
+      0.0001,
+      0.0016
+    ],
+    [
+      "Poland",
+      3,
+      "Aleksandra Kolodziej",
+      "Poland",
+      8064,
+      0.0,
+      0.0016
+    ],
+    [
+      "Poland",
+      4,
+      "Izabela Marcisz",
+      "Poland",
+      6327,
+      0.0036,
+      0.0016
+    ],
+    [
+      "Sweden",
+      1,
+      "Johanna Hagström",
+      "Sweden",
+      3212,
+      0.3617,
+      0.3862
+    ],
+    [
+      "Sweden",
+      2,
+      "Moa Ilar",
+      "Sweden",
+      1866,
+      0.1438,
+      0.3862
+    ],
+    [
+      "Sweden",
+      3,
+      "Ebba Andersson",
+      "Sweden",
+      1789,
+      0.4422,
+      0.3862
+    ],
+    [
+      "Sweden",
+      4,
+      "Jonna Sundling",
+      "Sweden",
+      1486,
+      0.6177,
+      0.3862
+    ],
+    [
+      "Switzerland",
+      1,
+      "Nadine Fähndrich",
+      "Switzerland",
+      1590,
+      0.2566,
+      0.059
+    ],
+    [
+      "Switzerland",
+      2,
+      "Anja Weber",
+      "Switzerland",
+      6338,
+      0.0239,
+      0.059
+    ],
+    [
+      "Switzerland",
+      3,
+      "Nadja Kälin",
+      "Switzerland",
+      6380,
+      0.0001,
+      0.059
+    ],
+    [
+      "Switzerland",
+      4,
+      "Marina Kälin",
+      "Switzerland",
+      7433,
+      0.0071,
+      0.059
+    ],
+    [
+      "USA",
+      1,
+      "Rosie Brennan",
+      "USA",
+      627,
+      0.0302,
+      0.2011
+    ],
+    [
+      "USA",
+      2,
+      "Julia Kern",
+      "USA",
+      1846,
+      0.0211,
+      0.2011
+    ],
+    [
+      "USA",
+      3,
+      "Jessie Diggins",
+      "USA",
+      131,
+      0.6544,
+      0.2011
+    ],
+    [
+      "USA",
+      4,
+      "Sophia Laukli",
+      "USA",
+      7369,
+      0.0291,
+      0.2011
+    ]
+  ]
+}

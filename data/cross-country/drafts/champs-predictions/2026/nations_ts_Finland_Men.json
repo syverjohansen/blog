@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Finland Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Lauri Vuorinen",
+      2874,
+      "Finland",
+      1,
+      0.083,
+      0.2004,
+      0.3472,
+      0.6615,
+      0.0458,
+      0.1391,
+      0.2941,
+      0.9023
+    ],
+    [
+      "Joni Mäki",
+      3586,
+      "Finland",
+      2,
+      0.0092,
+      0.0622,
+      0.1394,
+      0.4332,
+      0.0458,
+      0.1391,
+      0.2941,
+      0.9023
+    ]
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Finland Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Iivo Niskanen",
+      1470,
+      "Finland",
+      1,
+      0.3284,
+      0.6368,
+      0.5937,
+      0.9291,
+      0.0938,
+      0.2441,
+      0.3133,
+      0.6558
+    ],
+    [
+      "Arsi Ruuskanen",
+      8120,
+      "Finland",
+      2,
+      0.0787,
+      0.3065,
+      0.5143,
+      0.8426,
+      0.0938,
+      0.2441,
+      0.3133,
+      0.6558
+    ],
+    [
+      "Ristomatti Hakola",
+      2553,
+      "Finland",
+      3,
+      0.0113,
+      0.0766,
+      0.181,
+      0.7597,
+      0.0938,
+      0.2441,
+      0.3133,
+      0.6558
+    ],
+    [
+      "Lauri Vuorinen",
+      2874,
+      "Finland",
+      4,
+      0.0024,
+      0.0561,
+      0.0889,
+      0.2851,
+      0.0938,
+      0.2441,
+      0.3133,
+      0.6558
+    ]
+  ]
+}

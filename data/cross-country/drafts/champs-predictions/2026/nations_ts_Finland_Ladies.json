@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Finland Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Jasmi Joensuu",
+      1675,
+      "Finland",
+      1,
+      0.2653,
+      0.4025,
+      0.8328,
+      0.9965,
+      0.0621,
+      0.2248,
+      0.5112,
+      1
+    ],
+    [
+      "Jasmin Kähärä",
+      3528,
+      "Finland",
+      2,
+      0.0002,
+      0.0323,
+      0.1515,
+      0.799,
+      0.0621,
+      0.2248,
+      0.5112,
+      1
+    ]
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Slovakia Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Michal Adamov",
+      18776,
+      "Slovakia",
+      1,
+      0.0038,
+      0.0127,
+      0.013,
+      0.0499,
+      0.0021,
+      0.0068,
+      0.0088,
+      0.0302
+    ],
+    [
+      "Denis Tilesch",
+      12779,
+      "Slovakia",
+      2,
+      0.0007,
+      0.0018,
+      0.0051,
+      0.0131,
+      0.0021,
+      0.0068,
+      0.0088,
+      0.0302
+    ]
+  ]
+}

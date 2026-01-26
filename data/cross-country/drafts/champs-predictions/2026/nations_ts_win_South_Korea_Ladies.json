@@ -1,0 +1,47 @@
+{
+  "sheet_name": "South Korea Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Eui Jin Lee",
+      6644,
+      "South Korea",
+      1,
+      0.0001,
+      0.0005,
+      0.0001,
+      0.0,
+      0,
+      0.0009,
+      0.0008,
+      0.0038
+    ],
+    [
+      "Da-Som Han",
+      1519,
+      "South Korea",
+      2,
+      0.0,
+      0.0013,
+      0.0013,
+      0.0073,
+      0,
+      0.0009,
+      0.0008,
+      0.0038
+    ]
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Austria Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Benjamin Moser",
+      5989,
+      "Austria",
+      1,
+      0.0291,
+      0.1204,
+      0.283,
+      0.5268,
+      0.0158,
+      0.0684,
+      0.1582,
+      0.3729
+    ],
+    [
+      "Mika Vermeulen",
+      12673,
+      "Austria",
+      2,
+      0.0042,
+      0.0232,
+      0.0495,
+      0.2387,
+      0.0158,
+      0.0684,
+      0.1582,
+      0.3729
+    ]
+  ]
+}

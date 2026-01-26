@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Bulgaria Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Mario Matikanov",
+      16167,
+      "Bulgaria",
+      1,
+      0.0038,
+      0.0066,
+      0.0114,
+      0.0426,
+      0.0022,
+      0.0045,
+      0.0101,
+      0.038
+    ],
+    [
+      "Daniel Peshkov",
+      17082,
+      "Bulgaria",
+      2,
+      0.0005,
+      0.0019,
+      0.0052,
+      0.0054,
+      0.0022,
+      0.0045,
+      0.0101,
+      0.038
+    ]
+  ]
+}

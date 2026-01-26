@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Great Britain Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Joe Davies",
+      14110,
+      "Great Britain",
+      1,
+      0.0038,
+      0.0323,
+      0.036,
+      0.0898,
+      0.0034,
+      0.0247,
+      0.0355,
+      0.142
+    ],
+    [
+      "Andrew Musgrave",
+      277,
+      "Great Britain",
+      2,
+      0.003,
+      0.0181,
+      0.0351,
+      0.1874,
+      0.0034,
+      0.0247,
+      0.0355,
+      0.142
+    ]
+  ]
+}

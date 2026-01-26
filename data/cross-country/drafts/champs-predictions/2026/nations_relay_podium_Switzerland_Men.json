@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Switzerland Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Beda Klee",
+      3651,
+      "Switzerland",
+      1,
+      0.0062,
+      0.0708,
+      0.0999,
+      0.5506,
+      0.0107,
+      0.0995,
+      0.1194,
+      0.4848
+    ],
+    [
+      "Jonas Baumann",
+      1534,
+      "Switzerland",
+      2,
+      0.0373,
+      0.1648,
+      0.1501,
+      0.6346,
+      0.0107,
+      0.0995,
+      0.1194,
+      0.4848
+    ],
+    [
+      "Jason Rüesch",
+      2732,
+      "Switzerland",
+      3,
+      0.0053,
+      0.0497,
+      0.1458,
+      0.7031,
+      0.0107,
+      0.0995,
+      0.1194,
+      0.4848
+    ],
+    [
+      "Valerio Grond",
+      12164,
+      "Switzerland",
+      4,
+      0.0004,
+      0.1113,
+      0.0953,
+      0.1982,
+      0.0107,
+      0.0995,
+      0.1194,
+      0.4848
+    ]
+  ]
+}

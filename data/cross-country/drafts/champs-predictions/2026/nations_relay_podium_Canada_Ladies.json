@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Canada Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Liliane Gagnon",
+      7427,
+      "Canada",
+      1,
+      0.0007,
+      0.0492,
+      0.0153,
+      1.0,
+      0.0194,
+      0.1514,
+      0.1439,
+      0.5348
+    ],
+    [
+      "Sonjaa Schmidt",
+      7874,
+      "Canada",
+      2,
+      0.0011,
+      0.0076,
+      0.0452,
+      0.3664,
+      0.0194,
+      0.1514,
+      0.1439,
+      0.5348
+    ],
+    [
+      "Kathrine Stewart-Jones",
+      1676,
+      "Canada",
+      3,
+      0.0006,
+      0.056,
+      0.3136,
+      0.8463,
+      0.0194,
+      0.1514,
+      0.1439,
+      0.5348
+    ],
+    [
+      "Alison Mackie",
+      10185,
+      "Canada",
+      4,
+      0.0766,
+      0.5049,
+      0.1671,
+      0.0,
+      0.0194,
+      0.1514,
+      0.1439,
+      0.5348
+    ]
+  ]
+}

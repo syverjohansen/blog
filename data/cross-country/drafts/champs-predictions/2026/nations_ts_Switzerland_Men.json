@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Switzerland Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Janik Riebli",
+      7725,
+      "Switzerland",
+      1,
+      0.0604,
+      0.1624,
+      0.2388,
+      0.5696,
+      0.0526,
+      0.1731,
+      0.3606,
+      0.8729
+    ],
+    [
+      "Valerio Grond",
+      12164,
+      "Switzerland",
+      2,
+      0.0409,
+      0.1533,
+      0.3337,
+      0.4805,
+      0.0526,
+      0.1731,
+      0.3606,
+      0.8729
+    ]
+  ]
+}

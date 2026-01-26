@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Australia Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Rosie Fordham",
+      6450,
+      "Australia",
+      1,
+      0.0001,
+      0.0047,
+      0.002,
+      0.0927,
+      0,
+      0.0035,
+      0.0035,
+      0.066
+    ],
+    [
+      "Phoebe Cridland",
+      5184,
+      "Australia",
+      2,
+      0.0,
+      0.0019,
+      0.0027,
+      0.0218,
+      0,
+      0.0035,
+      0.0035,
+      0.066
+    ]
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Czechia Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Katerina Janatova",
+      3198,
+      "Czechia",
+      1,
+      0.0105,
+      0.0583,
+      0.2876,
+      0.6533,
+      0.005,
+      0.0303,
+      0.1414,
+      0.3806
+    ],
+    [
+      "Barbora Antosova",
+      6633,
+      "Czechia",
+      2,
+      0.0,
+      0.0046,
+      0.0073,
+      0.1305,
+      0.005,
+      0.0303,
+      0.1414,
+      0.3806
+    ]
+  ]
+}

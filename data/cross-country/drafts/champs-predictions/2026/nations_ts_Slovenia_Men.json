@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Slovenia Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Valeriy Gontar",
+      5765,
+      "Slovenia",
+      1,
+      0.0038,
+      0.0119,
+      0.0128,
+      0.0412,
+      0.0031,
+      0.0117,
+      0.0266,
+      0.0938
+    ],
+    [
+      "Miha Simenc",
+      2808,
+      "Slovenia",
+      2,
+      0.0022,
+      0.0095,
+      0.0288,
+      0.069,
+      0.0031,
+      0.0117,
+      0.0266,
+      0.0938
+    ]
+  ]
+}

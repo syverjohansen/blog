@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Germany Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Pia Fink",
+      4004,
+      "Germany",
+      1,
+      0.0019,
+      0.5292,
+      0.7446,
+      1.0,
+      0.041,
+      0.4307,
+      0.5951,
+      0.7487
+    ],
+    [
+      "Laura Gimmler",
+      1495,
+      "Germany",
+      2,
+      0.0283,
+      0.145,
+      0.6116,
+      0.9992,
+      0.041,
+      0.4307,
+      0.5951,
+      0.7487
+    ],
+    [
+      "Katherine Sauerbrey",
+      1727,
+      "Germany",
+      3,
+      0.0045,
+      0.4674,
+      0.6619,
+      0.9803,
+      0.041,
+      0.4307,
+      0.5951,
+      0.7487
+    ],
+    [
+      "Helen Hoffmann",
+      6691,
+      "Germany",
+      4,
+      0.1279,
+      0.6348,
+      0.3807,
+      0.0,
+      0.041,
+      0.4307,
+      0.5951,
+      0.7487
+    ]
+  ]
+}

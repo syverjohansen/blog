@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Ukraine Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Sofiia Shkatula",
+      10768,
+      "Ukraine",
+      1,
+      0.0001,
+      0.0003,
+      0.0001,
+      0.0,
+      0,
+      0.0012,
+      0.0011,
+      0.0057
+    ],
+    [
+      "Yelizaveta Nopriienko",
+      10799,
+      "Ukraine",
+      2,
+      0.0,
+      0.0019,
+      0.0019,
+      0.011,
+      0,
+      0.0012,
+      0.0011,
+      0.0057
+    ]
+  ]
+}

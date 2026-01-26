@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Australia Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Hugo Hinckfuss",
+      12412,
+      "Australia",
+      1,
+      0.0039,
+      0.0037,
+      0.0111,
+      0.044,
+      0.0023,
+      0.0033,
+      0.0101,
+      0.0282
+    ],
+    [
+      "Lars Young Vik",
+      12386,
+      "Australia",
+      2,
+      0.0009,
+      0.003,
+      0.0092,
+      0.0145,
+      0.0023,
+      0.0033,
+      0.0101,
+      0.0282
+    ]
+  ]
+}

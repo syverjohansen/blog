@@ -1,0 +1,47 @@
+{
+  "sheet_name": "France Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Jules Chappaz",
+      12181,
+      "France",
+      1,
+      0.1556,
+      0.4764,
+      0.677,
+      0.8325,
+      0.0933,
+      0.2628,
+      0.4568,
+      0.5661
+    ],
+    [
+      "Lucas Chanavat",
+      3582,
+      "France",
+      2,
+      0.039,
+      0.0766,
+      0.265,
+      0.334,
+      0.0933,
+      0.2628,
+      0.4568,
+      0.5661
+    ]
+  ]
+}

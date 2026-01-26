@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Austria Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Lisa Achleitner",
+      3255,
+      "Austria",
+      1,
+      0.0008,
+      0.0068,
+      0.0094,
+      0.0032,
+      0.0273,
+      0.179,
+      0.2741,
+      0.843
+    ],
+    [
+      "Teresa Stadlober",
+      529,
+      "Austria",
+      2,
+      0.0832,
+      0.9058,
+      0.9934,
+      0.9999,
+      0.0273,
+      0.179,
+      0.2741,
+      0.843
+    ],
+    [
+      "Magdalena Scherz",
+      6707,
+      "Austria",
+      3,
+      0.0001,
+      0.0008,
+      0.0376,
+      0.9483,
+      0.0273,
+      0.179,
+      0.2741,
+      0.843
+    ],
+    [
+      "Katharina Brudermann",
+      5040,
+      "Austria",
+      4,
+      0.0095,
+      0.0651,
+      0.0011,
+      1.0,
+      0.0273,
+      0.179,
+      0.2741,
+      0.843
+    ]
+  ]
+}

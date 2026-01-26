@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Kazakhstan Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Sultan Bazarbekov",
+      17588,
+      "Kazakhstan",
+      1,
+      0.0038,
+      0.0145,
+      0.0137,
+      0.0486,
+      0.0022,
+      0.0087,
+      0.0106,
+      0.0315
+    ],
+    [
+      "Svyatoslav Matassov",
+      11840,
+      "Kazakhstan",
+      2,
+      0.0008,
+      0.0036,
+      0.0079,
+      0.0166,
+      0.0022,
+      0.0087,
+      0.0106,
+      0.0315
+    ]
+  ]
+}

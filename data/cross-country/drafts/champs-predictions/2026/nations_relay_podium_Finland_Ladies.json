@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Finland Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Johanna Matintalo",
+      1761,
+      "Finland",
+      1,
+      0.1045,
+      0.7471,
+      0.9441,
+      1.0,
+      0.0679,
+      0.6445,
+      0.7667,
+      0.7543
+    ],
+    [
+      "Kerttu Niskanen",
+      37,
+      "Finland",
+      2,
+      0.0419,
+      0.6344,
+      0.9561,
+      0.9997,
+      0.0679,
+      0.6445,
+      0.7667,
+      0.7543
+    ],
+    [
+      "Jasmi Joensuu",
+      1675,
+      "Finland",
+      3,
+      0.009,
+      0.5797,
+      0.9098,
+      0.9999,
+      0.0679,
+      0.6445,
+      0.7667,
+      0.7543
+    ],
+    [
+      "Krista Pärmäkoski",
+      13,
+      "Finland",
+      4,
+      0.135,
+      0.6469,
+      0.2471,
+      0.0,
+      0.0679,
+      0.6445,
+      0.7667,
+      0.7543
+    ]
+  ]
+}

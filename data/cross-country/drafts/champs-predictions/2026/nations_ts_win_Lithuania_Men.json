@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Lithuania Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Modestas Vaiciulis",
+      1652,
+      "Lithuania",
+      1,
+      0.0039,
+      0.0034,
+      0.011,
+      0.0477,
+      0.0022,
+      0.0028,
+      0.0083,
+      0.0295
+    ],
+    [
+      "Matas Grazys",
+      19962,
+      "Lithuania",
+      2,
+      0.0007,
+      0.0022,
+      0.0058,
+      0.0136,
+      0.0022,
+      0.0028,
+      0.0083,
+      0.0295
+    ]
+  ]
+}

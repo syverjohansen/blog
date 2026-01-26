@@ -1,0 +1,47 @@
+{
+  "sheet_name": "USA Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Ben Ogden",
+      9179,
+      "USA",
+      1,
+      0.1452,
+      0.4954,
+      0.6393,
+      0.8267,
+      0.0988,
+      0.3851,
+      0.659,
+      1
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      "USA",
+      2,
+      0.0492,
+      0.224,
+      0.4331,
+      0.6455,
+      0.0988,
+      0.3851,
+      0.659,
+      1
+    ]
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Norway Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "Norway",
+      1,
+      0.261,
+      0.7746,
+      0.8727,
+      0.9341,
+      0.3721,
+      0.821,
+      1,
+      1
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "Norway",
+      2,
+      0.4344,
+      0.7227,
+      0.9073,
+      0.9482,
+      0.3721,
+      0.821,
+      1,
+      1
+    ]
+  ]
+}

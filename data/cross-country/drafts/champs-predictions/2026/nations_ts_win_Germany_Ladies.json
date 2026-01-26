@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Germany Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Coletta Rydzek",
+      3254,
+      "Germany",
+      1,
+      0.8311,
+      0.7791,
+      0.9998,
+      0.9726,
+      0.4039,
+      0.4216,
+      0.7029,
+      0.9596
+    ],
+    [
+      "Laura Gimmler",
+      1495,
+      "Germany",
+      2,
+      0.0121,
+      0.0937,
+      0.4306,
+      0.9476,
+      0.4039,
+      0.4216,
+      0.7029,
+      0.9596
+    ]
+  ]
+}

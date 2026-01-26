@@ -109,15 +109,15 @@ for sport in "${SPORTS[@]}"; do
     fi
 done
 
-# Phase 3: Create blog post directory structure
+# Phase 3: Create blog post directory structure with dynamic content
 log_message ""
-log_message "=== Phase 3: Blog Post Structure ==="
+log_message "=== Phase 3: Blog Post Generation ==="
 
 post_dir="$CONTENT_DIR/champs-predictions/$CURRENT_YEAR"
 mkdir -p "$post_dir"
 log_message "Created post directory: $post_dir"
 
-# Create one placeholder post per sport (with Calendar and Nation sections)
+# Generate posts dynamically based on JSON files
 for sport in "${SPORTS[@]}"; do
     # Get display name for sport
     case "$sport" in
@@ -129,32 +129,267 @@ for sport in "${SPORTS[@]}"; do
         *) sport_display="$sport" ;;
     esac
 
+    json_dir="$DATA_DIR/$sport/drafts/champs-predictions/$CURRENT_YEAR"
     post_file="$post_dir/$sport.md"
 
-    if [[ ! -f "$post_file" ]]; then
-        cat > "$post_file" << EOF
----
-title: "$CURRENT_YEAR Winter Olympics - $sport_display Predictions"
+    # Check if JSON directory exists
+    if [[ ! -d "$json_dir" ]]; then
+        log_message "Skipping $sport - no JSON files found"
+        continue
+    fi
+
+    log_message "Generating $sport.md from JSON files..."
+
+    # Start building the post content
+    post_content="---
+title: \"$CURRENT_YEAR Winter Olympics - $sport_display Predictions\"
 date: $(date -Iseconds)
 draft: true
-tags: ["predictions", "olympics", "$CURRENT_YEAR", "$sport"]
+tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
 ---
 
 # $CURRENT_YEAR Winter Olympics - $sport_display Predictions
 
 ## Calendar
 
-[Position probability tables for each event]
+### Individual Races
+"
 
-## Nation
+    # Add Men's individual races
+    men_individual=$(find "$json_dir" -name "men_position_probabilities_*.json" -type f 2>/dev/null | sort)
+    if [[ -n "$men_individual" ]]; then
+        post_content+="
+#### Men
+"
+        while IFS= read -r json_file; do
+            filename=$(basename "$json_file" .json)
+            # Extract race name from filename (e.g., men_position_probabilities_Sprint_C -> Sprint C)
+            race_name=$(echo "$filename" | sed 's/men_position_probabilities_//' | tr '_' ' ')
+            post_content+="
+##### $race_name
 
-[Nation breakdown tables]
-
-EOF
-        log_message "Created placeholder: $sport.md"
-    else
-        log_message "Skipped $sport.md (already exists)"
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+        done <<< "$men_individual"
     fi
+
+    # Add Ladies' individual races
+    ladies_individual=$(find "$json_dir" -name "ladies_position_probabilities_*.json" -type f 2>/dev/null | sort)
+    if [[ -n "$ladies_individual" ]]; then
+        post_content+="
+#### Ladies
+"
+        while IFS= read -r json_file; do
+            filename=$(basename "$json_file" .json)
+            race_name=$(echo "$filename" | sed 's/ladies_position_probabilities_//' | tr '_' ' ')
+            post_content+="
+##### $race_name
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+        done <<< "$ladies_individual"
+    fi
+
+    # Add Relay section if files exist
+    men_relay=$(find "$json_dir" -name "relay_final_predictions_Men_*.json" -type f 2>/dev/null | head -1)
+    ladies_relay=$(find "$json_dir" -name "relay_final_predictions_Ladies_*.json" -type f 2>/dev/null | head -1)
+    if [[ -n "$men_relay" ]] || [[ -n "$ladies_relay" ]]; then
+        post_content+="
+### Relay
+"
+        if [[ -n "$men_relay" ]]; then
+            filename=$(basename "$men_relay" .json)
+            post_content+="
+#### Men
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+        fi
+        if [[ -n "$ladies_relay" ]]; then
+            filename=$(basename "$ladies_relay" .json)
+            post_content+="
+#### Ladies
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+        fi
+    fi
+
+    # Add Team Sprint section if files exist
+    men_ts=$(find "$json_dir" -name "team_sprint_final_predictions_Men_*.json" -type f 2>/dev/null | head -1)
+    ladies_ts=$(find "$json_dir" -name "team_sprint_final_predictions_Ladies_*.json" -type f 2>/dev/null | head -1)
+    if [[ -n "$men_ts" ]] || [[ -n "$ladies_ts" ]]; then
+        post_content+="
+### Team Sprint
+"
+        if [[ -n "$men_ts" ]]; then
+            filename=$(basename "$men_ts" .json)
+            post_content+="
+#### Men
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+        fi
+        if [[ -n "$ladies_ts" ]]; then
+            filename=$(basename "$ladies_ts" .json)
+            post_content+="
+#### Ladies
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+        fi
+    fi
+
+    # Add Nation section
+    post_content+="
+## Nation
+"
+
+    # Add Summary first if it exists
+    summary_file=$(find "$json_dir" -name "nations_individual_Summary.json" -type f 2>/dev/null | head -1)
+    if [[ -n "$summary_file" ]]; then
+        filename=$(basename "$summary_file" .json)
+        post_content+="
+### Summary
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+    fi
+
+    # Function to add relay/TS data for a nation
+    add_nation_relay_ts() {
+        local nation="$1"
+        local gender="$2"  # "Men" or "Ladies"
+        local content=""
+
+        # Check for relay data
+        local relay_podium=$(find "$json_dir" -name "nations_relay_podium_${nation}_${gender}.json" -type f 2>/dev/null | head -1)
+        local relay_win=$(find "$json_dir" -name "nations_relay_win_${nation}_${gender}.json" -type f 2>/dev/null | head -1)
+
+        if [[ -n "$relay_podium" ]] || [[ -n "$relay_win" ]]; then
+            content+="
+##### Relay
+"
+            if [[ -n "$relay_podium" ]]; then
+                local fn=$(basename "$relay_podium" .json)
+                content+="
+###### Podium Optimized
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
+"
+            fi
+            if [[ -n "$relay_win" ]]; then
+                local fn=$(basename "$relay_win" .json)
+                content+="
+###### Win Optimized
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
+"
+            fi
+        fi
+
+        # Check for team sprint data
+        local ts_podium=$(find "$json_dir" -name "nations_ts_podium_${nation}_${gender}.json" -type f 2>/dev/null | head -1)
+        local ts_win=$(find "$json_dir" -name "nations_ts_win_${nation}_${gender}.json" -type f 2>/dev/null | head -1)
+
+        if [[ -n "$ts_podium" ]] || [[ -n "$ts_win" ]]; then
+            content+="
+##### Team Sprint
+"
+            if [[ -n "$ts_podium" ]]; then
+                local fn=$(basename "$ts_podium" .json)
+                content+="
+###### Podium Optimized
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
+"
+            fi
+            if [[ -n "$ts_win" ]]; then
+                local fn=$(basename "$ts_win" .json)
+                content+="
+###### Win Optimized
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
+"
+            fi
+        fi
+
+        echo "$content"
+    }
+
+    # Add Men's nations (excluding Other and Summary)
+    men_nations=$(find "$json_dir" -name "nations_individual_*_Men.json" -type f 2>/dev/null | grep -v "Other_Men" | sort)
+    if [[ -n "$men_nations" ]]; then
+        post_content+="
+### Men
+"
+        while IFS= read -r json_file; do
+            filename=$(basename "$json_file" .json)
+            # Extract nation name (e.g., nations_individual_Norway_Men -> Norway)
+            nation=$(echo "$filename" | sed 's/nations_individual_//' | sed 's/_Men$//')
+            post_content+="
+#### $nation
+
+##### Individual
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+            # Add relay and team sprint for this nation
+            post_content+="$(add_nation_relay_ts "$nation" "Men")"
+        done <<< "$men_nations"
+
+        # Add Other Men if exists
+        other_men=$(find "$json_dir" -name "nations_individual_Other_Men.json" -type f 2>/dev/null | head -1)
+        if [[ -n "$other_men" ]]; then
+            filename=$(basename "$other_men" .json)
+            post_content+="
+#### Other
+
+##### Individual
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+        fi
+    fi
+
+    # Add Ladies' nations (excluding Other and Summary)
+    ladies_nations=$(find "$json_dir" -name "nations_individual_*_Ladies.json" -type f 2>/dev/null | grep -v "Other_Ladies" | sort)
+    if [[ -n "$ladies_nations" ]]; then
+        post_content+="
+### Ladies
+"
+        while IFS= read -r json_file; do
+            filename=$(basename "$json_file" .json)
+            # Extract nation name (e.g., nations_individual_Norway_Ladies -> Norway)
+            nation=$(echo "$filename" | sed 's/nations_individual_//' | sed 's/_Ladies$//')
+            post_content+="
+#### $nation
+
+##### Individual
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+            # Add relay and team sprint for this nation
+            post_content+="$(add_nation_relay_ts "$nation" "Ladies")"
+        done <<< "$ladies_nations"
+
+        # Add Other Ladies if exists
+        other_ladies=$(find "$json_dir" -name "nations_individual_Other_Ladies.json" -type f 2>/dev/null | head -1)
+        if [[ -n "$other_ladies" ]]; then
+            filename=$(basename "$other_ladies" .json)
+            post_content+="
+#### Other
+
+##### Individual
+
+{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+        fi
+    fi
+
+    # Write the post file
+    echo "$post_content" > "$post_file"
+    log_message "Generated: $sport.md"
 done
 
 log_message ""
@@ -162,13 +397,18 @@ log_message "======================================="
 log_message "Pipeline Complete"
 log_message "======================================="
 log_message ""
-log_message "Next steps:"
-log_message "1. Run R champs-predictions.R scripts for each sport"
-log_message "2. Re-run this script to convert new Excel outputs"
-log_message "3. Edit blog posts in: $post_dir"
+log_message "Generated posts are in: $post_dir"
 log_message ""
-log_message "Datatable shortcode format:"
-log_message '  {{< {sport}/datatable "{sport}/drafts/champs-predictions/{year}/{filename}" >}}'
+log_message "Post structure (auto-generated from JSON files):"
+log_message "  ## Calendar - Individual races, Relay, Team Sprint"
+log_message "  ## Nation"
+log_message "    ### Summary"
+log_message "    ### Men / Ladies"
+log_message "      #### {Nation}"
+log_message "        ##### Individual"
+log_message "        ##### Relay (Podium + Win Optimized)"
+log_message "        ##### Team Sprint (Podium + Win Optimized)"
 log_message ""
-log_message "Example:"
-log_message '  {{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/men_position_probabilities_Skiathlon" >}}'
+log_message "To regenerate posts after updating R scripts:"
+log_message "  1. Run R champs-predictions.R for the sport"
+log_message "  2. Re-run: ./champs_script.sh $CURRENT_YEAR"

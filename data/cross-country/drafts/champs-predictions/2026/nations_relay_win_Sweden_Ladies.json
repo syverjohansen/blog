@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Sweden Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Johanna Hagström",
+      3212,
+      "Sweden",
+      1,
+      0.3617,
+      0.0282,
+      0.8292,
+      1,
+      0.3862,
+      0.7065,
+      0.9583,
+      1
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "Sweden",
+      2,
+      0.1438,
+      0.9027,
+      0.9931,
+      1,
+      0.3862,
+      0.7065,
+      0.9583,
+      1
+    ],
+    [
+      "Ebba Andersson",
+      1789,
+      "Sweden",
+      3,
+      0.4422,
+      0.9236,
+      1.0,
+      1,
+      0.3862,
+      0.7065,
+      0.9583,
+      1
+    ],
+    [
+      "Jonna Sundling",
+      1486,
+      "Sweden",
+      4,
+      0.6177,
+      0.782,
+      0.975,
+      1,
+      0.3862,
+      0.7065,
+      0.9583,
+      1
+    ]
+  ]
+}

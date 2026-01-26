@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Norway Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Kristine Stavås Skistad",
+      3207,
+      "Norway",
+      1,
+      0.879,
+      0.7434,
+      0.9999,
+      0.8941,
+      0.2056,
+      0.4163,
+      0.6103,
+      0.9488
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "Norway",
+      2,
+      0.0,
+      0.0616,
+      0.1756,
+      0.7169,
+      0.2056,
+      0.4163,
+      0.6103,
+      0.9488
+    ]
+  ]
+}

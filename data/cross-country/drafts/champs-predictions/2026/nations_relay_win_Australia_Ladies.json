@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Australia Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Tuva Bygrave",
+      6448,
+      "Australia",
+      1,
+      0.0001,
+      0.0083,
+      0.0004,
+      0.0,
+      0.0045,
+      0.0397,
+      0.0111,
+      0.0703
+    ],
+    [
+      "Phoebe Cridland",
+      5184,
+      "Australia",
+      2,
+      0.0003,
+      0.0045,
+      0.0256,
+      0.0379,
+      0.0045,
+      0.0397,
+      0.0111,
+      0.0703
+    ],
+    [
+      "Ellen Søhol Lie",
+      6627,
+      "Australia",
+      3,
+      0.0,
+      0.0,
+      0.0003,
+      0.2147,
+      0.0045,
+      0.0397,
+      0.0111,
+      0.0703
+    ],
+    [
+      "Rosie Fordham",
+      6450,
+      "Australia",
+      4,
+      0.0179,
+      0.1497,
+      0.0156,
+      0.0,
+      0.0045,
+      0.0397,
+      0.0111,
+      0.0703
+    ]
+  ]
+}

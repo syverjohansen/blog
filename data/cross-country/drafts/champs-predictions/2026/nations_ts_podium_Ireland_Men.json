@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Ireland Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Thomas Hjalmar Westgård",
+      5553,
+      "Ireland",
+      1,
+      0.0039,
+      0.0154,
+      0.0146,
+      0.032,
+      0.0022,
+      0.0081,
+      0.0094,
+      0.0222
+    ],
+    [
+      "Dylan Longridge",
+      20668,
+      "Ireland",
+      2,
+      0.0007,
+      0.0017,
+      0.0049,
+      0.0136,
+      0.0022,
+      0.0081,
+      0.0094,
+      0.0222
+    ]
+  ]
+}

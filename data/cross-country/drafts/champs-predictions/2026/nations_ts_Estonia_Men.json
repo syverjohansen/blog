@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Estonia Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Alvar Johannes Alev",
+      1996,
+      "Estonia",
+      1,
+      0.0038,
+      0.0285,
+      0.028,
+      0.0518,
+      0.0024,
+      0.0165,
+      0.022,
+      0.0601
+    ],
+    [
+      "Karl Sebastian Dremljuga",
+      12667,
+      "Estonia",
+      2,
+      0.0009,
+      0.0033,
+      0.0086,
+      0.0221,
+      0.0024,
+      0.0165,
+      0.022,
+      0.0601
+    ]
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Germany Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Laura Gimmler",
+      1495,
+      "Germany",
+      1,
+      0.1421,
+      0.3592,
+      0.8526,
+      1.0,
+      0.0748,
+      0.3281,
+      0.5884,
+      0.753
+    ],
+    [
+      "Coletta Rydzek",
+      3254,
+      "Germany",
+      2,
+      0.0131,
+      0.028,
+      0.1753,
+      0.995,
+      0.0748,
+      0.3281,
+      0.5884,
+      0.753
+    ],
+    [
+      "Pia Fink",
+      4004,
+      "Germany",
+      3,
+      0.042,
+      0.3365,
+      0.9987,
+      0.9998,
+      0.0748,
+      0.3281,
+      0.5884,
+      0.753
+    ],
+    [
+      "Helen Hoffmann",
+      6691,
+      "Germany",
+      4,
+      0.1279,
+      0.6348,
+      0.3807,
+      0.0,
+      0.0748,
+      0.3281,
+      0.5884,
+      0.753
+    ]
+  ]
+}

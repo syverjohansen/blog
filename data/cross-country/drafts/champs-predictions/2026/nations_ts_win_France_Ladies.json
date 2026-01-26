@@ -1,0 +1,47 @@
+{
+  "sheet_name": "France Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Lena Quintin",
+      3252,
+      "France",
+      1,
+      0.011,
+      0.0182,
+      0.1511,
+      0.6392,
+      0.0053,
+      0.0134,
+      0.0842,
+      0.4245
+    ],
+    [
+      "France Pignot",
+      10314,
+      "France",
+      2,
+      0.0,
+      0.0091,
+      0.0228,
+      0.2277,
+      0.0053,
+      0.0134,
+      0.0842,
+      0.4245
+    ]
+  ]
+}

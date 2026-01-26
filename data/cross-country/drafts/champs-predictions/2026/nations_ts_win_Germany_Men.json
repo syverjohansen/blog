@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Germany Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Jan Stölben",
+      14033,
+      "Germany",
+      1,
+      0.0409,
+      0.1139,
+      0.1783,
+      0.4668,
+      0.0203,
+      0.0598,
+      0.0949,
+      0.2738
+    ],
+    [
+      "Florian Notz",
+      1488,
+      "Germany",
+      2,
+      0.0023,
+      0.0127,
+      0.0223,
+      0.1056,
+      0.0203,
+      0.0598,
+      0.0949,
+      0.2738
+    ]
+  ]
+}

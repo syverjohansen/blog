@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Switzerland Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Nadine Fähndrich",
+      1590,
+      "Switzerland",
+      1,
+      0.2566,
+      0.3956,
+      0.9177,
+      1.0,
+      0.0534,
+      0.1777,
+      0.3282,
+      0.8232
+    ],
+    [
+      "Lea Fischer",
+      2284,
+      "Switzerland",
+      2,
+      0.0011,
+      0.0093,
+      0.0567,
+      0.367,
+      0.0534,
+      0.1777,
+      0.3282,
+      0.8232
+    ],
+    [
+      "Anja Weber",
+      6338,
+      "Switzerland",
+      3,
+      0.0027,
+      0.312,
+      0.4415,
+      0.9993,
+      0.0534,
+      0.1777,
+      0.3282,
+      0.8232
+    ],
+    [
+      "Marina Kälin",
+      7433,
+      "Switzerland",
+      4,
+      0.0071,
+      0.042,
+      0.035,
+      1.0,
+      0.0534,
+      0.1777,
+      0.3282,
+      0.8232
+    ]
+  ]
+}

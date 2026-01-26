@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Norway Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Martin Løwstrøm Nyenget",
+      2295,
+      "Norway",
+      1,
+      0.5508,
+      0.6803,
+      0.2358,
+      0.9301,
+      0.4815,
+      0.6727,
+      0.6981,
+      0.9572
+    ],
+    [
+      "Mattis Stenshagen",
+      5165,
+      "Norway",
+      2,
+      0.2133,
+      0.519,
+      0.6757,
+      0.9525,
+      0.4815,
+      0.6727,
+      0.6981,
+      0.9572
+    ],
+    [
+      "Einar Hedegart",
+      20631,
+      "Norway",
+      3,
+      0.2817,
+      0.6063,
+      0.8131,
+      0.9388,
+      0.4815,
+      0.6727,
+      0.6981,
+      0.9572
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "Norway",
+      4,
+      0.7399,
+      0.8096,
+      0.9431,
+      0.9908,
+      0.4815,
+      0.6727,
+      0.6981,
+      0.9572
+    ]
+  ]
+}

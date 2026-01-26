@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Argentina Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Agustina Groetzner",
+      7428,
+      "Argentina",
+      1,
+      0.0001,
+      0.0018,
+      0.0004,
+      0.001,
+      0,
+      0.0022,
+      0.0022,
+      0.0158
+    ],
+    [
+      "Nahiara Diaz Gonzalez",
+      10264,
+      "Argentina",
+      2,
+      0.0,
+      0.0022,
+      0.0028,
+      0.0247,
+      0,
+      0.0022,
+      0.0022,
+      0.0158
+    ]
+  ]
+}

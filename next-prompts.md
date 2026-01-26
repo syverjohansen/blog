@@ -790,7 +790,438 @@ Potential improvements to relay team selection:
 
 1. ⏳ Review/fix relay selection in Python scraper (technique-aware pre-selection)
 2. ⏳ Review/fix R script relay loading (use relay-specific startlists?)
-3. ⏳ Ensure R scripts output correct Excel format for conversion
+3. ✅ Ensure R scripts output correct Excel format for conversion
 4. ⏳ Run full pipeline: Python → R → Excel → JSON
-5. ⏳ Create blog post templates with datatable shortcodes
+5. ✅ Create blog post templates with datatable shortcodes
 6. ⏳ Write narrative content for nations and race-by-race posts
+
+---
+
+## Championship Predictions Pipeline Updates (2026-01-25)
+
+### Overview of Changes
+
+Updated the cross-country champs-predictions.R and champs_script.sh to create a complete automated pipeline for championship prediction blog posts.
+
+### Key Changes
+
+#### 1. Output Directory Structure Changed (YYYYMMDD → YYYY)
+
+**Before**: `~/blog/daehl-e/content/post/{sport}/drafts/champs-predictions/20260120/`
+**After**: `~/blog/daehl-e/content/post/{sport}/drafts/champs-predictions/2026/`
+
+**Rationale**: Only one championship per year, so year-based directories are cleaner.
+
+**Files Updated**:
+- `champs-predictions.R` line ~1098: `current_year <- format(Sys.Date(), "%Y")`
+
+#### 2. Blog Post Structure (One Post Per Sport)
+
+**Before**: Two separate posts (Nations + Race-by-Race)
+**After**: One post per sport with two sections
+
+**Post Location**: `~/blog/daehl-e/content/post/champs-predictions/2026/{sport}.md`
+
+**Structure**:
+```markdown
+# 2026 Winter Olympics - {Sport} Predictions
+
+## Calendar
+### Individual Races
+#### Men
+##### {Race Name}
+{{< sport/datatable "..." >}}
+#### Ladies
+...
+### Relay
+### Team Sprint
+
+## Nation
+### Summary
+### Men
+#### {Nation}
+...
+### Ladies
+#### {Nation}
+...
+```
+
+#### 3. Simplified Excel Column Output
+
+**Before**: 24+ columns including all intermediate calculations
+```
+Skier, Nation, ID, raw_win_prob, raw_podium_prob, raw_top5_prob, raw_top10_prob,
+raw_top30_prob, Race1_Prob, start_prob, win_prob, podium_prob, top5_prob,
+top10_prob, top30_prob, pre_norm_win, pre_norm_podium, pre_norm_top5,
+pre_norm_top10, pre_norm_top30, pre_hierarchy_win, pre_hierarchy_podium,
+pre_hierarchy_top5, pre_hierarchy_top10, pre_hierarchy_top30
+```
+
+**After**: 9 columns with user-friendly names
+```
+Skier, Nation, ID, Start, Win, Podium, Top5, Top-10, Top-30
+```
+
+**Files Updated**:
+- `champs-predictions.R` lines ~1108-1126: Added select/rename before storing results
+
+#### 4. Nations Excel Split by Gender
+
+**Before**: Nations counted overall (4+ athletes total)
+**After**: Nations counted per gender (4+ athletes per gender)
+
+**Sheet Structure**:
+- `{Nation} Men` - Nations with 4+ male athletes
+- `{Nation} Ladies` - Nations with 4+ female athletes
+- `Other Men` - Combined sheet for nations with <4 male athletes
+- `Other Ladies` - Combined sheet for nations with <4 female athletes
+- `Summary` - Aggregated totals by nation and gender
+
+#### 5. Dynamic Blog Post Generation (champs_script.sh)
+
+**Before**: Created placeholder posts with `[Position probability tables for each event]`
+**After**: Dynamically generates full post content from JSON files
+
+**How It Works**:
+1. Scans `data/{sport}/drafts/champs-predictions/{year}/` for JSON files
+2. Parses filenames to extract race names and nation names
+3. Generates appropriate markdown sections with datatable shortcodes
+4. Automatically handles varying numbers of nations per sport
+
+**Key Patterns**:
+- `men_position_probabilities_*.json` → Individual Men races
+- `ladies_position_probabilities_*.json` → Individual Ladies races
+- `relay_final_predictions_*.json` → Relay predictions
+- `team_sprint_final_predictions_*.json` → Team Sprint predictions
+- `nations_individual_*_Men.json` → Men's nation sheets
+- `nations_individual_*_Ladies.json` → Ladies' nation sheets
+- `nations_individual_Summary.json` → Summary sheet
+
+#### 6. 3-Phase Normalization (All Race Types)
+
+Updated normalization for individual, relay, and team sprint races to use consistent 3-phase approach:
+
+**Phase 1**: Normalize with capping at 1.0 and redistribution
+- Scale probabilities to target sum
+- Cap any probability > 1.0
+- Redistribute excess to uncapped athletes
+
+**Phase 2**: Monotonic constraints
+- Ensure: Win ≤ Podium ≤ Top5 ≤ Top10 ≤ Top30
+- Adjust violations by averaging adjacent values
+
+**Phase 3**: Re-normalize after monotonic adjustment
+- Re-scale to target sums after constraint adjustments
+
+**Target Sums**:
+- Individual: Win=1, Podium=3, Top5=5, Top10=10, Top30=30
+- Relay/Team Sprint: Win=1, Podium=3, Top5=5, Top10=10
+
+### Pipeline Execution
+
+```bash
+# Step 1: Run R script to generate Excel files
+cd ~/blog/daehl-e/content/post/cross-country/drafts
+Rscript champs-predictions.R
+
+# Step 2: Convert Excel to JSON and generate blog posts
+cd ~/blog/daehl-e
+./champs_script.sh 2026
+```
+
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `champs-predictions.R` | Output dir YYYY, simplified columns, gender-split nations, 3-phase normalization |
+| `champs_script.sh` | Dynamic post generation from JSON files |
+
+### Sports to Update
+
+These changes were made to cross-country. Other sports need similar updates:
+
+| Sport | Status |
+|-------|--------|
+| Cross-Country | ✅ Complete |
+| Alpine | ⏳ Needs update |
+| Biathlon | ⏳ Needs update |
+| Nordic Combined | ⏳ Needs update |
+| Ski Jumping | ⏳ Needs update |
+
+---
+
+## Win-Optimized Team Selection & Nations Relay/TS Files (2026-01-25)
+
+### Overview
+
+Added win-optimized team selection alongside podium optimization, and created nations breakdown files for relay and team sprint events.
+
+### Changes Made
+
+#### 1. Win-Optimized Relay Team Selection
+
+**New Functions Added**:
+```r
+# Generic function that takes threshold parameter
+calculate_team_prob_for_threshold(team_athletes, relay_models, leg_importance, threshold = 3)
+
+# Wrappers for specific optimizations
+calculate_team_podium_prob()  # threshold = 3
+calculate_team_win_prob()      # threshold = 1
+```
+
+**Updated `optimize_country_team()`**:
+- Now tracks both `best_podium_team` and `best_win_team`
+- Logs when win-optimized team differs from podium-optimized team
+- Returns both optimization results
+
+**New Output Files**:
+- `relay_team_optimization_podium.xlsx` - Teams optimized for podium probability
+- `relay_team_optimization_win.xlsx` - Teams optimized for win probability
+
+#### 2. Win-Optimized Team Sprint Selection
+
+Same pattern as relay:
+```r
+calculate_ts_team_prob_for_threshold(team_athletes, ts_models, leg_importance, race_technique, threshold = 3)
+calculate_ts_team_podium_prob()
+calculate_ts_team_win_prob()
+```
+
+**New Output Files**:
+- `team_sprint_optimization_podium.xlsx`
+- `team_sprint_optimization_win.xlsx`
+
+#### 3. Nations Relay Excel Files (Podium & Win Optimized)
+
+**Files**:
+- `nations_relay_podium.xlsx` - Teams optimized for podium probability
+- `nations_relay_win.xlsx` - Teams optimized for win probability
+
+**Structure** (each file):
+- One sheet per nation (e.g., "Norway Men", "Norway Ladies")
+- Summary sheet with team probabilities by nation/gender
+
+**Columns** (clean names without underscores):
+- Athlete, ID, Nation, Leg
+- Leg Win, Leg Podium, Leg Top5, Leg Top-10
+- Team Win, Team Podium, Team Top5, Team Top-10
+
+#### 4. Nations Team Sprint Excel Files (Podium & Win Optimized)
+
+**Files**:
+- `nations_ts_podium.xlsx` - Teams optimized for podium probability
+- `nations_ts_win.xlsx` - Teams optimized for win probability
+
+Same structure as relay but for team sprint (2 legs instead of 4).
+
+#### 5. Clean Column Names (No Underscores)
+
+All Excel files that go into the blog post now use clean column names:
+- `Leg_Win_Prob` → `Leg Win`
+- `Team_Podium_Prob` → `Team Podium`
+- `Leg_Top-10` → `Leg Top-10`
+- etc.
+
+#### 6. Updated champs_script.sh
+
+Blog post ## Nation section structure:
+```markdown
+### Individual
+- Summary
+- Men by nation
+- Ladies by nation
+
+### Relay Nations
+#### Podium Optimized
+- Summary
+- Men by nation
+- Ladies by nation
+#### Win Optimized
+- Summary
+- Men by nation
+- Ladies by nation
+
+### Team Sprint Nations
+#### Podium Optimized
+...
+#### Win Optimized
+...
+```
+
+### Key Insight: Win vs Podium Optimization
+
+The best team for winning may differ from the best team for podium:
+- **Win optimization**: May favor putting the absolute best athlete on anchor leg (Leg 4) to maximize probability of 1st place
+- **Podium optimization**: May spread strength more evenly to maximize probability of finishing in top 3
+
+The script now logs when teams differ:
+```
+Best podium probability for Norway: 0.4521
+Best win probability for Norway: 0.2134
+  Note: Win-optimized team differs from podium-optimized team
+```
+
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `champs-predictions.R` | Win optimization, separate podium/win nation files, clean column names |
+| `champs_script.sh` | Podium/Win sections for Relay and Team Sprint Nations |
+
+### New Excel Output Files
+
+| File | Description |
+|------|-------------|
+| `relay_team_optimization_podium.xlsx` | Podium-optimized relay teams |
+| `relay_team_optimization_win.xlsx` | Win-optimized relay teams |
+| `team_sprint_optimization_podium.xlsx` | Podium-optimized team sprint teams |
+| `team_sprint_optimization_win.xlsx` | Win-optimized team sprint teams |
+| `nations_relay_podium.xlsx` | Nation-by-nation relay (podium optimized) |
+| `nations_relay_win.xlsx` | Nation-by-nation relay (win optimized) |
+| `nations_ts_podium.xlsx` | Nation-by-nation team sprint (podium optimized) |
+| `nations_ts_win.xlsx` | Nation-by-nation team sprint (win optimized) |
+
+---
+
+## Bug Fix: Leg Probabilities Not Following Athletes in Win vs Podium Teams (2026-01-25)
+
+### Issue
+
+In `nations_ts_win.xlsx` and `nations_ts_podium.xlsx` (and relay equivalents), the leg probabilities (Leg Win, Leg Podium, etc.) had the same values for the same leg positions even though athletes were on different legs between the two files.
+
+**Example**:
+- `nations_ts_podium` (Norway): Leg 1: Klæbo (Leg Win: 0.261), Leg 2: Amundsen (Leg Win: 0.4344)
+- `nations_ts_win` (Norway): Leg 1: Amundsen (Leg Win: 0.261), Leg 2: Klæbo (Leg Win: 0.4344)
+
+The leg probabilities stayed with the leg positions instead of following the athletes.
+
+### Root Cause
+
+The `generate_ts_all_threshold_predictions()` and `generate_all_threshold_predictions()` functions only calculated predictions for ONE team arrangement (the podium-optimized team). When `format_ts_nations_data()` was called with `opt_type = "win"`, it correctly selected the win-optimized team from `optimization_results`, but the predictions came from `all_predictions` which were calculated only for the podium-optimized team arrangement.
+
+### Fix Applied
+
+Updated both relay and team sprint prediction generation to calculate predictions for BOTH team arrangements:
+
+**`generate_all_threshold_predictions()` (relay)**:
+```r
+for (country in names(optimization_results)) {
+  result <- optimization_results[[country]]
+  podium_team <- result$podium_team
+  win_team <- result$win_team
+
+  # Calculate all threshold probabilities for BOTH team arrangements
+  podium_predictions <- calculate_team_all_thresholds(podium_team, relay_models, leg_importance)
+  win_predictions <- calculate_team_all_thresholds(win_team, relay_models, leg_importance)
+
+  all_predictions[[country]] <- list(
+    podium_team = podium_team,
+    win_team = win_team,
+    podium_predictions = podium_predictions,
+    win_predictions = win_predictions,
+    # For backward compatibility
+    team = podium_team,
+    predictions = podium_predictions
+  )
+}
+```
+
+**`format_relay_nations_data()` and `format_ts_nations_data()`**:
+```r
+# Select team AND predictions based on optimization type
+if (opt_type == "win") {
+  team <- country_data$win_team
+  predictions <- country_data$win_predictions
+} else {
+  team <- country_data$podium_team
+  predictions <- country_data$podium_predictions
+}
+```
+
+### Files Modified
+
+| File | Lines | Changes |
+|------|-------|---------|
+| `champs-predictions.R` | ~2285-2311 | `generate_all_threshold_predictions()` now generates predictions for both podium and win teams |
+| `champs-predictions.R` | ~2550-2594 | `format_relay_nations_data()` now uses correct predictions based on opt_type |
+| `champs-predictions.R` | ~3690-3716 | `generate_ts_all_threshold_predictions()` now generates predictions for both teams |
+| `champs-predictions.R` | ~3948-3992 | `format_ts_nations_data()` now uses correct predictions based on opt_type |
+
+### Result
+
+Now when athletes are on different legs between podium-optimized and win-optimized teams, the leg probabilities correctly reflect each athlete's predicted performance on their assigned leg.
+
+---
+
+## Blog Post Structure Updates (2026-01-25)
+
+### Changes Made
+
+#### 1. Nations Individual Column Order
+
+Updated the column order in `nations_individual.xlsx` to be more user-friendly:
+
+**Before**: Race, Athlete, ID, Start, Win, Podium, Top5, Top-10, Top-30
+**After**: Athlete, ID, Race, Start, Win, Podium, Top5, Top-10, Top-30
+
+**File Modified**: `champs-predictions.R` lines ~1206-1218 (`select_and_rename_cols` function)
+
+#### 2. Nations Section Structure in Blog Post
+
+Restructured the Nations section so that Relay and Team Sprint data appears under each nation rather than as separate top-level sections.
+
+**Before**:
+```markdown
+## Nation
+### Summary
+### Men
+#### Norway
+#### Sweden
+...
+### Ladies
+...
+### Relay Nations
+#### Podium Optimized
+##### Men
+###### Norway
+...
+### Team Sprint Nations
+...
+```
+
+**After**:
+```markdown
+## Nation
+### Summary
+### Men
+#### Norway
+##### Individual
+##### Relay
+###### Podium Optimized
+###### Win Optimized
+##### Team Sprint
+###### Podium Optimized
+###### Win Optimized
+#### Sweden
+...
+### Ladies
+...
+```
+
+**File Modified**: `champs_script.sh` - Replaced the nation section generation logic with new structure that groups all event types under each nation.
+
+#### 3. Calendar Individual Files
+
+Confirmed the Calendar section already correctly uses:
+- `men_position_probabilities.xlsx` (multi-sheet, one per race)
+- `ladies_position_probabilities.xlsx` (multi-sheet, one per race)
+
+The Python Excel-to-JSON converter creates one JSON file per sheet (e.g., `men_position_probabilities_10_F.json`, `men_position_probabilities_Sprint_C.json`), which the script then finds and displays.
+
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `champs-predictions.R` | Column order: Athlete, ID, Race (was Race, Athlete, ID) |
+| `champs_script.sh` | Nations restructured: Relay/TS under each nation |

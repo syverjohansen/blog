@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Austria Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Teresa Stadlober",
+      529,
+      "Austria",
+      1,
+      0.0003,
+      0.094,
+      0.1014,
+      0.9678,
+      0.0001,
+      0.0495,
+      0.0611,
+      0.6798
+    ],
+    [
+      "Magdalena Scherz",
+      6707,
+      "Austria",
+      2,
+      0.0,
+      0.0087,
+      0.0241,
+      0.4157,
+      0.0001,
+      0.0495,
+      0.0611,
+      0.6798
+    ]
+  ]
+}

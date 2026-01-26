@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Poland Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg_Win",
+    "Leg_Podium",
+    "Leg_Top5",
+    "Leg_Top-10",
+    "Team_Win",
+    "Team_Podium",
+    "Team_Top5",
+    "Team_Top-10"
+  ],
+  "rows": [
+    [
+      "Monika Skinder",
+      6335,
+      "Poland",
+      1,
+      0.0034,
+      0.0239,
+      0.1083,
+      1.0,
+      0.0017,
+      0.0059,
+      0.0265,
+      0.5417
+    ],
+    [
+      "Aleksandra Kolodziej",
+      8064,
+      "Poland",
+      2,
+      0.0001,
+      0.0029,
+      0.0154,
+      0.0023,
+      0.0017,
+      0.0059,
+      0.0265,
+      0.5417
+    ],
+    [
+      "Andzelika Szyszka",
+      8097,
+      "Poland",
+      3,
+      0.0,
+      0.0,
+      0.0003,
+      0.2289,
+      0.0017,
+      0.0059,
+      0.0265,
+      0.5417
+    ],
+    [
+      "Izabela Marcisz",
+      6327,
+      "Poland",
+      4,
+      0.0036,
+      0.0138,
+      0.0094,
+      1.0,
+      0.0017,
+      0.0059,
+      0.0265,
+      0.5417
+    ]
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Czechia Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Tereza Beranova",
+      3618,
+      "Czechia",
+      1,
+      0.0081,
+      0.0108,
+      0.2226,
+      1.0,
+      0.0097,
+      0.0689,
+      0.1357,
+      0.5512
+    ],
+    [
+      "Barbora Antosova",
+      6633,
+      "Czechia",
+      2,
+      0.0014,
+      0.0027,
+      0.0142,
+      0.5023,
+      0.0097,
+      0.0689,
+      0.1357,
+      0.5512
+    ],
+    [
+      "Anna Marie Jaklova",
+      10190,
+      "Czechia",
+      3,
+      0.0001,
+      0.0011,
+      0.0478,
+      0.4607,
+      0.0097,
+      0.0689,
+      0.1357,
+      0.5512
+    ],
+    [
+      "Katerina Janatova",
+      3198,
+      "Czechia",
+      4,
+      0.0314,
+      0.2676,
+      0.3035,
+      0.3489,
+      0.0097,
+      0.0689,
+      0.1357,
+      0.5512
+    ]
+  ]
+}

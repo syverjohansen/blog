@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Poland Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Dominik Bury",
+      3623,
+      "Poland",
+      1,
+      0.004,
+      0.0191,
+      0.0262,
+      0.079,
+      0.0022,
+      0.0097,
+      0.0145,
+      0.039
+    ],
+    [
+      "Piotr Jarecki",
+      15530,
+      "Poland",
+      2,
+      0.0006,
+      0.0014,
+      0.0044,
+      0.0042,
+      0.0022,
+      0.0097,
+      0.0145,
+      0.039
+    ]
+  ]
+}

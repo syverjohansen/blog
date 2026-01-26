@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Sweden Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Maja Dahlqvist",
+      1673,
+      "Sweden",
+      1,
+      0.7707,
+      0.9062,
+      0.9997,
+      0.9869,
+      0.835,
+      0.912,
+      0.9841,
+      0.9924
+    ],
+    [
+      "Jonna Sundling",
+      1486,
+      "Sweden",
+      2,
+      0.894,
+      0.9173,
+      0.9698,
+      0.9975,
+      0.835,
+      0.912,
+      0.9841,
+      0.9924
+    ]
+  ]
+}

@@ -1,0 +1,374 @@
+{
+  "sheet_name": "Men Relay Teams",
+  "headers": [
+    "Country",
+    "Leg",
+    "Athlete",
+    "Nation",
+    "ID",
+    "Leg Podium",
+    "Team Podium"
+  ],
+  "rows": [
+    [
+      "Canada",
+      1,
+      "Graham Ritchie",
+      "Canada",
+      9217,
+      0.0008,
+      0.0966
+    ],
+    [
+      "Canada",
+      2,
+      "Olivier Leveille",
+      "Canada",
+      14108,
+      0.1002,
+      0.0966
+    ],
+    [
+      "Canada",
+      3,
+      "Xavier McKeever",
+      "Canada",
+      12676,
+      0.0656,
+      0.0966
+    ],
+    [
+      "Canada",
+      4,
+      "Antoine Cyr",
+      "Canada",
+      9225,
+      0.1792,
+      0.0966
+    ],
+    [
+      "Czechia",
+      1,
+      "Adam Fellner",
+      "Czechia",
+      2162,
+      0.0083,
+      0.1006
+    ],
+    [
+      "Czechia",
+      2,
+      "Jiri Tuz",
+      "Czechia",
+      17348,
+      0.0487,
+      0.1006
+    ],
+    [
+      "Czechia",
+      3,
+      "Ondrej Cerny",
+      "Czechia",
+      8094,
+      0.0451,
+      0.1006
+    ],
+    [
+      "Czechia",
+      4,
+      "Michal Novak",
+      "Czechia",
+      3655,
+      0.2328,
+      0.1006
+    ],
+    [
+      "Finland",
+      1,
+      "Iivo Niskanen",
+      "Finland",
+      1470,
+      0.6368,
+      0.2704
+    ],
+    [
+      "Finland",
+      2,
+      "Ville Ahonen",
+      "Finland",
+      2754,
+      0.1988,
+      0.2704
+    ],
+    [
+      "Finland",
+      3,
+      "Arsi Ruuskanen",
+      "Finland",
+      8120,
+      0.1985,
+      0.2704
+    ],
+    [
+      "Finland",
+      4,
+      "Ristomatti Hakola",
+      "Finland",
+      2553,
+      0.1194,
+      0.2704
+    ],
+    [
+      "France",
+      1,
+      "Hugo Lapalus",
+      "France",
+      6018,
+      0.385,
+      0.2298
+    ],
+    [
+      "France",
+      2,
+      "Remi Bourdin",
+      "France",
+      17445,
+      0.0499,
+      0.2298
+    ],
+    [
+      "France",
+      3,
+      "Mathis Desloges",
+      "France",
+      12767,
+      0.2372,
+      0.2298
+    ],
+    [
+      "France",
+      4,
+      "Jules Chappaz",
+      "France",
+      12181,
+      0.2344,
+      0.2298
+    ],
+    [
+      "Germany",
+      1,
+      "Friedrich Moch",
+      "Germany",
+      9323,
+      0.0384,
+      0.0726
+    ],
+    [
+      "Germany",
+      2,
+      "Janosch Brugger",
+      "Germany",
+      3657,
+      0.1483,
+      0.0726
+    ],
+    [
+      "Germany",
+      3,
+      "Florian Notz",
+      "Germany",
+      1488,
+      0.0757,
+      0.0726
+    ],
+    [
+      "Germany",
+      4,
+      "Jan Stölben",
+      "Germany",
+      14033,
+      0.0455,
+      0.0726
+    ],
+    [
+      "Italy",
+      1,
+      "Giovanni Ticco",
+      "Italy",
+      12675,
+      0.0115,
+      0.2682
+    ],
+    [
+      "Italy",
+      2,
+      "Elia Barp",
+      "Italy",
+      14042,
+      0.3587,
+      0.2682
+    ],
+    [
+      "Italy",
+      3,
+      "Davide Graz",
+      "Italy",
+      12165,
+      0.082,
+      0.2682
+    ],
+    [
+      "Italy",
+      4,
+      "Federico Pellegrino",
+      "Italy",
+      44,
+      0.5088,
+      0.2682
+    ],
+    [
+      "Norway",
+      1,
+      "Johannes Høsflot Klæbo",
+      "Norway",
+      5164,
+      0.8105,
+      0.7212
+    ],
+    [
+      "Norway",
+      2,
+      "Martin Løwstrøm Nyenget",
+      "Norway",
+      2295,
+      0.6624,
+      0.7212
+    ],
+    [
+      "Norway",
+      3,
+      "Mattis Stenshagen",
+      "Norway",
+      5165,
+      0.6115,
+      0.7212
+    ],
+    [
+      "Norway",
+      4,
+      "Harald Østberg Amundsen",
+      "Norway",
+      5449,
+      0.7731,
+      0.7212
+    ],
+    [
+      "Sweden",
+      1,
+      "William Poromaa",
+      "Sweden",
+      12573,
+      0.2986,
+      0.2471
+    ],
+    [
+      "Sweden",
+      2,
+      "Edvin Anger",
+      "Sweden",
+      14039,
+      0.4542,
+      0.2471
+    ],
+    [
+      "Sweden",
+      3,
+      "Jens Burman",
+      "Sweden",
+      2811,
+      0.0754,
+      0.2471
+    ],
+    [
+      "Sweden",
+      4,
+      "Calle Halfvarsson",
+      "Sweden",
+      73,
+      0.1984,
+      0.2471
+    ],
+    [
+      "Switzerland",
+      1,
+      "Beda Klee",
+      "Switzerland",
+      3651,
+      0.0708,
+      0.0995
+    ],
+    [
+      "Switzerland",
+      2,
+      "Jonas Baumann",
+      "Switzerland",
+      1534,
+      0.1648,
+      0.0995
+    ],
+    [
+      "Switzerland",
+      3,
+      "Jason Rüesch",
+      "Switzerland",
+      2732,
+      0.0497,
+      0.0995
+    ],
+    [
+      "Switzerland",
+      4,
+      "Valerio Grond",
+      "Switzerland",
+      12164,
+      0.1113,
+      0.0995
+    ],
+    [
+      "USA",
+      1,
+      "Ben Ogden",
+      "USA",
+      9179,
+      0.0727,
+      0.2099
+    ],
+    [
+      "USA",
+      2,
+      "Zanden McMullen",
+      "USA",
+      12698,
+      0.0424,
+      0.2099
+    ],
+    [
+      "USA",
+      3,
+      "Zak Ketterson",
+      "USA",
+      5988,
+      0.0629,
+      0.2099
+    ],
+    [
+      "USA",
+      4,
+      "Gus Schumacher",
+      "USA",
+      9172,
+      0.5069,
+      0.2099
+    ]
+  ]
+}

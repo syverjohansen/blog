@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Japan Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Ryo Hirose",
+      12172,
+      "Japan",
+      1,
+      0.0038,
+      0.0159,
+      0.0144,
+      0.0347,
+      0.0026,
+      0.0112,
+      0.0135,
+      0.037
+    ],
+    [
+      "Naoto Baba",
+      5186,
+      "Japan",
+      2,
+      0.0015,
+      0.0071,
+      0.0127,
+      0.0389,
+      0.0026,
+      0.0112,
+      0.0135,
+      0.037
+    ]
+  ]
+}

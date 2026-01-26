@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Latvia Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Sandijs Suhanovs",
+      17033,
+      "Latvia",
+      1,
+      0.0038,
+      0.0048,
+      0.0109,
+      0.0425,
+      0.0021,
+      0.0034,
+      0.0084,
+      0.0286
+    ],
+    [
+      "Raimo Vigants",
+      4153,
+      "Latvia",
+      2,
+      0.0007,
+      0.0022,
+      0.0062,
+      0.0165,
+      0.0021,
+      0.0034,
+      0.0084,
+      0.0286
+    ]
+  ]
+}

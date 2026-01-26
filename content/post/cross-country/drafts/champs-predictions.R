@@ -942,133 +942,154 @@ process_individual_races <- function() {
 # NOTE: Step 3 (start probability calculations) was moved to run BEFORE the prediction loop above
 # This ensures Race_Prob columns exist when we make position predictions
 
-# Step 4: Enforce probability hierarchy (win <= podium <= top5 <= top10 <= top30)
-log_info("Enforcing probability hierarchy constraints")
+# Step 4: Normalize and apply monotonic constraints (matching race-picks.R approach)
+# Order: Normalize → Monotonic constraints → Re-normalize
+log_info("=== Step 4: Normalization and Monotonic Constraints ===")
+
+# Expected totals for each position threshold (as percentages: 100%, 300%, etc.)
+position_thresholds <- c(1, 3, 5, 10, 30)
+prob_cols <- c("win_prob", "podium_prob", "top5_prob", "top10_prob", "top30_prob")
 
 for (race_name in names(results_list)) {
   race_results <- results_list[[race_name]]
-  
-  # Enforce hierarchy by adjusting downward: win <= podium <= top5 <= top10 <= top30
-  race_results_hierarchy <- race_results %>%
+  log_info(paste("Processing", race_name))
+
+  # Store pre-normalization values for debugging
+  race_results <- race_results %>%
     mutate(
-      # Store pre-hierarchy values for debugging
-      pre_hierarchy_win = win_prob,
-      pre_hierarchy_podium = podium_prob,
-      pre_hierarchy_top5 = top5_prob,
-      pre_hierarchy_top10 = top10_prob,
-      pre_hierarchy_top30 = top30_prob,
-      
-      # Enforce hierarchy by ensuring each level is AT MOST the next level
-      # Work forwards: if win > podium, reduce win to podium, etc.
-      win_prob = pmin(win_prob, podium_prob),        # win <= podium
-      podium_prob = pmin(podium_prob, top5_prob),    # podium <= top5
-      top5_prob = pmin(top5_prob, top10_prob),       # top5 <= top10
-      top10_prob = pmin(top10_prob, top30_prob)      # top10 <= top30
-      # top30_prob stays as-is (highest allowed)
-    )
-  
-  # Count violations before and after
-  violations_before <- race_results %>%
-    summarise(
-      win_podium_violations = sum(win_prob > podium_prob, na.rm = TRUE),
-      podium_top5_violations = sum(podium_prob > top5_prob, na.rm = TRUE),
-      top5_top10_violations = sum(top5_prob > top10_prob, na.rm = TRUE),
-      top10_top30_violations = sum(top10_prob > top30_prob, na.rm = TRUE)
-    ) %>%
-    rowSums(na.rm = TRUE)
-  
-  violations_after <- race_results_hierarchy %>%
-    summarise(
-      win_podium_violations = sum(win_prob > podium_prob, na.rm = TRUE),
-      podium_top5_violations = sum(podium_prob > top5_prob, na.rm = TRUE),
-      top5_top10_violations = sum(top5_prob > top10_prob, na.rm = TRUE),
-      top10_top30_violations = sum(top10_prob > top30_prob, na.rm = TRUE)
-    ) %>%
-    rowSums(na.rm = TRUE)
-  
-  # Update results
-  results_list[[race_name]] <- race_results_hierarchy
-  
-  log_info(paste("Hierarchy enforcement for", race_name, 
-                 "- Violations before:", violations_before, 
-                 "after:", violations_after))
-}
-
-log_info("Probability hierarchy enforcement complete")
-
-# Step 5: Normalize probabilities to expected totals
-log_info("Normalizing probabilities to expected totals")
-
-# Expected totals for each position threshold
-expected_totals <- list(
-  win_prob = 1.0,      # 100% (1 winner)
-  podium_prob = 3.0,   # 300% (3 podium spots)
-  top5_prob = 5.0,     # 500% (5 top-5 spots)
-  top10_prob = 10.0,   # 1000% (10 top-10 spots)
-  top30_prob = 30.0    # 3000% (30 top-30 spots)
-)
-
-for (race_name in names(results_list)) {
-  race_results <- results_list[[race_name]]
-  
-  # Calculate current totals
-  current_totals <- race_results %>%
-    summarise(
-      win_total = sum(win_prob, na.rm = TRUE),
-      podium_total = sum(podium_prob, na.rm = TRUE),
-      top5_total = sum(top5_prob, na.rm = TRUE),
-      top10_total = sum(top10_prob, na.rm = TRUE),
-      top30_total = sum(top30_prob, na.rm = TRUE)
-    )
-  
-  # Extract scalar normalization factors
-  win_factor <- if (current_totals$win_total > 0) expected_totals$win_prob / current_totals$win_total else 0
-  podium_factor <- if (current_totals$podium_total > 0) expected_totals$podium_prob / current_totals$podium_total else 0
-  top5_factor <- if (current_totals$top5_total > 0) expected_totals$top5_prob / current_totals$top5_total else 0
-  top10_factor <- if (current_totals$top10_total > 0) expected_totals$top10_prob / current_totals$top10_total else 0
-  top30_factor <- if (current_totals$top30_total > 0) expected_totals$top30_prob / current_totals$top30_total else 0
-  
-  # Normalize each probability column
-  race_results_normalized <- race_results %>%
-    mutate(
-      # Store pre-normalized values for debugging
       pre_norm_win = win_prob,
       pre_norm_podium = podium_prob,
       pre_norm_top5 = top5_prob,
       pre_norm_top10 = top10_prob,
-      pre_norm_top30 = top30_prob,
-      
-      # Apply normalization factors
-      win_prob = win_prob * win_factor,
-      podium_prob = podium_prob * podium_factor,
-      top5_prob = top5_prob * top5_factor,
-      top10_prob = top10_prob * top10_factor,
-      top30_prob = top30_prob * top30_factor
+      pre_norm_top30 = top30_prob
     )
-  
-  # Calculate new totals for verification
-  new_totals <- race_results_normalized %>%
-    summarise(
-      win_total = sum(win_prob, na.rm = TRUE),
-      podium_total = sum(podium_prob, na.rm = TRUE),
-      top5_total = sum(top5_prob, na.rm = TRUE),
-      top10_total = sum(top10_prob, na.rm = TRUE),
-      top30_total = sum(top30_prob, na.rm = TRUE)
+
+  # Log initial sums before normalization
+  log_info("  Sums BEFORE normalization:")
+  for (i in seq_along(prob_cols)) {
+    col <- prob_cols[i]
+    threshold <- position_thresholds[i]
+    initial_sum <- sum(race_results[[col]], na.rm = TRUE)
+    log_info(sprintf("    %s: %.4f (target: %.1f)", col, initial_sum, threshold))
+  }
+
+  # PHASE 1: Initial normalization with capping and redistribution
+  for (i in seq_along(prob_cols)) {
+    col <- prob_cols[i]
+    threshold <- position_thresholds[i]
+    target_sum <- threshold  # Target sum (1.0 for win, 3.0 for podium, etc.)
+
+    current_sum <- sum(race_results[[col]], na.rm = TRUE)
+
+    if (current_sum > 0) {
+      # Apply scaling factor
+      scaling_factor <- target_sum / current_sum
+      race_results[[col]] <- race_results[[col]] * scaling_factor
+
+      # Cap individual probabilities at 1.0 (100%)
+      over_one <- which(race_results[[col]] > 1.0)
+      if (length(over_one) > 0) {
+        log_info(sprintf("    Capping %d skiers with >100%% for %s", length(over_one), col))
+
+        # Calculate excess probability to redistribute
+        excess <- sum(race_results[[col]][over_one] - 1.0)
+
+        # Cap at 1.0
+        race_results[[col]][over_one] <- 1.0
+
+        # Redistribute excess to others proportionally
+        under_one <- which(race_results[[col]] < 1.0)
+        if (length(under_one) > 0 && excess > 0) {
+          under_sum <- sum(race_results[[col]][under_one])
+          if (under_sum > 0) {
+            redistrib_factor <- (under_sum + excess) / under_sum
+            race_results[[col]][under_one] <- race_results[[col]][under_one] * redistrib_factor
+
+            # Recursive cap if needed
+            if (any(race_results[[col]][under_one] > 1.0)) {
+              log_info("    Recursive capping after redistribution")
+              race_results[[col]][race_results[[col]] > 1.0] <- 1.0
+            }
+          }
+        }
+      }
+    } else {
+      # Zero sum - distribute evenly
+      log_warn(paste("    Zero sum for", col, "- distributing evenly"))
+      race_results[[col]] <- target_sum / nrow(race_results)
+    }
+  }
+
+  # PHASE 2: Apply monotonic constraints (win <= podium <= top5 <= top10 <= top30)
+  log_info("  Applying monotonic constraints...")
+
+  # Store pre-hierarchy values
+  race_results <- race_results %>%
+    mutate(
+      pre_hierarchy_win = win_prob,
+      pre_hierarchy_podium = podium_prob,
+      pre_hierarchy_top5 = top5_prob,
+      pre_hierarchy_top10 = top10_prob,
+      pre_hierarchy_top30 = top30_prob
     )
-  
-  # Update results
-  results_list[[race_name]] <- race_results_normalized
-  
-  # Log normalization results
-  log_info(paste("Normalized", race_name))
-  log_info(paste("  Win: ", round(current_totals$win_total, 3), "→", round(new_totals$win_total, 3)))
-  log_info(paste("  Podium: ", round(current_totals$podium_total, 3), "→", round(new_totals$podium_total, 3)))
-  log_info(paste("  Top5: ", round(current_totals$top5_total, 3), "→", round(new_totals$top5_total, 3)))
-  log_info(paste("  Top10: ", round(current_totals$top10_total, 3), "→", round(new_totals$top10_total, 3)))
-  log_info(paste("  Top30: ", round(current_totals$top30_total, 3), "→", round(new_totals$top30_total, 3)))
+
+  # For each row, ensure probabilities are monotonically non-decreasing
+  for (row_i in 1:nrow(race_results)) {
+    probs <- c(
+      race_results$win_prob[row_i],
+      race_results$podium_prob[row_i],
+      race_results$top5_prob[row_i],
+      race_results$top10_prob[row_i],
+      race_results$top30_prob[row_i]
+    )
+
+    # Enforce: each probability >= previous one
+    for (j in 2:length(probs)) {
+      if (probs[j] < probs[j-1]) {
+        probs[j] <- probs[j-1]
+      }
+    }
+
+    # Update row
+    race_results$win_prob[row_i] <- probs[1]
+    race_results$podium_prob[row_i] <- probs[2]
+    race_results$top5_prob[row_i] <- probs[3]
+    race_results$top10_prob[row_i] <- probs[4]
+    race_results$top30_prob[row_i] <- probs[5]
+  }
+
+  # PHASE 3: Re-normalize after monotonic adjustment
+  log_info("  Re-normalizing after monotonic constraints...")
+  for (i in seq_along(prob_cols)) {
+    col <- prob_cols[i]
+    threshold <- position_thresholds[i]
+    target_sum <- threshold
+
+    current_sum <- sum(race_results[[col]], na.rm = TRUE)
+
+    if (current_sum > 0) {
+      scaling_factor <- target_sum / current_sum
+      race_results[[col]] <- race_results[[col]] * scaling_factor
+
+      # Cap at 1.0 again
+      race_results[[col]][race_results[[col]] > 1.0] <- 1.0
+    }
+  }
+
+  # Log final sums
+  log_info("  Sums AFTER normalization and monotonic constraints:")
+  for (i in seq_along(prob_cols)) {
+    col <- prob_cols[i]
+    threshold <- position_thresholds[i]
+    final_sum <- sum(race_results[[col]], na.rm = TRUE)
+    log_info(sprintf("    %s: %.4f (target: %.1f)", col, final_sum, threshold))
+  }
+
+  # Update results list
+  results_list[[race_name]] <- race_results
 }
 
-log_info("Probability normalization complete")
+log_info("Normalization and monotonic constraints complete")
 
 # Save results to Excel files in biathlon format
 log_info("Saving individual race results to Excel files")
@@ -1086,16 +1107,28 @@ ladies_results <- list()
 
 for (race_name in names(results_list)) {
   race_data <- results_list[[race_name]]
-  
+
+  # Select only final columns and rename for user-friendly display
+  race_data <- race_data %>%
+    select(Skier, Nation, ID, start_prob, win_prob, podium_prob, top5_prob, top10_prob, top30_prob) %>%
+    rename(
+      Start = start_prob,
+      Win = win_prob,
+      Podium = podium_prob,
+      Top5 = top5_prob,
+      `Top-10` = top10_prob,
+      `Top-30` = top30_prob
+    )
+
   # Parse race name to get components
   parts <- strsplit(race_name, " ")[[1]]
   gender <- parts[1]
   distance <- parts[2]
   technique <- ifelse(length(parts) > 2, parts[3], "")
-  
+
   # Create tab name (Distance Technique format)
   tab_name <- if (technique == "") distance else paste(distance, technique)
-  
+
   # Store in appropriate gender list
   if (gender == "men") {
     men_results[[tab_name]] <- race_data
@@ -1122,108 +1155,133 @@ if (length(ladies_results) > 0) {
 
 # ============================================================================
 # CREATE NATIONS EXCEL FILE (for Nations blog post)
+# Split by gender - nations with 4+ athletes per gender get their own sheet
 # ============================================================================
 log_info("=== Creating Nations Excel File ===")
 
-# Combine all results into one data frame with Race column
-all_individual_results <- data.frame()
-
-# Process men's results
+# Combine men's results into one data frame with Race and Gender columns
+men_individual_results <- data.frame()
 for (race_name in names(men_results)) {
   race_data <- men_results[[race_name]]
-  race_data$Race <- paste("Men", race_name)
-  all_individual_results <- bind_rows(all_individual_results, race_data)
+  race_data$Race <- race_name
+  race_data$Gender <- "Men"
+  men_individual_results <- bind_rows(men_individual_results, race_data)
 }
 
-# Process ladies' results
+# Combine ladies' results into one data frame with Race and Gender columns
+ladies_individual_results <- data.frame()
 for (race_name in names(ladies_results)) {
   race_data <- ladies_results[[race_name]]
-  race_data$Race <- paste("Ladies", race_name)
-  all_individual_results <- bind_rows(all_individual_results, race_data)
+  race_data$Race <- race_name
+  race_data$Gender <- "Ladies"
+  ladies_individual_results <- bind_rows(ladies_individual_results, race_data)
 }
 
-log_info(paste("Combined", nrow(all_individual_results), "total rows from individual races"))
+log_info(paste("Combined", nrow(men_individual_results), "men's rows"))
+log_info(paste("Combined", nrow(ladies_individual_results), "ladies' rows"))
 
-# Count unique athletes per nation (across all races)
-nation_athlete_counts <- all_individual_results %>%
-  filter(start_prob > 0) %>%
+# Count unique athletes per nation per gender
+men_nation_counts <- men_individual_results %>%
+  filter(Start > 0) %>%
   group_by(Nation) %>%
   summarise(n_athletes = n_distinct(ID), .groups = "drop")
 
-# Nations with 4+ athletes get their own sheet
-main_nations <- nation_athlete_counts %>%
-  filter(n_athletes >= 4) %>%
-  pull(Nation) %>%
-  sort()
+ladies_nation_counts <- ladies_individual_results %>%
+  filter(Start > 0) %>%
+  group_by(Nation) %>%
+  summarise(n_athletes = n_distinct(ID), .groups = "drop")
 
-# Nations with <4 athletes go into "Other"
-other_nations <- nation_athlete_counts %>%
-  filter(n_athletes < 4) %>%
-  pull(Nation)
+# Nations with 4+ athletes per gender
+men_main_nations <- men_nation_counts %>% filter(n_athletes >= 4) %>% pull(Nation) %>% sort()
+ladies_main_nations <- ladies_nation_counts %>% filter(n_athletes >= 4) %>% pull(Nation) %>% sort()
 
-log_info(paste("Nations with 4+ athletes:", paste(main_nations, collapse = ", ")))
-log_info(paste("Nations with <4 athletes (Other):", length(other_nations)))
+# Nations with <4 athletes per gender
+men_other_nations <- men_nation_counts %>% filter(n_athletes < 4) %>% pull(Nation)
+ladies_other_nations <- ladies_nation_counts %>% filter(n_athletes < 4) %>% pull(Nation)
+
+log_info(paste("Men nations with 4+ athletes:", paste(men_main_nations, collapse = ", ")))
+log_info(paste("Ladies nations with 4+ athletes:", paste(ladies_main_nations, collapse = ", ")))
 
 # Select and rename columns for reader-friendly output
 select_and_rename_cols <- function(df, include_nation = FALSE) {
   if (include_nation) {
     df %>%
-      select(Race, Nation, Athlete = Skier, ID,
-             `Start Prob` = start_prob,
-             `Win Prob` = win_prob,
-             `Podium Prob` = podium_prob,
-             `Top 5 Prob` = top5_prob,
-             `Top 10 Prob` = top10_prob,
-             `Top 30 Prob` = top30_prob) %>%
-      arrange(Race, Nation, desc(`Start Prob`))
+      select(Athlete = Skier, ID, Race, Nation,
+             Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
+      arrange(Race, Nation, desc(Start))
   } else {
     df %>%
-      select(Race, Athlete = Skier, ID,
-             `Start Prob` = start_prob,
-             `Win Prob` = win_prob,
-             `Podium Prob` = podium_prob,
-             `Top 5 Prob` = top5_prob,
-             `Top 10 Prob` = top10_prob,
-             `Top 30 Prob` = top30_prob) %>%
-      arrange(Race, desc(`Start Prob`))
+      select(Athlete = Skier, ID, Race,
+             Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
+      arrange(Race, desc(Start))
   }
 }
 
 # Create nations workbook
 nations_wb <- list()
 
-# Process each main nation (alphabetical order)
-for (nation in main_nations) {
-  nation_data <- all_individual_results %>%
-    filter(Nation == nation, start_prob > 0)
+# Process men's main nations (alphabetical order)
+for (nation in men_main_nations) {
+  nation_data <- men_individual_results %>%
+    filter(Nation == nation, Start > 0)
 
   if (nrow(nation_data) > 0) {
-    nations_wb[[nation]] <- select_and_rename_cols(nation_data, include_nation = FALSE)
-    log_info(paste("Added", nation, "sheet with", nrow(nation_data), "rows"))
+    sheet_name <- paste(nation, "Men")
+    nations_wb[[sheet_name]] <- select_and_rename_cols(nation_data, include_nation = FALSE)
+    log_info(paste("Added", sheet_name, "sheet with", nrow(nation_data), "rows"))
   }
 }
 
-# Create "Other" sheet for nations with <4 athletes
-other_data <- all_individual_results %>%
-  filter(Nation %in% other_nations, start_prob > 0)
+# Create "Other Men" sheet for nations with <4 male athletes
+men_other_data <- men_individual_results %>%
+  filter(Nation %in% men_other_nations, Start > 0)
 
-if (nrow(other_data) > 0) {
-  nations_wb[["Other"]] <- select_and_rename_cols(other_data, include_nation = TRUE)
-  log_info(paste("Added Other sheet with", nrow(other_data), "rows from",
-                 length(unique(other_data$Nation)), "nations"))
+if (nrow(men_other_data) > 0) {
+  nations_wb[["Other Men"]] <- select_and_rename_cols(men_other_data, include_nation = TRUE)
+  log_info(paste("Added Other Men sheet with", nrow(men_other_data), "rows from",
+                 length(unique(men_other_data$Nation)), "nations"))
 }
 
-# Create Summary sheet
+# Process ladies' main nations (alphabetical order)
+for (nation in ladies_main_nations) {
+  nation_data <- ladies_individual_results %>%
+    filter(Nation == nation, Start > 0)
+
+  if (nrow(nation_data) > 0) {
+    sheet_name <- paste(nation, "Ladies")
+    nations_wb[[sheet_name]] <- select_and_rename_cols(nation_data, include_nation = FALSE)
+    log_info(paste("Added", sheet_name, "sheet with", nrow(nation_data), "rows"))
+  }
+}
+
+# Create "Other Ladies" sheet for nations with <4 female athletes
+ladies_other_data <- ladies_individual_results %>%
+  filter(Nation %in% ladies_other_nations, Start > 0)
+
+if (nrow(ladies_other_data) > 0) {
+  nations_wb[["Other Ladies"]] <- select_and_rename_cols(ladies_other_data, include_nation = TRUE)
+  log_info(paste("Added Other Ladies sheet with", nrow(ladies_other_data), "rows from",
+                 length(unique(ladies_other_data$Nation)), "nations"))
+}
+
+# Combine all results for summary
+all_individual_results <- bind_rows(men_individual_results, ladies_individual_results)
+
+# Create Summary sheet (split by gender)
 summary_data <- all_individual_results %>%
-  filter(start_prob > 0) %>%
+  filter(Start > 0) %>%
   mutate(
-    Nation_Group = ifelse(Nation %in% main_nations, Nation, "Other")
+    Nation_Group = case_when(
+      Gender == "Men" & Nation %in% men_main_nations ~ Nation,
+      Gender == "Ladies" & Nation %in% ladies_main_nations ~ Nation,
+      TRUE ~ "Other"
+    )
   ) %>%
-  group_by(Nation_Group) %>%
+  group_by(Gender, Nation_Group) %>%
   summarise(
-    `Total Win Prob` = sum(win_prob, na.rm = TRUE),
-    `Total Podium Prob` = sum(podium_prob, na.rm = TRUE),
-    `Total Top 10 Prob` = sum(top10_prob, na.rm = TRUE),
+    `Total Win` = sum(Win, na.rm = TRUE),
+    `Total Podium` = sum(Podium, na.rm = TRUE),
+    `Total Top-10` = sum(`Top-10`, na.rm = TRUE),
     `Athletes` = n_distinct(ID),
     .groups = "drop"
   ) %>%
@@ -1892,53 +1950,81 @@ process_relay_races <- function() {
   # STEP 3: ROSTER OPTIMIZATION
   log_info("=== STEP 3: ROSTER OPTIMIZATION ===")
   
-  # Function to calculate team podium probability
-  calculate_team_podium_prob <- function(team_athletes, relay_models, leg_importance) {
+  # Function to calculate team probability for a specific threshold
+  # threshold: 1 = win, 3 = podium, 5 = top5, 10 = top10
+  calculate_team_prob_for_threshold <- function(team_athletes, relay_models, leg_importance, threshold = 3) {
     leg_probs <- numeric(4)
-    
+
     for (leg in 1:4) {
-      if (paste0("leg_", leg) %in% names(relay_models$models)) {
+      # Try threshold-specific model first, then fall back to generic leg model
+      model_key <- paste0("leg_", leg, "_threshold_", threshold)
+      fallback_key <- paste0("leg_", leg)
+
+      if (model_key %in% names(relay_models$models)) {
         athlete <- team_athletes[leg, ]
-        
+
         # Create prediction data with appropriate prev_points_weighted
         pred_data <- athlete
         if (leg %in% c(1, 2)) {
-          # Classic legs - use classic prev_points
           pred_data$prev_points_weighted <- athlete$prev_points_weighted_classic
         } else {
-          # Freestyle legs - use freestyle prev_points  
           pred_data$prev_points_weighted <- athlete$prev_points_weighted_freestyle
         }
-        
-        # Get leg model and predict
-        model <- relay_models$models[[paste0("leg_", leg)]]
+
+        model <- relay_models$models[[model_key]]
+        leg_probs[leg] <- predict(model, newdata = pred_data, type = "response")
+      } else if (fallback_key %in% names(relay_models$models)) {
+        athlete <- team_athletes[leg, ]
+        pred_data <- athlete
+        if (leg %in% c(1, 2)) {
+          pred_data$prev_points_weighted <- athlete$prev_points_weighted_classic
+        } else {
+          pred_data$prev_points_weighted <- athlete$prev_points_weighted_freestyle
+        }
+
+        model <- relay_models$models[[fallback_key]]
         leg_probs[leg] <- predict(model, newdata = pred_data, type = "response")
       } else {
-        # If no model for this leg, use 0 probability
         leg_probs[leg] <- 0
       }
     }
-    
-    # Weight by leg importance
+
     team_prob <- sum(leg_probs * leg_importance)
     return(list(team_prob = team_prob, leg_probs = leg_probs))
   }
+
+  # Wrapper for podium probability (backward compatibility)
+  calculate_team_podium_prob <- function(team_athletes, relay_models, leg_importance) {
+    calculate_team_prob_for_threshold(team_athletes, relay_models, leg_importance, threshold = 3)
+  }
+
+  # Wrapper for win probability
+  calculate_team_win_prob <- function(team_athletes, relay_models, leg_importance) {
+    calculate_team_prob_for_threshold(team_athletes, relay_models, leg_importance, threshold = 1)
+  }
   
-  # Function to optimize team for a specific country
+  # Function to optimize team for a specific country (tracks both win and podium optimization)
   optimize_country_team <- function(country_athletes, relay_models, leg_importance, country_name) {
     n_athletes <- nrow(country_athletes)
     if (n_athletes < 4) {
       log_info(paste("Country", country_name, "has only", n_athletes, "athletes - skipping"))
       return(NULL)
     }
-    
+
     log_info(paste("Optimizing team for", country_name, "with", n_athletes, "athletes"))
-    
-    best_prob <- 0
-    best_team <- NULL
-    best_leg_probs <- NULL
-    best_legs <- NULL
-    
+
+    # Track best for podium optimization
+    best_podium_prob <- 0
+    best_podium_team <- NULL
+    best_podium_leg_probs <- NULL
+    best_podium_legs <- NULL
+
+    # Track best for win optimization
+    best_win_prob <- 0
+    best_win_team <- NULL
+    best_win_leg_probs <- NULL
+    best_win_legs <- NULL
+
     # Try all permutations (brute force - feasible with ≤8 athletes)
     for (leg1 in 1:n_athletes) {
       for (leg2 in 1:n_athletes) {
@@ -1947,29 +2033,58 @@ process_relay_races <- function() {
           if (leg3 %in% c(leg1, leg2)) next
           for (leg4 in 1:n_athletes) {
             if (leg4 %in% c(leg1, leg2, leg3)) next
-            
+
             team <- country_athletes[c(leg1, leg2, leg3, leg4), ]
-            result <- calculate_team_podium_prob(team, relay_models, leg_importance)
-            
-            if (result$team_prob > best_prob) {
-              best_prob <- result$team_prob
-              best_team <- team
-              best_leg_probs <- result$leg_probs
-              best_legs <- c(leg1, leg2, leg3, leg4)
+
+            # Calculate both win and podium probabilities
+            podium_result <- calculate_team_podium_prob(team, relay_models, leg_importance)
+            win_result <- calculate_team_win_prob(team, relay_models, leg_importance)
+
+            # Update best podium team
+            if (podium_result$team_prob > best_podium_prob) {
+              best_podium_prob <- podium_result$team_prob
+              best_podium_team <- team
+              best_podium_leg_probs <- podium_result$leg_probs
+              best_podium_legs <- c(leg1, leg2, leg3, leg4)
+            }
+
+            # Update best win team
+            if (win_result$team_prob > best_win_prob) {
+              best_win_prob <- win_result$team_prob
+              best_win_team <- team
+              best_win_leg_probs <- win_result$leg_probs
+              best_win_legs <- c(leg1, leg2, leg3, leg4)
             }
           }
         }
       }
     }
-    
-    log_info(paste("Best team probability for", country_name, ":", round(best_prob, 4)))
-    
+
+    log_info(paste("Best podium probability for", country_name, ":", round(best_podium_prob, 4)))
+    log_info(paste("Best win probability for", country_name, ":", round(best_win_prob, 4)))
+
+    # Check if win-optimized team differs from podium-optimized team
+    teams_differ <- !identical(best_podium_legs, best_win_legs)
+    if (teams_differ) {
+      log_info(paste("  Note: Win-optimized team differs from podium-optimized team"))
+    }
+
     return(list(
       country = country_name,
-      team = best_team, 
-      team_podium_prob = best_prob,
-      leg_probs = best_leg_probs,
-      leg_assignments = best_legs
+      # Podium optimization results
+      podium_team = best_podium_team,
+      team_podium_prob = best_podium_prob,
+      podium_leg_probs = best_podium_leg_probs,
+      podium_leg_assignments = best_podium_legs,
+      # Win optimization results
+      win_team = best_win_team,
+      team_win_prob = best_win_prob,
+      win_leg_probs = best_win_leg_probs,
+      win_leg_assignments = best_win_legs,
+      # For backward compatibility, 'team' refers to podium-optimized
+      team = best_podium_team,
+      leg_probs = best_podium_leg_probs,
+      leg_assignments = best_podium_legs
     ))
   }
   
@@ -2020,19 +2135,31 @@ process_relay_races <- function() {
   
   # Create Excel output format
   log_info("Creating Excel output for relay optimization results")
-  
-  # Function to format optimization results for Excel
-  format_relay_results_for_excel <- function(optimization_results) {
+
+  # Function to format optimization results for Excel (supports both podium and win optimization)
+  format_relay_results_for_excel <- function(optimization_results, optimization_type = "podium") {
     if (is.null(optimization_results) || length(optimization_results) == 0) {
       return(NULL)
     }
-    
+
     excel_data <- data.frame()
-    
+
     for (country in names(optimization_results)) {
       result <- optimization_results[[country]]
-      team <- result$team
-      
+
+      # Select appropriate team based on optimization type
+      if (optimization_type == "win") {
+        team <- result$win_team
+        leg_probs <- result$win_leg_probs
+        team_prob <- result$team_win_prob
+      } else {
+        team <- result$podium_team
+        leg_probs <- result$podium_leg_probs
+        team_prob <- result$team_podium_prob
+      }
+
+      if (is.null(team)) next
+
       # Create one row per leg
       for (leg in 1:4) {
         row_data <- data.frame(
@@ -2041,41 +2168,69 @@ process_relay_races <- function() {
           Athlete = team$Skier[leg],
           Nation = team$Nation[leg],
           ID = team$ID[leg],
-          Leg_Podium_Prob = round(result$leg_probs[leg], 4),
-          Team_Podium_Prob = round(result$team_podium_prob, 4)
+          Leg_Prob = round(leg_probs[leg], 4),
+          Team_Prob = round(team_prob, 4)
         )
         excel_data <- rbind(excel_data, row_data)
       }
     }
-    
+
+    # Rename columns based on optimization type (clean names without underscores)
+    if (optimization_type == "win") {
+      names(excel_data)[names(excel_data) == "Leg_Prob"] <- "Leg Win"
+      names(excel_data)[names(excel_data) == "Team_Prob"] <- "Team Win"
+    } else {
+      names(excel_data)[names(excel_data) == "Leg_Prob"] <- "Leg Podium"
+      names(excel_data)[names(excel_data) == "Team_Prob"] <- "Team Podium"
+    }
+
     return(excel_data)
   }
-  
-  men_excel_data <- format_relay_results_for_excel(men_relay_optimization)
-  ladies_excel_data <- format_relay_results_for_excel(ladies_relay_optimization)
-  
-  # Save to Excel file
+
+  # Create Excel data for both optimization types
+  men_podium_excel <- format_relay_results_for_excel(men_relay_optimization, "podium")
+  ladies_podium_excel <- format_relay_results_for_excel(ladies_relay_optimization, "podium")
+  men_win_excel <- format_relay_results_for_excel(men_relay_optimization, "win")
+  ladies_win_excel <- format_relay_results_for_excel(ladies_relay_optimization, "win")
+
+  # Save to Excel files
   current_year <- format(Sys.Date(), "%Y")
   output_dir <- file.path("~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions", current_year)
   if (!dir.exists(output_dir)) {
     dir.create(output_dir, recursive = TRUE)
   }
-  
-  relay_results_list <- list()
-  if (!is.null(men_excel_data)) {
-    relay_results_list[["Men Relay Teams"]] <- men_excel_data
+
+  # Save podium-optimized teams
+  podium_results_list <- list()
+  if (!is.null(men_podium_excel)) {
+    podium_results_list[["Men Relay Teams"]] <- men_podium_excel
   }
-  if (!is.null(ladies_excel_data)) {
-    relay_results_list[["Ladies Relay Teams"]] <- ladies_excel_data
+  if (!is.null(ladies_podium_excel)) {
+    podium_results_list[["Ladies Relay Teams"]] <- ladies_podium_excel
   }
-  
-  if (length(relay_results_list) > 0) {
-    relay_file <- file.path(output_dir, "relay_team_optimization.xlsx")
-    write.xlsx(relay_results_list, relay_file)
-    log_info(paste("Saved relay optimization results to", relay_file))
+
+  if (length(podium_results_list) > 0) {
+    podium_file <- file.path(output_dir, "relay_team_optimization_podium.xlsx")
+    write.xlsx(podium_results_list, podium_file)
+    log_info(paste("Saved podium-optimized relay teams to", podium_file))
   }
-  
-  log_info("Roster optimization complete")
+
+  # Save win-optimized teams
+  win_results_list <- list()
+  if (!is.null(men_win_excel)) {
+    win_results_list[["Men Relay Teams"]] <- men_win_excel
+  }
+  if (!is.null(ladies_win_excel)) {
+    win_results_list[["Ladies Relay Teams"]] <- ladies_win_excel
+  }
+
+  if (length(win_results_list) > 0) {
+    win_file <- file.path(output_dir, "relay_team_optimization_win.xlsx")
+    write.xlsx(win_results_list, win_file)
+    log_info(paste("Saved win-optimized relay teams to", win_file))
+  }
+
+  log_info("Roster optimization complete (both podium and win optimizations saved)")
   
   # STEP 4: GENERATE ALL THRESHOLD PREDICTIONS FOR OPTIMIZED TEAMS
   log_info("=== STEP 4: GENERATING ALL THRESHOLD PREDICTIONS ===")
@@ -2132,26 +2287,33 @@ process_relay_races <- function() {
       log_warn(paste("No optimization results for", gender, "- skipping threshold predictions"))
       return(NULL)
     }
-    
+
     log_info(paste("Generating all threshold predictions for", gender, "relay teams"))
-    
+
     all_predictions <- list()
-    
+
     for (country in names(optimization_results)) {
       result <- optimization_results[[country]]
-      team <- result$team
-      
-      # Calculate all threshold probabilities for this optimized team
-      threshold_predictions <- calculate_team_all_thresholds(team, relay_models, leg_importance)
-      
+      podium_team <- result$podium_team
+      win_team <- result$win_team
+
+      # Calculate all threshold probabilities for BOTH team arrangements
+      podium_predictions <- calculate_team_all_thresholds(podium_team, relay_models, leg_importance)
+      win_predictions <- calculate_team_all_thresholds(win_team, relay_models, leg_importance)
+
       all_predictions[[country]] <- list(
-        team = team,
-        predictions = threshold_predictions
+        podium_team = podium_team,
+        win_team = win_team,
+        podium_predictions = podium_predictions,
+        win_predictions = win_predictions,
+        # For backward compatibility
+        team = podium_team,
+        predictions = podium_predictions
       )
-      
+
       log_info(paste("Generated threshold predictions for", country))
     }
-    
+
     return(all_predictions)
   }
   
@@ -2172,14 +2334,14 @@ process_relay_races <- function() {
     if (is.null(all_predictions) || length(all_predictions) == 0) {
       return(NULL)
     }
-    
+
     excel_data <- data.frame()
-    
+
     for (country in names(all_predictions)) {
       country_data <- all_predictions[[country]]
       team <- country_data$team
       predictions <- country_data$predictions
-      
+
       # Create one row per leg with all threshold probabilities
       for (leg in 1:4) {
         row_data <- data.frame(
@@ -2188,19 +2350,21 @@ process_relay_races <- function() {
           Athlete = team$Skier[leg],
           Nation = team$Nation[leg],
           ID = team$ID[leg],
-          Leg_Win_Prob = round(predictions$threshold_1$leg_probs[leg], 4),
-          Leg_Podium_Prob = round(predictions$threshold_3$leg_probs[leg], 4),
-          Leg_Top5_Prob = round(predictions$threshold_5$leg_probs[leg], 4),
-          Leg_Top10_Prob = round(predictions$threshold_10$leg_probs[leg], 4),
-          Team_Win_Prob = round(predictions$threshold_1$team_prob, 4),
-          Team_Podium_Prob = round(predictions$threshold_3$team_prob, 4),
-          Team_Top5_Prob = round(predictions$threshold_5$team_prob, 4),
-          Team_Top10_Prob = round(predictions$threshold_10$team_prob, 4)
+          `Leg Win` = round(predictions$threshold_1$leg_probs[leg], 4),
+          `Leg Podium` = round(predictions$threshold_3$leg_probs[leg], 4),
+          `Leg Top5` = round(predictions$threshold_5$leg_probs[leg], 4),
+          `Leg Top-10` = round(predictions$threshold_10$leg_probs[leg], 4),
+          `Team Win` = round(predictions$threshold_1$team_prob, 4),
+          `Team Podium` = round(predictions$threshold_3$team_prob, 4),
+          `Team Top5` = round(predictions$threshold_5$team_prob, 4),
+          `Team Top-10` = round(predictions$threshold_10$team_prob, 4),
+          stringsAsFactors = FALSE,
+          check.names = FALSE
         )
-        excel_data <- rbind(excel_data, row_data)
+        excel_data <- bind_rows(excel_data, row_data)
       }
     }
-    
+
     return(excel_data)
   }
   
@@ -2224,127 +2388,134 @@ process_relay_races <- function() {
   
   log_info("All threshold prediction generation complete")
   
-  # HIERARCHY ENFORCEMENT AND NORMALIZATION (same as individual races)
-  log_info("=== HIERARCHY ENFORCEMENT AND NORMALIZATION ===")
-  
-  # Function to enforce hierarchy constraints for relay predictions
-  enforce_relay_hierarchy <- function(all_predictions, gender) {
+  # NORMALIZATION AND MONOTONIC CONSTRAINTS (matching race-picks.R approach)
+  # Order: Normalize → Monotonic constraints → Re-normalize
+  log_info("=== NORMALIZATION AND MONOTONIC CONSTRAINTS ===")
+
+  # Combined function: normalize, apply monotonic constraints, re-normalize
+  normalize_and_constrain_relay <- function(all_predictions, gender) {
     if (is.null(all_predictions) || length(all_predictions) == 0) {
       return(all_predictions)
     }
-    
-    log_info(paste("Enforcing probability hierarchy for", gender, "relay teams"))
-    
-    for (country in names(all_predictions)) {
-      country_data <- all_predictions[[country]]
-      predictions <- country_data$predictions
-      
-      # Extract current team probabilities
-      win_prob <- predictions$threshold_1$team_prob
-      podium_prob <- predictions$threshold_3$team_prob
-      top5_prob <- predictions$threshold_5$team_prob
-      top10_prob <- predictions$threshold_10$team_prob
-      
-      # Store pre-hierarchy values for debugging
-      pre_hierarchy <- c(win_prob, podium_prob, top5_prob, top10_prob)
-      
-      # Enforce hierarchy by adjusting downward: win <= podium <= top5 <= top10
-      win_prob <- min(win_prob, podium_prob)
-      podium_prob <- min(podium_prob, top5_prob)
-      top5_prob <- min(top5_prob, top10_prob)
-      # top10_prob stays as-is (highest allowed)
-      
-      # Update the predictions with hierarchy-enforced values
-      all_predictions[[country]]$predictions$threshold_1$team_prob <- win_prob
-      all_predictions[[country]]$predictions$threshold_3$team_prob <- podium_prob
-      all_predictions[[country]]$predictions$threshold_5$team_prob <- top5_prob
-      all_predictions[[country]]$predictions$threshold_10$team_prob <- top10_prob
-      
-      # Count violations for logging
-      violations <- sum(pre_hierarchy[1] > pre_hierarchy[2], 
-                       pre_hierarchy[2] > pre_hierarchy[3], 
-                       pre_hierarchy[3] > pre_hierarchy[4], na.rm = TRUE)
-      if (violations > 0) {
-        log_info(paste("Fixed", violations, "hierarchy violations for", country))
-      }
-    }
-    
-    return(all_predictions)
-  }
-  
-  # Function to normalize relay predictions to expected totals
-  normalize_relay_predictions <- function(all_predictions, gender) {
-    if (is.null(all_predictions) || length(all_predictions) == 0) {
-      return(all_predictions)
-    }
-    
-    log_info(paste("Normalizing relay predictions to expected totals for", gender))
-    
-    # Expected totals for each position threshold
+
+    log_info(paste("Processing", gender, "relay predictions"))
+
     expected_totals <- c(1.0, 3.0, 5.0, 10.0)  # win, podium, top5, top10
     threshold_names <- c("threshold_1", "threshold_3", "threshold_5", "threshold_10")
-    
-    # Calculate current totals across all countries
-    current_totals <- numeric(4)
-    for (i in 1:4) {
-      threshold_name <- threshold_names[i]
-      total <- 0
-      for (country in names(all_predictions)) {
-        total <- total + all_predictions[[country]]$predictions[[threshold_name]]$team_prob
-      }
-      current_totals[i] <- total
-    }
-    
-    log_info(paste("Current totals before normalization:", paste(round(current_totals, 3), collapse = ", ")))
-    log_info(paste("Expected totals:", paste(expected_totals, collapse = ", ")))
-    
-    # Calculate normalization factors
-    normalization_factors <- numeric(4)
-    for (i in 1:4) {
-      if (current_totals[i] > 0) {
-        normalization_factors[i] <- expected_totals[i] / current_totals[i]
-      } else {
-        normalization_factors[i] <- 0
-      }
-    }
-    
-    log_info(paste("Normalization factors:", paste(round(normalization_factors, 4), collapse = ", ")))
-    
-    # Apply normalization factors to all countries
-    for (country in names(all_predictions)) {
+    countries <- names(all_predictions)
+    n_countries <- length(countries)
+
+    # Helper to get current totals
+    get_totals <- function() {
+      totals <- numeric(4)
       for (i in 1:4) {
-        threshold_name <- threshold_names[i]
-        old_prob <- all_predictions[[country]]$predictions[[threshold_name]]$team_prob
-        new_prob <- old_prob * normalization_factors[i]
-        all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- new_prob
+        for (country in countries) {
+          totals[i] <- totals[i] + all_predictions[[country]]$predictions[[threshold_names[i]]]$team_prob
+        }
       }
+      totals
     }
-    
-    # Calculate new totals for verification
-    new_totals <- numeric(4)
+
+    # Log initial totals
+    initial_totals <- get_totals()
+    log_info(paste("  Initial totals:", paste(round(initial_totals, 4), collapse = ", ")))
+
+    # PHASE 1: Normalize with capping and redistribution
+    log_info("  Phase 1: Normalizing with capping...")
     for (i in 1:4) {
       threshold_name <- threshold_names[i]
-      total <- 0
-      for (country in names(all_predictions)) {
-        total <- total + all_predictions[[country]]$predictions[[threshold_name]]$team_prob
+      target <- expected_totals[i]
+      current_sum <- sum(sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
+
+      if (current_sum > 0) {
+        scaling_factor <- target / current_sum
+
+        # Apply scaling
+        for (country in countries) {
+          all_predictions[[country]]$predictions[[threshold_name]]$team_prob <-
+            all_predictions[[country]]$predictions[[threshold_name]]$team_prob * scaling_factor
+        }
+
+        # Cap at 1.0 and redistribute
+        over_one <- sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob > 1.0)
+        if (any(over_one)) {
+          excess <- sum(sapply(countries[over_one], function(c)
+            all_predictions[[c]]$predictions[[threshold_name]]$team_prob - 1.0))
+
+          # Cap
+          for (country in countries[over_one]) {
+            all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- 1.0
+          }
+
+          # Redistribute to under-1.0 countries
+          under_one <- !over_one
+          if (any(under_one) && excess > 0) {
+            under_sum <- sum(sapply(countries[under_one], function(c)
+              all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
+            if (under_sum > 0) {
+              redistrib_factor <- (under_sum + excess) / under_sum
+              for (country in countries[under_one]) {
+                new_prob <- all_predictions[[country]]$predictions[[threshold_name]]$team_prob * redistrib_factor
+                all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- min(new_prob, 1.0)
+              }
+            }
+          }
+        }
       }
-      new_totals[i] <- total
     }
-    
-    log_info(paste("New totals after normalization:", paste(round(new_totals, 3), collapse = ", ")))
-    
+
+    # PHASE 2: Monotonic constraints (win <= podium <= top5 <= top10)
+    log_info("  Phase 2: Applying monotonic constraints...")
+    for (country in countries) {
+      probs <- c(
+        all_predictions[[country]]$predictions$threshold_1$team_prob,
+        all_predictions[[country]]$predictions$threshold_3$team_prob,
+        all_predictions[[country]]$predictions$threshold_5$team_prob,
+        all_predictions[[country]]$predictions$threshold_10$team_prob
+      )
+
+      # Enforce monotonic (each >= previous)
+      for (j in 2:4) {
+        if (probs[j] < probs[j-1]) {
+          probs[j] <- probs[j-1]
+        }
+      }
+
+      all_predictions[[country]]$predictions$threshold_1$team_prob <- probs[1]
+      all_predictions[[country]]$predictions$threshold_3$team_prob <- probs[2]
+      all_predictions[[country]]$predictions$threshold_5$team_prob <- probs[3]
+      all_predictions[[country]]$predictions$threshold_10$team_prob <- probs[4]
+    }
+
+    # PHASE 3: Re-normalize after monotonic adjustment
+    log_info("  Phase 3: Re-normalizing...")
+    for (i in 1:4) {
+      threshold_name <- threshold_names[i]
+      target <- expected_totals[i]
+      current_sum <- sum(sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
+
+      if (current_sum > 0) {
+        scaling_factor <- target / current_sum
+        for (country in countries) {
+          new_prob <- all_predictions[[country]]$predictions[[threshold_name]]$team_prob * scaling_factor
+          all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- min(new_prob, 1.0)
+        }
+      }
+    }
+
+    # Log final totals
+    final_totals <- get_totals()
+    log_info(paste("  Final totals:", paste(round(final_totals, 4), collapse = ", ")))
+    log_info(paste("  Expected:", paste(expected_totals, collapse = ", ")))
+
     return(all_predictions)
   }
-  
-  # Apply hierarchy enforcement to both genders
-  men_all_predictions <- enforce_relay_hierarchy(men_all_predictions, "men")
-  ladies_all_predictions <- enforce_relay_hierarchy(ladies_all_predictions, "ladies")
-  
-  # Apply normalization to both genders
-  men_all_predictions <- normalize_relay_predictions(men_all_predictions, "men")
-  ladies_all_predictions <- normalize_relay_predictions(ladies_all_predictions, "ladies")
-  
-  log_info("Hierarchy enforcement and normalization complete")
+
+  # Apply to both genders
+  men_all_predictions <- normalize_and_constrain_relay(men_all_predictions, "men")
+  ladies_all_predictions <- normalize_and_constrain_relay(ladies_all_predictions, "ladies")
+
+  log_info("Normalization and monotonic constraints complete")
   
   # Update Excel output with hierarchy-enforced and normalized predictions
   log_info("Creating final Excel output with hierarchy-enforced and normalized predictions")
@@ -2368,7 +2539,140 @@ process_relay_races <- function() {
   }
   
   log_info("Final relay prediction processing complete")
-  
+
+  # ============================================================================
+  # CREATE NATIONS RELAY EXCEL FILES (Podium and Win Optimized)
+  # Split by gender - one sheet per nation
+  # ============================================================================
+  log_info("=== Creating Nations Relay Excel Files (Podium & Win Optimized) ===")
+
+  # Function to format relay nations data for a specific optimization type
+  format_relay_nations_data <- function(all_predictions, optimization_results, gender, opt_type = "podium") {
+    if (is.null(all_predictions) || length(all_predictions) == 0) {
+      return(data.frame())
+    }
+
+    results <- data.frame()
+
+    for (country in names(all_predictions)) {
+      country_data <- all_predictions[[country]]
+
+      # Select team AND predictions based on optimization type
+      if (opt_type == "win") {
+        team <- country_data$win_team
+        predictions <- country_data$win_predictions
+      } else {
+        team <- country_data$podium_team
+        predictions <- country_data$podium_predictions
+      }
+
+      if (is.null(team)) next
+
+      for (leg in 1:4) {
+        row_data <- data.frame(
+          Athlete = team$Skier[leg],
+          ID = team$ID[leg],
+          Nation = country,
+          Leg = leg,
+          `Leg Win` = round(predictions$threshold_1$leg_probs[leg], 4),
+          `Leg Podium` = round(predictions$threshold_3$leg_probs[leg], 4),
+          `Leg Top5` = round(predictions$threshold_5$leg_probs[leg], 4),
+          `Leg Top-10` = round(predictions$threshold_10$leg_probs[leg], 4),
+          `Team Win` = round(predictions$threshold_1$team_prob, 4),
+          `Team Podium` = round(predictions$threshold_3$team_prob, 4),
+          `Team Top5` = round(predictions$threshold_5$team_prob, 4),
+          `Team Top-10` = round(predictions$threshold_10$team_prob, 4),
+          Gender = gender,
+          stringsAsFactors = FALSE,
+          check.names = FALSE
+        )
+        results <- bind_rows(results, row_data)
+      }
+    }
+
+    return(results)
+  }
+
+  # Function to create nations relay workbook for a given optimization type
+  create_nations_relay_workbook <- function(men_data, ladies_data, opt_type) {
+    nations_wb <- list()
+
+    men_nations <- unique(men_data$Nation)
+    ladies_nations <- unique(ladies_data$Nation)
+
+    # Process men's relay nations (alphabetical order)
+    for (nation in sort(men_nations)) {
+      nation_data <- men_data %>%
+        filter(Nation == nation) %>%
+        select(-Gender) %>%
+        arrange(Leg)
+
+      if (nrow(nation_data) > 0) {
+        sheet_name <- paste(nation, "Men")
+        nations_wb[[sheet_name]] <- nation_data
+      }
+    }
+
+    # Process ladies' relay nations (alphabetical order)
+    for (nation in sort(ladies_nations)) {
+      nation_data <- ladies_data %>%
+        filter(Nation == nation) %>%
+        select(-Gender) %>%
+        arrange(Leg)
+
+      if (nrow(nation_data) > 0) {
+        sheet_name <- paste(nation, "Ladies")
+        nations_wb[[sheet_name]] <- nation_data
+      }
+    }
+
+    # Create Summary sheet
+    all_data <- bind_rows(men_data, ladies_data)
+
+    summary_data <- all_data %>%
+      group_by(Gender, Nation) %>%
+      summarise(
+        `Team Win` = first(`Team Win`),
+        `Team Podium` = first(`Team Podium`),
+        `Team Top5` = first(`Team Top5`),
+        `Team Top-10` = first(`Team Top-10`),
+        .groups = "drop"
+      ) %>%
+      arrange(Gender, desc(`Team Win`))
+
+    nations_wb[["Summary"]] <- summary_data
+
+    return(nations_wb)
+  }
+
+  # Create PODIUM-optimized nations relay file
+  log_info("Creating podium-optimized nations relay file...")
+  men_relay_podium_data <- format_relay_nations_data(men_all_predictions, men_relay_optimization, "Men", "podium")
+  ladies_relay_podium_data <- format_relay_nations_data(ladies_all_predictions, ladies_relay_optimization, "Ladies", "podium")
+
+  nations_relay_podium_wb <- create_nations_relay_workbook(men_relay_podium_data, ladies_relay_podium_data, "podium")
+
+  if (length(nations_relay_podium_wb) > 0) {
+    nations_relay_podium_file <- file.path(output_dir, "nations_relay_podium.xlsx")
+    write.xlsx(nations_relay_podium_wb, nations_relay_podium_file)
+    log_info(paste("Saved podium-optimized nations relay to", nations_relay_podium_file))
+    log_info(paste("Tabs:", paste(names(nations_relay_podium_wb), collapse = ", ")))
+  }
+
+  # Create WIN-optimized nations relay file
+  log_info("Creating win-optimized nations relay file...")
+  men_relay_win_data <- format_relay_nations_data(men_all_predictions, men_relay_optimization, "Men", "win")
+  ladies_relay_win_data <- format_relay_nations_data(ladies_all_predictions, ladies_relay_optimization, "Ladies", "win")
+
+  nations_relay_win_wb <- create_nations_relay_workbook(men_relay_win_data, ladies_relay_win_data, "win")
+
+  if (length(nations_relay_win_wb) > 0) {
+    nations_relay_win_file <- file.path(output_dir, "nations_relay_win.xlsx")
+    write.xlsx(nations_relay_win_wb, nations_relay_win_file)
+    log_info(paste("Saved win-optimized nations relay to", nations_relay_win_file))
+    log_info(paste("Tabs:", paste(names(nations_relay_win_wb), collapse = ", ")))
+  }
+
   return(list(
     men_models = men_relay_models,
     ladies_models = ladies_relay_models,
@@ -3040,100 +3344,135 @@ process_ts_races <- function() {
   # Note: Technique-specific feature filtering is now done during training,
   # so prediction functions can use the athlete data directly with technique-specific models
 
-  # Function to calculate team sprint team podium probability
-  calculate_ts_team_podium_prob <- function(team_athletes, ts_models, leg_importance, race_technique) {
+  # Function to calculate team sprint team probability for a specific threshold
+  # threshold: 1 = win, 3 = podium, 5 = top5, 10 = top10
+  calculate_ts_team_prob_for_threshold <- function(team_athletes, ts_models, leg_importance, race_technique, threshold = 3) {
     leg_probs <- numeric(2)  # Team sprint has 2 legs
-    
+
     for (leg in 1:2) {
-      # Try technique-specific model key first, fallback to old format
-      model_key <- paste0(race_technique, "_leg_", leg)
-      fallback_key <- paste0("leg_", leg)
-      
+      # Try threshold-specific model keys
+      model_key <- paste0(race_technique, "_leg_", leg, "_threshold_", threshold)
+      fallback_key <- paste0("leg_", leg, "_threshold_", threshold)
+      old_model_key <- paste0(race_technique, "_leg_", leg)
+      old_fallback_key <- paste0("leg_", leg)
+
+      # Create prediction data
+      athlete <- team_athletes[leg, ]
+      pred_data <- athlete
+      if (race_technique == "C") {
+        pred_data$prev_points_weighted <- athlete$prev_points_weighted_sprint_classic
+      } else {
+        pred_data$prev_points_weighted <- athlete$prev_points_weighted_sprint_freestyle
+      }
+
       if (model_key %in% names(ts_models$models)) {
-        athlete <- team_athletes[leg, ]
-        
-        # Create prediction data with appropriate prev_points_weighted based on race technique
-        pred_data <- athlete
-        if (race_technique == "C") {
-          # Classic team sprint - use sprint classic prev_points
-          pred_data$prev_points_weighted <- athlete$prev_points_weighted_sprint_classic
-        } else {
-          # Freestyle team sprint - use sprint freestyle prev_points  
-          pred_data$prev_points_weighted <- athlete$prev_points_weighted_sprint_freestyle
-        }
-        
-        # Technique-specific filtering is handled by using technique-specific models
-        
-        # Get leg model and predict
         model <- ts_models$models[[model_key]]
         leg_probs[leg] <- predict(model, newdata = pred_data, type = "response")
       } else if (fallback_key %in% names(ts_models$models)) {
-        # Fallback to old model format
-        athlete <- team_athletes[leg, ]
-        
-        # Create prediction data with appropriate prev_points_weighted based on race technique
-        pred_data <- athlete
-        if (race_technique == "C") {
-          pred_data$prev_points_weighted <- athlete$prev_points_weighted_sprint_classic
-        } else {
-          pred_data$prev_points_weighted <- athlete$prev_points_weighted_sprint_freestyle
-        }
-        
-        # Technique-specific filtering is handled by using technique-specific models
-        
         model <- ts_models$models[[fallback_key]]
         leg_probs[leg] <- predict(model, newdata = pred_data, type = "response")
+      } else if (old_model_key %in% names(ts_models$models)) {
+        # Fall back to non-threshold model
+        model <- ts_models$models[[old_model_key]]
+        leg_probs[leg] <- predict(model, newdata = pred_data, type = "response")
+      } else if (old_fallback_key %in% names(ts_models$models)) {
+        model <- ts_models$models[[old_fallback_key]]
+        leg_probs[leg] <- predict(model, newdata = pred_data, type = "response")
       } else {
-        # If no model for this leg, use 0 probability
         leg_probs[leg] <- 0
       }
     }
-    
-    # Weight by leg importance
+
     team_prob <- sum(leg_probs * leg_importance)
     return(list(team_prob = team_prob, leg_probs = leg_probs))
   }
+
+  # Wrapper for podium probability (backward compatibility)
+  calculate_ts_team_podium_prob <- function(team_athletes, ts_models, leg_importance, race_technique) {
+    calculate_ts_team_prob_for_threshold(team_athletes, ts_models, leg_importance, race_technique, threshold = 3)
+  }
+
+  # Wrapper for win probability
+  calculate_ts_team_win_prob <- function(team_athletes, ts_models, leg_importance, race_technique) {
+    calculate_ts_team_prob_for_threshold(team_athletes, ts_models, leg_importance, race_technique, threshold = 1)
+  }
   
-  # Function to optimize team sprint team for a specific country
+  # Function to optimize team sprint team for a specific country (tracks both win and podium optimization)
   optimize_ts_country_team <- function(country_athletes, ts_models, leg_importance, country_name, race_technique) {
     n_athletes <- nrow(country_athletes)
     if (n_athletes < 2) {  # Team sprint only needs 2 athletes
       log_info(paste("Country", country_name, "has only", n_athletes, "athletes - skipping"))
       return(NULL)
     }
-    
+
     log_info(paste("Optimizing team sprint team for", country_name, "with", n_athletes, "athletes"))
-    
-    best_prob <- 0
-    best_team <- NULL
-    best_leg_probs <- NULL
-    best_legs <- NULL
-    
+
+    # Track best for podium optimization
+    best_podium_prob <- 0
+    best_podium_team <- NULL
+    best_podium_leg_probs <- NULL
+    best_podium_legs <- NULL
+
+    # Track best for win optimization
+    best_win_prob <- 0
+    best_win_team <- NULL
+    best_win_leg_probs <- NULL
+    best_win_legs <- NULL
+
     # Try all permutations (brute force - feasible with ≤8 athletes, 2 legs)
     for (leg1 in 1:n_athletes) {
       for (leg2 in 1:n_athletes) {
         if (leg2 == leg1) next  # Same athlete can't run both legs
-        
+
         team <- country_athletes[c(leg1, leg2), ]
-        result <- calculate_ts_team_podium_prob(team, ts_models, leg_importance, race_technique)
-        
-        if (result$team_prob > best_prob) {
-          best_prob <- result$team_prob
-          best_team <- team
-          best_leg_probs <- result$leg_probs
-          best_legs <- c(leg1, leg2)
+
+        # Calculate both win and podium probabilities
+        podium_result <- calculate_ts_team_podium_prob(team, ts_models, leg_importance, race_technique)
+        win_result <- calculate_ts_team_win_prob(team, ts_models, leg_importance, race_technique)
+
+        # Update best podium team
+        if (podium_result$team_prob > best_podium_prob) {
+          best_podium_prob <- podium_result$team_prob
+          best_podium_team <- team
+          best_podium_leg_probs <- podium_result$leg_probs
+          best_podium_legs <- c(leg1, leg2)
+        }
+
+        # Update best win team
+        if (win_result$team_prob > best_win_prob) {
+          best_win_prob <- win_result$team_prob
+          best_win_team <- team
+          best_win_leg_probs <- win_result$leg_probs
+          best_win_legs <- c(leg1, leg2)
         }
       }
     }
-    
-    log_info(paste("Best team sprint team probability for", country_name, ":", round(best_prob, 4)))
-    
+
+    log_info(paste("Best podium probability for", country_name, ":", round(best_podium_prob, 4)))
+    log_info(paste("Best win probability for", country_name, ":", round(best_win_prob, 4)))
+
+    # Check if win-optimized team differs from podium-optimized team
+    teams_differ <- !identical(best_podium_legs, best_win_legs)
+    if (teams_differ) {
+      log_info(paste("  Note: Win-optimized team differs from podium-optimized team"))
+    }
+
     return(list(
       country = country_name,
-      team = best_team, 
-      team_podium_prob = best_prob,
-      leg_probs = best_leg_probs,
-      leg_assignments = best_legs
+      # Podium optimization results
+      podium_team = best_podium_team,
+      team_podium_prob = best_podium_prob,
+      podium_leg_probs = best_podium_leg_probs,
+      podium_leg_assignments = best_podium_legs,
+      # Win optimization results
+      win_team = best_win_team,
+      team_win_prob = best_win_prob,
+      win_leg_probs = best_win_leg_probs,
+      win_leg_assignments = best_win_legs,
+      # For backward compatibility, 'team' refers to podium-optimized
+      team = best_podium_team,
+      leg_probs = best_podium_leg_probs,
+      leg_assignments = best_podium_legs
     ))
   }
   
@@ -3188,19 +3527,31 @@ process_ts_races <- function() {
   
   # Create Excel output format
   log_info("Creating Excel output for team sprint optimization results")
-  
-  # Function to format optimization results for Excel
-  format_ts_results_for_excel <- function(optimization_results) {
+
+  # Function to format optimization results for Excel (supports both podium and win optimization)
+  format_ts_results_for_excel <- function(optimization_results, optimization_type = "podium") {
     if (is.null(optimization_results) || length(optimization_results) == 0) {
       return(NULL)
     }
-    
+
     excel_data <- data.frame()
-    
+
     for (country in names(optimization_results)) {
       result <- optimization_results[[country]]
-      team <- result$team
-      
+
+      # Select appropriate team based on optimization type
+      if (optimization_type == "win") {
+        team <- result$win_team
+        leg_probs <- result$win_leg_probs
+        team_prob <- result$team_win_prob
+      } else {
+        team <- result$podium_team
+        leg_probs <- result$podium_leg_probs
+        team_prob <- result$team_podium_prob
+      }
+
+      if (is.null(team)) next
+
       # Create one row per leg (2 legs for team sprint)
       for (leg in 1:2) {
         row_data <- data.frame(
@@ -3209,41 +3560,69 @@ process_ts_races <- function() {
           Athlete = team$Skier[leg],
           Nation = team$Nation[leg],
           ID = team$ID[leg],
-          Leg_Podium_Prob = round(result$leg_probs[leg], 4),
-          Team_Podium_Prob = round(result$team_podium_prob, 4)
+          Leg_Prob = round(leg_probs[leg], 4),
+          Team_Prob = round(team_prob, 4)
         )
         excel_data <- rbind(excel_data, row_data)
       }
     }
-    
+
+    # Rename columns based on optimization type (clean names without underscores)
+    if (optimization_type == "win") {
+      names(excel_data)[names(excel_data) == "Leg_Prob"] <- "Leg Win"
+      names(excel_data)[names(excel_data) == "Team_Prob"] <- "Team Win"
+    } else {
+      names(excel_data)[names(excel_data) == "Leg_Prob"] <- "Leg Podium"
+      names(excel_data)[names(excel_data) == "Team_Prob"] <- "Team Podium"
+    }
+
     return(excel_data)
   }
-  
-  men_ts_excel_data <- format_ts_results_for_excel(men_ts_optimization)
-  ladies_ts_excel_data <- format_ts_results_for_excel(ladies_ts_optimization)
-  
-  # Save to Excel file
+
+  # Create Excel data for both optimization types
+  men_ts_podium_excel <- format_ts_results_for_excel(men_ts_optimization, "podium")
+  ladies_ts_podium_excel <- format_ts_results_for_excel(ladies_ts_optimization, "podium")
+  men_ts_win_excel <- format_ts_results_for_excel(men_ts_optimization, "win")
+  ladies_ts_win_excel <- format_ts_results_for_excel(ladies_ts_optimization, "win")
+
+  # Save to Excel files
   current_year <- format(Sys.Date(), "%Y")
   output_dir <- file.path("~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions", current_year)
   if (!dir.exists(output_dir)) {
     dir.create(output_dir, recursive = TRUE)
   }
-  
-  ts_results_list <- list()
-  if (!is.null(men_ts_excel_data)) {
-    ts_results_list[["Men Team Sprint Teams"]] <- men_ts_excel_data
+
+  # Save podium-optimized teams
+  ts_podium_results_list <- list()
+  if (!is.null(men_ts_podium_excel)) {
+    ts_podium_results_list[["Men Team Sprint Teams"]] <- men_ts_podium_excel
   }
-  if (!is.null(ladies_ts_excel_data)) {
-    ts_results_list[["Ladies Team Sprint Teams"]] <- ladies_ts_excel_data
+  if (!is.null(ladies_ts_podium_excel)) {
+    ts_podium_results_list[["Ladies Team Sprint Teams"]] <- ladies_ts_podium_excel
   }
-  
-  if (length(ts_results_list) > 0) {
-    ts_file <- file.path(output_dir, "team_sprint_optimization.xlsx")
-    write.xlsx(ts_results_list, ts_file)
-    log_info(paste("Saved team sprint optimization results to", ts_file))
+
+  if (length(ts_podium_results_list) > 0) {
+    ts_podium_file <- file.path(output_dir, "team_sprint_optimization_podium.xlsx")
+    write.xlsx(ts_podium_results_list, ts_podium_file)
+    log_info(paste("Saved podium-optimized team sprint teams to", ts_podium_file))
   }
-  
-  log_info("Team sprint roster optimization complete")
+
+  # Save win-optimized teams
+  ts_win_results_list <- list()
+  if (!is.null(men_ts_win_excel)) {
+    ts_win_results_list[["Men Team Sprint Teams"]] <- men_ts_win_excel
+  }
+  if (!is.null(ladies_ts_win_excel)) {
+    ts_win_results_list[["Ladies Team Sprint Teams"]] <- ladies_ts_win_excel
+  }
+
+  if (length(ts_win_results_list) > 0) {
+    ts_win_file <- file.path(output_dir, "team_sprint_optimization_win.xlsx")
+    write.xlsx(ts_win_results_list, ts_win_file)
+    log_info(paste("Saved win-optimized team sprint teams to", ts_win_file))
+  }
+
+  log_info("Team sprint roster optimization complete (both podium and win optimizations saved)")
   
   # STEP 4: GENERATE ALL THRESHOLD PREDICTIONS FOR OPTIMIZED TEAMS
   log_info("=== STEP 4: GENERATING ALL THRESHOLD PREDICTIONS ===")
@@ -3320,26 +3699,33 @@ process_ts_races <- function() {
       log_warn(paste("No optimization results for", gender, "- skipping threshold predictions"))
       return(NULL)
     }
-    
+
     log_info(paste("Generating all threshold predictions for", gender, "team sprint teams"))
-    
+
     all_predictions <- list()
-    
+
     for (country in names(optimization_results)) {
       result <- optimization_results[[country]]
-      team <- result$team
-      
-      # Calculate all threshold probabilities for this optimized team
-      threshold_predictions <- calculate_ts_team_all_thresholds(team, ts_models, leg_importance, race_technique)
-      
+      podium_team <- result$podium_team
+      win_team <- result$win_team
+
+      # Calculate all threshold probabilities for BOTH team arrangements
+      podium_predictions <- calculate_ts_team_all_thresholds(podium_team, ts_models, leg_importance, race_technique)
+      win_predictions <- calculate_ts_team_all_thresholds(win_team, ts_models, leg_importance, race_technique)
+
       all_predictions[[country]] <- list(
-        team = team,
-        predictions = threshold_predictions
+        podium_team = podium_team,
+        win_team = win_team,
+        podium_predictions = podium_predictions,
+        win_predictions = win_predictions,
+        # For backward compatibility
+        team = podium_team,
+        predictions = podium_predictions
       )
-      
+
       log_info(paste("Generated threshold predictions for", country))
     }
-    
+
     return(all_predictions)
   }
   
@@ -3360,14 +3746,14 @@ process_ts_races <- function() {
     if (is.null(all_predictions) || length(all_predictions) == 0) {
       return(NULL)
     }
-    
+
     excel_data <- data.frame()
-    
+
     for (country in names(all_predictions)) {
       country_data <- all_predictions[[country]]
       team <- country_data$team
       predictions <- country_data$predictions
-      
+
       # Create one row per leg with all threshold probabilities (2 legs for team sprint)
       for (leg in 1:2) {
         row_data <- data.frame(
@@ -3376,19 +3762,21 @@ process_ts_races <- function() {
           Athlete = team$Skier[leg],
           Nation = team$Nation[leg],
           ID = team$ID[leg],
-          Leg_Win_Prob = round(predictions$threshold_1$leg_probs[leg], 4),
-          Leg_Podium_Prob = round(predictions$threshold_3$leg_probs[leg], 4),
-          Leg_Top5_Prob = round(predictions$threshold_5$leg_probs[leg], 4),
-          Leg_Top10_Prob = round(predictions$threshold_10$leg_probs[leg], 4),
-          Team_Win_Prob = round(predictions$threshold_1$team_prob, 4),
-          Team_Podium_Prob = round(predictions$threshold_3$team_prob, 4),
-          Team_Top5_Prob = round(predictions$threshold_5$team_prob, 4),
-          Team_Top10_Prob = round(predictions$threshold_10$team_prob, 4)
+          `Leg Win` = round(predictions$threshold_1$leg_probs[leg], 4),
+          `Leg Podium` = round(predictions$threshold_3$leg_probs[leg], 4),
+          `Leg Top5` = round(predictions$threshold_5$leg_probs[leg], 4),
+          `Leg Top-10` = round(predictions$threshold_10$leg_probs[leg], 4),
+          `Team Win` = round(predictions$threshold_1$team_prob, 4),
+          `Team Podium` = round(predictions$threshold_3$team_prob, 4),
+          `Team Top5` = round(predictions$threshold_5$team_prob, 4),
+          `Team Top-10` = round(predictions$threshold_10$team_prob, 4),
+          stringsAsFactors = FALSE,
+          check.names = FALSE
         )
-        excel_data <- rbind(excel_data, row_data)
+        excel_data <- bind_rows(excel_data, row_data)
       }
     }
-    
+
     return(excel_data)
   }
   
@@ -3412,127 +3800,134 @@ process_ts_races <- function() {
   
   log_info("Team sprint all threshold prediction generation complete")
   
-  # HIERARCHY ENFORCEMENT AND NORMALIZATION (same as relay races)
-  log_info("=== HIERARCHY ENFORCEMENT AND NORMALIZATION ===")
-  
-  # Function to enforce hierarchy constraints for team sprint predictions
-  enforce_ts_hierarchy <- function(all_predictions, gender) {
+  # NORMALIZATION AND MONOTONIC CONSTRAINTS (matching race-picks.R approach)
+  # Order: Normalize → Monotonic constraints → Re-normalize
+  log_info("=== NORMALIZATION AND MONOTONIC CONSTRAINTS ===")
+
+  # Combined function: normalize, apply monotonic constraints, re-normalize
+  normalize_and_constrain_ts <- function(all_predictions, gender) {
     if (is.null(all_predictions) || length(all_predictions) == 0) {
       return(all_predictions)
     }
-    
-    log_info(paste("Enforcing probability hierarchy for", gender, "team sprint teams"))
-    
-    for (country in names(all_predictions)) {
-      country_data <- all_predictions[[country]]
-      predictions <- country_data$predictions
-      
-      # Extract current team probabilities
-      win_prob <- predictions$threshold_1$team_prob
-      podium_prob <- predictions$threshold_3$team_prob
-      top5_prob <- predictions$threshold_5$team_prob
-      top10_prob <- predictions$threshold_10$team_prob
-      
-      # Store pre-hierarchy values for debugging
-      pre_hierarchy <- c(win_prob, podium_prob, top5_prob, top10_prob)
-      
-      # Enforce hierarchy by adjusting downward: win <= podium <= top5 <= top10
-      win_prob <- min(win_prob, podium_prob)
-      podium_prob <- min(podium_prob, top5_prob)
-      top5_prob <- min(top5_prob, top10_prob)
-      # top10_prob stays as-is (highest allowed)
-      
-      # Update the predictions with hierarchy-enforced values
-      all_predictions[[country]]$predictions$threshold_1$team_prob <- win_prob
-      all_predictions[[country]]$predictions$threshold_3$team_prob <- podium_prob
-      all_predictions[[country]]$predictions$threshold_5$team_prob <- top5_prob
-      all_predictions[[country]]$predictions$threshold_10$team_prob <- top10_prob
-      
-      # Count violations for logging
-      violations <- sum(pre_hierarchy[1] > pre_hierarchy[2], 
-                       pre_hierarchy[2] > pre_hierarchy[3], 
-                       pre_hierarchy[3] > pre_hierarchy[4], na.rm = TRUE)
-      if (violations > 0) {
-        log_info(paste("Fixed", violations, "hierarchy violations for", country))
-      }
-    }
-    
-    return(all_predictions)
-  }
-  
-  # Function to normalize team sprint predictions to expected totals
-  normalize_ts_predictions <- function(all_predictions, gender) {
-    if (is.null(all_predictions) || length(all_predictions) == 0) {
-      return(all_predictions)
-    }
-    
-    log_info(paste("Normalizing team sprint predictions to expected totals for", gender))
-    
-    # Expected totals for each position threshold
+
+    log_info(paste("Processing", gender, "team sprint predictions"))
+
     expected_totals <- c(1.0, 3.0, 5.0, 10.0)  # win, podium, top5, top10
     threshold_names <- c("threshold_1", "threshold_3", "threshold_5", "threshold_10")
-    
-    # Calculate current totals across all countries
-    current_totals <- numeric(4)
-    for (i in 1:4) {
-      threshold_name <- threshold_names[i]
-      total <- 0
-      for (country in names(all_predictions)) {
-        total <- total + all_predictions[[country]]$predictions[[threshold_name]]$team_prob
-      }
-      current_totals[i] <- total
-    }
-    
-    log_info(paste("Current totals before normalization:", paste(round(current_totals, 3), collapse = ", ")))
-    log_info(paste("Expected totals:", paste(expected_totals, collapse = ", ")))
-    
-    # Calculate normalization factors
-    normalization_factors <- numeric(4)
-    for (i in 1:4) {
-      if (current_totals[i] > 0) {
-        normalization_factors[i] <- expected_totals[i] / current_totals[i]
-      } else {
-        normalization_factors[i] <- 0
-      }
-    }
-    
-    log_info(paste("Normalization factors:", paste(round(normalization_factors, 4), collapse = ", ")))
-    
-    # Apply normalization factors to all countries
-    for (country in names(all_predictions)) {
+    countries <- names(all_predictions)
+    n_countries <- length(countries)
+
+    # Helper to get current totals
+    get_totals <- function() {
+      totals <- numeric(4)
       for (i in 1:4) {
-        threshold_name <- threshold_names[i]
-        old_prob <- all_predictions[[country]]$predictions[[threshold_name]]$team_prob
-        new_prob <- old_prob * normalization_factors[i]
-        all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- new_prob
+        for (country in countries) {
+          totals[i] <- totals[i] + all_predictions[[country]]$predictions[[threshold_names[i]]]$team_prob
+        }
       }
+      totals
     }
-    
-    # Calculate new totals for verification
-    new_totals <- numeric(4)
+
+    # Log initial totals
+    initial_totals <- get_totals()
+    log_info(paste("  Initial totals:", paste(round(initial_totals, 4), collapse = ", ")))
+
+    # PHASE 1: Normalize with capping and redistribution
+    log_info("  Phase 1: Normalizing with capping...")
     for (i in 1:4) {
       threshold_name <- threshold_names[i]
-      total <- 0
-      for (country in names(all_predictions)) {
-        total <- total + all_predictions[[country]]$predictions[[threshold_name]]$team_prob
+      target <- expected_totals[i]
+      current_sum <- sum(sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
+
+      if (current_sum > 0) {
+        scaling_factor <- target / current_sum
+
+        # Apply scaling
+        for (country in countries) {
+          all_predictions[[country]]$predictions[[threshold_name]]$team_prob <-
+            all_predictions[[country]]$predictions[[threshold_name]]$team_prob * scaling_factor
+        }
+
+        # Cap at 1.0 and redistribute
+        over_one <- sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob > 1.0)
+        if (any(over_one)) {
+          excess <- sum(sapply(countries[over_one], function(c)
+            all_predictions[[c]]$predictions[[threshold_name]]$team_prob - 1.0))
+
+          # Cap
+          for (country in countries[over_one]) {
+            all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- 1.0
+          }
+
+          # Redistribute to under-1.0 countries
+          under_one <- !over_one
+          if (any(under_one) && excess > 0) {
+            under_sum <- sum(sapply(countries[under_one], function(c)
+              all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
+            if (under_sum > 0) {
+              redistrib_factor <- (under_sum + excess) / under_sum
+              for (country in countries[under_one]) {
+                new_prob <- all_predictions[[country]]$predictions[[threshold_name]]$team_prob * redistrib_factor
+                all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- min(new_prob, 1.0)
+              }
+            }
+          }
+        }
       }
-      new_totals[i] <- total
     }
-    
-    log_info(paste("New totals after normalization:", paste(round(new_totals, 3), collapse = ", ")))
-    
+
+    # PHASE 2: Monotonic constraints (win <= podium <= top5 <= top10)
+    log_info("  Phase 2: Applying monotonic constraints...")
+    for (country in countries) {
+      probs <- c(
+        all_predictions[[country]]$predictions$threshold_1$team_prob,
+        all_predictions[[country]]$predictions$threshold_3$team_prob,
+        all_predictions[[country]]$predictions$threshold_5$team_prob,
+        all_predictions[[country]]$predictions$threshold_10$team_prob
+      )
+
+      # Enforce monotonic (each >= previous)
+      for (j in 2:4) {
+        if (probs[j] < probs[j-1]) {
+          probs[j] <- probs[j-1]
+        }
+      }
+
+      all_predictions[[country]]$predictions$threshold_1$team_prob <- probs[1]
+      all_predictions[[country]]$predictions$threshold_3$team_prob <- probs[2]
+      all_predictions[[country]]$predictions$threshold_5$team_prob <- probs[3]
+      all_predictions[[country]]$predictions$threshold_10$team_prob <- probs[4]
+    }
+
+    # PHASE 3: Re-normalize after monotonic adjustment
+    log_info("  Phase 3: Re-normalizing...")
+    for (i in 1:4) {
+      threshold_name <- threshold_names[i]
+      target <- expected_totals[i]
+      current_sum <- sum(sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
+
+      if (current_sum > 0) {
+        scaling_factor <- target / current_sum
+        for (country in countries) {
+          new_prob <- all_predictions[[country]]$predictions[[threshold_name]]$team_prob * scaling_factor
+          all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- min(new_prob, 1.0)
+        }
+      }
+    }
+
+    # Log final totals
+    final_totals <- get_totals()
+    log_info(paste("  Final totals:", paste(round(final_totals, 4), collapse = ", ")))
+    log_info(paste("  Expected:", paste(expected_totals, collapse = ", ")))
+
     return(all_predictions)
   }
-  
-  # Apply hierarchy enforcement to both genders
-  men_ts_all_predictions <- enforce_ts_hierarchy(men_ts_all_predictions, "men")
-  ladies_ts_all_predictions <- enforce_ts_hierarchy(ladies_ts_all_predictions, "ladies")
-  
-  # Apply normalization to both genders
-  men_ts_all_predictions <- normalize_ts_predictions(men_ts_all_predictions, "men")
-  ladies_ts_all_predictions <- normalize_ts_predictions(ladies_ts_all_predictions, "ladies")
-  
-  log_info("Team sprint hierarchy enforcement and normalization complete")
+
+  # Apply to both genders
+  men_ts_all_predictions <- normalize_and_constrain_ts(men_ts_all_predictions, "men")
+  ladies_ts_all_predictions <- normalize_and_constrain_ts(ladies_ts_all_predictions, "ladies")
+
+  log_info("Team sprint normalization and monotonic constraints complete")
   
   # Update Excel output with hierarchy-enforced and normalized predictions
   log_info("Creating final Excel output with hierarchy-enforced and normalized team sprint predictions")
@@ -3556,7 +3951,140 @@ process_ts_races <- function() {
   }
   
   log_info("Final team sprint prediction processing complete")
-  
+
+  # ============================================================================
+  # CREATE NATIONS TEAM SPRINT EXCEL FILES (Podium and Win Optimized)
+  # Split by gender - one sheet per nation
+  # ============================================================================
+  log_info("=== Creating Nations Team Sprint Excel Files (Podium & Win Optimized) ===")
+
+  # Function to format team sprint nations data for a specific optimization type
+  format_ts_nations_data <- function(all_predictions, optimization_results, gender, opt_type = "podium") {
+    if (is.null(all_predictions) || length(all_predictions) == 0) {
+      return(data.frame())
+    }
+
+    results <- data.frame()
+
+    for (country in names(all_predictions)) {
+      country_data <- all_predictions[[country]]
+
+      # Select team AND predictions based on optimization type
+      if (opt_type == "win") {
+        team <- country_data$win_team
+        predictions <- country_data$win_predictions
+      } else {
+        team <- country_data$podium_team
+        predictions <- country_data$podium_predictions
+      }
+
+      if (is.null(team)) next
+
+      for (leg in 1:2) {  # Team sprint has 2 legs
+        row_data <- data.frame(
+          Athlete = team$Skier[leg],
+          ID = team$ID[leg],
+          Nation = country,
+          Leg = leg,
+          `Leg Win` = round(predictions$threshold_1$leg_probs[leg], 4),
+          `Leg Podium` = round(predictions$threshold_3$leg_probs[leg], 4),
+          `Leg Top5` = round(predictions$threshold_5$leg_probs[leg], 4),
+          `Leg Top-10` = round(predictions$threshold_10$leg_probs[leg], 4),
+          `Team Win` = round(predictions$threshold_1$team_prob, 4),
+          `Team Podium` = round(predictions$threshold_3$team_prob, 4),
+          `Team Top5` = round(predictions$threshold_5$team_prob, 4),
+          `Team Top-10` = round(predictions$threshold_10$team_prob, 4),
+          Gender = gender,
+          stringsAsFactors = FALSE,
+          check.names = FALSE
+        )
+        results <- bind_rows(results, row_data)
+      }
+    }
+
+    return(results)
+  }
+
+  # Function to create nations team sprint workbook for a given optimization type
+  create_nations_ts_workbook <- function(men_data, ladies_data, opt_type) {
+    nations_wb <- list()
+
+    men_nations <- unique(men_data$Nation)
+    ladies_nations <- unique(ladies_data$Nation)
+
+    # Process men's team sprint nations (alphabetical order)
+    for (nation in sort(men_nations)) {
+      nation_data <- men_data %>%
+        filter(Nation == nation) %>%
+        select(-Gender) %>%
+        arrange(Leg)
+
+      if (nrow(nation_data) > 0) {
+        sheet_name <- paste(nation, "Men")
+        nations_wb[[sheet_name]] <- nation_data
+      }
+    }
+
+    # Process ladies' team sprint nations (alphabetical order)
+    for (nation in sort(ladies_nations)) {
+      nation_data <- ladies_data %>%
+        filter(Nation == nation) %>%
+        select(-Gender) %>%
+        arrange(Leg)
+
+      if (nrow(nation_data) > 0) {
+        sheet_name <- paste(nation, "Ladies")
+        nations_wb[[sheet_name]] <- nation_data
+      }
+    }
+
+    # Create Summary sheet
+    all_data <- bind_rows(men_data, ladies_data)
+
+    summary_data <- all_data %>%
+      group_by(Gender, Nation) %>%
+      summarise(
+        `Team Win` = first(`Team Win`),
+        `Team Podium` = first(`Team Podium`),
+        `Team Top5` = first(`Team Top5`),
+        `Team Top-10` = first(`Team Top-10`),
+        .groups = "drop"
+      ) %>%
+      arrange(Gender, desc(`Team Win`))
+
+    nations_wb[["Summary"]] <- summary_data
+
+    return(nations_wb)
+  }
+
+  # Create PODIUM-optimized nations team sprint file
+  log_info("Creating podium-optimized nations team sprint file...")
+  men_ts_podium_data <- format_ts_nations_data(men_ts_all_predictions, men_ts_optimization, "Men", "podium")
+  ladies_ts_podium_data <- format_ts_nations_data(ladies_ts_all_predictions, ladies_ts_optimization, "Ladies", "podium")
+
+  nations_ts_podium_wb <- create_nations_ts_workbook(men_ts_podium_data, ladies_ts_podium_data, "podium")
+
+  if (length(nations_ts_podium_wb) > 0) {
+    nations_ts_podium_file <- file.path(output_dir, "nations_ts_podium.xlsx")
+    write.xlsx(nations_ts_podium_wb, nations_ts_podium_file)
+    log_info(paste("Saved podium-optimized nations team sprint to", nations_ts_podium_file))
+    log_info(paste("Tabs:", paste(names(nations_ts_podium_wb), collapse = ", ")))
+  }
+
+  # Create WIN-optimized nations team sprint file
+  log_info("Creating win-optimized nations team sprint file...")
+  men_ts_win_data <- format_ts_nations_data(men_ts_all_predictions, men_ts_optimization, "Men", "win")
+  ladies_ts_win_data <- format_ts_nations_data(ladies_ts_all_predictions, ladies_ts_optimization, "Ladies", "win")
+
+  nations_ts_win_wb <- create_nations_ts_workbook(men_ts_win_data, ladies_ts_win_data, "win")
+
+  if (length(nations_ts_win_wb) > 0) {
+    nations_ts_win_file <- file.path(output_dir, "nations_ts_win.xlsx")
+    write.xlsx(nations_ts_win_wb, nations_ts_win_file)
+    log_info(paste("Saved win-optimized nations team sprint to", nations_ts_win_file))
+    log_info(paste("Tabs:", paste(names(nations_ts_win_wb), collapse = ", ")))
+  }
+
   return(list(
     men_models = men_ts_models,
     ladies_models = ladies_ts_models,

@@ -1,0 +1,716 @@
+---
+title: "2026 Winter Olympics - Cross-Country Skiing Predictions"
+date: 2026-01-26T02:24:54+00:00
+draft: true
+tags: ["predictions", "olympics", "2026", "cross-country"]
+---
+
+# 2026 Winter Olympics - Cross-Country Skiing Predictions
+
+## Calendar
+
+### Individual Races
+
+#### Men
+
+##### 10 F
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/men_position_probabilities_10_F" >}}
+
+##### 20 P
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/men_position_probabilities_20_P" >}}
+
+##### 50 C
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/men_position_probabilities_50_C" >}}
+
+##### Sprint C
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/men_position_probabilities_Sprint_C" >}}
+
+#### Ladies
+
+##### 10 F
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_10_F" >}}
+
+##### 20 P
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_20_P" >}}
+
+##### 50 C
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_50_C" >}}
+
+##### Sprint C
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_Sprint_C" >}}
+
+### Relay
+
+#### Men
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/relay_final_predictions_Men_All_Thresholds_Final" >}}
+
+#### Ladies
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/relay_final_predictions_Ladies_All_Thresholds_Final" >}}
+
+### Team Sprint
+
+#### Men
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/team_sprint_final_predictions_Men_All_Thresholds_Final" >}}
+
+#### Ladies
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/team_sprint_final_predictions_Ladies_All_Thresholds_Final" >}}
+
+## Nation
+
+### Summary
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Summary" >}}
+
+### Men
+
+#### Canada
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Canada_Men" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Canada_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Canada_Men" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Canada_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Canada_Men" >}}
+#### Czechia
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Czechia_Men" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Czechia_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Czechia_Men" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Czechia_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Czechia_Men" >}}
+#### Finland
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Finland_Men" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Finland_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Finland_Men" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Finland_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Finland_Men" >}}
+#### France
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_France_Men" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_France_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_France_Men" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_France_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_France_Men" >}}
+#### Germany
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Germany_Men" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Germany_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Germany_Men" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Germany_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Germany_Men" >}}
+#### Italy
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Italy_Men" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Italy_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Italy_Men" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Italy_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Italy_Men" >}}
+#### Norway
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Norway_Men" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Norway_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Norway_Men" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Norway_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Norway_Men" >}}
+#### Sweden
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Sweden_Men" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Sweden_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Sweden_Men" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Sweden_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Sweden_Men" >}}
+#### Switzerland
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Switzerland_Men" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Switzerland_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Switzerland_Men" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Switzerland_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Switzerland_Men" >}}
+#### USA
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_USA_Men" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_USA_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_USA_Men" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_USA_Men" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_USA_Men" >}}
+#### Other
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Other_Men" >}}
+
+### Ladies
+
+#### Australia
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Australia_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Australia_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Australia_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Australia_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Australia_Ladies" >}}
+#### Austria
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Austria_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Austria_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Austria_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Austria_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Austria_Ladies" >}}
+#### Canada
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Canada_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Canada_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Canada_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Canada_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Canada_Ladies" >}}
+#### Czechia
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Czechia_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Czechia_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Czechia_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Czechia_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Czechia_Ladies" >}}
+#### Estonia
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Estonia_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Estonia_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Estonia_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Estonia_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Estonia_Ladies" >}}
+#### Finland
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Finland_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Finland_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Finland_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Finland_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Finland_Ladies" >}}
+#### France
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_France_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_France_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_France_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_France_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_France_Ladies" >}}
+#### Germany
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Germany_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Germany_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Germany_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Germany_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Germany_Ladies" >}}
+#### Italy
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Italy_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Italy_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Italy_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Italy_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Italy_Ladies" >}}
+#### Kazakhstan
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Kazakhstan_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Kazakhstan_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Kazakhstan_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Kazakhstan_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Kazakhstan_Ladies" >}}
+#### Norway
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Norway_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Norway_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Norway_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Norway_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Norway_Ladies" >}}
+#### Poland
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Poland_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Poland_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Poland_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Poland_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Poland_Ladies" >}}
+#### Sweden
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Sweden_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Sweden_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Sweden_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Sweden_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Sweden_Ladies" >}}
+#### Switzerland
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Switzerland_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Switzerland_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_Switzerland_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Switzerland_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_Switzerland_Ladies" >}}
+#### USA
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_USA_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_podium_USA_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_relay_win_USA_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_podium_USA_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_ts_win_USA_Ladies" >}}
+#### Other
+
+##### Individual
+
+{{< cross-country/datatable "cross-country/drafts/champs-predictions/2026/nations_individual_Other_Ladies" >}}
+

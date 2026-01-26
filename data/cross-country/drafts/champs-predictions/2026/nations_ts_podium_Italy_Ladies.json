@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Italy Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Caterina Ganz",
+      1721,
+      "Italy",
+      1,
+      0.0012,
+      0.0691,
+      0.2913,
+      0.752,
+      0.002,
+      0.0558,
+      0.2089,
+      0.7537
+    ],
+    [
+      "Federica Cassol",
+      9082,
+      "Italy",
+      2,
+      0.0026,
+      0.0436,
+      0.1334,
+      0.7553,
+      0.002,
+      0.0558,
+      0.2089,
+      0.7537
+    ]
+  ]
+}

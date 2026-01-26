@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Greece Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Konstantina Charalampidou",
+      8340,
+      "Greece",
+      1,
+      0.0001,
+      0.0023,
+      0.0004,
+      0.0062,
+      0,
+      0.0022,
+      0.002,
+      0.0153
+    ],
+    [
+      "Maria Dimitra Tsiarka",
+      10256,
+      "Greece",
+      2,
+      0.0,
+      0.0021,
+      0.0035,
+      0.0236,
+      0,
+      0.0022,
+      0.002,
+      0.0153
+    ]
+  ]
+}
