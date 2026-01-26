@@ -943,7 +943,7 @@ These changes were made to cross-country. Other sports need similar updates:
 | Sport | Status |
 |-------|--------|
 | Cross-Country | ✅ Complete |
-| Alpine | ⏳ Needs update |
+| Alpine | ✅ Complete (2026-01-26) |
 | Biathlon | ⏳ Needs update |
 | Nordic Combined | ⏳ Needs update |
 | Ski Jumping | ⏳ Needs update |
@@ -1387,5 +1387,112 @@ After this fix, probability sums may be slightly lower than targets (e.g., win_p
 |------|-------|---------|
 | `champs-predictions.R` | ~1023-1059 | PHASE 2: Added start_prob ceiling to monotonic constraints |
 | `champs-predictions.R` | ~1078-1095 | NEW PHASE 4: Final cap at start_prob after re-normalization |
+
+---
+
+## Alpine champs-predictions.R Pipeline Update (2026-01-26)
+
+### Objective
+
+Update Alpine `champs-predictions.R` with the same pipeline improvements made to Cross-Country, ensuring consistent output format for the championship prediction blog posts.
+
+### Current State Analysis
+
+**File**: `~/blog/daehl-e/content/post/alpine/drafts/champs-predictions.R` (~1300 lines after updates)
+
+**Status: UPDATED (2026-01-26)**
+
+**What Alpine Now Has**:
+- ✅ 4-phase normalization with capping, redistribution, monotonic constraints, and start_prob ceiling
+- ✅ Output directory uses `YYYY` format
+- ✅ Simplified column names (Skier, Nation, Start, Win, Podium, Top5, Top-10, Top-30)
+- ✅ Nations breakdown Excel file (`nations_individual.xlsx`)
+- ✅ Exponential decay weighted participation probability
+- ✅ Race probability calculation with 4-person quota
+
+**Note**: Alpine is individual-only (no relay/team sprint), so relay-related changes don't apply.
+
+### Changes Required
+
+#### 1. Output Directory: YYYYMMDD → YYYY
+**Location**: Line 870
+```r
+# BEFORE
+champs_date <- format(Sys.Date(), "%Y%m%d")
+
+# AFTER
+champs_date <- format(Sys.Date(), "%Y")
+```
+
+#### 2. Simplified Excel Column Output
+**Location**: Lines 886-912 (race sheet creation)
+
+Change from 24+ columns to 9 clean columns:
+- Skier, Nation, ID, Start, Win, Podium, Top5, Top-10, Top-30
+
+Need to:
+- Add ID column from startlist
+- Add Start probability column
+- Rename columns to remove underscores
+
+#### 3. Nations Excel File (NEW)
+**Add**: After race-by-race Excel creation
+
+Create `nations_individual.xlsx` with:
+- One sheet per nation with 4+ athletes (per gender)
+- "Other Men" / "Other Ladies" sheets for nations with <4 athletes
+- "Summary" sheet with aggregated totals
+- Columns: Athlete, ID, Race, Start, Win, Podium, Top5, Top-10, Top-30
+
+#### 4. 4-Phase Normalization with start_prob Ceiling
+**Location**: Replace `normalize_position_probabilities()` function (lines 98-206)
+
+Implement:
+- **Phase 1**: Scale to target sum, cap at 100%, redistribute excess
+- **Phase 2**: Monotonic constraints + cap at start_prob
+- **Phase 3**: Re-normalize after constraint adjustments
+- **Phase 4**: Final cap at start_prob
+
+#### 5. Weighted Participation Probability (Exponential Decay)
+**Location**: Replace `get_base_race_probability()` function (lines 932-966)
+
+Implement exponential decay weighting:
+```r
+# Get races sorted by date
+races_sorted <- chronos %>% filter(...) %>% arrange(Date)
+
+# Exponential decay (alpha = 0.1)
+n_races <- nrow(races_sorted)
+race_weights <- exp(-0.1 * ((n_races - 1):0))
+
+# Weighted participation
+weighted_participation <- sum(participation * race_weights)
+prob <- weighted_participation / sum(race_weights)
+```
+
+### Implementation Steps
+
+1. ✅ **Step 1**: Change output directory format (YYYYMMDD → YYYY) - Line 931
+2. ✅ **Step 2**: Update `get_base_race_probability()` with exponential decay - Lines 988-1037
+3. ✅ **Step 3**: Replace normalization with 4-phase approach - Lines 98-206
+4. ✅ **Step 4**: Update Excel column output (simplified names) - Lines 948-985
+5. ✅ **Step 5**: Add nations breakdown Excel generation - Lines 1168-1297
+6. ⏳ **Step 6**: Test by running the script
+7. ⏳ **Step 7**: Update champs_script.sh if needed for Alpine
+
+### Files to Modify
+
+| File | Changes |
+|------|---------|
+| `~/blog/daehl-e/content/post/alpine/drafts/champs-predictions.R` | All changes above |
+| `~/blog/daehl-e/champs_script.sh` | Verify Alpine section works with new output |
+
+### Reference Implementation
+
+Use Cross-Country `champs-predictions.R` as reference:
+- 4-phase normalization: lines ~1000-1095
+- Weighted participation: lines ~651-706
+- Nations Excel generation: lines ~1150-1280
+- Simplified columns: lines ~1108-1126
 
 ---

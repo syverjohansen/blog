@@ -95,113 +95,176 @@ enforce_probability_constraints <- function(predictions) {
   return(predictions)
 }
 
-# Normalization function for position probabilities
+# 4-Phase Normalization function for position probabilities
+# Phase 1: Scale to target sum with capping and redistribution
+# Phase 2: Apply monotonic constraints + cap at start_prob
+# Phase 3: Re-normalize after constraint adjustments
+# Phase 4: Final cap at start_prob
 normalize_position_probabilities <- function(predictions, race_prob_col, position_thresholds) {
   # Make a copy to avoid modifying the original data frame
   normalized <- predictions
-  
+
+  prob_cols <- paste0("prob_top", position_thresholds)
+
+  # Store start_prob for ceiling calculations (convert from 0-1 to percentage if needed)
+  if(race_prob_col %in% names(normalized)) {
+    # If start_prob is in 0-1 range, convert to percentage
+    if(max(normalized[[race_prob_col]], na.rm = TRUE) <= 1) {
+      normalized$start_prob <- normalized[[race_prob_col]] * 100
+    } else {
+      normalized$start_prob <- normalized[[race_prob_col]]
+    }
+  } else {
+    normalized$start_prob <- 100  # Default to 100% if no start prob
+  }
+
   # Log initial sums before any modifications
   log_info("Position probability sums BEFORE normalization:")
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
     if(prob_col %in% names(normalized)) {
       initial_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
-      log_info(sprintf("  %s: %.2f%% (target: %d%%)", 
+      log_info(sprintf("  %s: %.2f%% (target: %d%%)",
                        prob_col, initial_sum, 100 * threshold))
     }
   }
-  
-  # For each threshold, adjust and normalize probabilities
+
+  # Apply start probability adjustment BEFORE normalization
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
-    
-    # First, adjust by race participation probability
     if(race_prob_col %in% names(normalized)) {
-      # Log sum before race probability adjustment
-      sum_before_race_adj <- sum(normalized[[prob_col]], na.rm = TRUE)
-      
-      # Apply race probability adjustment
-      normalized[[prob_col]] <- normalized[[prob_col]] * normalized[[race_prob_col]]
-      
-      # Log sum after race probability adjustment
-      sum_after_race_adj <- sum(normalized[[prob_col]], na.rm = TRUE)
-      log_info(sprintf("  %s after race prob adjustment: %.2f%% (scaling by race participation)", 
-                       prob_col, sum_after_race_adj))
+      # Multiply by start probability (on same scale)
+      if(max(normalized[[race_prob_col]], na.rm = TRUE) <= 1) {
+        normalized[[prob_col]] <- normalized[[prob_col]] * normalized[[race_prob_col]]
+      } else {
+        normalized[[prob_col]] <- normalized[[prob_col]] * (normalized[[race_prob_col]] / 100)
+      }
     }
-    
-    # Calculate the current sum
+  }
+
+  # PHASE 1: Initial normalization with capping and redistribution
+  log_info("  PHASE 1: Initial normalization with capping...")
+  for(i in seq_along(position_thresholds)) {
+    threshold <- position_thresholds[i]
+    prob_col <- prob_cols[i]
+    target_sum <- 100 * threshold  # e.g., 100% for win, 300% for podium
+
     current_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
-    
-    # Target sum should be 100 * threshold (e.g., 100% for top 1, 300% for top 3)
-    target_sum <- 100 * threshold
-    
-    # Normalize only if current sum is not zero to avoid division by zero
+
     if(current_sum > 0) {
-      # Apply scaling factor to adjust the probabilities
       scaling_factor <- target_sum / current_sum
       normalized[[prob_col]] <- normalized[[prob_col]] * scaling_factor
-      
+
       # Cap individual probabilities at 100%
       over_hundred <- which(normalized[[prob_col]] > 100)
       if(length(over_hundred) > 0) {
-        log_info(sprintf("  Capping %d participants with >100%% probability for %s", 
+        log_info(sprintf("    Capping %d athletes with >100%% for %s",
                          length(over_hundred), prob_col))
-        
-        # Calculate excess probability that needs to be redistributed
+
         excess <- sum(normalized[[prob_col]][over_hundred] - 100)
-        
-        # Cap values at 100%
         normalized[[prob_col]][over_hundred] <- 100
-        
-        # Redistribute the excess to other participants proportionally
+
+        # Redistribute excess to others proportionally
         under_hundred <- which(normalized[[prob_col]] < 100)
         if(length(under_hundred) > 0 && excess > 0) {
-          # Get current sum of under-100 probabilities
           under_sum <- sum(normalized[[prob_col]][under_hundred])
-          
-          # Calculate scaling factor for redistribution
           if(under_sum > 0) {
             redistrib_factor <- (under_sum + excess) / under_sum
             normalized[[prob_col]][under_hundred] <- normalized[[prob_col]][under_hundred] * redistrib_factor
-            
-            # Recursively cap again if needed (unlikely but possible)
+
+            # Recursive cap if needed
             if(any(normalized[[prob_col]][under_hundred] > 100)) {
-              log_info("  Recursive capping needed after redistribution")
-              # This is a simplification - in practice you might want a more robust approach
+              log_info("    Recursive capping after redistribution")
               normalized[[prob_col]][normalized[[prob_col]] > 100] <- 100
             }
           }
         }
       }
-      
-      log_info(sprintf("  %s normalization: applied scaling factor of %.4f", 
-                       prob_col, scaling_factor))
     } else {
-      # If sum is zero, distribute evenly among all participants
-      # This is a fallback that should rarely be needed
-      log_warn(paste("Zero sum for", prob_col, "- distributing evenly"))
+      log_warn(paste("    Zero sum for", prob_col, "- distributing evenly"))
       normalized[[prob_col]] <- target_sum / nrow(normalized)
     }
-    
-    # Final check to ensure we're close to the target sum
-    final_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
-    if(abs(final_sum - target_sum) > 1) {  # Allow for small rounding differences
-      log_warn(sprintf("  %s sum after capping: %.2f%% (target: %.2f%%)", 
-                       prob_col, final_sum, target_sum))
+  }
+
+  # PHASE 2: Apply monotonic constraints (win <= podium <= top5 <= top10 <= top30 <= start)
+  log_info("  PHASE 2: Applying monotonic constraints + start_prob ceiling...")
+  for(row_i in 1:nrow(normalized)) {
+    start_ceiling <- normalized$start_prob[row_i]
+
+    probs <- c(
+      normalized$prob_top1[row_i],
+      normalized$prob_top3[row_i],
+      normalized$prob_top5[row_i],
+      normalized$prob_top10[row_i],
+      normalized$prob_top30[row_i]
+    )
+
+    # First, cap all position probabilities at start_prob
+    probs <- pmin(probs, start_ceiling)
+
+    # Then enforce: each probability >= previous one (monotonic non-decreasing)
+    for(j in 2:length(probs)) {
+      if(probs[j] < probs[j-1]) {
+        probs[j] <- probs[j-1]
+      }
+    }
+
+    # Final cap at start_prob (in case monotonic adjustment pushed values up)
+    probs <- pmin(probs, start_ceiling)
+
+    # Update row
+    normalized$prob_top1[row_i] <- probs[1]
+    normalized$prob_top3[row_i] <- probs[2]
+    normalized$prob_top5[row_i] <- probs[3]
+    normalized$prob_top10[row_i] <- probs[4]
+    normalized$prob_top30[row_i] <- probs[5]
+  }
+
+  # PHASE 3: Re-normalize after monotonic adjustment
+  log_info("  PHASE 3: Re-normalizing after monotonic constraints...")
+  for(i in seq_along(position_thresholds)) {
+    threshold <- position_thresholds[i]
+    prob_col <- prob_cols[i]
+    target_sum <- 100 * threshold
+
+    current_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
+
+    if(current_sum > 0) {
+      scaling_factor <- target_sum / current_sum
+      normalized[[prob_col]] <- normalized[[prob_col]] * scaling_factor
+
+      # Cap at 100% again
+      normalized[[prob_col]][normalized[[prob_col]] > 100] <- 100
     }
   }
-  
+
+  # PHASE 4: Final cap at start_prob
+  log_info("  PHASE 4: Final start_prob ceiling...")
+  violations_fixed <- 0
+  for(row_i in 1:nrow(normalized)) {
+    start_ceiling <- normalized$start_prob[row_i]
+    for(prob_col in prob_cols) {
+      if(normalized[[prob_col]][row_i] > start_ceiling) {
+        normalized[[prob_col]][row_i] <- start_ceiling
+        violations_fixed <- violations_fixed + 1
+      }
+    }
+  }
+  if(violations_fixed > 0) {
+    log_info(sprintf("    Fixed %d cases where position prob exceeded start_prob", violations_fixed))
+  }
+
   # Log final sums after all adjustments
-  log_info("Position probability sums AFTER normalization:")
+  log_info("Position probability sums AFTER 4-phase normalization:")
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
     if(prob_col %in% names(normalized)) {
       final_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
-      log_info(sprintf("  %s: %.2f%% (target: %d%%)", 
+      log_info(sprintf("  %s: %.2f%% (target: %d%%)",
                        prob_col, final_sum, 100 * threshold))
     }
   }
-  
+
   return(normalized)
 }
 
@@ -826,12 +889,10 @@ process_gender_championships <- function(gender, races) {
       }
     }
     
-    # Normalize position probabilities to ensure they sum to the correct totals
+    # Normalize position probabilities using 4-phase approach
+    # (includes monotonic constraints and start_prob ceiling)
     position_preds <- normalize_position_probabilities(position_preds, race_prob_col, position_thresholds)
-    
-    # Enforce probability constraints AFTER normalization: Win <= Podium <= Top5
-    position_preds <- enforce_probability_constraints(position_preds)
-    
+
     # Add verification logging for each threshold
     log_info(sprintf("Race %d position probability sums after normalization:", i))
     for(threshold in position_thresholds) {
@@ -853,21 +914,21 @@ process_gender_championships <- function(gender, races) {
   # Combine all position predictions into one dataframe
   all_position_predictions <- bind_rows(position_predictions)
   
-  # Create summary by athlete from position predictions
+  # Create summary by athlete from position predictions (clean column names)
   athlete_summary <- all_position_predictions %>%
     group_by(Skier, Nation) %>%
     summarise(
-      Avg_Win_Prob = mean(prob_top1, na.rm = TRUE),
-      Avg_Podium_Prob = mean(prob_top3, na.rm = TRUE),
-      Avg_Top5_Prob = mean(prob_top5, na.rm = TRUE),
-      Avg_Top10_Prob = mean(prob_top10, na.rm = TRUE),
-      Races_Participating = n(),
+      `Avg Win` = round(mean(prob_top1, na.rm = TRUE), 1),
+      `Avg Podium` = round(mean(prob_top3, na.rm = TRUE), 1),
+      `Avg Top5` = round(mean(prob_top5, na.rm = TRUE), 1),
+      `Avg Top-10` = round(mean(prob_top10, na.rm = TRUE), 1),
+      Races = n(),
       .groups = 'drop'
     ) %>%
-    arrange(desc(Avg_Win_Prob))
+    arrange(desc(`Avg Win`))
   
-  # Create output directory
-  champs_date <- format(Sys.Date(), "%Y%m%d")
+  # Create output directory (use year only since there's one championship per year)
+  champs_date <- format(Sys.Date(), "%Y")
   dir_path <- paste0("~/blog/daehl-e/content/post/alpine/drafts/champs-predictions/", champs_date)
   
   if (!dir.exists(dir_path)) {
@@ -887,28 +948,39 @@ process_gender_championships <- function(gender, races) {
   for(race_num in unique_races) {
     log_info(paste("Processing sheet for race", race_num))
     race_data <- all_position_predictions[all_position_predictions$Race == race_num, ]
+
+    # Select and rename columns to simplified format (no underscores)
+    # start_prob was added by normalization function
     race_data <- race_data %>%
-      dplyr::select(Skier, Nation, prob_top1, prob_top3, prob_top5, prob_top10, prob_top30) %>%
-      rename(
-        Win_Prob = prob_top1,
-        Podium_Prob = prob_top3,
-        Top5_Prob = prob_top5,
-        Top10_Prob = prob_top10,
-        Top30_Prob = prob_top30
+      mutate(
+        Start = round(start_prob, 1)
       ) %>%
-      arrange(desc(Win_Prob))
-    
+      dplyr::select(
+        Skier,
+        Nation,
+        Start,
+        prob_top1, prob_top3, prob_top5, prob_top10, prob_top30
+      ) %>%
+      rename(
+        Win = prob_top1,
+        Podium = prob_top3,
+        Top5 = prob_top5,
+        `Top-10` = prob_top10,
+        `Top-30` = prob_top30
+      ) %>%
+      arrange(desc(Win))
+
     # Get race discipline for sheet naming using original race number
     race_disciplines <- champs_races_with_race_num %>%
       filter(Sex == ifelse(gender == "men", "M", "L"), OriginalRaceNum == race_num) %>%
       pull(Distance)
-    
+
     discipline <- if(length(race_disciplines) > 0) race_disciplines[1] else paste("Race", race_num)
     sheet_name <- paste(ifelse(gender == "men", "Men", "Ladies"), discipline)
-    
+
     log_info(paste("Race", race_num, "- Discipline:", discipline, "- Sheet name:", sheet_name))
     log_info(paste("Race data dimensions:", nrow(race_data), "x", ncol(race_data)))
-    
+
     race_dfs[[sheet_name]] <- race_data
   }
   
@@ -928,42 +1000,58 @@ process_gender_championships <- function(gender, races) {
 calculate_championships_race_probabilities <- function() {
   log_info("Calculating Championships race participation probabilities with 4-person quota constraint")
   
-  # Function to get base race probability for a skier (same as weekly-picks2.R)
+  # Function to get base race probability using exponential decay weighting
+  # Recent races are weighted more heavily (alpha = 0.1)
+  # Time window: later of 5 years ago OR athlete's first race date (fairer for newer athletes)
   get_base_race_probability <- function(chronos, participant, discipline) {
-    # Get participant's first ever race date
-    participant_first_race <- chronos %>%
-      filter(Skier == participant) %>%
-      arrange(Date) %>%
-      slice(1) %>%
-      pull(Date)
-    
-    # Calculate date from 5 years ago
     five_years_ago <- Sys.Date() - (5 * 365)
-    
-    # Use 5 years ago or participant's first race, whichever is later
-    start_date <- if(length(participant_first_race) == 0) {
-      five_years_ago
+
+    # Get athlete's first race date (any discipline)
+    athlete_first_race <- chronos %>%
+      filter(Skier == participant) %>%
+      summarise(first_date = min(Date, na.rm = TRUE)) %>%
+      pull(first_date)
+
+    # Use the later of: 5 years ago OR athlete's first race date
+    # This prevents penalizing newer athletes for races before they started
+    if (is.na(athlete_first_race) || length(athlete_first_race) == 0) {
+      cutoff_date <- five_years_ago
     } else {
-      max(five_years_ago, participant_first_race, na.rm = TRUE)
+      cutoff_date <- max(five_years_ago, athlete_first_race)
     }
-    
-    # Count all races in this discipline since start_date
-    all_races <- chronos %>%
-      filter(Date >= start_date, Distance == discipline) %>%
+
+    # Get all races of this discipline in the time window, sorted by date
+    all_discipline_races <- chronos %>%
+      filter(Date >= cutoff_date, Distance == discipline) %>%
       distinct(Date, City) %>%
-      nrow()
-    
-    # Count participant's races in this discipline since start_date
-    participant_races <- chronos %>%
-      filter(Date >= start_date, Skier == participant, Distance == discipline) %>%
-      distinct(Date, City) %>%
-      nrow()
-    
-    # Calculate base probability (capped at 1)
-    if(all_races == 0) return(0)
-    base_prob <- min(1, participant_races / all_races)
-    
-    return(base_prob)
+      arrange(Date)
+
+    # Get participant's races in this discipline
+    participant_discipline_races <- chronos %>%
+      filter(Date >= cutoff_date, Skier == participant, Distance == discipline) %>%
+      distinct(Date, City)
+
+    n_races <- nrow(all_discipline_races)
+    if(n_races == 0) return(0)
+
+    # Create participation vector: 1 if athlete participated in that race, 0 if not
+    participation <- sapply(1:n_races, function(i) {
+      race_date <- all_discipline_races$Date[i]
+      race_city <- all_discipline_races$City[i]
+      as.numeric(any(participant_discipline_races$Date == race_date &
+                     participant_discipline_races$City == race_city))
+    })
+
+    # Apply exponential decay weights (alpha = 0.1)
+    # Most recent race gets weight 1.0, older races get exponentially less weight
+    race_weights <- exp(-0.1 * ((n_races - 1):0))
+
+    # Calculate weighted participation probability
+    weighted_participation <- sum(participation * race_weights)
+    total_weight <- sum(race_weights)
+    prob <- weighted_participation / total_weight
+
+    return(prob)
   }
   
   # Process Championships startlists and add race probabilities
@@ -1075,6 +1163,166 @@ if(nrow(men_races) > 0) {
 ladies_results <- NULL
 if(nrow(ladies_races) > 0) {
   ladies_results <- process_gender_championships("ladies", ladies_races)
+}
+
+# ============================================================================
+# CREATE NATIONS EXCEL FILE (for Nations blog post)
+# Split by gender - nations with 4+ athletes per gender get their own sheet
+# ============================================================================
+log_info("=== Creating Nations Excel File ===")
+
+# Only proceed if we have results
+if (!is.null(men_results) || !is.null(ladies_results)) {
+
+  # Create output directory path
+  output_dir <- paste0("~/blog/daehl-e/content/post/alpine/drafts/champs-predictions/", format(Sys.Date(), "%Y"))
+
+  # Combine men's race results with Race column
+  men_individual_results <- data.frame()
+  if (!is.null(men_results) && !is.null(men_results$race_sheets)) {
+    for (race_name in names(men_results$race_sheets)) {
+      race_data <- men_results$race_sheets[[race_name]]
+      race_data$Race <- race_name
+      race_data$Gender <- "Men"
+      men_individual_results <- bind_rows(men_individual_results, race_data)
+    }
+  }
+
+  # Combine ladies' race results with Race column
+  ladies_individual_results <- data.frame()
+  if (!is.null(ladies_results) && !is.null(ladies_results$race_sheets)) {
+    for (race_name in names(ladies_results$race_sheets)) {
+      race_data <- ladies_results$race_sheets[[race_name]]
+      race_data$Race <- race_name
+      race_data$Gender <- "Ladies"
+      ladies_individual_results <- bind_rows(ladies_individual_results, race_data)
+    }
+  }
+
+  log_info(paste("Combined", nrow(men_individual_results), "men's rows"))
+  log_info(paste("Combined", nrow(ladies_individual_results), "ladies' rows"))
+
+  # Count unique athletes per nation per gender (using Skier as identifier since no ID column)
+  men_nation_counts <- men_individual_results %>%
+    filter(Start > 0) %>%
+    group_by(Nation) %>%
+    summarise(n_athletes = n_distinct(Skier), .groups = "drop")
+
+  ladies_nation_counts <- ladies_individual_results %>%
+    filter(Start > 0) %>%
+    group_by(Nation) %>%
+    summarise(n_athletes = n_distinct(Skier), .groups = "drop")
+
+  # Nations with 4+ athletes per gender
+  men_main_nations <- men_nation_counts %>% filter(n_athletes >= 4) %>% pull(Nation) %>% sort()
+  ladies_main_nations <- ladies_nation_counts %>% filter(n_athletes >= 4) %>% pull(Nation) %>% sort()
+
+  # Nations with <4 athletes per gender
+  men_other_nations <- men_nation_counts %>% filter(n_athletes < 4) %>% pull(Nation)
+  ladies_other_nations <- ladies_nation_counts %>% filter(n_athletes < 4) %>% pull(Nation)
+
+  log_info(paste("Men nations with 4+ athletes:", paste(men_main_nations, collapse = ", ")))
+  log_info(paste("Ladies nations with 4+ athletes:", paste(ladies_main_nations, collapse = ", ")))
+
+  # Helper function to select and rename columns for reader-friendly output
+  select_and_rename_cols <- function(df, include_nation = FALSE) {
+    if (include_nation) {
+      df %>%
+        select(Athlete = Skier, Race, Nation,
+               Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
+        arrange(Race, Nation, desc(Start))
+    } else {
+      df %>%
+        select(Athlete = Skier, Race,
+               Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
+        arrange(Race, desc(Start))
+    }
+  }
+
+  # Create nations workbook
+  nations_wb <- list()
+
+  # Process men's main nations (alphabetical order)
+  for (nation in men_main_nations) {
+    nation_data <- men_individual_results %>%
+      filter(Nation == nation, Start > 0)
+
+    if (nrow(nation_data) > 0) {
+      sheet_name <- paste(nation, "Men")
+      nations_wb[[sheet_name]] <- select_and_rename_cols(nation_data, include_nation = FALSE)
+      log_info(paste("Added", sheet_name, "sheet with", nrow(nation_data), "rows"))
+    }
+  }
+
+  # Create "Other Men" sheet for nations with <4 male athletes
+  men_other_data <- men_individual_results %>%
+    filter(Nation %in% men_other_nations, Start > 0)
+
+  if (nrow(men_other_data) > 0) {
+    nations_wb[["Other Men"]] <- select_and_rename_cols(men_other_data, include_nation = TRUE)
+    log_info(paste("Added Other Men sheet with", nrow(men_other_data), "rows from",
+                   length(unique(men_other_data$Nation)), "nations"))
+  }
+
+  # Process ladies' main nations (alphabetical order)
+  for (nation in ladies_main_nations) {
+    nation_data <- ladies_individual_results %>%
+      filter(Nation == nation, Start > 0)
+
+    if (nrow(nation_data) > 0) {
+      sheet_name <- paste(nation, "Ladies")
+      nations_wb[[sheet_name]] <- select_and_rename_cols(nation_data, include_nation = FALSE)
+      log_info(paste("Added", sheet_name, "sheet with", nrow(nation_data), "rows"))
+    }
+  }
+
+  # Create "Other Ladies" sheet for nations with <4 female athletes
+  ladies_other_data <- ladies_individual_results %>%
+    filter(Nation %in% ladies_other_nations, Start > 0)
+
+  if (nrow(ladies_other_data) > 0) {
+    nations_wb[["Other Ladies"]] <- select_and_rename_cols(ladies_other_data, include_nation = TRUE)
+    log_info(paste("Added Other Ladies sheet with", nrow(ladies_other_data), "rows from",
+                   length(unique(ladies_other_data$Nation)), "nations"))
+  }
+
+  # Combine all results for summary
+  all_individual_results <- bind_rows(men_individual_results, ladies_individual_results)
+
+  # Create Summary sheet (split by gender)
+  summary_data <- all_individual_results %>%
+    filter(Start > 0) %>%
+    mutate(
+      Nation_Group = case_when(
+        Gender == "Men" & Nation %in% men_main_nations ~ Nation,
+        Gender == "Ladies" & Nation %in% ladies_main_nations ~ Nation,
+        TRUE ~ "Other"
+      )
+    ) %>%
+    group_by(Gender, Nation_Group) %>%
+    summarise(
+      `Total Win` = round(sum(Win, na.rm = TRUE), 1),
+      `Total Podium` = round(sum(Podium, na.rm = TRUE), 1),
+      `Total Top-10` = round(sum(`Top-10`, na.rm = TRUE), 1),
+      Athletes = n_distinct(Skier),
+      .groups = "drop"
+    ) %>%
+    rename(Nation = Nation_Group) %>%
+    # Put main nations first (alphabetical), then Other at bottom
+    mutate(sort_order = ifelse(Nation == "Other", 2, 1)) %>%
+    arrange(Gender, sort_order, Nation) %>%
+    select(-sort_order)
+
+  nations_wb[["Summary"]] <- summary_data
+  log_info("Added Summary sheet")
+
+  # Save nations Excel file
+  if (length(nations_wb) > 0) {
+    nations_file <- file.path(output_dir, "nations_individual.xlsx")
+    write.xlsx(nations_wb, nations_file)
+    log_info(paste("Saved nations individual results to", nations_file))
+    log_info(paste("Nations tabs:", paste(names(nations_wb), collapse = ", ")))
+  }
 }
 
 log_info("Alpine Championships predictions completed successfully")

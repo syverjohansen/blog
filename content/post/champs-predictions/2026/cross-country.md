@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Cross-Country Skiing Predictions"
-date: 2026-01-26T18:42:00+00:00
+date: 2026-01-26T23:31:09+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "cross-country"]
 ---
