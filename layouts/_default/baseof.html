@@ -62,14 +62,25 @@ $(document).ready(function() {
     console.log('[Catalog Debug] Total h2/h3/h4 headings found in document:', allHeadings.length);
 
     var catalogItemCount = 0;
+    var usedIds = {}; // Track used IDs to avoid duplicates
 
     // Find all h2, h3, h4 elements in the post container (limited to h4 for performance)
-    allHeadings.each(function() {
+    allHeadings.each(function(index) {
       var heading = $(this);
 
       // If the heading doesn't have an ID, create one based on the text
       if (!heading.attr('id')) {
-        var headingId = heading.text().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+        var baseId = heading.text().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+        var headingId = baseId;
+
+        // Make ID unique if it's already been used
+        if (usedIds[headingId]) {
+          usedIds[headingId]++;
+          headingId = baseId + '-' + usedIds[headingId];
+        } else {
+          usedIds[headingId] = 1;
+        }
+
         heading.attr('id', headingId);
       }
 
@@ -77,6 +88,11 @@ $(document).ready(function() {
       var headingId = heading.attr('id');
       var headingText = heading.text();
       var headingLevel = heading.prop('tagName').toLowerCase();
+
+      // Debug: Log first 15 items to see what's being added
+      if (index < 15) {
+        console.log('[Catalog Debug] Item', index, ':', headingLevel, '-', headingText, '- ID:', headingId);
+      }
 
       // Create the list item with appropriate indentation
       var listItem = $('<li>');
@@ -101,9 +117,13 @@ $(document).ready(function() {
       catalogItemCount++;
     });
 
-    // Debug: Report final count
+    // Debug: Report final count and first few items in DOM
     console.log('[Catalog Debug] Total items added to catalog:', catalogItemCount);
     console.log('[Catalog Debug] Items in catalog-body:', $('.catalog-body li').length);
+    console.log('[Catalog Debug] First 5 catalog items in DOM:');
+    $('.catalog-body li').slice(0, 5).each(function(i) {
+      console.log('  ', i, ':', $(this).text(), '- href:', $(this).find('a').attr('href'));
+    });
     
     // Track active section while scrolling
     $(window).scroll(function() {
