@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      1,
+      1563,
+      801
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      2,
+      1340,
+      578
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      3,
+      1092,
+      330
+    ],
+    [
+      "Teresa Stadlober",
+      529,
+      4,
+      811,
+      49
+    ],
+    [
+      "Johanna Matintalo",
+      1761,
+      5,
+      810,
+      48
+    ],
+    [
+      "Ebba Andersson",
+      1789,
+      6,
+      803,
+      41
+    ],
+    [
+      "Jasmi Joensuu",
+      1675,
+      7,
+      791,
+      29
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      2300,
+      8,
+      786,
+      24
+    ],
+    [
+      "Heidi Weng",
+      60,
+      9,
+      774,
+      12
+    ]
+  ]
+}
