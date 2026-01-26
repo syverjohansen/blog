@@ -1,159 +1,299 @@
-<div class="container-fluid">
-    <div>
-        <h1 id="Ladies">Ladies All-Time Rankings</h1>
-        <table id="dataTableL_ranks" class="display">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
-    </div>
+<style>
+    .bbref-table-wrapper {
+        position: relative;
+        width: 100%;
+        margin: 1rem 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 14px;
+    }
+    .bbref-table-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .bbref-table-container::-webkit-scrollbar { height: 8px; }
+    .bbref-table-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+    .bbref-table-container::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+    .scroll-indicator-left, .scroll-indicator-right {
+        position: absolute; top: 0; bottom: 0; width: 20px;
+        pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 5;
+    }
+    .scroll-indicator-left { left: 0; background: linear-gradient(to right, rgba(0,0,0,0.08), transparent); }
+    .scroll-indicator-right { right: 0; background: linear-gradient(to left, rgba(0,0,0,0.08), transparent); }
+    .scroll-indicator-left.active, .scroll-indicator-right.active { opacity: 1; }
+    .bbref-table {
+        width: 100%; min-width: max-content;
+        border-collapse: separate; border-spacing: 0; background: white;
+    }
+    .bbref-table th, .bbref-table td {
+        padding: 6px 10px; text-align: left; white-space: nowrap; border-bottom: 1px solid #ddd;
+    }
+    .bbref-table th {
+        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+        font-weight: 600; color: #333; border-bottom: 2px solid #ccc;
+        position: sticky; top: 0; z-index: 2; cursor: pointer; user-select: none;
+    }
+    .bbref-table th:hover { background: linear-gradient(to bottom, #e9ecef, #dee2e6); }
+    .bbref-table th.sort-asc::after { content: ' \25B2'; font-size: 10px; }
+    .bbref-table th.sort-desc::after { content: ' \25BC'; font-size: 10px; }
+    .bbref-table .sticky-col { position: sticky; left: 0; z-index: 3; background: white; border-right: 2px solid #ccc; }
+    .bbref-table .sticky-col-2 { position: sticky; left: 50px; z-index: 3; background: white; }
+    .bbref-table .sticky-col-3 { position: sticky; left: 200px; z-index: 3; background: white; border-right: 2px solid #ccc; }
+    .bbref-table th.sticky-col, .bbref-table th.sticky-col-2, .bbref-table th.sticky-col-3 {
+        z-index: 4; background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+    }
+    .bbref-table tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+    .bbref-table tbody tr:nth-child(odd) .sticky-col,
+    .bbref-table tbody tr:nth-child(odd) .sticky-col-2,
+    .bbref-table tbody tr:nth-child(odd) .sticky-col-3 { background-color: #f8f9fa; }
+    .bbref-table tbody tr:hover { background-color: #e8f4fc !important; }
+    .bbref-table tbody tr:hover .sticky-col,
+    .bbref-table tbody tr:hover .sticky-col-2,
+    .bbref-table tbody tr:hover .sticky-col-3 { background-color: #e8f4fc !important; }
+    .bbref-table td.numeric { text-align: right; font-variant-numeric: tabular-nums; }
+    .bbref-table a { color: #0066cc; text-decoration: none; }
+    .bbref-table a:hover { text-decoration: underline; }
+    .bbref-table .active-skier { font-weight: bold; }
+    .skier-subtitle { font-size: 0.85em; color: #666; display: block; }
+    .bbref-controls {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 0; flex-wrap: wrap; gap: 10px;
+    }
+    .bbref-controls select, .bbref-controls input {
+        padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;
+    }
+    .bbref-controls input[type="text"] { width: 200px; }
+    .bbref-pagination {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 0; border-top: 1px solid #eee; flex-wrap: wrap; gap: 10px;
+    }
+    .page-info { color: #666; font-size: 13px; }
+    .page-buttons { display: flex; gap: 5px; }
+    .page-btn {
+        padding: 6px 12px; border: 1px solid #ccc; background: #fff;
+        border-radius: 4px; cursor: pointer; font-size: 13px;
+    }
+    .page-btn:hover:not(:disabled) { background: #e9ecef; }
+    .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .section-title { margin: 2rem 0 1rem; font-size: 1.5rem; font-weight: 600; color: #333; }
+    @media (max-width: 600px) {
+        .bbref-table-wrapper { font-size: 13px; }
+        .bbref-table th, .bbref-table td { padding: 5px 8px; }
+        .bbref-controls { flex-direction: column; align-items: stretch; }
+        .bbref-controls input[type="text"] { width: 100%; }
+    }
+</style>
 
-    <div style="margin-top: 50px;">
-        <h1 id="Men">Men All-Time Rankings</h1>
-        <table id="dataTableM_ranks" class="display">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
+<div class="container-fluid">
+    <h1 class="section-title" id="Ladies">Ladies All-Time Rankings</h1>
+    <div class="bbref-table-wrapper" id="wrapper-ladies-ranks">
+        <div class="scroll-indicator-left"></div>
+        <div class="scroll-indicator-right active"></div>
+        <div class="bbref-controls">
+            <label>Show <select class="entries-select">
+                <option value="25">25</option>
+                <option value="50" selected>50</option>
+                <option value="100">100</option>
+                <option value="-1">All</option>
+            </select> entries</label>
+            <label>Search: <input type="text" class="search-input" placeholder="Filter skiers..."></label>
+        </div>
+        <div class="bbref-table-container">
+            <table id="dataTableL_ranks" class="bbref-table">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="bbref-pagination">
+            <span class="page-info"></span>
+            <div class="page-buttons">
+                <button class="page-btn prev" disabled>&laquo; Prev</button>
+                <button class="page-btn next">Next &raquo;</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
-<script>
-$(document).ready(function() {
-    function initializeTable(tableId, jsonUrl, gender) {
-        $.getJSON(jsonUrl, function(data) {
-            // Find max season to determine active skiers
-            let maxSeason = 0;
-            data.forEach(function(row) {
-                if (row.To > maxSeason) {
-                    maxSeason = row.To;
-                }
-            });
+<div class="container-fluid" style="margin-top: 50px;">
+    <h1 class="section-title" id="Men">Men All-Time Rankings</h1>
+    <div class="bbref-table-wrapper" id="wrapper-men-ranks">
+        <div class="scroll-indicator-left"></div>
+        <div class="scroll-indicator-right active"></div>
+        <div class="bbref-controls">
+            <label>Show <select class="entries-select">
+                <option value="25">25</option>
+                <option value="50" selected>50</option>
+                <option value="100">100</option>
+                <option value="-1">All</option>
+            </select> entries</label>
+            <label>Search: <input type="text" class="search-input" placeholder="Filter skiers..."></label>
+        </div>
+        <div class="bbref-table-container">
+            <table id="dataTableM_ranks" class="bbref-table">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="bbref-pagination">
+            <span class="page-info"></span>
+            <div class="page-buttons">
+                <button class="page-btn prev" disabled>&laquo; Prev</button>
+                <button class="page-btn next">Next &raquo;</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-            var columns = [
-                {
-                    data: null,
-                    title: 'Rank',
-                    render: function(data, type, row, meta) {
-                        return meta.row + 1;
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function initializeRanksTable(tableId, jsonUrl, gender, wrapperId) {
+        const wrapper = document.getElementById(wrapperId);
+        const container = wrapper.querySelector('.bbref-table-container');
+        const table = document.querySelector(tableId);
+        const pagination = wrapper.querySelector('.bbref-pagination');
+
+        fetch(jsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (!data || data.length === 0) return;
+
+                // Find max season to determine active skiers
+                let maxSeason = 0;
+                data.forEach(row => { if (row.To > maxSeason) maxSeason = row.To; });
+
+                let currentPage = 1;
+                let pageSize = 50;
+                let sortCol = 0;
+                let sortDir = 'asc';
+                let filteredData = [...data];
+
+                // Build header
+                const thead = table.querySelector('thead');
+                thead.innerHTML = `<tr>
+                    <th class="sticky-col" data-col="rank">Rank</th>
+                    <th class="sticky-col-2" data-col="Skier">Skier</th>
+                    <th class="sticky-col-3" data-col="Nation">Nation</th>
+                    <th data-col="Olympics">Olympics</th>
+                    <th data-col="WSC">World Champs</th>
+                    <th data-col="Tour">Tour de Ski</th>
+                    <th data-col="WC">World Cup</th>
+                    <th data-col="Table">Standings</th>
+                    <th data-col="Total">Total</th>
+                </tr>`;
+
+                function buildRows() {
+                    const tbody = table.querySelector('tbody');
+                    tbody.innerHTML = '';
+
+                    let displayData, start, end;
+                    if (pageSize === -1) {
+                        displayData = filteredData;
+                        start = 0; end = filteredData.length;
+                    } else {
+                        start = (currentPage - 1) * pageSize;
+                        end = Math.min(start + pageSize, filteredData.length);
+                        displayData = filteredData.slice(start, end);
                     }
-                },
-                {
-                    data: 'Skier',
-                    title: 'Skier',
-                    render: function(data, type, row) {
+
+                    displayData.forEach((row, idx) => {
                         const isActive = row.To === maxSeason;
                         let subtitle = '';
-                        
-                        if (isActive) {
-                            // For active skiers, show age
-                            if (row.Age) {
-                                subtitle = `<span style="font-size:0.85em;color:#666;display:block;">(${row.From}-Present, ${row.Age})</span>`;
-                            }
+                        if (isActive && row.Age) {
+                            subtitle = `<span class="skier-subtitle">(${row.From}-Present, ${row.Age})</span>`;
+                        } else if (row.From !== row.To) {
+                            subtitle = `<span class="skier-subtitle">(${row.From}-${row.To})</span>`;
                         } else {
-                            // For retired skiers, show years active
-                            subtitle = row.From !== row.To ? 
-                                `<span style="font-size:0.85em;color:#666;display:block;">(${row.From}-${row.To})</span>` : 
-                                `<span style="font-size:0.85em;color:#666;display:block;">(${row.From})</span>`;
+                            subtitle = `<span class="skier-subtitle">(${row.From})</span>`;
                         }
-                        
-                        return `<a href="/nordic-combined/skiers/skier/?id=${row.ID}&gender=${gender}" ${isActive ? 'style="font-weight:bold;"' : ''}>
-                            ${data}
-                        </a>${subtitle}`;
-                    }
-                },
-                {
-                    data: 'Nation',
-                    title: 'Nation',
-                    render: function(data) {
-                        return data;
-                    }
-                },
-                {
-                    data: 'Olympics',
-                    title: 'Olympics',
-                    render: function(data) {
-                        return data ? data.toFixed(1) : '0';
-                    }
-                },
-                {
-                    data: 'WSC',
-                    title: 'World Champs',
-                    render: function(data) {
-                        return data ? data.toFixed(1) : '0';
-                    }
-                },
-                {
-                    data: 'WC',
-                    title: 'World Cup',
-                    render: function(data) {
-                        return data ? data.toFixed(1) : '0';
-                    }
-                },
-                {
-                    data: 'Table',
-                    title: 'Standings',
-                    render: function(data) {
-                        return data ? data.toFixed(1) : '0';
-                    }
-                },
-                {
-                    data: 'Total',
-                    title: 'Total',
-                    render: function(data) {
-                        return data ? data.toFixed(1) : '0';
-                    }
-                },
-                {
-                    data: 'ID',
-                    title: 'ID',
-                    visible: false
-                },
-                {
-                    data: 'Age',
-                    title: 'Age',
-                    visible: false
-                },
-                {
-                    data: 'From',
-                    title: 'From',
-                    visible: false
-                },
-                {
-                    data: 'To',
-                    title: 'To',
-                    visible: false
-                }
-            ];
 
-            $(tableId).DataTable({
-                data: data,
-                columns: columns,
-                scrollX: true,
-                scrollCollapse: true,
-                fixedColumns: {leftColumns: 3},  // Updated to include Nation column
-                pageLength: 50,
-                order: [[0, 'asc']], // Sort by Rank column (ascending)
-                orderCellsTop: true,
-                language: {
-                    search: "Filter skiers:"
-                },
-                columnDefs: [
-                    {
-                        // Set default order for numeric columns to be descending
-                        targets: [3, 4, 5, 6, 7, 8], // Olympic, WSC, WC, Table, Total columns
-                        orderSequence: ['desc', 'asc']
-                    }
-                ]
+                        const activeClass = isActive ? 'active-skier' : '';
+                        tbody.innerHTML += `<tr>
+                            <td class="sticky-col numeric">${start + idx + 1}</td>
+                            <td class="sticky-col-2"><a href="/nordic-combined/skiers/skier/?id=${row.ID}&gender=${gender}" class="${activeClass}">${row.Skier}</a>${subtitle}</td>
+                            <td class="sticky-col-3">${row.Nation || ''}</td>
+                            <td class="numeric">${row.Olympics ? row.Olympics.toFixed(1) : '0'}</td>
+                            <td class="numeric">${row.WSC ? row.WSC.toFixed(1) : '0'}</td>
+                            <td class="numeric">${row.Tour ? row.Tour.toFixed(1) : '0'}</td>
+                            <td class="numeric">${row.WC ? row.WC.toFixed(1) : '0'}</td>
+                            <td class="numeric">${row.Table ? row.Table.toFixed(1) : '0'}</td>
+                            <td class="numeric">${row.Total ? row.Total.toFixed(1) : '0'}</td>
+                        </tr>`;
+                    });
+
+                    const pageInfo = pagination.querySelector('.page-info');
+                    pageInfo.textContent = filteredData.length === 0 ? 'No matching entries' : `Showing ${start + 1} to ${end} of ${filteredData.length} entries`;
+                    const totalPages = pageSize === -1 ? 1 : Math.ceil(filteredData.length / pageSize);
+                    pagination.querySelector('.prev').disabled = currentPage <= 1;
+                    pagination.querySelector('.next').disabled = currentPage >= totalPages;
+                    updateScrollIndicators();
+                }
+
+                function updateScrollIndicators() {
+                    const left = wrapper.querySelector('.scroll-indicator-left');
+                    const right = wrapper.querySelector('.scroll-indicator-right');
+                    left.classList.toggle('active', container.scrollLeft > 5);
+                    right.classList.toggle('active', container.scrollLeft < container.scrollWidth - container.clientWidth - 5);
+                }
+
+                container.addEventListener('scroll', updateScrollIndicators);
+
+                // Sorting
+                thead.querySelectorAll('th').forEach((th, colIdx) => {
+                    th.addEventListener('click', () => {
+                        const colKey = th.dataset.col;
+                        if (sortCol === colIdx) {
+                            sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+                        } else {
+                            sortCol = colIdx;
+                            sortDir = colKey === 'rank' || colKey === 'Skier' || colKey === 'Nation' ? 'asc' : 'desc';
+                        }
+                        thead.querySelectorAll('th').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+                        th.classList.add('sort-' + sortDir);
+
+                        if (colKey === 'rank') {
+                            filteredData = [...data].filter(r => filteredData.includes(r));
+                        } else {
+                            filteredData.sort((a, b) => {
+                                const aVal = a[colKey], bVal = b[colKey];
+                                let result = typeof aVal === 'number' && typeof bVal === 'number' ? aVal - bVal : String(aVal || '').localeCompare(String(bVal || ''));
+                                return sortDir === 'desc' ? -result : result;
+                            });
+                        }
+                        currentPage = 1;
+                        buildRows();
+                    });
+                });
+
+                wrapper.querySelector('.search-input').addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    filteredData = data.filter(row => row.Skier.toLowerCase().includes(query) || (row.Nation && row.Nation.toLowerCase().includes(query)));
+                    currentPage = 1;
+                    buildRows();
+                });
+
+                wrapper.querySelector('.entries-select').addEventListener('change', (e) => {
+                    pageSize = parseInt(e.target.value);
+                    currentPage = 1;
+                    buildRows();
+                });
+
+                pagination.querySelector('.prev').addEventListener('click', () => { if (currentPage > 1) { currentPage--; buildRows(); } });
+                pagination.querySelector('.next').addEventListener('click', () => {
+                    const totalPages = pageSize === -1 ? 1 : Math.ceil(filteredData.length / pageSize);
+                    if (currentPage < totalPages) { currentPage++; buildRows(); }
+                });
+
+                buildRows();
+            })
+            .catch(err => {
+                console.error('Failed to load rankings:', err);
+                table.querySelector('tbody').innerHTML = '<tr><td colspan="9">Error loading rankings data</td></tr>';
             });
-        }).fail(function() {
-            console.error(`Failed to load JSON data for ${gender}`);
-            $(tableId).html('<tr><td colspan="8">Error loading rankings data</td></tr>');
-        });
     }
 
-    initializeTable('#dataTableL_ranks', '{{ "python/nordic-combined/excel365/L/ranks.json" | relURL }}', 'L');
-    initializeTable('#dataTableM_ranks', '{{ "python/nordic-combined/excel365/M/ranks.json" | relURL }}?t=' + new Date().getTime(), 'M');
+    initializeRanksTable('#dataTableL_ranks', '{{ "python/nordic-combined/excel365/L/ranks.json" | relURL }}', 'L', 'wrapper-ladies-ranks');
+    initializeRanksTable('#dataTableM_ranks', '{{ "python/nordic-combined/excel365/M/ranks.json" | relURL }}?t=' + new Date().getTime(), 'M', 'wrapper-men-ranks');
 });
 </script>

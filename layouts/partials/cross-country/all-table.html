@@ -4,60 +4,308 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All-Time Elo Records</title>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/4.2.2/css/fixedColumns.dataTables.min.css">
     <style>
-        .catalog-container {
-            position: fixed;
+        /* Baseball-Reference inspired table styles */
+        .bbref-table-wrapper {
+            position: relative;
+            width: 100%;
+            margin: 1rem 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .bbref-table-container {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .bbref-table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .bbref-table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .bbref-table-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .scroll-indicator-left,
+        .scroll-indicator-right {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 20px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 5;
+        }
+        .scroll-indicator-left {
+            left: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.08), transparent);
+        }
+        .scroll-indicator-right {
             right: 0;
-            top: 0px;
-            width: 250px;
-            height: 100%;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-left: 1px solid #ddd;
+            background: linear-gradient(to left, rgba(0,0,0,0.08), transparent);
         }
-        .content-container {
-            margin-left: 270px;
-            margin-right: 270px;
+        .scroll-indicator-left.active,
+        .scroll-indicator-right.active {
+            opacity: 1;
         }
-        .sticky-col {
+
+        .bbref-table {
+            width: 100%;
+            min-width: max-content;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+        }
+
+        .bbref-table th,
+        .bbref-table td {
+            padding: 6px 10px;
+            text-align: left;
+            white-space: nowrap;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .bbref-table th {
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #ccc;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .bbref-table th:hover {
+            background: linear-gradient(to bottom, #e9ecef, #dee2e6);
+        }
+
+        .bbref-table th.sort-asc::after {
+            content: ' \25B2';
+            font-size: 10px;
+        }
+        .bbref-table th.sort-desc::after {
+            content: ' \25BC';
+            font-size: 10px;
+        }
+
+        .bbref-table .sticky-col {
             position: sticky;
             left: 0;
-            background: #f4f4f4;
-            z-index: 2;
+            z-index: 3;
+            background: white;
+            border-right: 2px solid #ccc;
         }
+
+        .bbref-table .sticky-col-2 {
+            position: sticky;
+            left: 60px;
+            z-index: 3;
+            background: white;
+            border-right: 2px solid #ccc;
+        }
+
+        .bbref-table th.sticky-col,
+        .bbref-table th.sticky-col-2 {
+            z-index: 4;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+        }
+
+        .bbref-table tbody tr:nth-child(odd) {
+            background-color: #f8f9fa;
+        }
+        .bbref-table tbody tr:nth-child(odd) .sticky-col,
+        .bbref-table tbody tr:nth-child(odd) .sticky-col-2 {
+            background-color: #f8f9fa;
+        }
+
+        .bbref-table tbody tr:hover {
+            background-color: #e8f4fc !important;
+        }
+        .bbref-table tbody tr:hover .sticky-col,
+        .bbref-table tbody tr:hover .sticky-col-2 {
+            background-color: #e8f4fc !important;
+        }
+
+        .bbref-table td.numeric {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .bbref-table a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .bbref-table a:hover {
+            text-decoration: underline;
+        }
+
         .date-cell {
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: #666;
+        }
+
+        .bbref-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .bbref-controls select,
+        .bbref-controls input {
+            padding: 4px 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .bbref-controls input[type="text"] {
+            width: 200px;
+        }
+
+        .bbref-pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .page-info {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .page-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .page-btn {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: #e9ecef;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .section-title {
+            margin: 2rem 0 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        @media (max-width: 600px) {
+            .bbref-table-wrapper {
+                font-size: 13px;
+            }
+            .bbref-table th,
+            .bbref-table td {
+                padding: 5px 8px;
+            }
+            .bbref-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .bbref-controls input[type="text"] {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container-fluid">
-        <h2 id="L_chrono">Elo</h2>
-        <table id="dataTableL_chrono_alltime" class="display">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
+        <h2 class="section-title" id="L_chrono">Ladies All-Time Elo</h2>
+        <div class="bbref-table-wrapper" id="wrapper-ladies-alltime">
+            <div class="scroll-indicator-left"></div>
+            <div class="scroll-indicator-right active"></div>
+            <div class="bbref-controls">
+                <label>Show <select class="entries-select" data-table="ladies-alltime">
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="-1">All</option>
+                </select> entries</label>
+                <label>Search: <input type="text" class="search-input" data-table="ladies-alltime"></label>
+            </div>
+            <div class="bbref-table-container" id="container-ladies-alltime">
+                <table id="dataTableL_chrono_alltime" class="bbref-table">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="bbref-pagination" id="pagination-ladies-alltime">
+                <span class="page-info"></span>
+                <div class="page-buttons">
+                    <button class="page-btn prev" disabled>&laquo; Prev</button>
+                    <button class="page-btn next">Next &raquo;</button>
+                </div>
+            </div>
+        </div>
         {{ partial "cross-country/ladies-graph-all.html" . }}
     </div>
 
     <div class="container-fluid">
-        <h2 id="M_chrono">Elo</h2>
-        <table id="dataTableM_chrono_alltime" class="display">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
+        <h2 class="section-title" id="M_chrono">Men All-Time Elo</h2>
+        <div class="bbref-table-wrapper" id="wrapper-men-alltime">
+            <div class="scroll-indicator-left"></div>
+            <div class="scroll-indicator-right active"></div>
+            <div class="bbref-controls">
+                <label>Show <select class="entries-select" data-table="men-alltime">
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="-1">All</option>
+                </select> entries</label>
+                <label>Search: <input type="text" class="search-input" data-table="men-alltime"></label>
+            </div>
+            <div class="bbref-table-container" id="container-men-alltime">
+                <table id="dataTableM_chrono_alltime" class="bbref-table">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="bbref-pagination" id="pagination-men-alltime">
+                <span class="page-info"></span>
+                <div class="page-buttons">
+                    <button class="page-btn prev" disabled>&laquo; Prev</button>
+                    <button class="page-btn next">Next &raquo;</button>
+                </div>
+            </div>
+        </div>
         {{ partial "cross-country/men-graph-all.html" . }}
     </div>
 
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
     <script>
-    $(document).ready(function() {
+    document.addEventListener('DOMContentLoaded', function() {
         function formatDate(dateString) {
             if (!dateString) return '';
             const date = new Date(dateString);
@@ -68,77 +316,190 @@
             });
         }
 
-        function initializeTable(tableId, jsonUrl, gender) {
-            $.getJSON(jsonUrl, function(data) {
-                var columns = Object.keys(data[0]).map(function(key) {
-                    if (key === 'Place') {
-                        return {
-                            data: null,
-                            title: 'Place',
-                            render: function(data, type, row, meta) {
-                                if (type === 'display') {
-                                    return meta.row + 1;
-                                }
-                                return meta.row;
-                            }
-                        };
-                    }
-                    else if (key === 'Skier') {
-                        return {
-                            data: key,
-                            title: key.charAt(0).toUpperCase() + key.slice(1),
-                            render: function(data, type, row) {
-                                return `<a href="/cross-country/skiers/skier/?id=${row.ID}&gender=${gender}" target="_blank">${data}</a>`;
-                            }
-                        };
-                    }
-                    else if (key.endsWith('_Date')) {
-                        const baseKey = key.replace('_Date', '');
-                        return {
-                            data: key,
-                            title: `${baseKey} Date`,
-                            visible: false
-                        };
-                    }
-                    else {
-                        return {
-                            data: key,
-                            title: key.charAt(0).toUpperCase() + key.slice(1),
-                            visible: key !== 'ID',
-                            render: function(data, type, row) {
-                                if (type === 'sort') {
-                                    return typeof data === 'number' ? data : -Infinity;
-                                }
-                                if (type === 'display' && typeof data === 'number') {
-                                    const dateColumn = key + '_Date';
-                                    const date = row[dateColumn] ? 
-                                        `<div class="date-cell">(${formatDate(row[dateColumn])})</div>` : '';
-                                    return `${data.toFixed(2)}${date}`;
-                                }
-                                return data;
-                            },
-                            orderSequence: ['desc', 'asc']
-                        };
-                    }
-                });
+        function initializeTable(tableId, jsonUrl, gender, wrapperId) {
+            const wrapper = document.getElementById(wrapperId);
+            const container = wrapper.querySelector('.bbref-table-container');
+            const table = document.querySelector(tableId);
+            const pagination = wrapper.querySelector('.bbref-pagination');
 
-                $(tableId).DataTable({
-                    data: data,
-                    columns: columns,
-                    scrollX: true,
-                    scrollCollapse: true,
-                    fixedColumns: {leftColumns: 2},
-                    pageLength: 50,
-                    order: [[3, 'desc']],
-                    orderCellsTop: true
-                });
-            }).fail(function() {
-                console.error(`Failed to load JSON data for ${gender}`);
-            });
+            fetch(jsonUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data || data.length === 0) return;
+
+                    const keys = Object.keys(data[0]);
+                    let allRows = [];
+                    let currentPage = 1;
+                    let pageSize = 50;
+                    let sortCol = 3;
+                    let sortDir = 'desc';
+                    let filteredData = [...data];
+
+                    // Build header
+                    const thead = table.querySelector('thead');
+                    let headerRow = '<tr>';
+                    headerRow += '<th class="sticky-col">Place</th>';
+
+                    keys.forEach((key, idx) => {
+                        if (key === 'ID' || key.endsWith('_Date')) return;
+                        const isSkier = key === 'Skier';
+                        const stickyClass = isSkier ? 'sticky-col-2' : '';
+                        headerRow += `<th class="${stickyClass}" data-col="${key}">${key}</th>`;
+                    });
+                    headerRow += '</tr>';
+                    thead.innerHTML = headerRow;
+
+                    // Build rows
+                    function buildRows() {
+                        const tbody = table.querySelector('tbody');
+                        tbody.innerHTML = '';
+
+                        let displayData;
+                        let start, end;
+
+                        if (pageSize === -1) {
+                            displayData = filteredData;
+                            start = 0;
+                            end = filteredData.length;
+                        } else {
+                            start = (currentPage - 1) * pageSize;
+                            end = Math.min(start + pageSize, filteredData.length);
+                            displayData = filteredData.slice(start, end);
+                        }
+
+                        displayData.forEach((row, idx) => {
+                            let tr = `<tr>`;
+                            tr += `<td class="sticky-col numeric">${start + idx + 1}</td>`;
+
+                            keys.forEach(key => {
+                                if (key === 'ID' || key.endsWith('_Date')) return;
+
+                                if (key === 'Skier') {
+                                    tr += `<td class="sticky-col-2"><a href="/cross-country/skiers/skier/?id=${row.ID}&gender=${gender}">${row[key]}</a></td>`;
+                                } else if (typeof row[key] === 'number') {
+                                    const dateKey = key + '_Date';
+                                    const dateStr = row[dateKey] ? `<div class="date-cell">(${formatDate(row[dateKey])})</div>` : '';
+                                    tr += `<td class="numeric">${row[key].toFixed(2)}${dateStr}</td>`;
+                                } else {
+                                    tr += `<td>${row[key] || ''}</td>`;
+                                }
+                            });
+
+                            tr += '</tr>';
+                            tbody.innerHTML += tr;
+                        });
+
+                        // Update pagination info
+                        const pageInfo = pagination.querySelector('.page-info');
+                        if (filteredData.length === 0) {
+                            pageInfo.textContent = 'No matching entries';
+                        } else {
+                            pageInfo.textContent = `Showing ${start + 1} to ${end} of ${filteredData.length} entries`;
+                        }
+
+                        const totalPages = pageSize === -1 ? 1 : Math.ceil(filteredData.length / pageSize);
+                        pagination.querySelector('.prev').disabled = currentPage <= 1;
+                        pagination.querySelector('.next').disabled = currentPage >= totalPages;
+
+                        updateScrollIndicators();
+                    }
+
+                    function updateScrollIndicators() {
+                        const leftInd = wrapper.querySelector('.scroll-indicator-left');
+                        const rightInd = wrapper.querySelector('.scroll-indicator-right');
+
+                        if (container.scrollLeft > 5) {
+                            leftInd.classList.add('active');
+                        } else {
+                            leftInd.classList.remove('active');
+                        }
+
+                        if (container.scrollLeft < container.scrollWidth - container.clientWidth - 5) {
+                            rightInd.classList.add('active');
+                        } else {
+                            rightInd.classList.remove('active');
+                        }
+                    }
+
+                    container.addEventListener('scroll', updateScrollIndicators);
+
+                    // Sorting
+                    thead.querySelectorAll('th').forEach((th, colIdx) => {
+                        th.addEventListener('click', () => {
+                            const colKey = th.dataset.col;
+                            if (!colKey) return;
+
+                            if (sortCol === colIdx) {
+                                sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+                            } else {
+                                sortCol = colIdx;
+                                sortDir = 'desc';
+                            }
+
+                            thead.querySelectorAll('th').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+                            th.classList.add('sort-' + sortDir);
+
+                            filteredData.sort((a, b) => {
+                                const aVal = a[colKey];
+                                const bVal = b[colKey];
+                                let result;
+                                if (typeof aVal === 'number' && typeof bVal === 'number') {
+                                    result = aVal - bVal;
+                                } else {
+                                    result = String(aVal || '').localeCompare(String(bVal || ''));
+                                }
+                                return sortDir === 'desc' ? -result : result;
+                            });
+
+                            currentPage = 1;
+                            buildRows();
+                        });
+                    });
+
+                    // Search
+                    wrapper.querySelector('.search-input').addEventListener('input', (e) => {
+                        const query = e.target.value.toLowerCase();
+                        filteredData = data.filter(row =>
+                            Object.values(row).some(val =>
+                                String(val).toLowerCase().includes(query)
+                            )
+                        );
+                        currentPage = 1;
+                        buildRows();
+                    });
+
+                    // Page size
+                    wrapper.querySelector('.entries-select').addEventListener('change', (e) => {
+                        pageSize = parseInt(e.target.value);
+                        currentPage = 1;
+                        buildRows();
+                    });
+
+                    // Pagination
+                    pagination.querySelector('.prev').addEventListener('click', () => {
+                        if (currentPage > 1) {
+                            currentPage--;
+                            buildRows();
+                        }
+                    });
+
+                    pagination.querySelector('.next').addEventListener('click', () => {
+                        const totalPages = pageSize === -1 ? 1 : Math.ceil(filteredData.length / pageSize);
+                        if (currentPage < totalPages) {
+                            currentPage++;
+                            buildRows();
+                        }
+                    });
+
+                    // Initial sort by Elo (column index 3)
+                    filteredData.sort((a, b) => (b.Elo || 0) - (a.Elo || 0));
+                    buildRows();
+                })
+                .catch(err => console.error('Failed to load data:', err));
         }
 
-        initializeTable('#dataTableL_chrono_alltime', '{{ "python/cross-country/excel365/L_chrono_all_time.json" | relURL }}', 'L');
-        initializeTable('#dataTableM_chrono_alltime', '{{ "python/cross-country/excel365/M_chrono_all_time.json" | relURL }}?t=' + new Date().getTime(), 'M');
+        initializeTable('#dataTableL_chrono_alltime', '{{ "python/cross-country/excel365/L_chrono_all_time.json" | relURL }}', 'L', 'wrapper-ladies-alltime');
+        initializeTable('#dataTableM_chrono_alltime', '{{ "python/cross-country/excel365/M_chrono_all_time.json" | relURL }}?t=' + new Date().getTime(), 'M', 'wrapper-men-alltime');
     });
     </script>
 </body>

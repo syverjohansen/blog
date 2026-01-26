@@ -1,299 +1,284 @@
 {{/* layouts/biathlon/partials/skier-table.html */}}
-<div id="biathlon-toggle-buttons" class="mb-3">
-    <button id="biathlon-elo-mode-btn" class="btn btn-primary mr-2">Elo Mode</button>
-    <button id="biathlon-percent-mode-btn" class="btn btn-secondary">Percent of Max Mode</button>
+<style>
+    .bbref-table-wrapper {
+        position: relative; width: 100%; margin: 1rem 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 14px;
+    }
+    .bbref-table-container {
+        width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
+        border: 1px solid #ccc; border-radius: 4px; max-height: 500px; overflow-y: auto;
+    }
+    .bbref-table-container::-webkit-scrollbar { height: 8px; width: 8px; }
+    .bbref-table-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+    .bbref-table-container::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+    .scroll-indicator-left, .scroll-indicator-right {
+        position: absolute; top: 0; bottom: 0; width: 20px;
+        pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 5;
+    }
+    .scroll-indicator-left { left: 0; background: linear-gradient(to right, rgba(0,0,0,0.08), transparent); }
+    .scroll-indicator-right { right: 0; background: linear-gradient(to left, rgba(0,0,0,0.08), transparent); }
+    .scroll-indicator-left.active, .scroll-indicator-right.active { opacity: 1; }
+    .bbref-table {
+        width: 100%; min-width: max-content;
+        border-collapse: separate; border-spacing: 0; background: white;
+    }
+    .bbref-table th, .bbref-table td {
+        padding: 6px 10px; text-align: left; white-space: nowrap; border-bottom: 1px solid #ddd;
+    }
+    .bbref-table th {
+        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+        font-weight: 600; color: #333; border-bottom: 2px solid #ccc;
+        position: sticky; top: 0; z-index: 2; cursor: pointer; user-select: none;
+    }
+    .bbref-table th:hover { background: linear-gradient(to bottom, #e9ecef, #dee2e6); }
+    .bbref-table th.sort-asc::after { content: ' \25B2'; font-size: 10px; }
+    .bbref-table th.sort-desc::after { content: ' \25BC'; font-size: 10px; }
+    .bbref-table .sticky-col { position: sticky; left: 0; z-index: 3; background: white; border-right: 2px solid #ccc; }
+    .bbref-table .sticky-col-2 { position: sticky; left: 80px; z-index: 3; background: white; border-right: 2px solid #ccc; }
+    .bbref-table th.sticky-col, .bbref-table th.sticky-col-2 { z-index: 4; background: linear-gradient(to bottom, #f8f9fa, #e9ecef); }
+    .bbref-table tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+    .bbref-table tbody tr:nth-child(odd) .sticky-col, .bbref-table tbody tr:nth-child(odd) .sticky-col-2 { background-color: #f8f9fa; }
+    .bbref-table tbody tr:hover { background-color: #e8f4fc !important; }
+    .bbref-table tbody tr:hover .sticky-col, .bbref-table tbody tr:hover .sticky-col-2 { background-color: #e8f4fc !important; }
+    .bbref-table td.numeric { text-align: right; font-variant-numeric: tabular-nums; }
+    .mode-toggle { margin-bottom: 1rem; }
+    .mode-toggle .btn { padding: 8px 16px; border: 1px solid #ccc; background: #fff; cursor: pointer; font-size: 14px; }
+    .mode-toggle .btn.active { background: #0066cc; color: white; border-color: #0066cc; }
+    .mode-toggle .btn:first-child { border-radius: 4px 0 0 4px; }
+    .mode-toggle .btn:last-child { border-radius: 0 4px 4px 0; }
+    #loading-indicator { text-align: center; padding: 20px; color: #666; }
+    @media (max-width: 600px) {
+        .bbref-table-wrapper { font-size: 13px; }
+        .bbref-table th, .bbref-table td { padding: 5px 8px; }
+    }
+</style>
+
+<div id="toggle-buttons" class="mode-toggle">
+    <button id="elo-mode-btn" class="btn active">Elo Mode</button>
+    <button id="percent-mode-btn" class="btn">Percent of Max Mode</button>
 </div>
 
-<div id="biathlon-loading-indicator" class="text-center mb-3">
+<div id="loading-indicator">
     <p>Loading skier data...</p>
 </div>
 
-<div class="table-responsive">
-    <table id="biathlonDataTable" class="display table table-striped table-bordered">
-        <thead>
-            <!-- Headers will be dynamically populated -->
-        </thead>
-        <tbody>
-            <!-- Data will be dynamically populated -->
-        </tbody>
-    </table>
+<div class="bbref-table-wrapper" id="wrapper-skier" style="display: none;">
+    <div class="scroll-indicator-left"></div>
+    <div class="scroll-indicator-right active"></div>
+    <div class="bbref-table-container">
+        <table id="dataTableL" class="bbref-table">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
 
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.min.js"></script>
-
 <script>
-    $(document).ready(function() {
-        // Extract sex and ID from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const sex = urlParams.get('gender')?.toUpperCase();
-        const id = urlParams.get('id');
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sex = urlParams.get('gender')?.toUpperCase();
+    const id = urlParams.get('id');
 
-        let skierData = null;
-        let table;
-        let hasPercentageData = false;
+    let skierData = null;
+    const wrapper = document.getElementById('wrapper-skier');
+    const container = wrapper.querySelector('.bbref-table-container');
+    const table = document.getElementById('dataTableL');
 
-        // Column definitions for Elo Mode - Biathlon disciplines
-        const eloColumns = [
-            'Date', 'City', 'Country', 'Event', 'RaceType', 'Place', 'Season', 'Race', 'Age', 
-            'Elo', 'Sprint_Elo', 'Pursuit_Elo', 'Individual_Elo', 'MassStart_Elo'
-        ];
+    const eloColumns = ['Date', 'City', 'Country', 'Distance', 'MS', 'Technique', 'Place', 'Season', 'Race', 'Age',
+        'Elo', 'Distance_Elo', 'Distance_C_Elo', 'Distance_F_Elo', 'Sprint_Elo', 'Sprint_C_Elo', 'Sprint_F_Elo',
+        'Classic_Elo', 'Freestyle_Elo'];
 
-        // Column definitions for Percent of Max Mode - Biathlon disciplines
-        const pctColumns = [
-            'Date', 'City', 'Country', 'Event', 'RaceType', 'Place', 'Season', 'Race', 'Age', 
-            'Elo_Pct', 'Sprint_Elo_Pct', 'Pursuit_Elo_Pct', 'Individual_Elo_Pct', 'MassStart_Elo_Pct'
-        ];
+    const pctColumns = ['Date', 'City', 'Country', 'Distance', 'MS', 'Technique', 'Place', 'Season', 'Race', 'Age',
+        'Elo_Pct', 'Distance_Elo_Pct', 'Distance_C_Elo_Pct', 'Distance_F_Elo_Pct', 'Sprint_Elo_Pct',
+        'Sprint_C_Elo_Pct', 'Sprint_F_Elo_Pct', 'Classic_Elo_Pct', 'Freestyle_Elo_Pct'];
 
-        // Function to format data from the structure
-        function formatSkierData(groupData, id) {
-            const rawData = groupData[id];
-            if (!rawData) {
-                return [];
+    const titleMap = {
+        'Distance_Elo': 'Distance', 'Distance_C_Elo': 'Distance Classic', 'Distance_F_Elo': 'Distance Freestyle',
+        'Sprint_Elo': 'Sprint', 'Sprint_C_Elo': 'Sprint Classic', 'Sprint_F_Elo': 'Sprint Freestyle',
+        'Classic_Elo': 'Classic', 'Freestyle_Elo': 'Freestyle',
+        'Elo_Pct': 'Overall %', 'Distance_Elo_Pct': 'Distance %', 'Distance_C_Elo_Pct': 'Distance Classic %',
+        'Distance_F_Elo_Pct': 'Distance Freestyle %', 'Sprint_Elo_Pct': 'Sprint %',
+        'Sprint_C_Elo_Pct': 'Sprint Classic %', 'Sprint_F_Elo_Pct': 'Sprint Freestyle %',
+        'Classic_Elo_Pct': 'Classic %', 'Freestyle_Elo_Pct': 'Freestyle %'
+    };
+
+    function formatSkierData(groupData, id) {
+        const rawData = groupData[id];
+        if (!rawData) return [];
+
+        const dataArray = [];
+        const keys = Object.keys(rawData);
+        const rowCount = rawData[keys[0]].length;
+
+        // Calculate percentage columns if they don't exist
+        const eloKeys = keys.filter(key => key.includes('Elo') && !key.includes('_Pct'));
+        eloKeys.forEach(eloKey => {
+            const pctKey = `${eloKey}_Pct`;
+            if (!rawData[pctKey]) {
+                const eloValues = rawData[eloKey];
+                const maxElo = Math.max(...eloValues.map(val => parseFloat(val) || 0));
+                rawData[pctKey] = maxElo > 0 ? eloValues.map(val => ((parseFloat(val) || 0) / maxElo * 100).toFixed(2)) : Array(eloValues.length).fill(0);
             }
-            
-            // Transform the data into an array of objects
-            const dataArray = [];
-            const keys = Object.keys(rawData);
-            const rowCount = rawData[keys[0]].length;
-            
-            // Check if percentage columns exist
-            hasPercentageData = keys.some(key => key.endsWith('_Pct'));
-            
-            if (!hasPercentageData) {
-                // If percentage columns don't exist, we need to calculate them on the fly
-                // Add percentage columns for each Elo column
-                const eloKeys = keys.filter(key => key.includes('Elo') && !key.includes('_Pct'));
-                
-                eloKeys.forEach(eloKey => {
-                    const pctKey = `${eloKey}_Pct`;
-                    
-                    // Get all values for this Elo column
-                    const eloValues = rawData[eloKey];
-                    
-                    // Find the maximum value
-                    const maxElo = Math.max(...eloValues.map(val => parseFloat(val) || 0));
-                    
-                    // Calculate percentages
-                    if (maxElo > 0) {
-                        rawData[pctKey] = eloValues.map(val => {
-                            const elo = parseFloat(val) || 0;
-                            return ((elo / maxElo) * 100).toFixed(2);
-                        });
+        });
+
+        for (let i = 0; i < rowCount; i++) {
+            const rowObj = {};
+            Object.keys(rawData).forEach(key => { rowObj[key] = rawData[key][i]; });
+            dataArray.push(rowObj);
+        }
+        return dataArray;
+    }
+
+    function renderTable(data, columnsToShow) {
+        if (!data || data.length === 0) return;
+
+        const availableColumns = Object.keys(data[0]);
+        columnsToShow = columnsToShow.filter(col => availableColumns.includes(col));
+
+        let sortCol = 0;
+        let sortDir = 'desc';
+
+        const thead = table.querySelector('thead');
+        let headerRow = '<tr>';
+        columnsToShow.forEach((col, idx) => {
+            const title = titleMap[col] || col.replace(/_/g, ' ');
+            const stickyClass = idx === 0 ? 'sticky-col' : (idx === 1 ? 'sticky-col-2' : '');
+            headerRow += `<th class="${stickyClass}" data-col="${col}" data-idx="${idx}">${title}</th>`;
+        });
+        headerRow += '</tr>';
+        thead.innerHTML = headerRow;
+
+        let sortedData = [...data];
+
+        function buildRows() {
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = '';
+
+            sortedData.forEach(row => {
+                let tr = '<tr>';
+                columnsToShow.forEach((col, idx) => {
+                    const val = row[col];
+                    const stickyClass = idx === 0 ? 'sticky-col' : (idx === 1 ? 'sticky-col-2' : '');
+                    const numericClass = (col.includes('Elo') || col === 'Age' || col === 'Place') ? 'numeric' : '';
+
+                    if (col.includes('_Pct')) {
+                        tr += `<td class="${stickyClass} ${numericClass}">${val ? Math.round(parseFloat(val)) + '%' : ''}</td>`;
+                    } else if (col.includes('Elo') || col === 'Age') {
+                        tr += `<td class="${stickyClass} ${numericClass}">${val ? Math.round(parseFloat(val)) : ''}</td>`;
                     } else {
-                        rawData[pctKey] = Array(eloValues.length).fill(0);
+                        tr += `<td class="${stickyClass} ${numericClass}">${val || ''}</td>`;
                     }
                 });
-                
-                // Now we have percentage columns
-                hasPercentageData = true;
-            }
-            
-            for (let i = 0; i < rowCount; i++) {
-                const rowObj = {};
-                keys.forEach(key => {
-                    rowObj[key] = rawData[key][i];
-                });
-                dataArray.push(rowObj);
-            }
-            
-            return dataArray;
-        }
-
-        // Function to initialize DataTable
-        function initializeDataTable(data, columnsToShow) {
-            // Verify which columns actually exist in the data
-            if (data.length > 0) {
-                const availableColumns = Object.keys(data[0]);
-                // Filter out missing columns
-                columnsToShow = columnsToShow.filter(col => availableColumns.includes(col));
-            }
-
-            // Filter the data to only show columns present in the `columnsToShow` array
-            const columns = columnsToShow.map(function(key) {
-                let title = key;
-                
-                // Create more readable column titles for biathlon disciplines
-                const titleMap = {
-                    'Sprint_Elo': 'Sprint',
-                    'Pursuit_Elo': 'Pursuit',
-                    'Individual_Elo': 'Individual',
-                    'MassStart_Elo': 'Mass Start',
-                    'Sprint_Elo_Pct': 'Sprint %',
-                    'Pursuit_Elo_Pct': 'Pursuit %',
-                    'Individual_Elo_Pct': 'Individual %',
-                    'MassStart_Elo_Pct': 'Mass Start %',
-                    'Elo_Pct': 'Overall %'
-                };
-                
-                if (titleMap[key]) {
-                    title = titleMap[key];
-                } else {
-                    title = key.replace(/_/g, ' ').charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
-                }
-                
-                const columnDef = {
-                    data: key,
-                    title: title,
-                    visible: key !== 'ID',
-                    className: key.includes('Elo') ? 'text-right' : '',
-                    orderSequence: key.includes('Elo') ? ['desc', 'asc'] : ['asc', 'desc']
-                };
-                
-                // Add render function for Elo columns and Age to remove decimals
-                if (key.includes('Elo') || key === 'Age') {
-                    columnDef.render = function(data, type, row) {
-                        if (type === 'display' || type === 'filter') {
-                            // For display and filtering, convert to integer
-                            if (key.includes('_Pct')) {
-                                return data ? Math.round(parseFloat(data)) + '%' : data;
-                            } else {
-                                return data ? Math.round(parseFloat(data)) : data;
-                            }
-                        }
-                        // For sorting and other operations, use the original value
-                        return data;
-                    };
-                }
-                
-                return columnDef;
+                tr += '</tr>';
+                tbody.innerHTML += tr;
             });
 
-            if (table) {
-                table.clear();
-                table.destroy();
-            }
-
-            try {
-                table = $('#biathlonDataTable').DataTable({
-                    data: data,
-                    columns: columns,
-                    fixedColumns: { 
-                        left: 2 
-                    },
-                    scrollX: true,
-                    scrollY: '400px',
-                    scrollCollapse: true,
-                    paging: false,
-                    order: [[0, 'desc']] // Sort by date descending (most recent first)
-                });
-            } catch (error) {
-                $('#biathlonDataTable').html('<tr><td colspan="14">Error initializing data table</td></tr>');
-            }
+            updateScrollIndicators();
         }
 
-        // Function to fetch skier group
-        async function fetchSkierGroup(sex, id) {
-            const lookupUrl = `/python/biathlon/excel365/${sex}_skiers_lookup.json`;
-            console.log(`Fetching lookup from: ${lookupUrl}`);
-            try {
-                const response = await fetch(lookupUrl);
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch skier lookup: ${response.status}`);
-                }
-                const skiersList = await response.json();
-                console.log(`Loaded ${skiersList.length} skiers from lookup`);
-                console.log('First few lookup entries:', skiersList.slice(0, 3));
-                
-                const skierInfo = skiersList.find(skier => skier.id === parseInt(id));
-                
-                if (!skierInfo) {
-                    console.log(`Available IDs in lookup:`, skiersList.map(s => s.id).slice(0, 20));
-                    throw new Error(`Skier with ID ${id} not found in lookup table`);
-                }
-                
-                console.log('Found skier in lookup:', skierInfo);
-                return skierInfo.group;
-            } catch (error) {
-                console.error('Error in fetchSkierGroup:', error);
-                return null;
-            }
+        function updateScrollIndicators() {
+            const left = wrapper.querySelector('.scroll-indicator-left');
+            const right = wrapper.querySelector('.scroll-indicator-right');
+            left.classList.toggle('active', container.scrollLeft > 5);
+            right.classList.toggle('active', container.scrollLeft < container.scrollWidth - container.clientWidth - 5);
         }
 
-        // Function to fetch skier data
-        async function fetchSkierData(sex, id) {
-            $('#biathlon-loading-indicator').show();
-            
-            try {
-                console.log(`Fetching skier group for ${sex} ID ${id}`);
-                
-                // Fetch the skier's group
-                const group = await fetchSkierGroup(sex, id);
-                
-                if (!group) {
-                    throw new Error('Could not determine skier group');
+        container.addEventListener('scroll', updateScrollIndicators);
+
+        thead.querySelectorAll('th').forEach(th => {
+            th.addEventListener('click', () => {
+                const colKey = th.dataset.col;
+                const colIdx = parseInt(th.dataset.idx);
+
+                if (sortCol === colIdx) {
+                    sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+                } else {
+                    sortCol = colIdx;
+                    sortDir = colKey === 'Date' || colKey.includes('Elo') ? 'desc' : 'asc';
                 }
-                
-                console.log(`Found group: ${group}`);
-                
-                // Fetch the group data file using the group key
-                const groupUrl = `/python/biathlon/excel365/${sex}/skiers_${group}.json`;
-                console.log(`Fetching group data from: ${groupUrl}`);
-                
-                const response = await fetch(groupUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch group data: ${response.status}`);
-                }
-                
-                const groupData = await response.json();
-                console.log(`Group data contains ${Object.keys(groupData).length} skiers`);
-                console.log(`Available skier IDs in group:`, Object.keys(groupData).slice(0, 10));
-                
-                // Extract and format this skier's data
-                skierData = formatSkierData(groupData, id);
-                
-                if (!skierData || skierData.length === 0) {
-                    throw new Error(`No data found for skier ID ${id} in group ${group}`);
-                }
-                
-                console.log(`Formatted skier data: ${skierData.length} records`);
-                
-                // Initialize with default mode (Elo)
-                initializeDataTable(skierData, eloColumns);
-                
-                // Tell the radar chart that data is loaded (via custom event)
-                const dataLoadedEvent = new CustomEvent('skierDataLoaded', {
-                    detail: { 
-                        skierData: skierData,
-                        sex: sex,
-                        id: id
+
+                thead.querySelectorAll('th').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+                th.classList.add('sort-' + sortDir);
+
+                sortedData.sort((a, b) => {
+                    let aVal = a[colKey], bVal = b[colKey];
+                    if (colKey === 'Date') {
+                        aVal = aVal ? new Date(aVal) : new Date(0);
+                        bVal = bVal ? new Date(bVal) : new Date(0);
                     }
+                    let result;
+                    if (typeof aVal === 'number' && typeof bVal === 'number') {
+                        result = aVal - bVal;
+                    } else if (aVal instanceof Date) {
+                        result = aVal - bVal;
+                    } else {
+                        result = String(aVal || '').localeCompare(String(bVal || ''));
+                    }
+                    return sortDir === 'desc' ? -result : result;
                 });
-                document.dispatchEvent(dataLoadedEvent);
-                
-            } catch (error) {
-                console.error('Error details:', error);
-                $('#biathlonDataTable').html('<tr><td colspan="14">Error loading skier data. Please try again later.</td></tr>');
-            } finally {
-                $('#biathlon-loading-indicator').hide();
-            }
-        }
 
-        // Load initial data
-        if (sex && id) {
-            fetchSkierData(sex, id);
-        } else {
-            $('#biathlon-loading-indicator').hide();
-            $('#biathlonDataTable').html('<tr><td colspan="14">Missing gender or ID parameters</td></tr>');
-        }
-
-        // Event listeners for mode buttons
-        $('#biathlon-elo-mode-btn').click(function() {
-            $(this).addClass('btn-primary').removeClass('btn-secondary');
-            $('#biathlon-percent-mode-btn').addClass('btn-secondary').removeClass('btn-primary');
-            if (skierData) {
-                initializeDataTable(skierData, eloColumns);
-            }
+                buildRows();
+            });
         });
 
-        $('#biathlon-percent-mode-btn').click(function() {
-            $(this).addClass('btn-primary').removeClass('btn-secondary');
-            $('#biathlon-elo-mode-btn').addClass('btn-secondary').removeClass('btn-primary');
-            if (skierData) {
-                initializeDataTable(skierData, pctColumns);
-            }
-        });
+        // Initial sort by date descending
+        sortedData.sort((a, b) => new Date(b.Date || 0) - new Date(a.Date || 0));
+        buildRows();
+    }
+
+    async function fetchSkierGroup(sex, id) {
+        const lookupUrl = `/python/biathlon/excel365/${sex}_skiers_lookup.json`;
+        try {
+            const response = await fetch(lookupUrl);
+            const skiersList = await response.json();
+            const skierInfo = skiersList.find(skier => skier.id === parseInt(id));
+            return skierInfo ? skierInfo.group : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    async function fetchSkierData(sex, id) {
+        try {
+            const group = await fetchSkierGroup(sex, id);
+            if (!group) throw new Error('Could not determine skier group');
+
+            const groupUrl = `/python/biathlon/excel365/${sex}/skiers_${group}.json`;
+            const response = await fetch(groupUrl);
+            const groupData = await response.json();
+
+            skierData = formatSkierData(groupData, id);
+
+            document.getElementById('loading-indicator').style.display = 'none';
+            wrapper.style.display = 'block';
+
+            renderTable(skierData, eloColumns);
+
+            document.dispatchEvent(new CustomEvent('skierDataLoaded', {
+                detail: { skierData, sex, id }
+            }));
+        } catch (error) {
+            document.getElementById('loading-indicator').innerHTML = '<p>Error loading skier data. Please try again later.</p>';
+        }
+    }
+
+    if (sex && id) {
+        fetchSkierData(sex, id);
+    } else {
+        document.getElementById('loading-indicator').innerHTML = '<p>Missing gender or ID parameters</p>';
+    }
+
+    document.getElementById('elo-mode-btn').addEventListener('click', function() {
+        this.classList.add('active');
+        document.getElementById('percent-mode-btn').classList.remove('active');
+        if (skierData) renderTable(skierData, eloColumns);
     });
+
+    document.getElementById('percent-mode-btn').addEventListener('click', function() {
+        this.classList.add('active');
+        document.getElementById('elo-mode-btn').classList.remove('active');
+        if (skierData) renderTable(skierData, pctColumns);
+    });
+});
 </script>
