@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Australia Men",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Hugo Hinckfuss",
+      12412,
+      "Australia",
+      1,
+      0.003,
+      0.0004,
+      0.0116,
+      0.0828,
+      0.0021,
+      0.0051,
+      0.0062,
+      0.075
+    ],
+    [
+      "Seve De Campo",
+      8036,
+      "Australia",
+      2,
+      0.0062,
+      0.0091,
+      0.0083,
+      0.1064,
+      0.0021,
+      0.0051,
+      0.0062,
+      0.075
+    ],
+    [
+      "Lars Young Vik",
+      12386,
+      "Australia",
+      3,
+      0.0003,
+      0.0066,
+      0.0062,
+      0.1283,
+      0.0021,
+      0.0051,
+      0.0062,
+      0.075
+    ],
+    [
+      "Phil Bellingham",
+      1951,
+      "Australia",
+      4,
+      0.0,
+      0.0047,
+      0.0013,
+      0.0139,
+      0.0021,
+      0.0051,
+      0.0062,
+      0.075
+    ]
+  ]
+}

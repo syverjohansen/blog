@@ -16,8 +16,8 @@
       "Franco Dal Farra",
       "Argentina",
       8039,
-      0.0001,
-      0.001
+      0.0,
+      0.0009
     ],
     [
       "Argentina",
@@ -26,7 +26,7 @@
       "Argentina",
       14069,
       0.0018,
-      0.001
+      0.0009
     ],
     [
       "Australia",
@@ -34,8 +34,8 @@
       "Hugo Hinckfuss",
       "Australia",
       12412,
-      0.0037,
-      0.0033
+      0.0003,
+      0.0018
     ],
     [
       "Australia",
@@ -44,7 +44,7 @@
       "Australia",
       12386,
       0.003,
-      0.0033
+      0.0018
     ],
     [
       "Austria",
@@ -52,8 +52,8 @@
       "Benjamin Moser",
       "Austria",
       5989,
-      0.1204,
-      0.0684
+      0.1259,
+      0.0713
     ],
     [
       "Austria",
@@ -62,7 +62,7 @@
       "Austria",
       12673,
       0.0232,
-      0.0684
+      0.0713
     ],
     [
       "Bulgaria",
@@ -70,8 +70,8 @@
       "Mario Matikanov",
       "Bulgaria",
       16167,
-      0.0066,
-      0.0041
+      0.0028,
+      0.0023
     ],
     [
       "Bulgaria",
@@ -80,7 +80,7 @@
       "Bulgaria",
       17082,
       0.0019,
-      0.0041
+      0.0023
     ],
     [
       "Canada",
@@ -88,8 +88,8 @@
       "Xavier McKeever",
       "Canada",
       12676,
-      0.0263,
-      0.0223
+      0.0258,
+      0.0221
     ],
     [
       "Canada",
@@ -98,7 +98,7 @@
       "Canada",
       9225,
       0.0188,
-      0.0223
+      0.0221
     ],
     [
       "China",
@@ -106,8 +106,8 @@
       "Minglin Li",
       "China",
       18931,
-      0.0004,
-      0.0028
+      0.0,
+      0.0026
     ],
     [
       "China",
@@ -116,7 +116,7 @@
       "China",
       11198,
       0.005,
-      0.0028
+      0.0026
     ],
     [
       "Czechia",
@@ -124,8 +124,8 @@
       "Jiri Tuz",
       "Czechia",
       17348,
-      0.0941,
-      0.0553
+      0.1037,
+      0.06
     ],
     [
       "Czechia",
@@ -134,7 +134,7 @@
       "Czechia",
       3655,
       0.0215,
-      0.0553
+      0.06
     ],
     [
       "Estonia",
@@ -142,8 +142,8 @@
       "Alvar Johannes Alev",
       "Estonia",
       1996,
-      0.0285,
-      0.015
+      0.0288,
+      0.0153
     ],
     [
       "Estonia",
@@ -152,25 +152,25 @@
       "Estonia",
       12667,
       0.0033,
-      0.015
+      0.0153
     ],
     [
       "Finland",
       1,
-      "Lauri Vuorinen",
+      "Emil Liekari",
       "Finland",
-      2874,
-      0.2004,
-      0.1265
+      12440,
+      0.1778,
+      0.145
     ],
     [
       "Finland",
       2,
-      "Joni Mäki",
+      "Lauri Vuorinen",
       "Finland",
-      3586,
-      0.0622,
-      0.1265
+      2874,
+      0.1161,
+      0.145
     ],
     [
       "France",
@@ -178,8 +178,8 @@
       "Jules Chappaz",
       "France",
       12181,
-      0.4764,
-      0.2628
+      0.4899,
+      0.2706
     ],
     [
       "France",
@@ -187,8 +187,8 @@
       "Lucas Chanavat",
       "France",
       3582,
-      0.0766,
-      0.2628
+      0.0771,
+      0.2706
     ],
     [
       "Germany",
@@ -196,8 +196,8 @@
       "Jan Stölben",
       "Germany",
       14033,
-      0.1139,
-      0.0598
+      0.1287,
+      0.067
     ],
     [
       "Germany",
@@ -206,16 +206,16 @@
       "Germany",
       1488,
       0.0127,
-      0.0598
+      0.067
     ],
     [
       "Great Britain",
       1,
-      "Joe Davies",
+      "James Clugnet",
       "Great Britain",
-      14110,
-      0.0323,
-      0.0247
+      3615,
+      0.0588,
+      0.0372
     ],
     [
       "Great Britain",
@@ -224,25 +224,25 @@
       "Great Britain",
       277,
       0.0181,
-      0.0247
+      0.0372
     ],
     [
       "Hungary",
       1,
-      "Daniel Szollos",
+      "Adam Konya",
       "Hungary",
-      20938,
-      0.0051,
-      0.0026
+      2259,
+      0.0,
+      0.0004
     ],
     [
       "Hungary",
       2,
-      "Adam Konya",
+      "Adam Büki",
       "Hungary",
-      2259,
-      0.0005,
-      0.0026
+      8078,
+      0.0007,
+      0.0004
     ],
     [
       "Ireland",
@@ -250,8 +250,8 @@
       "Thomas Hjalmar Westgård",
       "Ireland",
       5553,
-      0.0154,
-      0.0081
+      0.0233,
+      0.0118
     ],
     [
       "Ireland",
@@ -260,7 +260,7 @@
       "Ireland",
       20668,
       0.0017,
-      0.0081
+      0.0118
     ],
     [
       "Italy",
@@ -268,8 +268,8 @@
       "Davide Graz",
       "Italy",
       12165,
-      0.1753,
-      0.4449
+      0.1777,
+      0.4444
     ],
     [
       "Italy",
@@ -277,17 +277,17 @@
       "Federico Pellegrino",
       "Italy",
       44,
-      0.6798,
-      0.4449
+      0.6797,
+      0.4444
     ],
     [
       "Japan",
       1,
-      "Haruki Yamashita",
+      "Ryo Hirose",
       "Japan",
-      6555,
-      0.0164,
-      0.0114
+      12172,
+      0.0232,
+      0.0147
     ],
     [
       "Japan",
@@ -296,7 +296,7 @@
       "Japan",
       5186,
       0.0071,
-      0.0114
+      0.0147
     ],
     [
       "Kazakhstan",
@@ -304,8 +304,8 @@
       "Sultan Bazarbekov",
       "Kazakhstan",
       17588,
-      0.0145,
-      0.0087
+      0.0219,
+      0.0122
     ],
     [
       "Kazakhstan",
@@ -314,7 +314,7 @@
       "Kazakhstan",
       11840,
       0.0036,
-      0.0087
+      0.0122
     ],
     [
       "Latvia",
@@ -322,8 +322,8 @@
       "Sandijs Suhanovs",
       "Latvia",
       17033,
-      0.0048,
-      0.0034
+      0.001,
+      0.0016
     ],
     [
       "Latvia",
@@ -332,25 +332,25 @@
       "Latvia",
       4153,
       0.0022,
-      0.0034
+      0.0016
     ],
     [
       "Lithuania",
       1,
-      "Modestas Vaiciulis",
+      "Matas Grazys",
       "Lithuania",
-      1652,
-      0.0034,
-      0.0028
+      19962,
+      0.0,
+      0.0015
     ],
     [
       "Lithuania",
       2,
-      "Matas Grazys",
+      "Modestas Vaiciulis",
       "Lithuania",
-      19962,
-      0.0022,
-      0.0028
+      1652,
+      0.0027,
+      0.0015
     ],
     [
       "Norway",
@@ -358,8 +358,8 @@
       "Harald Østberg Amundsen",
       "Norway",
       5449,
-      0.7746,
-      0.7469
+      0.7768,
+      0.7479
     ],
     [
       "Norway",
@@ -367,8 +367,8 @@
       "Johannes Høsflot Klæbo",
       "Norway",
       5164,
-      0.7227,
-      0.7469
+      0.7224,
+      0.7479
     ],
     [
       "Poland",
@@ -376,8 +376,8 @@
       "Dominik Bury",
       "Poland",
       3623,
-      0.0191,
-      0.0097
+      0.0196,
+      0.01
     ],
     [
       "Poland",
@@ -386,7 +386,7 @@
       "Poland",
       15530,
       0.0014,
-      0.0097
+      0.01
     ],
     [
       "Romania",
@@ -394,8 +394,8 @@
       "Ionut Alexandru Costea",
       "Romania",
       18954,
-      0.0094,
-      0.0053
+      0.0082,
+      0.0048
     ],
     [
       "Romania",
@@ -404,7 +404,7 @@
       "Romania",
       16169,
       0.0017,
-      0.0053
+      0.0048
     ],
     [
       "Slovakia",
@@ -412,8 +412,8 @@
       "Michal Adamov",
       "Slovakia",
       18776,
-      0.0127,
-      0.0068
+      0.0173,
+      0.0091
     ],
     [
       "Slovakia",
@@ -422,7 +422,7 @@
       "Slovakia",
       12779,
       0.0018,
-      0.0068
+      0.0091
     ],
     [
       "Slovenia",
@@ -430,8 +430,8 @@
       "Valeriy Gontar",
       "Slovenia",
       5765,
-      0.0119,
-      0.0106
+      0.0151,
+      0.0122
     ],
     [
       "Slovenia",
@@ -440,16 +440,16 @@
       "Slovenia",
       2808,
       0.0095,
-      0.0106
+      0.0122
     ],
     [
       "Spain",
       1,
-      "Marc Colell Pantebre",
+      "Bernat Selles Gasch",
       "Spain",
-      17552,
-      0.0006,
-      0.0191
+      17556,
+      0.0,
+      0.0188
     ],
     [
       "Spain",
@@ -457,8 +457,8 @@
       "Jaume Pueyo",
       "Spain",
       12682,
-      0.0352,
-      0.0191
+      0.0353,
+      0.0188
     ],
     [
       "Sweden",
@@ -466,8 +466,8 @@
       "Calle Halfvarsson",
       "Sweden",
       73,
-      0.1396,
-      0.2916
+      0.1457,
+      0.2936
     ],
     [
       "Sweden",
@@ -475,8 +475,8 @@
       "Edvin Anger",
       "Sweden",
       14039,
-      0.4241,
-      0.2916
+      0.424,
+      0.2936
     ],
     [
       "Switzerland",
@@ -484,8 +484,8 @@
       "Janik Riebli",
       "Switzerland",
       7725,
-      0.1624,
-      0.1575
+      0.1698,
+      0.1611
     ],
     [
       "Switzerland",
@@ -493,8 +493,8 @@
       "Valerio Grond",
       "Switzerland",
       12164,
-      0.1533,
-      0.1575
+      0.1535,
+      0.1611
     ],
     [
       "USA",
@@ -502,8 +502,8 @@
       "Ben Ogden",
       "USA",
       9179,
-      0.4954,
-      0.3503
+      0.4949,
+      0.3509
     ],
     [
       "USA",
@@ -511,26 +511,26 @@
       "Gus Schumacher",
       "USA",
       9172,
-      0.224,
-      0.3503
+      0.2239,
+      0.3509
     ],
     [
       "Ukraine",
       1,
-      "Ruslan Denysenko",
+      "Andriy Dotsenko",
       "Ukraine",
-      17447,
-      0.0005,
-      0.0012
+      20563,
+      0.0,
+      0.001
     ],
     [
       "Ukraine",
       2,
-      "Andriy Dotsenko",
+      "Ruslan Denysenko",
       "Ukraine",
-      20563,
-      0.0018,
-      0.0012
+      17447,
+      0.0019,
+      0.001
     ]
   ]
 }
