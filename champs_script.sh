@@ -144,7 +144,7 @@ for sport in "${SPORTS[@]}"; do
     post_content="---
 title: \"$CURRENT_YEAR Winter Olympics - $sport_display Predictions\"
 date: $(date -Iseconds)
-draft: true
+draft: false
 tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
 ---
 
@@ -168,7 +168,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
             post_content+="
 ##### $race_name
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "
         done <<< "$men_individual"
     fi
@@ -185,7 +185,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
             post_content+="
 ##### $race_name
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "
         done <<< "$ladies_individual"
     fi
@@ -202,7 +202,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
             post_content+="
 #### Men
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "
         fi
         if [[ -n "$ladies_relay" ]]; then
@@ -210,7 +210,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
             post_content+="
 #### Ladies
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "
         fi
     fi
@@ -227,7 +227,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
             post_content+="
 #### Men
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "
         fi
         if [[ -n "$ladies_ts" ]]; then
@@ -235,7 +235,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
             post_content+="
 #### Ladies
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "
         fi
     fi
@@ -252,7 +252,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
         post_content+="
 ### Summary
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "
     fi
 
@@ -275,7 +275,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
                 content+="
 ###### Podium Optimized
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
 "
             fi
             if [[ -n "$relay_win" ]]; then
@@ -283,7 +283,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
                 content+="
 ###### Win Optimized
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
 "
             fi
         fi
@@ -301,7 +301,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
                 content+="
 ###### Podium Optimized
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
 "
             fi
             if [[ -n "$ts_win" ]]; then
@@ -309,7 +309,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
                 content+="
 ###### Win Optimized
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$fn\" >}}
 "
             fi
         fi
@@ -332,7 +332,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
 
 ##### Individual
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "
             # Add relay and team sprint for this nation
             post_content+="$(add_nation_relay_ts "$nation" "Men")"
@@ -347,7 +347,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
 
 ##### Individual
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "
         fi
     fi
@@ -367,7 +367,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
 
 ##### Individual
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "
             # Add relay and team sprint for this nation
             post_content+="$(add_nation_relay_ts "$nation" "Ladies")"
@@ -382,7 +382,7 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
 
 ##### Individual
 
-{{< $sport/datatable \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "
         fi
     fi

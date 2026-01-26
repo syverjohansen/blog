@@ -1,0 +1,553 @@
+{{ $context := . }}
+{{ $dataPath := split (.Get 0) "/" }}
+{{ $data := .Site.Data }}
+{{ range $dataPath }}
+    {{ $data = index $data . }}
+{{ end }}
+
+{{ $headers := index $data "headers" }}
+{{ $rows := index $data "rows" }}
+
+<!-- Check if ID column exists and find its index -->
+{{ $idColumnIndex := -1 }}
+{{ range $index, $header := $headers }}
+    {{ if eq (lower $header) "id" }}
+        {{ $idColumnIndex = $index }}
+    {{ end }}
+{{ end }}
+
+<!-- Check if Sex column exists and find its index -->
+{{ $sexColumnIndex := -1 }}
+{{ range $index, $header := $headers }}
+    {{ if eq (lower $header) "sex" }}
+        {{ $sexColumnIndex = $index }}
+    {{ end }}
+{{ end }}
+
+<!-- Generate unique ID for this table -->
+{{ $tableId := printf "table-%s" (anchorize (.Get 0)) }}
+
+<div class="bbref-table-wrapper" id="wrapper-{{ $tableId }}">
+    <!-- Scroll shadow indicators -->
+    <div class="scroll-indicator-left"></div>
+    <div class="scroll-indicator-right active"></div>
+
+    <div class="bbref-table-container" id="container-{{ $tableId }}">
+        <table class="bbref-table" id="{{ $tableId }}">
+            <thead>
+                <tr>
+                    {{ range $index, $header := $headers }}
+                        {{ if and (ne $index $idColumnIndex) (ne $index $sexColumnIndex) }}
+                            <th{{ if eq $index 0 }} class="sticky-col"{{ end }}>{{ $header }}</th>
+                        {{ end }}
+                    {{ end }}
+                </tr>
+            </thead>
+            <tbody>
+                {{ range $rowIndex, $row := $rows }}
+                    <tr class="{{ cond (eq (mod $rowIndex 2) 0) "even" "odd" }}">
+                        {{ range $cellIndex, $cellValue := $row }}
+                            {{ if and (ne $cellIndex $idColumnIndex) (ne $cellIndex $sexColumnIndex) }}
+                                {{ if eq $cellIndex 0 }}
+                                    <td class="sticky-col">
+                                        {{ if ge $idColumnIndex 0 }}
+                                            {{ $id := index $row $idColumnIndex }}
+                                            {{ $gender := "L" }}
+                                            {{ if ge $sexColumnIndex 0 }}
+                                                {{ $sex := index $row $sexColumnIndex }}
+                                                {{ if eq $sex "M" }}
+                                                    {{ $gender = "M" }}
+                                                {{ end }}
+                                            {{ else }}
+                                                {{ $tableName := lower ($context.Get 0) }}
+                                                {{ if or (in $tableName "men") (in $tableName "m_") }}
+                                                    {{ $gender = "M" }}
+                                                {{ end }}
+                                            {{ end }}
+                                            <a href="/biathlon/skiers/skier/?id={{ $id }}&gender={{ $gender }}">{{ $cellValue }}</a>
+                                        {{ else }}
+                                            {{ $cellValue }}
+                                        {{ end }}
+                                    </td>
+                                {{ else }}
+                                    {{ if findRE `^-?\d*\.?\d+$` (string $cellValue) }}
+                                        {{ $numValue := float $cellValue }}
+                                        {{ if eq $numValue (float (printf "%.0f" $numValue)) }}
+                                            <td class="numeric">{{ printf "%.0f" $numValue }}</td>
+                                        {{ else }}
+                                            <td class="numeric">{{ printf "%.2f" $numValue }}</td>
+                                        {{ end }}
+                                    {{ else }}
+                                        <td>{{ $cellValue }}</td>
+                                    {{ end }}
+                                {{ end }}
+                            {{ end }}
+                        {{ end }}
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Table controls -->
+    <div class="bbref-table-controls">
+        <div class="entries-control">
+            <label>Show
+                <select class="entries-select" data-table="{{ $tableId }}">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="-1">All</option>
+                </select>
+                entries
+            </label>
+        </div>
+        <div class="search-control">
+            <label>Search: <input type="text" class="search-input" data-table="{{ $tableId }}" placeholder=""></label>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="bbref-pagination" id="pagination-{{ $tableId }}">
+        <span class="page-info"></span>
+        <div class="page-buttons">
+            <button class="page-btn prev" disabled>&laquo; Prev</button>
+            <button class="page-btn next">Next &raquo;</button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Baseball-Reference inspired table styles */
+.bbref-table-wrapper {
+    position: relative;
+    width: 100%;
+    margin: 1rem 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+}
+
+.bbref-table-container {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Custom scrollbar */
+.bbref-table-container::-webkit-scrollbar {
+    height: 8px;
+}
+.bbref-table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+.bbref-table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+.bbref-table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Scroll shadow indicators */
+.scroll-indicator-left,
+.scroll-indicator-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 5;
+}
+.scroll-indicator-left {
+    left: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.08), transparent);
+}
+.scroll-indicator-right {
+    right: 0;
+    background: linear-gradient(to left, rgba(0,0,0,0.08), transparent);
+}
+.scroll-indicator-left.active,
+.scroll-indicator-right.active {
+    opacity: 1;
+}
+
+/* Table styles */
+.bbref-table {
+    width: 100%;
+    min-width: max-content;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+}
+
+.bbref-table th,
+.bbref-table td {
+    padding: 6px 10px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid #ddd;
+}
+
+.bbref-table th {
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #ccc;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    cursor: pointer;
+    user-select: none;
+}
+
+.bbref-table th:hover {
+    background: linear-gradient(to bottom, #e9ecef, #dee2e6);
+}
+
+/* Sort indicators */
+.bbref-table th::after {
+    content: '';
+    display: inline-block;
+    margin-left: 5px;
+    opacity: 0.3;
+}
+.bbref-table th.sort-asc::after {
+    content: '\25B2';
+    opacity: 1;
+}
+.bbref-table th.sort-desc::after {
+    content: '\25BC';
+    opacity: 1;
+}
+
+/* Sticky first column */
+.bbref-table .sticky-col {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background: white;
+    border-right: 2px solid #ccc;
+    font-weight: 500;
+    min-width: 150px;
+    max-width: 220px;
+}
+
+.bbref-table th.sticky-col {
+    z-index: 4;
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+}
+
+/* Row striping */
+.bbref-table tbody tr.even {
+    background-color: #fff;
+}
+.bbref-table tbody tr.odd {
+    background-color: #f8f9fa;
+}
+.bbref-table tbody tr.even .sticky-col {
+    background-color: #fff;
+}
+.bbref-table tbody tr.odd .sticky-col {
+    background-color: #f8f9fa;
+}
+
+/* Hover effect */
+.bbref-table tbody tr:hover {
+    background-color: #e8f4fc !important;
+}
+.bbref-table tbody tr:hover .sticky-col {
+    background-color: #e8f4fc !important;
+}
+
+/* Numeric cells */
+.bbref-table td.numeric {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Links in table */
+.bbref-table a {
+    color: #0066cc;
+    text-decoration: none;
+}
+.bbref-table a:hover {
+    text-decoration: underline;
+}
+
+/* Controls */
+.bbref-table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.entries-select,
+.search-input {
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.search-input {
+    width: 200px;
+}
+
+/* Pagination */
+.bbref-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid #eee;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.page-info {
+    color: #666;
+    font-size: 13px;
+}
+
+.page-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.page-btn {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    .bbref-table-wrapper {
+        font-size: 13px;
+    }
+
+    .bbref-table th,
+    .bbref-table td {
+        padding: 5px 8px;
+    }
+
+    .bbref-table .sticky-col {
+        min-width: 120px;
+        max-width: 160px;
+    }
+
+    .bbref-table-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+    .bbref-pagination {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>
+
+<script>
+(function() {
+    const tableId = '{{ $tableId }}';
+    const wrapper = document.getElementById('wrapper-' + tableId);
+    const container = document.getElementById('container-' + tableId);
+    const table = document.getElementById(tableId);
+    const pagination = document.getElementById('pagination-' + tableId);
+
+    if (!table) return;
+
+    const tbody = table.querySelector('tbody');
+    const allRows = Array.from(tbody.querySelectorAll('tr'));
+    const headers = Array.from(table.querySelectorAll('thead th'));
+
+    let currentPage = 1;
+    let pageSize = 10;
+    let filteredRows = [...allRows];
+    let sortCol = -1;
+    let sortDir = 'desc';
+
+    // Scroll indicators
+    function updateScrollIndicators() {
+        const leftIndicator = wrapper.querySelector('.scroll-indicator-left');
+        const rightIndicator = wrapper.querySelector('.scroll-indicator-right');
+
+        if (container.scrollLeft > 5) {
+            leftIndicator.classList.add('active');
+        } else {
+            leftIndicator.classList.remove('active');
+        }
+
+        if (container.scrollLeft < container.scrollWidth - container.clientWidth - 5) {
+            rightIndicator.classList.add('active');
+        } else {
+            rightIndicator.classList.remove('active');
+        }
+    }
+
+    container.addEventListener('scroll', updateScrollIndicators);
+    window.addEventListener('resize', updateScrollIndicators);
+    setTimeout(updateScrollIndicators, 100);
+
+    // Sorting
+    headers.forEach((th, index) => {
+        th.addEventListener('click', () => {
+            if (sortCol === index) {
+                sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+            } else {
+                sortCol = index;
+                sortDir = 'desc';
+            }
+
+            headers.forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+            th.classList.add('sort-' + sortDir);
+
+            filteredRows.sort((a, b) => {
+                const aVal = a.cells[index].textContent.trim();
+                const bVal = b.cells[index].textContent.trim();
+
+                const aNum = parseFloat(aVal);
+                const bNum = parseFloat(bVal);
+
+                let result;
+                if (!isNaN(aNum) && !isNaN(bNum)) {
+                    result = aNum - bNum;
+                } else {
+                    result = aVal.localeCompare(bVal);
+                }
+
+                return sortDir === 'desc' ? -result : result;
+            });
+
+            currentPage = 1;
+            render();
+        });
+    });
+
+    // Search
+    const searchInput = wrapper.querySelector('.search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            filteredRows = allRows.filter(row => {
+                return Array.from(row.cells).some(cell =>
+                    cell.textContent.toLowerCase().includes(query)
+                );
+            });
+            currentPage = 1;
+            render();
+        });
+    }
+
+    // Page size
+    const entriesSelect = wrapper.querySelector('.entries-select');
+    if (entriesSelect) {
+        entriesSelect.addEventListener('change', (e) => {
+            pageSize = parseInt(e.target.value);
+            currentPage = 1;
+            render();
+        });
+    }
+
+    // Pagination buttons
+    const prevBtn = pagination.querySelector('.prev');
+    const nextBtn = pagination.querySelector('.next');
+    const pageInfo = pagination.querySelector('.page-info');
+
+    prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            render();
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        const totalPages = pageSize === -1 ? 1 : Math.ceil(filteredRows.length / pageSize);
+        if (currentPage < totalPages) {
+            currentPage++;
+            render();
+        }
+    });
+
+    function render() {
+        // Clear tbody
+        while (tbody.firstChild) {
+            tbody.removeChild(tbody.firstChild);
+        }
+
+        let displayRows;
+        let start, end;
+
+        if (pageSize === -1) {
+            displayRows = filteredRows;
+            start = 1;
+            end = filteredRows.length;
+        } else {
+            start = (currentPage - 1) * pageSize;
+            end = Math.min(start + pageSize, filteredRows.length);
+            displayRows = filteredRows.slice(start, end);
+            start = start + 1;
+        }
+
+        // Re-stripe and append rows
+        displayRows.forEach((row, idx) => {
+            row.classList.remove('even', 'odd');
+            row.classList.add(idx % 2 === 0 ? 'even' : 'odd');
+
+            // Update sticky col background
+            const stickyCol = row.querySelector('.sticky-col');
+            if (stickyCol) {
+                stickyCol.style.backgroundColor = idx % 2 === 0 ? '#fff' : '#f8f9fa';
+            }
+
+            tbody.appendChild(row);
+        });
+
+        // Update page info
+        if (filteredRows.length === 0) {
+            pageInfo.textContent = 'No matching entries';
+        } else {
+            pageInfo.textContent = `Showing ${start} to ${end} of ${filteredRows.length} entries`;
+        }
+
+        // Update button states
+        const totalPages = pageSize === -1 ? 1 : Math.ceil(filteredRows.length / pageSize);
+        prevBtn.disabled = currentPage <= 1;
+        nextBtn.disabled = currentPage >= totalPages || filteredRows.length === 0;
+
+        updateScrollIndicators();
+    }
+
+    render();
+})();
+</script>
