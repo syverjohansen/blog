@@ -338,10 +338,10 @@
                     // Build header
                     const thead = table.querySelector('thead');
                     let headerRow = '<tr>';
-                    headerRow += '<th class="sticky-col">Place</th>';
+                    headerRow += '<th class="sticky-col">Rank</th>';
 
                     keys.forEach((key, idx) => {
-                        if (key === 'ID' || key.endsWith('_Date')) return;
+                        if (key === 'ID' || key === 'Place' || key.endsWith('_Date')) return;
                         const isSkier = key === 'Skier';
                         const stickyClass = isSkier ? 'sticky-col-2' : '';
                         headerRow += `<th class="${stickyClass}" data-col="${key}">${key}</th>`;
@@ -372,7 +372,7 @@
                             tr += `<td class="sticky-col numeric">${start + idx + 1}</td>`;
 
                             keys.forEach(key => {
-                                if (key === 'ID' || key.endsWith('_Date')) return;
+                                if (key === 'ID' || key === 'Place' || key.endsWith('_Date')) return;
 
                                 if (key === 'Skier') {
                                     tr += `<td class="sticky-col-2"><a href="/alpine/skiers/skier/?id=${row.ID}&gender=${gender}">${row[key]}</a></td>`;

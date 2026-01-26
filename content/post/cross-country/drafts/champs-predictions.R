@@ -1020,8 +1020,8 @@ for (race_name in names(results_list)) {
     }
   }
 
-  # PHASE 2: Apply monotonic constraints (win <= podium <= top5 <= top10 <= top30)
-  log_info("  Applying monotonic constraints...")
+  # PHASE 2: Apply monotonic constraints (win <= podium <= top5 <= top10 <= top30 <= start)
+  log_info("  Applying monotonic constraints (including start_prob ceiling)...")
 
   # Store pre-hierarchy values
   race_results <- race_results %>%
@@ -1034,7 +1034,10 @@ for (race_name in names(results_list)) {
     )
 
   # For each row, ensure probabilities are monotonically non-decreasing
+  # AND all position probabilities are capped at start_prob
   for (row_i in 1:nrow(race_results)) {
+    start_ceiling <- race_results$start_prob[row_i]
+
     probs <- c(
       race_results$win_prob[row_i],
       race_results$podium_prob[row_i],
@@ -1043,12 +1046,18 @@ for (race_name in names(results_list)) {
       race_results$top30_prob[row_i]
     )
 
-    # Enforce: each probability >= previous one
+    # First, cap all position probabilities at start_prob
+    probs <- pmin(probs, start_ceiling)
+
+    # Then enforce: each probability >= previous one
     for (j in 2:length(probs)) {
       if (probs[j] < probs[j-1]) {
         probs[j] <- probs[j-1]
       }
     }
+
+    # Final cap at start_prob (in case monotonic adjustment pushed values up)
+    probs <- pmin(probs, start_ceiling)
 
     # Update row
     race_results$win_prob[row_i] <- probs[1]
@@ -1076,8 +1085,24 @@ for (race_name in names(results_list)) {
     }
   }
 
+  # PHASE 4: Final cap at start_prob (position probs can never exceed participation prob)
+  log_info("  Applying final start_prob ceiling...")
+  violations_fixed <- 0
+  for (row_i in 1:nrow(race_results)) {
+    start_ceiling <- race_results$start_prob[row_i]
+    for (col in prob_cols) {
+      if (race_results[[col]][row_i] > start_ceiling) {
+        race_results[[col]][row_i] <- start_ceiling
+        violations_fixed <- violations_fixed + 1
+      }
+    }
+  }
+  if (violations_fixed > 0) {
+    log_info(sprintf("    Fixed %d cases where position prob exceeded start_prob", violations_fixed))
+  }
+
   # Log final sums
-  log_info("  Sums AFTER normalization and monotonic constraints:")
+  log_info("  Sums AFTER normalization, monotonic constraints, and start_prob ceiling:")
   for (i in seq_along(prob_cols)) {
     col <- prob_cols[i]
     threshold <- position_thresholds[i]

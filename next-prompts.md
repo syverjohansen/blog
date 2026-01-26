@@ -1225,3 +1225,167 @@ The Python Excel-to-JSON converter creates one JSON file per sheet (e.g., `men_p
 |------|---------|
 | `champs-predictions.R` | Column order: Athlete, ID, Race (was Race, Athlete, ID) |
 | `champs_script.sh` | Nations restructured: Relay/TS under each nation |
+
+---
+
+## Baseball-Reference Style Tables (2026-01-26)
+
+### Overview
+
+Replaced DataTables-based table styling with a custom Baseball-Reference inspired design that is more mobile-friendly and uses native CSS sticky columns.
+
+### Changes Made
+
+#### 1. New `datatable2.html` Shortcode
+
+Created a new shortcode for each sport that uses:
+- Native CSS `position: sticky` for frozen first column (no jQuery/DataTables)
+- Full-width containers with horizontal scroll
+- Scroll shadow indicators (CSS gradients) to show scrollable content
+- Vanilla JavaScript for sorting, search, and pagination
+- Responsive design with `-webkit-overflow-scrolling: touch`
+
+**Files Created**:
+- `layouts/shortcodes/datatable2.html` (base version)
+- `layouts/shortcodes/{sport}/datatable2.html` for alpine, biathlon, cross-country, nordic-combined, skijump
+
+#### 2. Updated Table Partials (All 5 Sports)
+
+Updated all table partials with Baseball-Reference styling:
+
+**Files Updated** (for each sport: alpine, biathlon, cross-country, nordic-combined, skijump):
+- `layouts/partials/{sport}/all-table.html` - All-time Elo records
+- `layouts/partials/{sport}/ranks-table.html` - All-time rankings
+- `layouts/partials/{sport}/skier-table.html` - Individual skier race history
+- `layouts/partials/{sport}/small-table.html` - Current Elo tables
+
+**Key Styling Features**:
+- Sticky first column (Rank) and second column (Skier name with link)
+- Gradient header with hover effect
+- Alternating row colors with hover highlight
+- Sort indicators (▲/▼) on column headers
+- Scroll shadow indicators on left/right edges
+- Pagination with page info
+- Search/filter input
+- Entries per page selector (10/25/50/All)
+
+#### 3. Removed Redundant Place Column
+
+Fixed duplicate Rank/Place columns in `all-table.html` and `small-table.html`:
+
+**Issue**: Both tables showed a "Rank" column (dynamically calculated) AND a "Place" column from JSON data.
+
+**Fix**: Added `key === 'Place'` to the skip conditions when iterating over JSON keys:
+```javascript
+// all-table.html
+if (key === 'ID' || key === 'Place' || key.endsWith('_Date')) return;
+
+// small-table.html
+if (key === 'ID' || key === 'Place') return;
+```
+
+#### 4. Updated champs_script.sh
+
+- Changed `draft: true` to `draft: false`
+- Changed all `{sport}/datatable` references to `{sport}/datatable2`
+
+### Files Modified Summary
+
+| File | Changes |
+|------|---------|
+| `layouts/shortcodes/datatable2.html` | New Baseball-Reference style shortcode |
+| `layouts/shortcodes/{sport}/datatable2.html` | Sport-specific versions (5 files) |
+| `layouts/partials/{sport}/all-table.html` | New styling, removed Place column (5 files) |
+| `layouts/partials/{sport}/ranks-table.html` | New styling (5 files) |
+| `layouts/partials/{sport}/skier-table.html` | New styling (5 files) |
+| `layouts/partials/{sport}/small-table.html` | New styling, removed Place column (5 files) |
+| `champs_script.sh` | draft: false, datatable2 shortcode |
+
+---
+
+## Fix: Position Probabilities Exceeding Start Probability (2026-01-26)
+
+### Issue
+
+Position probabilities (Win, Podium, Top5, etc.) could exceed the participation/start probability after normalization. For example:
+- Start probability: 0.30 (30% chance of participating)
+- Win probability after normalization: 0.40 (40% chance of winning)
+
+This is logically impossible - you can't win a race you don't start.
+
+### Root Cause
+
+The normalization process applied scaling AFTER multiplying by start probability:
+
+1. Position probs multiplied by start_prob: `win_prob = raw_win_prob * start_prob` ✓
+2. Normalization scales up to hit target sums (e.g., win_prob sums to 1.0)
+3. This scaling can push position probs ABOVE start_prob ✗
+
+### Fix Applied
+
+Updated Step 4 (Normalization and Monotonic Constraints) in `champs-predictions.R`:
+
+**PHASE 2 Update** - Added start_prob as ceiling in monotonic constraints:
+```r
+# For each row, ensure probabilities are monotonically non-decreasing
+# AND all position probabilities are capped at start_prob
+for (row_i in 1:nrow(race_results)) {
+  start_ceiling <- race_results$start_prob[row_i]
+
+  probs <- c(win_prob, podium_prob, top5_prob, top10_prob, top30_prob)
+
+  # First, cap all position probabilities at start_prob
+  probs <- pmin(probs, start_ceiling)
+
+  # Then enforce: each probability >= previous one
+  for (j in 2:length(probs)) {
+    if (probs[j] < probs[j-1]) {
+      probs[j] <- probs[j-1]
+    }
+  }
+
+  # Final cap at start_prob (in case monotonic adjustment pushed values up)
+  probs <- pmin(probs, start_ceiling)
+
+  # Update row...
+}
+```
+
+**NEW PHASE 4** - Final cap after re-normalization:
+```r
+# PHASE 4: Final cap at start_prob (position probs can never exceed participation prob)
+log_info("  Applying final start_prob ceiling...")
+violations_fixed <- 0
+for (row_i in 1:nrow(race_results)) {
+  start_ceiling <- race_results$start_prob[row_i]
+  for (col in prob_cols) {
+    if (race_results[[col]][row_i] > start_ceiling) {
+      race_results[[col]][row_i] <- start_ceiling
+      violations_fixed <- violations_fixed + 1
+    }
+  }
+}
+if (violations_fixed > 0) {
+  log_info(sprintf("    Fixed %d cases where position prob exceeded start_prob", violations_fixed))
+}
+```
+
+### Constraint Chain
+
+The monotonic constraint chain is now:
+```
+win <= podium <= top5 <= top10 <= top30 <= start
+```
+
+### Note on Probability Sums
+
+After this fix, probability sums may be slightly lower than targets (e.g., win_prob sum < 1.0) if many athletes have low start probabilities. This is actually correct behavior - it represents uncertainty about participation affecting outcome distributions.
+
+### Files Modified
+
+| File | Lines | Changes |
+|------|-------|---------|
+| `champs-predictions.R` | ~1023-1059 | PHASE 2: Added start_prob ceiling to monotonic constraints |
+| `champs-predictions.R` | ~1078-1095 | NEW PHASE 4: Final cap at start_prob after re-normalization |
+
+---
