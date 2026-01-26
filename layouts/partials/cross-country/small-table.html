@@ -181,7 +181,7 @@
                     const thead = table.querySelector('thead');
                     let headerRow = '<tr><th class="sticky-col" data-col="rank">Rank</th>';
                     keys.forEach(key => {
-                        if (key === 'ID') return;
+                        if (key === 'ID' || key === 'Place') return;
                         const title = titleMap[key] || (key === 'Birthday' ? 'Age' : key);
                         const isSkier = key === 'Skier';
                         headerRow += `<th class="${isSkier ? 'sticky-col-2' : ''}" data-col="${key}">${title}</th>`;
@@ -205,7 +205,7 @@
                         displayData.forEach((row, idx) => {
                             let tr = `<tr><td class="sticky-col numeric">${start + idx + 1}</td>`;
                             keys.forEach(key => {
-                                if (key === 'ID') return;
+                                if (key === 'ID' || key === 'Place') return;
                                 if (key === 'Skier') {
                                     tr += `<td class="sticky-col-2"><a href="/cross-country/skiers/skier/?id=${row.ID}&gender=${gender}">${row[key]}</a></td>`;
                                 } else if (key === 'Birthday') {
