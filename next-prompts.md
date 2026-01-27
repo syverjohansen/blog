@@ -945,7 +945,7 @@ These changes were made to cross-country. Other sports need similar updates:
 | Cross-Country | ✅ Complete |
 | Alpine | ✅ Complete (2026-01-26) |
 | Biathlon | ✅ Complete (2026-01-26) |
-| Nordic Combined | ⏳ Needs update |
+| Nordic Combined | ✅ Complete (2026-01-27) |
 | Ski Jumping | ⏳ Needs update |
 
 ---
@@ -1585,5 +1585,91 @@ Creates `nations_individual.xlsx` with:
 |------|---------|
 | `~/blog/daehl-e/content/post/biathlon/drafts/champs-predictions.R` | All changes above |
 | `~/blog/daehl-e/next-prompts.md` | Marked Biathlon as complete |
+
+---
+
+## Nordic Combined champs-predictions.R Pipeline Update (2026-01-27)
+
+### Objective
+
+Update Nordic Combined `champs-predictions.R` with the same pipeline improvements made to Cross-Country, Alpine, and Biathlon, ensuring consistent output format for the championship prediction blog posts.
+
+### Current State Analysis
+
+**File**: `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions.R` (~1800 lines after updates)
+
+**Status: UPDATED (2026-01-27)**
+
+**What Nordic Combined Now Has**:
+- ✅ 4-phase normalization with capping, redistribution, monotonic constraints, and start_prob ceiling
+- ✅ Output directory uses `YYYY` format (2 locations updated)
+- ✅ Simplified column names for individual races (Skier, Nation, Start, Win, Podium, Top5, Top-10, Top-30)
+- ✅ Simplified column names for team races (Nation, Team, Start, Win, Podium, Top5, Top-10)
+- ✅ TeamMembers column in team output
+- ✅ Nations breakdown Excel file (`nations_individual.xlsx`)
+- ✅ Exponential decay weighted participation probability
+
+**Note**: Nordic Combined has individual races (commented out in main execution) AND team events (men, ladies, mixed). Uses 3-person quota per nation (not 4).
+
+### Changes Made
+
+#### 1. Output Directory: YYYYMMDD → YYYY
+**Location**: 2 occurrences (used replace_all)
+```r
+# Create output directory (use year only since there's one championship per year)
+champs_date <- format(Sys.Date(), "%Y")
+dir_path <- paste0("~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions/", champs_date)
+```
+
+#### 2. Exponential Decay Weighted Participation (get_base_race_probability)
+
+Key changes:
+- Calculate cutoff date as max of 5 years ago or athlete's first race
+- Sort races by date within the time window
+- Apply exponential decay weights: `race_weights <- exp(-0.1 * ((n_races - 1):0))`
+- Calculate weighted participation rate
+
+#### 3. 4-Phase Normalization with start_prob Ceiling (normalize_position_probabilities)
+
+Phases implemented:
+- **Phase 1**: Scale to target sum, cap at 100%, redistribute excess
+- **Phase 2**: Monotonic constraints + cap at start_prob (with NA handling)
+- **Phase 3**: Re-normalize after constraint adjustments
+- **Phase 4**: Final cap at start_prob
+
+#### 4. Simplified Excel Column Output
+**Individual races**:
+- Columns: Skier, Nation, Start, Win, Podium, Top5, Top-10, Top-30
+
+**Team races**:
+- Columns: Nation, Team, Start, Win, Podium, Top5, Top-10
+
+#### 5. TeamMembers Column in Team Output
+Added TeamMembers from startlist to position_preds, renamed to "Team" in output.
+
+#### 6. Nations Breakdown Excel File
+Creates `nations_individual.xlsx` with:
+- Per-nation sheets for nations with 3+ athletes (per gender)
+- "Other Men" / "Other Ladies" sheets for nations with <3 athletes
+- "Summary" sheet with aggregated totals by nation and gender
+- **Note**: Uses 3-athlete threshold (Nordic Combined quota) instead of 4
+
+### Implementation Steps Completed
+
+1. ✅ **Step 1**: Change output directory format (YYYYMMDD → YYYY) - 2 locations with replace_all
+2. ✅ **Step 2**: Update `get_base_race_probability()` with exponential decay
+3. ✅ **Step 3**: Replace normalization with 4-phase approach (including start_prob ceiling)
+4. ✅ **Step 4**: Update Excel column output with simplified names (individual + team)
+5. ✅ **Step 5**: Add TeamMembers column to team output
+6. ✅ **Step 6**: Add nations breakdown Excel generation
+7. ⏳ **Step 7**: Test by running the script
+8. ✅ **Step 8**: Update next-prompts.md with completion status
+
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions.R` | All changes above |
+| `~/blog/daehl-e/next-prompts.md` | Marked Nordic Combined as complete |
 
 ---

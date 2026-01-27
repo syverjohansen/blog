@@ -1,0 +1,45 @@
+{
+  "sheet_name": "France Men",
+  "headers": [
+    "Athlete",
+    "Race",
+    "Start",
+    "Win",
+    "Podium",
+    "Top5",
+    "Top-10",
+    "Top-30"
+  ],
+  "rows": [
+    [
+      "Laurent Muhlethaler",
+      "Men Individual",
+      100.0,
+      0,
+      0.871779190657523,
+      3.15823699760601,
+      6.95859595569634,
+      100.0
+    ],
+    [
+      "Matteo Baud",
+      "Men Individual",
+      100.0,
+      0,
+      0.0,
+      0.0,
+      0.296110466199844,
+      93.4028736423531
+    ],
+    [
+      "Gael Blondeau",
+      "Men Individual",
+      86.6,
+      0,
+      0.0,
+      0.210410981757075,
+      0.210246490926838,
+      56.2014611190877
+    ]
+  ]
+}

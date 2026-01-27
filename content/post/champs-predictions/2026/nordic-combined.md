@@ -1,7 +1,7 @@
 ---
 title: "2026 Winter Olympics - Nordic Combined Predictions"
-date: 2026-01-25T19:29:33+00:00
-draft: true
+date: 2026-01-27T16:28:12+00:00
+draft: false
 tags: ["predictions", "olympics", "2026", "nordic-combined"]
 ---
 
@@ -9,9 +9,61 @@ tags: ["predictions", "olympics", "2026", "nordic-combined"]
 
 ## Calendar
 
-[Position probability tables for each event]
+### Individual Races
 
 ## Nation
 
-[Nation breakdown tables]
+### Summary
+
+{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/nations_individual_Summary" >}}
+
+### Men
+
+#### Austria
+
+##### Individual
+
+{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/nations_individual_Austria_Men" >}}
+
+#### Finland
+
+##### Individual
+
+{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/nations_individual_Finland_Men" >}}
+
+#### France
+
+##### Individual
+
+{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/nations_individual_France_Men" >}}
+
+#### Germany
+
+##### Individual
+
+{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/nations_individual_Germany_Men" >}}
+
+#### Italy
+
+##### Individual
+
+{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/nations_individual_Italy_Men" >}}
+
+#### Japan
+
+##### Individual
+
+{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/nations_individual_Japan_Men" >}}
+
+#### Norway
+
+##### Individual
+
+{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/nations_individual_Norway_Men" >}}
+
+#### Other
+
+##### Individual
+
+{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/nations_individual_Other_Men" >}}
 

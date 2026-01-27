@@ -1,0 +1,77 @@
+{
+  "sheet_name": "Men Team Sprint",
+  "headers": [
+    "Nation",
+    "Team",
+    "Start",
+    "Win",
+    "Podium",
+    "Top5",
+    "Top-10"
+  ],
+  "rows": [
+    [
+      "Austria",
+      "Johannes Lamparter,Stefan Rettenegger",
+      100,
+      46.9444444444444,
+      100.0,
+      100.0,
+      100
+    ],
+    [
+      "Germany",
+      "Julian Schmid,Johannes Rydzek",
+      100,
+      28.8888888888889,
+      100.0,
+      100.0,
+      100
+    ],
+    [
+      "Norway",
+      "Jens Lurås Oftebro,Einar Lurås Oftebro",
+      100,
+      19.0277777777778,
+      35.9447004608295,
+      100.0,
+      100
+    ],
+    [
+      "Finland",
+      "Ilkka Herola,Eero Hirvonen",
+      100,
+      4.86111111111111,
+      17.741935483871,
+      82.7317431348115,
+      100
+    ],
+    [
+      "Italy",
+      "Samuel Costa,Aaron Kostner",
+      100,
+      0.138888888888889,
+      0.691244239631336,
+      3.9396068159434,
+      100
+    ],
+    [
+      "Japan",
+      "Ryota Yamamoto,Akito Watabe",
+      100,
+      0.138888888888889,
+      34.331797235023,
+      78.4638357508728,
+      100
+    ],
+    [
+      "France",
+      "Laurent Muhlethaler,Matteo Baud",
+      100,
+      0.0,
+      11.2903225806452,
+      12.1453559590083,
+      100
+    ]
+  ]
+}
