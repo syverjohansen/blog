@@ -1049,7 +1049,10 @@ process_gender_championships <- function(gender, races) {
   race_dfs <- list()
   unique_races <- unique(all_position_predictions$Race)
   log_info(paste("Creating sheets for races:", paste(unique_races, collapse=", ")))
-  
+
+  # Track race type counts to handle duplicates (e.g., two "Individual" races)
+  race_type_counts <- list()
+
   for(race_num in unique_races) {
     log_info(paste("Processing sheet for race", race_num))
     race_data <- all_position_predictions[all_position_predictions$Race == race_num, ]
@@ -1068,18 +1071,37 @@ process_gender_championships <- function(gender, races) {
         `Top-30` = prob_top30
       ) %>%
       arrange(desc(Win))
-    
+
     # Get race type for sheet naming using original race number
     race_types <- champs_races_with_race_num %>%
       filter(Sex == ifelse(gender == "men", "M", "L"), OriginalRaceNum == race_num) %>%
       pull(RaceType)
-    
+
     race_type <- if(length(race_types) > 0) race_types[1] else paste("Race", race_num)
-    sheet_name <- paste(ifelse(gender == "men", "Men", "Ladies"), race_type)
-    
+    gender_prefix <- ifelse(gender == "men", "Men", "Ladies")
+
+    # Track how many times we've seen this race type to handle duplicates
+    race_type_key <- paste(gender_prefix, race_type)
+    if (is.null(race_type_counts[[race_type_key]])) {
+      race_type_counts[[race_type_key]] <- 1
+    } else {
+      race_type_counts[[race_type_key]] <- race_type_counts[[race_type_key]] + 1
+    }
+
+    # Add number suffix if this race type appears multiple times
+    # Check total count of this race type in the schedule
+    total_of_type <- sum(champs_races_with_race_num$Sex == ifelse(gender == "men", "M", "L") &
+                         champs_races_with_race_num$RaceType == race_type)
+
+    if (total_of_type > 1) {
+      sheet_name <- paste(gender_prefix, race_type, race_type_counts[[race_type_key]])
+    } else {
+      sheet_name <- paste(gender_prefix, race_type)
+    }
+
     log_info(paste("Race", race_num, "- Race type:", race_type, "- Sheet name:", sheet_name))
     log_info(paste("Race data dimensions:", nrow(race_data), "x", ncol(race_data)))
-    
+
     race_dfs[[sheet_name]] <- race_data
   }
   
