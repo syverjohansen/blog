@@ -2,6 +2,7 @@
   "sheet_name": "Ladies Relay",
   "headers": [
     "Nation",
+    "Team",
     "Start",
     "Win",
     "Podium",
@@ -11,6 +12,7 @@
   "rows": [
     [
       "France",
+      "Lou Jeanmonnot,Julia Simon,Justine Braisaz-Bouchet,Oceane Michelon",
       100,
       69.3396226415094,
       96.2178517397882,
@@ -19,6 +21,7 @@
     ],
     [
       "Sweden",
+      "Hanna Öberg,Elvira Öberg,Anna Magnusson,Linn Gestblom",
       100,
       6.13207547169811,
       50.2646263733538,
@@ -27,6 +30,7 @@
     ],
     [
       "Germany",
+      "Franziska Preuss,Vanessa Voigt,Selina Grotian,Julia Tannheimer",
       100,
       5.18867924528302,
       39.1180774286352,
@@ -35,6 +39,7 @@
     ],
     [
       "Italy",
+      "Lisa Vittozzi,Dorothea Wierer,Rebecca Passler,Hannah Auchentaller",
       100,
       2.83018867924528,
       43.7449468019146,
@@ -43,6 +48,7 @@
     ],
     [
       "Norway",
+      "Maren Kirkeeide,Karoline Offigstad Knotten,Marthe Kråkstad Johansen,Ingrid Landmark Tandrevold",
       100,
       1.88679245283019,
       39.1180774286352,
@@ -51,6 +57,7 @@
     ],
     [
       "Austria",
+      "Lisa Theresa Hauser,Anna Gandler,Tamara Steiner,Anna Andexer",
       100,
       1.41509433962264,
       7.15061630415912,
@@ -59,6 +66,7 @@
     ],
     [
       "Bulgaria",
+      "Milena Todorova,Lora Hristova,Valentina Dimitrova,Maria Zdravkova",
       100,
       1.41509433962264,
       1.36157337367625,
@@ -67,6 +75,7 @@
     ],
     [
       "Canada",
+      "Nadia Moser,Shilo Rousseau,Pascale Paradis,Benita Peiffer",
       100,
       1.41509433962264,
       1.36157337367625,
@@ -75,6 +84,7 @@
     ],
     [
       "Lithuania",
+      "Sara Urumova,Judita Traubaite,Lidiia Zhurauskaite,Natalja Kocergina",
       100,
       1.41509433962264,
       1.36157337367625,
@@ -83,6 +93,7 @@
     ],
     [
       "Slovenia",
+      "Polona Klemencic,Lena Repinc,Anamarija Lampic,Manca Caserman",
       100,
       1.41509433962264,
       1.36157337367625,
@@ -91,6 +102,7 @@
     ],
     [
       "Switzerland",
+      "Amy Baserga,Lea Meier,Lena Häcki-Gross,Aita Gasparin",
       100,
       1.41509433962264,
       13.0393591428784,
@@ -99,6 +111,7 @@
     ],
     [
       "USA",
+      "Deedra Irwin,Margie Freed,Joanne Reid,Lucinda Anderson",
       100,
       1.41509433962264,
       1.36157337367625,
@@ -107,6 +120,7 @@
     ],
     [
       "Estonia",
+      "Regina Ermits,Susan Külm,Tuuli Tomingas,Johanna Talihaerm",
       100,
       0.943396226415094,
       0.907715582450832,
@@ -115,6 +129,7 @@
     ],
     [
       "Slovakia",
+      "Paulina Batovska Fialkova,Anastasiya Kuzmina,Ema Kapustova,Maria Remenova",
       100,
       0.943396226415094,
       0.907715582450832,
@@ -123,6 +138,7 @@
     ],
     [
       "Belgium",
+      "Maya Cloetens,Lotte Lie,Marisa Emonts,Eve Bouvard",
       100,
       0.471698113207547,
       0.453857791225416,
@@ -131,6 +147,7 @@
     ],
     [
       "Czechia",
+      "Marketa Davidova,Tereza Vobornikova,Lucie Charvatova,Jessica Jislova",
       100,
       0.471698113207547,
       0.453857791225416,
@@ -139,6 +156,7 @@
     ],
     [
       "Finland",
+      "Suvi Minkkinen,Venla Lehtonen,Inka Hämäläinen,Noora Kaisa Keränen",
       100,
       0.471698113207547,
       0.453857791225416,
@@ -147,6 +165,7 @@
     ],
     [
       "Latvia",
+      "Baiba Bendika,Estere Volfa,Sanita Bulina,Annija Sabule",
       100,
       0.471698113207547,
       0.453857791225416,
@@ -155,6 +174,7 @@
     ],
     [
       "Poland",
+      "Natalia Sidorowicz,Kamila Zuk,Joanna Jakiela,Anna Maka",
       100,
       0.471698113207547,
       0.453857791225416,
@@ -163,6 +183,7 @@
     ],
     [
       "Ukraine",
+      "Khrystyna Dmytrenko,Yuliia Dzhima,Anastasiya Merkushyna,Olena Horodna",
       100,
       0.471698113207547,
       0.453857791225416,

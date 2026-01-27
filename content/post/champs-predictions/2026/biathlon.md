@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Biathlon Predictions"
-date: 2026-01-27T02:07:57+00:00
+date: 2026-01-27T14:57:18+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "biathlon"]
 ---
@@ -46,6 +46,20 @@ tags: ["predictions", "olympics", "2026", "biathlon"]
 ##### Ladies Sprint
 
 {{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/ladies_position_probabilities_Ladies_Sprint" >}}
+
+### Relay
+
+#### Men
+
+{{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/men_relay_position_probabilities" >}}
+
+#### Ladies
+
+{{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/ladies_relay_position_probabilities" >}}
+
+#### Mixed
+
+{{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/mixed_relay_position_probabilities" >}}
 
 ## Nation
 

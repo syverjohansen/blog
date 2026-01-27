@@ -1566,6 +1566,14 @@ process_relay_championships <- function(relay_type, races) {
     position_preds <- data.frame(Nation = startlist_prepared$Nation)
     position_preds$Sex <- relay_type
     position_preds$Race <- race_info$original_race_num
+
+    # Add TeamMembers column if available in startlist
+    if("TeamMembers" %in% names(startlist_prepared)) {
+      position_preds$TeamMembers <- startlist_prepared$TeamMembers
+    } else if("TeamMembers" %in% names(startlist)) {
+      # Try to match from original startlist by Nation
+      position_preds$TeamMembers <- startlist$TeamMembers[match(position_preds$Nation, startlist$Nation)]
+    }
     
     # Add race probability column
     if(race_prob_col %in% names(startlist_prepared)) {
@@ -1719,14 +1727,20 @@ process_relay_championships <- function(relay_type, races) {
       mutate(
         Start = round(if("start_prob" %in% names(.)) start_prob else 100, 1)
       ) %>%
-      dplyr::select(Nation, Start, prob_top1, prob_top3, prob_top5, prob_top10) %>%
+      dplyr::select(Nation, any_of("TeamMembers"), Start, prob_top1, prob_top3, prob_top5, prob_top10) %>%
       rename(
         Win = prob_top1,
         Podium = prob_top3,
         Top5 = prob_top5,
         `Top-10` = prob_top10
-      ) %>%
-      arrange(desc(Win))
+      )
+
+    # Rename TeamMembers to "Team" if present
+    if("TeamMembers" %in% names(race_data)) {
+      race_data <- race_data %>% rename(Team = TeamMembers)
+    }
+
+    race_data <- race_data %>% arrange(desc(Win))
 
     # Get race type for sheet naming
     race_types <- champs_races_with_race_num %>%

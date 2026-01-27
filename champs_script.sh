@@ -191,9 +191,21 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
     fi
 
     # Add Relay section if files exist
+    # Check for cross-country style naming (relay_final_predictions_*) OR biathlon style (men_relay_position_probabilities)
     men_relay=$(find "$json_dir" -name "relay_final_predictions_Men_*.json" -type f 2>/dev/null | head -1)
     ladies_relay=$(find "$json_dir" -name "relay_final_predictions_Ladies_*.json" -type f 2>/dev/null | head -1)
-    if [[ -n "$men_relay" ]] || [[ -n "$ladies_relay" ]]; then
+    # Biathlon style naming
+    if [[ -z "$men_relay" ]]; then
+        men_relay=$(find "$json_dir" -name "men_relay_position_probabilities*.json" -type f 2>/dev/null | head -1)
+    fi
+    if [[ -z "$ladies_relay" ]]; then
+        ladies_relay=$(find "$json_dir" -name "ladies_relay_position_probabilities*.json" -type f 2>/dev/null | head -1)
+    fi
+    # Mixed relay (biathlon only)
+    mixed_relay=$(find "$json_dir" -name "mixed_relay_position_probabilities*.json" -type f 2>/dev/null | head -1)
+    single_mixed_relay=$(find "$json_dir" -name "single_mixed_relay_position_probabilities*.json" -type f 2>/dev/null | head -1)
+
+    if [[ -n "$men_relay" ]] || [[ -n "$ladies_relay" ]] || [[ -n "$mixed_relay" ]] || [[ -n "$single_mixed_relay" ]]; then
         post_content+="
 ### Relay
 "
@@ -209,6 +221,22 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
             filename=$(basename "$ladies_relay" .json)
             post_content+="
 #### Ladies
+
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+        fi
+        if [[ -n "$mixed_relay" ]]; then
+            filename=$(basename "$mixed_relay" .json)
+            post_content+="
+#### Mixed
+
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+        fi
+        if [[ -n "$single_mixed_relay" ]]; then
+            filename=$(basename "$single_mixed_relay" .json)
+            post_content+="
+#### Single Mixed
 
 {{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "

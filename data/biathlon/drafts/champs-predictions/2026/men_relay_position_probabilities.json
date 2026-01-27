@@ -2,6 +2,7 @@
   "sheet_name": "Men Relay",
   "headers": [
     "Nation",
+    "Team",
     "Start",
     "Win",
     "Podium",
@@ -11,6 +12,7 @@
   "rows": [
     [
       "Norway",
+      "Sturla Holm Lægreid,Johannes Dale-Skjevdal,Johan-Olav Botn,Martin Uldal",
       100,
       53.1791907514451,
       99.0458015267176,
@@ -19,6 +21,7 @@
     ],
     [
       "France",
+      "Eric Perrot,Quentin Fillon Maillet,Emilien Jacquelin,Fabien Claude",
       100,
       36.4161849710983,
       99.0458015267176,
@@ -27,6 +30,7 @@
     ],
     [
       "Sweden",
+      "Martin Ponsiluoma,Sebastian Samuelsson,Jesper Nelin,Victor Brandt",
       100,
       7.51445086705202,
       74.2843511450382,
@@ -35,6 +39,7 @@
     ],
     [
       "Germany",
+      "Philipp Nawrath,Philipp Horn,David Zobel,Justus Strelow",
       100,
       1.73410404624277,
       1.7175572519084,
@@ -43,6 +48,7 @@
     ],
     [
       "Italy",
+      "Tommaso Giacomel,Lukas Hofer,Patrick Braunhofer,Nicola Romanin",
       100,
       1.15606936416185,
       1.14503816793893,
@@ -51,6 +57,7 @@
     ],
     [
       "Austria",
+      "Simon Eder,Fabian Müllauer,Patrick Jacob,Dominic Unterweger",
       100,
       0.0,
       0.0,
@@ -59,6 +66,7 @@
     ],
     [
       "Belgium",
+      "Thierry Langer,Florent Claude,Sam Parmantier,Marek Mackels",
       100,
       0.0,
       0.0,
@@ -67,6 +75,7 @@
     ],
     [
       "Bulgaria",
+      "Blagoy Todev,Konstantin Vasilev,Vladimir Iliev,Anton Sinapov",
       100,
       0.0,
       0.0,
@@ -75,6 +84,7 @@
     ],
     [
       "Canada",
+      "Adam Runnalls,Zachary Connelly,Jasper Fleming,Logan Pletz",
       100,
       0.0,
       0.0,
@@ -83,6 +93,7 @@
     ],
     [
       "Czechia",
+      "Michal Krcmar,Vitezslav Hornig,Tomas Mikyska,Mikulas Karlik",
       100,
       0.0,
       0.0,
@@ -91,6 +102,7 @@
     ],
     [
       "Estonia",
+      "Kristo Siimer,Mark-Markos Kehva,Rene Zahkna,Jakob Kulbin",
       100,
       0.0,
       0.0,
@@ -99,6 +111,7 @@
     ],
     [
       "Finland",
+      "Tero Seppälä,Olli Hiidensalo,Tuomas Harjula,Otto Invenius",
       100,
       0.0,
       0.0,
@@ -107,6 +120,7 @@
     ],
     [
       "Latvia",
+      "Renars Birkentals,Andrejs Rastorgujevs,Rihards Lozbers,Edgars Mise",
       100,
       0.0,
       0.0,
@@ -115,6 +129,7 @@
     ],
     [
       "Lithuania",
+      "Vytautas Strolia,Maksim Fomin,Nikita Cigak,Karol Dombrovski",
       100,
       0.0,
       0.0,
@@ -123,6 +138,7 @@
     ],
     [
       "Poland",
+      "Konrad Badacz,Jan Gunka,Grzegorz Galica,Marcin Zawot",
       100,
       0.0,
       0.0,
@@ -131,6 +147,7 @@
     ],
     [
       "Romania",
+      "Dmitrii Shamaev,George Coltea,George Buta,Raul Flore",
       100,
       0.0,
       0.0,
@@ -139,6 +156,7 @@
     ],
     [
       "Slovenia",
+      "Lovro Planko,Jakov Fak,Anton Vidmar,Miha Dovzan",
       100,
       0.0,
       24.7614503816794,
@@ -147,6 +165,7 @@
     ],
     [
       "Switzerland",
+      "Niklas Hartweg,Sebastian Stalder,Joscha Burkhalter,Jeremy Finello",
       100,
       0.0,
       0.0,
@@ -155,6 +174,7 @@
     ],
     [
       "USA",
+      "Campbell Wright,Sean Doherty,Maxime Germain,Paul Schommer",
       100,
       0.0,
       0.0,
@@ -163,6 +183,7 @@
     ],
     [
       "Ukraine",
+      "Vitalii Mandzyn,Dmytro Pidruchnyi,Anton Dudchenko,Artem Tyshchenko",
       100,
       0.0,
       0.0,

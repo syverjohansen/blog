@@ -2,6 +2,7 @@
   "sheet_name": "Mixed Mixed Relay",
   "headers": [
     "Nation",
+    "Team",
     "Start",
     "Win",
     "Podium",
@@ -11,6 +12,7 @@
   "rows": [
     [
       "Sweden",
+      "Martin Ponsiluoma,Sebastian Samuelsson,Hanna Öberg,Elvira Öberg",
       100,
       48.0916030534351,
       100.0,
@@ -19,6 +21,7 @@
     ],
     [
       "France",
+      "Eric Perrot,Quentin Fillon Maillet,Lou Jeanmonnot,Julia Simon",
       100,
       42.5954198473282,
       100.0,
@@ -27,6 +30,7 @@
     ],
     [
       "Norway",
+      "Sturla Holm Lægreid,Johannes Dale-Skjevdal,Maren Kirkeeide,Karoline Offigstad Knotten",
       100,
       4.58015267175573,
       35.871743486974,
@@ -35,6 +39,7 @@
     ],
     [
       "Italy",
+      "Tommaso Giacomel,Lukas Hofer,Lisa Vittozzi,Dorothea Wierer",
       100,
       3.96946564885496,
       39.6793587174349,
@@ -43,6 +48,7 @@
     ],
     [
       "Germany",
+      "Philipp Nawrath,Philipp Horn,Franziska Preuss,Vanessa Voigt",
       100,
       0.763358778625954,
       12.4248496993988,
@@ -51,6 +57,7 @@
     ],
     [
       "Austria",
+      "Simon Eder,Fabian Müllauer,Lisa Theresa Hauser,Anna Gandler",
       100,
       0.0,
       1.00200400801603,
@@ -59,6 +66,7 @@
     ],
     [
       "Belgium",
+      "Thierry Langer,Florent Claude,Maya Cloetens,Lotte Lie",
       100,
       0.0,
       0.200400801603206,
@@ -67,6 +75,7 @@
     ],
     [
       "Bulgaria",
+      "Blagoy Todev,Konstantin Vasilev,Milena Todorova,Lora Hristova",
       100,
       0.0,
       0.0,
@@ -75,6 +84,7 @@
     ],
     [
       "Canada",
+      "Adam Runnalls,Zachary Connelly,Nadia Moser,Shilo Rousseau",
       100,
       0.0,
       0.0,
@@ -83,6 +93,7 @@
     ],
     [
       "Czechia",
+      "Michal Krcmar,Vitezslav Hornig,Marketa Davidova,Tereza Vobornikova",
       100,
       0.0,
       4.80961923847696,
@@ -91,6 +102,7 @@
     ],
     [
       "Estonia",
+      "Kristo Siimer,Mark-Markos Kehva,Regina Ermits,Susan Külm",
       100,
       0.0,
       0.0,
@@ -99,6 +111,7 @@
     ],
     [
       "Finland",
+      "Tero Seppälä,Olli Hiidensalo,Suvi Minkkinen,Venla Lehtonen",
       100,
       0.0,
       2.80561122244489,
@@ -107,6 +120,7 @@
     ],
     [
       "Kazakhstan",
+      "Vladislav Kireyev,Asset Dyussenov,Milana Geneva,Aisha Rakisheva",
       100,
       0.0,
       0.200400801603206,
@@ -115,6 +129,7 @@
     ],
     [
       "Latvia",
+      "Renars Birkentals,Andrejs Rastorgujevs,Baiba Bendika,Estere Volfa",
       100,
       0.0,
       0.0,
@@ -123,6 +138,7 @@
     ],
     [
       "Lithuania",
+      "Vytautas Strolia,Maksim Fomin,Sara Urumova,Judita Traubaite",
       100,
       0.0,
       0.0,
@@ -131,6 +147,7 @@
     ],
     [
       "Moldova",
+      "Pavel Magazeev,Maksim Makarov,Alina Stremous,Aliona Makarova",
       100,
       0.0,
       0.0,
@@ -139,6 +156,7 @@
     ],
     [
       "Poland",
+      "Konrad Badacz,Jan Gunka,Natalia Sidorowicz,Kamila Zuk",
       100,
       0.0,
       0.0,
@@ -147,6 +165,7 @@
     ],
     [
       "Romania",
+      "Dmitrii Shamaev,George Coltea,Anastasia Tolmacheva,Andreea Mezdrea",
       100,
       0.0,
       0.0,
@@ -155,6 +174,7 @@
     ],
     [
       "Slovakia",
+      "Jakub Borgula,Simon Adamov,Paulina Batovska Fialkova,Anastasiya Kuzmina",
       100,
       0.0,
       0.200400801603206,
@@ -163,6 +183,7 @@
     ],
     [
       "Slovenia",
+      "Lovro Planko,Jakov Fak,Polona Klemencic,Lena Repinc",
       100,
       0.0,
       0.0,
@@ -171,6 +192,7 @@
     ],
     [
       "Switzerland",
+      "Niklas Hartweg,Sebastian Stalder,Amy Baserga,Lea Meier",
       100,
       0.0,
       1.40280561122244,
@@ -179,6 +201,7 @@
     ],
     [
       "USA",
+      "Campbell Wright,Sean Doherty,Deedra Irwin,Margie Freed",
       100,
       0.0,
       0.0,
@@ -187,6 +210,7 @@
     ],
     [
       "Ukraine",
+      "Vitalii Mandzyn,Dmytro Pidruchnyi,Khrystyna Dmytrenko,Yuliia Dzhima",
       100,
       0.0,
       1.40280561122244,
