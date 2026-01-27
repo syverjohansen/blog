@@ -1673,3 +1673,130 @@ Creates `nations_individual.xlsx` with:
 | `~/blog/daehl-e/next-prompts.md` | Marked Nordic Combined as complete |
 
 ---
+
+## Team Sprint vs Team Separation (2026-01-27)
+
+### Overview
+
+Nordic Combined can have both Team Sprint (2-person teams) and regular Team (4-person teams) events at championships. Updated all three codebases to handle these as separate event types.
+
+### Changes Made
+
+#### 1. Python Startlist Scraper (`startlist-scrape-champs.py`)
+
+**File**: `~/ski/elo/python/nordic-combined/polars/startlist-scrape-champs.py`
+
+Separated Team Sprint from regular Team races:
+```python
+# Separate Team Sprint (2-person) from regular Team (4-person) events
+team_sprint_races = team_races[team_races['RaceType'].str.contains('Sprint', case=False, na=False)]
+regular_team_races = team_races[~team_races['RaceType'].str.contains('Sprint', case=False, na=False)]
+```
+
+Fixed qualifying threshold bug (was hardcoded to 3):
+```python
+# Determine minimum athletes needed based on race type
+if 'Sprint' in race_type:
+    min_athletes = 2  # Team Sprint needs 2 athletes
+else:
+    min_athletes = 4  # Regular Team needs 4 athletes
+
+qualifying_nations = []
+for nation in all_nations:
+    athletes = get_champs_athletes(nation, gender)
+    if len(athletes) >= min_athletes:
+        qualifying_nations.append(nation)
+```
+
+**Output Files**:
+- `startlist_champs_men_team_sprint.csv` - 2-person team sprint startlist
+- `startlist_champs_men_teams.csv` - 4-person regular team startlist
+- (Same pattern for ladies and mixed)
+
+#### 2. R Prediction Script (`champs-predictions.R`)
+
+**File**: `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions.R`
+
+Race filtering separation:
+```r
+# Create race dataframes for Team Sprint (2-person teams)
+men_team_sprint <- champs_races_with_race_num %>%
+  filter(grepl("Team Sprint", RaceType, ignore.case = TRUE) & Sex == "M")
+
+# Create race dataframes for regular Team events (4-person teams)
+# Team but NOT Team Sprint
+men_teams <- champs_races_with_race_num %>%
+  filter(grepl("Team", RaceType, ignore.case = TRUE) &
+         !grepl("Sprint", RaceType, ignore.case = TRUE) &
+         Sex == "M")
+```
+
+Updated function signature:
+```r
+process_team_championships <- function(gender, races, event_type = "teams")
+```
+
+Output file naming:
+```r
+summary_file <- file.path(dir_path, paste0(gender, "_", event_type, ".xlsx"))
+race_file <- file.path(dir_path, paste0(gender, "_", event_type, "_position_probabilities.xlsx"))
+```
+
+Main execution calls both:
+```r
+# Process Team Sprint Championships (2-person teams)
+if(nrow(men_team_sprint) > 0) {
+  men_team_sprint_results <- process_team_championships("men", men_team_sprint, "team_sprint")
+}
+
+# Process regular Team Championships (4-person teams)
+if(nrow(men_teams) > 0) {
+  men_team_results <- process_team_championships("men", men_teams, "teams")
+}
+```
+
+#### 3. Shell Script (`champs_script.sh`)
+
+**File**: `~/blog/daehl-e/champs_script.sh`
+
+Added separate Team Sprint and Team sections:
+```bash
+# Add Team Sprint section if files exist (2-person teams)
+men_ts=$(find "$json_dir" -name "team_sprint_final_predictions_Men_*.json" -type f 2>/dev/null | head -1)
+# Nordic Combined style naming for team sprint
+if [[ -z "$men_ts" ]]; then
+    men_ts=$(find "$json_dir" -name "men_team_sprint_position_probabilities*.json" -type f 2>/dev/null | head -1)
+fi
+
+# Add regular Team section if files exist (4-person teams)
+men_team=$(find "$json_dir" -name "men_teams_position_probabilities*.json" -type f 2>/dev/null | head -1)
+```
+
+### Bug Fixed
+
+**Issue**: USA (with 2 male athletes configured) wasn't appearing in Team Sprint startlist
+
+**Root Cause**: The qualifying threshold was hardcoded to `>= 3` athletes regardless of event type
+
+**Fix**: Made minimum athletes dynamic based on race type:
+- Team Sprint: 2 athletes minimum
+- Regular Team: 4 athletes minimum
+- Mixed Team Sprint: 1 per gender minimum
+- Regular Mixed Team: 2 per gender minimum
+
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `~/ski/elo/python/nordic-combined/polars/startlist-scrape-champs.py` | Separate Team Sprint from Team, dynamic qualifying threshold |
+| `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions.R` | Separate race filtering, event_type parameter, output file naming |
+| `~/blog/daehl-e/champs_script.sh` | Separate Team Sprint and Team sections in blog post |
+
+### Testing Status
+
+⏳ **Pending**: Run full pipeline to verify Team Sprint vs Team separation works correctly:
+1. `python startlist-scrape-champs.py` (generate startlists)
+2. `Rscript champs-predictions.R` (generate predictions)
+3. `./champs_script.sh 2026` (generate blog post)
+
+---

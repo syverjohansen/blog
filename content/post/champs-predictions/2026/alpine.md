@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Alpine Skiing Predictions"
-date: 2026-01-27T16:44:49+00:00
+date: 2026-01-27T18:16:33+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "alpine"]
 ---

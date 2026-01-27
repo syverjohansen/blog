@@ -66,26 +66,50 @@ ladies_races <- champs_races_with_race_num %>%
   dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
   rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
 
-# Create race dataframes for teams
+# Create race dataframes for Team Sprint (2-person teams)
+men_team_sprint <- champs_races_with_race_num %>%
+  filter(grepl("Team Sprint", RaceType, ignore.case = TRUE) & Sex == "M") %>%
+  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
+  rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
+
+ladies_team_sprint <- champs_races_with_race_num %>%
+  filter(grepl("Team Sprint", RaceType, ignore.case = TRUE) & Sex == "L") %>%
+  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
+  rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
+
+# Create race dataframes for regular Team events (4-person teams)
+# Team but NOT Team Sprint
 men_teams <- champs_races_with_race_num %>%
-  filter(grepl("Team", RaceType, ignore.case = TRUE) & Sex == "M") %>%  # RaceType contains "Team" and Sex is "M"
+  filter(grepl("Team", RaceType, ignore.case = TRUE) &
+         !grepl("Sprint", RaceType, ignore.case = TRUE) &
+         Sex == "M") %>%
   dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
   rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
 
 ladies_teams <- champs_races_with_race_num %>%
-  filter(grepl("Team", RaceType, ignore.case = TRUE) & Sex == "L") %>%  # RaceType contains "Team" and Sex is "L"
+  filter(grepl("Team", RaceType, ignore.case = TRUE) &
+         !grepl("Sprint", RaceType, ignore.case = TRUE) &
+         Sex == "L") %>%
   dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
   rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
 
-# Mixed team races (Sex == "Mixed")
+# Mixed team races (Sex == "Mixed") - can be either Team or Team Sprint
+mixed_team_sprint <- champs_races_with_race_num %>%
+  filter(grepl("Team Sprint", RaceType, ignore.case = TRUE) & Sex == "Mixed") %>%
+  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
+  rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
+
 mixed_teams <- champs_races_with_race_num %>%
-  filter(Sex == "Mixed") %>%  # Mixed team events have Sex == "Mixed"
+  filter(grepl("Team", RaceType, ignore.case = TRUE) &
+         !grepl("Sprint", RaceType, ignore.case = TRUE) &
+         Sex == "Mixed") %>%
   dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
   rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
 
 log_info(paste("Found", nrow(men_races), "men's individual races,", nrow(ladies_races), "ladies' individual races"))
+log_info(paste("Found", nrow(men_team_sprint), "men's team sprint,", nrow(ladies_team_sprint), "ladies' team sprint"))
 log_info(paste("Found", nrow(men_teams), "men's team races,", nrow(ladies_teams), "ladies' team races"))
-log_info(paste("Found", nrow(mixed_teams), "mixed team races"))
+log_info(paste("Found", nrow(mixed_team_sprint), "mixed team sprint,", nrow(mixed_teams), "mixed team races"))
 
 # Function to get points based on place for Nordic Combined
 get_points <- function(place, race_type = NULL) {
@@ -1096,8 +1120,9 @@ calculate_team_prev_points <- function(team_members, current_date, race_type, in
 }
 
 # Function to process team Championships (adapted from ski jumping)
-process_team_championships <- function(gender, races) {
-  log_info(paste("Processing", gender, "team Championships with", nrow(races), "races"))
+# event_type: "team_sprint" for 2-person teams, "teams" for 4-person teams
+process_team_championships <- function(gender, races, event_type = "teams") {
+  log_info(paste("Processing", gender, event_type, "Championships with", nrow(races), "races"))
   
   # Determine startlist file based on gender and race type
   if(gender == "mixed") {
@@ -1379,10 +1404,10 @@ process_team_championships <- function(gender, races) {
     dir.create(dir_path, recursive = TRUE)
   }
   
-  # Save team summary
-  summary_file <- file.path(dir_path, paste0(gender, "_teams.xlsx"))
+  # Save team summary (use event_type in filename)
+  summary_file <- file.path(dir_path, paste0(gender, "_", event_type, ".xlsx"))
   write.xlsx(team_summary, summary_file)
-  log_info(paste("Saved", gender, "team Championships summary to", summary_file))
+  log_info(paste("Saved", gender, event_type, "Championships summary to", summary_file))
   
   # Save detailed race-by-race results
   race_dfs <- list()
@@ -1423,10 +1448,10 @@ process_team_championships <- function(gender, races) {
     race_dfs[[sheet_name]] <- race_data
   }
   
-  # Save race-by-race results
-  race_file <- file.path(dir_path, paste0(gender, "_teams_position_probabilities.xlsx"))
+  # Save race-by-race results (use event_type in filename)
+  race_file <- file.path(dir_path, paste0(gender, "_", event_type, "_position_probabilities.xlsx"))
   write.xlsx(race_dfs, race_file)
-  log_info(paste("Saved", gender, "team race probabilities to", race_file))
+  log_info(paste("Saved", gender, event_type, "race probabilities to", race_file))
   
   return(list(
     summary = team_summary,
@@ -1604,20 +1629,36 @@ if(nrow(ladies_races) > 0) {
   ladies_results <- process_gender_championships("ladies", ladies_races)
 }
 
-# Process team Championships
+# Process Team Sprint Championships (2-person teams)
+if(nrow(men_team_sprint) > 0) {
+  log_info("Processing men's team sprint Championships")
+  men_team_sprint_results <- process_team_championships("men", men_team_sprint, "team_sprint")
+}
+
+if(nrow(ladies_team_sprint) > 0) {
+  log_info("Processing ladies' team sprint Championships")
+  ladies_team_sprint_results <- process_team_championships("ladies", ladies_team_sprint, "team_sprint")
+}
+
+if(nrow(mixed_team_sprint) > 0) {
+  log_info("Processing mixed team sprint Championships")
+  mixed_team_sprint_results <- process_team_championships("mixed", mixed_team_sprint, "team_sprint")
+}
+
+# Process regular Team Championships (4-person teams)
 if(nrow(men_teams) > 0) {
   log_info("Processing men's team Championships")
-  men_team_results <- process_team_championships("men", men_teams)
+  men_team_results <- process_team_championships("men", men_teams, "teams")
 }
 
 if(nrow(ladies_teams) > 0) {
-  log_info("Processing ladies' team Championships") 
-  ladies_team_results <- process_team_championships("ladies", ladies_teams)
+  log_info("Processing ladies' team Championships")
+  ladies_team_results <- process_team_championships("ladies", ladies_teams, "teams")
 }
 
 if(nrow(mixed_teams) > 0) {
   log_info("Processing mixed team Championships")
-  mixed_team_results <- process_team_championships("mixed", mixed_teams)
+  mixed_team_results <- process_team_championships("mixed", mixed_teams, "teams")
 }
 
 # ============================================================================

@@ -1,0 +1,131 @@
+{
+  "sheet_name": "Men Team Sprint",
+  "headers": [
+    "Nation",
+    "Team",
+    "Start",
+    "Win",
+    "Podium",
+    "Top5",
+    "Top-10"
+  ],
+  "rows": [
+    [
+      "Austria",
+      "Johannes Lamparter,Stefan Rettenegger",
+      100,
+      46.9444444444444,
+      100.0,
+      100.0,
+      100.0
+    ],
+    [
+      "Germany",
+      "Julian Schmid,Johannes Rydzek",
+      100,
+      28.8888888888889,
+      100.0,
+      100.0,
+      100.0
+    ],
+    [
+      "Norway",
+      "Jens Lurås Oftebro,Einar Lurås Oftebro",
+      100,
+      19.0277777777778,
+      30.2912621359223,
+      100.0,
+      100.0
+    ],
+    [
+      "Finland",
+      "Ilkka Herola,Eero Hirvonen",
+      100,
+      4.86111111111111,
+      14.9514563106796,
+      82.5968728755948,
+      100.0
+    ],
+    [
+      "Italy",
+      "Samuel Costa,Aaron Kostner",
+      100,
+      0.138888888888889,
+      0.58252427184466,
+      3.93318442264737,
+      100.0
+    ],
+    [
+      "Japan",
+      "Ryota Yamamoto,Akito Watabe",
+      100,
+      0.138888888888889,
+      28.9320388349515,
+      78.3359230843935,
+      100.0
+    ],
+    [
+      "China",
+      "Zihe Zhao,Jiawen Zhao",
+      100,
+      0.0,
+      0.0,
+      0.0,
+      1.3011515190944
+    ],
+    [
+      "Czechia",
+      "Jan Vytrval,Jiri Konvalinka",
+      100,
+      0.0,
+      0.776699029126214,
+      0.784089588404708,
+      78.3943790254375
+    ],
+    [
+      "France",
+      "Laurent Muhlethaler,Matteo Baud",
+      100,
+      0.0,
+      9.51456310679612,
+      9.60509745795767,
+      100.0
+    ],
+    [
+      "Poland",
+      "Kacper Jarzabek,Milosz Kzempek",
+      100,
+      0.0,
+      0.0,
+      0.0,
+      16.5896818684536
+    ],
+    [
+      "Slovenia",
+      "Vid Vrhovnik,Gašper Brecl",
+      100,
+      0.0,
+      1.55339805825243,
+      1.56817917680942,
+      76.1173638670223
+    ],
+    [
+      "USA",
+      "Niklas Malacinski,Ben Loomis",
+      100,
+      0.0,
+      0.194174757281553,
+      0.327765368553948,
+      55.9495153210591
+    ],
+    [
+      "Ukraine",
+      "Dmytro Mazurchuk,Oleksandr Shumbarets",
+      100,
+      0.0,
+      0.0,
+      0.0,
+      2.9275909179624
+    ]
+  ]
+}
