@@ -1,0 +1,968 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Avg Win",
+    "Avg Podium",
+    "Avg Top5",
+    "Avg Top-10",
+    "Races"
+  ],
+  "rows": [
+    [
+      "Eric Perrot",
+      "France",
+      24.9,
+      54.0,
+      60.3,
+      75.3,
+      4
+    ],
+    [
+      "Tommaso Giacomel",
+      "Italy",
+      15.0,
+      39.4,
+      56.6,
+      85.9,
+      4
+    ],
+    [
+      "Sturla Holm Lægreid",
+      "Norway",
+      8.7,
+      33.2,
+      52.0,
+      75.3,
+      4
+    ],
+    [
+      "Johannes Dale-Skjevdal",
+      "Norway",
+      6.0,
+      20.9,
+      33.5,
+      52.8,
+      4
+    ],
+    [
+      "Sebastian Samuelsson",
+      "Sweden",
+      5.5,
+      12.0,
+      24.8,
+      48.7,
+      4
+    ],
+    [
+      "Quentin Fillon Maillet",
+      "France",
+      3.9,
+      11.5,
+      20.9,
+      47.1,
+      4
+    ],
+    [
+      "Vetle Sjåstad Christiansen",
+      "Norway",
+      3.8,
+      11.6,
+      20.1,
+      37.0,
+      4
+    ],
+    [
+      "Emilien Jacquelin",
+      "France",
+      3.7,
+      10.9,
+      20.3,
+      46.1,
+      4
+    ],
+    [
+      "Johan-Olav Botn",
+      "Norway",
+      3.4,
+      11.3,
+      15.9,
+      25.9,
+      4
+    ],
+    [
+      "Philipp Nawrath",
+      "Germany",
+      3.2,
+      11.3,
+      22.4,
+      46.7,
+      4
+    ],
+    [
+      "Martin Ponsiluoma",
+      "Sweden",
+      3.0,
+      15.2,
+      28.7,
+      58.2,
+      4
+    ],
+    [
+      "Lukas Hofer",
+      "Italy",
+      1.5,
+      7.3,
+      15.1,
+      37.4,
+      4
+    ],
+    [
+      "Campbell Wright",
+      "USA",
+      1.3,
+      8.2,
+      14.8,
+      39.1,
+      4
+    ],
+    [
+      "Fabien Claude",
+      "France",
+      1.3,
+      6.1,
+      13.5,
+      32.4,
+      4
+    ],
+    [
+      "Martin Uldal",
+      "Norway",
+      1.3,
+      6.0,
+      12.0,
+      23.7,
+      4
+    ],
+    [
+      "Isak Leknes Frey",
+      "Norway",
+      1.2,
+      6.6,
+      14.2,
+      33.4,
+      4
+    ],
+    [
+      "Niklas Hartweg",
+      "Switzerland",
+      1.1,
+      2.1,
+      4.5,
+      14.6,
+      4
+    ],
+    [
+      "Philipp Horn",
+      "Germany",
+      1.1,
+      2.8,
+      5.5,
+      15.4,
+      4
+    ],
+    [
+      "Andrejs Rastorgujevs",
+      "Latvia",
+      1.0,
+      1.5,
+      2.1,
+      5.0,
+      4
+    ],
+    [
+      "Justus Strelow",
+      "Germany",
+      1.0,
+      2.2,
+      4.5,
+      11.2,
+      4
+    ],
+    [
+      "Vitezslav Hornig",
+      "Czechia",
+      0.8,
+      2.3,
+      4.6,
+      16.7,
+      4
+    ],
+    [
+      "Michal Krcmar",
+      "Czechia",
+      0.7,
+      2.7,
+      5.7,
+      17.5,
+      4
+    ],
+    [
+      "Jakov Fak",
+      "Slovenia",
+      0.6,
+      1.0,
+      1.6,
+      5.3,
+      4
+    ],
+    [
+      "Jesper Nelin",
+      "Sweden",
+      0.6,
+      1.6,
+      3.1,
+      11.9,
+      4
+    ],
+    [
+      "Emilien Claude",
+      "France",
+      0.5,
+      1.1,
+      2.5,
+      6.9,
+      4
+    ],
+    [
+      "Tero Seppälä",
+      "Finland",
+      0.5,
+      1.7,
+      5.1,
+      13.3,
+      4
+    ],
+    [
+      "David Zobel",
+      "Germany",
+      0.4,
+      2.0,
+      4.8,
+      13.4,
+      4
+    ],
+    [
+      "Sebastian Stalder",
+      "Switzerland",
+      0.4,
+      1.1,
+      2.4,
+      8.9,
+      4
+    ],
+    [
+      "Olli Hiidensalo",
+      "Finland",
+      0.3,
+      0.8,
+      2.3,
+      7.7,
+      4
+    ],
+    [
+      "Joscha Burkhalter",
+      "Switzerland",
+      0.2,
+      0.6,
+      1.2,
+      4.4,
+      4
+    ],
+    [
+      "Konrad Badacz",
+      "Poland",
+      0.2,
+      0.8,
+      1.8,
+      5.0,
+      4
+    ],
+    [
+      "Oscar Lombardot",
+      "France",
+      0.2,
+      1.0,
+      1.9,
+      6.6,
+      4
+    ],
+    [
+      "Renars Birkentals",
+      "Latvia",
+      0.2,
+      0.6,
+      1.3,
+      3.6,
+      4
+    ],
+    [
+      "Simon Eder",
+      "Austria",
+      0.2,
+      0.6,
+      1.6,
+      6.4,
+      4
+    ],
+    [
+      "Victor Brandt",
+      "Sweden",
+      0.2,
+      0.7,
+      1.8,
+      4.7,
+      4
+    ],
+    [
+      "Vitalii Mandzyn",
+      "Ukraine",
+      0.2,
+      1.3,
+      3.5,
+      11.4,
+      4
+    ],
+    [
+      "Vytautas Strolia",
+      "Lithuania",
+      0.2,
+      0.7,
+      1.8,
+      5.2,
+      4
+    ],
+    [
+      "Adam Runnalls",
+      "Canada",
+      0.1,
+      0.1,
+      0.3,
+      0.9,
+      4
+    ],
+    [
+      "Anton Vidmar",
+      "Slovenia",
+      0.1,
+      0.2,
+      0.4,
+      1.1,
+      4
+    ],
+    [
+      "Dmitrii Shamaev",
+      "Romania",
+      0.1,
+      0.2,
+      0.4,
+      0.8,
+      4
+    ],
+    [
+      "Dmytro Pidruchnyi",
+      "Ukraine",
+      0.1,
+      0.5,
+      1.3,
+      6.5,
+      4
+    ],
+    [
+      "Florent Claude",
+      "Belgium",
+      0.1,
+      0.2,
+      0.4,
+      1.0,
+      4
+    ],
+    [
+      "Jakob Kulbin",
+      "Estonia",
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Jakub Borgula",
+      "Slovakia",
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Kristo Siimer",
+      "Estonia",
+      0.1,
+      0.1,
+      0.3,
+      0.9,
+      4
+    ],
+    [
+      "Lovro Planko",
+      "Slovenia",
+      0.1,
+      0.2,
+      0.4,
+      1.3,
+      4
+    ],
+    [
+      "Maksim Fomin",
+      "Lithuania",
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Malte Stefansson",
+      "Sweden",
+      0.1,
+      0.1,
+      0.2,
+      0.7,
+      4
+    ],
+    [
+      "Mark-Markos Kehva",
+      "Estonia",
+      0.1,
+      0.1,
+      0.1,
+      0.2,
+      4
+    ],
+    [
+      "Maxime Germain",
+      "USA",
+      0.1,
+      0.2,
+      0.5,
+      1.3,
+      4
+    ],
+    [
+      "Miha Dovzan",
+      "Slovenia",
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Paul Schommer",
+      "USA",
+      0.1,
+      0.1,
+      0.1,
+      0.3,
+      4
+    ],
+    [
+      "Rene Zahkna",
+      "Estonia",
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Sean Doherty",
+      "USA",
+      0.1,
+      0.2,
+      0.5,
+      1.6,
+      4
+    ],
+    [
+      "Thierry Langer",
+      "Belgium",
+      0.1,
+      0.5,
+      1.1,
+      3.2,
+      4
+    ],
+    [
+      "Tomas Mikyska",
+      "Czechia",
+      0.1,
+      0.3,
+      0.7,
+      2.3,
+      4
+    ],
+    [
+      "Tuomas Harjula",
+      "Finland",
+      0.1,
+      0.2,
+      0.4,
+      1.1,
+      4
+    ],
+    [
+      "Vladislav Kireyev",
+      "Kazakhstan",
+      0.1,
+      0.1,
+      0.3,
+      0.9,
+      4
+    ],
+    [
+      "Anton Dudchenko",
+      "Ukraine",
+      0.0,
+      0.0,
+      0.2,
+      0.6,
+      4
+    ],
+    [
+      "Anton Sinapov",
+      "Bulgaria",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Artem Tyshchenko",
+      "Ukraine",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Asset Dyussenov",
+      "Kazakhstan",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Blagoy Todev",
+      "Bulgaria",
+      0.0,
+      0.1,
+      0.2,
+      0.6,
+      4
+    ],
+    [
+      "Denys Nasyko",
+      "Ukraine",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Dominic Unterweger",
+      "Austria",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Edgars Mise",
+      "Latvia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Elia Zeni",
+      "Italy",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Fabian Müllauer",
+      "Austria",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "George Buta",
+      "Romania",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "George Coltea",
+      "Romania",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Grzegorz Galica",
+      "Poland",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Henning Sjökvist",
+      "Sweden",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Iulian Lukin",
+      "Moldova",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "James Pacal",
+      "Switzerland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Jan Gunka",
+      "Poland",
+      0.0,
+      0.3,
+      0.6,
+      2.0,
+      4
+    ],
+    [
+      "Jasper Fleming",
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Jeremy Finello",
+      "Switzerland",
+      0.0,
+      0.0,
+      0.1,
+      0.2,
+      4
+    ],
+    [
+      "Jimi Klemettinen",
+      "Finland",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Karol Dombrovski",
+      "Lithuania",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Konstantin Vasilev",
+      "Bulgaria",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Kresimir Crnkovic",
+      "Croatia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Logan Pletz",
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Lucas Fratzscher",
+      "Germany",
+      0.0,
+      0.2,
+      0.5,
+      1.2,
+      4
+    ],
+    [
+      "Maksim Makarov",
+      "Moldova",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Marcin Zawot",
+      "Poland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Marek Mackels",
+      "Belgium",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Matic Repnik",
+      "Slovenia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Matija Legovic",
+      "Croatia",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Mikito Tachizaki",
+      "Japan",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Mikulas Karlik",
+      "Czechia",
+      0.0,
+      0.1,
+      0.1,
+      0.3,
+      4
+    ],
+    [
+      "Nicola Romanin",
+      "Italy",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Nikita Cigak",
+      "Lithuania",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Otto Invenius",
+      "Finland",
+      0.0,
+      0.1,
+      0.3,
+      0.8,
+      4
+    ],
+    [
+      "Patrick Braunhofer",
+      "Italy",
+      0.0,
+      0.1,
+      0.2,
+      0.5,
+      4
+    ],
+    [
+      "Patrick Jacob",
+      "Austria",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Pavel Magazeev",
+      "Moldova",
+      0.0,
+      0.1,
+      0.3,
+      0.9,
+      4
+    ],
+    [
+      "Petr Hak",
+      "Czechia",
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      4
+    ],
+    [
+      "Raul Flore",
+      "Romania",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Rihards Lozbers",
+      "Latvia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Sam Parmantier",
+      "Belgium",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Simon Adamov",
+      "Slovakia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Sondre Slettemark",
+      "Greenland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Timofei Lapshin",
+      "South Korea",
+      0.0,
+      0.2,
+      0.4,
+      1.3,
+      4
+    ],
+    [
+      "Vladimir Iliev",
+      "Bulgaria",
+      0.0,
+      0.0,
+      0.1,
+      0.5,
+      4
+    ],
+    [
+      "Xingyuan Yan",
+      "China",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Zachary Connelly",
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ]
+  ]
+}

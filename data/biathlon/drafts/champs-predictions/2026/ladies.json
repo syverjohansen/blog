@@ -1,0 +1,977 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Avg Win",
+    "Avg Podium",
+    "Avg Top5",
+    "Avg Top-10",
+    "Races"
+  ],
+  "rows": [
+    [
+      "Lou Jeanmonnot",
+      "France",
+      23.5,
+      44.8,
+      54.8,
+      66.6,
+      4
+    ],
+    [
+      "Lisa Vittozzi",
+      "Italy",
+      11.6,
+      30.6,
+      43.7,
+      64.5,
+      4
+    ],
+    [
+      "Elvira Öberg",
+      "Sweden",
+      7.4,
+      22.2,
+      33.8,
+      57.1,
+      4
+    ],
+    [
+      "Julia Simon",
+      "France",
+      6.9,
+      16.4,
+      23.4,
+      42.5,
+      4
+    ],
+    [
+      "Maren Kirkeeide",
+      "Norway",
+      6.6,
+      25.1,
+      40.8,
+      69.5,
+      4
+    ],
+    [
+      "Hanna Öberg",
+      "Sweden",
+      6.4,
+      25.0,
+      37.9,
+      61.7,
+      4
+    ],
+    [
+      "Suvi Minkkinen",
+      "Finland",
+      6.3,
+      23.1,
+      36.8,
+      63.1,
+      4
+    ],
+    [
+      "Justine Braisaz-Bouchet",
+      "France",
+      4.9,
+      12.0,
+      19.2,
+      33.2,
+      4
+    ],
+    [
+      "Anna Magnusson",
+      "Sweden",
+      4.5,
+      17.0,
+      28.3,
+      52.5,
+      4
+    ],
+    [
+      "Oceane Michelon",
+      "France",
+      3.0,
+      8.9,
+      16.6,
+      30.0,
+      4
+    ],
+    [
+      "Dorothea Wierer",
+      "Italy",
+      2.5,
+      8.4,
+      13.4,
+      32.3,
+      4
+    ],
+    [
+      "Camille Bened",
+      "France",
+      2.2,
+      5.3,
+      9.1,
+      21.3,
+      4
+    ],
+    [
+      "Vanessa Voigt",
+      "Germany",
+      2.0,
+      3.8,
+      8.7,
+      21.3,
+      4
+    ],
+    [
+      "Amy Baserga",
+      "Switzerland",
+      1.3,
+      4.8,
+      12.4,
+      28.7,
+      4
+    ],
+    [
+      "Lisa Theresa Hauser",
+      "Austria",
+      1.1,
+      2.3,
+      4.9,
+      15.0,
+      4
+    ],
+    [
+      "Selina Grotian",
+      "Germany",
+      1.1,
+      3.9,
+      7.4,
+      20.6,
+      4
+    ],
+    [
+      "Karoline Offigstad Knotten",
+      "Norway",
+      0.8,
+      4.1,
+      6.3,
+      15.0,
+      4
+    ],
+    [
+      "Jeanne Richard",
+      "France",
+      0.7,
+      1.6,
+      4.6,
+      11.9,
+      4
+    ],
+    [
+      "Marketa Davidova",
+      "Czechia",
+      0.7,
+      3.0,
+      6.6,
+      16.7,
+      4
+    ],
+    [
+      "Julia Tannheimer",
+      "Germany",
+      0.6,
+      3.2,
+      6.9,
+      17.3,
+      4
+    ],
+    [
+      "Regina Ermits",
+      "Estonia",
+      0.5,
+      3.7,
+      8.7,
+      22.3,
+      4
+    ],
+    [
+      "Tereza Vobornikova",
+      "Czechia",
+      0.4,
+      1.2,
+      3.6,
+      11.3,
+      4
+    ],
+    [
+      "Ella Halvarsson",
+      "Sweden",
+      0.3,
+      1.2,
+      3.0,
+      7.7,
+      4
+    ],
+    [
+      "Ingrid Landmark Tandrevold",
+      "Norway",
+      0.3,
+      1.5,
+      2.5,
+      7.1,
+      4
+    ],
+    [
+      "Linn Gestblom",
+      "Sweden",
+      0.3,
+      1.1,
+      1.9,
+      4.7,
+      4
+    ],
+    [
+      "Marthe Kråkstad Johansen",
+      "Norway",
+      0.3,
+      1.1,
+      3.1,
+      8.6,
+      4
+    ],
+    [
+      "Maya Cloetens",
+      "Belgium",
+      0.3,
+      1.9,
+      4.2,
+      13.0,
+      4
+    ],
+    [
+      "Milena Todorova",
+      "Bulgaria",
+      0.3,
+      2.0,
+      2.9,
+      11.8,
+      4
+    ],
+    [
+      "Paulina Batovska Fialkova",
+      "Slovakia",
+      0.3,
+      2.9,
+      6.9,
+      19.2,
+      4
+    ],
+    [
+      "Polona Klemencic",
+      "Slovenia",
+      0.3,
+      1.4,
+      3.9,
+      9.8,
+      4
+    ],
+    [
+      "Yuliia Dzhima",
+      "Ukraine",
+      0.3,
+      0.9,
+      1.6,
+      4.0,
+      4
+    ],
+    [
+      "Deedra Irwin",
+      "USA",
+      0.2,
+      1.1,
+      3.2,
+      9.0,
+      4
+    ],
+    [
+      "Janina Hettich-Walz",
+      "Germany",
+      0.2,
+      0.7,
+      2.6,
+      7.5,
+      4
+    ],
+    [
+      "Anna Andexer",
+      "Austria",
+      0.1,
+      0.4,
+      0.9,
+      3.2,
+      4
+    ],
+    [
+      "Anna Gandler",
+      "Austria",
+      0.1,
+      0.8,
+      3.0,
+      8.6,
+      4
+    ],
+    [
+      "Anna Weidel",
+      "Germany",
+      0.1,
+      0.6,
+      1.5,
+      5.9,
+      4
+    ],
+    [
+      "Hannah Auchentaller",
+      "Italy",
+      0.1,
+      0.3,
+      0.8,
+      2.7,
+      4
+    ],
+    [
+      "Joanna Jakiela",
+      "Poland",
+      0.1,
+      0.6,
+      0.8,
+      3.6,
+      4
+    ],
+    [
+      "Khrystyna Dmytrenko",
+      "Ukraine",
+      0.1,
+      0.7,
+      2.2,
+      5.6,
+      4
+    ],
+    [
+      "Lea Meier",
+      "Switzerland",
+      0.1,
+      0.4,
+      1.5,
+      4.1,
+      4
+    ],
+    [
+      "Lena Häcki-Gross",
+      "Switzerland",
+      0.1,
+      0.7,
+      2.2,
+      6.9,
+      4
+    ],
+    [
+      "Lena Repinc",
+      "Slovenia",
+      0.1,
+      0.2,
+      0.6,
+      1.5,
+      4
+    ],
+    [
+      "Lotte Lie",
+      "Belgium",
+      0.1,
+      0.6,
+      2.0,
+      6.9,
+      4
+    ],
+    [
+      "Lucie Charvatova",
+      "Czechia",
+      0.1,
+      0.3,
+      0.8,
+      2.5,
+      4
+    ],
+    [
+      "Nadia Moser",
+      "Canada",
+      0.1,
+      0.4,
+      1.1,
+      3.5,
+      4
+    ],
+    [
+      "Natalia Sidorowicz",
+      "Poland",
+      0.1,
+      0.5,
+      1.5,
+      3.9,
+      4
+    ],
+    [
+      "Rebecca Passler",
+      "Italy",
+      0.1,
+      0.6,
+      1.5,
+      5.2,
+      4
+    ],
+    [
+      "Susan Külm",
+      "Estonia",
+      0.1,
+      0.3,
+      0.4,
+      1.9,
+      4
+    ],
+    [
+      "Tuuli Tomingas",
+      "Estonia",
+      0.1,
+      0.2,
+      0.6,
+      2.0,
+      4
+    ],
+    [
+      "Valentina Dimitrova",
+      "Bulgaria",
+      0.1,
+      0.1,
+      0.2,
+      0.4,
+      4
+    ],
+    [
+      "Aisha Rakisheva",
+      "Kazakhstan",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Aita Gasparin",
+      "Switzerland",
+      0.0,
+      0.3,
+      1.4,
+      4.1,
+      4
+    ],
+    [
+      "Alina Stremous",
+      "Moldova",
+      0.0,
+      0.8,
+      1.7,
+      7.2,
+      4
+    ],
+    [
+      "Aliona Makarova",
+      "Moldova",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Anamarija Lampic",
+      "Slovenia",
+      0.0,
+      0.3,
+      0.6,
+      7.9,
+      4
+    ],
+    [
+      "Anastasia Tolmacheva",
+      "Romania",
+      0.0,
+      0.0,
+      0.1,
+      0.3,
+      4
+    ],
+    [
+      "Anastasiya Kuzmina",
+      "Slovakia",
+      0.0,
+      0.2,
+      0.3,
+      1.5,
+      4
+    ],
+    [
+      "Anastasiya Merkushyna",
+      "Ukraine",
+      0.0,
+      0.1,
+      0.2,
+      0.6,
+      4
+    ],
+    [
+      "Andreea Mezdrea",
+      "Romania",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Anika Kozica",
+      "Croatia",
+      0.0,
+      0.1,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Anna Juppe",
+      "Austria",
+      0.0,
+      0.1,
+      0.4,
+      1.0,
+      4
+    ],
+    [
+      "Anna Maka",
+      "Poland",
+      0.0,
+      0.0,
+      0.2,
+      0.3,
+      4
+    ],
+    [
+      "Anna-Karin Heijdenberg",
+      "Sweden",
+      0.0,
+      0.4,
+      1.3,
+      3.7,
+      4
+    ],
+    [
+      "Anne de Besche",
+      "Denmark",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Annija Sabule",
+      "Latvia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Baiba Bendika",
+      "Latvia",
+      0.0,
+      0.2,
+      0.7,
+      2.5,
+      4
+    ],
+    [
+      "Benita Peiffer",
+      "Canada",
+      0.0,
+      0.1,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Darcie Morton",
+      "Australia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Ekaterina Avvakumova",
+      "South Korea",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Ema Kapustova",
+      "Slovakia",
+      0.0,
+      0.1,
+      0.1,
+      0.5,
+      4
+    ],
+    [
+      "Estere Volfa",
+      "Latvia",
+      0.0,
+      0.1,
+      0.3,
+      1.1,
+      4
+    ],
+    [
+      "Eve Bouvard",
+      "Belgium",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Fanqi Meng",
+      "China",
+      0.0,
+      0.1,
+      0.1,
+      0.2,
+      4
+    ],
+    [
+      "Franziska Preuss",
+      "Germany",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Gaia Brunello",
+      "Brazil",
+      0.0,
+      0.1,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Inka Hämäläinen",
+      "Finland",
+      0.0,
+      0.1,
+      0.1,
+      0.6,
+      4
+    ],
+    [
+      "Jessica Jislova",
+      "Czechia",
+      0.0,
+      0.1,
+      0.2,
+      0.8,
+      4
+    ],
+    [
+      "Joanne Reid",
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Johanna Talihaerm",
+      "Estonia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Judita Traubaite",
+      "Lithuania",
+      0.0,
+      0.1,
+      0.1,
+      0.2,
+      4
+    ],
+    [
+      "Juni Arnekleiv",
+      "Norway",
+      0.0,
+      0.2,
+      0.4,
+      1.8,
+      4
+    ],
+    [
+      "Kamila Zuk",
+      "Poland",
+      0.0,
+      0.4,
+      0.8,
+      4.3,
+      4
+    ],
+    [
+      "Lidiia Zhurauskaite",
+      "Lithuania",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Liliia Steblyna",
+      "Ukraine",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Lora Hristova",
+      "Bulgaria",
+      0.0,
+      0.2,
+      0.6,
+      1.6,
+      4
+    ],
+    [
+      "Lucinda Anderson",
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Lydia Mettler",
+      "Switzerland",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Manca Caserman",
+      "Slovenia",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Margie Freed",
+      "USA",
+      0.0,
+      0.1,
+      0.2,
+      0.7,
+      4
+    ],
+    [
+      "Maria Remenova",
+      "Slovakia",
+      0.0,
+      0.1,
+      0.2,
+      0.8,
+      4
+    ],
+    [
+      "Maria Zdravkova",
+      "Bulgaria",
+      0.0,
+      0.1,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Marisa Emonts",
+      "Belgium",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Michela Carrara",
+      "Italy",
+      0.0,
+      0.2,
+      0.9,
+      3.0,
+      4
+    ],
+    [
+      "Milana Geneva",
+      "Kazakhstan",
+      0.0,
+      0.1,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Natalja Kocergina",
+      "Lithuania",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Noora Kaisa Keränen",
+      "Finland",
+      0.0,
+      0.0,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Olena Horodna",
+      "Ukraine",
+      0.0,
+      0.1,
+      0.1,
+      0.5,
+      4
+    ],
+    [
+      "Pascale Paradis",
+      "Canada",
+      0.0,
+      0.1,
+      0.1,
+      0.4,
+      4
+    ],
+    [
+      "Sanita Bulina",
+      "Latvia",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Sara Urumova",
+      "Lithuania",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Shilo Rousseau",
+      "Canada",
+      0.0,
+      0.2,
+      0.6,
+      2.5,
+      4
+    ],
+    [
+      "Sonja Leinamo",
+      "Finland",
+      0.0,
+      0.1,
+      0.1,
+      0.1,
+      4
+    ],
+    [
+      "Tamara Steiner",
+      "Austria",
+      0.0,
+      0.3,
+      0.9,
+      2.3,
+      4
+    ],
+    [
+      "Tereza Vinklarkova",
+      "Czechia",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      4
+    ],
+    [
+      "Ukaleq Slettemark",
+      "Greenland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4
+    ],
+    [
+      "Venla Lehtonen",
+      "Finland",
+      0.0,
+      0.2,
+      0.8,
+      2.3,
+      4
+    ],
+    [
+      "Yuanmeng Chu",
+      "China",
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      4
+    ]
+  ]
+}

@@ -944,7 +944,7 @@ These changes were made to cross-country. Other sports need similar updates:
 |-------|--------|
 | Cross-Country | ✅ Complete |
 | Alpine | ✅ Complete (2026-01-26) |
-| Biathlon | ⏳ Needs update |
+| Biathlon | ✅ Complete (2026-01-26) |
 | Nordic Combined | ⏳ Needs update |
 | Ski Jumping | ⏳ Needs update |
 
@@ -1494,5 +1494,96 @@ Use Cross-Country `champs-predictions.R` as reference:
 - Weighted participation: lines ~651-706
 - Nations Excel generation: lines ~1150-1280
 - Simplified columns: lines ~1108-1126
+
+---
+
+## Biathlon champs-predictions.R Pipeline Update (2026-01-26)
+
+### Objective
+
+Update Biathlon `champs-predictions.R` with the same pipeline improvements made to Cross-Country and Alpine, ensuring consistent output format for the championship prediction blog posts.
+
+### Current State Analysis
+
+**File**: `~/blog/daehl-e/content/post/biathlon/drafts/champs-predictions.R` (~1987 lines after updates)
+
+**Status: UPDATED (2026-01-26)**
+
+**What Biathlon Now Has**:
+- ✅ 4-phase normalization with capping, redistribution, monotonic constraints, and start_prob ceiling
+- ✅ Output directory uses `YYYY` format (2 locations updated)
+- ✅ Simplified column names for individual races (Skier, Nation, Start, Win, Podium, Top5, Top-10, Top-30)
+- ✅ Simplified column names for relay races (Team/Nation, Leg assignments, Start, Win, Podium, Top5, Top-10)
+- ✅ Nations breakdown Excel file (`nations_individual.xlsx`)
+- ✅ Exponential decay weighted participation probability
+- ✅ Race probability calculation with 4-person quota
+
+**Note**: Biathlon has individual races (Individual, Sprint, Pursuit, Mass Start) AND 4 relay types (Men, Ladies, Mixed, Single Mixed).
+
+### Changes Made
+
+#### 1. Output Directory: YYYYMMDD → YYYY
+**Location**: 2 occurrences (used replace_all)
+```r
+# Create output directory (use year only since there's one championship per year)
+champs_date <- format(Sys.Date(), "%Y")
+dir_path <- paste0("~/blog/daehl-e/content/post/biathlon/drafts/champs-predictions/", champs_date)
+```
+
+#### 2. Exponential Decay Weighted Participation (get_base_race_probability)
+**Location**: Lines ~1050-1084
+
+Key changes:
+- Calculate cutoff date as max of 5 years ago or athlete's first race
+- Sort races by date within the time window
+- Apply exponential decay weights: `race_weights <- exp(-0.1 * ((n_races - 1):0))`
+- Calculate weighted participation rate
+
+#### 3. 4-Phase Normalization with start_prob Ceiling
+**Location**: Lines ~138-244 (normalize_position_probabilities function)
+
+Phases implemented:
+- **Phase 1**: Scale to target sum, cap at 100%, redistribute excess
+- **Phase 2**: Monotonic constraints + cap at start_prob
+- **Phase 3**: Re-normalize after constraint adjustments
+- **Phase 4**: Final cap at start_prob
+
+Removed separate `enforce_probability_constraints()` calls that were duplicating Phase 2 logic.
+
+#### 4. Simplified Excel Column Output
+**Individual races** (summary and position_probabilities):
+- Columns: Skier, Nation, Start, Win, Podium, Top5, Top-10, Top-30
+
+**Relay races** (4 relay types):
+- Summary: Team, Nation, Start, Win, Podium, Top5, Top-10
+- Race sheets: Team, Leg1, Leg2, Leg3, Leg4, Nation, Start, Win, Podium, Top5, Top-10
+
+#### 5. Nations Breakdown Excel File
+**Location**: Lines ~1802-1987 (end of main execution)
+
+Creates `nations_individual.xlsx` with:
+- Per-nation sheets for nations with 4+ athletes (per gender): "{Nation} Men", "{Nation} Ladies"
+- "Other Men" / "Other Ladies" sheets for nations with <4 athletes
+- "Summary" sheet with aggregated totals by nation and gender
+- Columns: Athlete, Race, Start, Win, Podium, Top5, Top-10, Top-30 (plus Nation in Other sheets)
+
+**Special handling**: Code checks if individual results exist before generating (some sections commented out in main execution).
+
+### Implementation Steps Completed
+
+1. ✅ **Step 1**: Change output directory format (YYYYMMDD → YYYY) - 2 locations with replace_all
+2. ✅ **Step 2**: Update `get_base_race_probability()` with exponential decay
+3. ✅ **Step 3**: Replace normalization with 4-phase approach (including start_prob ceiling)
+4. ✅ **Step 4**: Update Excel column output with simplified names (individual + relay)
+5. ✅ **Step 5**: Add nations breakdown Excel generation
+6. ⏳ **Step 6**: Test by running the script
+7. ✅ **Step 7**: Update next-prompts.md with completion status
+
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `~/blog/daehl-e/content/post/biathlon/drafts/champs-predictions.R` | All changes above |
+| `~/blog/daehl-e/next-prompts.md` | Marked Biathlon as complete |
 
 ---
