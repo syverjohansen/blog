@@ -244,11 +244,22 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
     fi
 
     # Add Team Sprint section if files exist
+    # Check for cross-country style naming (team_sprint_final_predictions_*) OR nordic-combined style (men_teams_position_probabilities)
     men_ts=$(find "$json_dir" -name "team_sprint_final_predictions_Men_*.json" -type f 2>/dev/null | head -1)
     ladies_ts=$(find "$json_dir" -name "team_sprint_final_predictions_Ladies_*.json" -type f 2>/dev/null | head -1)
-    if [[ -n "$men_ts" ]] || [[ -n "$ladies_ts" ]]; then
+    # Nordic Combined style naming (teams instead of team_sprint)
+    if [[ -z "$men_ts" ]]; then
+        men_ts=$(find "$json_dir" -name "men_teams_position_probabilities*.json" -type f 2>/dev/null | head -1)
+    fi
+    if [[ -z "$ladies_ts" ]]; then
+        ladies_ts=$(find "$json_dir" -name "ladies_teams_position_probabilities*.json" -type f 2>/dev/null | head -1)
+    fi
+    # Mixed team (Nordic Combined)
+    mixed_ts=$(find "$json_dir" -name "mixed_teams_position_probabilities*.json" -type f 2>/dev/null | head -1)
+
+    if [[ -n "$men_ts" ]] || [[ -n "$ladies_ts" ]] || [[ -n "$mixed_ts" ]]; then
         post_content+="
-### Team Sprint
+### Team
 "
         if [[ -n "$men_ts" ]]; then
             filename=$(basename "$men_ts" .json)
@@ -262,6 +273,14 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
             filename=$(basename "$ladies_ts" .json)
             post_content+="
 #### Ladies
+
+{{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
+"
+        fi
+        if [[ -n "$mixed_ts" ]]; then
+            filename=$(basename "$mixed_ts" .json)
+            post_content+="
+#### Mixed
 
 {{< $sport/datatable2 \"$sport/drafts/champs-predictions/$CURRENT_YEAR/$filename\" >}}
 "

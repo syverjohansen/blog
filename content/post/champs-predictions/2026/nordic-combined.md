@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Nordic Combined Predictions"
-date: 2026-01-27T16:38:14+00:00
+date: 2026-01-27T16:44:51+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "nordic-combined"]
 ---
@@ -10,6 +10,12 @@ tags: ["predictions", "olympics", "2026", "nordic-combined"]
 ## Calendar
 
 ### Individual Races
+
+### Team
+
+#### Men
+
+{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/men_teams_position_probabilities" >}}
 
 ## Nation
 

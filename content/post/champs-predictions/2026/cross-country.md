@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Cross-Country Skiing Predictions"
-date: 2026-01-27T16:38:14+00:00
+date: 2026-01-27T16:44:50+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "cross-country"]
 ---
@@ -57,7 +57,7 @@ tags: ["predictions", "olympics", "2026", "cross-country"]
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/relay_final_predictions_Ladies_All_Thresholds_Final" >}}
 
-### Team Sprint
+### Team
 
 #### Men
 
