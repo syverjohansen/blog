@@ -995,9 +995,11 @@ process_gender_championships <- function(gender, races) {
   # Sort unique races to ensure chronological order (OriginalRaceNum is assigned by Race_Date order)
   unique_races <- sort(unique(all_position_predictions$Race))
   log_info(paste("Creating sheets for races:", paste(unique_races, collapse=", ")))
-  
+
+  race_order <- 0  # Counter for chronological ordering
   for(race_num in unique_races) {
-    log_info(paste("Processing sheet for race", race_num))
+    race_order <- race_order + 1
+    log_info(paste("Processing sheet for race", race_num, "(order:", race_order, ")"))
     race_data <- all_position_predictions[all_position_predictions$Race == race_num, ]
 
     # Select and rename columns to simplified format (no underscores)
@@ -1029,11 +1031,10 @@ process_gender_championships <- function(gender, races) {
     # Format date as "Feb 11" (abbreviated month + day)
     race_date <- if(nrow(race_info) > 0) format(race_info$Race_Date[1], "%b %d") else ""
 
-    # Format: "Mens Downhill - Feb 07" or "Ladies Giant Slalom - Feb 15"
-    gender_prefix <- ifelse(gender == "men", "Mens", "Ladies")
-    sheet_name <- paste0(gender_prefix, " ", discipline, " - ", race_date)
+    # Format: "1. Downhill - Feb 07" with numeric prefix for chronological sorting
+    sheet_name <- paste0(race_order, ". ", discipline, " - ", race_date)
 
-    log_info(paste("Race", race_num, "- Discipline:", discipline, "- Date:", race_date, "- Sheet name:", sheet_name))
+    log_info(paste("Race", race_num, "- Order:", race_order, "- Discipline:", discipline, "- Date:", race_date, "- Sheet name:", sheet_name))
     log_info(paste("Race data dimensions:", nrow(race_data), "x", ncol(race_data)))
 
     race_dfs[[sheet_name]] <- race_data
@@ -1237,7 +1238,10 @@ if (!is.null(men_results) || !is.null(ladies_results)) {
   if (!is.null(men_results) && !is.null(men_results$race_sheets)) {
     for (race_name in names(men_results$race_sheets)) {
       race_data <- men_results$race_sheets[[race_name]]
-      race_data$Race <- race_name
+      # Extract just the discipline (remove "N. " prefix and " - Date" suffix) for Race column
+      discipline_only <- sub("^\\d+\\. ", "", race_name)  # Remove "1. " prefix
+      discipline_only <- sub(" - .*$", "", discipline_only)  # Remove " - Feb 07" suffix
+      race_data$Race <- discipline_only
       race_data$Gender <- "Men"
       men_individual_results <- bind_rows(men_individual_results, race_data)
     }
@@ -1248,7 +1252,10 @@ if (!is.null(men_results) || !is.null(ladies_results)) {
   if (!is.null(ladies_results) && !is.null(ladies_results$race_sheets)) {
     for (race_name in names(ladies_results$race_sheets)) {
       race_data <- ladies_results$race_sheets[[race_name]]
-      race_data$Race <- race_name
+      # Extract just the discipline (remove "N. " prefix and " - Date" suffix) for Race column
+      discipline_only <- sub("^\\d+\\. ", "", race_name)  # Remove "1. " prefix
+      discipline_only <- sub(" - .*$", "", discipline_only)  # Remove " - Feb 08" suffix
+      race_data$Race <- discipline_only
       race_data$Gender <- "Ladies"
       ladies_individual_results <- bind_rows(ladies_individual_results, race_data)
     }

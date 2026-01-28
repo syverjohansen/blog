@@ -13,7 +13,7 @@
   "rows": [
     [
       "Marco Odermatt",
-      "Mens Downhill - Feb 07",
+      "Downhill",
       90.0,
       34.1835982094984,
       78.5683543248378,
@@ -23,7 +23,7 @@
     ],
     [
       "Stefan Rogentin",
-      "Mens Downhill - Feb 07",
+      "Downhill",
       89.9,
       1.63132352359096,
       2.51187798494501,
@@ -33,7 +33,7 @@
     ],
     [
       "Franjo Von Allmen",
-      "Mens Downhill - Feb 07",
+      "Downhill",
       87.7,
       17.501926868519,
       39.3946879709008,
@@ -43,7 +43,7 @@
     ],
     [
       "Alexis Monney",
-      "Mens Downhill - Feb 07",
+      "Downhill",
       77.2,
       1.39992840482548,
       8.19120628187282,
@@ -53,7 +53,7 @@
     ],
     [
       "Niels Hintermann",
-      "Mens Downhill - Feb 07",
+      "Downhill",
       54.7,
       0.354523819370053,
       2.81241700155109,
@@ -63,7 +63,7 @@
     ],
     [
       "Loic Meillard",
-      "Mens Downhill - Feb 07",
+      "Downhill",
       0.4,
       0.0010180915938056,
       0.0017557525794574,
@@ -73,7 +73,7 @@
     ],
     [
       "Marco Odermatt",
-      "Mens Giant Slalom - Feb 14",
+      "Giant Slalom",
       100.0,
       59.385912132096,
       88.6400221558872,
@@ -83,7 +83,7 @@
     ],
     [
       "Loic Meillard",
-      "Mens Giant Slalom - Feb 14",
+      "Giant Slalom",
       100.0,
       12.0784906031382,
       33.3286483306136,
@@ -93,7 +93,7 @@
     ],
     [
       "Thomas Tumler",
-      "Mens Giant Slalom - Feb 14",
+      "Giant Slalom",
       100.0,
       0.431374664397792,
       5.67296141797678,
@@ -103,7 +103,7 @@
     ],
     [
       "Luca Aerni",
-      "Mens Giant Slalom - Feb 14",
+      "Giant Slalom",
       72.7,
       0.522550406987676,
       2.98932161752817,
@@ -113,7 +113,7 @@
     ],
     [
       "Alexis Monney",
-      "Mens Giant Slalom - Feb 14",
+      "Giant Slalom",
       5.5,
       0.0078470918670891,
       0.061917752356822,
@@ -123,7 +123,7 @@
     ],
     [
       "Stefan Rogentin",
-      "Mens Giant Slalom - Feb 14",
+      "Giant Slalom",
       5.4,
       0.0,
       0.0308014308749065,
@@ -133,7 +133,7 @@
     ],
     [
       "Tanguy Nef",
-      "Mens Giant Slalom - Feb 14",
+      "Giant Slalom",
       0.2,
       0.0,
       0.0027204771079991,
@@ -143,7 +143,7 @@
     ],
     [
       "Daniel Yule",
-      "Mens Giant Slalom - Feb 14",
+      "Giant Slalom",
       0.1,
       0.0,
       0.0008462218277416,
@@ -153,7 +153,7 @@
     ],
     [
       "Daniel Yule",
-      "Mens Slalom - Feb 16",
+      "Slalom",
       97.8,
       0.231023252994246,
       1.80449982060373,
@@ -163,7 +163,7 @@
     ],
     [
       "Loic Meillard",
-      "Mens Slalom - Feb 16",
+      "Slalom",
       95.5,
       10.4863101569486,
       32.9643221738193,
@@ -173,7 +173,7 @@
     ],
     [
       "Tanguy Nef",
-      "Mens Slalom - Feb 16",
+      "Slalom",
       79.3,
       3.84148477913586,
       11.2912526182128,
@@ -183,7 +183,7 @@
     ],
     [
       "Luca Aerni",
-      "Mens Slalom - Feb 16",
+      "Slalom",
       77.0,
       0.0909157630867544,
       0.202895442717542,
@@ -193,7 +193,7 @@
     ],
     [
       "Matthias Iten",
-      "Mens Slalom - Feb 16",
+      "Slalom",
       50.3,
       0.178212971913592,
       0.39771540827209,
@@ -203,7 +203,7 @@
     ],
     [
       "Marco Odermatt",
-      "Mens Super G - Feb 11",
+      "Super G",
       92.0,
       43.4406663843765,
       72.8758927750307,
@@ -213,7 +213,7 @@
     ],
     [
       "Stefan Rogentin",
-      "Mens Super G - Feb 11",
+      "Super G",
       91.4,
       1.70420286104115,
       7.5703822748708,
@@ -223,7 +223,7 @@
     ],
     [
       "Franjo Von Allmen",
-      "Mens Super G - Feb 11",
+      "Super G",
       73.9,
       9.73376248567362,
       27.6713587284759,
@@ -233,7 +233,7 @@
     ],
     [
       "Alexis Monney",
-      "Mens Super G - Feb 11",
+      "Super G",
       73.9,
       1.56182503495668,
       6.94400504039474,
@@ -243,7 +243,7 @@
     ],
     [
       "Loic Meillard",
-      "Mens Super G - Feb 11",
+      "Super G",
       56.3,
       0.350103589749106,
       1.74092292657388,
@@ -253,7 +253,7 @@
     ],
     [
       "Niels Hintermann",
-      "Mens Super G - Feb 11",
+      "Super G",
       11.2,
       0.111858948514411,
       0.264208827083438,
@@ -263,7 +263,7 @@
     ],
     [
       "Thomas Tumler",
-      "Mens Super G - Feb 11",
+      "Super G",
       1.2,
       0.0015294478000639,
       0.0106474516266812,
