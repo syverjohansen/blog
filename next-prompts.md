@@ -620,7 +620,7 @@ prob <- weighted_participation / total_weight
 | Cross-Country | `champs-predictions.R` | ✅ Updated 2026-01-20 |
 | Biathlon | `champs-predictions.R` | ⏳ Needs update |
 | Nordic Combined | `champs-predictions.R` | ⏳ Needs update |
-| Ski Jumping | `champs-predictions.R` | ⏳ Needs update |
+| Ski Jumping | `champs-predictions.R` | ✅ Complete (2026-01-27) |
 
 **Key Changes Required**:
 1. Find the `get_base_race_probability` or equivalent function
@@ -946,7 +946,7 @@ These changes were made to cross-country. Other sports need similar updates:
 | Alpine | ✅ Complete (2026-01-26) |
 | Biathlon | ✅ Complete (2026-01-26) |
 | Nordic Combined | ✅ Complete (2026-01-27) |
-| Ski Jumping | ⏳ Needs update |
+| Ski Jumping | ✅ Complete (2026-01-27) |
 
 ---
 
@@ -1798,5 +1798,172 @@ men_team=$(find "$json_dir" -name "men_teams_position_probabilities*.json" -type
 1. `python startlist-scrape-champs.py` (generate startlists)
 2. `Rscript champs-predictions.R` (generate predictions)
 3. `./champs_script.sh 2026` (generate blog post)
+
+---
+
+## Duplicate Race Type Sheet Naming Fix (2026-01-27)
+
+### Issue
+
+When a championship has multiple races of the same type (e.g., two "Individual" races), the R script was creating sheets with identical names ("Men Individual"), causing the second sheet to overwrite the first. This resulted in only one sheet in the Excel file and no individual race tables appearing in the blog post.
+
+### Root Cause
+
+The sheet naming logic used only the race type without accounting for duplicates:
+```r
+sheet_name <- paste(ifelse(gender == "men", "Men", "Ladies"), race_type)
+```
+
+When both races had `RaceType = "Individual"`, both sheets were named "Men Individual".
+
+### Fix Applied
+
+**File**: `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions.R`
+
+Added a counter to track duplicate race types and append a number suffix when needed:
+
+```r
+# Track race type counts to handle duplicates (e.g., two "Individual" races)
+race_type_counts <- list()
+
+for(race_num in unique_races) {
+  # ... existing code ...
+
+  # Track how many times we've seen this race type to handle duplicates
+  race_type_key <- paste(gender_prefix, race_type)
+  if (is.null(race_type_counts[[race_type_key]])) {
+    race_type_counts[[race_type_key]] <- 1
+  } else {
+    race_type_counts[[race_type_key]] <- race_type_counts[[race_type_key]] + 1
+  }
+
+  # Add number suffix if this race type appears multiple times
+  total_of_type <- sum(champs_races_with_race_num$Sex == ifelse(gender == "men", "M", "L") &
+                       champs_races_with_race_num$RaceType == race_type)
+
+  if (total_of_type > 1) {
+    sheet_name <- paste(gender_prefix, race_type, race_type_counts[[race_type_key]])
+  } else {
+    sheet_name <- paste(gender_prefix, race_type)
+  }
+}
+```
+
+### Result
+
+- Two "Individual" races → "Men Individual 1", "Men Individual 2"
+- Single "Sprint" race → "Men Sprint" (no suffix needed)
+- JSON files created: `men_position_probabilities_Men_Individual_1.json`, `men_position_probabilities_Men_Individual_2.json`
+
+### Sports That May Need This Fix
+
+| Sport | Status | Notes |
+|-------|--------|-------|
+| Nordic Combined | ✅ Fixed | Has two Individual races |
+| Ski Jumping | ✅ Fixed | Applied same fix |
+| Cross-Country | ⏳ Check | Likely has unique race types |
+| Alpine | ⏳ Check | Multiple DH/SG/GS/SL races possible |
+| Biathlon | ⏳ Check | Multiple Sprint/Individual races possible |
+
+---
+
+## Ski Jumping champs-predictions.R Pipeline Update (2026-01-27)
+
+### Objective
+
+Update Ski Jumping `champs-predictions.R` with the same pipeline improvements made to Cross-Country, Alpine, Biathlon, and Nordic Combined, ensuring consistent output format for the championship prediction blog posts.
+
+### Current State Analysis
+
+**File**: `~/blog/daehl-e/content/post/skijump/drafts/champs-predictions.R` (~1900 lines after updates)
+
+**Status: UPDATED (2026-01-27)**
+
+**What Ski Jumping Now Has**:
+- ✅ 4-phase normalization with capping, redistribution, monotonic constraints, and start_prob ceiling
+- ✅ Output directory uses `YYYY` format (2 locations updated)
+- ✅ Simplified column names for individual races (Skier, Nation, Start, Win, Podium, Top5, Top-10, Top-30)
+- ✅ Nations breakdown Excel file (`nations_individual.xlsx`)
+- ✅ Exponential decay weighted participation probability
+- ✅ Duplicate race type sheet naming fix (handles multiple races of same type)
+
+**Note**: Ski Jumping has individual races AND team events (men, ladies, mixed).
+
+### Changes Made
+
+#### 1. Output Directory: YYYYMMDD → YYYY
+**Location**: 2 occurrences (used replace_all)
+```r
+# Create output directory (use year only since there's one championship per year)
+champs_date <- format(Sys.Date(), "%Y")
+dir_path <- paste0("~/blog/daehl-e/content/post/skijump/drafts/champs-predictions/", champs_date)
+```
+
+#### 2. Exponential Decay Weighted Participation (get_base_race_probability)
+
+Key changes:
+- Calculate cutoff date as max of 5 years ago or athlete's first race
+- Sort races by date within the time window
+- Apply exponential decay weights: `race_weights <- exp(-0.1 * ((n_races - 1):0))`
+- Calculate weighted participation rate
+
+#### 3. 4-Phase Normalization with start_prob Ceiling (normalize_position_probabilities)
+
+Phases implemented:
+- **Phase 1**: Scale to target sum, cap at 100%, redistribute excess
+- **Phase 2**: Monotonic constraints + cap at start_prob
+- **Phase 3**: Re-normalize after constraint adjustments
+- **Phase 4**: Final cap at start_prob
+
+#### 4. Simplified Excel Column Output
+**Individual races**:
+- Columns: Skier, Nation, Start, Win, Podium, Top5, Top-10, Top-30
+
+#### 5. Duplicate Race Type Sheet Naming Fix
+Added counter to track duplicate race types and append number suffix when needed.
+
+#### 6. Nations Breakdown Excel File
+Creates `nations_individual.xlsx` with:
+- Per-nation sheets for nations with 4+ athletes (per gender)
+- "Other Men" / "Other Ladies" sheets for nations with <4 athletes
+- "Summary" sheet with aggregated totals by nation and gender
+
+### Implementation Steps Completed
+
+1. ✅ **Step 1**: Change output directory format (YYYYMMDD → YYYY) - 2 locations with replace_all
+2. ✅ **Step 2**: Update `get_base_race_probability()` with exponential decay
+3. ✅ **Step 3**: Replace normalization with 4-phase approach (including start_prob ceiling)
+4. ✅ **Step 4**: Update Excel column output with simplified names
+5. ✅ **Step 5**: Add duplicate race type sheet naming fix
+6. ✅ **Step 6**: Add nations breakdown Excel generation
+7. ⏳ **Step 7**: Test by running the script
+
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `~/blog/daehl-e/content/post/skijump/drafts/champs-predictions.R` | All changes above |
+| `~/blog/daehl-e/next-prompts.md` | Marked Ski Jumping as complete |
+
+---
+
+## All Sports Pipeline Updates Complete (2026-01-27)
+
+All five winter sports have been updated with the championship prediction pipeline improvements:
+
+| Sport | Output Dir | Exp Decay | 4-Phase Norm | Simplified Cols | Nations Excel | Dup Race Fix |
+|-------|------------|-----------|--------------|-----------------|---------------|--------------|
+| Alpine | ✅ YYYY | ✅ | ✅ | ✅ | ✅ | ⏳ Check |
+| Biathlon | ✅ YYYY | ✅ | ✅ | ✅ | ✅ | ⏳ Check |
+| Cross-Country | ✅ YYYY | ✅ | ✅ | ✅ | ✅ | ⏳ Check |
+| Nordic Combined | ✅ YYYY | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Ski Jumping | ✅ YYYY | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+### Next Steps
+
+1. Test all sports by running their R scripts
+2. Run `champs_script.sh 2026` to generate blog posts
+3. Verify blog post tables display correctly
+4. Apply duplicate race type fix to other sports if needed
 
 ---
