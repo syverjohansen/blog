@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Ski Jumping Predictions"
-date: 2026-01-28T14:11:30+00:00
+date: 2026-01-28T19:01:44+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "skijump"]
 ---

@@ -140,11 +140,12 @@ enforce_probability_constraints <- function(predictions) {
   return(predictions)
 }
 
-# Normalization function for position probabilities (4-phase approach)
+# Normalization function for position probabilities (5-phase approach)
 # Phase 1: Scale to target sum with capping and redistribution
 # Phase 2: Apply monotonic constraints + cap at start_prob
 # Phase 3: Re-normalize after constraint adjustments
 # Phase 4: Final cap at start_prob
+# Phase 5: Final monotonic constraint enforcement (critical for credibility)
 normalize_position_probabilities <- function(predictions, race_prob_col, position_thresholds) {
   # Make a copy to avoid modifying the original data frame
   normalized <- predictions
@@ -305,8 +306,47 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     log_info(sprintf("    Fixed %d cases where position prob exceeded start_prob", violations_fixed))
   }
 
+  # PHASE 5: Final monotonic constraint enforcement
+  # This is critical - no prediction is credible if win > podium > top5 etc.
+  log_info("  PHASE 5: Final monotonic constraint enforcement...")
+  monotonic_fixes <- 0
+  for(row_i in 1:nrow(normalized)) {
+    # Get probabilities in order (only for columns that exist)
+    probs <- sapply(existing_prob_cols, function(col) normalized[[col]][row_i])
+
+    # Replace NA values with 0
+    probs[is.na(probs)] <- 0
+
+    # Check if any violations exist
+    needs_fix <- FALSE
+    for(j in 2:length(probs)) {
+      if(probs[j] < probs[j-1]) {
+        needs_fix <- TRUE
+        break
+      }
+    }
+
+    if(needs_fix) {
+      # Enforce monotonic: each probability >= previous one
+      for(j in 2:length(probs)) {
+        if(probs[j] < probs[j-1]) {
+          probs[j] <- probs[j-1]
+        }
+      }
+
+      # Update row
+      for(j in seq_along(existing_prob_cols)) {
+        normalized[[existing_prob_cols[j]]][row_i] <- probs[j]
+      }
+      monotonic_fixes <- monotonic_fixes + 1
+    }
+  }
+  if(monotonic_fixes > 0) {
+    log_info(sprintf("    Fixed monotonic violations in %d rows", monotonic_fixes))
+  }
+
   # Log final sums after all adjustments
-  log_info("Position probability sums AFTER normalization:")
+  log_info("Position probability sums AFTER 5-phase normalization:")
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
     if(prob_col %in% names(normalized)) {
@@ -1840,9 +1880,10 @@ if (has_men_results || has_ladies_results) {
         ) %>%
         group_by(Gender, Nation_Group) %>%
         summarise(
-          `Total Win` = round(sum(Win, na.rm = TRUE), 1),
-          `Total Podium` = round(sum(Podium, na.rm = TRUE), 1),
-          `Total Top-10` = round(sum(`Top-10`, na.rm = TRUE), 1),
+          # Divide by 100 to convert from percentage to expected count
+          `Total Win` = round(sum(Win, na.rm = TRUE) / 100, 2),
+          `Total Podium` = round(sum(Podium, na.rm = TRUE) / 100, 2),
+          `Total Top-10` = round(sum(`Top-10`, na.rm = TRUE) / 100, 2),
           Athletes = n_distinct(Skier),
           .groups = "drop"
         ) %>%

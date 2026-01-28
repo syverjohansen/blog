@@ -2100,3 +2100,114 @@ The ski jumping file `startlist_champs_mixed_team.csv` IS generated - it's just 
 6. Verify team CSV files have TeamMembers column
 
 ---
+
+## Phase 5 Monotonic Constraint Enforcement (2026-01-28)
+
+### Issue
+
+After 4-phase normalization (scale → monotonic → re-scale → cap), the final re-scaling in Phase 3 can break monotonic constraints again. This results in predictions where Win > Podium or Podium > Top5, which is logically impossible and destroys credibility.
+
+### Solution
+
+Added **Phase 5: Final monotonic constraint enforcement** to all five sports' `champs-predictions.R` scripts. This runs after Phase 4 (final start_prob cap) to guarantee that the output always satisfies:
+
+```
+Win ≤ Podium ≤ Top5 ≤ Top10 ≤ Top30 ≤ Start
+```
+
+### Implementation
+
+```r
+# PHASE 5: Final monotonic constraint enforcement
+# This is critical - no prediction is credible if win > podium > top5 etc.
+log_info("  PHASE 5: Final monotonic constraint enforcement...")
+monotonic_fixes <- 0
+for(row_i in 1:nrow(normalized)) {
+  probs <- c(win_prob, podium_prob, top5_prob, top10_prob, top30_prob)
+
+  # Check if any violations exist
+  needs_fix <- FALSE
+  for(j in 2:length(probs)) {
+    if(probs[j] < probs[j-1]) {
+      needs_fix <- TRUE
+      break
+    }
+  }
+
+  if(needs_fix) {
+    # Enforce monotonic: each probability >= previous one
+    for(j in 2:length(probs)) {
+      if(probs[j] < probs[j-1]) {
+        probs[j] <- probs[j-1]
+      }
+    }
+    # Update row...
+    monotonic_fixes <- monotonic_fixes + 1
+  }
+}
+if(monotonic_fixes > 0) {
+  log_info(sprintf("    Fixed monotonic violations in %d rows", monotonic_fixes))
+}
+```
+
+### Files Modified
+
+| Sport | File |
+|-------|------|
+| Alpine | `~/blog/daehl-e/content/post/alpine/drafts/champs-predictions.R` |
+| Biathlon | `~/blog/daehl-e/content/post/biathlon/drafts/champs-predictions.R` |
+| Cross-Country | `~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions.R` |
+| Nordic Combined | `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions.R` |
+| Ski Jumping | `~/blog/daehl-e/content/post/skijump/drafts/champs-predictions.R` |
+
+### Updated Normalization Flow (5-Phase)
+
+1. **Phase 1**: Scale to target sum, cap at 100%, redistribute excess
+2. **Phase 2**: Apply monotonic constraints + cap at start_prob
+3. **Phase 3**: Re-normalize after constraint adjustments
+4. **Phase 4**: Final cap at start_prob
+5. **Phase 5**: Final monotonic constraint enforcement ← **NEW**
+
+### Note on Probability Sums
+
+After Phase 5, probability sums may be slightly different from targets (e.g., win_prob sum slightly > 1.0) because monotonic enforcement can push values up. This is an acceptable trade-off - credibility of individual predictions matters more than exact aggregate sums.
+
+---
+
+## Nation Summary Percentage-to-Count Fix (2026-01-28)
+
+### Issue
+
+The Nations Summary sheet was showing values like "Total Win = 197.5" for Switzerland, which is impossible. This happened because the position probabilities are stored as percentages (0-100 scale), but when summed for "expected wins", we need to convert to counts (0-1 scale).
+
+### Solution
+
+Divide by 100 when calculating Total Win, Total Podium, and Total Top-10 in the nations summary:
+
+```r
+summarise(
+  # Divide by 100 to convert from percentage to expected count
+  `Total Win` = round(sum(Win, na.rm = TRUE) / 100, 2),
+  `Total Podium` = round(sum(Podium, na.rm = TRUE) / 100, 2),
+  `Total Top-10` = round(sum(`Top-10`, na.rm = TRUE) / 100, 2),
+  Athletes = n_distinct(Skier),
+  .groups = "drop"
+)
+```
+
+### Files Modified
+
+| Sport | File | Notes |
+|-------|------|-------|
+| Alpine | `champs-predictions.R` | Fixed (0-100 scale) |
+| Biathlon | `champs-predictions.R` | Fixed (0-100 scale) |
+| Nordic Combined | `champs-predictions.R` | Fixed (0-100 scale) |
+| Cross-Country | `champs-predictions.R` | No change needed (already 0-1 scale) |
+| Ski Jumping | `champs-predictions.R` | Uses averages not totals (different design) |
+
+### Example
+
+Before fix: Switzerland Men `Total Win = 197.5` (impossible)
+After fix: Switzerland Men `Total Win = 1.97` (meaning ~2 expected gold medals)
+
+---

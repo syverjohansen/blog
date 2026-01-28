@@ -1101,8 +1101,51 @@ for (race_name in names(results_list)) {
     log_info(sprintf("    Fixed %d cases where position prob exceeded start_prob", violations_fixed))
   }
 
+  # PHASE 5: Final monotonic constraint enforcement
+  # This is critical - no prediction is credible if win > podium > top5 etc.
+  log_info("  PHASE 5: Final monotonic constraint enforcement...")
+  monotonic_fixes <- 0
+  for (row_i in 1:nrow(race_results)) {
+    probs <- c(
+      race_results$win_prob[row_i],
+      race_results$podium_prob[row_i],
+      race_results$top5_prob[row_i],
+      race_results$top10_prob[row_i],
+      race_results$top30_prob[row_i]
+    )
+
+    # Check if any violations exist
+    needs_fix <- FALSE
+    for (j in 2:length(probs)) {
+      if (probs[j] < probs[j-1]) {
+        needs_fix <- TRUE
+        break
+      }
+    }
+
+    if (needs_fix) {
+      # Enforce monotonic: each probability >= previous one
+      for (j in 2:length(probs)) {
+        if (probs[j] < probs[j-1]) {
+          probs[j] <- probs[j-1]
+        }
+      }
+
+      # Update row
+      race_results$win_prob[row_i] <- probs[1]
+      race_results$podium_prob[row_i] <- probs[2]
+      race_results$top5_prob[row_i] <- probs[3]
+      race_results$top10_prob[row_i] <- probs[4]
+      race_results$top30_prob[row_i] <- probs[5]
+      monotonic_fixes <- monotonic_fixes + 1
+    }
+  }
+  if (monotonic_fixes > 0) {
+    log_info(sprintf("    Fixed monotonic violations in %d rows", monotonic_fixes))
+  }
+
   # Log final sums
-  log_info("  Sums AFTER normalization, monotonic constraints, and start_prob ceiling:")
+  log_info("  Sums AFTER 5-phase normalization:")
   for (i in seq_along(prob_cols)) {
     col <- prob_cols[i]
     threshold <- position_thresholds[i]

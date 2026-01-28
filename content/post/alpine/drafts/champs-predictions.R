@@ -33,9 +33,12 @@ log_info("Starting Alpine Skiing Championships predictions process")
 
 # Read in the race schedule from weekends.csv with proper date parsing
 log_info("Reading weekends data")
-weekends <- read.csv("~/ski/elo/python/alpine/polars/excel365/weekends.csv", 
+weekends <- read.csv("~/ski/elo/python/alpine/polars/excel365/weekends.csv",
                      stringsAsFactors = FALSE) %>%
-  mutate(Date = as.Date(Date, format="%m/%d/%Y"))
+  mutate(
+    Date = as.Date(Date, format="%m/%d/%Y"),
+    Race_Date = as.Date(Race_Date, format="%m/%d/%Y")
+  )
 
 # Filter for Championships races only (Championship == 1)
 log_info("Filtering for Championships races")
@@ -50,19 +53,22 @@ if (nrow(champs_races) == 0) {
 log_info(paste("Found", nrow(champs_races), "Championships races"))
 
 # Create race dataframes for men and ladies (all alpine races are individual)
-# Add row numbers first to preserve original race order
+# Order by Race_Date to ensure chronological order, then add row numbers
 champs_races_with_race_num <- champs_races %>%
+  arrange(Race_Date) %>%
   mutate(OriginalRaceNum = row_number())
 
 men_races <- champs_races_with_race_num %>%
   filter(Sex == "M") %>%
-  dplyr::select(Distance, Period, Country, OriginalRaceNum) %>%
-  rename(discipline = Distance, period = Period, country = Country, original_race_num = OriginalRaceNum)
+  arrange(Race_Date) %>%
+  dplyr::select(Distance, Period, Country, Race_Date, OriginalRaceNum) %>%
+  rename(discipline = Distance, period = Period, country = Country, race_date = Race_Date, original_race_num = OriginalRaceNum)
 
 ladies_races <- champs_races_with_race_num %>%
   filter(Sex == "L") %>%
-  dplyr::select(Distance, Period, Country, OriginalRaceNum) %>%
-  rename(discipline = Distance, period = Period, country = Country, original_race_num = OriginalRaceNum)
+  arrange(Race_Date) %>%
+  dplyr::select(Distance, Period, Country, Race_Date, OriginalRaceNum) %>%
+  rename(discipline = Distance, period = Period, country = Country, race_date = Race_Date, original_race_num = OriginalRaceNum)
 
 log_info(paste("Found", nrow(men_races), "men's races,", nrow(ladies_races), "ladies' races"))
 
@@ -95,11 +101,12 @@ enforce_probability_constraints <- function(predictions) {
   return(predictions)
 }
 
-# 4-Phase Normalization function for position probabilities
+# 5-Phase Normalization function for position probabilities
 # Phase 1: Scale to target sum with capping and redistribution
 # Phase 2: Apply monotonic constraints + cap at start_prob
 # Phase 3: Re-normalize after constraint adjustments
 # Phase 4: Final cap at start_prob
+# Phase 5: Final monotonic constraint enforcement (critical for credibility)
 normalize_position_probabilities <- function(predictions, race_prob_col, position_thresholds) {
   # Make a copy to avoid modifying the original data frame
   normalized <- predictions
@@ -254,8 +261,51 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     log_info(sprintf("    Fixed %d cases where position prob exceeded start_prob", violations_fixed))
   }
 
+  # PHASE 5: Final monotonic constraint enforcement
+  # This is critical - no prediction is credible if win > podium > top5 etc.
+  log_info("  PHASE 5: Final monotonic constraint enforcement...")
+  monotonic_fixes <- 0
+  for(row_i in 1:nrow(normalized)) {
+    probs <- c(
+      normalized$prob_top1[row_i],
+      normalized$prob_top3[row_i],
+      normalized$prob_top5[row_i],
+      normalized$prob_top10[row_i],
+      normalized$prob_top30[row_i]
+    )
+
+    # Check if any violations exist
+    needs_fix <- FALSE
+    for(j in 2:length(probs)) {
+      if(probs[j] < probs[j-1]) {
+        needs_fix <- TRUE
+        break
+      }
+    }
+
+    if(needs_fix) {
+      # Enforce monotonic: each probability >= previous one
+      for(j in 2:length(probs)) {
+        if(probs[j] < probs[j-1]) {
+          probs[j] <- probs[j-1]
+        }
+      }
+
+      # Update row
+      normalized$prob_top1[row_i] <- probs[1]
+      normalized$prob_top3[row_i] <- probs[2]
+      normalized$prob_top5[row_i] <- probs[3]
+      normalized$prob_top10[row_i] <- probs[4]
+      normalized$prob_top30[row_i] <- probs[5]
+      monotonic_fixes <- monotonic_fixes + 1
+    }
+  }
+  if(monotonic_fixes > 0) {
+    log_info(sprintf("    Fixed monotonic violations in %d rows", monotonic_fixes))
+  }
+
   # Log final sums after all adjustments
-  log_info("Position probability sums AFTER 4-phase normalization:")
+  log_info("Position probability sums AFTER 5-phase normalization:")
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
     if(prob_col %in% names(normalized)) {
@@ -942,7 +992,8 @@ process_gender_championships <- function(gender, races) {
   
   # Save detailed race-by-race results
   race_dfs <- list()
-  unique_races <- unique(all_position_predictions$Race)
+  # Sort unique races to ensure chronological order (OriginalRaceNum is assigned by Race_Date order)
+  unique_races <- sort(unique(all_position_predictions$Race))
   log_info(paste("Creating sheets for races:", paste(unique_races, collapse=", ")))
   
   for(race_num in unique_races) {
@@ -970,15 +1021,17 @@ process_gender_championships <- function(gender, races) {
       ) %>%
       arrange(desc(Win))
 
-    # Get race discipline for sheet naming using original race number
-    race_disciplines <- champs_races_with_race_num %>%
-      filter(Sex == ifelse(gender == "men", "M", "L"), OriginalRaceNum == race_num) %>%
-      pull(Distance)
+    # Get race discipline and date for sheet naming using original race number
+    race_info <- champs_races_with_race_num %>%
+      filter(Sex == ifelse(gender == "men", "M", "L"), OriginalRaceNum == race_num)
 
-    discipline <- if(length(race_disciplines) > 0) race_disciplines[1] else paste("Race", race_num)
-    sheet_name <- paste(ifelse(gender == "men", "Men", "Ladies"), discipline)
+    discipline <- if(nrow(race_info) > 0) race_info$Distance[1] else paste("Race", race_num)
+    race_date <- if(nrow(race_info) > 0) format(race_info$Race_Date[1], "%m/%d") else ""
 
-    log_info(paste("Race", race_num, "- Discipline:", discipline, "- Sheet name:", sheet_name))
+    # Format: "Men Downhill (02/15)" or "Ladies Giant Slalom (02/16)"
+    sheet_name <- paste0(ifelse(gender == "men", "Men ", "Ladies "), discipline, " (", race_date, ")")
+
+    log_info(paste("Race", race_num, "- Discipline:", discipline, "- Date:", race_date, "- Sheet name:", sheet_name))
     log_info(paste("Race data dimensions:", nrow(race_data), "x", ncol(race_data)))
 
     race_dfs[[sheet_name]] <- race_data
@@ -1301,9 +1354,10 @@ if (!is.null(men_results) || !is.null(ladies_results)) {
     ) %>%
     group_by(Gender, Nation_Group) %>%
     summarise(
-      `Total Win` = round(sum(Win, na.rm = TRUE), 1),
-      `Total Podium` = round(sum(Podium, na.rm = TRUE), 1),
-      `Total Top-10` = round(sum(`Top-10`, na.rm = TRUE), 1),
+      # Divide by 100 to convert from percentage to expected count
+      `Total Win` = round(sum(Win, na.rm = TRUE) / 100, 2),
+      `Total Podium` = round(sum(Podium, na.rm = TRUE) / 100, 2),
+      `Total Top-10` = round(sum(`Top-10`, na.rm = TRUE) / 100, 2),
       Athletes = n_distinct(Skier),
       .groups = "drop"
     ) %>%
