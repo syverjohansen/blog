@@ -1,0 +1,133 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Nation",
+    "Team",
+    "Win_Prob",
+    "Podium_Prob",
+    "Top5_Prob",
+    "Races_Participating"
+  ],
+  "rows": [
+    [
+      "Slovenia",
+      "Domen Prevc,Anze Lanisek",
+      "39.7078353253652",
+      "95.3467954345918",
+      "100.0",
+      1
+    ],
+    [
+      "Japan",
+      "Ryoyu Kobayashi,Ren Nikaido",
+      "38.6454183266932",
+      "95.7418788410887",
+      "100.0",
+      1
+    ],
+    [
+      "Austria",
+      "Jan Hörl,Stefan Kraft",
+      "17.3970783532537",
+      "66.2423178226515",
+      "100.0",
+      1
+    ],
+    [
+      "Norway",
+      "Johann Forfang,Marius Lindvik",
+      "3.05444887118194",
+      "24.1000877963126",
+      "80.8571428571428",
+      1
+    ],
+    [
+      "Germany",
+      "Philipp Raimund,Pius Paschke",
+      "1.19521912350598",
+      "14.3546971027217",
+      "67.1428571428571",
+      1
+    ],
+    [
+      "Estonia",
+      "Artti Aigro,Kaimar Vagul",
+      "0.0",
+      "0.263388937664618",
+      "5.71428571428571",
+      1
+    ],
+    [
+      "Finland",
+      "Antti Aalto,Niko Kytösaho",
+      "0.0",
+      "0.526777875329236",
+      "9.14285714285714",
+      1
+    ],
+    [
+      "France",
+      "Valentin Foubert,Enzo Milesi",
+      "0.0",
+      "0.131694468832309",
+      "4.57142857142857",
+      1
+    ],
+    [
+      "Italy",
+      "Alex Insam,Giovanni Bresadola",
+      "0.0",
+      "0.0",
+      "1.42857142857143",
+      1
+    ],
+    [
+      "Kazakhstan",
+      "Ilya Mizernykh,Danil Vassilyev",
+      "0.0",
+      "0.0",
+      "1.14285714285714",
+      1
+    ],
+    [
+      "Poland",
+      "Kacper Tomasiak,Kamil Stoch",
+      "0.0",
+      "2.23880597014925",
+      "18.0",
+      1
+    ],
+    [
+      "Switzerland",
+      "Gregor Deschwanden,Sandro Hauswirth",
+      "0.0",
+      "0.921861281826163",
+      "7.42857142857143",
+      1
+    ],
+    [
+      "Turkey",
+      "Fatih Arda Ipcioglu,Muhammed Ali Bedir",
+      "0.0",
+      "0.0",
+      "0.571428571428571",
+      1
+    ],
+    [
+      "USA",
+      "Jason Colby,Tate Frantz",
+      "0.0",
+      "0.131694468832309",
+      "3.42857142857143",
+      1
+    ],
+    [
+      "Ukraine",
+      "Yevhen Marusiak,Vitaliy Kalinichenko",
+      "0.0",
+      "0.0",
+      "0.571428571428571",
+      1
+    ]
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Nation",
+    "Team",
+    "Win_Prob",
+    "Podium_Prob",
+    "Top5_Prob",
+    "Races_Participating"
+  ],
+  "rows": [
+    [
+      "Slovenia",
+      "Domen Prevc,Anze Lanisek,Nika Prevc,Nika Vodan",
+      "49.0842490842491",
+      "83.2240666017943",
+      "99.9755859375",
+      1
+    ],
+    [
+      "Japan",
+      "Ryoyu Kobayashi,Ren Nikaido,Nozomi Maruyama,Sara Takanashi",
+      "25.1526251526252",
+      "68.8383444619195",
+      "99.9755859375",
+      1
+    ],
+    [
+      "Austria",
+      "Jan Hörl,Stefan Kraft,Lisa Eder,Julia Mühlbacher",
+      "10.01221001221",
+      "47.5261635139568",
+      "99.4781949626865",
+      1
+    ],
+    [
+      "Norway",
+      "Johann Forfang,Marius Lindvik,Anna Odine Strøm,Eirin Maria Kvandal",
+      "7.93650793650794",
+      "49.2311379897938",
+      "99.9755859375",
+      1
+    ],
+    [
+      "Germany",
+      "Philipp Raimund,Pius Paschke,Selina Freitag,Agnes Reisch",
+      "7.57020757020757",
+      "50.9361124656308",
+      "99.9755859375",
+      1
+    ],
+    [
+      "Finland",
+      "Antti Aalto,Niko Kytösaho,Jenny Rautionaho,Heta Hirvonen",
+      "0.122100122100122",
+      "0.122100122100122",
+      "0.497390974813433",
+      1
+    ],
+    [
+      "Poland",
+      "Kacper Tomasiak,Kamil Stoch,Anna Twardosz,Pola Beltowska",
+      "0.122100122100122",
+      "0.122100122100122",
+      "0.122100122100122",
+      1
+    ],
+    [
+      "France",
+      "Valentin Foubert,Enzo Milesi,Josephine Pagnier,Emma Chervet",
+      "0.0",
+      "0.0",
+      "0.0",
+      1
+    ],
+    [
+      "Italy",
+      "Alex Insam,Giovanni Bresadola,Annika Sieff,Martina Zanitzer",
+      "0.0",
+      "0.0",
+      "0.0",
+      1
+    ],
+    [
+      "Switzerland",
+      "Gregor Deschwanden,Sandro Hauswirth,Rea Kindlimann,Sina Arnet",
+      "0.0",
+      "0.0",
+      "0.0",
+      1
+    ],
+    [
+      "USA",
+      "Jason Colby,Tate Frantz,Annika Belshaw,Josie Johnson",
+      "0.0",
+      "0.0",
+      "0.0",
+      1
+    ]
+  ]
+}

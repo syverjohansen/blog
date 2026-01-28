@@ -1967,3 +1967,136 @@ All five winter sports have been updated with the championship prediction pipeli
 4. Apply duplicate race type fix to other sports if needed
 
 ---
+
+## Ski Jumping Additional Fixes (2026-01-28)
+
+### Issues Identified and Fixed
+
+#### 1. Unit Mismatch in Normalization (start_prob ceiling)
+
+**Issue**: All athletes had 100% probability for all metrics (Win=1, Podium=1, etc.)
+
+**Root Cause**: `start_prob` is stored as decimal (0-1) but position probabilities are percentages (0-100). The Phase 2 and Phase 4 capping was comparing `50 > 1.0` which was always true, capping everything at 1.
+
+**Fix**: Multiply `start_prob` by 100 before using as ceiling:
+```r
+# PHASE 2 and PHASE 4
+start_ceiling <- normalized$start_prob[row_i] * 100
+```
+
+**Files Modified**: `~/blog/daehl-e/content/post/skijump/drafts/champs-predictions.R`
+
+**Note**: This fix was only applied to Ski Jumping. Other sports may need the same fix if they exhibit the same issue.
+
+#### 2. Mixed Team RaceType Mismatch
+
+**Issue**: Mixed team races had 0 rows after filtering because FIS website had "Mixed Mixed" instead of "Mixed Team"
+
+**Root Cause**: `race_scrape.py` only checked for "Team" in race text, missing "Mixed" events
+
+**Fix**: Updated `parse_hill_size_and_racetype()` in race_scrape.py:
+```python
+# Mixed events are always team events, even if FIS mislabels them
+is_team_event = "Team" in race_text or "Mixed" in race_text
+```
+
+**Files Modified**: `~/ski/elo/python/skijump/polars/race_scrape.py`
+
+#### 3. Team RaceType Filter in R Script
+
+**Issue**: Team race filtering for `RaceType == "Normal"` failed because chrono has `RaceType == "Team Normal"`
+
+**Fix**: Added logic to construct proper chrono RaceType:
+```r
+chrono_race_type <- if(grepl("Team", race_type)) {
+  race_type  # Already has "Team" prefix
+} else {
+  paste("Team", race_type)  # Add "Team" prefix
+}
+```
+
+Also added error handling to skip races with no historical data.
+
+**Files Modified**: `~/blog/daehl-e/content/post/skijump/drafts/champs-predictions.R`
+
+#### 4. Olympic Team Size (4 → 2 athletes)
+
+**Issue**: Ski jumping Olympic team events use 2-person teams, not 4-person teams
+
+**Fix**: Updated `startlist-scrape-champs.py`:
+- Changed minimum athletes from 4 to 2
+- Changed top athlete selection from 4 to 2
+- Changed member processing loop from `range(4)` to `range(2)`
+
+**Files Modified**: `~/ski/elo/python/skijump/polars/startlist-scrape-champs.py`
+
+#### 5. TeamMembers Column in Team Excel Output (R Script)
+
+**Issue**: Team Excel output (men_team.xlsx) didn't include team member names
+
+**Fix**: Added TeamMembers lookup and join before saving team predictions:
+```r
+if("TeamMembers" %in% names(startlist)) {
+  team_members_lookup <- startlist %>%
+    dplyr::select(Nation, TeamMembers) %>%
+    distinct()
+  team_predictions <- team_predictions %>%
+    left_join(team_members_lookup, by = "Nation") %>%
+    rename(Team = TeamMembers) %>%
+    dplyr::select(Nation, Team, everything())
+}
+```
+
+**Files Modified**: `~/blog/daehl-e/content/post/skijump/drafts/champs-predictions.R`
+
+#### 6. TeamMembers Column in Python Startlist Scraper
+
+**Issue**: Python `startlist-scrape-champs.py` wasn't outputting a `TeamMembers` column in team CSV files (unlike biathlon which has this column)
+
+**Fix**: Added TeamMembers column to both `create_team_record_from_config()` and `create_mixed_team_record()`:
+```python
+# In create_team_record_from_config:
+team_record['Team_Points'] = ''
+team_record['TeamMembers'] = ','.join(athletes)  # Comma-separated athlete names
+
+# In create_mixed_team_record:
+team_record['Team_Points'] = ''
+all_athletes = men_athletes + ladies_athletes
+team_record['TeamMembers'] = ','.join(all_athletes)  # Comma-separated athlete names
+```
+
+**Files Modified**: `~/ski/elo/python/skijump/polars/startlist-scrape-champs.py`
+
+### Files Summary
+
+| File | Changes |
+|------|---------|
+| `~/blog/daehl-e/content/post/skijump/drafts/champs-predictions.R` | start_prob * 100 fix, RaceType filter fix, TeamMembers column |
+| `~/ski/elo/python/skijump/polars/race_scrape.py` | Mixed event detection |
+| `~/ski/elo/python/skijump/polars/startlist-scrape-champs.py` | 2-person teams for Olympics, TeamMembers column in CSV output |
+
+### Biathlon vs Ski Jumping Mixed Event Comparison
+
+Both sports have code to generate mixed team/relay startlists, but use different terminology:
+
+| Sport | Event Name | Function | Output File | Team Composition |
+|-------|------------|----------|-------------|------------------|
+| Biathlon | Mixed Relay | `create_mixed_relay_championships_startlist()` | `relay/excel365/startlist_champs_mixed_relay.csv` | 2 men + 2 ladies |
+| Ski Jumping | Mixed Team | `create_mixed_team_championships_startlist()` | `relay/excel365/startlist_champs_mixed_team.csv` | 2 men + 2 ladies |
+
+**Why the naming difference:**
+- **Biathlon**: Athletes race sequentially in legs (relay format)
+- **Ski Jumping**: Athletes jump individually and scores are combined (team format)
+
+The ski jumping file `startlist_champs_mixed_team.csv` IS generated - it's just named differently than biathlon's `startlist_champs_mixed_relay.csv`. Both files now include the TeamMembers column with comma-separated athlete names.
+
+### Testing Required
+
+1. Re-run `race_scrape.py` to regenerate race data with fixed Mixed team detection
+2. Re-run `startlist-scrape-champs.py` to generate 2-person team startlists with TeamMembers column
+3. Run `champs-predictions.R` to generate predictions
+4. Run `champs_script.sh 2026` to generate blog post
+5. Verify probabilities are reasonable (not all 1 or all 100)
+6. Verify team CSV files have TeamMembers column
+
+---

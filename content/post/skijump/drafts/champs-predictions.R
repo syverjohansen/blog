@@ -231,8 +231,10 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
   prob_cols <- paste0("prob_top", position_thresholds)
   for(row_i in 1:nrow(normalized)) {
     # Get start_prob ceiling for this row (handle NA)
-    start_ceiling <- if("start_prob" %in% names(normalized)) normalized$start_prob[row_i] else NA
-    if(is.na(start_ceiling)) start_ceiling <- 100  # Default to 100 if no start_prob
+    # Note: start_prob is stored as decimal (0-1), but position probs are percentages (0-100)
+    # So we multiply start_prob by 100 to get the ceiling in percentage terms
+    start_ceiling <- if("start_prob" %in% names(normalized)) normalized$start_prob[row_i] * 100 else NA
+    if(is.na(start_ceiling)) start_ceiling <- 100  # Default to 100% if no start_prob
 
     # Get current probabilities
     probs <- sapply(prob_cols, function(col) {
@@ -279,7 +281,8 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
   if("start_prob" %in% names(normalized)) {
     violations_fixed <- 0
     for(row_i in 1:nrow(normalized)) {
-      start_ceiling <- normalized$start_prob[row_i]
+      # Convert start_prob from decimal (0-1) to percentage (0-100) for comparison
+      start_ceiling <- normalized$start_prob[row_i] * 100
       if(is.na(start_ceiling)) next
       for(col in prob_cols) {
         if(!is.na(normalized[[col]][row_i]) && normalized[[col]][row_i] > start_ceiling) {
@@ -1784,7 +1787,18 @@ process_team_championships <- function(gender, races) {
       Podium_Prob = Avg_Podium_Prob,
       Top5_Prob = Avg_Top5_Prob
     )
-  
+
+  # Add TeamMembers column from startlist if available
+  if("TeamMembers" %in% names(startlist)) {
+    team_members_lookup <- startlist %>%
+      dplyr::select(Nation, TeamMembers) %>%
+      distinct()
+    team_predictions <- team_predictions %>%
+      left_join(team_members_lookup, by = "Nation") %>%
+      rename(Team = TeamMembers) %>%
+      dplyr::select(Nation, Team, everything())
+  }
+
   # Create output directory
   champs_date <- format(Sys.Date(), "%Y")
   dir_path <- paste0("~/blog/daehl-e/content/post/skijump/drafts/champs-predictions/", champs_date)
