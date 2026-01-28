@@ -1029,8 +1029,8 @@ process_gender_championships <- function(gender, races) {
     # Format date as "Feb 11" (abbreviated month + day)
     race_date <- if(nrow(race_info) > 0) format(race_info$Race_Date[1], "%b %d") else ""
 
-    # Format: "Men's Super G - Feb 11" or "Ladies' Giant Slalom - Feb 15"
-    gender_prefix <- ifelse(gender == "men", "Men's", "Ladies'")
+    # Format: "Mens Downhill - Feb 07" or "Ladies Giant Slalom - Feb 15"
+    gender_prefix <- ifelse(gender == "men", "Mens", "Ladies")
     sheet_name <- paste0(gender_prefix, " ", discipline, " - ", race_date)
 
     log_info(paste("Race", race_num, "- Discipline:", discipline, "- Date:", race_date, "- Sheet name:", sheet_name))
