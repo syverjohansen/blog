@@ -2211,3 +2211,91 @@ Before fix: Switzerland Men `Total Win = 197.5` (impossible)
 After fix: Switzerland Men `Total Win = 1.97` (meaning ~2 expected gold medals)
 
 ---
+
+## Alpine Calendar Date Ordering and Formatting (2026-01-28)
+
+### Issues Addressed
+
+1. **Races not in chronological order** - Races were sorted alphabetically by discipline name instead of by date
+2. **No dates shown** - Users couldn't tell when races occur
+3. **Redundant gender prefix** - "Mens Downhill" in the Men section is redundant
+4. **Nations Race column too verbose** - Showed "Mens Downhill - Feb 07" instead of just "Downhill"
+
+### Solution
+
+#### 1. Parse Race_Date from weekends.csv
+
+```r
+weekends <- read.csv("~/ski/elo/python/alpine/polars/excel365/weekends.csv",
+                     stringsAsFactors = FALSE) %>%
+  mutate(
+    Date = as.Date(Date, format="%m/%d/%Y"),
+    Race_Date = as.Date(Race_Date, format="%m/%d/%Y")
+  )
+```
+
+#### 2. Order races chronologically
+
+```r
+champs_races_with_race_num <- champs_races %>%
+  arrange(Race_Date) %>%
+  mutate(OriginalRaceNum = row_number())
+
+men_races <- champs_races_with_race_num %>%
+  filter(Sex == "M") %>%
+  arrange(Race_Date) %>%
+  dplyr::select(Distance, Period, Country, Race_Date, OriginalRaceNum) %>%
+  rename(...)
+```
+
+#### 3. Sheet naming with numeric prefix and date
+
+```r
+# Format date as "Feb 11" (abbreviated month + day)
+race_date <- if(nrow(race_info) > 0) format(race_info$Race_Date[1], "%b %d") else ""
+
+# Format: "1. Downhill - Feb 07" with numeric prefix for chronological sorting
+sheet_name <- paste0(race_order, ". ", discipline, " - ", race_date)
+```
+
+#### 4. Nations Race column shows just discipline
+
+```r
+# Extract just the discipline (remove "N. " prefix and " - Date" suffix) for Race column
+discipline_only <- sub("^\\d+\\. ", "", race_name)  # Remove "1. " prefix
+discipline_only <- sub(" - .*$", "", discipline_only)  # Remove " - Feb 07" suffix
+race_data$Race <- discipline_only
+```
+
+#### 5. Blog post formatting in champs_script.sh
+
+Added sed commands to format race names with proper punctuation:
+
+```bash
+# Convert "1 Downhill Feb 07" to "1. Downhill (Feb 07)"
+race_name=$(echo "$filename" | sed 's/men_position_probabilities_//' | tr '_' ' ' | sed 's/  */ /g' | sed 's/^\([0-9]*\) /\1. /' | sed 's/ \([A-Z][a-z][a-z] [0-9][0-9]\)$/ (\1)/')
+```
+
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `~/blog/daehl-e/content/post/alpine/drafts/champs-predictions.R` | Race_Date parsing, chronological ordering, sheet naming with dates |
+| `~/blog/daehl-e/champs_script.sh` | Race name formatting with punctuation |
+
+### Result
+
+**Calendar section:**
+- `1. Downhill (Feb 07)`
+- `2. Super G (Feb 11)`
+- `3. Giant Slalom (Feb 14)`
+- `4. Slalom (Feb 16)`
+
+**Nations Race column:**
+- Just `Downhill`, `Super G`, etc. (no prefix or date)
+
+### Still Pending
+
+- Apply same date changes to other sports (Biathlon, Cross-Country, Nordic Combined, Ski Jumping)
+
+---

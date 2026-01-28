@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Cross-Country Skiing Predictions"
-date: 2026-01-28T22:31:18+00:00
+date: 2026-01-28T22:42:47+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "cross-country"]
 ---
@@ -13,15 +13,15 @@ tags: ["predictions", "olympics", "2026", "cross-country"]
 
 #### Men
 
-##### 10 F
+##### 10. F
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_10_F" >}}
 
-##### 20 P
+##### 20. P
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_20_P" >}}
 
-##### 50 C
+##### 50. C
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_50_C" >}}
 
@@ -31,15 +31,15 @@ tags: ["predictions", "olympics", "2026", "cross-country"]
 
 #### Ladies
 
-##### 10 F
+##### 10. F
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_10_F" >}}
 
-##### 20 P
+##### 20. P
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_20_P" >}}
 
-##### 50 C
+##### 50. C
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_50_C" >}}
 

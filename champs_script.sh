@@ -163,8 +163,8 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
 "
         while IFS= read -r json_file; do
             filename=$(basename "$json_file" .json)
-            # Extract race name from filename (e.g., men_position_probabilities_Sprint_C -> Sprint C)
-            race_name=$(echo "$filename" | sed 's/men_position_probabilities_//' | tr '_' ' ')
+            # Extract race name from filename (e.g., men_position_probabilities_1__Downhill___Feb_07 -> 1. Downhill (Feb 07))
+            race_name=$(echo "$filename" | sed 's/men_position_probabilities_//' | tr '_' ' ' | sed 's/  */ /g' | sed 's/^\([0-9]*\) /\1. /' | sed 's/ \([A-Z][a-z][a-z] [0-9][0-9]\)$/ (\1)/')
             post_content+="
 ##### $race_name
 
@@ -181,7 +181,8 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
 "
         while IFS= read -r json_file; do
             filename=$(basename "$json_file" .json)
-            race_name=$(echo "$filename" | sed 's/ladies_position_probabilities_//' | tr '_' ' ')
+            # Extract race name from filename (e.g., ladies_position_probabilities_1__Downhill___Feb_08 -> 1. Downhill (Feb 08))
+            race_name=$(echo "$filename" | sed 's/ladies_position_probabilities_//' | tr '_' ' ' | sed 's/  */ /g' | sed 's/^\([0-9]*\) /\1. /' | sed 's/ \([A-Z][a-z][a-z] [0-9][0-9]\)$/ (\1)/')
             post_content+="
 ##### $race_name
 
