@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Alpine Skiing Predictions"
-date: 2026-01-28T19:01:42+00:00
+date: 2026-01-28T19:35:08+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "alpine"]
 ---
@@ -17,33 +17,17 @@ tags: ["predictions", "olympics", "2026", "alpine"]
 
 {{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/men_position_probabilities_Men_Downhill__02_07_" >}}
 
-##### Men Downhill
-
-{{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/men_position_probabilities_Men_Downhill" >}}
-
 ##### Men Giant Slalom  02 14 
 
 {{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/men_position_probabilities_Men_Giant_Slalom__02_14_" >}}
-
-##### Men Giant Slalom
-
-{{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/men_position_probabilities_Men_Giant_Slalom" >}}
 
 ##### Men Slalom  02 16 
 
 {{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/men_position_probabilities_Men_Slalom__02_16_" >}}
 
-##### Men Slalom
-
-{{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/men_position_probabilities_Men_Slalom" >}}
-
 ##### Men Super G  02 11 
 
 {{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/men_position_probabilities_Men_Super_G__02_11_" >}}
-
-##### Men Super G
-
-{{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/men_position_probabilities_Men_Super_G" >}}
 
 #### Ladies
 
@@ -51,33 +35,17 @@ tags: ["predictions", "olympics", "2026", "alpine"]
 
 {{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/ladies_position_probabilities_Ladies_Downhill__02_08_" >}}
 
-##### Ladies Downhill
-
-{{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/ladies_position_probabilities_Ladies_Downhill" >}}
-
 ##### Ladies Giant Slalom  02 15 
 
 {{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/ladies_position_probabilities_Ladies_Giant_Slalom__02_15_" >}}
-
-##### Ladies Giant Slalom
-
-{{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/ladies_position_probabilities_Ladies_Giant_Slalom" >}}
 
 ##### Ladies Slalom  02 18 
 
 {{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/ladies_position_probabilities_Ladies_Slalom__02_18_" >}}
 
-##### Ladies Slalom
-
-{{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/ladies_position_probabilities_Ladies_Slalom" >}}
-
 ##### Ladies Super G  02 12 
 
 {{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/ladies_position_probabilities_Ladies_Super_G__02_12_" >}}
-
-##### Ladies Super G
-
-{{< alpine/datatable2 "alpine/drafts/champs-predictions/2026/ladies_position_probabilities_Ladies_Super_G" >}}
 
 ## Nation
 

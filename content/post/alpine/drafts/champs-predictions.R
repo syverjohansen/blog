@@ -1026,10 +1026,12 @@ process_gender_championships <- function(gender, races) {
       filter(Sex == ifelse(gender == "men", "M", "L"), OriginalRaceNum == race_num)
 
     discipline <- if(nrow(race_info) > 0) race_info$Distance[1] else paste("Race", race_num)
-    race_date <- if(nrow(race_info) > 0) format(race_info$Race_Date[1], "%m/%d") else ""
+    # Format date as MM-DD-YYYY (use dashes since Excel sheet names can't have slashes)
+    race_date <- if(nrow(race_info) > 0) format(race_info$Race_Date[1], "%m-%d-%Y") else ""
 
-    # Format: "Men Downhill (02/15)" or "Ladies Giant Slalom (02/16)"
-    sheet_name <- paste0(ifelse(gender == "men", "Men ", "Ladies "), discipline, " (", race_date, ")")
+    # Format: "Men's Downhill -- 02-07-2026" or "Ladies' Giant Slalom -- 02-08-2026"
+    gender_prefix <- ifelse(gender == "men", "Men's", "Ladies'")
+    sheet_name <- paste0(gender_prefix, " ", discipline, " -- ", race_date)
 
     log_info(paste("Race", race_num, "- Discipline:", discipline, "- Date:", race_date, "- Sheet name:", sheet_name))
     log_info(paste("Race data dimensions:", nrow(race_data), "x", ncol(race_data)))
