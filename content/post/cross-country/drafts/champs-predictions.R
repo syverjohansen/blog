@@ -434,13 +434,18 @@ log_info("=== PART 3: INDIVIDUAL RACES - TEST SETUP ===")
 # Read weekends CSV to get championship race schedule
 log_info("Reading weekends data and championship startlists")
 
-weekends <- read.csv("~/ski/elo/python/ski/polars/excel365/weekends.csv", 
+weekends <- read.csv("~/ski/elo/python/ski/polars/excel365/weekends.csv",
                      stringsAsFactors = FALSE) %>%
-  mutate(Date = mdy(Date))
+  mutate(
+    Date = mdy(Date),
+    Race_Date = mdy(Race_Date)
+  )
 
-# Filter for Championships races only (Championship == 1)
+# Filter for Championships races only (Championship == 1) and order chronologically
 champs_races <- weekends %>%
-  filter(Championship == 1)
+  filter(Championship == 1) %>%
+  arrange(Race_Date) %>%
+  mutate(OriginalRaceNum = row_number())
 
 if (nrow(champs_races) == 0) {
   log_warn("No Championships races found in weekends.csv")
@@ -629,9 +634,10 @@ calculate_position_probabilities <- function(model_info, test_data) {
 process_individual_races <- function() {
   log_info("=== PROCESSING INDIVIDUAL RACES ===")
   
-  # Get individual races
+  # Get individual races (ordered chronologically via OriginalRaceNum)
   individual_races <- champs_races %>%
     filter(!Distance %in% c("Rel", "Ts"), Sex %in% c("M", "L")) %>%  # Both men's and ladies' individual races
+    arrange(Race_Date) %>%
     mutate(race_type = mapply(determine_race_type, Distance, Technique, MS))
   
   log_info(paste("Found", nrow(individual_races), "individual races to process"))
@@ -931,10 +937,18 @@ process_individual_races <- function() {
       arrange(desc(win_prob))
   }
   
-  # Store results
+  # Store results with metadata for sheet naming
   race_name <- paste(gender, race$Distance, race$Technique)
-  results_list[[race_name]] <- race_results
-  
+  race_date_str <- format(race$Race_Date, "%b %d")  # Format as "Feb 12"
+  results_list[[race_name]] <- list(
+    data = race_results,
+    gender = gender,
+    distance = race$Distance,
+    technique = race$Technique,
+    race_date = race_date_str,
+    race_num = gender_race_num
+  )
+
   log_info(paste("Completed predictions for", race_name, "- Top prediction:",
                  race_results$Skier[1], "with", round(race_results$win_prob[1], 3), "win probability"))
 }
@@ -951,7 +965,8 @@ position_thresholds <- c(1, 3, 5, 10, 30)
 prob_cols <- c("win_prob", "podium_prob", "top5_prob", "top10_prob", "top30_prob")
 
 for (race_name in names(results_list)) {
-  race_results <- results_list[[race_name]]
+  race_entry <- results_list[[race_name]]
+  race_results <- race_entry$data
   log_info(paste("Processing", race_name))
 
   # Store pre-normalization values for debugging
@@ -1153,8 +1168,9 @@ for (race_name in names(results_list)) {
     log_info(sprintf("    %s: %.4f (target: %.1f)", col, final_sum, threshold))
   }
 
-  # Update results list
-  results_list[[race_name]] <- race_results
+  # Update results list (preserve metadata, update data)
+  race_entry$data <- race_results
+  results_list[[race_name]] <- race_entry
 }
 
 log_info("Normalization and monotonic constraints complete")
@@ -1174,11 +1190,21 @@ men_results <- list()
 ladies_results <- list()
 
 for (race_name in names(results_list)) {
-  race_data <- results_list[[race_name]]
+  race_entry <- results_list[[race_name]]
+  race_data <- race_entry$data
 
-  # Select only final columns and rename for user-friendly display
+  # Select columns, convert to percentages, and rename for user-friendly display
+  # ID is second column (after Skier)
   race_data <- race_data %>%
-    select(Skier, Nation, ID, start_prob, win_prob, podium_prob, top5_prob, top10_prob, top30_prob) %>%
+    mutate(
+      start_prob = round(start_prob * 100, 1),
+      win_prob = round(win_prob * 100, 1),
+      podium_prob = round(podium_prob * 100, 1),
+      top5_prob = round(top5_prob * 100, 1),
+      top10_prob = round(top10_prob * 100, 1),
+      top30_prob = round(top30_prob * 100, 1)
+    ) %>%
+    select(Skier, ID, Nation, start_prob, win_prob, podium_prob, top5_prob, top10_prob, top30_prob) %>%
     rename(
       Start = start_prob,
       Win = win_prob,
@@ -1186,16 +1212,19 @@ for (race_name in names(results_list)) {
       Top5 = top5_prob,
       `Top-10` = top10_prob,
       `Top-30` = top30_prob
-    )
+    ) %>%
+    arrange(desc(Win))
 
-  # Parse race name to get components
-  parts <- strsplit(race_name, " ")[[1]]
-  gender <- parts[1]
-  distance <- parts[2]
-  technique <- ifelse(length(parts) > 2, parts[3], "")
+  # Get metadata for tab naming
+  gender <- race_entry$gender
+  distance <- race_entry$distance
+  technique <- race_entry$technique
+  race_date <- race_entry$race_date
+  race_num <- race_entry$race_num
 
-  # Create tab name (Distance Technique format)
-  tab_name <- if (technique == "") distance else paste(distance, technique)
+  # Create tab name with format: "1. 10 C - Feb 12"
+  race_type <- if (technique == "") distance else paste(distance, technique)
+  tab_name <- paste0(race_num, ". ", race_type, " - ", race_date)
 
   # Store in appropriate gender list
   if (gender == "men") {
@@ -1231,7 +1260,10 @@ log_info("=== Creating Nations Excel File ===")
 men_individual_results <- data.frame()
 for (race_name in names(men_results)) {
   race_data <- men_results[[race_name]]
-  race_data$Race <- race_name
+  # Extract just the race type (remove "N. " prefix and " - Mon DD" suffix)
+  race_type_only <- sub("^\\d+\\. ", "", race_name)  # Remove "1. " prefix
+  race_type_only <- sub(" - .*$", "", race_type_only)  # Remove " - Feb 12" suffix
+  race_data$Race <- race_type_only
   race_data$Gender <- "Men"
   men_individual_results <- bind_rows(men_individual_results, race_data)
 }
@@ -1240,7 +1272,10 @@ for (race_name in names(men_results)) {
 ladies_individual_results <- data.frame()
 for (race_name in names(ladies_results)) {
   race_data <- ladies_results[[race_name]]
-  race_data$Race <- race_name
+  # Extract just the race type (remove "N. " prefix and " - Mon DD" suffix)
+  race_type_only <- sub("^\\d+\\. ", "", race_name)  # Remove "1. " prefix
+  race_type_only <- sub(" - .*$", "", race_type_only)  # Remove " - Feb 12" suffix
+  race_data$Race <- race_type_only
   race_data$Gender <- "Ladies"
   ladies_individual_results <- bind_rows(ladies_individual_results, race_data)
 }
@@ -1336,6 +1371,7 @@ if (nrow(ladies_other_data) > 0) {
 all_individual_results <- bind_rows(men_individual_results, ladies_individual_results)
 
 # Create Summary sheet (split by gender)
+# Divide by 100 to convert from percentage to expected count
 summary_data <- all_individual_results %>%
   filter(Start > 0) %>%
   mutate(
@@ -1347,16 +1383,16 @@ summary_data <- all_individual_results %>%
   ) %>%
   group_by(Gender, Nation_Group) %>%
   summarise(
-    `Total Win` = sum(Win, na.rm = TRUE),
-    `Total Podium` = sum(Podium, na.rm = TRUE),
-    `Total Top-10` = sum(`Top-10`, na.rm = TRUE),
+    `Total Win` = round(sum(Win, na.rm = TRUE) / 100, 2),
+    `Total Podium` = round(sum(Podium, na.rm = TRUE) / 100, 2),
+    `Total Top-10` = round(sum(`Top-10`, na.rm = TRUE) / 100, 2),
     `Athletes` = n_distinct(ID),
     .groups = "drop"
   ) %>%
   rename(Nation = Nation_Group) %>%
   # Put main nations first (alphabetical), then Other at bottom
   mutate(sort_order = ifelse(Nation == "Other", 2, 1)) %>%
-  arrange(sort_order, Nation) %>%
+  arrange(Gender, sort_order, Nation) %>%
   select(-sort_order)
 
 nations_wb[["Summary"]] <- summary_data

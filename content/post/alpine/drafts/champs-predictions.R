@@ -833,11 +833,12 @@ process_gender_championships <- function(gender, races) {
     # NEW CODE: Make position probability predictions with adjustments
     position_preds <- data.frame(startlist_prepared[[participant_col]])
     names(position_preds)[1] <- participant_col
-    
-    # Add Nation for individual races
+
+    # Add ID and Nation for individual races
+    position_preds$ID <- startlist_prepared$ID
     position_preds$Nation <- startlist_prepared$Nation
     position_preds$Sex <- ifelse(gender == "men", "M", "L")
-    
+
     # Add original race number
     position_preds$Race <- race_info$original_race_num
     
@@ -1004,12 +1005,14 @@ process_gender_championships <- function(gender, races) {
 
     # Select and rename columns to simplified format (no underscores)
     # start_prob was added by normalization function
+    # ID is second column (after Skier)
     race_data <- race_data %>%
       mutate(
         Start = round(start_prob, 1)
       ) %>%
       dplyr::select(
         Skier,
+        ID,
         Nation,
         Start,
         prob_top1, prob_top3, prob_top5, prob_top10, prob_top30
@@ -1290,12 +1293,12 @@ if (!is.null(men_results) || !is.null(ladies_results)) {
   select_and_rename_cols <- function(df, include_nation = FALSE) {
     if (include_nation) {
       df %>%
-        select(Athlete = Skier, Race, Nation,
+        select(Athlete = Skier, ID, Race, Nation,
                Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
         arrange(Race, Nation, desc(Start))
     } else {
       df %>%
-        select(Athlete = Skier, Race,
+        select(Athlete = Skier, ID, Race,
                Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
         arrange(Race, desc(Start))
     }
