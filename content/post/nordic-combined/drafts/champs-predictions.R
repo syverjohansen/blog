@@ -1112,15 +1112,15 @@ process_gender_championships <- function(gender, races) {
     race_data <- all_position_predictions[all_position_predictions$Race == race_num, ]
 
     # Select and rename columns to simplified format
-    # Convert to percentages (multiply by 100), ID as second column
+    # Values are already percentages from normalization, just round them
     race_data <- race_data %>%
       mutate(
-        Start = round(if("start_prob" %in% names(.)) start_prob * 100 else 100, 1),
-        prob_top1 = round(prob_top1 * 100, 1),
-        prob_top3 = round(prob_top3 * 100, 1),
-        prob_top5 = round(prob_top5 * 100, 1),
-        prob_top10 = round(prob_top10 * 100, 1),
-        prob_top30 = round(prob_top30 * 100, 1)
+        Start = round(if("start_prob" %in% names(.)) start_prob else 100, 1),
+        prob_top1 = round(prob_top1, 1),
+        prob_top3 = round(prob_top3, 1),
+        prob_top5 = round(prob_top5, 1),
+        prob_top10 = round(prob_top10, 1),
+        prob_top30 = round(prob_top30, 1)
       ) %>%
       dplyr::select(Skier, ID, Nation, Start, prob_top1, prob_top3, prob_top5, prob_top10, prob_top30) %>%
       rename(

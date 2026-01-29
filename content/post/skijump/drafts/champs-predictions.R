@@ -1168,9 +1168,9 @@ process_gender_championships <- function(gender, races) {
     # Select and rename columns to simplified format
     race_data <- race_data %>%
       mutate(
-        Start = round(if("start_prob" %in% names(.)) start_prob else 100, 1)
+        Start = round(if("start_prob" %in% names(.)) start_prob * 100 else 100, 1)
       ) %>%
-      dplyr::select(Skier, Nation, Start, prob_top1, prob_top3, prob_top5, prob_top10, prob_top30) %>%
+      dplyr::select(Skier, ID, Nation, Start, prob_top1, prob_top3, prob_top5, prob_top10, prob_top30) %>%
       rename(
         Win = prob_top1,
         Podium = prob_top3,
@@ -1180,31 +1180,18 @@ process_gender_championships <- function(gender, races) {
       ) %>%
       arrange(desc(Win))
 
-    # Get race type for sheet naming using original race number
-    race_hill_sizes <- champs_races_with_race_num %>%
-      filter(Sex == ifelse(gender == "men", "M", "L"), OriginalRaceNum == race_num) %>%
-      pull(RaceType)
+    # Get race info for sheet naming using original race number
+    race_info_for_sheet <- races %>%
+      filter(original_race_num == race_num)
 
-    race_type <- if(length(race_hill_sizes) > 0) race_hill_sizes[1] else paste("Race", race_num)
-    gender_prefix <- ifelse(gender == "men", "Men", "Ladies")
+    race_type <- if(nrow(race_info_for_sheet) > 0) race_info_for_sheet$race_type[1] else paste("Race", race_num)
+    race_date <- if(nrow(race_info_for_sheet) > 0) race_info_for_sheet$race_date[1] else ""
 
-    # Track how many times we've seen this race type to handle duplicates
-    race_type_key <- paste(gender_prefix, race_type)
-    if (is.null(race_type_counts[[race_type_key]])) {
-      race_type_counts[[race_type_key]] <- 1
-    } else {
-      race_type_counts[[race_type_key]] <- race_type_counts[[race_type_key]] + 1
-    }
+    # Get the order of this race within this gender (1, 2, 3, etc.)
+    race_order <- which(races$original_race_num == race_num)
 
-    # Add number suffix if this race type appears multiple times
-    total_of_type <- sum(champs_races_with_race_num$Sex == ifelse(gender == "men", "M", "L") &
-                         champs_races_with_race_num$RaceType == race_type)
-
-    if (total_of_type > 1) {
-      sheet_name <- paste(gender_prefix, race_type, race_type_counts[[race_type_key]])
-    } else {
-      sheet_name <- paste(gender_prefix, race_type)
-    }
+    # Create sheet name with format "N. RaceType - Mon DD"
+    sheet_name <- paste0(race_order, ". ", race_type, " - ", race_date)
 
     log_info(paste("Race", race_num, "- Race type:", race_type, "- Sheet name:", sheet_name))
     log_info(paste("Race data dimensions:", nrow(race_data), "x", ncol(race_data)))
@@ -1926,23 +1913,29 @@ if (has_men_results || has_ladies_results) {
     dir.create(output_dir, recursive = TRUE)
   }
 
-  # Combine men's race results with Race column
+  # Combine men's race results with Race column (extract just race type from sheet name)
   men_individual_results <- data.frame()
   if (has_men_results && !is.null(men_results$race_sheets)) {
     for (race_name in names(men_results$race_sheets)) {
       race_data <- men_results$race_sheets[[race_name]]
-      race_data$Race <- race_name
+      # Extract just race type from "N. RaceType - Mon DD" format
+      race_type <- sub("^\\d+\\. ", "", race_name)  # Remove leading number
+      race_type <- sub(" - .*$", "", race_type)      # Remove date suffix
+      race_data$Race <- race_type
       race_data$Gender <- "Men"
       men_individual_results <- bind_rows(men_individual_results, race_data)
     }
   }
 
-  # Combine ladies' race results with Race column
+  # Combine ladies' race results with Race column (extract just race type from sheet name)
   ladies_individual_results <- data.frame()
   if (has_ladies_results && !is.null(ladies_results$race_sheets)) {
     for (race_name in names(ladies_results$race_sheets)) {
       race_data <- ladies_results$race_sheets[[race_name]]
-      race_data$Race <- race_name
+      # Extract just race type from "N. RaceType - Mon DD" format
+      race_type <- sub("^\\d+\\. ", "", race_name)  # Remove leading number
+      race_type <- sub(" - .*$", "", race_type)      # Remove date suffix
+      race_data$Race <- race_type
       race_data$Gender <- "Ladies"
       ladies_individual_results <- bind_rows(ladies_individual_results, race_data)
     }
@@ -1957,11 +1950,11 @@ if (has_men_results || has_ladies_results) {
     select_and_rename_cols <- function(df, include_nation = FALSE) {
       if (include_nation) {
         df %>%
-          dplyr::select(Skier, Nation, Race, Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
+          dplyr::select(Skier, ID, Nation, Race, Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
           rename(Athlete = Skier)
       } else {
         df %>%
-          dplyr::select(Skier, Race, Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
+          dplyr::select(Skier, ID, Race, Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
           rename(Athlete = Skier)
       }
     }
@@ -2049,7 +2042,7 @@ if (has_men_results || has_ladies_results) {
     # Combine all results for summary
     all_individual_results <- bind_rows(men_individual_results, ladies_individual_results)
 
-    # Create Summary sheet (split by gender)
+    # Create Summary sheet with expected medal counts (split by gender)
     if (nrow(all_individual_results) > 0) {
       summary_data <- all_individual_results %>%
         filter(Start > 0) %>%
@@ -2057,12 +2050,12 @@ if (has_men_results || has_ladies_results) {
         summarise(
           Athletes = n_distinct(Skier),
           Races = n(),
-          `Avg Win` = round(mean(Win, na.rm = TRUE), 2),
-          `Avg Podium` = round(mean(Podium, na.rm = TRUE), 2),
-          `Avg Top5` = round(mean(Top5, na.rm = TRUE), 2),
+          `Exp Wins` = round(sum(Win, na.rm = TRUE) / 100, 2),
+          `Exp Podiums` = round(sum(Podium, na.rm = TRUE) / 100, 2),
+          `Exp Top5` = round(sum(Top5, na.rm = TRUE) / 100, 2),
           .groups = "drop"
         ) %>%
-        arrange(Gender, desc(`Avg Win`))
+        arrange(Gender, desc(`Exp Wins`))
 
       nations_wb[["Summary"]] <- summary_data
       log_info(paste("Added Summary sheet with", nrow(summary_data), "nation-gender combinations"))

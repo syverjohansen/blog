@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Ski Jumping Predictions"
-date: 2026-01-29T19:23:17+00:00
+date: 2026-01-29T19:37:50+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "skijump"]
 ---
@@ -13,6 +13,14 @@ tags: ["predictions", "olympics", "2026", "skijump"]
 
 #### Men
 
+##### 1. Normal (Feb 07)
+
+{{< skijump/datatable2 "skijump/drafts/champs-predictions/2026/men_position_probabilities_1__Normal___Feb_07" >}}
+
+##### 2. Large (Feb 14)
+
+{{< skijump/datatable2 "skijump/drafts/champs-predictions/2026/men_position_probabilities_2__Large___Feb_14" >}}
+
 ##### Men Large
 
 {{< skijump/datatable2 "skijump/drafts/champs-predictions/2026/men_position_probabilities_Men_Large" >}}
@@ -22,6 +30,14 @@ tags: ["predictions", "olympics", "2026", "skijump"]
 {{< skijump/datatable2 "skijump/drafts/champs-predictions/2026/men_position_probabilities_Men_Normal" >}}
 
 #### Ladies
+
+##### 1. Normal (Feb 07)
+
+{{< skijump/datatable2 "skijump/drafts/champs-predictions/2026/ladies_position_probabilities_1__Normal___Feb_07" >}}
+
+##### 2. Large (Feb 14)
+
+{{< skijump/datatable2 "skijump/drafts/champs-predictions/2026/ladies_position_probabilities_2__Large___Feb_14" >}}
 
 ##### Ladies Large
 

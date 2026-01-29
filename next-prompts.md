@@ -24,7 +24,7 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 | Biathlon | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
 | Cross-Country | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
 | Nordic Combined | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
-| Ski Jumping | ⏳ Pending | ⏳ Pending | ⏳ Pending | ✅ Complete | Needs update |
+| Ski Jumping | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
 
 ### Features Implemented (All Sports)
 - 5-phase normalization (scale → monotonic → re-scale → cap at start_prob → final monotonic)
@@ -41,6 +41,23 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 ---
 
 ## Recent Changes
+
+### Ski Jumping Full Update (2026-01-29)
+
+**Changes Made:**
+1. **Chronological ordering**: Added `arrange(Date)` before assigning `OriginalRaceNum`
+2. **Race date in dataframes**: Added `race_date` column to all race dataframes (men_races, ladies_races, teams)
+3. **ID in prepare_startlist_data**: Added ID to base_df select
+4. **ID in position_preds**: Added `position_preds$ID <- startlist_prepared$ID`
+5. **Start percentage fix**: Multiplied start_prob by 100 in Excel output
+6. **ID in Excel output**: Added ID as second column (Skier, ID, Nation, ...)
+7. **Sheet naming**: Format `"1. Normal - Feb 20"` with numeric prefix and date
+8. **Nations Race column**: Extracts just race type from sheet name
+9. **Nations select_and_rename_cols**: Added ID as second column
+10. **Nations Summary**: Changed to expected medal counts (sum/100) instead of averages
+
+**Files Modified:**
+- `~/blog/daehl-e/content/post/skijump/drafts/champs-predictions.R`
 
 ### Nordic Combined Full Update (2026-01-29)
 
@@ -106,20 +123,6 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 **Files Modified:**
 - `~/blog/daehl-e/content/post/alpine/drafts/champs-predictions.R`
 - `~/blog/daehl-e/champs_script.sh`
-
----
-
-## Pending Work
-
-### Nordic Combined & Ski Jumping Updates
-Apply the same changes as Cross-Country:
-1. Add `arrange(Race_Date)` for chronological ordering
-2. Include `race_date` in race dataframes
-3. Update sheet naming to `"N. RaceType - Mon DD"` format
-4. Update nations Race column to extract just race type
-5. Add ID as second column in Excel outputs
-6. Convert probabilities to percentages (multiply by 100)
-7. Update Nations Summary to divide by 100 for expected medals
 
 ---
 
