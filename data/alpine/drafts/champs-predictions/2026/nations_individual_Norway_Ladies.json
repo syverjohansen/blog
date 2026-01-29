@@ -2,6 +2,7 @@
   "sheet_name": "Norway Ladies",
   "headers": [
     "Athlete",
+    "ID",
     "Race",
     "Start",
     "Win",
@@ -13,6 +14,7 @@
   "rows": [
     [
       "Kajsa Vickhoff Lie",
+      2963,
       "Downhill",
       100.0,
       3.17004774467812,
@@ -23,6 +25,7 @@
     ],
     [
       "Marte Monsen",
+      3793,
       "Downhill",
       100.0,
       0.0,
@@ -33,6 +36,7 @@
     ],
     [
       "Mina Fürst Holtmann",
+      480,
       "Giant Slalom",
       100.0,
       0.37276769864719,
@@ -43,6 +47,7 @@
     ],
     [
       "Thea Louise Stjernesund",
+      3019,
       "Giant Slalom",
       100.0,
       0.0,
@@ -53,6 +58,7 @@
     ],
     [
       "Madeline Sylvester-Davik",
+      5486,
       "Giant Slalom",
       79.8,
       0.0594710719008439,
@@ -63,6 +69,7 @@
     ],
     [
       "Kajsa Vickhoff Lie",
+      2963,
       "Giant Slalom",
       42.5,
       0.221585046320855,
@@ -73,6 +80,7 @@
     ],
     [
       "Marte Monsen",
+      3793,
       "Giant Slalom",
       20.2,
       0.0,
@@ -83,6 +91,7 @@
     ],
     [
       "Bianca Bakke Westhoff",
+      4160,
       "Giant Slalom",
       8.2,
       0.0,
@@ -93,6 +102,7 @@
     ],
     [
       "Thea Louise Stjernesund",
+      3019,
       "Slalom",
       100.0,
       0.092104674600493,
@@ -103,6 +113,7 @@
     ],
     [
       "Mina Fürst Holtmann",
+      480,
       "Slalom",
       100.0,
       0.0,
@@ -113,6 +124,7 @@
     ],
     [
       "Bianca Bakke Westhoff",
+      4160,
       "Slalom",
       100.0,
       0.0,
@@ -123,6 +135,7 @@
     ],
     [
       "Madeline Sylvester-Davik",
+      5486,
       "Slalom",
       15.4,
       0.0,
@@ -133,6 +146,7 @@
     ],
     [
       "Marte Monsen",
+      3793,
       "Slalom",
       1.5,
       0.0,
@@ -143,6 +157,7 @@
     ],
     [
       "Kajsa Vickhoff Lie",
+      2963,
       "Super G",
       100.0,
       2.83077754562813,
@@ -153,6 +168,7 @@
     ],
     [
       "Marte Monsen",
+      3793,
       "Super G",
       100.0,
       0.134798930744197,

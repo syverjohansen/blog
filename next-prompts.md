@@ -45,9 +45,10 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 ### Alpine ID Column (2026-01-29)
 
 **Changes Made:**
-1. **ID in position_preds**: Added `position_preds$ID <- startlist_prepared$ID`
-2. **ID in Excel output**: Added ID as second column (Skier, ID, Nation, ...)
-3. **ID in nations**: Updated `select_and_rename_cols` to include ID
+1. **ID in prepare_startlist_data**: Added ID to base_df select (line 337)
+2. **ID in position_preds**: Added `position_preds$ID <- startlist_prepared$ID`
+3. **ID in Excel output**: Added ID as second column (Skier, ID, Nation, ...)
+4. **ID in nations**: Updated `select_and_rename_cols` to include ID
 
 **Files Modified:**
 - `~/blog/daehl-e/content/post/alpine/drafts/champs-predictions.R`

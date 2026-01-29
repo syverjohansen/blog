@@ -334,7 +334,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col) {
   log_info(paste("Available Elo columns in startlist:", paste(available_elo_cols, collapse=", ")))
 
   base_df <- startlist %>%
-    dplyr::select(Skier, Nation, Price, all_of(race_prob_cols), any_of(elo_cols))
+    dplyr::select(Skier, ID, Nation, Price, all_of(race_prob_cols), any_of(elo_cols))
 
   # Get recent points for specific discipline
   recent_points <- race_df %>%

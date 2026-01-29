@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Biathlon Predictions"
-date: 2026-01-29T17:09:14+00:00
+date: 2026-01-29T17:52:04+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "biathlon"]
 ---

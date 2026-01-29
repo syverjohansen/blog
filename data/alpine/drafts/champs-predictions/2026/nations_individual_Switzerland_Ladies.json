@@ -2,6 +2,7 @@
   "sheet_name": "Switzerland Ladies",
   "headers": [
     "Athlete",
+    "ID",
     "Race",
     "Start",
     "Win",
@@ -13,6 +14,7 @@
   "rows": [
     [
       "Malorie Blanc",
+      4978,
       "Downhill",
       86.9,
       0.408186155439904,
@@ -23,6 +25,7 @@
     ],
     [
       "Delia Durrer",
+      4074,
       "Downhill",
       80.7,
       0.0,
@@ -33,6 +36,7 @@
     ],
     [
       "Janine Schmitt",
+      4140,
       "Downhill",
       66.2,
       0.0,
@@ -43,6 +47,7 @@
     ],
     [
       "Jasmine Flury",
+      201,
       "Downhill",
       61.3,
       1.43917654180227,
@@ -53,6 +58,7 @@
     ],
     [
       "Corinne Suter",
+      177,
       "Downhill",
       58.5,
       1.03111086799472,
@@ -63,6 +69,7 @@
     ],
     [
       "Michelle Gisin",
+      360,
       "Downhill",
       45.4,
       0.159958505132258,
@@ -73,6 +80,7 @@
     ],
     [
       "Wendy Holdener",
+      78,
       "Downhill",
       0.9,
       0.0106868020880282,
@@ -83,6 +91,7 @@
     ],
     [
       "Camille Rast",
+      3229,
       "Giant Slalom",
       98.5,
       11.0876567784087,
@@ -93,6 +102,7 @@
     ],
     [
       "Wendy Holdener",
+      78,
       "Giant Slalom",
       90.3,
       0.0,
@@ -103,6 +113,7 @@
     ],
     [
       "Sue Piller",
+      5832,
       "Giant Slalom",
       87.9,
       0.0655447603868222,
@@ -113,6 +124,7 @@
     ],
     [
       "Vanessa Kasper",
+      3023,
       "Giant Slalom",
       75.3,
       0.0561709004770922,
@@ -123,6 +135,7 @@
     ],
     [
       "Michelle Gisin",
+      360,
       "Giant Slalom",
       24.7,
       0.0184110794475636,
@@ -133,6 +146,7 @@
     ],
     [
       "Melanie Meillard",
+      1322,
       "Giant Slalom",
       12.5,
       0.0093131456773894,
@@ -143,6 +157,7 @@
     ],
     [
       "Janine Schmitt",
+      4140,
       "Giant Slalom",
       8.4,
       0.0,
@@ -153,6 +168,7 @@
     ],
     [
       "Corinne Suter",
+      177,
       "Giant Slalom",
       1.4,
       0.0010196282981136,
@@ -163,6 +179,7 @@
     ],
     [
       "Jasmine Flury",
+      201,
       "Giant Slalom",
       1.0,
       0.0,
@@ -173,6 +190,7 @@
     ],
     [
       "Camille Rast",
+      3229,
       "Slalom",
       98.9,
       25.5964146425902,
@@ -183,6 +201,7 @@
     ],
     [
       "Melanie Meillard",
+      1322,
       "Slalom",
       96.9,
       0.0892511055155234,
@@ -193,6 +212,7 @@
     ],
     [
       "Wendy Holdener",
+      78,
       "Slalom",
       95.3,
       1.40444808526851,
@@ -203,6 +223,7 @@
     ],
     [
       "Eliane Christen",
+      4471,
       "Slalom",
       83.7,
       0.0,
@@ -213,6 +234,7 @@
     ],
     [
       "Michelle Gisin",
+      360,
       "Slalom",
       25.1,
       0.0,
@@ -223,6 +245,7 @@
     ],
     [
       "Delia Durrer",
+      4074,
       "Slalom",
       0.1,
       0.0,
@@ -233,6 +256,7 @@
     ],
     [
       "Vanessa Kasper",
+      3023,
       "Slalom",
       0.1,
       0.0,
@@ -243,6 +267,7 @@
     ],
     [
       "Malorie Blanc",
+      4978,
       "Super G",
       92.9,
       0.375668150588301,
@@ -253,6 +278,7 @@
     ],
     [
       "Corinne Suter",
+      177,
       "Super G",
       80.4,
       1.08378433809192,
@@ -263,6 +289,7 @@
     ],
     [
       "Michelle Gisin",
+      360,
       "Super G",
       74.1,
       0.399665951030531,
@@ -273,6 +300,7 @@
     ],
     [
       "Janine Schmitt",
+      4140,
       "Super G",
       53.2,
       0.0717221936502898,
@@ -283,6 +311,7 @@
     ],
     [
       "Delia Durrer",
+      4074,
       "Super G",
       47.5,
       0.0640433532434392,
@@ -293,6 +322,7 @@
     ],
     [
       "Jasmine Flury",
+      201,
       "Super G",
       45.9,
       0.24723360785683,
@@ -303,6 +333,7 @@
     ],
     [
       "Wendy Holdener",
+      78,
       "Super G",
       6.0,
       0.0486248141355478,

@@ -2,6 +2,7 @@
   "sheet_name": "Germany Ladies",
   "headers": [
     "Athlete",
+    "ID",
     "Race",
     "Start",
     "Win",
@@ -13,6 +14,7 @@
   "rows": [
     [
       "Emma Aicher",
+      4194,
       "Downhill",
       100.0,
       6.80973219227152,
@@ -23,6 +25,7 @@
     ],
     [
       "Kira Weidle-Winkelmann",
+      1340,
       "Downhill",
       100.0,
       2.11336516311875,
@@ -33,6 +36,7 @@
     ],
     [
       "Fabiana Dorigo",
+      4130,
       "Downhill",
       70.9,
       0.0832301800357132,
@@ -43,6 +47,7 @@
     ],
     [
       "Anna Schillinger",
+      4178,
       "Downhill",
       15.4,
       0.0180998100233267,
@@ -53,6 +58,7 @@
     ],
     [
       "Lena Dürr",
+      28,
       "Giant Slalom",
       100.0,
       0.298214158917752,
@@ -63,6 +69,7 @@
     ],
     [
       "Emma Aicher",
+      4194,
       "Giant Slalom",
       100.0,
       0.223660619188314,
@@ -73,6 +80,7 @@
     ],
     [
       "Fabiana Dorigo",
+      4130,
       "Giant Slalom",
       100.0,
       0.0745535397294381,
@@ -83,6 +91,7 @@
     ],
     [
       "Jana Fritz",
+      5269,
       "Giant Slalom",
       31.8,
       0.02371505279161,
@@ -93,6 +102,7 @@
     ],
     [
       "Jessica Hilzinger",
+      1339,
       "Giant Slalom",
       17.6,
       0.0,
@@ -103,6 +113,7 @@
     ],
     [
       "Emma Aicher",
+      4194,
       "Slalom",
       100.0,
       0.276314023801479,
@@ -113,6 +124,7 @@
     ],
     [
       "Lena Dürr",
+      28,
       "Slalom",
       100.0,
       0.0,
@@ -123,6 +135,7 @@
     ],
     [
       "Jessica Hilzinger",
+      1339,
       "Slalom",
       100.0,
       0.0,
@@ -133,6 +146,7 @@
     ],
     [
       "Emma Aicher",
+      4194,
       "Super G",
       100.0,
       11.1883112517683,
@@ -143,6 +157,7 @@
     ],
     [
       "Kira Weidle-Winkelmann",
+      1340,
       "Super G",
       100.0,
       0.539195722976786,
@@ -153,6 +168,7 @@
     ],
     [
       "Fabiana Dorigo",
+      4130,
       "Super G",
       35.8,
       0.0482665465538438,
@@ -163,6 +179,7 @@
     ],
     [
       "Anna Schillinger",
+      4178,
       "Super G",
       0.3,
       0.0003788864036872,

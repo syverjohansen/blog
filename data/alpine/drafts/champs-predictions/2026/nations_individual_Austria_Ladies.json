@@ -2,6 +2,7 @@
   "sheet_name": "Austria Ladies",
   "headers": [
     "Athlete",
+    "ID",
     "Race",
     "Start",
     "Win",
@@ -13,6 +14,7 @@
   "rows": [
     [
       "Mirjam Puchner",
+      175,
       "Downhill",
       100.0,
       3.0526385689493,
@@ -23,6 +25,7 @@
     ],
     [
       "Cornelia Hütter",
+      94,
       "Downhill",
       99.9,
       6.45351517066316,
@@ -33,6 +36,7 @@
     ],
     [
       "Nina Ortlieb",
+      386,
       "Downhill",
       58.9,
       0.691146112020724,
@@ -43,6 +47,7 @@
     ],
     [
       "Ariane Raedler",
+      3633,
       "Downhill",
       55.7,
       0.719506831767305,
@@ -53,6 +58,7 @@
     ],
     [
       "Stephanie Venier",
+      255,
       "Downhill",
       53.3,
       1.12572730218161,
@@ -63,6 +69,7 @@
     ],
     [
       "Ricarda Haaser",
+      260,
       "Downhill",
       29.1,
       0.170570851259411,
@@ -73,6 +80,7 @@
     ],
     [
       "Julia Scheib",
+      2970,
       "Giant Slalom",
       100.0,
       16.4017787404764,
@@ -83,6 +91,7 @@
     ],
     [
       "Stephanie Brunner",
+      234,
       "Giant Slalom",
       100.0,
       0.0,
@@ -93,6 +102,7 @@
     ],
     [
       "Katharina Liensberger",
+      2921,
       "Giant Slalom",
       79.7,
       0.0,
@@ -103,6 +113,7 @@
     ],
     [
       "Ricarda Haaser",
+      260,
       "Giant Slalom",
       72.8,
       0.108555895031997,
@@ -113,6 +124,7 @@
     ],
     [
       "Katharina Truppe",
+      1345,
       "Giant Slalom",
       35.7,
       0.0,
@@ -123,6 +135,7 @@
     ],
     [
       "Katharina Liensberger",
+      2921,
       "Slalom",
       100.0,
       1.74998881740937,
@@ -133,6 +146,7 @@
     ],
     [
       "Katharina Truppe",
+      1345,
       "Slalom",
       100.0,
       1.19736076980641,
@@ -143,6 +157,7 @@
     ],
     [
       "Katharina Gallhuber",
+      2829,
       "Slalom",
       100.0,
       0.0,
@@ -153,6 +168,7 @@
     ],
     [
       "Stephanie Brunner",
+      234,
       "Slalom",
       5.3,
       0.0,
@@ -163,6 +179,7 @@
     ],
     [
       "Cornelia Hütter",
+      94,
       "Super G",
       81.8,
       1.87419731715716,
@@ -173,6 +190,7 @@
     ],
     [
       "Mirjam Puchner",
+      175,
       "Super G",
       74.8,
       0.302600134678199,
@@ -183,6 +201,7 @@
     ],
     [
       "Stephanie Venier",
+      255,
       "Super G",
       56.8,
       4.36256073819582,
@@ -193,6 +212,7 @@
     ],
     [
       "Ariane Raedler",
+      3633,
       "Super G",
       56.1,
       0.45411215512822,
@@ -203,6 +223,7 @@
     ],
     [
       "Stephanie Brunner",
+      234,
       "Super G",
       47.5,
       0.0639978589435123,
@@ -213,6 +234,7 @@
     ],
     [
       "Nina Ortlieb",
+      386,
       "Super G",
       38.8,
       0.0522799761924947,
@@ -223,6 +245,7 @@
     ],
     [
       "Ricarda Haaser",
+      260,
       "Super G",
       32.3,
       0.653035697840357,
@@ -233,6 +256,7 @@
     ],
     [
       "Julia Scheib",
+      2970,
       "Super G",
       11.9,
       0.0320940991861202,

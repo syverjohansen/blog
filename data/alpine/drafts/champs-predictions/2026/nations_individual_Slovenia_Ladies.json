@@ -2,6 +2,7 @@
   "sheet_name": "Slovenia Ladies",
   "headers": [
     "Athlete",
+    "ID",
     "Race",
     "Start",
     "Win",
@@ -13,6 +14,7 @@
   "rows": [
     [
       "Ilka Stuhec",
+      43,
       "Downhill",
       100.0,
       9.51014323403436,
@@ -23,6 +25,7 @@
     ],
     [
       "Ana Bucik Jogan",
+      180,
       "Giant Slalom",
       100.0,
       0.0,
@@ -33,6 +36,7 @@
     ],
     [
       "Neja Dvornik",
+      3890,
       "Giant Slalom",
       95.7,
       0.142677714117112,
@@ -43,6 +47,7 @@
     ],
     [
       "Nika Tomsic",
+      3581,
       "Giant Slalom",
       58.9,
       0.0,
@@ -53,6 +58,7 @@
     ],
     [
       "Andreja Slokar",
+      3736,
       "Giant Slalom",
       50.3,
       0.0,
@@ -63,6 +69,7 @@
     ],
     [
       "Ana Bucik Jogan",
+      180,
       "Slalom",
       100.0,
       0.0,
@@ -73,6 +80,7 @@
     ],
     [
       "Neja Dvornik",
+      3890,
       "Slalom",
       91.3,
       0.0841335728350665,
@@ -83,6 +91,7 @@
     ],
     [
       "Andreja Slokar",
+      3736,
       "Slalom",
       75.7,
       0.0697033416256212,
@@ -93,6 +102,7 @@
     ],
     [
       "Nika Tomsic",
+      3581,
       "Slalom",
       43.5,
       0.0,
@@ -103,6 +113,7 @@
     ],
     [
       "Anja Oplotnik",
+      4109,
       "Slalom",
       21.5,
       0.0,
@@ -113,6 +124,7 @@
     ],
     [
       "Ilka Stuhec",
+      43,
       "Super G",
       100.0,
       0.269597861488393,

@@ -2,6 +2,7 @@
   "sheet_name": "3. Giant Slalom - Feb 15",
   "headers": [
     "Skier",
+    "ID",
     "Nation",
     "Start",
     "Win",
@@ -13,6 +14,7 @@
   "rows": [
     [
       "Julia Scheib",
+      2970,
       "Austria",
       100.0,
       16.4017787404764,
@@ -23,6 +25,7 @@
     ],
     [
       "Alice Robinson",
+      3891,
       "New Zealand",
       100.0,
       14.6124937869699,
@@ -33,6 +36,7 @@
     ],
     [
       "Mikaela Shiffrin",
+      72,
       "USA",
       78.8,
       13.7994274269983,
@@ -43,6 +47,7 @@
     ],
     [
       "Sara Hector",
+      133,
       "Sweden",
       100.0,
       12.9723159129222,
@@ -53,6 +58,7 @@
     ],
     [
       "Federica Brignone",
+      127,
       "Italy",
       63.0,
       12.3488690724162,
@@ -63,6 +69,7 @@
     ],
     [
       "Camille Rast",
+      3229,
       "Switzerland",
       98.5,
       11.0876567784087,
@@ -73,6 +80,7 @@
     ],
     [
       "Petra Vlhova",
+      236,
       "Slovakia",
       100.0,
       7.15713981402605,
@@ -83,6 +91,7 @@
     ],
     [
       "Valerie Grenier",
+      460,
       "Canada",
       100.0,
       4.17499822484853,
@@ -93,6 +102,7 @@
     ],
     [
       "Lara Della Mea",
+      3580,
       "Italy",
       91.0,
       1.42398120663244,
@@ -103,6 +113,7 @@
     ],
     [
       "Paula Moltzan",
+      294,
       "USA",
       96.1,
       1.28917119229278,
@@ -113,6 +124,7 @@
     ],
     [
       "Sofia Goggia",
+      331,
       "Italy",
       67.8,
       0.909389743786236,
@@ -123,6 +135,7 @@
     ],
     [
       "Maryna Gasienica Daniel",
+      289,
       "Poland",
       100.0,
       0.820088937023819,
@@ -133,6 +146,7 @@
     ],
     [
       "Mina Fürst Holtmann",
+      480,
       "Norway",
       100.0,
       0.37276769864719,
@@ -143,6 +157,7 @@
     ],
     [
       "Lara Colturi",
+      5268,
       "Albania",
       100.0,
       0.298214158917752,
@@ -153,6 +168,7 @@
     ],
     [
       "Clara Direz",
+      252,
       "France",
       100.0,
       0.298214158917752,
@@ -163,6 +179,7 @@
     ],
     [
       "Lena Dürr",
+      28,
       "Germany",
       100.0,
       0.298214158917752,
@@ -173,6 +190,7 @@
     ],
     [
       "Emma Aicher",
+      4194,
       "Germany",
       100.0,
       0.223660619188314,
@@ -183,6 +201,7 @@
     ],
     [
       "Kajsa Vickhoff Lie",
+      2963,
       "Norway",
       42.5,
       0.221585046320855,
@@ -193,6 +212,7 @@
     ],
     [
       "Estelle Alphand",
+      197,
       "Sweden",
       100.0,
       0.149107079458876,
@@ -203,6 +223,7 @@
     ],
     [
       "Neja Dvornik",
+      3890,
       "Slovenia",
       95.7,
       0.142677714117112,
@@ -213,6 +234,7 @@
     ],
     [
       "Ricarda Haaser",
+      260,
       "Austria",
       72.8,
       0.108555895031997,
@@ -223,6 +245,7 @@
     ],
     [
       "Marta Bassino",
+      385,
       "Italy",
       38.5,
       0.08607472866589,
@@ -233,6 +256,7 @@
     ],
     [
       "Cassidy Gray",
+      4154,
       "Canada",
       100.0,
       0.0745535397294381,
@@ -243,6 +267,7 @@
     ],
     [
       "Ester Ledecka",
+      2957,
       "Czechia",
       100.0,
       0.0745535397294381,
@@ -253,6 +278,7 @@
     ],
     [
       "Doriane Escane",
+      3577,
       "France",
       100.0,
       0.0745535397294381,
@@ -263,6 +289,7 @@
     ],
     [
       "Fabiana Dorigo",
+      4130,
       "Germany",
       100.0,
       0.0745535397294381,
@@ -273,6 +300,7 @@
     ],
     [
       "Asja Zenere",
+      1325,
       "Italy",
       95.2,
       0.0709572474694822,
@@ -283,6 +311,7 @@
     ],
     [
       "Sue Piller",
+      5832,
       "Switzerland",
       87.9,
       0.0655447603868222,
@@ -293,6 +322,7 @@
     ],
     [
       "Madeline Sylvester-Davik",
+      5486,
       "Norway",
       79.8,
       0.0594710719008439,
@@ -303,6 +333,7 @@
     ],
     [
       "Marie Lamure",
+      3993,
       "France",
       2.7,
       0.0577552028223992,
@@ -313,6 +344,7 @@
     ],
     [
       "Vanessa Kasper",
+      3023,
       "Switzerland",
       75.3,
       0.0561709004770922,
@@ -323,6 +355,7 @@
     ],
     [
       "Magdalena Luczak",
+      3922,
       "Poland",
       67.8,
       0.0505489722749977,
@@ -333,6 +366,7 @@
     ],
     [
       "Lisa Nyberg",
+      4222,
       "Sweden",
       50.0,
       0.0372449844447146,
@@ -343,6 +377,7 @@
     ],
     [
       "Roberta Melesi",
+      428,
       "Italy",
       34.4,
       0.0256653799394002,
@@ -353,6 +388,7 @@
     ],
     [
       "Jana Fritz",
+      5269,
       "Germany",
       31.8,
       0.02371505279161,
@@ -363,6 +399,7 @@
     ],
     [
       "Katie Hensien",
+      3887,
       "USA",
       25.2,
       0.0187523398685334,
@@ -373,6 +410,7 @@
     ],
     [
       "Michelle Gisin",
+      360,
       "Switzerland",
       24.7,
       0.0184110794475636,
@@ -383,6 +421,7 @@
     ],
     [
       "Melanie Meillard",
+      1322,
       "Switzerland",
       12.5,
       0.0093131456773894,
@@ -393,6 +432,7 @@
     ],
     [
       "Laura Pirovano",
+      2916,
       "Italy",
       8.2,
       0.0061260792737465,
@@ -403,6 +443,7 @@
     ],
     [
       "Elena Curtoni",
+      33,
       "Italy",
       2.0,
       0.0029794397865417,
@@ -413,6 +454,7 @@
     ],
     [
       "Romane Miradoli",
+      196,
       "France",
       2.3,
       0.0017284612380415,
@@ -423,6 +465,7 @@
     ],
     [
       "Corinne Suter",
+      177,
       "Switzerland",
       1.4,
       0.0010196282981136,
@@ -433,6 +476,7 @@
     ],
     [
       "Cande Moreno Becerra",
+      3777,
       "Andorra",
       0.0,
       0.0,
@@ -443,6 +487,7 @@
     ],
     [
       "Francesca Baruzzi Farriol",
+      1336,
       "Argentina",
       100.0,
       0.0,
@@ -453,6 +498,7 @@
     ],
     [
       "Cornelia Hütter",
+      94,
       "Austria",
       0.0,
       0.0,
@@ -463,6 +509,7 @@
     ],
     [
       "Katharina Liensberger",
+      2921,
       "Austria",
       79.7,
       0.0,
@@ -473,6 +520,7 @@
     ],
     [
       "Stephanie Venier",
+      255,
       "Austria",
       0.0,
       0.0,
@@ -483,6 +531,7 @@
     ],
     [
       "Mirjam Puchner",
+      175,
       "Austria",
       0.0,
       0.0,
@@ -493,6 +542,7 @@
     ],
     [
       "Ariane Raedler",
+      3633,
       "Austria",
       0.0,
       0.0,
@@ -503,6 +553,7 @@
     ],
     [
       "Katharina Gallhuber",
+      2829,
       "Austria",
       0.0,
       0.0,
@@ -513,6 +564,7 @@
     ],
     [
       "Stephanie Brunner",
+      234,
       "Austria",
       100.0,
       0.0,
@@ -523,6 +575,7 @@
     ],
     [
       "Nina Ortlieb",
+      386,
       "Austria",
       0.0,
       0.0,
@@ -533,6 +586,7 @@
     ],
     [
       "Katharina Truppe",
+      1345,
       "Austria",
       35.7,
       0.0,
@@ -543,6 +597,7 @@
     ],
     [
       "Esma Alic",
+      4062,
       "Bosnia&Herzegovina",
       100.0,
       0.0,
@@ -553,6 +608,7 @@
     ],
     [
       "Nikolina Dragljevic",
+      4180,
       "Bosnia&Herzegovina",
       100.0,
       0.0,
@@ -563,6 +619,7 @@
     ],
     [
       "Kiara Alexander",
+      4743,
       "Canada",
       0.0,
       0.0,
@@ -573,6 +630,7 @@
     ],
     [
       "Justine Lamontagne",
+      4286,
       "Canada",
       100.0,
       0.0,
@@ -583,6 +641,7 @@
     ],
     [
       "Ali Nullmeyer",
+      2972,
       "Canada",
       0.0,
       0.0,
@@ -593,6 +652,7 @@
     ],
     [
       "Britt Richardson",
+      4212,
       "Canada",
       0.0,
       0.0,
@@ -603,6 +663,7 @@
     ],
     [
       "Amelia Smart",
+      2983,
       "Canada",
       0.0,
       0.0,
@@ -613,6 +674,7 @@
     ],
     [
       "Laurence St-Germain",
+      379,
       "Canada",
       0.0,
       0.0,
@@ -623,6 +685,7 @@
     ],
     [
       "Zrinka Ljutic",
+      4175,
       "Croatia",
       100.0,
       0.0,
@@ -633,6 +696,7 @@
     ],
     [
       "Leona Popovic",
+      1193,
       "Croatia",
       8.7,
       0.0,
@@ -643,6 +707,7 @@
     ],
     [
       "Martina Dubovska",
+      168,
       "Czechia",
       0.0,
       0.0,
@@ -653,6 +718,7 @@
     ],
     [
       "Barbora Novakova",
+      4000,
       "Czechia",
       0.0,
       0.0,
@@ -663,6 +729,7 @@
     ],
     [
       "Aada Kanto",
+      5444,
       "Finland",
       0.0,
       0.0,
@@ -673,6 +740,7 @@
     ],
     [
       "Silja Koskinen",
+      5220,
       "Finland",
       0.0,
       0.0,
@@ -683,6 +751,7 @@
     ],
     [
       "Camille Cerutti",
+      2964,
       "France",
       34.9,
       0.0,
@@ -693,6 +762,7 @@
     ],
     [
       "Marion Chevrier",
+      4203,
       "France",
       0.0,
       0.0,
@@ -703,6 +773,7 @@
     ],
     [
       "Laura Gauche",
+      388,
       "France",
       0.0,
       0.0,
@@ -713,6 +784,7 @@
     ],
     [
       "Caitlin McFarlane",
+      4104,
       "France",
       84.7,
       0.0,
@@ -723,6 +795,7 @@
     ],
     [
       "Kira Weidle-Winkelmann",
+      1340,
       "Germany",
       0.0,
       0.0,
@@ -733,6 +806,7 @@
     ],
     [
       "Jessica Hilzinger",
+      1339,
       "Germany",
       17.6,
       0.0,
@@ -743,6 +817,7 @@
     ],
     [
       "Anna Schillinger",
+      4178,
       "Germany",
       0.0,
       0.0,
@@ -753,6 +828,7 @@
     ],
     [
       "Victoria Palla",
+      3921,
       "Great Britain",
       0.0,
       0.0,
@@ -763,6 +839,7 @@
     ],
     [
       "Martina Peterlini",
+      3892,
       "Italy",
       0.0,
       0.0,
@@ -773,6 +850,7 @@
     ],
     [
       "Marta Rossetti",
+      3945,
       "Italy",
       0.0,
       0.0,
@@ -783,6 +861,7 @@
     ],
     [
       "Nicol Delago",
+      461,
       "Italy",
       0.0,
       0.0,
@@ -793,6 +872,7 @@
     ],
     [
       "Marte Monsen",
+      3793,
       "Norway",
       20.2,
       0.0,
@@ -803,6 +883,7 @@
     ],
     [
       "Thea Louise Stjernesund",
+      3019,
       "Norway",
       100.0,
       0.0,
@@ -813,6 +894,7 @@
     ],
     [
       "Bianca Bakke Westhoff",
+      4160,
       "Norway",
       8.2,
       0.0,
@@ -823,6 +905,7 @@
     ],
     [
       "Ilka Stuhec",
+      43,
       "Slovenia",
       0.0,
       0.0,
@@ -833,6 +916,7 @@
     ],
     [
       "Ana Bucik Jogan",
+      180,
       "Slovenia",
       100.0,
       0.0,
@@ -843,6 +927,7 @@
     ],
     [
       "Andreja Slokar",
+      3736,
       "Slovenia",
       50.3,
       0.0,
@@ -853,6 +938,7 @@
     ],
     [
       "Anja Oplotnik",
+      4109,
       "Slovenia",
       0.0,
       0.0,
@@ -863,6 +949,7 @@
     ],
     [
       "Nika Tomsic",
+      3581,
       "Slovenia",
       58.9,
       0.0,
@@ -873,6 +960,7 @@
     ],
     [
       "Anna Swenn-Larsson",
+      76,
       "Sweden",
       0.0,
       0.0,
@@ -883,6 +971,7 @@
     ],
     [
       "Cornelia Öhlund",
+      5016,
       "Sweden",
       13.5,
       0.0,
@@ -893,6 +982,7 @@
     ],
     [
       "Hanna Aronsson Elfman",
+      4063,
       "Sweden",
       87.7,
       0.0,
@@ -903,6 +993,7 @@
     ],
     [
       "Elsa Fermbäck",
+      3729,
       "Sweden",
       0.0,
       0.0,
@@ -913,6 +1004,7 @@
     ],
     [
       "Malorie Blanc",
+      4978,
       "Switzerland",
       0.0,
       0.0,
@@ -923,6 +1015,7 @@
     ],
     [
       "Eliane Christen",
+      4471,
       "Switzerland",
       0.0,
       0.0,
@@ -933,6 +1026,7 @@
     ],
     [
       "Delia Durrer",
+      4074,
       "Switzerland",
       0.0,
       0.0,
@@ -943,6 +1037,7 @@
     ],
     [
       "Jasmine Flury",
+      201,
       "Switzerland",
       1.0,
       0.0,
@@ -953,6 +1048,7 @@
     ],
     [
       "Wendy Holdener",
+      78,
       "Switzerland",
       90.3,
       0.0,
@@ -963,6 +1059,7 @@
     ],
     [
       "Janine Schmitt",
+      4140,
       "Switzerland",
       8.4,
       0.0,
@@ -973,6 +1070,7 @@
     ],
     [
       "Mary Bocock",
+      4764,
       "USA",
       29.5,
       0.0,
@@ -983,6 +1081,7 @@
     ],
     [
       "Keely Cashman",
+      2975,
       "USA",
       10.5,
       0.0,
@@ -993,6 +1092,7 @@
     ],
     [
       "AJ Hurt",
+      3886,
       "USA",
       76.6,
       0.0,
@@ -1003,6 +1103,7 @@
     ],
     [
       "Breezy Johnson",
+      497,
       "USA",
       0.0,
       0.0,
@@ -1013,6 +1114,7 @@
     ],
     [
       "Nina O'Brien",
+      1346,
       "USA",
       83.4,
       0.0,
@@ -1023,6 +1125,7 @@
     ],
     [
       "Lindsey Vonn",
+      2,
       "USA",
       0.0,
       0.0,
@@ -1033,6 +1136,7 @@
     ],
     [
       "Jacqueline Wiles",
+      378,
       "USA",
       0.0,
       0.0,
@@ -1043,6 +1147,7 @@
     ],
     [
       "Isabella Wright",
+      3934,
       "USA",
       0.0,
       0.0,

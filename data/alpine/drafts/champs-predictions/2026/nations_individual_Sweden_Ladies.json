@@ -2,6 +2,7 @@
   "sheet_name": "Sweden Ladies",
   "headers": [
     "Athlete",
+    "ID",
     "Race",
     "Start",
     "Win",
@@ -13,6 +14,7 @@
   "rows": [
     [
       "Sara Hector",
+      133,
       "Giant Slalom",
       100.0,
       12.9723159129222,
@@ -23,6 +25,7 @@
     ],
     [
       "Estelle Alphand",
+      197,
       "Giant Slalom",
       100.0,
       0.149107079458876,
@@ -33,6 +36,7 @@
     ],
     [
       "Hanna Aronsson Elfman",
+      4063,
       "Giant Slalom",
       87.7,
       0.0,
@@ -43,6 +47,7 @@
     ],
     [
       "Lisa Nyberg",
+      4222,
       "Giant Slalom",
       50.0,
       0.0372449844447146,
@@ -53,6 +58,7 @@
     ],
     [
       "Cornelia Öhlund",
+      5016,
       "Giant Slalom",
       13.5,
       0.0,
@@ -63,6 +69,7 @@
     ],
     [
       "Anna Swenn-Larsson",
+      76,
       "Slalom",
       88.7,
       0.490109737788825,
@@ -73,6 +80,7 @@
     ],
     [
       "Sara Hector",
+      133,
       "Slalom",
       81.6,
       0.0,
@@ -83,6 +91,7 @@
     ],
     [
       "Hanna Aronsson Elfman",
+      4063,
       "Slalom",
       78.0,
       0.0,
@@ -93,6 +102,7 @@
     ],
     [
       "Estelle Alphand",
+      197,
       "Slalom",
       76.1,
       0.0,
@@ -103,6 +113,7 @@
     ],
     [
       "Cornelia Öhlund",
+      5016,
       "Slalom",
       70.2,
       0.0646690656220781,
@@ -113,6 +124,7 @@
     ],
     [
       "Elsa Fermbäck",
+      3729,
       "Slalom",
       5.4,
       0.0,
@@ -123,6 +135,7 @@
     ],
     [
       "Estelle Alphand",
+      197,
       "Super G",
       100.0,
       0.134798930744197,
