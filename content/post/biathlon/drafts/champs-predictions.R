@@ -33,9 +33,12 @@ log_info("Starting Biathlon Championships predictions process")
 
 # Read in the race schedule from weekends.csv with proper date parsing
 log_info("Reading weekends data")
-weekends <- read.csv("~/ski/elo/python/biathlon/polars/excel365/weekends.csv", 
+weekends <- read.csv("~/ski/elo/python/biathlon/polars/excel365/weekends.csv",
                      stringsAsFactors = FALSE) %>%
-  mutate(Date = as.Date(Date, format="%m/%d/%Y"))
+  mutate(
+    Date = as.Date(Date, format="%m/%d/%Y"),
+    Race_Date = as.Date(Race_Date, format="%m/%d/%Y")
+  )
 
 # Filter for Championships races only (Championship == 1)
 log_info("Filtering for Championships races")
@@ -50,44 +53,51 @@ if (nrow(champs_races) == 0) {
 log_info(paste("Found", nrow(champs_races), "Championships races"))
 
 # Create race dataframes for men and ladies (individual races)
-# Add row numbers first to preserve original race order
+# Order by Race_Date to ensure chronological order, then add row numbers
 champs_races_with_race_num <- champs_races %>%
+  arrange(Race_Date) %>%
   mutate(OriginalRaceNum = row_number())
 
 men_races <- champs_races_with_race_num %>%
-  filter(Sex == "M", 
+  filter(Sex == "M",
          !grepl("Relay", RaceType, ignore.case = TRUE)) %>%  # Exclude any race type containing "Relay"
-  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
-  rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
+  arrange(Race_Date) %>%
+  dplyr::select(RaceType, Period, Country, Race_Date, OriginalRaceNum) %>%
+  rename(race_type = RaceType, period = Period, country = Country, race_date = Race_Date, original_race_num = OriginalRaceNum)
 
 ladies_races <- champs_races_with_race_num %>%
-  filter(Sex == "L", 
+  filter(Sex == "L",
          !grepl("Relay", RaceType, ignore.case = TRUE)) %>%  # Exclude any race type containing "Relay"
-  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
-  rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
+  arrange(Race_Date) %>%
+  dplyr::select(RaceType, Period, Country, Race_Date, OriginalRaceNum) %>%
+  rename(race_type = RaceType, period = Period, country = Country, race_date = Race_Date, original_race_num = OriginalRaceNum)
 
 # Create race dataframes for relays
 men_relays <- champs_races_with_race_num %>%
   filter(grepl("Relay", RaceType, ignore.case = TRUE) & Sex == "M") %>%  # RaceType contains "Relay" and Sex is "M"
-  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
-  rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
+  arrange(Race_Date) %>%
+  dplyr::select(RaceType, Period, Country, Race_Date, OriginalRaceNum) %>%
+  rename(race_type = RaceType, period = Period, country = Country, race_date = Race_Date, original_race_num = OriginalRaceNum)
 
 ladies_relays <- champs_races_with_race_num %>%
   filter(grepl("Relay", RaceType, ignore.case = TRUE) & Sex == "L") %>%  # RaceType contains "Relay" and Sex is "L"
-  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
-  rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
+  arrange(Race_Date) %>%
+  dplyr::select(RaceType, Period, Country, Race_Date, OriginalRaceNum) %>%
+  rename(race_type = RaceType, period = Period, country = Country, race_date = Race_Date, original_race_num = OriginalRaceNum)
 
 # Mixed relay races (Sex == "Mixed")
 mixed_relays <- champs_races_with_race_num %>%
   filter(Sex == "Mixed" & !grepl("Single Mixed", RaceType, ignore.case = TRUE)) %>%  # Mixed relay events (2M+2L)
-  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
-  rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
+  arrange(Race_Date) %>%
+  dplyr::select(RaceType, Period, Country, Race_Date, OriginalRaceNum) %>%
+  rename(race_type = RaceType, period = Period, country = Country, race_date = Race_Date, original_race_num = OriginalRaceNum)
 
 # Single Mixed relays (specific RaceType)
 single_mixed_relays <- champs_races_with_race_num %>%
   filter(grepl("Single Mixed", RaceType, ignore.case = TRUE)) %>%  # Single Mixed relay events (1M+1L)
-  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
-  rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
+  arrange(Race_Date) %>%
+  dplyr::select(RaceType, Period, Country, Race_Date, OriginalRaceNum) %>%
+  rename(race_type = RaceType, period = Period, country = Country, race_date = Race_Date, original_race_num = OriginalRaceNum)
 
 log_info(paste("Found", nrow(men_races), "men's individual races,", nrow(ladies_races), "ladies' individual races"))
 log_info(paste("Found", nrow(men_relays), "men's relay races,", nrow(ladies_relays), "ladies' relay races"))
@@ -1108,11 +1118,14 @@ process_gender_championships <- function(gender, races) {
   
   # Save detailed race-by-race results
   race_dfs <- list()
-  unique_races <- unique(all_position_predictions$Race)
+  # Sort unique races to ensure chronological order (OriginalRaceNum is assigned by Race_Date order)
+  unique_races <- sort(unique(all_position_predictions$Race))
   log_info(paste("Creating sheets for races:", paste(unique_races, collapse=", ")))
-  
+
+  race_order <- 0  # Counter for chronological ordering
   for(race_num in unique_races) {
-    log_info(paste("Processing sheet for race", race_num))
+    race_order <- race_order + 1
+    log_info(paste("Processing sheet for race", race_num, "(order:", race_order, ")"))
     race_data <- all_position_predictions[all_position_predictions$Race == race_num, ]
 
     # Select and rename columns to simplified format (no underscores)
@@ -1136,17 +1149,20 @@ process_gender_championships <- function(gender, races) {
       ) %>%
       arrange(desc(Win))
 
-    # Get race type for sheet naming using original race number
-    race_types <- champs_races_with_race_num %>%
-      filter(Sex == ifelse(gender == "men", "M", "L"), OriginalRaceNum == race_num) %>%
-      pull(RaceType)
+    # Get race type and date for sheet naming using original race number
+    race_info <- champs_races_with_race_num %>%
+      filter(Sex == ifelse(gender == "men", "M", "L"), OriginalRaceNum == race_num)
 
-    race_type <- if(length(race_types) > 0) race_types[1] else paste("Race", race_num)
-    sheet_name <- paste(ifelse(gender == "men", "Men", "Ladies"), race_type)
+    race_type <- if(nrow(race_info) > 0) race_info$RaceType[1] else paste("Race", race_num)
+    # Format date as "Feb 12" (abbreviated month + day)
+    race_date <- if(nrow(race_info) > 0) format(race_info$Race_Date[1], "%b %d") else ""
 
-    log_info(paste("Race", race_num, "- Race type:", race_type, "- Sheet name:", sheet_name))
+    # Format: "1. Sprint - Feb 12" with numeric prefix for chronological sorting
+    sheet_name <- paste0(race_order, ". ", race_type, " - ", race_date)
+
+    log_info(paste("Race", race_num, "- Order:", race_order, "- Race type:", race_type, "- Date:", race_date, "- Sheet name:", sheet_name))
     log_info(paste("Race data dimensions:", nrow(race_data), "x", ncol(race_data)))
-    
+
     race_dfs[[sheet_name]] <- race_data
   }
   
@@ -1756,9 +1772,12 @@ process_relay_championships <- function(relay_type, races) {
   
   # Save detailed race-by-race results
   race_dfs <- list()
-  unique_races <- unique(all_position_predictions$Race)
-  
+  # Sort unique races to ensure chronological order
+  unique_races <- sort(unique(all_position_predictions$Race))
+
+  race_order <- 0  # Counter for chronological ordering
   for(race_num in unique_races) {
+    race_order <- race_order + 1
     race_data <- all_position_predictions[all_position_predictions$Race == race_num, ]
 
     # Select and rename columns to simplified format
@@ -1782,26 +1801,21 @@ process_relay_championships <- function(relay_type, races) {
 
     race_data <- race_data %>% arrange(desc(Win))
 
-    # Get race type for sheet naming
-    race_types <- champs_races_with_race_num %>%
+    # Get race type and date for sheet naming
+    race_info <- champs_races_with_race_num %>%
       filter(
         (Sex == "M" & relay_type == "men") |
         (Sex == "L" & relay_type == "ladies") |
         (Sex == "Mixed" & relay_type %in% c("mixed", "single_mixed")),
         OriginalRaceNum == race_num
-      ) %>%
-      pull(RaceType)
+      )
 
-    race_type_name <- if(length(race_types) > 0) race_types[1] else paste("Race", race_num)
+    race_type_name <- if(nrow(race_info) > 0) race_info$RaceType[1] else paste("Race", race_num)
+    # Format date as "Feb 12" (abbreviated month + day)
+    race_date <- if(nrow(race_info) > 0) format(race_info$Race_Date[1], "%b %d") else ""
 
-    # Create descriptive sheet name
-    if(relay_type == "mixed") {
-      sheet_name <- paste("Mixed", race_type_name)
-    } else if(relay_type == "single_mixed") {
-      sheet_name <- paste("Single Mixed", race_type_name)
-    } else {
-      sheet_name <- paste(ifelse(relay_type == "men", "Men", "Ladies"), race_type_name)
-    }
+    # Format: "1. Relay - Feb 15" with numeric prefix for chronological sorting
+    sheet_name <- paste0(race_order, ". ", race_type_name, " - ", race_date)
 
     race_dfs[[sheet_name]] <- race_data
   }
@@ -1884,7 +1898,10 @@ if (has_men_results || has_ladies_results) {
   if (has_men_results && !is.null(men_results$race_sheets)) {
     for (race_name in names(men_results$race_sheets)) {
       race_data <- men_results$race_sheets[[race_name]]
-      race_data$Race <- race_name
+      # Extract just the race type (remove "N. " prefix and " - Date" suffix) for Race column
+      race_type_only <- sub("^\\d+\\. ", "", race_name)  # Remove "1. " prefix
+      race_type_only <- sub(" - .*$", "", race_type_only)  # Remove " - Feb 12" suffix
+      race_data$Race <- race_type_only
       race_data$Gender <- "Men"
       men_individual_results <- bind_rows(men_individual_results, race_data)
     }
@@ -1895,7 +1912,10 @@ if (has_men_results || has_ladies_results) {
   if (has_ladies_results && !is.null(ladies_results$race_sheets)) {
     for (race_name in names(ladies_results$race_sheets)) {
       race_data <- ladies_results$race_sheets[[race_name]]
-      race_data$Race <- race_name
+      # Extract just the race type (remove "N. " prefix and " - Date" suffix) for Race column
+      race_type_only <- sub("^\\d+\\. ", "", race_name)  # Remove "1. " prefix
+      race_type_only <- sub(" - .*$", "", race_type_only)  # Remove " - Feb 12" suffix
+      race_data$Race <- race_type_only
       race_data$Gender <- "Ladies"
       ladies_individual_results <- bind_rows(ladies_individual_results, race_data)
     }

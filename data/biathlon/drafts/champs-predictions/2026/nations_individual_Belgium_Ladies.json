@@ -13,7 +13,7 @@
   "rows": [
     [
       "Maya Cloetens",
-      "Ladies Individual",
+      "Individual",
       100.0,
       0.143181606319009,
       3.49502692025607,
@@ -23,7 +23,7 @@
     ],
     [
       "Lotte Lie",
-      "Ladies Individual",
+      "Individual",
       100.0,
       0.143181606319009,
       1.42978374010476,
@@ -33,7 +33,7 @@
     ],
     [
       "Eve Bouvard",
-      "Ladies Individual",
+      "Individual",
       100.0,
       0.0,
       0.0,
@@ -43,7 +43,7 @@
     ],
     [
       "Maya Cloetens",
-      "Ladies Mass Start",
+      "Mass Start",
       100.0,
       0.76736021324509,
       2.22398407094744,
@@ -53,7 +53,7 @@
     ],
     [
       "Lotte Lie",
-      "Ladies Mass Start",
+      "Mass Start",
       100.0,
       0.153472042649018,
       0.741328023649147,
@@ -63,7 +63,7 @@
     ],
     [
       "Maya Cloetens",
-      "Ladies Pursuit",
+      "Pursuit",
       100.0,
       0.0,
       0.686506247254115,
@@ -73,7 +73,7 @@
     ],
     [
       "Lotte Lie",
-      "Ladies Pursuit",
+      "Pursuit",
       100.0,
       0.0,
       0.171626561813529,
@@ -83,7 +83,7 @@
     ],
     [
       "Eve Bouvard",
-      "Ladies Pursuit",
+      "Pursuit",
       30.2,
       0.0,
       0.0,
@@ -93,7 +93,7 @@
     ],
     [
       "Maya Cloetens",
-      "Ladies Sprint",
+      "Sprint",
       100.0,
       0.400691464465716,
       1.21466192598185,
@@ -103,17 +103,17 @@
     ],
     [
       "Lotte Lie",
-      "Ladies Sprint",
+      "Sprint",
       100.0,
       0.200345732232858,
-      0.198668062310413,
+      0.200345732232858,
       1.0530154757671,
       4.81712194714782,
       44.8286009773624
     ],
     [
       "Eve Bouvard",
-      "Ladies Sprint",
+      "Sprint",
       100.0,
       0.0,
       0.0,
@@ -123,11 +123,11 @@
     ],
     [
       "Marisa Emonts",
-      "Ladies Sprint",
+      "Sprint",
       22.8,
       0.0,
       0.0346625960671009,
-      0.0342888637660903,
+      0.0346625960671009,
       0.0646895863394907,
       0.548833357311434
     ]

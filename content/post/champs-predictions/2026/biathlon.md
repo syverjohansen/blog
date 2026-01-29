@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Biathlon Predictions"
-date: 2026-01-28T22:47:44+00:00
+date: 2026-01-29T15:11:51+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "biathlon"]
 ---
@@ -12,6 +12,22 @@ tags: ["predictions", "olympics", "2026", "biathlon"]
 ### Individual Races
 
 #### Men
+
+##### 1. Individual (Feb 10)
+
+{{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/men_position_probabilities_1__Individual___Feb_10" >}}
+
+##### 2. Sprint (Feb 13)
+
+{{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/men_position_probabilities_2__Sprint___Feb_13" >}}
+
+##### 3. Pursuit (Feb 15)
+
+{{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/men_position_probabilities_3__Pursuit___Feb_15" >}}
+
+##### 4. Mass Start (Feb 20)
+
+{{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/men_position_probabilities_4__Mass_Start___Feb_20" >}}
 
 ##### Men Individual
 
@@ -30,6 +46,22 @@ tags: ["predictions", "olympics", "2026", "biathlon"]
 {{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/men_position_probabilities_Men_Sprint" >}}
 
 #### Ladies
+
+##### 1. Individual (Feb 11)
+
+{{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/ladies_position_probabilities_1__Individual___Feb_11" >}}
+
+##### 2. Sprint (Feb 14)
+
+{{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/ladies_position_probabilities_2__Sprint___Feb_14" >}}
+
+##### 3. Pursuit (Feb 15)
+
+{{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/ladies_position_probabilities_3__Pursuit___Feb_15" >}}
+
+##### 4. Mass Start (Feb 21)
+
+{{< biathlon/datatable2 "biathlon/drafts/champs-predictions/2026/ladies_position_probabilities_4__Mass_Start___Feb_21" >}}
 
 ##### Ladies Individual
 
