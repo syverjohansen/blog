@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Cross-Country Skiing Predictions"
-date: 2026-01-29T17:52:05+00:00
+date: 2026-01-29T19:23:16+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "cross-country"]
 ---
@@ -13,13 +13,29 @@ tags: ["predictions", "olympics", "2026", "cross-country"]
 
 #### Men
 
+##### 1. 20 P (Feb 08)
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_1__20_P___Feb_08" >}}
+
 ##### 10. F
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_10_F" >}}
 
+##### 2. Sprint C (Feb 10)
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_2__Sprint_C___Feb_10" >}}
+
 ##### 20. P
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_20_P" >}}
+
+##### 3. 10 F (Feb 13)
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_3__10_F___Feb_13" >}}
+
+##### 4. 50 C (Feb 21)
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_4__50_C___Feb_21" >}}
 
 ##### 50. C
 
@@ -31,13 +47,29 @@ tags: ["predictions", "olympics", "2026", "cross-country"]
 
 #### Ladies
 
+##### 1. 20 P (Feb 07)
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_1__20_P___Feb_07" >}}
+
 ##### 10. F
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_10_F" >}}
 
+##### 2. Sprint C (Feb 10)
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_2__Sprint_C___Feb_10" >}}
+
 ##### 20. P
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_20_P" >}}
+
+##### 3. 10 F (Feb 12)
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_3__10_F___Feb_12" >}}
+
+##### 4. 50 C (Feb 22)
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_4__50_C___Feb_22" >}}
 
 ##### 50. C
 

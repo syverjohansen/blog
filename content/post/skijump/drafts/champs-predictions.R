@@ -40,7 +40,8 @@ weekends <- read.csv("~/ski/elo/python/skijump/polars/excel365/weekends.csv",
 # Filter for Championships races only (Championship == 1)
 log_info("Filtering for Championships races")
 champs_races <- weekends %>%
-  filter(Championship == 1)
+  filter(Championship == 1) %>%
+  arrange(Date)  # Sort chronologically
 
 if (nrow(champs_races) == 0) {
   log_info("No Championships races found. Terminating program.")
@@ -50,37 +51,42 @@ if (nrow(champs_races) == 0) {
 log_info(paste("Found", nrow(champs_races), "Championships races"))
 
 # Create race dataframes for men and ladies (individual races)
-# Add row numbers first to preserve original race order
+# Add row numbers after chronological sorting to ensure proper order
 champs_races_with_race_num <- champs_races %>%
   mutate(OriginalRaceNum = row_number())
 
 men_races <- champs_races_with_race_num %>%
-  filter(Sex == "M", 
+  filter(Sex == "M",
          !grepl("Team", RaceType, ignore.case = TRUE)) %>%  # Exclude any race type containing "Team"
-  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
+  mutate(race_date = format(Date, "%b %d")) %>%
+  dplyr::select(RaceType, Period, Country, OriginalRaceNum, race_date) %>%
   rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
 
 ladies_races <- champs_races_with_race_num %>%
-  filter(Sex == "L", 
+  filter(Sex == "L",
          !grepl("Team", RaceType, ignore.case = TRUE)) %>%  # Exclude any race type containing "Team"
-  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
+  mutate(race_date = format(Date, "%b %d")) %>%
+  dplyr::select(RaceType, Period, Country, OriginalRaceNum, race_date) %>%
   rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
 
 # Create race dataframes for teams
 men_teams <- champs_races_with_race_num %>%
   filter(grepl("Team", RaceType, ignore.case = TRUE) & Sex == "M") %>%  # RaceType contains "Team" and Sex is "M"
-  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
+  mutate(race_date = format(Date, "%b %d")) %>%
+  dplyr::select(RaceType, Period, Country, OriginalRaceNum, race_date) %>%
   rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
 
 ladies_teams <- champs_races_with_race_num %>%
   filter(grepl("Team", RaceType, ignore.case = TRUE) & Sex == "L") %>%  # RaceType contains "Team" and Sex is "L"
-  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
+  mutate(race_date = format(Date, "%b %d")) %>%
+  dplyr::select(RaceType, Period, Country, OriginalRaceNum, race_date) %>%
   rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
 
 # Mixed team races (Sex == "Mixed")
 mixed_teams <- champs_races_with_race_num %>%
   filter(Sex == "Mixed") %>%  # Mixed team events have Sex == "Mixed"
-  dplyr::select(RaceType, Period, Country, OriginalRaceNum) %>%
+  mutate(race_date = format(Date, "%b %d")) %>%
+  dplyr::select(RaceType, Period, Country, OriginalRaceNum, race_date) %>%
   rename(race_type = RaceType, period = Period, country = Country, original_race_num = OriginalRaceNum)
 
 log_info(paste("Found", nrow(men_races), "men's individual races,", nrow(ladies_races), "ladies' individual races"))
@@ -443,7 +449,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
     log_info(paste("Available Elo columns in startlist:", paste(available_elo_cols, collapse=", ")))
 
     base_df <- startlist %>%
-      dplyr::select(Skier, Nation, Price, all_of(race_prob_cols), any_of(elo_cols))
+      dplyr::select(Skier, ID, Nation, Price, all_of(race_prob_cols), any_of(elo_cols))
 
     # Get recent points for individuals
     recent_points <- race_df %>%
@@ -960,8 +966,9 @@ process_gender_championships <- function(gender, races) {
     # Make position probability predictions with adjustments
     position_preds <- data.frame(startlist_prepared[[participant_col]])
     names(position_preds)[1] <- participant_col
-    
-    # Add Nation for individual races
+
+    # Add ID and Nation for individual races
+    position_preds$ID <- startlist_prepared$ID
     position_preds$Nation <- startlist_prepared$Nation
     position_preds$Sex <- ifelse(gender == "men", "M", "L")
     

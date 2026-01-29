@@ -23,7 +23,7 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 | Alpine | ✅ Complete | ✅ Complete | ✅ Complete | N/A | ✅ Ready |
 | Biathlon | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
 | Cross-Country | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
-| Nordic Combined | ⏳ Pending | ⏳ Pending | ⏳ Pending | ✅ Complete | Needs update |
+| Nordic Combined | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
 | Ski Jumping | ⏳ Pending | ⏳ Pending | ⏳ Pending | ✅ Complete | Needs update |
 
 ### Features Implemented (All Sports)
@@ -42,7 +42,21 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 
 ## Recent Changes
 
-### Alpine ID Column (2026-01-29)
+### Nordic Combined Full Update (2026-01-29)
+
+**Changes Made:**
+1. **Chronological ordering**: Added `Race_Date` parsing and `arrange(Race_Date)` for all race dataframes
+2. **ID in prepare_startlist_data**: Added ID to base_df select
+3. **ID in position_preds**: Added `position_preds$ID <- startlist_prepared$ID`
+4. **Converted to percentages**: Multiplied all probabilities by 100 in Excel output
+5. **Sheet naming**: Format `"1. Individual - Feb 20"` with numeric prefix and date
+6. **Nations Race column**: Extracts just race type from sheet name
+7. **Nations select_and_rename_cols**: Added ID as second column
+
+**Files Modified:**
+- `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions.R`
+
+### Alpine ID Column (2026-01-29) ✅ Tested
 
 **Changes Made:**
 1. **ID in prepare_startlist_data**: Added ID to base_df select (line 337)
