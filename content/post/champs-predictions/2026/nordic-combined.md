@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Nordic Combined Predictions"
-date: 2026-01-29T19:37:50+00:00
+date: 2026-01-29T20:07:15+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "nordic-combined"]
 ---
@@ -21,25 +21,11 @@ tags: ["predictions", "olympics", "2026", "nordic-combined"]
 
 {{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/men_position_probabilities_2__Individual___Feb_17" >}}
 
-##### Men Individual 1
-
-{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/men_position_probabilities_Men_Individual_1" >}}
-
-##### Men Individual 2
-
-{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/men_position_probabilities_Men_Individual_2" >}}
-
 ### Team Sprint
 
 #### Men
 
 {{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/men_team_sprint_position_probabilities" >}}
-
-### Team
-
-#### Men
-
-{{< nordic-combined/datatable2 "nordic-combined/drafts/champs-predictions/2026/men_teams_position_probabilities" >}}
 
 ## Nation
 

@@ -1222,8 +1222,30 @@ for (race_name in names(results_list)) {
   race_date <- race_entry$race_date
   race_num <- race_entry$race_num
 
-  # Create tab name with format: "1. 10 C - Feb 12"
-  race_type <- if (technique == "") distance else paste(distance, technique)
+  # Helper function to expand distance and technique to full names
+  expand_race_name <- function(dist, tech) {
+    # Expand technique
+    tech_full <- switch(tech,
+      "P" = "Skiathlon",
+      "C" = "Classic",
+      "F" = "Freestyle",
+      tech  # Default: keep as-is
+    )
+
+    # Handle distance
+    if (dist == "Sprint") {
+      return(paste("Sprint", tech_full))
+    } else if (tech == "P") {
+      # Skiathlon: just show "Xkm Skiathlon"
+      return(paste0(dist, "km ", tech_full))
+    } else {
+      # Regular distance race: "Xkm Technique"
+      return(paste0(dist, "km ", tech_full))
+    }
+  }
+
+  # Create tab name with format: "1. 10km Freestyle - Feb 12"
+  race_type <- if (technique == "") distance else expand_race_name(distance, technique)
   tab_name <- paste0(race_num, ". ", race_type, " - ", race_date)
 
   # Store in appropriate gender list

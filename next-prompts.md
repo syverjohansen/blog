@@ -35,12 +35,36 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 ### Standard Output Format (Target for All Sports)
 - **Columns**: Skier, ID, Nation, Start, Win, Podium, Top5, Top-10, Top-30
 - **Values**: Percentages (0-100 scale), rounded to 1 decimal
-- **Sheet names**: `"N. RaceType - Mon DD"` format (e.g., "1. Sprint - Feb 12")
+- **Sheet names**: `"N. RaceType - Mon DD"` format (e.g., "1. Sprint Classic - Feb 12")
 - **Nations Summary**: Expected medal counts (divide percentage sums by 100)
+
+### Cross-Country Race Naming
+- "P" technique = Skiathlon (e.g., "20km Skiathlon")
+- "C" technique = Classic (e.g., "10km Classic", "Sprint Classic")
+- "F" technique = Freestyle (e.g., "10km Freestyle", "Sprint Freestyle")
 
 ---
 
 ## Recent Changes
+
+### Cross-Country Race Name Expansion (2026-01-29)
+
+**Changes Made:**
+1. Added `expand_race_name()` helper function to convert abbreviated race names to full names
+2. Technique expansion: "P" → "Skiathlon", "C" → "Classic", "F" → "Freestyle"
+3. Distance format: "10" → "10km", "20" → "20km", etc.
+4. Examples: "20 P" → "20km Skiathlon", "Sprint C" → "Sprint Classic", "10 F" → "10km Freestyle"
+
+**Files Modified:**
+- `~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions.R`
+
+### Nordic Combined Percentage Fix (2026-01-29)
+
+**Issue:** Values were 100x too high (e.g., 10000 instead of 100 for Start)
+**Fix:** Removed extra `* 100` multiplication in Excel output - values were already percentages from normalization
+
+**Files Modified:**
+- `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions.R`
 
 ### Ski Jumping Full Update (2026-01-29)
 

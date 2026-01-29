@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Cross-Country Skiing Predictions"
-date: 2026-01-29T19:37:49+00:00
+date: 2026-01-29T20:07:15+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "cross-country"]
 ---
@@ -17,33 +17,33 @@ tags: ["predictions", "olympics", "2026", "cross-country"]
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_1__20_P___Feb_08" >}}
 
-##### 10. F
+##### 1. 20km Skiathlon (Feb 08)
 
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_10_F" >}}
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_1__20km_Skiathlon___Feb_08" >}}
 
 ##### 2. Sprint C (Feb 10)
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_2__Sprint_C___Feb_10" >}}
 
-##### 20. P
+##### 2. Sprint Classic (Feb 10)
 
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_20_P" >}}
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_2__Sprint_Classic___Feb_10" >}}
 
 ##### 3. 10 F (Feb 13)
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_3__10_F___Feb_13" >}}
 
+##### 3. 10km Freestyle (Feb 13)
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_3__10km_Freestyle___Feb_13" >}}
+
 ##### 4. 50 C (Feb 21)
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_4__50_C___Feb_21" >}}
 
-##### 50. C
+##### 4. 50km Classic (Feb 21)
 
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_50_C" >}}
-
-##### Sprint C
-
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_Sprint_C" >}}
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/men_position_probabilities_4__50km_Classic___Feb_21" >}}
 
 #### Ladies
 
@@ -51,33 +51,33 @@ tags: ["predictions", "olympics", "2026", "cross-country"]
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_1__20_P___Feb_07" >}}
 
-##### 10. F
+##### 1. 20km Skiathlon (Feb 07)
 
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_10_F" >}}
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_1__20km_Skiathlon___Feb_07" >}}
 
 ##### 2. Sprint C (Feb 10)
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_2__Sprint_C___Feb_10" >}}
 
-##### 20. P
+##### 2. Sprint Classic (Feb 10)
 
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_20_P" >}}
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_2__Sprint_Classic___Feb_10" >}}
 
 ##### 3. 10 F (Feb 12)
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_3__10_F___Feb_12" >}}
 
+##### 3. 10km Freestyle (Feb 12)
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_3__10km_Freestyle___Feb_12" >}}
+
 ##### 4. 50 C (Feb 22)
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_4__50_C___Feb_22" >}}
 
-##### 50. C
+##### 4. 50km Classic (Feb 22)
 
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_50_C" >}}
-
-##### Sprint C
-
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_Sprint_C" >}}
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/ladies_position_probabilities_4__50km_Classic___Feb_22" >}}
 
 ### Relay
 
@@ -365,31 +365,6 @@ tags: ["predictions", "olympics", "2026", "cross-country"]
 
 ### Ladies
 
-#### Australia
-
-##### Individual
-
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/nations_individual_Australia_Ladies" >}}
-
-##### Relay
-
-###### Podium Optimized
-
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Australia_Ladies" >}}
-
-###### Win Optimized
-
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/nations_relay_win_Australia_Ladies" >}}
-
-##### Team Sprint
-
-###### Podium Optimized
-
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Australia_Ladies" >}}
-
-###### Win Optimized
-
-{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/nations_ts_win_Australia_Ladies" >}}
 #### Austria
 
 ##### Individual
