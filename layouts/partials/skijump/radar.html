@@ -97,18 +97,31 @@ function initRadarChart() {
                 return;
             }
 
-            const radarLabels = [
-                "Overall", "Small Hill", "Medium Hill", "Normal Hill", "Large Hill", "Flying Hill"
+            // Define all disciplines with their labels and data keys
+            const allDisciplines = [
+                { label: "Overall", key: "Elo_Pct" },
+                { label: "Small Hill", key: "Small_Elo_Pct" },
+                { label: "Medium Hill", key: "Medium_Elo_Pct" },
+                { label: "Normal Hill", key: "Normal_Elo_Pct" },
+                { label: "Large Hill", key: "Large_Elo_Pct" },
+                { label: "Flying Hill", key: "Flying_Elo_Pct" }
             ];
 
-            const radarValues = [
-                parseFloat(mostRecentEntry.Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Small_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Medium_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Normal_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Large_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Flying_Elo_Pct) || 0
-            ];
+            // Filter out disciplines with zero or missing values
+            const activeDisciplines = allDisciplines.filter(d => {
+                const value = parseFloat(mostRecentEntry[d.key]) || 0;
+                return value > 0;
+            });
+
+            // Check if we have enough data points for a meaningful radar
+            if (activeDisciplines.length < 3) {
+                document.getElementById('radar-error').style.display = 'block';
+                document.getElementById('radar-error-message').textContent = 'Not enough discipline data for radar chart (minimum 3 required)';
+                return;
+            }
+
+            const radarLabels = activeDisciplines.map(d => d.label);
+            const radarValues = activeDisciplines.map(d => parseFloat(mostRecentEntry[d.key]) || 0);
 
             const canvas = document.getElementById('radarChart');
             if (!canvas) {

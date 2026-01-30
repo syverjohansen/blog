@@ -28,6 +28,19 @@
             background: #f4f4f4;
             z-index: 2;
         }
+        @media (max-width: 600px) {
+            .catalog-container {
+                display: none;
+            }
+            .content-container {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            /* Hide graph sections on mobile */
+            .graph-section {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -38,7 +51,9 @@
             <thead></thead>
             <tbody></tbody>
         </table>
-        {{ partial "ladies-graph.html" . }}
+        <div class="graph-section">
+            {{ partial "ladies-graph.html" . }}
+        </div>
     </div>
 
     <div class="container-fluid">
@@ -48,7 +63,9 @@
             <thead></thead>
             <tbody></tbody>
         </table>
-        {{ partial "men-graph.html" . }}
+        <div class="graph-section">
+            {{ partial "men-graph.html" . }}
+        </div>
     </div>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

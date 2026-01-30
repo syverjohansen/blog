@@ -99,23 +99,34 @@ function initRadarChart() {
                 return;
             }
 
-            const radarLabels = [
-                "Overall", "Distance", "Distance Classic",
-                "Distance Freestyle", "Sprint", "Sprint Classic",
-                "Sprint Freestyle", "Classic", "Freestyle"
+            // Define all disciplines with their labels and data keys
+            const allDisciplines = [
+                { label: "Overall", key: "Elo_Pct" },
+                { label: "Distance", key: "Distance_Elo_Pct" },
+                { label: "Distance Classic", key: "Distance_C_Elo_Pct" },
+                { label: "Distance Freestyle", key: "Distance_F_Elo_Pct" },
+                { label: "Sprint", key: "Sprint_Elo_Pct" },
+                { label: "Sprint Classic", key: "Sprint_C_Elo_Pct" },
+                { label: "Sprint Freestyle", key: "Sprint_F_Elo_Pct" },
+                { label: "Classic", key: "Classic_Elo_Pct" },
+                { label: "Freestyle", key: "Freestyle_Elo_Pct" }
             ];
 
-            const radarValues = [
-                parseFloat(mostRecentEntry.Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_C_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Distance_F_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_C_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_F_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Classic_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Freestyle_Elo_Pct) || 0
-            ];
+            // Filter out disciplines with zero or missing values
+            const activeDisciplines = allDisciplines.filter(d => {
+                const value = parseFloat(mostRecentEntry[d.key]) || 0;
+                return value > 0;
+            });
+
+            // Check if we have enough data points for a meaningful radar
+            if (activeDisciplines.length < 3) {
+                document.getElementById('radar-error').style.display = 'block';
+                document.getElementById('radar-error-message').textContent = 'Not enough discipline data for radar chart (minimum 3 required)';
+                return;
+            }
+
+            const radarLabels = activeDisciplines.map(d => d.label);
+            const radarValues = activeDisciplines.map(d => parseFloat(mostRecentEntry[d.key]) || 0);
 
             const canvas = document.getElementById('radarChart');
             if (!canvas) {

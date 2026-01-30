@@ -105,17 +105,30 @@ function initBiathlonRadarChart() {
                 return;
             }
 
-            const radarLabels = [
-                "Overall", "Sprint", "Pursuit", "Individual", "Mass Start"
+            // Define all disciplines with their labels and data keys
+            const allDisciplines = [
+                { label: "Overall", key: "Elo_Pct" },
+                { label: "Sprint", key: "Sprint_Elo_Pct" },
+                { label: "Pursuit", key: "Pursuit_Elo_Pct" },
+                { label: "Individual", key: "Individual_Elo_Pct" },
+                { label: "Mass Start", key: "MassStart_Elo_Pct" }
             ];
 
-            const radarValues = [
-                parseFloat(mostRecentEntry.Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Sprint_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Pursuit_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.Individual_Elo_Pct) || 0,
-                parseFloat(mostRecentEntry.MassStart_Elo_Pct) || 0
-            ];
+            // Filter out disciplines with zero or missing values
+            const activeDisciplines = allDisciplines.filter(d => {
+                const value = parseFloat(mostRecentEntry[d.key]) || 0;
+                return value > 0;
+            });
+
+            // Check if we have enough data points for a meaningful radar
+            if (activeDisciplines.length < 3) {
+                document.getElementById('biathlon-radar-error').style.display = 'block';
+                document.getElementById('biathlon-radar-error-message').textContent = 'Not enough discipline data for radar chart (minimum 3 required)';
+                return;
+            }
+
+            const radarLabels = activeDisciplines.map(d => d.label);
+            const radarValues = activeDisciplines.map(d => parseFloat(mostRecentEntry[d.key]) || 0);
 
             const canvas = document.getElementById('biathlonRadarChart');
             if (!canvas) {

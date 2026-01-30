@@ -238,6 +238,25 @@
             .bbref-controls input[type="text"] {
                 width: 100%;
             }
+            /* Hide Elo columns on mobile - show only Rank, Skier, Nation, Overall Elo */
+            .bbref-table th:nth-child(n+5),
+            .bbref-table td:nth-child(n+5) {
+                display: none;
+            }
+            /* Remove sticky from Skier column on mobile */
+            .bbref-table .sticky-col-2 {
+                position: static;
+                border-right: none;
+            }
+            /* Keep only Rank column sticky */
+            .bbref-table .sticky-col {
+                position: sticky;
+                left: 0;
+            }
+            /* Hide graph sections on mobile */
+            .graph-section {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -270,7 +289,9 @@
                 </div>
             </div>
         </div>
-        {{ partial "nordic-combined/ladies-graph-all.html" . }}
+        <div class="graph-section">
+            {{ partial "nordic-combined/ladies-graph-all.html" . }}
+        </div>
     </div>
 
     <div class="container-fluid">
@@ -301,7 +322,9 @@
                 </div>
             </div>
         </div>
-        {{ partial "nordic-combined/men-graph-all.html" . }}
+        <div class="graph-section">
+            {{ partial "nordic-combined/men-graph-all.html" . }}
+        </div>
     </div>
 
     <script>

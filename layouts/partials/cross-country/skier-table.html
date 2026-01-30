@@ -51,6 +51,25 @@
     @media (max-width: 600px) {
         .bbref-table-wrapper { font-size: 13px; }
         .bbref-table th, .bbref-table td { padding: 5px 8px; }
+        /* Hide Country (3), Season (8), Race (9) columns on mobile */
+        .bbref-table th:nth-child(3),
+        .bbref-table td:nth-child(3),
+        .bbref-table th:nth-child(8),
+        .bbref-table td:nth-child(8),
+        .bbref-table th:nth-child(9),
+        .bbref-table td:nth-child(9) {
+            display: none;
+        }
+        /* Remove sticky from City column on mobile */
+        .bbref-table .sticky-col-2 {
+            position: static;
+            border-right: none;
+        }
+        /* Keep only Date column sticky */
+        .bbref-table .sticky-col {
+            position: sticky;
+            left: 0;
+        }
     }
 </style>
 
