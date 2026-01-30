@@ -1,6 +1,6 @@
 # 2026 Winter Olympics Championship Predictions
 
-## Current Status (2026-01-29)
+## Current Status (2026-01-30)
 
 ### Project Overview
 Creating championship prediction blog posts for the 2026 Winter Olympics with:
@@ -46,6 +46,89 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 ---
 
 ## Recent Changes
+
+### Mobile Display Updates (2026-01-30)
+
+**Files Updated (all 5 sports: alpine, biathlon, cross-country, nordic-combined, skijump):**
+
+#### ranks-table.html
+- Hide middle columns on mobile (show only Rank, Skier, Nation, Total)
+- Remove sticky from Skier and Nation columns on mobile
+- Keep only Rank column sticky
+
+#### small-table.html (Elo pages) - REVISED APPROACH
+- Keep all Elo columns visible for horizontal scrolling
+- Truncate skier name with ellipsis (max-width: 80px)
+- Both Rank and Skier columns stay sticky on mobile
+- Hide graph sections on mobile via `.graph-section { display: none; }`
+- Wrapped graph partials in `<div class="graph-section">`
+
+#### all-table.html (All-Time Elo pages) - REVISED APPROACH
+- Keep all Elo columns visible for horizontal scrolling
+- Truncate skier name with ellipsis (max-width: 80px)
+- Both Rank and Skier columns stay sticky on mobile
+- Hide graph sections on mobile
+- Wrapped graph partials in `<div class="graph-section">`
+
+#### skier-table.html (Individual skier pages) - REVISED APPROACH
+- Keep all columns visible for horizontal scrolling
+- Truncate city name with ellipsis (max-width: 80px)
+- Both Date and City columns stay sticky on mobile
+- Consistent approach across all 5 sports
+
+#### radar.html (Skier performance radar charts)
+- Filter out disciplines with zero values (skier hasn't competed)
+- Only show axes for disciplines with actual data
+- Show message if fewer than 3 disciplines have data
+
+**CSS Pattern for Truncation (small-table.html, all-table.html):**
+```css
+@media (max-width: 600px) {
+    .bbref-table-wrapper { font-size: 13px; }
+    .bbref-table th, .bbref-table td { padding: 5px 6px; }
+    .bbref-controls { flex-direction: column; align-items: stretch; }
+    .bbref-controls input[type="text"] { width: 100%; }
+    /* Truncate skier name with ellipsis on mobile */
+    .bbref-table td.sticky-col-2 {
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .bbref-table th.sticky-col-2 { max-width: 80px; }
+    /* Adjust sticky positions for mobile */
+    .bbref-table .sticky-col { left: 0; }
+    .bbref-table .sticky-col-2 { left: 40px; }
+    /* Hide graphs */
+    .graph-section { display: none; }
+}
+```
+
+---
+
+### Ski Jumping Team Predictions Fix (2026-01-30)
+
+**Issue:** Team predictions for ski jumping were being generated in Excel files but not appearing on the site.
+
+**Root Cause:** The `champs_script.sh` looked for files named `men_teams_position_probabilities*.json` (plural "teams" + "position_probabilities"), but ski jumping generates files named `men_team.json` and `mixed_team.json` (singular "team", no suffix).
+
+**Fix:** Updated `champs_script.sh` to also check for ski jumping style naming:
+```bash
+# Ski jumping style naming (men_team.json, mixed_team.json)
+if [[ -z "$men_team" ]]; then
+    men_team=$(find "$json_dir" -name "men_team.json" -type f 2>/dev/null | head -1)
+fi
+if [[ -z "$ladies_team" ]]; then
+    ladies_team=$(find "$json_dir" -name "ladies_team.json" -type f 2>/dev/null | head -1)
+fi
+if [[ -z "$mixed_team" ]]; then
+    mixed_team=$(find "$json_dir" -name "mixed_team.json" -type f 2>/dev/null | head -1)
+fi
+```
+
+**Files Modified:**
+- `~/blog/daehl-e/champs_script.sh`
+
+---
 
 ### Cross-Country Race Name Expansion (2026-01-29)
 
@@ -151,6 +234,20 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 ---
 
 ## Key File Locations
+
+### Hugo Layout Partials (Tables & Charts)
+```
+~/blog/daehl-e/layouts/partials/{sport}/ranks-table.html     # All-time rankings
+~/blog/daehl-e/layouts/partials/{sport}/small-table.html     # Current Elo table
+~/blog/daehl-e/layouts/partials/{sport}/all-table.html       # All-time Elo table
+~/blog/daehl-e/layouts/partials/{sport}/skier-table.html     # Individual skier data
+~/blog/daehl-e/layouts/partials/{sport}/radar.html           # Performance radar chart
+~/blog/daehl-e/layouts/partials/{sport}/men-graph.html       # Men's Elo graph
+~/blog/daehl-e/layouts/partials/{sport}/ladies-graph.html    # Ladies' Elo graph
+~/blog/daehl-e/layouts/partials/{sport}/men-graph-all.html   # Men's all-time Elo graph
+~/blog/daehl-e/layouts/partials/{sport}/ladies-graph-all.html # Ladies' all-time Elo graph
+```
+Where `{sport}` = alpine, biathlon, cross-country, nordic-combined, skijump
 
 ### R Prediction Scripts
 ```

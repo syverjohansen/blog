@@ -293,6 +293,16 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
     men_team=$(find "$json_dir" -name "men_teams_position_probabilities*.json" -type f 2>/dev/null | head -1)
     ladies_team=$(find "$json_dir" -name "ladies_teams_position_probabilities*.json" -type f 2>/dev/null | head -1)
     mixed_team=$(find "$json_dir" -name "mixed_teams_position_probabilities*.json" -type f 2>/dev/null | head -1)
+    # Ski jumping style naming (men_team.json, mixed_team.json)
+    if [[ -z "$men_team" ]]; then
+        men_team=$(find "$json_dir" -name "men_team.json" -type f 2>/dev/null | head -1)
+    fi
+    if [[ -z "$ladies_team" ]]; then
+        ladies_team=$(find "$json_dir" -name "ladies_team.json" -type f 2>/dev/null | head -1)
+    fi
+    if [[ -z "$mixed_team" ]]; then
+        mixed_team=$(find "$json_dir" -name "mixed_team.json" -type f 2>/dev/null | head -1)
+    fi
 
     if [[ -n "$men_team" ]] || [[ -n "$ladies_team" ]] || [[ -n "$mixed_team" ]]; then
         post_content+="

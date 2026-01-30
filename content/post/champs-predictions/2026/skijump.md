@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Ski Jumping Predictions"
-date: 2026-01-29T20:36:13+00:00
+date: 2026-01-30T13:34:48+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "skijump"]
 ---
@@ -30,6 +30,16 @@ tags: ["predictions", "olympics", "2026", "skijump"]
 ##### 2. Large (Feb 14)
 
 {{< skijump/datatable2 "skijump/drafts/champs-predictions/2026/ladies_position_probabilities_2__Large___Feb_14" >}}
+
+### Team
+
+#### Men
+
+{{< skijump/datatable2 "skijump/drafts/champs-predictions/2026/men_team" >}}
+
+#### Mixed
+
+{{< skijump/datatable2 "skijump/drafts/champs-predictions/2026/mixed_team" >}}
 
 ## Nation
 

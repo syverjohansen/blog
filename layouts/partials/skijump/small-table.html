@@ -72,24 +72,21 @@
         .section-title { margin: 2rem 0 1rem; font-size: 1.5rem; font-weight: 600; color: #333; }
         @media (max-width: 600px) {
             .bbref-table-wrapper { font-size: 13px; }
-            .bbref-table th, .bbref-table td { padding: 5px 8px; }
+            .bbref-table th, .bbref-table td { padding: 5px 6px; }
             .bbref-controls { flex-direction: column; align-items: stretch; }
             .bbref-controls input[type="text"] { width: 100%; }
-            /* Hide Elo columns on mobile - show only Rank, Skier, Nation, Age, Overall */
-            .bbref-table th:nth-child(n+6),
-            .bbref-table td:nth-child(n+6) {
-                display: none;
+            /* Truncate skier name with ellipsis on mobile */
+            .bbref-table td.sticky-col-2 {
+                max-width: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
-            /* Remove sticky from Skier column on mobile */
-            .bbref-table .sticky-col-2 {
-                position: static;
-                border-right: none;
+            .bbref-table th.sticky-col-2 {
+                max-width: 80px;
             }
-            /* Keep only Rank column sticky */
-            .bbref-table .sticky-col {
-                position: sticky;
-                left: 0;
-            }
+            /* Adjust sticky positions for mobile */
+            .bbref-table .sticky-col { left: 0; }
+            .bbref-table .sticky-col-2 { left: 40px; }
             /* Hide graph sections on mobile */
             .graph-section {
                 display: none;
