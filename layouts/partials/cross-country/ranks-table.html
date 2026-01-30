@@ -83,6 +83,22 @@
         .bbref-table th, .bbref-table td { padding: 5px 8px; }
         .bbref-controls { flex-direction: column; align-items: stretch; }
         .bbref-controls input[type="text"] { width: 100%; }
+        /* Hide middle columns on mobile - show only Rank, Skier, Nation, Total */
+        .bbref-table th:nth-child(n+4):nth-child(-n+8),
+        .bbref-table td:nth-child(n+4):nth-child(-n+8) {
+            display: none;
+        }
+        /* Remove sticky from Skier and Nation columns on mobile */
+        .bbref-table .sticky-col-2,
+        .bbref-table .sticky-col-3 {
+            position: static;
+            border-right: none;
+        }
+        /* Keep only Rank column sticky */
+        .bbref-table .sticky-col {
+            position: sticky;
+            left: 0;
+        }
     }
 </style>
 
