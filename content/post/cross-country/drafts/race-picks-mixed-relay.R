@@ -1036,7 +1036,29 @@ normalize_probabilities <- function(team_predictions) {
       }
     }
   }
-  
+
+  # FINAL MONOTONIC CONSTRAINT CHECK after re-normalization
+  # This ensures no inversions were introduced by the re-normalization step
+  log_info("Applying final monotonic constraints after re-normalization...")
+  for(i in 1:nrow(team_predictions)) {
+    probs <- numeric(length(prob_cols))
+    for(j in 1:length(prob_cols)) {
+      probs[j] <- team_predictions[[prob_cols[j]]][i]
+    }
+
+    # Apply monotonic adjustment: each probability should be >= previous one
+    for(j in 2:length(probs)) {
+      if(probs[j] < probs[j-1]) {
+        probs[j] <- probs[j-1]  # Set to previous value
+      }
+    }
+
+    # Update the team_predictions dataframe
+    for(j in 1:length(prob_cols)) {
+      team_predictions[[prob_cols[j]]][i] <- probs[j]
+    }
+  }
+
   # Recalculate Expected_Points based on normalized probabilities
   if("Expected_Points" %in% names(team_predictions)) {
     team_predictions <- team_predictions %>%

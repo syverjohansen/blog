@@ -1,6 +1,6 @@
 # 2026 Winter Olympics Championship Predictions
 
-## Current Status (2026-01-30)
+## Current Status (2026-01-31)
 
 ### Project Overview
 Creating championship prediction blog posts for the 2026 Winter Olympics with:
@@ -27,10 +27,11 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 | Ski Jumping | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
 
 ### Features Implemented (All Sports)
-- 5-phase normalization (scale → monotonic → re-scale → cap at start_prob → final monotonic)
+- 7-phase normalization (scale → monotonic → re-scale → cap → final monotonic → start_prob cap → log)
 - Exponential decay weighted participation probability
 - Nations Excel with Summary sheet and per-nation breakdown
 - Clean column names (no underscores)
+- Sport-specific Elo columns in skier tables
 
 ### Standard Output Format (Target for All Sports)
 - **Columns**: Skier, ID, Nation, Start, Win, Podium, Top5, Top-10, Top-30
@@ -45,7 +46,213 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 
 ---
 
+## Completed Task: Race-Picks Methodology Verification (2026-01-31)
+
+### Task Description
+Verified the accuracy of `~/blog/daehl-e/content/post/methods/race-picks.md` methodology documentation and applied corrections based on actual R and Python implementation.
+
+### Files to Review
+
+**Documentation File:**
+- `~/blog/daehl-e/content/post/methods/race-picks.md` (1123 lines covering all sports)
+
+**R Source Files (Individual Race Picks):**
+- `~/blog/daehl-e/content/post/alpine/drafts/race-picks.R`
+- `~/blog/daehl-e/content/post/biathlon/drafts/race-picks.R`
+- `~/blog/daehl-e/content/post/cross-country/drafts/race-picks.R`
+- `~/blog/daehl-e/content/post/nordic-combined/drafts/race-picks.R`
+- `~/blog/daehl-e/content/post/skijump/drafts/race-picks.R`
+
+**R Source Files (Cross-Country Relays):**
+- `~/blog/daehl-e/content/post/cross-country/drafts/race-picks-relay.R`
+- `~/blog/daehl-e/content/post/cross-country/drafts/race-picks-mixed-relay.R`
+- `~/blog/daehl-e/content/post/cross-country/drafts/race-picks-team-sprint.R`
+
+**Python Startlist Scraper Files (Individual):**
+- `~/ski/elo/python/alpine/polars/startlist-scrape-race*.py`
+- `~/ski/elo/python/biathlon/polars/startlist-scrape-race*.py`
+- `~/ski/elo/python/cross-country/polars/startlist-scrape-race*.py`
+- `~/ski/elo/python/nordic-combined/polars/startlist-scrape-race*.py`
+- `~/ski/elo/python/skijump/polars/startlist-scrape-race*.py`
+
+**Python Startlist Scraper Files (Relays):**
+- `~/ski/elo/python/biathlon/polars/relay/`
+- `~/ski/elo/python/cross-country/polars/relay/`
+- `~/ski/elo/python/nordic-combined/polars/relay/`
+- `~/ski/elo/python/skijump/polars/relay/`
+
+### Verification Process (Sport by Sport)
+
+For each sport, verify:
+
+1. **Conceptual Accuracy:**
+   - Is the overall approach described correctly?
+   - Are the model types (GAM with binomial family) accurately described?
+   - Is the feature selection process (BIC) correctly explained?
+   - Is the exponential decay participation probability described accurately?
+
+2. **Detailed Accuracy:**
+   - Are the input data sources and columns correct?
+   - Are the specific features/variables mentioned accurate?
+   - Is the normalization process (7-phase) correctly documented?
+   - Are sport-specific differences (event types, Elo columns) accurate?
+   - Are relay/team variations correctly described?
+
+3. **Cross-Reference Python Scrapers:**
+   - What data do the scrapers collect?
+   - How does this feed into the R prediction scripts?
+   - Are there any data transformations in the scrapers that affect predictions?
+
+### Sports Checklist (COMPLETED 2026-01-31)
+
+- [x] Alpine (Individual only - no team events)
+- [x] Biathlon (Individual + Relay)
+- [x] Cross-Country (Individual + Relay + Mixed Relay + Team Sprint)
+- [x] Nordic Combined (Individual + Team)
+- [x] Ski Jumping (Individual + Team + Mixed Team)
+
+### Verification Results Summary
+
+#### Issues Found and FIXED in race-picks.md:
+
+**1. ALL SPORTS - Normalization Section Incomplete**
+Documentation describes ~3 phases but code uses 7 phases:
+1. Scale to target sum
+2. Cap at 100%, redistribute excess
+3. Monotonic constraints
+4. Re-normalize
+5. Cap at 100% again
+6. Final monotonic constraint (recently added)
+7. Final cap at start_prob (recently added)
+
+**2. Exponential Decay α Value WRONG (4 sports)**
+- **Documentation says α = 0.3** for Biathlon, Nordic Combined, Ski Jumping
+- **Code uses α = 0.1** for ALL sports
+- Only Alpine documentation correctly states α = 0.1
+
+**3. Cross-Country - Period Definition WRONG**
+- Documentation describes semantic periods: pre-TdS, TdS, post-TdS, championships, post-championships
+- Code uses simple race count buckets: 1-5, 6-10, 11-15, 16-20, 21-25+
+
+**4. Nordic Combined - Multiple Errors**
+- Documentation says "Pursuit" Elo, code uses "Sprint_Elo" (no Pursuit in NC)
+- Documentation claims NO 75% Elo filter, but code DOES filter by 75%
+- Documentation says "IBU site" but NC uses FIS
+
+**5. Ski Jumping - Multiple Errors**
+- Elo columns incomplete: missing Small_Elo, Medium_Elo from documentation
+- Copy-paste error: lists Nordic Combined disciplines for weighted points
+- Claims elevation adjustment but code uses hillsize_adjustment instead
+
+#### Verified as Correct:
+- Overall approach (GAM with binomial family, BIC feature selection)
+- Alpine: All major claims verified correct
+- Biathlon: Elo columns, elevation threshold (1300m), relay methodology
+- Cross-Country: Sprint thresholds (1,3,6,12,30), Elo columns, altitude threshold, relay leg structure
+- Relay: XGBoost for n>500, GLM for smaller datasets (cross-country)
+- Data sources: FIS (alpine, XC, NC, SJ), IBU (biathlon)
+
+### Future Documentation Tasks
+- Fix race-picks.md with corrections above
+- Write methodology documentation for `champs-predictions.R`
+- Write methodology documentation for Elo calculations
+
+---
+
 ## Recent Changes
+
+### Final Monotonic Constraint in Race Picks (2026-01-31)
+
+**Issue:** After the re-normalization step, small probability inversions could occur (e.g., Top-30 slightly lower than Top-10), which undermines user trust in predictions regardless of how small the difference.
+
+**Fix:** Added a final monotonic constraint check after the last re-normalization step to ensure probabilities always satisfy: Win ≤ Podium ≤ Top5 ≤ Top10 ≤ Top30.
+
+**Files Updated (8 files):**
+
+Individual race files:
+- `content/post/alpine/drafts/race-picks.R`
+- `content/post/biathlon/drafts/race-picks.R`
+- `content/post/cross-country/drafts/race-picks.R`
+- `content/post/nordic-combined/drafts/race-picks.R`
+- `content/post/skijump/drafts/race-picks.R`
+
+Cross-country relay/team files:
+- `content/post/cross-country/drafts/race-picks-relay.R`
+- `content/post/cross-country/drafts/race-picks-mixed-relay.R`
+- `content/post/cross-country/drafts/race-picks-team-sprint.R`
+
+**Code Pattern Added (after re-normalization block):**
+```r
+# FINAL MONOTONIC CONSTRAINT CHECK after re-normalization
+# This ensures no inversions were introduced by the re-normalization step
+log_info("Applying final monotonic constraints after re-normalization...")
+for(i in 1:nrow(normalized)) {
+  probs <- numeric(length(prob_cols))
+  for(j in 1:length(prob_cols)) {
+    probs[j] <- normalized[[prob_cols[j]]][i]
+  }
+
+  # Apply monotonic adjustment: each probability should be >= previous one
+  for(j in 2:length(probs)) {
+    if(probs[j] < probs[j-1]) {
+      probs[j] <- probs[j-1]  # Set to previous value
+    }
+  }
+
+  # Update the normalized dataframe
+  for(j in 1:length(prob_cols)) {
+    normalized[[prob_cols[j]]][i] <- probs[j]
+  }
+}
+
+# FINAL CAP AT START_PROB: No probability should exceed participation probability
+if(race_prob_col %in% names(normalized)) {
+  log_info("Applying final cap at start probability...")
+  for(prob_col in prob_cols) {
+    if(prob_col %in% names(normalized)) {
+      # Cap each probability at the participant's start probability (converted to percentage)
+      start_probs <- normalized[[race_prob_col]] * 100
+      normalized[[prob_col]] <- pmin(normalized[[prob_col]], start_probs)
+    }
+  }
+}
+```
+
+**Note:** For relay/team files, teams are confirmed participants (start_prob = 1.0), so the existing cap at 1.0 serves as the start_prob cap.
+
+---
+
+### Column Display Fixes (2026-01-31)
+
+#### small-table.html - Clean Column Names
+**Issue:** Columns displayed as "Downhill_Pelo", "Super G_Pelo" instead of "Downhill", "Super G".
+
+**Fix:** Updated `titleMap` and added `formatColumnTitle()` function in all 5 sports.
+
+**Sport-specific titleMaps:**
+- **Alpine:** Downhill, Super G, Giant Slalom, Slalom, Combined, Tech, Speed
+- **Biathlon:** Overall, Sprint, Pursuit, Individual, Mass Start
+- **Cross-Country:** Overall, Distance, Sprint, Distance Classic/Freestyle, Sprint Classic/Freestyle, Classic, Freestyle
+- **Nordic Combined:** Overall, Individual, Individual Compact, Sprint, Mass Start
+- **Ski Jump:** Overall, Small, Medium, Normal, Large, Flying
+
+#### skier-table.html - Sport-Specific Elo Columns
+**Issue:** All sports were using cross-country column definitions, causing missing columns for other sports.
+
+**Fix:** Updated `eloColumns`, `pctColumns`, and `titleMap` for each sport with correct discipline-specific columns.
+
+**Sport-specific eloColumns:**
+- **Alpine:** Elo, Downhill_Elo, Super G_Elo, Giant Slalom_Elo, Slalom_Elo, Combined_Elo, Tech_Elo, Speed_Elo
+- **Biathlon:** Elo, Individual_Elo, Sprint_Elo, Pursuit_Elo, MassStart_Elo
+- **Cross-Country:** (unchanged - already correct)
+- **Nordic Combined:** Elo, Individual_Elo, IndividualCompact_Elo, Sprint_Elo, MassStart_Elo
+- **Ski Jump:** Elo, Small_Elo, Medium_Elo, Normal_Elo, Large_Elo, Flying_Elo
+
+**Files Updated:**
+- `layouts/partials/{sport}/small-table.html` (all 5 sports)
+- `layouts/partials/{sport}/skier-table.html` (all 5 sports)
+
+---
 
 ### Mobile Display Updates (2026-01-30)
 
@@ -292,12 +499,14 @@ Where `{sport}` = alpine, biathlon, cross-country, nordic-combined, skijump
 
 ## Technical Reference
 
-### 5-Phase Normalization
+### 7-Phase Normalization
 1. **Phase 1**: Scale to target sum, cap at 100%, redistribute excess
-2. **Phase 2**: Monotonic constraints + cap at start_prob
+2. **Phase 2**: Monotonic constraints (Win ≤ Podium ≤ Top5 ≤ Top10 ≤ Top30)
 3. **Phase 3**: Re-normalize after constraint adjustments
-4. **Phase 4**: Final cap at start_prob
-5. **Phase 5**: Final monotonic constraint enforcement
+4. **Phase 4**: Cap at 100% again
+5. **Phase 5**: Final monotonic constraint enforcement (ensures no inversions from re-normalization)
+6. **Phase 6**: Final cap at start_prob (no probability can exceed participation probability)
+7. **Phase 7**: Log final sums for verification
 
 ### Target Sums (as percentages)
 - Individual: Win=100, Podium=300, Top5=500, Top10=1000, Top30=3000

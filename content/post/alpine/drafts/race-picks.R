@@ -235,7 +235,41 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
       }
     }
   }
-  
+
+  # FINAL MONOTONIC CONSTRAINT CHECK after re-normalization
+  # This ensures no inversions were introduced by the re-normalization step
+  log_info("Applying final monotonic constraints after re-normalization...")
+  for(i in 1:nrow(normalized)) {
+    probs <- numeric(length(prob_cols))
+    for(j in 1:length(prob_cols)) {
+      probs[j] <- normalized[[prob_cols[j]]][i]
+    }
+
+    # Apply monotonic adjustment: each probability should be >= previous one
+    for(j in 2:length(probs)) {
+      if(probs[j] < probs[j-1]) {
+        probs[j] <- probs[j-1]  # Set to previous value
+      }
+    }
+
+    # Update the normalized dataframe
+    for(j in 1:length(prob_cols)) {
+      normalized[[prob_cols[j]]][i] <- probs[j]
+    }
+  }
+
+  # FINAL CAP AT START_PROB: No probability should exceed participation probability
+  if(race_prob_col %in% names(normalized)) {
+    log_info("Applying final cap at start probability...")
+    for(prob_col in prob_cols) {
+      if(prob_col %in% names(normalized)) {
+        # Cap each probability at the participant's start probability (converted to percentage)
+        start_probs <- normalized[[race_prob_col]] * 100
+        normalized[[prob_col]] <- pmin(normalized[[prob_col]], start_probs)
+      }
+    }
+  }
+
   # Log final sums after all adjustments
   log_info("Position probability sums AFTER normalization and monotonic constraints:")
   for(threshold in position_thresholds) {
