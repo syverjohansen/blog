@@ -97,22 +97,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const container = wrapper.querySelector('.bbref-table-container');
     const table = document.getElementById('dataTableL');
 
-    const eloColumns = ['Date', 'City', 'Country', 'Distance', 'MS', 'Technique', 'Place', 'Season', 'Race', 'Age',
-        'Elo', 'Distance_Elo', 'Distance_C_Elo', 'Distance_F_Elo', 'Sprint_Elo', 'Sprint_C_Elo', 'Sprint_F_Elo',
-        'Classic_Elo', 'Freestyle_Elo'];
+    const eloColumns = ['Date', 'City', 'Country', 'Distance', 'RaceType', 'Event', 'Place', 'Age',
+        'Elo', 'Individual_Elo', 'Sprint_Elo', 'Pursuit_Elo', 'MassStart_Elo'];
 
-    const pctColumns = ['Date', 'City', 'Country', 'Distance', 'MS', 'Technique', 'Place', 'Season', 'Race', 'Age',
-        'Elo_Pct', 'Distance_Elo_Pct', 'Distance_C_Elo_Pct', 'Distance_F_Elo_Pct', 'Sprint_Elo_Pct',
-        'Sprint_C_Elo_Pct', 'Sprint_F_Elo_Pct', 'Classic_Elo_Pct', 'Freestyle_Elo_Pct'];
+    const pctColumns = ['Date', 'City', 'Country', 'Distance', 'RaceType', 'Event', 'Place', 'Age',
+        'Elo_Pct', 'Individual_Elo_Pct', 'Sprint_Elo_Pct', 'Pursuit_Elo_Pct', 'MassStart_Elo_Pct'];
 
     const titleMap = {
-        'Distance_Elo': 'Distance', 'Distance_C_Elo': 'Distance Classic', 'Distance_F_Elo': 'Distance Freestyle',
-        'Sprint_Elo': 'Sprint', 'Sprint_C_Elo': 'Sprint Classic', 'Sprint_F_Elo': 'Sprint Freestyle',
-        'Classic_Elo': 'Classic', 'Freestyle_Elo': 'Freestyle',
-        'Elo_Pct': 'Overall %', 'Distance_Elo_Pct': 'Distance %', 'Distance_C_Elo_Pct': 'Distance Classic %',
-        'Distance_F_Elo_Pct': 'Distance Freestyle %', 'Sprint_Elo_Pct': 'Sprint %',
-        'Sprint_C_Elo_Pct': 'Sprint Classic %', 'Sprint_F_Elo_Pct': 'Sprint Freestyle %',
-        'Classic_Elo_Pct': 'Classic %', 'Freestyle_Elo_Pct': 'Freestyle %'
+        'Individual_Elo': 'Individual', 'Sprint_Elo': 'Sprint', 'Pursuit_Elo': 'Pursuit', 'MassStart_Elo': 'Mass Start',
+        'Elo_Pct': 'Overall %', 'Individual_Elo_Pct': 'Individual %', 'Sprint_Elo_Pct': 'Sprint %',
+        'Pursuit_Elo_Pct': 'Pursuit %', 'MassStart_Elo_Pct': 'Mass Start %'
     };
 
     function formatSkierData(groupData, id) {

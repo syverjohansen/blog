@@ -168,8 +168,16 @@
         const titleMap = {
             'Pelo': 'Overall', 'Distance_Pelo': 'Distance', 'Sprint_Pelo': 'Sprint',
             'Distance_C_Pelo': 'Distance Classic', 'Distance_F_Pelo': 'Distance Freestyle',
-            'Sprint_C_Pelo': 'Sprint Classic', 'Sprint_F_Pelo': 'Sprint Freestyle'
+            'Sprint_C_Pelo': 'Sprint Classic', 'Sprint_F_Pelo': 'Sprint Freestyle',
+            'Classic_Pelo': 'Classic', 'Freestyle_Pelo': 'Freestyle'
         };
+
+        function formatColumnTitle(key) {
+            if (titleMap[key]) return titleMap[key];
+            if (key === 'Birthday') return 'Age';
+            // Remove _Pelo suffix and replace underscores with spaces
+            return key.replace(/_Pelo$/, '').replace(/_/g, ' ');
+        }
 
         function calculateAge(birthday) {
             if (!birthday) return '';
@@ -202,7 +210,7 @@
                     let headerRow = '<tr><th class="sticky-col" data-col="rank">Rank</th>';
                     keys.forEach(key => {
                         if (key === 'ID' || key === 'Place') return;
-                        const title = titleMap[key] || (key === 'Birthday' ? 'Age' : key);
+                        const title = formatColumnTitle(key);
                         const isSkier = key === 'Skier';
                         headerRow += `<th class="${isSkier ? 'sticky-col-2' : ''}" data-col="${key}">${title}</th>`;
                     });
