@@ -153,9 +153,51 @@ Documentation describes ~3 phases but code uses 7 phases:
 - Data sources: FIS (alpine, XC, NC, SJ), IBU (biathlon)
 
 ### Future Documentation Tasks
-- Fix race-picks.md with corrections above
-- Write methodology documentation for `champs-predictions.R`
-- Write methodology documentation for Elo calculations
+- ~~Fix race-picks.md with corrections above~~ (DONE 2026-01-31)
+- ~~Write methodology documentation for `champs-predictions.R`~~ (DONE 2026-01-31)
+- ~~Write methodology documentation for Elo calculations~~ (DONE 2026-02-01)
+- Write methodology documentation for ranks calculations
+
+### Elo Calculations Documentation (2026-02-01)
+
+Created `content/post/methods/elo-calculations.md` documenting:
+- Core algorithm: Base Elo 1300, multi-player Elo formula E = 1/(1 + 10^((Rj - Ri)/400))
+- Dynamic K-factor: max_racers/current_season_racers, capped 1-5
+- Season discount: 0.85 regression toward base
+- Sport-specific K adjustments:
+  - Alpine Combined: K × 0.8
+  - Biathlon Relay/Mixed Relay: K / 4, Single Mixed Relay: K / 2
+  - Cross-Country Relay: K / 4, Team Sprint: K / 2
+  - Nordic Combined Team: K / 4, Team Sprint: K / 2
+  - Ski Jumping Team: K / 4
+- Pipeline: scrape.py → elo.py → chrono.py (website) or elo_predict.py → chrono_predict.py (predictions)
+- Discipline-specific Elos for each sport
+
+### Completed Tasks (2026-02-01)
+
+1. **Ranks Methodology Documentation** - DONE
+   - Created `content/post/methods/ranks.md` documenting:
+     - Points system: Only top 3 finishes earn points
+     - Base points: Olympics (80/40/20), WSC (40/20/10), WC (8/4/4), Standings (80/40/20)
+     - Race type modifiers: Individual (1.0×), Team Sprint/SMR (0.5×), Relay/Team (0.25×)
+     - Sport-specific events: Tour de Ski, 4 Hills Tournament, Ski Flying WC
+
+2. **Methodology Links in Blog Posts** - DONE
+   - `predict_script.sh`: Added race-picks methodology link to weekly-picks, TdS, and race-picks posts
+   - `champs_script.sh`: Added champs-predictions methodology link to championship posts
+   - Elo pages: Added elo-calculations methodology link to all 10 elo/all-elo pages
+   - Ranks pages: Added ranks methodology link to all 5 ranks pages
+
+### Championship Predictions Documentation (2026-01-31)
+
+Created `content/post/methods/champs-predictions.md` documenting:
+- Config-based athlete selection (vs scraped startlists)
+- Probability-only predictions (no points)
+- 5-phase normalization process
+- Sport-specific thresholds:
+  - Individual: 1, 3, 5, 10, 30
+  - Relay/Team: 1, 3, 5, 10 (biathlon, XC, NC) or 1, 3, 5 (ski jumping)
+- All sports: α = 0.1 exponential decay, 75% Elo filter
 
 ---
 

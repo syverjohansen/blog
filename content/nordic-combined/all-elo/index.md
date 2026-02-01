@@ -5,14 +5,4 @@ image: '/img/combined-ski.jpg'
 draft: false
 ---
 
-This is for elo scores
-
-
-
-
-
-
-
-
-
-
+*See [Elo Calculations Methodology](/post/methods/elo-calculations/) for details on how these ratings are calculated.*

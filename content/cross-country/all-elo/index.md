@@ -5,10 +5,4 @@ image: '/img/bjorgen.jpg'
 draft: false
 ---
 
-
-
-
-
-
-
-
+*See [Elo Calculations Methodology](/post/methods/elo-calculations/) for details on how these ratings are calculated.*

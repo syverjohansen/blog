@@ -150,6 +150,8 @@ tags: [\"predictions\", \"olympics\", \"$CURRENT_YEAR\", \"$sport\"]
 
 # $CURRENT_YEAR Winter Olympics - $sport_display Predictions
 
+*See [Championship Predictions Methodology](/post/methods/champs-predictions/) for details on how these predictions are generated.*
+
 ## Calendar
 
 ### Individual Races

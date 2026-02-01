@@ -695,6 +695,8 @@ tags: ["predictions", "skiing", "weekend-picks"]
 
 # $title
 
+*See [Race Picks Methodology](/post/methods/race-picks/) for details on how these predictions are generated.*
+
 EOF
 
         log_message "Created weekly post header"
@@ -734,6 +736,8 @@ tags: ["predictions", "skiing", "tour-de-ski", "tds-picks"]
 
 # $title
 
+*See [Race Picks Methodology](/post/methods/race-picks/) for details on how these predictions are generated.*
+
 EOF
 
         log_message "Created TdS post header"
@@ -772,6 +776,8 @@ tags: ["predictions", "skiing", "race-picks"]
 ---
 
 # $title
+
+*See [Race Picks Methodology](/post/methods/race-picks/) for details on how these predictions are generated.*
 
 EOF
 
