@@ -74,7 +74,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 13,
-      "elo": 1289.7139951292445,
+      "elo": 1288.9982295584362,
       "skier_name": "Trine G\u00f6pfert"
     },
     {
@@ -85,7 +85,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 13,
-      "elo": 1296.493912833712,
+      "elo": 1295.2442349854443,
       "skier_name": "Trine G\u00f6pfert"
     },
     {
@@ -96,7 +96,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 20,
-      "elo": 1291.280424388039,
+      "elo": 1290.5226238049124,
       "skier_name": "Trine G\u00f6pfert"
     },
     {
@@ -107,7 +107,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 17,
-      "elo": 1290.1455749818606,
+      "elo": 1289.510139295411,
       "skier_name": "Trine G\u00f6pfert"
     },
     {
@@ -118,7 +118,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 12,
-      "elo": 1298.8378488424062,
+      "elo": 1297.4892613866125,
       "skier_name": "Trine G\u00f6pfert"
     },
     {
@@ -129,7 +129,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 15,
-      "elo": 1300.5540693795,
+      "elo": 1299.1139747144962,
       "skier_name": "Trine G\u00f6pfert"
     },
     {
@@ -140,7 +140,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 21,
-      "elo": 1294.2290407767548,
+      "elo": 1293.387980485826,
       "skier_name": "Trine G\u00f6pfert"
     },
     {
@@ -151,7 +151,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 22,
-      "elo": 1286.2735478616894,
+      "elo": 1286.117690309549,
       "skier_name": "Trine G\u00f6pfert"
     },
     {
@@ -162,7 +162,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 23,
-      "elo": 1277.245853554255,
+      "elo": 1277.8468192577525,
       "skier_name": "Trine G\u00f6pfert"
     },
     {
@@ -173,7 +173,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 19,
-      "elo": 1274.7443703035049,
+      "elo": 1275.4989019721295,
+      "skier_name": "Trine G\u00f6pfert"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 19,
+      "elo": 1272.0630365786426,
       "skier_name": "Trine G\u00f6pfert"
     }
   ],
@@ -1017,7 +1028,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 7,
-      "elo": 1453.1554950686889,
+      "elo": 1452.6213166279467,
       "skier_name": "Yuna Kasai"
     },
     {
@@ -1028,7 +1039,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 6,
-      "elo": 1459.9664012319,
+      "elo": 1458.8765158386643,
       "skier_name": "Yuna Kasai"
     },
     {
@@ -1039,7 +1050,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 5,
-      "elo": 1467.0042705679516,
+      "elo": 1465.345882901778,
       "skier_name": "Yuna Kasai"
     },
     {
@@ -1050,7 +1061,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 9,
-      "elo": 1467.8332913018323,
+      "elo": 1466.1520230367507,
       "skier_name": "Yuna Kasai"
     },
     {
@@ -1061,7 +1072,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 6,
-      "elo": 1474.4555844209228,
+      "elo": 1472.2668066432436,
       "skier_name": "Yuna Kasai"
     },
     {
@@ -1072,7 +1083,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 2,
-      "elo": 1485.1336872914442,
+      "elo": 1482.1010814109795,
       "skier_name": "Yuna Kasai"
     },
     {
@@ -1083,7 +1094,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 8,
-      "elo": 1487.098130712179,
+      "elo": 1483.993690064132,
       "skier_name": "Yuna Kasai"
     },
     {
@@ -1094,7 +1105,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 7,
-      "elo": 1490.336343722395,
+      "elo": 1487.0296405564982,
       "skier_name": "Yuna Kasai"
     },
     {
@@ -1105,7 +1116,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 10,
-      "elo": 1489.1724772757898,
+      "elo": 1486.0508313017408,
       "skier_name": "Yuna Kasai"
     },
     {
@@ -1116,7 +1127,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 5,
-      "elo": 1495.21269043587,
+      "elo": 1491.6457531205533,
+      "skier_name": "Yuna Kasai"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 6,
+      "elo": 1495.2002715866374,
       "skier_name": "Yuna Kasai"
     }
   ],
@@ -2400,7 +2422,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 2,
-      "elo": 1506.26040514985,
+      "elo": 1505.3545372662863,
       "skier_name": "Nathalie Armbruster"
     },
     {
@@ -2411,7 +2433,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 3,
-      "elo": 1514.586358575833,
+      "elo": 1513.0089707258678,
       "skier_name": "Nathalie Armbruster"
     },
     {
@@ -2422,7 +2444,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 12,
-      "elo": 1508.5250542285394,
+      "elo": 1507.5042554110744,
       "skier_name": "Nathalie Armbruster"
     },
     {
@@ -2433,7 +2455,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 3,
-      "elo": 1515.9298804464636,
+      "elo": 1514.2968171227008,
       "skier_name": "Nathalie Armbruster"
     },
     {
@@ -2444,7 +2466,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 3,
-      "elo": 1524.3549490617552,
+      "elo": 1522.0503629922348,
       "skier_name": "Nathalie Armbruster"
     },
     {
@@ -2455,7 +2477,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 7,
-      "elo": 1525.7457952948832,
+      "elo": 1523.378266320894,
       "skier_name": "Nathalie Armbruster"
     },
     {
@@ -2466,7 +2488,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 2,
-      "elo": 1534.3406800719883,
+      "elo": 1531.2775608876368,
       "skier_name": "Nathalie Armbruster"
     },
     {
@@ -2477,7 +2499,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 3,
-      "elo": 1541.1567808738866,
+      "elo": 1537.578464164834,
       "skier_name": "Nathalie Armbruster"
     },
     {
@@ -2488,7 +2510,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 4,
-      "elo": 1546.3577408858598,
+      "elo": 1542.406963005613,
+      "skier_name": "Nathalie Armbruster"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 3,
+      "elo": 1547.9440511918529,
       "skier_name": "Nathalie Armbruster"
     }
   ],
@@ -2688,7 +2721,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 14,
-      "elo": 1277.6545838787624,
+      "elo": 1276.9937770172394,
       "skier_name": "Ronja Loh"
     },
     {
@@ -2699,7 +2732,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 15,
-      "elo": 1282.3747492744042,
+      "elo": 1281.3517675672974,
       "skier_name": "Ronja Loh"
     },
     {
@@ -2710,7 +2743,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 17,
-      "elo": 1282.186912090205,
+      "elo": 1281.2185395118318,
       "skier_name": "Ronja Loh"
     },
     {
@@ -2721,7 +2754,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 19,
-      "elo": 1278.73939972123,
+      "elo": 1278.1010733796957,
       "skier_name": "Ronja Loh"
     },
     {
@@ -2732,7 +2765,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 17,
-      "elo": 1281.0897352843513,
+      "elo": 1280.277460687471,
       "skier_name": "Ronja Loh"
     },
     {
@@ -2743,7 +2776,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 19,
-      "elo": 1278.1609365914576,
+      "elo": 1277.6259409938573,
       "skier_name": "Ronja Loh"
     },
     {
@@ -2754,7 +2787,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 27,
-      "elo": 1264.6714508493314,
+      "elo": 1265.2990602641344,
       "skier_name": "Ronja Loh"
     },
     {
@@ -2765,7 +2798,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 23,
-      "elo": 1256.9030258955968,
+      "elo": 1258.1332160422544,
       "skier_name": "Ronja Loh"
     },
     {
@@ -2776,7 +2809,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 17,
-      "elo": 1257.9051096260705,
+      "elo": 1258.979831176298,
       "skier_name": "Ronja Loh"
     },
     {
@@ -2787,7 +2820,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 17,
-      "elo": 1259.2938892577984,
+      "elo": 1260.173385511484,
+      "skier_name": "Ronja Loh"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 21,
+      "elo": 1254.8843204829889,
       "skier_name": "Ronja Loh"
     }
   ],
@@ -3229,7 +3273,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 22,
-      "elo": 1267.713677741412,
+      "elo": 1268.0166925703604,
       "skier_name": "Claudia Purker"
     },
     {
@@ -3240,7 +3284,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 30,
-      "elo": 1251.9222861320122,
+      "elo": 1253.547400272364,
       "skier_name": "Claudia Purker"
     },
     {
@@ -3251,7 +3295,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 14,
-      "elo": 1257.6663058047286,
+      "elo": 1258.7095324211214,
       "skier_name": "Claudia Purker"
     },
     {
@@ -3262,7 +3306,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 13,
-      "elo": 1266.9405145140452,
+      "elo": 1267.13120512545,
       "skier_name": "Claudia Purker"
     },
     {
@@ -3273,7 +3317,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 12,
-      "elo": 1274.6591919311213,
+      "elo": 1274.1752715772957,
       "skier_name": "Claudia Purker"
     },
     {
@@ -3284,7 +3328,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 12,
-      "elo": 1282.5046610957368,
+      "elo": 1281.372164940091,
       "skier_name": "Claudia Purker"
     },
     {
@@ -3295,7 +3339,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 18,
-      "elo": 1280.8201270293114,
+      "elo": 1279.857853917705,
       "skier_name": "Claudia Purker"
     },
     {
@@ -3306,7 +3350,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 9,
-      "elo": 1291.8117197256406,
+      "elo": 1289.949805885488,
       "skier_name": "Claudia Purker"
     },
     {
@@ -3317,7 +3361,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 16,
-      "elo": 1292.7249995916502,
+      "elo": 1290.8497631883297,
+      "skier_name": "Claudia Purker"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 18,
+      "elo": 1287.9723690806916,
       "skier_name": "Claudia Purker"
     }
   ],
@@ -3662,7 +3717,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 21,
-      "elo": 1204.22677976898,
+      "elo": 1204.027914002377,
       "skier_name": "Mille Marie Hagen"
     },
     {
@@ -3673,7 +3728,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 19,
-      "elo": 1207.8038809463585,
+      "elo": 1207.3145270981124,
       "skier_name": "Mille Marie Hagen"
     },
     {
@@ -3684,7 +3739,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 21,
-      "elo": 1206.0764618770363,
+      "elo": 1205.747920757637,
       "skier_name": "Mille Marie Hagen"
     },
     {
@@ -3695,7 +3750,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 20,
-      "elo": 1205.3463420735563,
+      "elo": 1205.0917212593238,
       "skier_name": "Mille Marie Hagen"
     },
     {
@@ -3706,7 +3761,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 19,
-      "elo": 1209.2649445967722,
+      "elo": 1208.689619076011,
       "skier_name": "Mille Marie Hagen"
     },
     {
@@ -3717,7 +3772,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 17,
-      "elo": 1213.0488764796546,
+      "elo": 1212.1780680824438,
       "skier_name": "Mille Marie Hagen"
     },
     {
@@ -3728,7 +3783,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 20,
-      "elo": 1213.075973046719,
+      "elo": 1212.248417512065,
       "skier_name": "Mille Marie Hagen"
     },
     {
@@ -3739,7 +3794,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 16,
-      "elo": 1217.8837652407008,
+      "elo": 1216.6725954409203,
       "skier_name": "Mille Marie Hagen"
     },
     {
@@ -3750,7 +3805,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 18,
-      "elo": 1219.5246720521768,
+      "elo": 1218.2289915028691,
       "skier_name": "Mille Marie Hagen"
     },
     {
@@ -3761,7 +3816,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 23,
-      "elo": 1214.5506093744796,
+      "elo": 1213.7270926661497,
+      "skier_name": "Mille Marie Hagen"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 20,
+      "elo": 1211.882111417738,
       "skier_name": "Mille Marie Hagen"
     }
   ],
@@ -4128,7 +4194,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 5,
-      "elo": 1385.8950517002484,
+      "elo": 1384.734059787845,
       "skier_name": "Minja Korhonen"
     },
     {
@@ -4139,7 +4205,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 5,
-      "elo": 1397.9682637717624,
+      "elo": 1395.844268372345,
       "skier_name": "Minja Korhonen"
     },
     {
@@ -4150,7 +4216,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 3,
-      "elo": 1411.02895423731,
+      "elo": 1407.8827705844274,
       "skier_name": "Minja Korhonen"
     },
     {
@@ -4161,7 +4227,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 8,
-      "elo": 1416.0466482785423,
+      "elo": 1412.602277000517,
       "skier_name": "Minja Korhonen"
     },
     {
@@ -4172,7 +4238,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 2,
-      "elo": 1431.1791035095816,
+      "elo": 1426.6091560960951,
       "skier_name": "Minja Korhonen"
     },
     {
@@ -4183,7 +4249,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 3,
-      "elo": 1442.585131888413,
+      "elo": 1437.2319334921217,
       "skier_name": "Minja Korhonen"
     },
     {
@@ -4194,7 +4260,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 2,
-      "elo": 1455.1136585757222,
+      "elo": 1448.917437492121,
       "skier_name": "Minja Korhonen"
     },
     {
@@ -4205,7 +4271,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 3,
-      "elo": 1465.487195038971,
+      "elo": 1458.6307030403,
       "skier_name": "Minja Korhonen"
     },
     {
@@ -4216,7 +4282,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 2,
-      "elo": 1476.736608861997,
+      "elo": 1469.175558281395,
       "skier_name": "Minja Korhonen"
     },
     {
@@ -4227,7 +4293,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 13,
-      "elo": 1472.0824508400567,
+      "elo": 1465.180115077621,
+      "skier_name": "Minja Korhonen"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 8,
+      "elo": 1467.2231508952505,
       "skier_name": "Minja Korhonen"
     }
   ],
@@ -4317,7 +4394,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 8,
-      "elo": 1337.7164485437056,
+      "elo": 1336.6520347213204,
       "skier_name": "Ingrid L\u00e5te"
     },
     {
@@ -4328,7 +4405,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 8,
-      "elo": 1348.522355289386,
+      "elo": 1346.600804857003,
       "skier_name": "Ingrid L\u00e5te"
     },
     {
@@ -4339,7 +4416,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 16,
-      "elo": 1345.9982930453352,
+      "elo": 1344.371857182996,
       "skier_name": "Ingrid L\u00e5te"
     },
     {
@@ -4350,7 +4427,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 7,
-      "elo": 1355.9150934889378,
+      "elo": 1353.5121037700496,
       "skier_name": "Ingrid L\u00e5te"
     },
     {
@@ -4361,7 +4438,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 5,
-      "elo": 1370.4088927447356,
+      "elo": 1366.8919820381009,
       "skier_name": "Ingrid L\u00e5te"
     },
     {
@@ -4372,7 +4449,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 5,
-      "elo": 1382.228815505316,
+      "elo": 1377.8615706457576,
       "skier_name": "Ingrid L\u00e5te"
     },
     {
@@ -4383,7 +4460,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 13,
-      "elo": 1382.508339330932,
+      "elo": 1378.3138044152222,
       "skier_name": "Ingrid L\u00e5te"
     },
     {
@@ -4394,7 +4471,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 24,
-      "elo": 1366.9752996687737,
+      "elo": 1364.2537249483848,
       "skier_name": "Ingrid L\u00e5te"
     },
     {
@@ -4405,7 +4482,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 8,
-      "elo": 1374.9894695436278,
+      "elo": 1371.6758482624368,
       "skier_name": "Ingrid L\u00e5te"
     }
   ],
@@ -4464,7 +4541,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 31,
-      "elo": 1259.2756465566524,
+      "elo": 1260.6795909026264,
       "skier_name": "Romane Baud"
     },
     {
@@ -4475,7 +4552,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 27,
-      "elo": 1248.2372519231656,
+      "elo": 1250.4978519720323,
       "skier_name": "Romane Baud"
     },
     {
@@ -4486,7 +4563,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 26,
-      "elo": 1237.2778300364091,
+      "elo": 1240.341184055237,
       "skier_name": "Romane Baud"
     },
     {
@@ -4497,7 +4574,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 23,
-      "elo": 1230.6599958771162,
+      "elo": 1234.125545787271,
       "skier_name": "Romane Baud"
     },
     {
@@ -4508,7 +4585,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 26,
-      "elo": 1220.467738080505,
+      "elo": 1224.612521105089,
       "skier_name": "Romane Baud"
     },
     {
@@ -4519,7 +4596,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 22,
-      "elo": 1216.339505185664,
+      "elo": 1220.633968035941,
       "skier_name": "Romane Baud"
     },
     {
@@ -4530,7 +4607,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 21,
-      "elo": 1214.353786092987,
+      "elo": 1218.592480633254,
+      "skier_name": "Romane Baud"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 23,
+      "elo": 1212.6575555127276,
       "skier_name": "Romane Baud"
     }
   ],
@@ -4743,7 +4831,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 20,
-      "elo": 1265.1889345317184,
+      "elo": 1265.220732399366,
       "skier_name": "Teja Pavec"
     },
     {
@@ -4754,7 +4842,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 21,
-      "elo": 1262.2357385319272,
+      "elo": 1262.5166164080642,
       "skier_name": "Teja Pavec"
     },
     {
@@ -4765,7 +4853,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 18,
-      "elo": 1261.7701617869625,
+      "elo": 1262.0632269484647,
       "skier_name": "Teja Pavec"
     },
     {
@@ -4776,7 +4864,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 14,
-      "elo": 1266.4960746300592,
+      "elo": 1266.3641954536297,
       "skier_name": "Teja Pavec"
     },
     {
@@ -4787,7 +4875,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 14,
-      "elo": 1273.8235919226308,
+      "elo": 1273.0686556918567,
       "skier_name": "Teja Pavec"
     },
     {
@@ -4798,7 +4886,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 18,
-      "elo": 1273.2632501277508,
+      "elo": 1272.5869084415108,
       "skier_name": "Teja Pavec"
     },
     {
@@ -4809,7 +4897,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 10,
-      "elo": 1283.349175181677,
+      "elo": 1281.82410350161,
       "skier_name": "Teja Pavec"
     },
     {
@@ -4820,7 +4908,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 14,
-      "elo": 1287.1597324065651,
+      "elo": 1285.371318621288,
       "skier_name": "Teja Pavec"
     },
     {
@@ -4831,7 +4919,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 18,
-      "elo": 1285.514745316678,
+      "elo": 1283.9272690500509,
+      "skier_name": "Teja Pavec"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 27,
+      "elo": 1269.7746314895585,
       "skier_name": "Teja Pavec"
     }
   ],
@@ -4866,7 +4965,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 19,
-      "elo": 1273.3370881237456,
+      "elo": 1273.5475954322137,
       "skier_name": "Anna Kerko"
     },
     {
@@ -4877,7 +4976,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 24,
-      "elo": 1266.156487569708,
+      "elo": 1266.9540743933337,
       "skier_name": "Anna Kerko"
     },
     {
@@ -4888,7 +4987,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 23,
-      "elo": 1258.420076531943,
+      "elo": 1259.8229154894168,
       "skier_name": "Anna Kerko"
     },
     {
@@ -4899,7 +4998,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 25,
-      "elo": 1248.8757011062858,
+      "elo": 1251.0088940239064,
       "skier_name": "Anna Kerko"
     },
     {
@@ -4910,7 +5009,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 26,
-      "elo": 1238.0811098324243,
+      "elo": 1241.0012190018235,
+      "skier_name": "Anna Kerko"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 22,
+      "elo": 1235.321853123463,
       "skier_name": "Anna Kerko"
     }
   ],
@@ -4923,7 +5033,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 28,
-      "elo": 1285.5400023378168,
+      "elo": 1286.7528507581414,
       "skier_name": "Sofia Eggensberger"
     },
     {
@@ -4934,7 +5044,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 26,
-      "elo": 1272.5006769170625,
+      "elo": 1274.7438861113717,
       "skier_name": "Sofia Eggensberger"
     },
     {
@@ -4945,7 +5055,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 31,
-      "elo": 1253.699780105114,
+      "elo": 1257.4108622393396,
       "skier_name": "Sofia Eggensberger"
     },
     {
@@ -4956,7 +5066,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 27,
-      "elo": 1240.882183852777,
+      "elo": 1245.4752637459894,
       "skier_name": "Sofia Eggensberger"
     },
     {
@@ -4967,7 +5077,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 26,
-      "elo": 1230.0526206161096,
+      "elo": 1235.3342540941662,
       "skier_name": "Sofia Eggensberger"
     }
   ],
@@ -4980,7 +5090,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 29,
-      "elo": 1284.131056650916,
+      "elo": 1285.463377073931,
       "skier_name": "Maja Loh"
     },
     {
@@ -4991,7 +5101,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 27,
-      "elo": 1269.761317909409,
+      "elo": 1272.230941662459,
       "skier_name": "Maja Loh"
     },
     {
@@ -5002,7 +5112,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 28,
-      "elo": 1255.3439372753878,
+      "elo": 1258.8984963575217,
       "skier_name": "Maja Loh"
     },
     {
@@ -5013,7 +5123,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 29,
-      "elo": 1239.6208067781326,
+      "elo": 1244.3108945903352,
       "skier_name": "Maja Loh"
     },
     {
@@ -5024,7 +5134,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 28,
-      "elo": 1226.039755718202,
+      "elo": 1231.6474730589107,
       "skier_name": "Maja Loh"
     }
   ],
@@ -5235,7 +5345,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 9,
-      "elo": 1275.080181327102,
+      "elo": 1273.764014246013,
       "skier_name": "Heta Hirvonen"
     },
     {
@@ -5246,7 +5356,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 7,
-      "elo": 1291.2333970894274,
+      "elo": 1288.6232382271676,
       "skier_name": "Heta Hirvonen"
     },
     {
@@ -5257,7 +5367,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 9,
-      "elo": 1301.8163140107004,
+      "elo": 1298.4293471976816,
       "skier_name": "Heta Hirvonen"
     },
     {
@@ -5268,7 +5378,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 10,
-      "elo": 1309.9577665840047,
+      "elo": 1306.0397567039724,
       "skier_name": "Heta Hirvonen"
     },
     {
@@ -5279,7 +5389,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 15,
-      "elo": 1311.2663662848886,
+      "elo": 1307.4026646193836,
+      "skier_name": "Heta Hirvonen"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 17,
+      "elo": 1305.0242877010087,
       "skier_name": "Heta Hirvonen"
     }
   ],
@@ -5369,7 +5490,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 4,
-      "elo": 1299.3360423594872,
+      "elo": 1297.526477935167,
       "skier_name": "Katharina Gruber"
     },
     {
@@ -5380,7 +5501,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 1,
-      "elo": 1322.4171506301343,
+      "elo": 1318.7542753655518,
       "skier_name": "Katharina Gruber"
     },
     {
@@ -5391,7 +5512,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 4,
-      "elo": 1338.2758335595922,
+      "elo": 1333.4419902619395,
       "skier_name": "Katharina Gruber"
     },
     {
@@ -5402,7 +5523,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 5,
-      "elo": 1351.436615471239,
+      "elo": 1345.7148966065,
       "skier_name": "Katharina Gruber"
     },
     {
@@ -5413,7 +5534,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 10,
-      "elo": 1359.1599798652846,
+      "elo": 1353.0862237282586,
       "skier_name": "Katharina Gruber"
     },
     {
@@ -5424,7 +5545,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 6,
-      "elo": 1370.1900029781466,
+      "elo": 1363.46556792144,
       "skier_name": "Katharina Gruber"
     },
     {
@@ -5435,7 +5556,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 11,
-      "elo": 1373.9625018759516,
+      "elo": 1367.2411685511452,
       "skier_name": "Katharina Gruber"
     },
     {
@@ -5446,7 +5567,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 14,
-      "elo": 1372.9713534102798,
+      "elo": 1366.6163148555413,
       "skier_name": "Katharina Gruber"
     },
     {
@@ -5457,7 +5578,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 5,
-      "elo": 1384.642325632601,
+      "elo": 1377.5722508172066,
       "skier_name": "Katharina Gruber"
     },
     {
@@ -5468,7 +5589,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 10,
-      "elo": 1388.8818926462093,
+      "elo": 1381.7499865303168,
+      "skier_name": "Katharina Gruber"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 10,
+      "elo": 1384.8858696772843,
       "skier_name": "Katharina Gruber"
     }
   ],
@@ -5536,7 +5668,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 16,
-      "elo": 1307.4990802979885,
+      "elo": 1307.2755133560336,
       "skier_name": "Tia Malovrh"
     },
     {
@@ -5547,7 +5679,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 15,
-      "elo": 1310.891122828643,
+      "elo": 1310.378411035798,
       "skier_name": "Tia Malovrh"
     },
     {
@@ -5558,7 +5690,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 16,
-      "elo": 1310.5234780264964,
+      "elo": 1310.0512802435098,
       "skier_name": "Tia Malovrh"
     },
     {
@@ -5569,7 +5701,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 16,
-      "elo": 1310.6676966875589,
+      "elo": 1310.192839706311,
       "skier_name": "Tia Malovrh"
     }
   ],
@@ -5637,7 +5769,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 18,
-      "elo": 1270.9712907695457,
+      "elo": 1270.7820417077276,
       "skier_name": "Anna-Sophie Gredler"
     },
     {
@@ -5648,7 +5780,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 26,
-      "elo": 1260.6119393691267,
+      "elo": 1261.3122676681044,
       "skier_name": "Anna-Sophie Gredler"
     },
     {
@@ -5659,7 +5791,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 31,
-      "elo": 1244.3460901470694,
+      "elo": 1246.3782210144384,
       "skier_name": "Anna-Sophie Gredler"
     },
     {
@@ -5670,7 +5802,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 29,
-      "elo": 1229.3514076006795,
+      "elo": 1232.546501850208,
       "skier_name": "Anna-Sophie Gredler"
     }
   ],
@@ -5738,7 +5870,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 30,
-      "elo": 1255.7412425721757,
+      "elo": 1256.995795104645,
       "skier_name": "Marion Droz Vincent"
     },
     {
@@ -5749,7 +5881,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 24,
-      "elo": 1249.1493034452697,
+      "elo": 1250.8922506037457,
       "skier_name": "Marion Droz Vincent"
     }
   ],
@@ -6061,7 +6193,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 26,
-      "elo": 1242.926203145515,
+      "elo": 1243.5918762333702,
       "skier_name": "Nora Helene Evans"
     },
     {
@@ -6072,7 +6204,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 29,
-      "elo": 1230.0812676961566,
+      "elo": 1231.799774072606,
       "skier_name": "Nora Helene Evans"
     },
     {
@@ -6083,7 +6215,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 27,
-      "elo": 1218.7074164418284,
+      "elo": 1221.2940432811993,
       "skier_name": "Nora Helene Evans"
     },
     {
@@ -6094,7 +6226,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 28,
-      "elo": 1206.0401341635832,
+      "elo": 1209.5698076909373,
       "skier_name": "Nora Helene Evans"
     },
     {
@@ -6105,7 +6237,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 27,
-      "elo": 1198.6473375539397,
+      "elo": 1202.6155753185928,
       "skier_name": "Nora Helene Evans"
     },
     {
@@ -6116,7 +6248,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 26,
-      "elo": 1190.996471971676,
+      "elo": 1195.4229812736478,
       "skier_name": "Nora Helene Evans"
     }
   ],
@@ -6300,7 +6432,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 10,
-      "elo": 1311.6242587125707,
+      "elo": 1310.6575426166778,
       "skier_name": "Yuzuki Kainuma"
     },
     {
@@ -6311,7 +6443,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 9,
-      "elo": 1322.6594228308709,
+      "elo": 1320.8117885105455,
       "skier_name": "Yuzuki Kainuma"
     },
     {
@@ -6322,7 +6454,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 10,
-      "elo": 1330.050690979118,
+      "elo": 1327.6557085193926,
       "skier_name": "Yuzuki Kainuma"
     },
     {
@@ -6333,7 +6465,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 15,
-      "elo": 1329.5773914327594,
+      "elo": 1327.3279872622466,
       "skier_name": "Yuzuki Kainuma"
     },
     {
@@ -6344,7 +6476,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 11,
-      "elo": 1337.2383783729388,
+      "elo": 1334.45006200706,
       "skier_name": "Yuzuki Kainuma"
     },
     {
@@ -6355,7 +6487,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 11,
-      "elo": 1342.4412961502103,
+      "elo": 1339.3338296907962,
       "skier_name": "Yuzuki Kainuma"
     },
     {
@@ -6366,7 +6498,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 15,
-      "elo": 1342.1564159468585,
+      "elo": 1339.2155524247532,
       "skier_name": "Yuzuki Kainuma"
     },
     {
@@ -6377,7 +6509,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 21,
-      "elo": 1333.008541887019,
+      "elo": 1330.9486622742097,
       "skier_name": "Yuzuki Kainuma"
     },
     {
@@ -6388,7 +6520,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 16,
-      "elo": 1331.317062304932,
+      "elo": 1329.4763006085614,
       "skier_name": "Yuzuki Kainuma"
     },
     {
@@ -6399,7 +6531,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 6,
-      "elo": 1343.4108333648337,
+      "elo": 1340.5975610520177,
+      "skier_name": "Yuzuki Kainuma"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 15,
+      "elo": 1339.2161087918323,
       "skier_name": "Yuzuki Kainuma"
     }
   ],
@@ -6517,7 +6660,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 15,
-      "elo": 1300.3690647270746,
+      "elo": 1299.9741051502183,
       "skier_name": "Masa Likozar Brankovic"
     },
     {
@@ -6528,7 +6671,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 20,
-      "elo": 1296.615098948654,
+      "elo": 1296.560652806659,
       "skier_name": "Masa Likozar Brankovic"
     }
   ],
@@ -6563,7 +6706,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 29,
-      "elo": 1263.0261496846208,
+      "elo": 1264.4502495958927,
       "skier_name": "Karina Kozlova"
     },
     {
@@ -6574,7 +6717,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 24,
-      "elo": 1253.593476584777,
+      "elo": 1255.7359341814538,
       "skier_name": "Karina Kozlova"
     }
   ],
@@ -6622,7 +6765,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 33,
-      "elo": 1279.0097989452609,
+      "elo": 1280.7896697949318,
       "skier_name": "Ingrid Gr\u00e6sli"
     },
     {
@@ -6633,7 +6776,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 33,
-      "elo": 1258.2838739490348,
+      "elo": 1261.7189113865325,
       "skier_name": "Ingrid Gr\u00e6sli"
     }
   ],
@@ -7185,7 +7328,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 12,
-      "elo": 1417.8596805246796,
+      "elo": 1417.7721747947696,
       "skier_name": "Jenny Nowak"
     },
     {
@@ -7196,7 +7339,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 10,
-      "elo": 1421.0065761091223,
+      "elo": 1420.6529000422213,
       "skier_name": "Jenny Nowak"
     },
     {
@@ -7207,7 +7350,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 7,
-      "elo": 1427.2056258045864,
+      "elo": 1426.3229208093378,
       "skier_name": "Jenny Nowak"
     },
     {
@@ -7218,7 +7361,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 13,
-      "elo": 1424.3493989510057,
+      "elo": 1423.7266496052675,
       "skier_name": "Jenny Nowak"
     },
     {
@@ -7229,7 +7372,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 8,
-      "elo": 1430.551404598554,
+      "elo": 1429.409673877813,
       "skier_name": "Jenny Nowak"
     },
     {
@@ -7240,7 +7383,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 8,
-      "elo": 1434.944847088385,
+      "elo": 1433.453061783833,
       "skier_name": "Jenny Nowak"
     },
     {
@@ -7251,7 +7394,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 9,
-      "elo": 1438.0071270907092,
+      "elo": 1436.2930297704825,
       "skier_name": "Jenny Nowak"
     },
     {
@@ -7262,7 +7405,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 11,
-      "elo": 1437.945137962712,
+      "elo": 1436.259690708854,
       "skier_name": "Jenny Nowak"
     },
     {
@@ -7273,7 +7416,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 13,
-      "elo": 1435.0208734023045,
+      "elo": 1433.6145032990216,
       "skier_name": "Jenny Nowak"
     },
     {
@@ -7284,7 +7427,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 14,
-      "elo": 1430.9936272494654,
+      "elo": 1429.9337560111906,
+      "skier_name": "Jenny Nowak"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 12,
+      "elo": 1428.3195618184675,
       "skier_name": "Jenny Nowak"
     }
   ],
@@ -7873,7 +8027,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 27,
-      "elo": 1243.8249281432534,
+      "elo": 1244.6238827249415,
       "skier_name": "Veronica Gianmoena"
     },
     {
@@ -7884,7 +8038,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 23,
-      "elo": 1239.3783985432974,
+      "elo": 1240.5104754451108,
       "skier_name": "Veronica Gianmoena"
     },
     {
@@ -7895,7 +8049,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 23,
-      "elo": 1233.1332916041035,
+      "elo": 1234.7266406380547,
       "skier_name": "Veronica Gianmoena"
     },
     {
@@ -7906,7 +8060,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 25,
-      "elo": 1223.9212461656666,
+      "elo": 1226.2105241738357,
       "skier_name": "Veronica Gianmoena"
     },
     {
@@ -7917,7 +8071,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 26,
-      "elo": 1216.8978947479472,
+      "elo": 1219.6551864656733,
       "skier_name": "Veronica Gianmoena"
     },
     {
@@ -7928,7 +8082,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 18,
-      "elo": 1218.872245918041,
+      "elo": 1221.325203100566,
       "skier_name": "Veronica Gianmoena"
     },
     {
@@ -7939,7 +8093,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 14,
-      "elo": 1227.0352556651137,
+      "elo": 1228.6736660987965,
       "skier_name": "Veronica Gianmoena"
     },
     {
@@ -7950,7 +8104,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 17,
-      "elo": 1229.7126062056543,
+      "elo": 1231.0279291424358,
       "skier_name": "Veronica Gianmoena"
     },
     {
@@ -7961,7 +8115,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 20,
-      "elo": 1227.9222370894672,
+      "elo": 1229.321427442807,
       "skier_name": "Veronica Gianmoena"
     },
     {
@@ -7972,7 +8126,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 20,
-      "elo": 1226.723074439131,
+      "elo": 1228.138930596942,
+      "skier_name": "Veronica Gianmoena"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 16,
+      "elo": 1230.792448931414,
       "skier_name": "Veronica Gianmoena"
     }
   ],
@@ -8249,7 +8414,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 32,
-      "elo": 1202.1831230339862,
+      "elo": 1203.3755054576382,
       "skier_name": "Hanna Midtsundstad"
     },
     {
@@ -8260,7 +8425,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 32,
-      "elo": 1187.5640967985514,
+      "elo": 1189.9341086040645,
       "skier_name": "Hanna Midtsundstad"
     },
     {
@@ -8271,7 +8436,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 25,
-      "elo": 1181.2527340127049,
+      "elo": 1184.038607463811,
       "skier_name": "Hanna Midtsundstad"
     },
     {
@@ -8282,7 +8447,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 27,
-      "elo": 1171.9361359678785,
+      "elo": 1175.381349834249,
       "skier_name": "Hanna Midtsundstad"
     },
     {
@@ -8293,7 +8458,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 30,
-      "elo": 1162.2243071316125,
+      "elo": 1166.3224538042584,
       "skier_name": "Hanna Midtsundstad"
     },
     {
@@ -8304,7 +8469,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 28,
-      "elo": 1152.8787398965076,
+      "elo": 1157.590420019931,
       "skier_name": "Hanna Midtsundstad"
     },
     {
@@ -8315,7 +8480,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 23,
-      "elo": 1151.8072278915445,
+      "elo": 1156.4061353978316,
       "skier_name": "Hanna Midtsundstad"
     },
     {
@@ -8326,7 +8491,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 12,
-      "elo": 1165.259100625281,
+      "elo": 1168.5149280409694,
       "skier_name": "Hanna Midtsundstad"
     },
     {
@@ -8337,7 +8502,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 29,
-      "elo": 1154.0234488066976,
+      "elo": 1158.0942063822092,
       "skier_name": "Hanna Midtsundstad"
     },
     {
@@ -8348,7 +8513,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 27,
-      "elo": 1146.7841513574317,
+      "elo": 1151.2854517827884,
+      "skier_name": "Hanna Midtsundstad"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 11,
+      "elo": 1163.7653993454574,
       "skier_name": "Hanna Midtsundstad"
     }
   ],
@@ -8825,7 +9001,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 24,
-      "elo": 1246.3752784496614,
+      "elo": 1246.8057822695714,
       "skier_name": "Daniela Dejori"
     },
     {
@@ -8836,7 +9012,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 22,
-      "elo": 1243.1806354409769,
+      "elo": 1243.8587514329065,
       "skier_name": "Daniela Dejori"
     },
     {
@@ -8847,7 +9023,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 22,
-      "elo": 1238.1357374671115,
+      "elo": 1239.1957939957742,
       "skier_name": "Daniela Dejori"
     },
     {
@@ -8858,7 +9034,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 18,
-      "elo": 1238.5162280619838,
+      "elo": 1239.4844423987026,
       "skier_name": "Daniela Dejori"
     },
     {
@@ -8869,7 +9045,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 21,
-      "elo": 1237.6725503279536,
+      "elo": 1238.6535797262688,
       "skier_name": "Daniela Dejori"
     },
     {
@@ -8880,7 +9056,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 22,
-      "elo": 1232.901944087589,
+      "elo": 1234.2327424861694,
       "skier_name": "Daniela Dejori"
     },
     {
@@ -8891,7 +9067,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 22,
-      "elo": 1229.0191385550304,
+      "elo": 1230.6099677105792,
       "skier_name": "Daniela Dejori"
     },
     {
@@ -8902,7 +9078,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 20,
-      "elo": 1227.3662403230062,
+      "elo": 1229.002907454932,
       "skier_name": "Daniela Dejori"
     },
     {
@@ -8913,7 +9089,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 19,
-      "elo": 1227.1070644177105,
+      "elo": 1228.6829574188123,
       "skier_name": "Daniela Dejori"
     },
     {
@@ -8924,7 +9100,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 28,
-      "elo": 1214.68036217006,
+      "elo": 1217.2164262754118,
+      "skier_name": "Daniela Dejori"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 24,
+      "elo": 1210.0547963950005,
       "skier_name": "Daniela Dejori"
     }
   ],
@@ -9819,7 +10006,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 25,
-      "elo": 1152.1944947753354,
+      "elo": 1152.623433455843,
       "skier_name": "Silva Verbi\u010d"
     },
     {
@@ -9830,7 +10017,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 24,
-      "elo": 1148.6218749833608,
+      "elo": 1149.3427191550857,
       "skier_name": "Silva Verbi\u010d"
     },
     {
@@ -9841,7 +10028,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 22,
-      "elo": 1148.690442033585,
+      "elo": 1149.37476997064,
+      "skier_name": "Silva Verbi\u010d"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 28,
+      "elo": 1140.0126805028865,
       "skier_name": "Silva Verbi\u010d"
     }
   ],
@@ -10338,7 +10536,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 25,
-      "elo": 1255.1636185773075,
+      "elo": 1255.7748102332414,
       "skier_name": "Annalena Slamik"
     },
     {
@@ -10349,7 +10547,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 16,
-      "elo": 1259.8790893652797,
+      "elo": 1260.0564765448803,
       "skier_name": "Annalena Slamik"
     },
     {
@@ -10360,7 +10558,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 24,
-      "elo": 1251.0913365385456,
+      "elo": 1251.9920590137035,
       "skier_name": "Annalena Slamik"
     },
     {
@@ -10371,7 +10569,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 22,
-      "elo": 1245.1313625391049,
+      "elo": 1246.4840012359489,
       "skier_name": "Annalena Slamik"
     },
     {
@@ -10382,7 +10580,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 25,
-      "elo": 1238.2555536969726,
+      "elo": 1240.110157696059,
       "skier_name": "Annalena Slamik"
     },
     {
@@ -10393,7 +10591,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 24,
-      "elo": 1230.6355707649268,
+      "elo": 1233.03807089325,
       "skier_name": "Annalena Slamik"
     },
     {
@@ -10404,7 +10602,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 30,
-      "elo": 1215.6070551842836,
+      "elo": 1219.1605431328023,
       "skier_name": "Annalena Slamik"
     },
     {
@@ -10415,7 +10613,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 28,
-      "elo": 1203.3775132858632,
+      "elo": 1207.7843385146234,
       "skier_name": "Annalena Slamik"
     },
     {
@@ -10426,7 +10624,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 25,
-      "elo": 1195.8972568621982,
+      "elo": 1200.7325686363722,
       "skier_name": "Annalena Slamik"
     },
     {
@@ -10437,7 +10635,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 29,
-      "elo": 1183.7197899420328,
+      "elo": 1189.346984748483,
+      "skier_name": "Annalena Slamik"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 26,
+      "elo": 1180.8562824678522,
       "skier_name": "Annalena Slamik"
     }
   ],
@@ -11116,7 +11325,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 15,
-      "elo": 1402.5399988210818,
+      "elo": 1402.886633289437,
       "skier_name": "Ema Volavsek"
     },
     {
@@ -11127,7 +11336,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 12,
-      "elo": 1402.3643762824508,
+      "elo": 1402.6872853002842,
       "skier_name": "Ema Volavsek"
     },
     {
@@ -11138,7 +11347,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 16,
-      "elo": 1398.5687019012196,
+      "elo": 1399.171976758351,
       "skier_name": "Ema Volavsek"
     },
     {
@@ -11149,7 +11358,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 10,
-      "elo": 1401.8190061368136,
+      "elo": 1402.0888203065626,
       "skier_name": "Ema Volavsek"
     },
     {
@@ -11160,7 +11369,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 7,
-      "elo": 1409.4703061736025,
+      "elo": 1409.0474549583323,
       "skier_name": "Ema Volavsek"
     },
     {
@@ -11171,7 +11380,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 5,
-      "elo": 1419.3024391662404,
+      "elo": 1418.014347869487,
       "skier_name": "Ema Volavsek"
     },
     {
@@ -11182,7 +11391,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 8,
-      "elo": 1424.3510648606743,
+      "elo": 1422.6521202699398,
       "skier_name": "Ema Volavsek"
     },
     {
@@ -11193,7 +11402,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 2,
-      "elo": 1437.774305828378,
+      "elo": 1434.958331430935,
+      "skier_name": "Ema Volavsek"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 7,
+      "elo": 1439.5725293610542,
       "skier_name": "Ema Volavsek"
     }
   ],
@@ -11670,7 +11890,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 6,
-      "elo": 1467.326037079863,
+      "elo": 1466.7375156331127,
       "skier_name": "Lisa-Marie Hirner"
     },
     {
@@ -11681,7 +11901,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 12,
-      "elo": 1464.9279107673206,
+      "elo": 1464.5661987748758,
       "skier_name": "Lisa-Marie Hirner"
     },
     {
@@ -11692,7 +11912,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 8,
-      "elo": 1467.4965679306454,
+      "elo": 1466.9124039197557,
       "skier_name": "Lisa-Marie Hirner"
     },
     {
@@ -11703,7 +11923,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 4,
-      "elo": 1475.3470657555768,
+      "elo": 1474.098019676202,
       "skier_name": "Lisa-Marie Hirner"
     },
     {
@@ -11714,7 +11934,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 9,
-      "elo": 1477.347024528884,
+      "elo": 1475.9602430901512,
       "skier_name": "Lisa-Marie Hirner"
     },
     {
@@ -11725,7 +11945,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 4,
-      "elo": 1485.3204116658758,
+      "elo": 1483.2816499946657,
       "skier_name": "Lisa-Marie Hirner"
     },
     {
@@ -11736,7 +11956,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 6,
-      "elo": 1490.0485866785946,
+      "elo": 1487.6369457489889,
       "skier_name": "Lisa-Marie Hirner"
     },
     {
@@ -11747,7 +11967,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 7,
-      "elo": 1493.124467718712,
+      "elo": 1490.5014369045962,
       "skier_name": "Lisa-Marie Hirner"
     }
   ],
@@ -12321,7 +12541,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 23,
-      "elo": 1366.617527318579,
+      "elo": 1367.6424098906602,
       "skier_name": "L\u00e9na Brocard"
     },
     {
@@ -12332,7 +12552,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 17,
-      "elo": 1362.9532539353772,
+      "elo": 1364.228772006471,
       "skier_name": "L\u00e9na Brocard"
     },
     {
@@ -12343,7 +12563,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 12,
-      "elo": 1364.5523319032425,
+      "elo": 1365.60856864486,
       "skier_name": "L\u00e9na Brocard"
     },
     {
@@ -12354,7 +12574,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 16,
-      "elo": 1360.7725591537771,
+      "elo": 1362.077282521434,
       "skier_name": "L\u00e9na Brocard"
     },
     {
@@ -12365,7 +12585,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 20,
-      "elo": 1353.8354637913026,
+      "elo": 1355.6351887095975,
       "skier_name": "L\u00e9na Brocard"
     },
     {
@@ -12376,7 +12596,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 21,
-      "elo": 1344.0258520777202,
+      "elo": 1346.5428875720943,
       "skier_name": "L\u00e9na Brocard"
     },
     {
@@ -12387,7 +12607,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 24,
-      "elo": 1330.9696709333743,
+      "elo": 1334.440030250421,
       "skier_name": "L\u00e9na Brocard"
     },
     {
@@ -12398,7 +12618,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 6,
-      "elo": 1343.4776219108992,
+      "elo": 1345.689353050581,
       "skier_name": "L\u00e9na Brocard"
     },
     {
@@ -12409,7 +12629,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 9,
-      "elo": 1351.3744060374925,
+      "elo": 1352.7601273547773,
+      "skier_name": "L\u00e9na Brocard"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 14,
+      "elo": 1352.0927032186923,
       "skier_name": "L\u00e9na Brocard"
     }
   ],
@@ -12444,7 +12675,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 19,
-      "elo": 1382.7501679213117,
+      "elo": 1383.357557851482,
       "skier_name": "Tara Geraghty-Moats"
     },
     {
@@ -12455,7 +12686,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 18,
-      "elo": 1376.6963388789795,
+      "elo": 1377.780480253506,
       "skier_name": "Tara Geraghty-Moats"
     },
     {
@@ -12466,7 +12697,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 22,
-      "elo": 1365.9755511412684,
+      "elo": 1367.887004729089,
       "skier_name": "Tara Geraghty-Moats"
     },
     {
@@ -12477,7 +12708,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 13,
-      "elo": 1366.7673156117075,
+      "elo": 1368.4906536495432,
       "skier_name": "Tara Geraghty-Moats"
     },
     {
@@ -12488,7 +12719,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 6,
-      "elo": 1377.7776915798545,
+      "elo": 1378.452809982999,
       "skier_name": "Tara Geraghty-Moats"
     },
     {
@@ -12499,7 +12730,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 8,
-      "elo": 1385.037860219065,
+      "elo": 1385.0175529624933,
       "skier_name": "Tara Geraghty-Moats"
     },
     {
@@ -12510,7 +12741,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 15,
-      "elo": 1381.9851287729182,
+      "elo": 1382.187911327548,
       "skier_name": "Tara Geraghty-Moats"
     },
     {
@@ -12521,7 +12752,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 11,
-      "elo": 1384.9587050615266,
+      "elo": 1384.8473164991776,
+      "skier_name": "Tara Geraghty-Moats"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 5,
+      "elo": 1394.287633128469,
       "skier_name": "Tara Geraghty-Moats"
     }
   ],
@@ -13132,7 +13374,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 1,
-      "elo": 1546.456921241748,
+      "elo": 1545.6004703654023,
       "skier_name": "Ida Marie Hagen"
     },
     {
@@ -13143,7 +13385,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 2,
-      "elo": 1554.3674803080037,
+      "elo": 1552.8683929722345,
       "skier_name": "Ida Marie Hagen"
     },
     {
@@ -13154,7 +13396,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 1,
-      "elo": 1562.867433663443,
+      "elo": 1560.6819255950088,
       "skier_name": "Ida Marie Hagen"
     },
     {
@@ -13165,7 +13407,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 1,
-      "elo": 1570.905488022404,
+      "elo": 1568.0893640680106,
       "skier_name": "Ida Marie Hagen"
     },
     {
@@ -13176,7 +13418,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 1,
-      "elo": 1579.712465702898,
+      "elo": 1576.227856058275,
       "skier_name": "Ida Marie Hagen"
     },
     {
@@ -13187,7 +13429,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 1,
-      "elo": 1587.382122087329,
+      "elo": 1583.3297866453736,
       "skier_name": "Ida Marie Hagen"
     },
     {
@@ -13198,7 +13440,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 1,
-      "elo": 1594.9226460806256,
+      "elo": 1590.3280824956285,
       "skier_name": "Ida Marie Hagen"
     },
     {
@@ -13209,7 +13451,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 1,
-      "elo": 1602.2810234576907,
+      "elo": 1597.1548634827154,
       "skier_name": "Ida Marie Hagen"
     },
     {
@@ -13220,7 +13462,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 1,
-      "elo": 1609.3897944925984,
+      "elo": 1603.7698709701294,
       "skier_name": "Ida Marie Hagen"
     },
     {
@@ -13231,7 +13473,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 3,
-      "elo": 1613.4798123659634,
+      "elo": 1607.6248717862763,
+      "skier_name": "Ida Marie Hagen"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 1,
+      "elo": 1613.656180211481,
       "skier_name": "Ida Marie Hagen"
     }
   ],
@@ -13794,7 +14047,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 17,
-      "elo": 1250.2301718013491,
+      "elo": 1249.788519529577,
       "skier_name": "Annika Malacinski"
     },
     {
@@ -13805,7 +14058,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 14,
-      "elo": 1258.0690990090543,
+      "elo": 1256.9886590049275,
       "skier_name": "Annika Malacinski"
     },
     {
@@ -13816,7 +14069,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 11,
-      "elo": 1267.6984880431548,
+      "elo": 1265.8439870257223,
       "skier_name": "Annika Malacinski"
     },
     {
@@ -13827,7 +14080,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 11,
-      "elo": 1276.324546518574,
+      "elo": 1273.8223748296505,
       "skier_name": "Annika Malacinski"
     },
     {
@@ -13838,7 +14091,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 18,
-      "elo": 1277.4143073700286,
+      "elo": 1274.9502394134263,
       "skier_name": "Annika Malacinski"
     },
     {
@@ -13849,7 +14102,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 14,
-      "elo": 1281.7346392066277,
+      "elo": 1279.0178312586283,
       "skier_name": "Annika Malacinski"
     },
     {
@@ -13860,7 +14113,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 10,
-      "elo": 1291.9920437043422,
+      "elo": 1288.538649486469,
       "skier_name": "Annika Malacinski"
     },
     {
@@ -13871,7 +14124,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 13,
-      "elo": 1296.8384034864737,
+      "elo": 1293.1152394529274,
       "skier_name": "Annika Malacinski"
     },
     {
@@ -13882,7 +14135,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 11,
-      "elo": 1304.1473016651796,
+      "elo": 1299.9707013834156,
       "skier_name": "Annika Malacinski"
     },
     {
@@ -13893,7 +14146,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 6,
-      "elo": 1317.7565310827958,
+      "elo": 1312.6059664201948,
+      "skier_name": "Annika Malacinski"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 9,
+      "elo": 1320.2948238087158,
       "skier_name": "Annika Malacinski"
     }
   ],
@@ -15265,7 +15529,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 29,
-      "elo": 1217.8538189323535,
+      "elo": 1218.7544174058044,
       "skier_name": "Jonna Kil"
     },
     {
@@ -15276,7 +15540,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 25,
-      "elo": 1212.1675844661763,
+      "elo": 1213.5026936371428,
       "skier_name": "Jonna Kil"
     },
     {
@@ -15287,7 +15551,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 28,
-      "elo": 1200.3466034090343,
+      "elo": 1202.6094673088262,
       "skier_name": "Jonna Kil"
     },
     {
@@ -15298,7 +15562,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 21,
-      "elo": 1198.50605100608,
+      "elo": 1200.8139259372767,
       "skier_name": "Jonna Kil"
     },
     {
@@ -15309,7 +15573,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 23,
-      "elo": 1197.1794647811464,
+      "elo": 1199.4782898041658,
       "skier_name": "Jonna Kil"
     },
     {
@@ -15320,7 +15584,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 20,
-      "elo": 1197.3623624193644,
+      "elo": 1199.5365917266774,
       "skier_name": "Jonna Kil"
     },
     {
@@ -15331,7 +15595,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 17,
-      "elo": 1202.460476733639,
+      "elo": 1204.1005392072286,
       "skier_name": "Jonna Kil"
     },
     {
@@ -15342,7 +15606,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 15,
-      "elo": 1209.2180397890656,
+      "elo": 1210.1958115768678,
       "skier_name": "Jonna Kil"
     },
     {
@@ -15353,7 +15617,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 21,
-      "elo": 1207.0765621653943,
+      "elo": 1208.1889188337398,
       "skier_name": "Jonna Kil"
     },
     {
@@ -15364,7 +15628,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 25,
-      "elo": 1199.947507998583,
+      "elo": 1201.599705837055,
+      "skier_name": "Jonna Kil"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 13,
+      "elo": 1209.3279363386707,
       "skier_name": "Jonna Kil"
     }
   ],
@@ -15850,7 +16125,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 11,
-      "elo": 1407.292249506368,
+      "elo": 1407.0189169464122,
       "skier_name": "Marte Leinan Lund"
     },
     {
@@ -15861,7 +16136,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 11,
-      "elo": 1409.6431794011112,
+      "elo": 1409.1814363492756,
       "skier_name": "Marte Leinan Lund"
     },
     {
@@ -15872,7 +16147,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 6,
-      "elo": 1417.851250383684,
+      "elo": 1416.6958929038146,
       "skier_name": "Marte Leinan Lund"
     },
     {
@@ -15883,7 +16158,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 6,
-      "elo": 1425.3348151760233,
+      "elo": 1423.5764925274889,
       "skier_name": "Marte Leinan Lund"
     },
     {
@@ -15894,7 +16169,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 7,
-      "elo": 1432.8895488965372,
+      "elo": 1430.556853531142,
       "skier_name": "Marte Leinan Lund"
     },
     {
@@ -15905,7 +16180,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 9,
-      "elo": 1435.7544703825183,
+      "elo": 1433.2568464308133,
       "skier_name": "Marte Leinan Lund"
     },
     {
@@ -15916,7 +16191,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 5,
-      "elo": 1444.4102991275995,
+      "elo": 1441.2641257361008,
       "skier_name": "Marte Leinan Lund"
     },
     {
@@ -15927,7 +16202,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 9,
-      "elo": 1446.85067574746,
+      "elo": 1443.58429619941,
       "skier_name": "Marte Leinan Lund"
     },
     {
@@ -15938,7 +16213,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 12,
-      "elo": 1444.9006346410729,
+      "elo": 1441.8992110327606,
       "skier_name": "Marte Leinan Lund"
     },
     {
@@ -15949,7 +16224,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 12,
-      "elo": 1443.1960656472731,
+      "elo": 1440.4150978867635,
+      "skier_name": "Marte Leinan Lund"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 4,
+      "elo": 1448.6617216766058,
       "skier_name": "Marte Leinan Lund"
     }
   ],
@@ -16971,7 +17257,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 3,
-      "elo": 1323.9264336905387,
+      "elo": 1322.1382470542364,
       "skier_name": "Alexa Brabec"
     },
     {
@@ -16982,7 +17268,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 4,
-      "elo": 1341.2322965687977,
+      "elo": 1338.078215294369,
       "skier_name": "Alexa Brabec"
     },
     {
@@ -16993,7 +17279,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 2,
-      "elo": 1358.8441155667836,
+      "elo": 1354.3421623381432,
       "skier_name": "Alexa Brabec"
     },
     {
@@ -17004,7 +17290,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 2,
-      "elo": 1375.100856618842,
+      "elo": 1369.4273605567275,
       "skier_name": "Alexa Brabec"
     },
     {
@@ -17015,7 +17301,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 4,
-      "elo": 1389.837329868626,
+      "elo": 1383.207195841588,
       "skier_name": "Alexa Brabec"
     },
     {
@@ -17026,7 +17312,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 4,
-      "elo": 1402.0097738925156,
+      "elo": 1394.6488958177638,
       "skier_name": "Alexa Brabec"
     },
     {
@@ -17037,7 +17323,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 3,
-      "elo": 1415.286435128487,
+      "elo": 1407.1399122033051,
       "skier_name": "Alexa Brabec"
     },
     {
@@ -17048,7 +17334,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 4,
-      "elo": 1426.229695877629,
+      "elo": 1417.4863546513395,
       "skier_name": "Alexa Brabec"
     },
     {
@@ -17059,7 +17345,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 4,
-      "elo": 1436.566476016153,
+      "elo": 1427.3065063721165,
       "skier_name": "Alexa Brabec"
     },
     {
@@ -17070,7 +17356,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 1,
-      "elo": 1450.7775514458572,
+      "elo": 1440.683266541942,
+      "skier_name": "Alexa Brabec"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 2,
+      "elo": 1451.4972896812092,
       "skier_name": "Alexa Brabec"
     }
   ],
@@ -17171,7 +17468,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 34,
-      "elo": 1200.3154495072097,
+      "elo": 1201.7522724433363,
       "skier_name": "Jolana Hradilova"
     },
     {
@@ -17182,7 +17479,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 31,
-      "elo": 1187.2148853811598,
+      "elo": 1189.6876603209666,
       "skier_name": "Jolana Hradilova"
     },
     {
@@ -17193,7 +17490,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 30,
-      "elo": 1173.8766462479796,
+      "elo": 1177.356383295407,
       "skier_name": "Jolana Hradilova"
     },
     {
@@ -17204,7 +17501,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 29,
-      "elo": 1162.112207303408,
+      "elo": 1166.4291302117113,
       "skier_name": "Jolana Hradilova"
     },
     {
@@ -17215,7 +17512,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 32,
-      "elo": 1150.1112705145588,
+      "elo": 1155.2363742017728,
       "skier_name": "Jolana Hradilova"
     },
     {
@@ -17226,7 +17523,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 30,
-      "elo": 1138.5259565585347,
+      "elo": 1144.4152899385197,
       "skier_name": "Jolana Hradilova"
     },
     {
@@ -17237,7 +17534,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 29,
-      "elo": 1129.6979389100904,
+      "elo": 1136.0877793625723,
       "skier_name": "Jolana Hradilova"
     },
     {
@@ -17248,7 +17545,7 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 31,
-      "elo": 1117.9870163847934,
+      "elo": 1125.0984102089574,
       "skier_name": "Jolana Hradilova"
     }
   ],
@@ -18077,7 +18374,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 35,
-      "elo": 1095.528791196204,
+      "elo": 1096.540342834999,
       "skier_name": "Tereza Koldovska"
     },
     {
@@ -18088,7 +18385,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 30,
-      "elo": 1085.9724151551436,
+      "elo": 1087.759606153251,
       "skier_name": "Tereza Koldovska"
     },
     {
@@ -18099,7 +18396,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 30,
-      "elo": 1076.9245563469506,
+      "elo": 1079.416050414659,
       "skier_name": "Tereza Koldovska"
     },
     {
@@ -18110,7 +18407,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 30,
-      "elo": 1068.147755419294,
+      "elo": 1071.3072595035442,
       "skier_name": "Tereza Koldovska"
     },
     {
@@ -18121,7 +18418,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 30,
-      "elo": 1060.5293483821042,
+      "elo": 1064.229566141791,
+      "skier_name": "Tereza Koldovska"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 29,
+      "elo": 1056.7866930345351,
       "skier_name": "Tereza Koldovska"
     }
   ],
@@ -18369,7 +18677,7 @@
       "country": "Norway",
       "event": "Individual Compact",
       "place": 28,
-      "elo": 1209.3978333802972,
+      "elo": 1210.12146479692,
       "skier_name": "Greta Pinzani"
     },
     {
@@ -18380,7 +18688,7 @@
       "country": "Norway",
       "event": "Mass Start",
       "place": 28,
-      "elo": 1199.9888622941564,
+      "elo": 1201.4730176185997,
       "skier_name": "Greta Pinzani"
     },
     {
@@ -18391,7 +18699,7 @@
       "country": "Austria",
       "event": "Individual",
       "place": 26,
-      "elo": 1191.1221441062287,
+      "elo": 1193.284319129221,
       "skier_name": "Greta Pinzani"
     },
     {
@@ -18402,7 +18710,7 @@
       "country": "Estonia",
       "event": "Mass Start",
       "place": 33,
-      "elo": 1176.12322087061,
+      "elo": 1179.4453742404903,
       "skier_name": "Greta Pinzani"
     },
     {
@@ -18413,7 +18721,7 @@
       "country": "Estonia",
       "event": "Individual",
       "place": 25,
-      "elo": 1170.3241194838647,
+      "elo": 1173.9883470773789,
       "skier_name": "Greta Pinzani"
     },
     {
@@ -18424,7 +18732,7 @@
       "country": "Estonia",
       "event": "Individual Compact",
       "place": 19,
-      "elo": 1174.013743289944,
+      "elo": 1177.201550863708,
       "skier_name": "Greta Pinzani"
     },
     {
@@ -18435,7 +18743,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 19,
-      "elo": 1176.5462315910042,
+      "elo": 1179.3688289372492,
       "skier_name": "Greta Pinzani"
     },
     {
@@ -18446,7 +18754,7 @@
       "country": "Germany",
       "event": "Individual",
       "place": 27,
-      "elo": 1167.5829734639185,
+      "elo": 1171.0430303427252,
       "skier_name": "Greta Pinzani"
     },
     {
@@ -18457,7 +18765,18 @@
       "country": "Austria",
       "event": "Mass Start",
       "place": 24,
-      "elo": 1163.8989715412322,
+      "elo": 1167.5095769285292,
+      "skier_name": "Greta Pinzani"
+    },
+    {
+      "season": "2026",
+      "race": "11",
+      "date": "2026-01-31",
+      "city": "Seefeld",
+      "country": "Austria",
+      "event": "Individual Compact",
+      "place": 25,
+      "elo": 1161.255004191437,
       "skier_name": "Greta Pinzani"
     }
   ],
