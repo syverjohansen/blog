@@ -1,11 +1,13 @@
 ---
 title: "2026 Winter Olympics - Biathlon Predictions"
-date: 2026-01-30T13:34:46+00:00
+date: 2026-02-02T02:56:07+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "biathlon"]
 ---
 
 # 2026 Winter Olympics - Biathlon Predictions
+
+*See [Championship Predictions Methodology](/post/methods/champs-predictions/) for details on how these predictions are generated.*
 
 ## Calendar
 
