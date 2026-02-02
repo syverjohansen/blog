@@ -239,14 +239,15 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
   }
 
   # PHASE 2: Monotonic constraints + cap at start_prob
-  log_info("PHASE 2: Applying monotonic constraints and start_prob ceiling...")
+  log_info("PHASE 2: Applying monotonic constraints...")
   prob_cols <- paste0("prob_top", position_thresholds)
   for(row_i in 1:nrow(normalized)) {
+    # NOTE: start_prob capping commented out for testing (2026-02-01)
     # Get start_prob ceiling for this row (handle NA)
     # Note: start_prob is stored as decimal (0-1), but position probs are percentages (0-100)
     # So we multiply start_prob by 100 to get the ceiling in percentage terms
-    start_ceiling <- if("start_prob" %in% names(normalized)) normalized$start_prob[row_i] * 100 else NA
-    if(is.na(start_ceiling)) start_ceiling <- 100  # Default to 100% if no start_prob
+    # start_ceiling <- if("start_prob" %in% names(normalized)) normalized$start_prob[row_i] * 100 else NA
+    # if(is.na(start_ceiling)) start_ceiling <- 100  # Default to 100% if no start_prob
 
     # Get current probabilities
     probs <- sapply(prob_cols, function(col) {
@@ -254,8 +255,9 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
       if(is.na(val)) 0 else val
     })
 
+    # NOTE: start_prob capping commented out for testing (2026-02-01)
     # First, cap all position probabilities at start_prob
-    probs <- pmin(probs, start_ceiling)
+    # probs <- pmin(probs, start_ceiling)
 
     # Then enforce monotonic: each probability >= previous one (Win <= Podium <= Top5 <= etc)
     for(j in 2:length(probs)) {
@@ -264,8 +266,9 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
       }
     }
 
+    # NOTE: start_prob capping commented out for testing (2026-02-01)
     # Final cap at start_prob (in case monotonic adjustment pushed values up)
-    probs <- pmin(probs, start_ceiling)
+    # probs <- pmin(probs, start_ceiling)
 
     # Update row
     for(k in seq_along(prob_cols)) {
@@ -288,25 +291,25 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     }
   }
 
-  # PHASE 4: Final cap at start_prob (position probs can never exceed participation prob)
-  log_info("PHASE 4: Applying final start_prob ceiling...")
-  if("start_prob" %in% names(normalized)) {
-    violations_fixed <- 0
-    for(row_i in 1:nrow(normalized)) {
-      # Convert start_prob from decimal (0-1) to percentage (0-100) for comparison
-      start_ceiling <- normalized$start_prob[row_i] * 100
-      if(is.na(start_ceiling)) next
-      for(col in prob_cols) {
-        if(!is.na(normalized[[col]][row_i]) && normalized[[col]][row_i] > start_ceiling) {
-          normalized[[col]][row_i] <- start_ceiling
-          violations_fixed <- violations_fixed + 1
-        }
-      }
-    }
-    if(violations_fixed > 0) {
-      log_info(sprintf("  Fixed %d cases where position prob exceeded start_prob", violations_fixed))
-    }
-  }
+  # PHASE 4: Final cap at start_prob - COMMENTED OUT FOR TESTING (2026-02-01)
+  # log_info("PHASE 4: Applying final start_prob ceiling...")
+  # if("start_prob" %in% names(normalized)) {
+  #   violations_fixed <- 0
+  #   for(row_i in 1:nrow(normalized)) {
+  #     # Convert start_prob from decimal (0-1) to percentage (0-100) for comparison
+  #     start_ceiling <- normalized$start_prob[row_i] * 100
+  #     if(is.na(start_ceiling)) next
+  #     for(col in prob_cols) {
+  #       if(!is.na(normalized[[col]][row_i]) && normalized[[col]][row_i] > start_ceiling) {
+  #         normalized[[col]][row_i] <- start_ceiling
+  #         violations_fixed <- violations_fixed + 1
+  #       }
+  #     }
+  #   }
+  #   if(violations_fixed > 0) {
+  #     log_info(sprintf("  Fixed %d cases where position prob exceeded start_prob", violations_fixed))
+  #   }
+  # }
 
   # PHASE 5: Final monotonic constraint enforcement
   # This is critical - no prediction is credible if win > podium > top5 etc.

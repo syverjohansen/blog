@@ -13,169 +13,213 @@
   ],
   "rows": [
     [
-      "Juliette Ducordeau",
-      3218,
+      "Leonie Perry",
+      10413,
       "10km Freestyle",
-      100.0,
+      82.9,
+      2.2,
+      4.9,
+      10.9,
+      13.7,
+      62.8
+    ],
+    [
+      "Clemence Didierlaurent",
+      10690,
+      "10km Freestyle",
+      75.9,
       0.0,
       0.0,
       0.1,
-      0.4,
-      16.0
-    ],
-    [
-      "Flora Dolci",
-      2483,
-      "10km Freestyle",
-      89.0,
-      1.8,
-      8.9,
-      18.1,
-      27.6,
-      80.5
+      0.3,
+      5.0
     ],
     [
       "Melissa Gal",
       4034,
       "10km Freestyle",
-      79.7,
+      72.8,
       0.0,
       0.0,
       0.1,
       0.7,
-      18.1
+      15.3
+    ],
+    [
+      "Julie Pierrel",
+      7444,
+      "10km Freestyle",
+      66.6,
+      0.0,
+      0.0,
+      0.1,
+      0.4,
+      12.9
     ],
     [
       "Delphine Claudel",
       1694,
       "10km Freestyle",
-      69.1,
-      0.3,
-      1.7,
-      4.5,
-      11.1,
-      58.8
-    ],
-    [
-      "Lena Quintin",
-      3252,
-      "10km Freestyle",
-      47.8,
-      0.0,
-      0.0,
-      0.0,
+      63.1,
       0.2,
-      4.6
+      1.7,
+      4.3,
+      10.4,
+      47.7
     ],
     [
-      "Flora Dolci",
-      2483,
-      "20km Skiathlon",
-      100.0,
-      0.8,
-      2.0,
-      5.3,
-      29.9,
-      67.3
+      "Cloe Pagnier",
+      10319,
+      "10km Freestyle",
+      38.6,
+      0.0,
+      0.0,
+      0.1,
+      0.4,
+      16.5
     ],
     [
       "Delphine Claudel",
       1694,
       "20km Skiathlon",
-      100.0,
+      85.8,
       0.1,
       0.3,
       0.9,
-      5.1,
-      55.8
+      4.8,
+      43.9
     ],
     [
-      "Juliette Ducordeau",
-      3218,
+      "Leonie Perry",
+      10413,
       "20km Skiathlon",
-      98.9,
+      72.7,
+      0.1,
+      0.3,
+      0.7,
+      5.3,
+      42.2
+    ],
+    [
+      "Julie Pierrel",
+      7444,
+      "20km Skiathlon",
+      72.5,
       0.0,
       0.0,
       0.1,
-      0.5,
-      21.2
+      0.4,
+      14.7
     ],
     [
       "Melissa Gal",
       4034,
       "20km Skiathlon",
-      60.6,
+      51.9,
       0.0,
       0.0,
       0.1,
+      0.2,
+      16.6
+    ],
+    [
+      "Cloe Pagnier",
+      10319,
+      "20km Skiathlon",
+      44.3,
+      0.0,
+      0.0,
       0.1,
+      0.7,
+      19.9
+    ],
+    [
+      "Justine Gaillard",
+      11576,
+      "20km Skiathlon",
+      44.3,
+      0.0,
+      0.0,
+      0.1,
+      0.8,
       20.7
     ],
     [
-      "Lena Quintin",
-      3252,
+      "Clemence Didierlaurent",
+      10690,
       "20km Skiathlon",
-      30.1,
+      28.5,
       0.0,
       0.0,
       0.0,
       0.1,
-      6.5
+      12.0
+    ],
+    [
+      "Cloe Pagnier",
+      10319,
+      "50km Classic",
+      80.6,
+      0.0,
+      0.0,
+      0.2,
+      1.0,
+      22.0
+    ],
+    [
+      "Justine Gaillard",
+      11576,
+      "50km Classic",
+      80.6,
+      0.0,
+      0.0,
+      0.1,
+      0.9,
+      22.8
     ],
     [
       "Delphine Claudel",
       1694,
       "50km Classic",
-      100.0,
+      72.6,
       0.0,
       0.1,
       0.5,
-      3.2,
-      58.1
+      3.0,
+      46.2
     ],
     [
-      "Juliette Ducordeau",
-      3218,
+      "Julie Pierrel",
+      7444,
       "50km Classic",
-      100.0,
+      70.9,
       0.0,
       0.0,
       0.1,
-      0.7,
-      23.3
+      0.5,
+      16.6
     ],
     [
-      "Flora Dolci",
-      2483,
+      "Leonie Perry",
+      10413,
       "50km Classic",
-      65.8,
-      0.0,
-      0.0,
-      0.2,
-      1.4,
-      58.0
+      60.6,
+      0.1,
+      0.1,
+      0.4,
+      2.6,
+      45.5
     ],
     [
       "Melissa Gal",
       4034,
       "50km Classic",
-      65.3,
+      34.8,
       0.0,
       0.0,
       0.0,
       0.3,
-      17.9
-    ],
-    [
-      "Lena Quintin",
-      3252,
-      "50km Classic",
-      29.2,
-      0.0,
-      0.0,
-      0.0,
-      0.2,
-      7.3
+      14.7
     ],
     [
       "Melissa Gal",
@@ -183,54 +227,65 @@
       "Sprint Classic",
       100.0,
       0.1,
-      0.4,
-      1.5,
-      7.5,
-      53.2
+      0.3,
+      1.4,
+      6.9,
+      42.4
     ],
     [
-      "Lena Quintin",
-      3252,
+      "Clemence Didierlaurent",
+      10690,
       "Sprint Classic",
-      100.0,
+      96.8,
+      0.0,
+      0.0,
+      0.2,
+      0.8,
+      11.7
+    ],
+    [
+      "Julie Pierrel",
+      7444,
+      "Sprint Classic",
+      75.2,
+      0.0,
+      0.0,
+      0.2,
+      1.1,
+      15.0
+    ],
+    [
+      "Justine Gaillard",
+      11576,
+      "Sprint Classic",
+      61.1,
+      0.0,
       0.0,
       0.2,
       0.7,
-      4.0,
-      34.9
+      11.9
     ],
     [
-      "Juliette Ducordeau",
-      3218,
+      "Leonie Perry",
+      10413,
       "Sprint Classic",
-      28.3,
-      0.0,
+      52.4,
       0.0,
       0.0,
       0.1,
-      4.2
+      0.3,
+      8.2
     ],
     [
       "Delphine Claudel",
       1694,
       "Sprint Classic",
-      6.5,
+      5.1,
       0.0,
       0.0,
       0.1,
       0.4,
-      6.5
-    ],
-    [
-      "Flora Dolci",
-      2483,
-      "Sprint Classic",
-      2.4,
-      0.0,
-      0.0,
-      0.0,
-      0.1,
-      2.4
+      11.6
     ]
   ]
 }

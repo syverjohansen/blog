@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Slovenia Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Tia Janezic",
+      10321,
+      "Slovenia",
+      1,
+      0.0012,
+      0.0068,
+      0.0221,
+      0.9987,
+      0.0015,
+      0.0061,
+      0.011,
+      0.6117
+    ],
+    [
+      "Lucija Medja",
+      9083,
+      "Slovenia",
+      2,
+      0.0009,
+      0.0027,
+      0.0142,
+      0.2699,
+      0.0015,
+      0.0061,
+      0.011,
+      0.6117
+    ],
+    [
+      "Neza Zerjav",
+      4035,
+      "Slovenia",
+      3,
+      0.0,
+      0.0001,
+      0.0044,
+      0.3375,
+      0.0015,
+      0.0061,
+      0.011,
+      0.6117
+    ],
+    [
+      "Anja Mandeljc",
+      1868,
+      "Slovenia",
+      4,
+      0.0039,
+      0.0161,
+      0.006,
+      1.0,
+      0.0015,
+      0.0061,
+      0.011,
+      0.6117
+    ]
+  ]
+}

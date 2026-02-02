@@ -169,6 +169,21 @@ Commented out start_prob multiplication in all 5 champs-predictions.R files for 
 
 All marked with: `# NOTE: Start probability multiplication commented out for testing (2026-02-01)`
 
+### Start Probability Capping Removal (2026-02-01) - COMPLETE
+
+In addition to commenting out the multiplication, also commented out the CAPPING of position probabilities at start_prob. This affects:
+- Phase 2: `pmin(probs, start_ceiling)` caps (both initial and final cap)
+- Phase 4: Final cap at start_prob block
+
+All changes marked with: `# NOTE: start_prob capping commented out for testing (2026-02-01)`
+
+Sports updated:
+- [x] Alpine (lines 197-230, 249-263)
+- [x] Biathlon (lines 240-280, 300-314)
+- [x] Cross-Country (lines 1057-1081, 1109-1123)
+- [x] Nordic Combined (lines 249-286, 305-321)
+- [x] Ski Jumping (lines 241-274, 291-309)
+
 ### Methodology Page Dates (2026-02-01)
 
 Updated all methodology page dates to 2020-01-01 to hide from post feed:

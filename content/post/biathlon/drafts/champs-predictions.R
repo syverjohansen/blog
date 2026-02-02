@@ -238,18 +238,19 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
   }
 
   # PHASE 2: Apply monotonic constraints (win <= podium <= top5 <= top10 <= top30 <= start)
-  log_info("  PHASE 2: Applying monotonic constraints + start_prob ceiling...")
+  log_info("  PHASE 2: Applying monotonic constraints...")
 
   # Get the prob columns that exist in this data
   existing_prob_cols <- intersect(prob_cols, names(normalized))
 
   for(row_i in 1:nrow(normalized)) {
-    start_ceiling <- normalized$start_prob[row_i]
+    # NOTE: start_prob capping commented out for testing (2026-02-01)
+    # start_ceiling <- normalized$start_prob[row_i]
 
     # Handle NA start_ceiling
-    if(is.na(start_ceiling)) {
-      start_ceiling <- 100
-    }
+    # if(is.na(start_ceiling)) {
+    #   start_ceiling <- 100
+    # }
 
     # Get probabilities in order (only for columns that exist)
     probs <- sapply(existing_prob_cols, function(col) normalized[[col]][row_i])
@@ -257,8 +258,9 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     # Replace NA values with 0
     probs[is.na(probs)] <- 0
 
+    # NOTE: start_prob capping commented out for testing (2026-02-01)
     # First, cap all position probabilities at start_prob
-    probs <- pmin(probs, start_ceiling)
+    # probs <- pmin(probs, start_ceiling)
 
     # Then enforce: each probability >= previous one (monotonic non-decreasing)
     for(j in 2:length(probs)) {
@@ -267,8 +269,9 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
       }
     }
 
+    # NOTE: start_prob capping commented out for testing (2026-02-01)
     # Final cap at start_prob (in case monotonic adjustment pushed values up)
-    probs <- pmin(probs, start_ceiling)
+    # probs <- pmin(probs, start_ceiling)
 
     # Update row
     for(j in seq_along(existing_prob_cols)) {
@@ -297,21 +300,21 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     }
   }
 
-  # PHASE 4: Final cap at start_prob
-  log_info("  PHASE 4: Final start_prob ceiling...")
-  violations_fixed <- 0
-  for(row_i in 1:nrow(normalized)) {
-    start_ceiling <- normalized$start_prob[row_i]
-    for(prob_col in existing_prob_cols) {
-      if(normalized[[prob_col]][row_i] > start_ceiling) {
-        normalized[[prob_col]][row_i] <- start_ceiling
-        violations_fixed <- violations_fixed + 1
-      }
-    }
-  }
-  if(violations_fixed > 0) {
-    log_info(sprintf("    Fixed %d cases where position prob exceeded start_prob", violations_fixed))
-  }
+  # PHASE 4: Final cap at start_prob - COMMENTED OUT FOR TESTING (2026-02-01)
+  # log_info("  PHASE 4: Final start_prob ceiling...")
+  # violations_fixed <- 0
+  # for(row_i in 1:nrow(normalized)) {
+  #   start_ceiling <- normalized$start_prob[row_i]
+  #   for(prob_col in existing_prob_cols) {
+  #     if(normalized[[prob_col]][row_i] > start_ceiling) {
+  #       normalized[[prob_col]][row_i] <- start_ceiling
+  #       violations_fixed <- violations_fixed + 1
+  #     }
+  #   }
+  # }
+  # if(violations_fixed > 0) {
+  #   log_info(sprintf("    Fixed %d cases where position prob exceeded start_prob", violations_fixed))
+  # }
 
   # PHASE 5: Final monotonic constraint enforcement
   # This is critical - no prediction is credible if win > podium > top5 etc.
@@ -571,7 +574,7 @@ prepare_startlist_data <- function(startlist, race_df, elo_col) {
     log_info(paste("Available Elo columns in startlist:", paste(available_elo_cols, collapse=", ")))
 
     base_df <- startlist %>%
-      dplyr::select(Skier, Nation, Price, all_of(race_prob_cols), any_of(elo_cols))
+      dplyr::select(Skier, ID, Nation, Price, all_of(race_prob_cols), any_of(elo_cols))
 
     # Get recent points for individuals
     recent_points <- race_df %>%

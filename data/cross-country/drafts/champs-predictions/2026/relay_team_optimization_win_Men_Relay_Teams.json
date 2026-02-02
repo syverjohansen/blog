@@ -11,49 +11,13 @@
   ],
   "rows": [
     [
-      "Australia",
-      1,
-      "Hugo Hinckfuss",
-      "Australia",
-      12412,
-      0.003,
-      0.0021
-    ],
-    [
-      "Australia",
-      2,
-      "Seve De Campo",
-      "Australia",
-      8036,
-      0.0062,
-      0.0021
-    ],
-    [
-      "Australia",
-      3,
-      "Lars Young Vik",
-      "Australia",
-      12386,
-      0.0003,
-      0.0021
-    ],
-    [
-      "Australia",
-      4,
-      "Phil Bellingham",
-      "Australia",
-      1951,
-      0.0,
-      0.0021
-    ],
-    [
       "Canada",
       1,
       "Xavier McKeever",
       "Canada",
       12676,
-      0.0187,
-      0.0206
+      0.0193,
+      0.0199
     ],
     [
       "Canada",
@@ -62,7 +26,7 @@
       "Canada",
       12678,
       0.0108,
-      0.0206
+      0.0199
     ],
     [
       "Canada",
@@ -70,8 +34,8 @@
       "Antoine Cyr",
       "Canada",
       9225,
-      0.0621,
-      0.0206
+      0.0581,
+      0.0199
     ],
     [
       "Canada",
@@ -80,7 +44,7 @@
       "Canada",
       8051,
       0.0,
-      0.0206
+      0.0199
     ],
     [
       "Czechia",
@@ -88,7 +52,7 @@
       "Jiri Tuz",
       "Czechia",
       17348,
-      0.0165,
+      0.0164,
       0.0125
     ],
     [
@@ -115,7 +79,7 @@
       "Ondrej Cerny",
       "Czechia",
       8094,
-      0.0046,
+      0.0048,
       0.0125
     ],
     [
@@ -124,8 +88,8 @@
       "Iivo Niskanen",
       "Finland",
       1470,
-      0.3284,
-      0.0951
+      0.3383,
+      0.0975
     ],
     [
       "Finland",
@@ -134,7 +98,7 @@
       "Finland",
       8120,
       0.0787,
-      0.0951
+      0.0975
     ],
     [
       "Finland",
@@ -142,8 +106,8 @@
       "Nilo Moilanen",
       "Finland",
       12446,
-      0.0139,
-      0.0951
+      0.0146,
+      0.0975
     ],
     [
       "Finland",
@@ -151,8 +115,8 @@
       "Emil Liekari",
       "Finland",
       12440,
-      0.0045,
-      0.0951
+      0.0047,
+      0.0975
     ],
     [
       "France",
@@ -160,8 +124,8 @@
       "Jules Chappaz",
       "France",
       12181,
-      0.0823,
-      0.0476
+      0.0807,
+      0.0471
     ],
     [
       "France",
@@ -170,7 +134,7 @@
       "France",
       6018,
       0.0902,
-      0.0476
+      0.0471
     ],
     [
       "France",
@@ -178,8 +142,8 @@
       "Mathis Desloges",
       "France",
       12767,
-      0.0412,
-      0.0476
+      0.0407,
+      0.0471
     ],
     [
       "France",
@@ -187,8 +151,8 @@
       "Richard Jouve",
       "France",
       2768,
-      0.0018,
-      0.0476
+      0.0019,
+      0.0471
     ],
     [
       "Germany",
@@ -196,8 +160,8 @@
       "Janosch Brugger",
       "Germany",
       3657,
-      0.0239,
-      0.0118
+      0.0254,
+      0.0124
     ],
     [
       "Germany",
@@ -206,16 +170,16 @@
       "Germany",
       1488,
       0.026,
-      0.0118
+      0.0124
     ],
     [
       "Germany",
       3,
-      "Elias Keck",
+      "Jakob Elias Moch",
       "Germany",
-      14056,
-      0.0005,
-      0.0118
+      19936,
+      0.0014,
+      0.0124
     ],
     [
       "Germany",
@@ -223,8 +187,8 @@
       "Jan Stölben",
       "Germany",
       14033,
-      0.0023,
-      0.0118
+      0.0025,
+      0.0124
     ],
     [
       "Italy",
@@ -232,8 +196,8 @@
       "Federico Pellegrino",
       "Italy",
       44,
-      0.2445,
-      0.0819
+      0.2476,
+      0.087
     ],
     [
       "Italy",
@@ -242,43 +206,43 @@
       "Italy",
       14042,
       0.1108,
-      0.0819
+      0.087
     ],
     [
       "Italy",
       3,
-      "Davide Graz",
+      "Martino Carollo",
       "Italy",
-      12165,
-      0.0104,
-      0.0819
+      19980,
+      0.025,
+      0.087
     ],
     [
       "Italy",
       4,
-      "Michael Hellweger",
+      "Davide Graz",
       "Italy",
-      5979,
-      0.0034,
-      0.0819
+      12165,
+      0.0068,
+      0.087
     ],
     [
       "Norway",
       1,
-      "Mattis Stenshagen",
+      "Martin Løwstrøm Nyenget",
       "Norway",
-      5165,
-      0.4128,
-      0.4889
+      2295,
+      0.5618,
+      0.4848
     ],
     [
       "Norway",
       2,
-      "Martin Løwstrøm Nyenget",
+      "Mattis Stenshagen",
       "Norway",
-      2295,
-      0.3942,
-      0.4889
+      5165,
+      0.2359,
+      0.4848
     ],
     [
       "Norway",
@@ -286,8 +250,8 @@
       "Einar Hedegart",
       "Norway",
       20631,
-      0.2817,
-      0.4889
+      0.2644,
+      0.4848
     ],
     [
       "Norway",
@@ -296,7 +260,7 @@
       "Norway",
       5164,
       0.7399,
-      0.4889
+      0.4848
     ],
     [
       "Sweden",
@@ -304,8 +268,8 @@
       "Edvin Anger",
       "Sweden",
       14039,
-      0.1815,
-      0.0656
+      0.1858,
+      0.0671
     ],
     [
       "Sweden",
@@ -314,7 +278,7 @@
       "Sweden",
       12573,
       0.0778,
-      0.0656
+      0.0671
     ],
     [
       "Sweden",
@@ -322,8 +286,8 @@
       "Truls Gisselman",
       "Sweden",
       12782,
-      0.0089,
-      0.0656
+      0.0086,
+      0.0671
     ],
     [
       "Sweden",
@@ -331,26 +295,26 @@
       "Calle Halfvarsson",
       "Sweden",
       73,
-      0.0188,
-      0.0656
+      0.0205,
+      0.0671
     ],
     [
       "Switzerland",
       1,
-      "Beda Klee",
+      "Nicola Wigger",
       "Switzerland",
-      3651,
-      0.0141,
-      0.0133
+      12697,
+      0.0099,
+      0.0098
     ],
     [
       "Switzerland",
       2,
-      "Jonas Baumann",
+      "Beda Klee",
       "Switzerland",
-      1534,
-      0.0373,
-      0.0133
+      3651,
+      0.024,
+      0.0098
     ],
     [
       "Switzerland",
@@ -358,8 +322,8 @@
       "Valerio Grond",
       "Switzerland",
       12164,
-      0.008,
-      0.0133
+      0.009,
+      0.0098
     ],
     [
       "Switzerland",
@@ -368,7 +332,7 @@
       "Switzerland",
       7725,
       0.0013,
-      0.0133
+      0.0098
     ],
     [
       "USA",
@@ -376,7 +340,7 @@
       "Zak Ketterson",
       "USA",
       5988,
-      0.0229,
+      0.0234,
       0.0423
     ],
     [
@@ -394,7 +358,7 @@
       "Ben Ogden",
       "USA",
       9179,
-      0.0188,
+      0.0189,
       0.0423
     ],
     [
@@ -403,7 +367,7 @@
       "Gus Schumacher",
       "USA",
       9172,
-      0.0888,
+      0.0886,
       0.0423
     ]
   ]

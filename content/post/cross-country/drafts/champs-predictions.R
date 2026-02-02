@@ -1055,9 +1055,9 @@ for (race_name in names(results_list)) {
     )
 
   # For each row, ensure probabilities are monotonically non-decreasing
-  # AND all position probabilities are capped at start_prob
+  # NOTE: start_prob capping commented out for testing (2026-02-01)
   for (row_i in 1:nrow(race_results)) {
-    start_ceiling <- race_results$start_prob[row_i]
+    # start_ceiling <- race_results$start_prob[row_i]
 
     probs <- c(
       race_results$win_prob[row_i],
@@ -1067,8 +1067,8 @@ for (race_name in names(results_list)) {
       race_results$top30_prob[row_i]
     )
 
-    # First, cap all position probabilities at start_prob
-    probs <- pmin(probs, start_ceiling)
+    # First, cap all position probabilities at start_prob - COMMENTED OUT FOR TESTING
+    # probs <- pmin(probs, start_ceiling)
 
     # Then enforce: each probability >= previous one
     for (j in 2:length(probs)) {
@@ -1077,8 +1077,8 @@ for (race_name in names(results_list)) {
       }
     }
 
-    # Final cap at start_prob (in case monotonic adjustment pushed values up)
-    probs <- pmin(probs, start_ceiling)
+    # Final cap at start_prob (in case monotonic adjustment pushed values up) - COMMENTED OUT FOR TESTING
+    # probs <- pmin(probs, start_ceiling)
 
     # Update row
     race_results$win_prob[row_i] <- probs[1]
@@ -1106,21 +1106,21 @@ for (race_name in names(results_list)) {
     }
   }
 
-  # PHASE 4: Final cap at start_prob (position probs can never exceed participation prob)
-  log_info("  Applying final start_prob ceiling...")
-  violations_fixed <- 0
-  for (row_i in 1:nrow(race_results)) {
-    start_ceiling <- race_results$start_prob[row_i]
-    for (col in prob_cols) {
-      if (race_results[[col]][row_i] > start_ceiling) {
-        race_results[[col]][row_i] <- start_ceiling
-        violations_fixed <- violations_fixed + 1
-      }
-    }
-  }
-  if (violations_fixed > 0) {
-    log_info(sprintf("    Fixed %d cases where position prob exceeded start_prob", violations_fixed))
-  }
+  # PHASE 4: Final cap at start_prob - COMMENTED OUT FOR TESTING (2026-02-01)
+  # log_info("  Applying final start_prob ceiling...")
+  # violations_fixed <- 0
+  # for (row_i in 1:nrow(race_results)) {
+  #   start_ceiling <- race_results$start_prob[row_i]
+  #   for (col in prob_cols) {
+  #     if (race_results[[col]][row_i] > start_ceiling) {
+  #       race_results[[col]][row_i] <- start_ceiling
+  #       violations_fixed <- violations_fixed + 1
+  #     }
+  #   }
+  # }
+  # if (violations_fixed > 0) {
+  #   log_info(sprintf("    Fixed %d cases where position prob exceeded start_prob", violations_fixed))
+  # }
 
   # PHASE 5: Final monotonic constraint enforcement
   # This is critical - no prediction is credible if win > podium > top5 etc.

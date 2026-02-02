@@ -13,15 +13,15 @@
   ],
   "rows": [
     [
-      "Yelizaveta Tolmachyova",
-      9324,
+      "Nadezhda Stepashkina",
+      6922,
       "10km Freestyle",
       100.0,
       0,
       0,
+      0,
       0.0,
-      0.0,
-      0.9
+      1.1
     ],
     [
       "Darya Ryazhko",
@@ -30,75 +30,130 @@
       100.0,
       0,
       0,
+      0,
       0.0,
-      0.0,
-      1.4
+      1.1
     ],
     [
-      "Angelina Shuryga",
-      1509,
+      "Kseniya Shalygina",
+      5390,
       "10km Freestyle",
-      95.5,
+      91.4,
+      0,
       0,
       0,
       0.0,
-      0.0,
-      1.4
+      1.3
     ],
     [
-      "Angelina Shuryga",
-      1509,
+      "Anna Melnik",
+      6157,
+      "10km Freestyle",
+      49.3,
+      0,
+      0,
+      0,
+      0.0,
+      0.8
+    ],
+    [
+      "Nadezhda Stepashkina",
+      6922,
       "20km Skiathlon",
       100.0,
       0,
       0,
+      0,
       0.0,
-      0.0,
-      2.3
+      2.2
     ],
     [
-      "Yelizaveta Tolmachyova",
-      9324,
+      "Kseniya Shalygina",
+      5390,
       "20km Skiathlon",
       100.0,
       0,
       0,
-      0.0,
-      0.1,
-      2.7
-    ],
-    [
-      "Laura Kinybaeyeva",
-      6958,
-      "20km Skiathlon",
-      44.5,
       0,
-      0,
-      0.1,
-      0.2,
-      8.8
-    ],
-    [
-      "Darya Ryazhko",
-      3468,
-      "20km Skiathlon",
-      7.8,
-      0,
-      0,
-      0.0,
       0.0,
       1.6
+    ],
+    [
+      "Anna Melnik",
+      6157,
+      "20km Skiathlon",
+      9.3,
+      0,
+      0,
+      0,
+      0.0,
+      2.9
+    ],
+    [
+      "Darya Ryazhko",
+      3468,
+      "20km Skiathlon",
+      8.8,
+      0,
+      0,
+      0,
+      0.0,
+      1.4
+    ],
+    [
+      "Nadezhda Stepashkina",
+      6922,
+      "50km Classic",
+      100.0,
+      0,
+      0,
+      0,
+      0.2,
+      3.3
+    ],
+    [
+      "Kseniya Shalygina",
+      5390,
+      "50km Classic",
+      100.0,
+      0,
+      0,
+      0,
+      0.2,
+      2.9
+    ],
+    [
+      "Anna Melnik",
+      6157,
+      "50km Classic",
+      62.5,
+      0,
+      0,
+      0,
+      0.1,
+      2.6
     ],
     [
       "Darya Ryazhko",
       3468,
       "50km Classic",
+      30.5,
+      0,
+      0,
+      0,
+      0.1,
+      0.9
+    ],
+    [
+      "Nadezhda Stepashkina",
+      6922,
+      "Sprint Classic",
       100.0,
       0,
       0,
+      0,
       0.0,
-      0.1,
-      1.0
+      0.5
     ],
     [
       "Darya Ryazhko",
@@ -107,42 +162,31 @@
       100.0,
       0,
       0,
-      0.0,
+      0,
       0.0,
       0.7
     ],
     [
-      "Yelizaveta Tolmachyova",
-      9324,
+      "Anna Melnik",
+      6157,
       "Sprint Classic",
-      100.0,
+      97.7,
+      0,
       0,
       0,
       0.0,
-      0.0,
-      0.5
+      0.4
     ],
     [
-      "Laura Kinybaeyeva",
-      6958,
+      "Kseniya Shalygina",
+      5390,
       "Sprint Classic",
-      56.7,
+      63.0,
       0,
       0,
-      0.0,
-      0.2,
-      3.2
-    ],
-    [
-      "Angelina Shuryga",
-      1509,
-      "Sprint Classic",
-      3.4,
       0,
-      0,
-      0.0,
       0.1,
-      1.4
+      0.8
     ]
   ]
 }
