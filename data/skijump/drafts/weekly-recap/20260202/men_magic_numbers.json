@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Domen Prevc",
+      1868,
+      1,
+      1614,
+      1001
+    ],
+    [
+      "Ryoyu Kobayashi",
+      1637,
+      2,
+      989,
+      376
+    ],
+    [
+      "Ren Nikaido",
+      2283,
+      3,
+      921,
+      308
+    ],
+    [
+      "Anze Lanisek",
+      1166,
+      4,
+      767,
+      154
+    ],
+    [
+      "Daniel Tschofenig",
+      2542,
+      5,
+      745,
+      132
+    ],
+    [
+      "Philipp Raimund",
+      2401,
+      6,
+      743,
+      130
+    ],
+    [
+      "Jan Hörl",
+      2416,
+      7,
+      720,
+      107
+    ],
+    [
+      "Felix Hoffmann",
+      1893,
+      8,
+      652,
+      39
+    ],
+    [
+      "Stephan Embacher",
+      2638,
+      9,
+      615,
+      2
+    ]
+  ]
+}

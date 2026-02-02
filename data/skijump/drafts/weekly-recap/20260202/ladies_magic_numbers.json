@@ -1,0 +1,40 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Current_Place",
+    "Points",
+    "Magic_Number"
+  ],
+  "rows": [
+    [
+      "Nika Prevc",
+      426,
+      1,
+      1936,
+      901
+    ],
+    [
+      "Nozomi Maruyama",
+      222,
+      2,
+      1450,
+      415
+    ],
+    [
+      "Lisa Eder",
+      337,
+      3,
+      1133,
+      98
+    ],
+    [
+      "Anna Odine Strøm",
+      44,
+      4,
+      1053,
+      18
+    ]
+  ]
+}
