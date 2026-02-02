@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Nordic Combined Predictions"
-date: 2026-02-02T18:38:08+00:00
+date: 2026-02-02T23:50:46+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "nordic-combined"]
 ---

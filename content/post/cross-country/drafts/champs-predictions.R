@@ -231,6 +231,56 @@ log_info(paste("PELO pct range - Ladies:", round(min(ladies_chrono$Pelo_pct, na.
 
 log_info("Individual train setup complete - chrono data filtered, imputed, with points, prev_points_weighted, and pct columns")
 
+# Helper function: Iterative constrained normalization
+# This properly handles the case where some athletes hit the 100% cap
+# by locking capped athletes and only normalizing the remaining probability budget
+normalize_with_cap <- function(probs, target_sum, max_prob = 1.0, max_iterations = 100) {
+  if (sum(probs, na.rm = TRUE) == 0) {
+    # Edge case: all zeros - distribute evenly
+    return(rep(target_sum / length(probs), length(probs)))
+  }
+
+  for (iter in 1:max_iterations) {
+    # Identify capped vs uncapped
+    capped <- probs >= max_prob
+
+    # Lock capped values at max_prob
+    probs[capped] <- max_prob
+
+    # Calculate remaining budget for uncapped athletes
+    capped_total <- sum(capped) * max_prob
+    remaining_target <- target_sum - capped_total
+    uncapped_sum <- sum(probs[!capped], na.rm = TRUE)
+
+    if (remaining_target <= 0) {
+      # Edge case: too many athletes at cap - cap everyone who's capped,
+      # set others to 0 (target exceeded by capped athletes alone)
+      probs[!capped] <- 0
+      break
+    }
+
+    if (uncapped_sum <= 0) {
+      # Edge case: no probability mass in uncapped - distribute remaining evenly
+      n_uncapped <- sum(!capped)
+      if (n_uncapped > 0) {
+        probs[!capped] <- remaining_target / n_uncapped
+      }
+      break
+    }
+
+    # Scale only uncapped values to hit remaining target
+    scaling_factor <- remaining_target / uncapped_sum
+    probs[!capped] <- probs[!capped] * scaling_factor
+
+    # Check if any newly exceed cap - if not, we've converged
+    if (!any(probs[!capped] > max_prob, na.rm = TRUE)) {
+      break
+    }
+  }
+
+  return(probs)
+}
+
 # PART 2: INDIVIDUAL RACES - TRAIN EXECUTION
 log_info("=== PART 2: INDIVIDUAL RACES - TRAIN EXECUTION ===")
 
@@ -994,50 +1044,22 @@ for (race_name in names(results_list)) {
     log_info(sprintf("    %s: %.4f (target: %.1f)", col, initial_sum, threshold))
   }
 
-  # PHASE 1: Initial normalization with capping and redistribution
+  # PHASE 1: Initial normalization with iterative constrained capping
+  # This properly handles athletes at the 100% cap by locking them and
+  # distributing remaining probability budget among uncapped athletes
   for (i in seq_along(prob_cols)) {
     col <- prob_cols[i]
     threshold <- position_thresholds[i]
-    target_sum <- threshold  # Target sum (1.0 for win, 3.0 for podium, etc.)
 
-    current_sum <- sum(race_results[[col]], na.rm = TRUE)
+    probs_before <- race_results[[col]]
+    n_capped_before <- sum(probs_before >= 1.0, na.rm = TRUE)
 
-    if (current_sum > 0) {
-      # Apply scaling factor
-      scaling_factor <- target_sum / current_sum
-      race_results[[col]] <- race_results[[col]] * scaling_factor
+    # Apply iterative constrained normalization
+    race_results[[col]] <- normalize_with_cap(race_results[[col]], target_sum = threshold, max_prob = 1.0)
 
-      # Cap individual probabilities at 1.0 (100%)
-      over_one <- which(race_results[[col]] > 1.0)
-      if (length(over_one) > 0) {
-        log_info(sprintf("    Capping %d skiers with >100%% for %s", length(over_one), col))
-
-        # Calculate excess probability to redistribute
-        excess <- sum(race_results[[col]][over_one] - 1.0)
-
-        # Cap at 1.0
-        race_results[[col]][over_one] <- 1.0
-
-        # Redistribute excess to others proportionally
-        under_one <- which(race_results[[col]] < 1.0)
-        if (length(under_one) > 0 && excess > 0) {
-          under_sum <- sum(race_results[[col]][under_one])
-          if (under_sum > 0) {
-            redistrib_factor <- (under_sum + excess) / under_sum
-            race_results[[col]][under_one] <- race_results[[col]][under_one] * redistrib_factor
-
-            # Recursive cap if needed
-            if (any(race_results[[col]][under_one] > 1.0)) {
-              log_info("    Recursive capping after redistribution")
-              race_results[[col]][race_results[[col]] > 1.0] <- 1.0
-            }
-          }
-        }
-      }
-    } else {
-      # Zero sum - distribute evenly
-      log_warn(paste("    Zero sum for", col, "- distributing evenly"))
-      race_results[[col]] <- target_sum / nrow(race_results)
+    n_capped_after <- sum(race_results[[col]] >= 1.0, na.rm = TRUE)
+    if (n_capped_after > 0) {
+      log_info(sprintf("    %s: %d athletes at 100%% cap", col, n_capped_after))
     }
   }
 
@@ -1088,22 +1110,14 @@ for (race_name in names(results_list)) {
     race_results$top30_prob[row_i] <- probs[5]
   }
 
-  # PHASE 3: Re-normalize after monotonic adjustment
-  log_info("  Re-normalizing after monotonic constraints...")
+  # PHASE 3: Re-normalize after monotonic adjustment using iterative constrained normalization
+  log_info("  Re-normalizing after monotonic constraints (iterative constrained)...")
   for (i in seq_along(prob_cols)) {
     col <- prob_cols[i]
     threshold <- position_thresholds[i]
-    target_sum <- threshold
 
-    current_sum <- sum(race_results[[col]], na.rm = TRUE)
-
-    if (current_sum > 0) {
-      scaling_factor <- target_sum / current_sum
-      race_results[[col]] <- race_results[[col]] * scaling_factor
-
-      # Cap at 1.0 again
-      race_results[[col]][race_results[[col]] > 1.0] <- 1.0
-    }
+    # Apply iterative constrained normalization - preserves athletes at 100% cap
+    race_results[[col]] <- normalize_with_cap(race_results[[col]], target_sum = threshold, max_prob = 1.0)
   }
 
   # PHASE 4: Final cap at start_prob - COMMENTED OUT FOR TESTING (2026-02-01)
@@ -2552,47 +2566,21 @@ process_relay_races <- function() {
     initial_totals <- get_totals()
     log_info(paste("  Initial totals:", paste(round(initial_totals, 4), collapse = ", ")))
 
-    # PHASE 1: Normalize with capping and redistribution
-    log_info("  Phase 1: Normalizing with capping...")
+    # PHASE 1: Normalize with iterative constrained capping
+    log_info("  Phase 1: Normalizing with iterative constrained capping...")
     for (i in 1:4) {
       threshold_name <- threshold_names[i]
       target <- expected_totals[i]
-      current_sum <- sum(sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
 
-      if (current_sum > 0) {
-        scaling_factor <- target / current_sum
+      # Extract probabilities as a vector
+      probs <- sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob)
 
-        # Apply scaling
-        for (country in countries) {
-          all_predictions[[country]]$predictions[[threshold_name]]$team_prob <-
-            all_predictions[[country]]$predictions[[threshold_name]]$team_prob * scaling_factor
-        }
+      # Apply iterative constrained normalization
+      normalized_probs <- normalize_with_cap(probs, target_sum = target, max_prob = 1.0)
 
-        # Cap at 1.0 and redistribute
-        over_one <- sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob > 1.0)
-        if (any(over_one)) {
-          excess <- sum(sapply(countries[over_one], function(c)
-            all_predictions[[c]]$predictions[[threshold_name]]$team_prob - 1.0))
-
-          # Cap
-          for (country in countries[over_one]) {
-            all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- 1.0
-          }
-
-          # Redistribute to under-1.0 countries
-          under_one <- !over_one
-          if (any(under_one) && excess > 0) {
-            under_sum <- sum(sapply(countries[under_one], function(c)
-              all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
-            if (under_sum > 0) {
-              redistrib_factor <- (under_sum + excess) / under_sum
-              for (country in countries[under_one]) {
-                new_prob <- all_predictions[[country]]$predictions[[threshold_name]]$team_prob * redistrib_factor
-                all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- min(new_prob, 1.0)
-              }
-            }
-          }
-        }
+      # Put back into structure
+      for (j in seq_along(countries)) {
+        all_predictions[[countries[j]]]$predictions[[threshold_name]]$team_prob <- normalized_probs[j]
       }
     }
 
@@ -2619,19 +2607,21 @@ process_relay_races <- function() {
       all_predictions[[country]]$predictions$threshold_10$team_prob <- probs[4]
     }
 
-    # PHASE 3: Re-normalize after monotonic adjustment
-    log_info("  Phase 3: Re-normalizing...")
+    # PHASE 3: Re-normalize after monotonic adjustment using iterative constrained normalization
+    log_info("  Phase 3: Re-normalizing (iterative constrained)...")
     for (i in 1:4) {
       threshold_name <- threshold_names[i]
       target <- expected_totals[i]
-      current_sum <- sum(sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
 
-      if (current_sum > 0) {
-        scaling_factor <- target / current_sum
-        for (country in countries) {
-          new_prob <- all_predictions[[country]]$predictions[[threshold_name]]$team_prob * scaling_factor
-          all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- min(new_prob, 1.0)
-        }
+      # Extract probabilities as a vector
+      probs <- sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob)
+
+      # Apply iterative constrained normalization
+      normalized_probs <- normalize_with_cap(probs, target_sum = target, max_prob = 1.0)
+
+      # Put back into structure
+      for (j in seq_along(countries)) {
+        all_predictions[[countries[j]]]$predictions[[threshold_name]]$team_prob <- normalized_probs[j]
       }
     }
 
@@ -3964,47 +3954,21 @@ process_ts_races <- function() {
     initial_totals <- get_totals()
     log_info(paste("  Initial totals:", paste(round(initial_totals, 4), collapse = ", ")))
 
-    # PHASE 1: Normalize with capping and redistribution
-    log_info("  Phase 1: Normalizing with capping...")
+    # PHASE 1: Normalize with iterative constrained capping
+    log_info("  Phase 1: Normalizing with iterative constrained capping...")
     for (i in 1:4) {
       threshold_name <- threshold_names[i]
       target <- expected_totals[i]
-      current_sum <- sum(sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
 
-      if (current_sum > 0) {
-        scaling_factor <- target / current_sum
+      # Extract probabilities as a vector
+      probs <- sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob)
 
-        # Apply scaling
-        for (country in countries) {
-          all_predictions[[country]]$predictions[[threshold_name]]$team_prob <-
-            all_predictions[[country]]$predictions[[threshold_name]]$team_prob * scaling_factor
-        }
+      # Apply iterative constrained normalization
+      normalized_probs <- normalize_with_cap(probs, target_sum = target, max_prob = 1.0)
 
-        # Cap at 1.0 and redistribute
-        over_one <- sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob > 1.0)
-        if (any(over_one)) {
-          excess <- sum(sapply(countries[over_one], function(c)
-            all_predictions[[c]]$predictions[[threshold_name]]$team_prob - 1.0))
-
-          # Cap
-          for (country in countries[over_one]) {
-            all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- 1.0
-          }
-
-          # Redistribute to under-1.0 countries
-          under_one <- !over_one
-          if (any(under_one) && excess > 0) {
-            under_sum <- sum(sapply(countries[under_one], function(c)
-              all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
-            if (under_sum > 0) {
-              redistrib_factor <- (under_sum + excess) / under_sum
-              for (country in countries[under_one]) {
-                new_prob <- all_predictions[[country]]$predictions[[threshold_name]]$team_prob * redistrib_factor
-                all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- min(new_prob, 1.0)
-              }
-            }
-          }
-        }
+      # Put back into structure
+      for (j in seq_along(countries)) {
+        all_predictions[[countries[j]]]$predictions[[threshold_name]]$team_prob <- normalized_probs[j]
       }
     }
 
@@ -4031,19 +3995,21 @@ process_ts_races <- function() {
       all_predictions[[country]]$predictions$threshold_10$team_prob <- probs[4]
     }
 
-    # PHASE 3: Re-normalize after monotonic adjustment
-    log_info("  Phase 3: Re-normalizing...")
+    # PHASE 3: Re-normalize after monotonic adjustment using iterative constrained normalization
+    log_info("  Phase 3: Re-normalizing (iterative constrained)...")
     for (i in 1:4) {
       threshold_name <- threshold_names[i]
       target <- expected_totals[i]
-      current_sum <- sum(sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob))
 
-      if (current_sum > 0) {
-        scaling_factor <- target / current_sum
-        for (country in countries) {
-          new_prob <- all_predictions[[country]]$predictions[[threshold_name]]$team_prob * scaling_factor
-          all_predictions[[country]]$predictions[[threshold_name]]$team_prob <- min(new_prob, 1.0)
-        }
+      # Extract probabilities as a vector
+      probs <- sapply(countries, function(c) all_predictions[[c]]$predictions[[threshold_name]]$team_prob)
+
+      # Apply iterative constrained normalization
+      normalized_probs <- normalize_with_cap(probs, target_sum = target, max_prob = 1.0)
+
+      # Put back into structure
+      for (j in seq_along(countries)) {
+        all_predictions[[countries[j]]]$predictions[[threshold_name]]$team_prob <- normalized_probs[j]
       }
     }
 

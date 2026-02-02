@@ -291,6 +291,53 @@ Created `content/post/methods/champs-predictions.md` documenting:
 
 ## Recent Changes
 
+### Iterative Constrained Normalization Fix (2026-02-02)
+
+**Issue:** The normalization process in champs-predictions.R had two problems:
+1. Athletes at the 100% cap were being re-normalized in Phase 3, unfairly reducing their probability
+2. After capping at 100%, the excess was not properly redistributed, causing sums to not match targets
+
+**Problem Example:**
+- Athlete A has raw prob that normalizes to 95%, gets capped at 100% in Phase 1
+- Phase 2 applies monotonic constraints, changing total sum
+- Phase 3 re-normalizes by scaling everyone equally
+- Result: Athlete A's "true" 100% gets scaled down to 85% (unfair penalty)
+
+**Solution:** Implemented `normalize_with_cap()` helper function that:
+1. Locks athletes at the 100% cap - they don't participate in further normalization
+2. Distributes remaining probability budget only among uncapped athletes
+3. Iterates until convergence (if scaling pushes new athletes above cap, cap them and repeat)
+
+**Algorithm:**
+```r
+normalize_with_cap <- function(probs, target_sum, max_prob = 100) {
+  repeat {
+    capped <- probs >= max_prob
+    probs[capped] <- max_prob
+
+    remaining_target <- target_sum - sum(capped) * max_prob
+    uncapped_sum <- sum(probs[!capped])
+
+    probs[!capped] <- probs[!capped] * (remaining_target / uncapped_sum)
+
+    if (!any(probs[!capped] > max_prob)) break
+  }
+  return(probs)
+}
+```
+
+**Files Updated (all 5 sports):**
+- `content/post/alpine/drafts/champs-predictions.R`
+- `content/post/biathlon/drafts/champs-predictions.R`
+- `content/post/cross-country/drafts/champs-predictions.R` (including relay and team sprint sections)
+- `content/post/nordic-combined/drafts/champs-predictions.R`
+- `content/post/skijump/drafts/champs-predictions.R`
+
+**Changes in each file:**
+1. Added `normalize_with_cap()` helper function
+2. Updated Phase 1 to use iterative constrained normalization
+3. Updated Phase 3 to use iterative constrained normalization
+
 ### Magic Number Calculation Bug Fix (2026-02-02)
 
 **Issue:** Cross-country magic number calculation was missing Skiathlon races (technique "P"). The `calculate_remaining_races()` function only handled techniques "", "C", and "F" but not "P".

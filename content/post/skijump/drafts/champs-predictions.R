@@ -159,6 +159,56 @@ calculate_team_prev_points <- function(team_members, event_date, race_type, indi
   return(team_avg)
 }
 
+# Helper function: Iterative constrained normalization
+# This properly handles the case where some athletes hit the cap (100% or max_prob)
+# by locking capped athletes and only normalizing the remaining probability budget
+normalize_with_cap <- function(probs, target_sum, max_prob = 100, max_iterations = 100) {
+  if (sum(probs, na.rm = TRUE) == 0) {
+    # Edge case: all zeros - distribute evenly
+    return(rep(target_sum / length(probs), length(probs)))
+  }
+
+  for (iter in 1:max_iterations) {
+    # Identify capped vs uncapped
+    capped <- probs >= max_prob
+
+    # Lock capped values at max_prob
+    probs[capped] <- max_prob
+
+    # Calculate remaining budget for uncapped athletes
+    capped_total <- sum(capped) * max_prob
+    remaining_target <- target_sum - capped_total
+    uncapped_sum <- sum(probs[!capped], na.rm = TRUE)
+
+    if (remaining_target <= 0) {
+      # Edge case: too many athletes at cap - cap everyone who's capped,
+      # set others to 0 (target exceeded by capped athletes alone)
+      probs[!capped] <- 0
+      break
+    }
+
+    if (uncapped_sum <= 0) {
+      # Edge case: no probability mass in uncapped - distribute remaining evenly
+      n_uncapped <- sum(!capped)
+      if (n_uncapped > 0) {
+        probs[!capped] <- remaining_target / n_uncapped
+      }
+      break
+    }
+
+    # Scale only uncapped values to hit remaining target
+    scaling_factor <- remaining_target / uncapped_sum
+    probs[!capped] <- probs[!capped] * scaling_factor
+
+    # Check if any newly exceed cap - if not, we've converged
+    if (!any(probs[!capped] > max_prob, na.rm = TRUE)) {
+      break
+    }
+  }
+
+  return(probs)
+}
+
 # Normalization function for position probabilities (5-phase approach)
 # Phase 1: Scale to target sum with capping and redistribution
 # Phase 2: Apply monotonic constraints + cap at start_prob
@@ -185,8 +235,10 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     }
   }
 
-  # PHASE 1: Scale + cap + redistribute for each threshold
-  log_info("PHASE 1: Scaling, capping at 100%, and redistributing excess...")
+  # PHASE 1: Initial normalization with iterative constrained capping
+  # This properly handles athletes at the 100% cap by locking them and
+  # distributing remaining probability budget among uncapped athletes
+  log_info("PHASE 1: Iterative constrained normalization...")
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
 
@@ -196,45 +248,17 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     #   normalized[[prob_col]] <- normalized[[prob_col]] * normalized[[race_prob_col]]
     # }
 
-    # Calculate the current sum
-    current_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
-
     # Target sum should be 100 * threshold (e.g., 100% for top 1, 300% for top 3)
     target_sum <- 100 * threshold
 
-    # Normalize only if current sum is not zero to avoid division by zero
-    if(current_sum > 0) {
-      # Apply scaling factor to adjust the probabilities
-      scaling_factor <- target_sum / current_sum
-      normalized[[prob_col]] <- normalized[[prob_col]] * scaling_factor
+    n_capped_before <- sum(normalized[[prob_col]] >= 100, na.rm = TRUE)
 
-      # Cap individual probabilities at 100%
-      over_hundred <- which(normalized[[prob_col]] > 100)
-      if(length(over_hundred) > 0) {
-        log_info(sprintf("  Capping %d participants with >100%% probability for %s",
-                         length(over_hundred), prob_col))
+    # Apply iterative constrained normalization (max_prob = 100 for percentage scale)
+    normalized[[prob_col]] <- normalize_with_cap(normalized[[prob_col]], target_sum = target_sum, max_prob = 100)
 
-        # Calculate excess probability that needs to be redistributed
-        excess <- sum(normalized[[prob_col]][over_hundred] - 100)
-
-        # Cap values at 100%
-        normalized[[prob_col]][over_hundred] <- 100
-
-        # Redistribute the excess to other participants proportionally
-        under_hundred <- which(normalized[[prob_col]] < 100)
-        if(length(under_hundred) > 0 && excess > 0) {
-          under_sum <- sum(normalized[[prob_col]][under_hundred])
-          if(under_sum > 0) {
-            redistrib_factor <- (under_sum + excess) / under_sum
-            normalized[[prob_col]][under_hundred] <- normalized[[prob_col]][under_hundred] * redistrib_factor
-            # Final cap if redistribution pushed values over 100%
-            normalized[[prob_col]][normalized[[prob_col]] > 100] <- 100
-          }
-        }
-      }
-    } else {
-      log_warn(paste("Zero sum for", prob_col, "- distributing evenly"))
-      normalized[[prob_col]] <- target_sum / nrow(normalized)
+    n_capped_after <- sum(normalized[[prob_col]] >= 100, na.rm = TRUE)
+    if(n_capped_after > 0) {
+      log_info(sprintf("    %s: %d athletes at 100%% cap", prob_col, n_capped_after))
     }
   }
 
@@ -276,19 +300,14 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     }
   }
 
-  # PHASE 3: Re-normalize after monotonic adjustments
-  log_info("PHASE 3: Re-normalizing after monotonic constraints...")
+  # PHASE 3: Re-normalize after monotonic adjustment using iterative constrained normalization
+  log_info("PHASE 3: Re-normalizing after monotonic constraints (iterative constrained)...")
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
-    current_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
     target_sum <- 100 * threshold
 
-    if(current_sum > 0 && abs(current_sum - target_sum) > 0.01) {
-      scaling_factor <- target_sum / current_sum
-      normalized[[prob_col]] <- normalized[[prob_col]] * scaling_factor
-      # Cap at 100% again
-      normalized[[prob_col]][normalized[[prob_col]] > 100] <- 100
-    }
+    # Apply iterative constrained normalization - preserves athletes at 100% cap
+    normalized[[prob_col]] <- normalize_with_cap(normalized[[prob_col]], target_sum = target_sum, max_prob = 100)
   }
 
   # PHASE 4: Final cap at start_prob - COMMENTED OUT FOR TESTING (2026-02-01)
