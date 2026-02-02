@@ -157,6 +157,42 @@ Documentation describes ~3 phases but code uses 7 phases:
 - ~~Write methodology documentation for `champs-predictions.R`~~ (DONE 2026-01-31)
 - ~~Write methodology documentation for Elo calculations~~ (DONE 2026-02-01)
 - ~~Write methodology documentation for ranks calculations~~ (DONE 2026-02-01)
+- ~~Write methodology documentation for weekly recap~~ (DONE 2026-02-02)
+
+### Weekly Recap Improvements (2026-02-02)
+
+**Column Naming Improvements:**
+Updated ALL 5 sports' race-recap2.R files to use user-friendly column names:
+
+1. **Elo Change Section:**
+   - `Current_Elo` → `Current Elo`
+   - `Previous_Week_Elo` → `Previous Elo`
+   - `Elo_Change` → `Change`
+
+2. **Magic Numbers Section:**
+   - `Current_Place` → `Rank`
+   - `Magic_Number` → `Magic #`
+
+**Files Updated:**
+- `content/post/alpine/drafts/race-recap2.R`
+- `content/post/biathlon/drafts/race-recap2.R`
+- `content/post/cross-country/drafts/race-recap2.R`
+- `content/post/nordic-combined/drafts/race-recap2.R`
+- `content/post/skijump/drafts/race-recap2.R`
+
+**Methodology Documentation:**
+Created `content/post/methods/race-recap.md` documenting:
+- Elo change tracking methodology
+- Monte Carlo season simulation (formula, noise model, iterations)
+- Magic number calculation with mathematical definition
+- Points remaining calculation per sport
+- Technical notes on date handling and edge cases
+
+**Shell Script Update:**
+Updated `weekly-recap.sh` to include methodology link in generated posts:
+```markdown
+*For details on how these predictions are generated, see the [Weekly Recap Methodology](/post/methods/race-recap/).*
+```
 
 ### Start Probability Testing (2026-02-01)
 
@@ -254,6 +290,35 @@ Created `content/post/methods/champs-predictions.md` documenting:
 ---
 
 ## Recent Changes
+
+### Magic Number Calculation Bug Fix (2026-02-02)
+
+**Issue:** Cross-country magic number calculation was missing Skiathlon races (technique "P"). The `calculate_remaining_races()` function only handled techniques "", "C", and "F" but not "P".
+
+**Impact:** Magic numbers were undercounted by 100 points per Skiathlon race remaining. For Feb 2, 2026, this meant 800 points calculated instead of 900 points (missing Falun 20P on 03/01).
+
+**Fix:** Added Skiathlon handling in `content/post/cross-country/drafts/race-recap2.R`:
+```r
+is_distance & technique_clean == "P" & is_world_cup ~ "WC_Distance",  # Skiathlon
+is_distance & technique_clean == "P" & is_stage_race ~ "Stage_Distance",  # Skiathlon
+```
+
+**Audit Results (all sports checked):**
+- Alpine: OK - All disciplines mapped correctly
+- Biathlon: OK - All race types mapped correctly
+- Cross-Country: FIXED - Skiathlon was missing
+- Nordic Combined: OK - All race types mapped correctly
+- Ski Jumping: OK - All race types mapped correctly
+
+### Biathlon Champs-Predictions ID Column Fix (2026-02-02)
+
+**Issue:** Biathlon champs-predictions.R was missing the ID column in `prepare_startlist_data()`, causing "Column `ID` doesn't exist" error.
+
+**Fix:** Added ID to the select statement at line 577:
+```r
+base_df <- startlist %>%
+  dplyr::select(Skier, ID, Nation, Price, all_of(race_prob_cols), any_of(elo_cols))
+```
 
 ### Final Monotonic Constraint in Race Picks (2026-01-31)
 

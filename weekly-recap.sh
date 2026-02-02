@@ -112,6 +112,8 @@ date:       ${FORMATTED_DATE}
 author:     "Syver Johansen"
 ---
 
+*For details on how these predictions are generated, see the [Weekly Recap Methodology](/post/methods/race-recap/).*
+
 ## Cross Country Skiing
 
 EOF

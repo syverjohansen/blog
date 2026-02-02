@@ -137,10 +137,18 @@ generate_weekly_elo_change <- function(chrono_data, gender, base_dir) {
   # Sort by Elo change (descending)
   elo_changes <- elo_changes %>%
     arrange(desc(Elo_Change))
-  
+
+  # Rename columns for user-friendly display
+  elo_changes_display <- elo_changes %>%
+    rename(
+      `Current Elo` = Current_Elo,
+      `Previous Elo` = Previous_Week_Elo,
+      `Change` = Elo_Change
+    )
+
   # Save to Excel
   file_path <- file.path(week_dir, paste0(gender, "_elo_change.xlsx"))
-  write_xlsx(elo_changes, file_path)
+  write_xlsx(elo_changes_display, file_path)
   
   # Create a top gainers/losers summary
   top_gainers <- elo_changes %>%
@@ -1428,8 +1436,13 @@ calculate_magic_numbers_alpine <- function(standings_df, remaining_races_by_gend
     ) %>%
     filter(Mathematical_Chance == TRUE) %>%
     select(Skier, ID, Current_Place, Points, Magic_Number) %>%
-    arrange(Current_Place)
-  
+    arrange(Current_Place) %>%
+    # Rename columns for user-friendly display
+    rename(
+      `Rank` = Current_Place,
+      `Magic #` = Magic_Number
+    )
+
   return(magic_numbers)
 }
 
