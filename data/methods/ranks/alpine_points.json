@@ -1,0 +1,9 @@
+{
+  "headers": ["Event", "1st", "2nd", "3rd"],
+  "rows": [
+    ["Olympics", 80, 40, 20],
+    ["World Championships", 40, 20, 10],
+    ["World Cup", 8, 4, 4],
+    ["Standings", 80, 40, 20]
+  ]
+}

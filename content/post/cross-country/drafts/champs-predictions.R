@@ -910,16 +910,22 @@ process_individual_races <- function() {
   # Check if the race probability column exists in the current startlist
   if (race_col %in% names(startlist_clean)) {
     # Add start probabilities to results dataframe
+    # NOTE: Start probability multiplication commented out for testing (2026-02-01)
     race_results <- race_results %>%
       left_join(startlist_clean %>% select(ID, !!sym(race_col)), by = "ID") %>%
       mutate(
         start_prob = get(race_col),
-        # Multiply position probabilities by start probabilities
-        win_prob = raw_win_prob * start_prob,
-        podium_prob = raw_podium_prob * start_prob,
-        top5_prob = raw_top5_prob * start_prob,
-        top10_prob = raw_top10_prob * start_prob,
-        top30_prob = raw_top30_prob * start_prob
+        # Multiply position probabilities by start probabilities - COMMENTED OUT FOR TESTING
+        # win_prob = raw_win_prob * start_prob,
+        # podium_prob = raw_podium_prob * start_prob,
+        # top5_prob = raw_top5_prob * start_prob,
+        # top10_prob = raw_top10_prob * start_prob,
+        # top30_prob = raw_top30_prob * start_prob
+        win_prob = raw_win_prob,
+        podium_prob = raw_podium_prob,
+        top5_prob = raw_top5_prob,
+        top10_prob = raw_top10_prob,
+        top30_prob = raw_top30_prob
       ) %>%
       arrange(desc(win_prob))
   } else {

@@ -1,0 +1,9 @@
+{
+  "headers": ["Athlete", "End-of-Season Elo", "After Discount"],
+  "rows": [
+    ["Top Performer", 1600, 1555],
+    ["Average Performer", 1400, 1395],
+    ["New Athlete", 1300, 1300],
+    ["Struggling", 1200, 1245]
+  ]
+}

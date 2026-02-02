@@ -1,0 +1,10 @@
+{
+  "headers": ["Event", "Individual", "Team"],
+  "rows": [
+    ["Olympics", "80/40/20", "20/10/5"],
+    ["World Championships", "40/20/10", "10/5/2.5"],
+    ["4 Hills Tournament", "20/10/5", "10/5/2.5"],
+    ["Ski Flying WC", "20/10/5", "10/5/2.5"],
+    ["World Cup", "8/4/4", "2/1/1"]
+  ]
+}

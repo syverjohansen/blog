@@ -156,7 +156,44 @@ Documentation describes ~3 phases but code uses 7 phases:
 - ~~Fix race-picks.md with corrections above~~ (DONE 2026-01-31)
 - ~~Write methodology documentation for `champs-predictions.R`~~ (DONE 2026-01-31)
 - ~~Write methodology documentation for Elo calculations~~ (DONE 2026-02-01)
-- Write methodology documentation for ranks calculations
+- ~~Write methodology documentation for ranks calculations~~ (DONE 2026-02-01)
+
+### Start Probability Testing (2026-02-01)
+
+Commented out start_prob multiplication in all 5 champs-predictions.R files for testing:
+- Alpine: Lines 139-150
+- Biathlon: Lines 182-193
+- Cross-Country: Lines 917-922 (different structure)
+- Nordic Combined: Lines 191-202
+- Ski Jumping: Lines 193-196 (inside Phase 1)
+
+All marked with: `# NOTE: Start probability multiplication commented out for testing (2026-02-01)`
+
+### Methodology Page Dates (2026-02-01)
+
+Updated all methodology page dates to 2020-01-01 to hide from post feed:
+- elo-calculations.md
+- ranks.md
+- champs-predictions.md
+- race-picks.md
+
+### Methodology Documentation Improvements (2026-02-01)
+
+1. **ranks.md** - Converted to use datatable shortcodes for better readability
+   - Created JSON data files in `data/methods/ranks/`
+   - Tables: base_points, race_modifiers, alpine_points, biathlon_points, crosscountry_points, nordic_combined_points, skijump_points, output_columns
+
+2. **elo-calculations.md** - Fixed and improved
+   - Fixed formula: End Elo = Elo x 0.85 + 1300 x 0.15 (not "Pre-race Elo")
+   - Added example race showing how Elo changes
+   - Added season discount example
+   - Created JSON data files in `data/methods/elo/`
+
+3. **ranks-table.html fixes** - Fixed sport-specific columns
+   - Alpine: Removed Tour de Ski column (doesn't exist for alpine)
+   - Biathlon: Removed Tour de Ski column (doesn't exist for biathlon)
+   - Nordic Combined: Removed Tour de Ski column (doesn't exist for NC)
+   - Ski Jumping: Replaced Tour de Ski with 4 Hills + Ski Flying WC + World Cup columns
 
 ### Elo Calculations Documentation (2026-02-01)
 

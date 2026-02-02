@@ -1,0 +1,8 @@
+{
+  "headers": ["Race Type", "Points Multiplier"],
+  "rows": [
+    ["Individual", "1.0x (full points)"],
+    ["Team Sprint / Single Mixed Relay", "0.5x"],
+    ["Relay / Team", "0.25x"]
+  ]
+}

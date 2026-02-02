@@ -1,0 +1,13 @@
+{
+  "headers": ["Sport", "Event Type", "K Adjustment"],
+  "rows": [
+    ["Alpine", "Combined", "K x 0.8"],
+    ["Biathlon", "Relay, Mixed Relay", "K / 4"],
+    ["Biathlon", "Single Mixed Relay", "K / 2"],
+    ["Cross-Country", "Relay", "K / 4"],
+    ["Cross-Country", "Team Sprint", "K / 2"],
+    ["Nordic Combined", "Team", "K / 4"],
+    ["Nordic Combined", "Team Sprint", "K / 2"],
+    ["Ski Jumping", "Team Events", "K / 4"]
+  ]
+}

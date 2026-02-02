@@ -179,18 +179,19 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     }
   }
 
+  # NOTE: Start probability multiplication commented out for testing (2026-02-01)
   # Apply start probability adjustment BEFORE normalization
-  for(threshold in position_thresholds) {
-    prob_col <- paste0("prob_top", threshold)
-    if(race_prob_col %in% names(normalized)) {
-      # Multiply by start probability (on same scale)
-      if(max(normalized[[race_prob_col]], na.rm = TRUE) <= 1) {
-        normalized[[prob_col]] <- normalized[[prob_col]] * normalized[[race_prob_col]]
-      } else {
-        normalized[[prob_col]] <- normalized[[prob_col]] * (normalized[[race_prob_col]] / 100)
-      }
-    }
-  }
+  # for(threshold in position_thresholds) {
+  #   prob_col <- paste0("prob_top", threshold)
+  #   if(race_prob_col %in% names(normalized)) {
+  #     # Multiply by start probability (on same scale)
+  #     if(max(normalized[[race_prob_col]], na.rm = TRUE) <= 1) {
+  #       normalized[[prob_col]] <- normalized[[prob_col]] * normalized[[race_prob_col]]
+  #     } else {
+  #       normalized[[prob_col]] <- normalized[[prob_col]] * (normalized[[race_prob_col]] / 100)
+  #     }
+  #   }
+  # }
 
   # PHASE 1: Initial normalization with capping and redistribution
   log_info("  PHASE 1: Initial normalization with capping...")

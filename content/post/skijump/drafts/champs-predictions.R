@@ -190,10 +190,11 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
 
+    # NOTE: Start probability multiplication commented out for testing (2026-02-01)
     # First, adjust by race participation probability
-    if(race_prob_col %in% names(normalized)) {
-      normalized[[prob_col]] <- normalized[[prob_col]] * normalized[[race_prob_col]]
-    }
+    # if(race_prob_col %in% names(normalized)) {
+    #   normalized[[prob_col]] <- normalized[[prob_col]] * normalized[[race_prob_col]]
+    # }
 
     # Calculate the current sum
     current_sum <- sum(normalized[[prob_col]], na.rm = TRUE)

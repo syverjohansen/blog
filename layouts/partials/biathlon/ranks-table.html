@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let sortDir = 'asc';
                 let filteredData = [...data];
 
-                // Build header
+                // Build header - Biathlon has no Tour de Ski
                 const thead = table.querySelector('thead');
                 thead.innerHTML = `<tr>
                     <th class="sticky-col" data-col="rank">Rank</th>
@@ -193,7 +193,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <th class="sticky-col-3" data-col="Nation">Nation</th>
                     <th data-col="Olympics">Olympics</th>
                     <th data-col="WSC">World Champs</th>
-                    <th data-col="Tour">Tour de Ski</th>
                     <th data-col="WC">World Cup</th>
                     <th data-col="Table">Standings</th>
                     <th data-col="Total">Total</th>
@@ -231,7 +230,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             <td class="sticky-col-3">${row.Nation || ''}</td>
                             <td class="numeric">${row.Olympics ? row.Olympics.toFixed(1) : '0'}</td>
                             <td class="numeric">${row.WSC ? row.WSC.toFixed(1) : '0'}</td>
-                            <td class="numeric">${row.Tour ? row.Tour.toFixed(1) : '0'}</td>
                             <td class="numeric">${row.WC ? row.WC.toFixed(1) : '0'}</td>
                             <td class="numeric">${row.Table ? row.Table.toFixed(1) : '0'}</td>
                             <td class="numeric">${row.Total ? row.Total.toFixed(1) : '0'}</td>
@@ -305,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(err => {
                 console.error('Failed to load rankings:', err);
-                table.querySelector('tbody').innerHTML = '<tr><td colspan="9">Error loading rankings data</td></tr>';
+                table.querySelector('tbody').innerHTML = '<tr><td colspan="8">Error loading rankings data</td></tr>';
             });
     }
 

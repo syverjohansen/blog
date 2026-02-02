@@ -1,0 +1,15 @@
+{
+  "headers": ["Column", "Description"],
+  "rows": [
+    ["Skier", "Athlete name"],
+    ["Nation", "Country code"],
+    ["Olympics", "Points from Olympic Games"],
+    ["WSC", "Points from World Championships"],
+    ["WC", "Points from World Cup events"],
+    ["Table", "Points from overall standings"],
+    ["Total", "Sum of all points"],
+    ["From", "First season with points"],
+    ["To", "Most recent season with points"],
+    ["Age", "Current age"]
+  ]
+}

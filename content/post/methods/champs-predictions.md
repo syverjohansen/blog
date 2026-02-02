@@ -1,6 +1,6 @@
 ---
 title: "Championship Predictions Methodology"
-date: 2026-01-31T01:00:00+00:00
+date: 2020-01-01T01:00:00+00:00
 draft: false
 tags: ["methodology", "skiing", "championships", "olympics", "world-championships"]
 ---
