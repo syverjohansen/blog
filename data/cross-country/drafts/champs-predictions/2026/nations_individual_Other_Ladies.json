@@ -23,7 +23,7 @@
       0.2,
       0.7,
       4.2,
-      42.1
+      41.7
     ],
     [
       "Agustina Groetzner",
@@ -35,7 +35,7 @@
       0.0,
       0.0,
       0.2,
-      3.5
+      3.4
     ],
     [
       "Nahiara Diaz Gonzalez",
@@ -47,7 +47,7 @@
       0.0,
       0.0,
       0.1,
-      1.8
+      1.7
     ],
     [
       "Katya Galstyan",
@@ -71,7 +71,7 @@
       0.1,
       0.5,
       1.7,
-      30.2
+      29.9
     ],
     [
       "Phoebe Cridland",
@@ -95,7 +95,31 @@
       0.0,
       0.0,
       0.0,
-      0.9
+      0.8
+    ],
+    [
+      "Hanna Karaliova",
+      3225,
+      "10km Freestyle",
+      "Belarus",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      1.2
+    ],
+    [
+      "Teodora Delipara",
+      10330,
+      "10km Freestyle",
+      "Bosnia&Herzegovina",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      1.9
     ],
     [
       "Bruna Moura",
@@ -158,8 +182,8 @@
       3.5
     ],
     [
-      "Maria Dimitra Tsiarka",
-      10256,
+      "Nefeli Tita",
+      5219,
       "10km Freestyle",
       "Greece",
       100.0,
@@ -167,7 +191,7 @@
       0.0,
       0.0,
       0.1,
-      2.7
+      0.9
     ],
     [
       "Sara Ponya",
@@ -191,55 +215,67 @@
       0.0,
       0.0,
       0.2,
-      3.0
+      2.9
     ],
     [
-      "Chika Kobayashi",
-      3524,
+      "Samaneh Beyrami Baher",
+      6748,
       "10km Freestyle",
-      "Japan",
+      "Iran",
       100.0,
       0.0,
       0.0,
       0.0,
       0.1,
-      2.3
-    ],
-    [
-      "Chika Honda",
-      7087,
-      "10km Freestyle",
-      "Japan",
-      100.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.1
+      2.1
     ],
     [
       "Masae Tsuchiya",
       3498,
       "10km Freestyle",
       "Japan",
-      92.2,
+      100.0,
       0.0,
       0.0,
       0.1,
       0.6,
-      19.4
+      19.2
     ],
     [
-      "Patricijia Eiduka",
-      3240,
+      "Elizaveta Hlusovici",
+      11962,
       "10km Freestyle",
-      "Latvia",
+      "Moldova",
       100.0,
+      0.0,
+      0.0,
+      0.0,
       0.1,
-      0.6,
-      1.7,
-      7.4,
-      42.7
+      2.0
+    ],
+    [
+      "Ariuntungalag Enkhbayar",
+      567,
+      "10km Freestyle",
+      "Mongolia",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      3.0
+    ],
+    [
+      "Ana Cvetanovska",
+      4070,
+      "10km Freestyle",
+      "North Macedonia",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.8
     ],
     [
       "Dariya Nepryaeva",
@@ -251,7 +287,7 @@
       3.4,
       8.1,
       17.9,
-      63.4
+      62.7
     ],
     [
       "Anja Ilic",
@@ -275,7 +311,7 @@
       0.0,
       0.1,
       0.5,
-      17.4
+      17.3
     ],
     [
       "Neza Zerjav",
@@ -287,7 +323,7 @@
       0.0,
       0.0,
       0.1,
-      2.1
+      2.0
     ],
     [
       "Eui Jin Lee",
@@ -306,6 +342,30 @@
       1519,
       "10km Freestyle",
       "South Korea",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    [
+      "Sophia Tsu Velicer",
+      7036,
+      "10km Freestyle",
+      "Taiwan",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.8
+    ],
+    [
+      "Karen Chanloung",
+      3813,
+      "10km Freestyle",
+      "Thailand",
       100.0,
       0.0,
       0.0,
@@ -347,7 +407,7 @@
       0.2,
       0.6,
       1.5,
-      31.0
+      30.6
     ],
     [
       "Katya Galstyan",
@@ -359,7 +419,7 @@
       0.0,
       0.0,
       0.0,
-      1.7
+      1.6
     ],
     [
       "Rosie Fordham",
@@ -371,7 +431,7 @@
       0.1,
       0.2,
       0.4,
-      25.8
+      25.5
     ],
     [
       "Phoebe Cridland",
@@ -395,7 +455,19 @@
       0.0,
       0.0,
       0.0,
-      3.3
+      3.2
+    ],
+    [
+      "Hanna Karaliova",
+      3225,
+      "20km Skiathlon",
+      "Belarus",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.3
     ],
     [
       "Bruna Moura",
@@ -407,7 +479,7 @@
       0.0,
       0.1,
       0.2,
-      4.9
+      4.8
     ],
     [
       "Chunxue Chi",
@@ -419,7 +491,7 @@
       0.0,
       0.1,
       0.7,
-      20.5
+      20.2
     ],
     [
       "Dinigeer Yilamujiang",
@@ -443,7 +515,19 @@
       0.0,
       0.1,
       0.2,
-      4.7
+      4.6
+    ],
+    [
+      "Nefeli Tita",
+      5219,
+      "20km Skiathlon",
+      "Greece",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      3.0
     ],
     [
       "Larissza Vanda Bere",
@@ -455,7 +539,7 @@
       0.0,
       0.1,
       0.4,
-      11.8
+      11.7
     ],
     [
       "Sara Ponya",
@@ -467,55 +551,43 @@
       0.0,
       0.0,
       0.1,
-      6.7
+      6.6
     ],
     [
-      "Chika Kobayashi",
-      3524,
+      "Samaneh Beyrami Baher",
+      6748,
       "20km Skiathlon",
-      "Japan",
+      "Iran",
       100.0,
-      0.0,
       0.0,
       0.0,
       0.1,
-      5.4
-    ],
-    [
-      "Chika Honda",
-      7087,
-      "20km Skiathlon",
-      "Japan",
-      100.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.8
+      0.1,
+      4.6
     ],
     [
       "Masae Tsuchiya",
       3498,
       "20km Skiathlon",
       "Japan",
-      91.9,
+      100.0,
       0.0,
       0.1,
       0.1,
       0.9,
-      22.4
+      22.1
     ],
     [
-      "Patricijia Eiduka",
-      3240,
+      "Ana Cvetanovska",
+      4070,
       "20km Skiathlon",
-      "Latvia",
+      "North Macedonia",
       100.0,
-      0.1,
-      0.3,
-      0.9,
-      5.8,
-      44.6
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.9
     ],
     [
       "Dariya Nepryaeva",
@@ -525,9 +597,9 @@
       100.0,
       3.1,
       5.8,
-      11.5,
+      11.4,
       37.0,
-      54.9
+      54.2
     ],
     [
       "Anja Mandeljc",
@@ -539,7 +611,7 @@
       0.0,
       0.1,
       0.7,
-      20.0
+      19.8
     ],
     [
       "Neza Zerjav",
@@ -563,7 +635,7 @@
       0.0,
       0.2,
       0.2,
-      9.4
+      9.3
     ],
     [
       "Da-Som Han",
@@ -587,7 +659,31 @@
       0.0,
       0.0,
       0.0,
-      1.4
+      1.3
+    ],
+    [
+      "Sophia Tsu Velicer",
+      7036,
+      "20km Skiathlon",
+      "Taiwan",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      5.6
+    ],
+    [
+      "Karen Chanloung",
+      3813,
+      "20km Skiathlon",
+      "Thailand",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.6
     ],
     [
       "Anastasiia Nikon",
@@ -611,7 +707,7 @@
       0.0,
       0.0,
       0.0,
-      2.6
+      2.5
     ],
     [
       "Sofiia Shkatula",
@@ -635,7 +731,7 @@
       0.0,
       0.0,
       0.3,
-      13.0
+      12.8
     ],
     [
       "Ellen Søhol Lie",
@@ -659,7 +755,7 @@
       0.0,
       0.0,
       0.3,
-      20.7
+      20.5
     ],
     [
       "Phoebe Cridland",
@@ -674,6 +770,18 @@
       3.1
     ],
     [
+      "Hanna Karaliova",
+      3225,
+      "50km Classic",
+      "Belarus",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      3.4
+    ],
+    [
       "Bruna Moura",
       3180,
       "50km Classic",
@@ -683,7 +791,7 @@
       0.0,
       0.0,
       0.2,
-      3.6
+      3.5
     ],
     [
       "Dinigeer Yilamujiang",
@@ -707,31 +815,7 @@
       0.0,
       0.1,
       0.8,
-      23.0
-    ],
-    [
-      "Chika Kobayashi",
-      3524,
-      "50km Classic",
-      "Japan",
-      100.0,
-      0.0,
-      0.0,
-      0.0,
-      0.3,
-      6.0
-    ],
-    [
-      "Patricijia Eiduka",
-      3240,
-      "50km Classic",
-      "Latvia",
-      100.0,
-      0.0,
-      0.0,
-      0.3,
-      1.7,
-      42.1
+      22.8
     ],
     [
       "Dariya Nepryaeva",
@@ -742,8 +826,8 @@
       2.1,
       2.4,
       7.6,
-      30.9,
-      57.7
+      30.8,
+      57.2
     ],
     [
       "Anja Mandeljc",
@@ -755,7 +839,7 @@
       0.0,
       0.2,
       1.1,
-      24.9
+      24.7
     ],
     [
       "Neza Zerjav",
@@ -767,7 +851,7 @@
       0.0,
       0.1,
       0.4,
-      9.2
+      9.1
     ],
     [
       "Da-Som Han",
@@ -792,6 +876,30 @@
       0.0,
       0.1,
       1.0
+    ],
+    [
+      "Sophia Tsu Velicer",
+      7036,
+      "50km Classic",
+      "Taiwan",
+      100.0,
+      0.0,
+      0.0,
+      0.1,
+      0.4,
+      7.5
+    ],
+    [
+      "Karen Chanloung",
+      3813,
+      "50km Classic",
+      "Thailand",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      1.1
     ],
     [
       "Anastasiia Nikon",
@@ -827,7 +935,7 @@
       0.4,
       0.9,
       4.3,
-      34.5
+      34.2
     ],
     [
       "Nahiara Diaz Gonzalez",
@@ -890,6 +998,18 @@
       2.5
     ],
     [
+      "Hanna Karaliova",
+      3225,
+      "Sprint Classic",
+      "Belarus",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      2.0
+    ],
+    [
       "Bruna Moura",
       3180,
       "Sprint Classic",
@@ -899,7 +1019,7 @@
       0.0,
       0.0,
       0.1,
-      2.4
+      2.3
     ],
     [
       "Eduarda Ribera",
@@ -959,7 +1079,7 @@
       0.0,
       0.1,
       0.2,
-      4.5
+      4.4
     ],
     [
       "Tena Hadzic",
@@ -986,6 +1106,18 @@
       5.7
     ],
     [
+      "Nefeli Tita",
+      5219,
+      "Sprint Classic",
+      "Greece",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      1.5
+    ],
+    [
       "Sara Ponya",
       4064,
       "Sprint Classic",
@@ -995,7 +1127,7 @@
       0.0,
       0.0,
       0.1,
-      1.7
+      1.6
     ],
     [
       "Kristrun Gudnadottir",
@@ -1007,67 +1139,19 @@
       0.0,
       0.1,
       0.3,
-      3.9
+      3.8
     ],
     [
-      "Atefah Salehi",
-      10890,
+      "Samaneh Beyrami Baher",
+      6748,
       "Sprint Classic",
       "Iran",
       100.0,
       0.0,
       0.0,
       0.0,
-      0.1,
-      1.8
-    ],
-    [
-      "Chika Honda",
-      7087,
-      "Sprint Classic",
-      "Japan",
-      100.0,
       0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.3
-    ],
-    [
-      "Patricijia Eiduka",
-      3240,
-      "Sprint Classic",
-      "Latvia",
-      100.0,
-      0.0,
-      0.2,
-      0.7,
-      4.0,
-      37.5
-    ],
-    [
-      "Linda Kaparkaleja",
-      10843,
-      "Sprint Classic",
-      "Latvia",
-      17.6,
-      0.0,
-      0.0,
-      0.1,
-      0.3,
-      4.1
-    ],
-    [
-      "Adriana Suminska",
-      10845,
-      "Sprint Classic",
-      "Latvia",
-      17.6,
-      0.0,
-      0.0,
-      0.1,
-      0.3,
-      4.1
+      0.7
     ],
     [
       "Ieva Dainyte",
@@ -1094,6 +1178,42 @@
       2.1
     ],
     [
+      "Regina Martinez Lorenzo",
+      9054,
+      "Sprint Classic",
+      "Mexico",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      2.3
+    ],
+    [
+      "Ariuntungalag Enkhbayar",
+      567,
+      "Sprint Classic",
+      "Mongolia",
+      100.0,
+      0.0,
+      0.0,
+      0.1,
+      0.3,
+      3.8
+    ],
+    [
+      "Ana Cvetanovska",
+      4070,
+      "Sprint Classic",
+      "North Macedonia",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5
+    ],
+    [
       "Dariya Nepryaeva",
       6555,
       "Sprint Classic",
@@ -1103,7 +1223,7 @@
       0.1,
       0.3,
       1.7,
-      32.5
+      32.2
     ],
     [
       "Anja Ilic",
@@ -1127,7 +1247,7 @@
       0.0,
       0.0,
       0.1,
-      2.8
+      2.7
     ],
     [
       "Da-Som Han",
@@ -1152,6 +1272,30 @@
       0.0,
       0.1,
       1.1
+    ],
+    [
+      "Sophia Tsu Velicer",
+      7036,
+      "Sprint Classic",
+      "Taiwan",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      1.1
+    ],
+    [
+      "Karen Chanloung",
+      3813,
+      "Sprint Classic",
+      "Thailand",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.4
     ],
     [
       "Anastasiia Nikon",

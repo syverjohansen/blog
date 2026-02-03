@@ -1,6 +1,6 @@
 ---
 title: "2026 Winter Olympics - Cross-Country Skiing Predictions"
-date: 2026-02-03T15:27:07+00:00
+date: 2026-02-03T19:13:15+00:00
 draft: false
 tags: ["predictions", "olympics", "2026", "cross-country"]
 ---
@@ -560,6 +560,31 @@ tags: ["predictions", "olympics", "2026", "cross-country"]
 ###### Win Optimized
 
 {{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/nations_ts_win_Kazakhstan_Ladies" >}}
+#### Latvia
+
+##### Individual
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/nations_individual_Latvia_Ladies" >}}
+
+##### Relay
+
+###### Podium Optimized
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/nations_relay_podium_Latvia_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/nations_relay_win_Latvia_Ladies" >}}
+
+##### Team Sprint
+
+###### Podium Optimized
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/nations_ts_podium_Latvia_Ladies" >}}
+
+###### Win Optimized
+
+{{< cross-country/datatable2 "cross-country/drafts/champs-predictions/2026/nations_ts_win_Latvia_Ladies" >}}
 #### Norway
 
 ##### Individual

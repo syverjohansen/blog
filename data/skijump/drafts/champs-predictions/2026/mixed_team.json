@@ -3,98 +3,98 @@
   "headers": [
     "Nation",
     "Team",
-    "Win_Prob",
-    "Podium_Prob",
-    "Top5_Prob",
-    "Races_Participating"
+    "Win",
+    "Podium",
+    "Top-5",
+    "Races"
   ],
   "rows": [
     [
       "Slovenia",
       "Domen Prevc,Anze Lanisek,Nika Prevc,Nika Vodan",
-      "45.6490727532097",
-      "80.6167064051831",
-      "99.9714774671991",
+      44.8807854137447,
+      81.9033400002529,
+      99.9719573752103,
       1
     ],
     [
       "Japan",
       "Ryoyu Kobayashi,Ren Nikaido,Nozomi Maruyama,Sara Takanashi",
-      "25.2496433666191",
-      "67.0529728987479",
-      "99.9714774671991",
+      24.8246844319776,
+      68.1231308278901,
+      99.9719573752103,
       1
     ],
     [
       "Austria",
       "Jan Hörl,Stefan Kraft,Lisa Eder,Julia Mühlbacher",
-      "10.9843081312411",
-      "48.2387619059508",
-      "98.2453512375496",
+      10.7994389901823,
+      49.0086471371934,
+      98.2458228593793,
+      1
+    ],
+    [
+      "Germany",
+      "Philipp Raimund,Felix Hoffmann,Selina Freitag,Agnes Reisch",
+      10.2384291725105,
+      49.0086471371934,
+      99.9719573752103,
       1
     ],
     [
       "Norway",
       "Johann Forfang,Kristoffer Eriksen Sundal,Anna Odine Strøm,Eirin Maria Kvandal",
-      "9.12981455064194",
-      "50.8640006491318",
-      "99.9714774671991",
-      1
-    ],
-    [
-      "Germany",
-      "Philipp Raimund,Pius Paschke,Selina Freitag,Agnes Reisch",
-      "8.7018544935806",
-      "52.9423146541501",
-      "99.9714774671991",
+      8.97615708274895,
+      51.6757843963603,
+      99.9719573752103,
       1
     ],
     [
       "Finland",
       "Antti Aalto,Niko Kytösaho,Jenny Rautionaho,Heta Hirvonen",
-      "0.14265335235378",
-      "0.14265335235378",
-      "1.72612622964948",
+      0.140252454417952,
+      0.140252454417952,
+      1.72613451583097,
       1
     ],
     [
       "Poland",
       "Kacper Tomasiak,Kamil Stoch,Anna Twardosz,Pola Beltowska",
-      "0.14265335235378",
-      "0.14265335235378",
-      "0.14265335235378",
+      0.140252454417952,
+      0.140252454417952,
+      0.140252454417952,
       1
     ],
     [
       "France",
       "Valentin Foubert,Enzo Milesi,Josephine Pagnier,Emma Chervet",
-      "0.0",
-      "0.0",
-      "0.0",
+      0.0,
+      0.0,
+      0.0,
       1
     ],
     [
       "Italy",
       "Alex Insam,Giovanni Bresadola,Annika Sieff,Martina Zanitzer",
-      "0.0",
-      "0.0",
-      "0.0",
+      0.0,
+      0.0,
+      0.0,
       1
     ],
     [
-      "Switzerland",
-      "Gregor Deschwanden,Sandro Hauswirth,Rea Kindlimann,Sina Arnet",
-      "0.0",
-      "0.0",
-      "0.0",
+      "Romania",
+      "Mihnea Alexandru Spulber,Daniel Andrei Cacina,Delia Anamaria Folea,Daniela Haralambie",
+      0.0,
+      0.0,
+      0.0,
       1
     ],
     [
       "USA",
       "Jason Colby,Tate Frantz,Annika Belshaw,Josie Johnson",
-      "0.0",
-      "0.0",
-      "0.0",
+      0.0,
+      0.0,
+      0.0,
       1
     ]
   ]

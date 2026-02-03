@@ -1,0 +1,115 @@
+{
+  "sheet_name": "Latvia Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Race",
+    "Start",
+    "Win",
+    "Podium",
+    "Top5",
+    "Top-10",
+    "Top-30"
+  ],
+  "rows": [
+    [
+      "Patricijia Eiduka",
+      3240,
+      "10km Freestyle",
+      100.0,
+      0.1,
+      0.6,
+      1.7,
+      7.4,
+      42.3
+    ],
+    [
+      "Kitija Auzina",
+      1651,
+      "10km Freestyle",
+      66.7,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      0.8
+    ],
+    [
+      "Samanta Krampe",
+      6758,
+      "10km Freestyle",
+      4.8,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      1.5
+    ],
+    [
+      "Patricijia Eiduka",
+      3240,
+      "20km Skiathlon",
+      100.0,
+      0.1,
+      0.3,
+      0.9,
+      5.8,
+      44.1
+    ],
+    [
+      "Patricijia Eiduka",
+      3240,
+      "50km Classic",
+      100.0,
+      0.0,
+      0.0,
+      0.3,
+      1.7,
+      41.7
+    ],
+    [
+      "Patricijia Eiduka",
+      3240,
+      "Sprint Classic",
+      100.0,
+      0.0,
+      0.2,
+      0.7,
+      4.0,
+      37.1
+    ],
+    [
+      "Kitija Auzina",
+      1651,
+      "Sprint Classic",
+      100.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5
+    ],
+    [
+      "Samanta Krampe",
+      6758,
+      "Sprint Classic",
+      19.2,
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      2.8
+    ],
+    [
+      "Linda Kaparkaleja",
+      10843,
+      "Sprint Classic",
+      10.3,
+      0.0,
+      0.0,
+      0.1,
+      0.3,
+      4.1
+    ]
+  ]
+}

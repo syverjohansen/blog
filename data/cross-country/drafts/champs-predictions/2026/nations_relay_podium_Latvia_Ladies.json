@@ -1,0 +1,75 @@
+{
+  "sheet_name": "Latvia Ladies",
+  "headers": [
+    "Athlete",
+    "ID",
+    "Nation",
+    "Leg",
+    "Leg Win",
+    "Leg Podium",
+    "Leg Top5",
+    "Leg Top-10",
+    "Team Win",
+    "Team Podium",
+    "Team Top5",
+    "Team Top-10"
+  ],
+  "rows": [
+    [
+      "Kitija Auzina",
+      1651,
+      "Latvia",
+      1,
+      0.0002,
+      0.0071,
+      0.0004,
+      0.0,
+      0.0095,
+      0.0795,
+      0.0484,
+      0.1487
+    ],
+    [
+      "Samanta Krampe",
+      6758,
+      "Latvia",
+      2,
+      0.0004,
+      0.0027,
+      0.0142,
+      0.068,
+      0.0095,
+      0.0795,
+      0.0484,
+      0.1487
+    ],
+    [
+      "Linda Kaparkaleja",
+      10843,
+      "Latvia",
+      3,
+      0.0,
+      0.0003,
+      0.0117,
+      0.4661,
+      0.0095,
+      0.0795,
+      0.0484,
+      0.1487
+    ],
+    [
+      "Patricijia Eiduka",
+      3240,
+      "Latvia",
+      4,
+      0.0379,
+      0.3146,
+      0.1674,
+      0.0,
+      0.0095,
+      0.0795,
+      0.0484,
+      0.1487
+    ]
+  ]
+}
