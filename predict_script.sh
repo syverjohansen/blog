@@ -693,8 +693,6 @@ draft: true
 tags: ["predictions", "skiing", "weekend-picks"]
 ---
 
-# $title
-
 *See [Race Picks Methodology](/post/methods/race-picks/) for details on how these predictions are generated.*
 
 EOF
@@ -734,8 +732,6 @@ draft: false
 tags: ["predictions", "skiing", "tour-de-ski", "tds-picks"]
 ---
 
-# $title
-
 *See [Race Picks Methodology](/post/methods/race-picks/) for details on how these predictions are generated.*
 
 EOF
@@ -774,8 +770,6 @@ date: $(date -Iseconds)
 draft: false
 tags: ["predictions", "skiing", "race-picks"]
 ---
-
-# $title
 
 *See [Race Picks Methodology](/post/methods/race-picks/) for details on how these predictions are generated.*
 

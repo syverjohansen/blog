@@ -1,6 +1,6 @@
 # 2026 Winter Olympics Championship Predictions
 
-## Current Status (2026-02-02)
+## Current Status (2026-02-03)
 
 ### Project Overview
 Creating championship prediction blog posts for the 2026 Winter Olympics with:
@@ -27,7 +27,7 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 | Ski Jumping | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
 
 ### Features Implemented (All Sports)
-- 7-phase normalization (scale → monotonic → re-scale → cap → final monotonic → start_prob cap → log)
+- Two-phase normalization (scale proportionally → cap and redistribute iteratively)
 - Exponential decay weighted participation probability
 - Nations Excel with Summary sheet and per-nation breakdown
 - Clean column names (no underscores)
@@ -35,7 +35,49 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 
 ---
 
-## Pending Tasks
+## Olympics Website Review (2026-02-03)
+
+Going page by page through the website to identify and fix issues before the 2026 Winter Olympics.
+
+### Issues Found and Fixed
+
+*(Issues will be documented here as they are identified and resolved)*
+
+---
+
+## Recent Changes (2026-02-03)
+
+### Two-Phase Normalization Applied to All Prediction Scripts
+
+Applied two-phase normalization to both champs-predictions.R and race-picks.R files across all sports.
+
+**Algorithm:**
+1. **Phase A**: Scale proportionally to target sum first (no capping)
+2. **Phase B**: Cap at 100% and redistribute excess iteratively
+
+**Why:** Prevents unfair treatment when multiple athletes have over-predicted raw probabilities (e.g., 5 athletes at 120% each now get 20% each instead of all being capped at 100%).
+
+**Files Updated:**
+- All 5 champs-predictions.R files
+- All 5 race-picks.R files
+- 3 cross-country relay files (race-picks-relay.R, race-picks-mixed-relay.R, race-picks-team-sprint.R)
+
+### Team Event Column Names Fixed (Ski Jumping & Nordic Combined)
+
+Fixed underscore column names in team/summary Excel outputs:
+- `Win_Prob` → `Win`
+- `Podium_Prob` → `Podium`
+- `Top5_Prob` → `Top-5`
+- `Top10_Prob` → `Top-10`
+- `Races_Participating` → `Races`
+
+**Files Updated:**
+- `content/post/skijump/drafts/champs-predictions.R` (team predictions + athlete summary)
+- `content/post/nordic-combined/drafts/champs-predictions.R` (athlete summary + team summary)
+
+---
+
+## Completed Tasks
 
 ### Apply Two-Phase Normalization to race-picks.R - COMPLETED (2026-02-03)
 
