@@ -67,13 +67,36 @@ Period adjustments from training are applied to predictions where statistically 
 
 #### Normalization and Monotonic Constraints
 
-A 5-phase normalization process is applied:
+A 5-phase normalization process is applied using **two-phase constrained normalization**:
 
-1. **Scale and cap**: Probabilities scaled to target sums (100% for win, 300% for podium, etc.) with individual caps at 100%
-2. **Monotonic constraints**: Ensures Win ≤ Podium ≤ Top 5 ≤ Top 10 ≤ Top 30, capped at participation probability
-3. **Re-normalize**: Re-scale to maintain target sums after constraint adjustments
-4. **Final participation cap**: No probability can exceed athlete's participation probability
-5. **Final monotonic enforcement**: Second pass to ensure no inversions from re-normalization
+1. **Phase 1 - Two-Phase Constrained Normalization**:
+   - **Phase A**: Scale all probabilities proportionally to target sum (100% for win, 300% for podium, etc.)
+   - **Phase B**: Cap athletes above 100% and redistribute excess iteratively
+   - Process iterates until no athletes exceed cap
+
+2. **Phase 2 - Monotonic Constraints**: Ensures Win ≤ Podium ≤ Top 5 ≤ Top 10 ≤ Top 30
+
+3. **Phase 3 - Re-normalize (Two-Phase Constrained)**:
+   - Same two-phase approach as Phase 1
+   - Adjusts for any sum changes from monotonic constraints
+
+4. **Phase 4 - Final Participation Cap**: No probability can exceed athlete's participation probability
+
+5. **Phase 5 - Final Monotonic Enforcement**: Second pass to ensure no inversions from re-normalization
+
+**Why Two-Phase Normalization?**
+
+The key insight is that raw model predictions may be over-inflated (e.g., multiple athletes at 120% win probability). The two-phase approach handles this correctly:
+
+1. **Phase A** scales everyone proportionally first, bringing the total to the target
+2. **Phase B** then caps any athletes still above 100% and redistributes excess
+
+This ensures:
+- Over-predicted athletes are scaled down fairly before capping
+- Truly dominant athletes (above 100% after scaling) get capped and excess redistributed
+- Probabilities always sum to the correct target
+
+**Mathematical Guarantee:** After Phase A scaling, at most `target/100` athletes can exceed 100%. For Win (target=100%), at most 1 athlete can exceed 100%. For Podium (target=300%), at most 3 can exceed 100%. This guarantees Phase B always has room to redistribute excess.
 
 ## Biathlon
 

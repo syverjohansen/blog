@@ -110,42 +110,50 @@ normalize_with_cap <- function(probs, target_sum, max_prob = 100, max_iterations
     return(rep(target_sum / length(probs), length(probs)))
   }
 
-  for (iter in 1:max_iterations) {
-    # Identify capped vs uncapped
-    capped <- probs >= max_prob
+  # Phase A: Scale proportionally to target sum first (no capping)
+  # This ensures over-predicted athletes are scaled down fairly before any capping
+  current_sum <- sum(probs, na.rm = TRUE)
+  if (current_sum > 0) {
+    probs <- probs * (target_sum / current_sum)
+  }
 
-    # Lock capped values at max_prob
-    probs[capped] <- max_prob
+  # Phase B: Cap at max_prob and redistribute excess (iterative)
+  for (iter in 1:max_iterations) {
+    # Identify athletes above cap
+    above_cap <- probs > max_prob
+
+    if (!any(above_cap, na.rm = TRUE)) {
+      # No one above cap - we're done
+      break
+    }
+
+    # Cap those above the limit
+    probs[above_cap] <- max_prob
 
     # Calculate remaining budget for uncapped athletes
-    capped_total <- sum(capped) * max_prob
+    capped_total <- sum(above_cap) * max_prob
     remaining_target <- target_sum - capped_total
-    uncapped_sum <- sum(probs[!capped], na.rm = TRUE)
+    uncapped_sum <- sum(probs[!above_cap], na.rm = TRUE)
 
     if (remaining_target <= 0) {
-      # Edge case: too many athletes at cap - cap everyone who's capped,
-      # set others to 0 (target exceeded by capped athletes alone)
-      probs[!capped] <- 0
+      # Edge case: capped athletes alone exceed target
+      # This shouldn't happen after Phase A scaling, but handle gracefully
+      probs[!above_cap] <- 0
       break
     }
 
     if (uncapped_sum <= 0) {
       # Edge case: no probability mass in uncapped - distribute remaining evenly
-      n_uncapped <- sum(!capped)
+      n_uncapped <- sum(!above_cap)
       if (n_uncapped > 0) {
-        probs[!capped] <- remaining_target / n_uncapped
+        probs[!above_cap] <- remaining_target / n_uncapped
       }
       break
     }
 
     # Scale only uncapped values to hit remaining target
     scaling_factor <- remaining_target / uncapped_sum
-    probs[!capped] <- probs[!capped] * scaling_factor
-
-    # Check if any newly exceed cap - if not, we've converged
-    if (!any(probs[!capped] > max_prob, na.rm = TRUE)) {
-      break
-    }
+    probs[!above_cap] <- probs[!above_cap] * scaling_factor
   }
 
   return(probs)

@@ -1,6 +1,6 @@
 # 2026 Winter Olympics Championship Predictions
 
-## Current Status (2026-01-31)
+## Current Status (2026-02-02)
 
 ### Project Overview
 Creating championship prediction blog posts for the 2026 Winter Olympics with:
@@ -32,6 +32,40 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 - Nations Excel with Summary sheet and per-nation breakdown
 - Clean column names (no underscores)
 - Sport-specific Elo columns in skier tables
+
+---
+
+## Pending Tasks
+
+### Apply Two-Phase Normalization to race-picks.R
+
+**Priority:** Medium
+
+**Description:** The two-phase normalization fix applied to champs-predictions.R should also be applied to all race-picks.R files. This ensures:
+1. Over-predicted athletes are scaled down fairly before any capping
+2. Truly dominant athletes get capped at 100% with excess redistributed
+3. Probabilities always sum to the correct target
+
+**Files to Update:**
+
+Individual race files:
+- `content/post/alpine/drafts/race-picks.R`
+- `content/post/biathlon/drafts/race-picks.R`
+- `content/post/cross-country/drafts/race-picks.R`
+- `content/post/nordic-combined/drafts/race-picks.R`
+- `content/post/skijump/drafts/race-picks.R`
+
+Cross-country relay/team files:
+- `content/post/cross-country/drafts/race-picks-relay.R`
+- `content/post/cross-country/drafts/race-picks-mixed-relay.R`
+- `content/post/cross-country/drafts/race-picks-team-sprint.R`
+
+**Implementation:**
+1. Add `normalize_with_cap()` helper function (same as in champs-predictions.R)
+2. Update Phase 1 normalization to use two-phase approach
+3. Update Phase 3 re-normalization to use two-phase approach
+
+**Reference:** See "Two-Phase Normalization Fix (2026-02-03)" section below for the algorithm.
 
 ### Standard Output Format (Target for All Sports)
 - **Columns**: Skier, ID, Nation, Start, Win, Podium, Top5, Top-10, Top-30
@@ -152,13 +186,6 @@ Documentation describes ~3 phases but code uses 7 phases:
 - Relay: XGBoost for n>500, GLM for smaller datasets (cross-country)
 - Data sources: FIS (alpine, XC, NC, SJ), IBU (biathlon)
 
-### Future Documentation Tasks
-- ~~Fix race-picks.md with corrections above~~ (DONE 2026-01-31)
-- ~~Write methodology documentation for `champs-predictions.R`~~ (DONE 2026-01-31)
-- ~~Write methodology documentation for Elo calculations~~ (DONE 2026-02-01)
-- ~~Write methodology documentation for ranks calculations~~ (DONE 2026-02-01)
-- ~~Write methodology documentation for weekly recap~~ (DONE 2026-02-02)
-
 ### Weekly Recap Improvements (2026-02-02)
 
 **Column Naming Improvements:**
@@ -194,31 +221,9 @@ Updated `weekly-recap.sh` to include methodology link in generated posts:
 *For details on how these predictions are generated, see the [Weekly Recap Methodology](/post/methods/race-recap/).*
 ```
 
-### Start Probability Testing (2026-02-01)
+### Start Probability Testing (2026-02-01) - HISTORICAL
 
-Commented out start_prob multiplication in all 5 champs-predictions.R files for testing:
-- Alpine: Lines 139-150
-- Biathlon: Lines 182-193
-- Cross-Country: Lines 917-922 (different structure)
-- Nordic Combined: Lines 191-202
-- Ski Jumping: Lines 193-196 (inside Phase 1)
-
-All marked with: `# NOTE: Start probability multiplication commented out for testing (2026-02-01)`
-
-### Start Probability Capping Removal (2026-02-01) - COMPLETE
-
-In addition to commenting out the multiplication, also commented out the CAPPING of position probabilities at start_prob. This affects:
-- Phase 2: `pmin(probs, start_ceiling)` caps (both initial and final cap)
-- Phase 4: Final cap at start_prob block
-
-All changes marked with: `# NOTE: start_prob capping commented out for testing (2026-02-01)`
-
-Sports updated:
-- [x] Alpine (lines 197-230, 249-263)
-- [x] Biathlon (lines 240-280, 300-314)
-- [x] Cross-Country (lines 1057-1081, 1109-1123)
-- [x] Nordic Combined (lines 249-286, 305-321)
-- [x] Ski Jumping (lines 241-274, 291-309)
+Start probability multiplication and capping was commented out in all 5 champs-predictions.R files for testing purposes. All changes marked with `# NOTE:` comments in the code. This was an experimental change to evaluate the impact of start_prob on predictions.
 
 ### Methodology Page Dates (2026-02-01)
 
@@ -276,12 +281,12 @@ Created `content/post/methods/elo-calculations.md` documenting:
    - Elo pages: Added elo-calculations methodology link to all 10 elo/all-elo pages
    - Ranks pages: Added ranks methodology link to all 5 ranks pages
 
-### Championship Predictions Documentation (2026-01-31)
+### Championship Predictions Documentation (2026-01-31, updated 2026-02-02)
 
 Created `content/post/methods/champs-predictions.md` documenting:
 - Config-based athlete selection (vs scraped startlists)
 - Probability-only predictions (no points)
-- 5-phase normalization process
+- 5-phase iterative constrained normalization process (updated 2026-02-02)
 - Sport-specific thresholds:
   - Individual: 1, 3, 5, 10, 30
   - Relay/Team: 1, 3, 5, 10 (biathlon, XC, NC) or 1, 3, 5 (ski jumping)
@@ -291,52 +296,111 @@ Created `content/post/methods/champs-predictions.md` documenting:
 
 ## Recent Changes
 
-### Iterative Constrained Normalization Fix (2026-02-02)
+### Two-Phase Normalization Fix (2026-02-03)
 
-**Issue:** The normalization process in champs-predictions.R had two problems:
-1. Athletes at the 100% cap were being re-normalized in Phase 3, unfairly reducing their probability
-2. After capping at 100%, the excess was not properly redistributed, causing sums to not match targets
+**Issue:** The original iterative constrained normalization had a flaw: if multiple athletes all had raw predictions above 100% (e.g., 5 athletes at 120% each), the algorithm would cap them all at 100% immediately, resulting in a 500% total instead of the target 100%.
 
 **Problem Example:**
-- Athlete A has raw prob that normalizes to 95%, gets capped at 100% in Phase 1
-- Phase 2 applies monotonic constraints, changing total sum
-- Phase 3 re-normalizes by scaling everyone equally
-- Result: Athlete A's "true" 100% gets scaled down to 85% (unfair penalty)
+- 5 athletes each have raw Win probability of 120% (model over-predicting)
+- Old algorithm: Cap all 5 at 100% → Total = 500% (wrong!)
+- The issue: When everyone is above cap, there's no one to redistribute excess to
 
-**Solution:** Implemented `normalize_with_cap()` helper function that:
-1. Locks athletes at the 100% cap - they don't participate in further normalization
-2. Distributes remaining probability budget only among uncapped athletes
-3. Iterates until convergence (if scaling pushes new athletes above cap, cap them and repeat)
+**Solution:** Implemented two-phase `normalize_with_cap()`:
+1. **Phase A**: Scale proportionally to target sum FIRST (no capping)
+2. **Phase B**: THEN cap at 100% and redistribute excess iteratively
 
 **Algorithm:**
 ```r
 normalize_with_cap <- function(probs, target_sum, max_prob = 100) {
+  # Phase A: Scale proportionally first
+  current_sum <- sum(probs, na.rm = TRUE)
+  if (current_sum > 0) {
+    probs <- probs * (target_sum / current_sum)
+  }
+
+  # Phase B: Cap and redistribute iteratively
   repeat {
-    capped <- probs >= max_prob
-    probs[capped] <- max_prob
+    above_cap <- probs > max_prob
+    if (!any(above_cap)) break
 
-    remaining_target <- target_sum - sum(capped) * max_prob
-    uncapped_sum <- sum(probs[!capped])
+    probs[above_cap] <- max_prob
+    remaining_target <- target_sum - sum(above_cap) * max_prob
+    uncapped_sum <- sum(probs[!above_cap])
 
-    probs[!capped] <- probs[!capped] * (remaining_target / uncapped_sum)
-
-    if (!any(probs[!capped] > max_prob)) break
+    probs[!above_cap] <- probs[!above_cap] * (remaining_target / uncapped_sum)
   }
   return(probs)
 }
 ```
 
+**Why this works:**
+- After Phase A, total = target (100% for Win, 300% for Podium, etc.)
+- Mathematically, at most `target/100` athletes can exceed 100% after Phase A
+- For Win (100%): At most 1 athlete can exceed 100%
+- For Podium (300%): At most 3 can exceed 100%
+- This guarantees Phase B always has room to redistribute
+
+**Example with 5 athletes at 120% (target = 100%):**
+- Phase A: Scale 600% → 100%, each gets 20%
+- Phase B: No one above 100%, done
+- Result: [20, 20, 20, 20, 20] = 100% ✓
+
 **Files Updated (all 5 sports):**
 - `content/post/alpine/drafts/champs-predictions.R`
 - `content/post/biathlon/drafts/champs-predictions.R`
-- `content/post/cross-country/drafts/champs-predictions.R` (including relay and team sprint sections)
+- `content/post/cross-country/drafts/champs-predictions.R`
 - `content/post/nordic-combined/drafts/champs-predictions.R`
 - `content/post/skijump/drafts/champs-predictions.R`
 
-**Changes in each file:**
-1. Added `normalize_with_cap()` helper function
-2. Updated Phase 1 to use iterative constrained normalization
-3. Updated Phase 3 to use iterative constrained normalization
+### run_champs_predictions.sh Restructure (2026-02-02)
+
+**Issue:** The shell script was using bash associative arrays (`declare -A`) which failed silently, causing cross-country to run in the wrong directory.
+
+**Debug Output Showed:**
+```
+>>> RUNNING SCRAPER for alpine <<<
+Working directory: /Users/syverjohansen/ski/elo/python/skijump/polars  # WRONG!
+```
+
+**Fix:** Replaced associative array with a `case` statement function and restructured to run each sport completely before moving to the next:
+
+```bash
+get_elo_folder() {
+    case "$1" in
+        alpine) echo "alpine" ;;
+        biathlon) echo "biathlon" ;;
+        cross-country) echo "ski" ;;
+        nordic-combined) echo "nordic-combined" ;;
+        skijump) echo "skijump" ;;
+        *) echo "" ;;
+    esac
+}
+```
+
+**New Structure (per sport):**
+1. Step 1: Run elo_predict_script.sh
+2. Step 2: Run chrono_predict.py
+3. Step 3: Run startlist-scrape-champs.py
+4. Step 4: Run champs-predictions.R
+
+**Files Modified:**
+- `~/blog/daehl-e/run_champs_predictions.sh`
+
+### Cross-Country Startlist Scraper chrono_pred Fix (2026-02-02)
+
+**Issue:** Team sprint and mixed relay were using `_chrono.csv` (historical data) instead of `_chrono_pred.csv` (prediction data) for startlist generation.
+
+**Files Fixed:**
+- `~/ski/elo/python/ski/polars/startlist-scrape-champs.py`
+  - Line 308: Team sprint `_chrono.csv` → `_chrono_pred.csv`
+  - Lines 538-539: Mixed relay `_chrono.csv` → `_chrono_pred.csv`
+
+**Audit Results (all sports/relay scrapers verified):**
+All other startlist scrapers (races, weekend, champs) across all sports and relay directories correctly use `_chrono_pred.csv`.
+
+### Champs-Predictions Methodology Documentation Update (2026-02-02)
+
+Updated `content/post/methods/champs-predictions.md` to document the new iterative constrained normalization approach in the Normalization section. The documentation now describes the 5-phase process with the key insight that athletes at 100% cap are "locked" and excluded from further scaling.
 
 ### Magic Number Calculation Bug Fix (2026-02-02)
 
