@@ -37,35 +37,27 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 
 ## Pending Tasks
 
-### Apply Two-Phase Normalization to race-picks.R
+### Apply Two-Phase Normalization to race-picks.R - COMPLETED (2026-02-03)
 
-**Priority:** Medium
+Applied two-phase normalization to all race-picks.R files:
 
-**Description:** The two-phase normalization fix applied to champs-predictions.R should also be applied to all race-picks.R files. This ensures:
-1. Over-predicted athletes are scaled down fairly before any capping
-2. Truly dominant athletes get capped at 100% with excess redistributed
-3. Probabilities always sum to the correct target
+**Individual race files (0-100 scale):**
+- `content/post/alpine/drafts/race-picks.R` ✓
+- `content/post/biathlon/drafts/race-picks.R` ✓
+- `content/post/cross-country/drafts/race-picks.R` ✓
+- `content/post/nordic-combined/drafts/race-picks.R` ✓
+- `content/post/skijump/drafts/race-picks.R` ✓
 
-**Files to Update:**
+**Cross-country relay/team files (0-1 scale):**
+- `content/post/cross-country/drafts/race-picks-relay.R` ✓
+- `content/post/cross-country/drafts/race-picks-mixed-relay.R` ✓
+- `content/post/cross-country/drafts/race-picks-team-sprint.R` ✓
 
-Individual race files:
-- `content/post/alpine/drafts/race-picks.R`
-- `content/post/biathlon/drafts/race-picks.R`
-- `content/post/cross-country/drafts/race-picks.R`
-- `content/post/nordic-combined/drafts/race-picks.R`
-- `content/post/skijump/drafts/race-picks.R`
-
-Cross-country relay/team files:
-- `content/post/cross-country/drafts/race-picks-relay.R`
-- `content/post/cross-country/drafts/race-picks-mixed-relay.R`
-- `content/post/cross-country/drafts/race-picks-team-sprint.R`
-
-**Implementation:**
-1. Add `normalize_with_cap()` helper function (same as in champs-predictions.R)
-2. Update Phase 1 normalization to use two-phase approach
-3. Update Phase 3 re-normalization to use two-phase approach
-
-**Reference:** See "Two-Phase Normalization Fix (2026-02-03)" section below for the algorithm.
+**Changes made:**
+1. Added `normalize_with_cap()` helper function to each file
+2. Updated initial normalization to use two-phase approach
+3. Updated re-normalization after monotonic constraints to use two-phase approach
+4. Biathlon uses participating athletes subset for normalization (preserved)
 
 ### Standard Output Format (Target for All Sports)
 - **Columns**: Skier, ID, Nation, Start, Win, Podium, Top5, Top-10, Top-30

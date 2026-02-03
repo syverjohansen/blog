@@ -1108,14 +1108,14 @@ process_gender_championships <- function(gender, races) {
   athlete_summary <- all_position_predictions %>%
     group_by(Skier, Nation) %>%
     summarise(
-      Avg_Win_Prob = mean(prob_top1, na.rm = TRUE),
-      Avg_Podium_Prob = mean(prob_top3, na.rm = TRUE),
-      Avg_Top5_Prob = mean(prob_top5, na.rm = TRUE),
-      Avg_Top10_Prob = mean(prob_top10, na.rm = TRUE),
-      Races_Participating = n(),
+      Win = mean(prob_top1, na.rm = TRUE),
+      Podium = mean(prob_top3, na.rm = TRUE),
+      `Top-5` = mean(prob_top5, na.rm = TRUE),
+      `Top-10` = mean(prob_top10, na.rm = TRUE),
+      Races = n(),
       .groups = 'drop'
     ) %>%
-    arrange(desc(Avg_Win_Prob))
+    arrange(desc(Win))
   
   # Create output directory
   # Create output directory (use year only since there's one championship per year)
@@ -1484,14 +1484,14 @@ process_team_championships <- function(gender, races, event_type = "teams") {
   team_summary <- all_position_predictions %>%
     group_by(Nation) %>%
     summarise(
-      Avg_Win_Prob = mean(prob_top1, na.rm = TRUE),
-      Avg_Podium_Prob = mean(prob_top3, na.rm = TRUE),
-      Avg_Top5_Prob = mean(prob_top5, na.rm = TRUE),
-      Avg_Top10_Prob = mean(prob_top10, na.rm = TRUE),
-      Races_Participating = n(),
+      Win = mean(prob_top1, na.rm = TRUE),
+      Podium = mean(prob_top3, na.rm = TRUE),
+      `Top-5` = mean(prob_top5, na.rm = TRUE),
+      `Top-10` = mean(prob_top10, na.rm = TRUE),
+      Races = n(),
       .groups = 'drop'
     ) %>%
-    arrange(desc(Avg_Win_Prob))
+    arrange(desc(Win))
   
   # Create output directory
   # Create output directory (use year only since there's one championship per year)

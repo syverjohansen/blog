@@ -1011,6 +1011,54 @@ get_points <- function(place, RaceType) {
   return(0)
 }
 
+# Two-phase normalization helper function
+# Phase A: Scale proportionally to target sum first
+# Phase B: Cap at max_prob and redistribute excess iteratively
+normalize_with_cap <- function(probs, target_sum, max_prob = 100, max_iterations = 100) {
+  if (sum(probs, na.rm = TRUE) == 0) {
+    return(rep(target_sum / length(probs), length(probs)))
+  }
+
+  # Phase A: Scale proportionally to target sum first (no capping)
+  current_sum <- sum(probs, na.rm = TRUE)
+  if (current_sum > 0) {
+    probs <- probs * (target_sum / current_sum)
+  }
+
+  # Phase B: Cap at max_prob and redistribute excess (iterative)
+  for (iter in 1:max_iterations) {
+    above_cap <- probs > max_prob
+
+    if (!any(above_cap, na.rm = TRUE)) {
+      break
+    }
+
+    probs[above_cap] <- max_prob
+
+    capped_total <- sum(above_cap) * max_prob
+    remaining_target <- target_sum - capped_total
+    uncapped_sum <- sum(probs[!above_cap], na.rm = TRUE)
+
+    if (remaining_target <= 0) {
+      probs[!above_cap] <- 0
+      break
+    }
+
+    if (uncapped_sum <= 0) {
+      n_uncapped <- sum(!above_cap)
+      if (n_uncapped > 0) {
+        probs[!above_cap] <- remaining_target / n_uncapped
+      }
+      break
+    }
+
+    scaling_factor <- remaining_target / uncapped_sum
+    probs[!above_cap] <- probs[!above_cap] * scaling_factor
+  }
+
+  return(probs)
+}
+
 # Normalization function for position probabilities
 normalize_position_probabilities <- function(predictions, race_prob_col, position_thresholds) {
   # Make a copy to avoid modifying the original data frame
@@ -1054,72 +1102,30 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
       participating_mask <- rep(TRUE, nrow(normalized))
       participating_indices <- seq_len(nrow(normalized))
     }
-    
-    # Calculate the current sum only among participating athletes
-    current_sum <- sum(normalized[[prob_col]][participating_mask], na.rm = TRUE)
-    
+
     # Target sum should be 100 * threshold (e.g., 100% for top 1, 300% for top 3)
     target_sum <- 100 * threshold
-    
-    # Normalize only if current sum is not zero and we have participating athletes
-    if(current_sum > 0 && length(participating_indices) > 0) {
-      # Apply scaling factor to adjust the probabilities (only for participating athletes)
-      scaling_factor <- target_sum / current_sum
-      normalized[[prob_col]][participating_indices] <- normalized[[prob_col]][participating_indices] * scaling_factor
-      
-      # Cap individual probabilities at 100% (only among participating athletes)
-      over_hundred <- intersect(which(normalized[[prob_col]] > 100), participating_indices)
-      if(length(over_hundred) > 0) {
-        log_info(sprintf("  Capping %d participants with >100%% probability for %s", 
-                         length(over_hundred), prob_col))
-        
-        # Calculate excess probability that needs to be redistributed
-        excess <- sum(normalized[[prob_col]][over_hundred] - 100)
-        
-        # Cap values at 100%
-        normalized[[prob_col]][over_hundred] <- 100
-        
-        # Redistribute the excess to other participating athletes under 100%
-        under_hundred <- intersect(which(normalized[[prob_col]] < 100), participating_indices)
-        if(length(under_hundred) > 0 && excess > 0) {
-          # Get current sum of under-100 probabilities (only participating athletes)
-          under_sum <- sum(normalized[[prob_col]][under_hundred])
-          
-          # Calculate scaling factor for redistribution
-          if(under_sum > 0) {
-            redistrib_factor <- (under_sum + excess) / under_sum
-            normalized[[prob_col]][under_hundred] <- normalized[[prob_col]][under_hundred] * redistrib_factor
-            
-            # Recursively cap again if needed (unlikely but possible)
-            over_hundred_after <- intersect(which(normalized[[prob_col]] > 100), participating_indices)
-            if(length(over_hundred_after) > 0) {
-              log_info("  Recursive capping needed after redistribution")
-              normalized[[prob_col]][over_hundred_after] <- 100
-            }
-          }
-        }
-      }
-      
-      log_info(sprintf("  %s normalization: applied scaling factor of %.4f", 
-                       prob_col, scaling_factor))
+
+    # Apply two-phase normalization only to participating athletes
+    if(length(participating_indices) > 0) {
+      # Extract participating athletes' probabilities
+      participating_probs <- normalized[[prob_col]][participating_indices]
+
+      # Apply normalize_with_cap to participating subset
+      normalized_probs <- normalize_with_cap(participating_probs, target_sum = target_sum, max_prob = 100)
+
+      # Put results back
+      normalized[[prob_col]][participating_indices] <- normalized_probs
+
+      log_info(sprintf("  %s normalization complete (target: %.0f%%)", prob_col, target_sum))
     } else {
-      # If sum is zero, distribute evenly among PARTICIPATING athletes only
-      # This is a fallback that should rarely be needed
-      log_warn(paste("Zero sum for", prob_col, "- distributing evenly among participating athletes"))
-      if(length(participating_indices) > 0) {
-        # Set all non-participants to 0 and distribute among participants
-        normalized[[prob_col]] <- 0
-        normalized[[prob_col]][participating_indices] <- target_sum / length(participating_indices)
-      } else {
-        # If no participants, set all to 0
-        normalized[[prob_col]] <- 0
-      }
+      log_warn(paste("No participating athletes for", prob_col))
     }
-    
+
     # Final check to ensure we're close to the target sum
     final_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
-    if(abs(final_sum - target_sum) > 1) {  # Allow for small rounding differences
-      log_warn(sprintf("  %s sum after capping: %.2f%% (target: %.2f%%)", 
+    if(abs(final_sum - target_sum) > 1) {
+      log_warn(sprintf("  %s sum after normalization: %.2f%% (target: %.2f%%)",
                        prob_col, final_sum, target_sum))
     }
   }
@@ -1162,7 +1168,7 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
   log_info("Re-normalizing after monotonic constraints...")
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
-    
+
     if(prob_col %in% names(normalized)) {
       # Only consider participating athletes for re-normalization
       if(race_prob_col %in% names(normalized)) {
@@ -1172,19 +1178,12 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
         participating_mask <- rep(TRUE, nrow(normalized))
         participating_indices <- seq_len(nrow(normalized))
       }
-      
-      current_sum <- sum(normalized[[prob_col]][participating_mask], na.rm = TRUE)
+
       target_sum <- 100 * threshold
-      
-      if(current_sum > 0 && length(participating_indices) > 0) {
-        scaling_factor <- target_sum / current_sum
-        normalized[[prob_col]][participating_indices] <- normalized[[prob_col]][participating_indices] * scaling_factor
-        
-        # Cap at 100% again (only for participating athletes)
-        over_hundred <- intersect(which(normalized[[prob_col]] > 100), participating_indices)
-        if(length(over_hundred) > 0) {
-          normalized[[prob_col]][over_hundred] <- 100
-        }
+
+      if(length(participating_indices) > 0) {
+        participating_probs <- normalized[[prob_col]][participating_indices]
+        normalized[[prob_col]][participating_indices] <- normalize_with_cap(participating_probs, target_sum = target_sum, max_prob = 100)
       }
     }
   }

@@ -993,35 +993,70 @@ cap_probabilities <- function(team_predictions) {
   return(team_predictions)
 }
 
+# Two-phase normalization helper function (0-1 scale for relay)
+# Phase A: Scale proportionally to target sum first
+# Phase B: Cap at max_prob and redistribute excess iteratively
+normalize_with_cap <- function(probs, target_sum, max_prob = 1.0, max_iterations = 100) {
+  if (sum(probs, na.rm = TRUE) == 0) {
+    return(rep(target_sum / length(probs), length(probs)))
+  }
+
+  # Phase A: Scale proportionally to target sum first (no capping)
+  current_sum <- sum(probs, na.rm = TRUE)
+  if (current_sum > 0) {
+    probs <- probs * (target_sum / current_sum)
+  }
+
+  # Phase B: Cap at max_prob and redistribute excess (iterative)
+  for (iter in 1:max_iterations) {
+    above_cap <- probs > max_prob
+
+    if (!any(above_cap, na.rm = TRUE)) {
+      break
+    }
+
+    probs[above_cap] <- max_prob
+
+    capped_total <- sum(above_cap) * max_prob
+    remaining_target <- target_sum - capped_total
+    uncapped_sum <- sum(probs[!above_cap], na.rm = TRUE)
+
+    if (remaining_target <= 0) {
+      probs[!above_cap] <- 0
+      break
+    }
+
+    if (uncapped_sum <= 0) {
+      n_uncapped <- sum(!above_cap)
+      if (n_uncapped > 0) {
+        probs[!above_cap] <- remaining_target / n_uncapped
+      }
+      break
+    }
+
+    scaling_factor <- remaining_target / uncapped_sum
+    probs[!above_cap] <- probs[!above_cap] * scaling_factor
+  }
+
+  return(probs)
+}
+
 # Function to normalize probabilities in team predictions
 normalize_probabilities <- function(team_predictions) {
-  # Define normalization targets
+  # Define normalization targets (0-1 scale)
   targets <- list(
     Win_Prob = 1,      # Win probability sums to 1
     Podium_Prob = 3,   # Podium probability sums to 3
     Top5_Prob = 5,     # Top5 probability sums to 5
     Top10_Prob = 10    # Top10 probability sums to 10
   )
-  
-  # For each probability column, normalize to the target sum
+
+  # For each probability column, apply two-phase normalization
   for(prob_col in names(targets)) {
     if(prob_col %in% names(team_predictions)) {
-      # Get current sum
-      current_sum <- sum(team_predictions[[prob_col]], na.rm = TRUE)
-      
-      # Skip if current sum is 0 (to avoid division by zero)
-      if(current_sum > 0) {
-        # Apply normalization factor
-        target_sum <- targets[[prob_col]]
-        normalization_factor <- target_sum / current_sum
-        
-        # Normalize probabilities
-        team_predictions[[prob_col]] <- team_predictions[[prob_col]] * normalization_factor
-        
-        # Log the normalization
-        log_info(paste("Normalized", prob_col, "from sum of", round(current_sum, 2), 
-                       "to", round(sum(team_predictions[[prob_col]], na.rm = TRUE), 2)))
-      }
+      target_sum <- targets[[prob_col]]
+      team_predictions[[prob_col]] <- normalize_with_cap(team_predictions[[prob_col]], target_sum = target_sum, max_prob = 1.0)
+      log_info(sprintf("Normalized %s to target sum %.0f", prob_col, target_sum))
     }
   }
   
@@ -1055,16 +1090,8 @@ normalize_probabilities <- function(team_predictions) {
   log_info("Re-normalizing after monotonic constraints...")
   for(prob_col in names(targets)) {
     if(prob_col %in% names(team_predictions)) {
-      current_sum <- sum(team_predictions[[prob_col]], na.rm = TRUE)
       target_sum <- targets[[prob_col]]
-      
-      if(current_sum > 0) {
-        scaling_factor <- target_sum / current_sum
-        team_predictions[[prob_col]] <- team_predictions[[prob_col]] * scaling_factor
-        
-        # Cap at 1.0 again
-        team_predictions[[prob_col]] <- pmin(team_predictions[[prob_col]], 1.0)
-      }
+      team_predictions[[prob_col]] <- normalize_with_cap(team_predictions[[prob_col]], target_sum = target_sum, max_prob = 1.0)
     }
   }
 

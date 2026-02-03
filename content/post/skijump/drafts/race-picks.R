@@ -116,98 +116,100 @@ get_points <- function(place, RaceType) {
   return(0)
 }
 
+# Two-phase normalization helper function
+# Phase A: Scale proportionally to target sum first
+# Phase B: Cap at max_prob and redistribute excess iteratively
+normalize_with_cap <- function(probs, target_sum, max_prob = 100, max_iterations = 100) {
+  if (sum(probs, na.rm = TRUE) == 0) {
+    return(rep(target_sum / length(probs), length(probs)))
+  }
+
+  # Phase A: Scale proportionally to target sum first (no capping)
+  current_sum <- sum(probs, na.rm = TRUE)
+  if (current_sum > 0) {
+    probs <- probs * (target_sum / current_sum)
+  }
+
+  # Phase B: Cap at max_prob and redistribute excess (iterative)
+  for (iter in 1:max_iterations) {
+    above_cap <- probs > max_prob
+
+    if (!any(above_cap, na.rm = TRUE)) {
+      break
+    }
+
+    probs[above_cap] <- max_prob
+
+    capped_total <- sum(above_cap) * max_prob
+    remaining_target <- target_sum - capped_total
+    uncapped_sum <- sum(probs[!above_cap], na.rm = TRUE)
+
+    if (remaining_target <= 0) {
+      probs[!above_cap] <- 0
+      break
+    }
+
+    if (uncapped_sum <= 0) {
+      n_uncapped <- sum(!above_cap)
+      if (n_uncapped > 0) {
+        probs[!above_cap] <- remaining_target / n_uncapped
+      }
+      break
+    }
+
+    scaling_factor <- remaining_target / uncapped_sum
+    probs[!above_cap] <- probs[!above_cap] * scaling_factor
+  }
+
+  return(probs)
+}
+
 # Normalization function for position probabilities
 normalize_position_probabilities <- function(predictions, race_prob_col, position_thresholds) {
   # Make a copy to avoid modifying the original data frame
   normalized <- predictions
-  
+
   # Log initial sums before any modifications
   log_info("Position probability sums BEFORE normalization:")
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
     if(prob_col %in% names(normalized)) {
       initial_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
-      log_info(sprintf("  %s: %.2f%% (target: %d%%)", 
+      log_info(sprintf("  %s: %.2f%% (target: %d%%)",
                        prob_col, initial_sum, 100 * threshold))
     }
   }
-  
+
   # For each threshold, adjust and normalize probabilities
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
-    
+
     # First, adjust by race participation probability
     if(race_prob_col %in% names(normalized)) {
       # Log sum before race probability adjustment
       sum_before_race_adj <- sum(normalized[[prob_col]], na.rm = TRUE)
-      
+
       # Apply race probability adjustment
       normalized[[prob_col]] <- normalized[[prob_col]] * normalized[[race_prob_col]]
-      
+
       # Log sum after race probability adjustment
       sum_after_race_adj <- sum(normalized[[prob_col]], na.rm = TRUE)
-      log_info(sprintf("  %s after race prob adjustment: %.2f%% (scaling by race participation)", 
+      log_info(sprintf("  %s after race prob adjustment: %.2f%% (scaling by race participation)",
                        prob_col, sum_after_race_adj))
     }
-    
-    # Calculate the current sum
-    current_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
-    
+
     # Target sum should be 100 * threshold (e.g., 100% for top 1, 300% for top 3)
     target_sum <- 100 * threshold
-    
-    # Normalize only if current sum is not zero to avoid division by zero
-    if(current_sum > 0) {
-      # Apply scaling factor to adjust the probabilities
-      scaling_factor <- target_sum / current_sum
-      normalized[[prob_col]] <- normalized[[prob_col]] * scaling_factor
-      
-      # Cap individual probabilities at 100%
-      over_hundred <- which(normalized[[prob_col]] > 100)
-      if(length(over_hundred) > 0) {
-        log_info(sprintf("  Capping %d participants with >100%% probability for %s", 
-                         length(over_hundred), prob_col))
-        
-        # Calculate excess probability that needs to be redistributed
-        excess <- sum(normalized[[prob_col]][over_hundred] - 100)
-        
-        # Cap values at 100%
-        normalized[[prob_col]][over_hundred] <- 100
-        
-        # Redistribute the excess to other participants proportionally
-        under_hundred <- which(normalized[[prob_col]] < 100)
-        if(length(under_hundred) > 0 && excess > 0) {
-          # Get current sum of under-100 probabilities
-          under_sum <- sum(normalized[[prob_col]][under_hundred])
-          
-          # Calculate scaling factor for redistribution
-          if(under_sum > 0) {
-            redistrib_factor <- (under_sum + excess) / under_sum
-            normalized[[prob_col]][under_hundred] <- normalized[[prob_col]][under_hundred] * redistrib_factor
-            
-            # Recursively cap again if needed (unlikely but possible)
-            if(any(normalized[[prob_col]][under_hundred] > 100)) {
-              log_info("  Recursive capping needed after redistribution")
-              # This is a simplification - in practice you might want a more robust approach
-              normalized[[prob_col]][normalized[[prob_col]] > 100] <- 100
-            }
-          }
-        }
-      }
-      
-      log_info(sprintf("  %s normalization: applied scaling factor of %.4f", 
-                       prob_col, scaling_factor))
-    } else {
-      # If sum is zero, distribute evenly among all participants
-      # This is a fallback that should rarely be needed
-      log_warn(paste("Zero sum for", prob_col, "- distributing evenly"))
-      normalized[[prob_col]] <- target_sum / nrow(normalized)
-    }
-    
+
+    # Apply two-phase normalization with cap
+    normalized[[prob_col]] <- normalize_with_cap(normalized[[prob_col]], target_sum = target_sum, max_prob = 100)
+
+    log_info(sprintf("  %s normalization complete (target: %.0f%%)", prob_col, target_sum))
+
     # Final check to ensure we're close to the target sum
     final_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
-    if(abs(final_sum - target_sum) > 1) {  # Allow for small rounding differences
-      log_warn(sprintf("  %s sum after capping: %.2f%% (target: %.2f%%)", 
+    if(abs(final_sum - target_sum) > 1) {
+      log_warn(sprintf("  %s sum after normalization: %.2f%% (target: %.2f%%)",
                        prob_col, final_sum, target_sum))
     }
   }
@@ -243,18 +245,10 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
   log_info("Re-normalizing after monotonic constraints...")
   for(threshold in position_thresholds) {
     prob_col <- paste0("prob_top", threshold)
-    
+
     if(prob_col %in% names(normalized)) {
-      current_sum <- sum(normalized[[prob_col]], na.rm = TRUE)
       target_sum <- 100 * threshold
-      
-      if(current_sum > 0) {
-        scaling_factor <- target_sum / current_sum
-        normalized[[prob_col]] <- normalized[[prob_col]] * scaling_factor
-        
-        # Cap at 100% again
-        normalized[[prob_col]][normalized[[prob_col]] > 100] <- 100
-      }
+      normalized[[prob_col]] <- normalize_with_cap(normalized[[prob_col]], target_sum = target_sum, max_prob = 100)
     }
   }
 
