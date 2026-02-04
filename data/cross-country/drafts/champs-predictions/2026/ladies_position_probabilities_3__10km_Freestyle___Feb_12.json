@@ -3,6 +3,7 @@
   "headers": [
     "Skier",
     "ID",
+    "Sex",
     "Nation",
     "Start",
     "Win",
@@ -15,6 +16,7 @@
     [
       "Jessie Diggins",
       131,
+      "L",
       "USA",
       100.0,
       47.1,
@@ -26,6 +28,7 @@
     [
       "Moa Ilar",
       1866,
+      "L",
       "Sweden",
       76.4,
       9.1,
@@ -37,6 +40,7 @@
     [
       "Ebba Andersson",
       1789,
+      "L",
       "Sweden",
       78.4,
       7.4,
@@ -48,6 +52,7 @@
     [
       "Jonna Sundling",
       1486,
+      "L",
       "Sweden",
       25.6,
       5.3,
@@ -59,6 +64,7 @@
     [
       "Astrid Øyre Slind",
       115,
+      "L",
       "Norway",
       93.3,
       3.7,
@@ -70,6 +76,7 @@
     [
       "Emma Ribom",
       1844,
+      "L",
       "Sweden",
       50.4,
       3.2,
@@ -81,6 +88,7 @@
     [
       "Heidi Weng",
       60,
+      "L",
       "Norway",
       80.0,
       2.9,
@@ -92,6 +100,7 @@
     [
       "Maja Dahlqvist",
       1673,
+      "L",
       "Sweden",
       61.6,
       2.6,
@@ -103,6 +112,7 @@
     [
       "Karoline Simpson-Larsen",
       2300,
+      "L",
       "Norway",
       57.6,
       2.6,
@@ -114,6 +124,7 @@
     [
       "Linn Svahn",
       3190,
+      "L",
       "Sweden",
       19.2,
       2.2,
@@ -125,6 +136,7 @@
     [
       "Leonie Perry",
       10413,
+      "L",
       "France",
       82.9,
       2.2,
@@ -136,6 +148,7 @@
     [
       "Krista Pärmäkoski",
       13,
+      "L",
       "Finland",
       61.9,
       2.1,
@@ -147,6 +160,7 @@
     [
       "Kristin Austgulen Fosnæs",
       4268,
+      "L",
       "Norway",
       64.6,
       1.5,
@@ -158,6 +172,7 @@
     [
       "Pia Fink",
       4004,
+      "L",
       "Germany",
       71.8,
       1.4,
@@ -169,6 +184,7 @@
     [
       "Dariya Nepryaeva",
       6555,
+      "L",
       "Russia",
       100.0,
       1.4,
@@ -180,6 +196,7 @@
     [
       "Teresa Stadlober",
       529,
+      "L",
       "Austria",
       100.0,
       0.8,
@@ -191,6 +208,7 @@
     [
       "Frida Karlsson",
       3998,
+      "L",
       "Sweden",
       60.5,
       0.7,
@@ -202,6 +220,7 @@
     [
       "Helen Hoffmann",
       6691,
+      "L",
       "Germany",
       73.8,
       0.6,
@@ -213,6 +232,7 @@
     [
       "Kerttu Niskanen",
       37,
+      "L",
       "Finland",
       99.6,
       0.4,
@@ -224,6 +244,7 @@
     [
       "Eliza Rucka-Michalek",
       6328,
+      "L",
       "Poland",
       100.0,
       0.4,
@@ -235,6 +256,7 @@
     [
       "Katerina Janatova",
       3198,
+      "L",
       "Czechia",
       100.0,
       0.3,
@@ -246,6 +268,7 @@
     [
       "Caterina Ganz",
       1721,
+      "L",
       "Italy",
       100.0,
       0.3,
@@ -257,6 +280,7 @@
     [
       "Delphine Claudel",
       1694,
+      "L",
       "France",
       63.1,
       0.2,
@@ -268,6 +292,7 @@
     [
       "Katharina Hennig Dotzler",
       1618,
+      "L",
       "Germany",
       54.8,
       0.2,
@@ -279,6 +304,7 @@
     [
       "Julie Bjervig Drivenes",
       3357,
+      "L",
       "Norway",
       41.4,
       0.2,
@@ -290,6 +316,7 @@
     [
       "Maria Gismondi",
       10867,
+      "L",
       "Italy",
       58.1,
       0.1,
@@ -301,6 +328,7 @@
     [
       "Julia Kern",
       1846,
+      "L",
       "USA",
       97.5,
       0.1,
@@ -312,6 +340,7 @@
     [
       "Vilma Ryytty",
       6607,
+      "L",
       "Finland",
       75.8,
       0.1,
@@ -323,6 +352,7 @@
     [
       "Alison Mackie",
       10185,
+      "L",
       "Canada",
       69.4,
       0.1,
@@ -334,6 +364,7 @@
     [
       "Patricijia Eiduka",
       3240,
+      "L",
       "Latvia",
       100.0,
       0.1,
@@ -345,6 +376,7 @@
     [
       "Hailey Swirbul",
       1849,
+      "L",
       "USA",
       12.1,
       0.1,
@@ -356,6 +388,7 @@
     [
       "Johanna Matintalo",
       1761,
+      "L",
       "Finland",
       25.8,
       0.1,
@@ -367,6 +400,7 @@
     [
       "Anja Weber",
       6338,
+      "L",
       "Switzerland",
       88.9,
       0.0,
@@ -378,6 +412,7 @@
     [
       "Sofie Krehl",
       1695,
+      "L",
       "Germany",
       57.5,
       0.0,
@@ -389,6 +424,7 @@
     [
       "Vilma Nissinen",
       3034,
+      "L",
       "Finland",
       41.7,
       0.0,
@@ -400,6 +436,7 @@
     [
       "Jasmin Kähärä",
       3528,
+      "L",
       "Finland",
       43.1,
       0.0,
@@ -411,6 +448,7 @@
     [
       "Jasmi Joensuu",
       1675,
+      "L",
       "Finland",
       51.9,
       0.0,
@@ -422,6 +460,7 @@
     [
       "Gina del Rio",
       10313,
+      "L",
       "Andorra",
       100.0,
       0.0,
@@ -433,6 +472,7 @@
     [
       "Rosie Fordham",
       6450,
+      "L",
       "Australia",
       100.0,
       0.0,
@@ -444,6 +484,7 @@
     [
       "Kathrine Stewart-Jones",
       1676,
+      "L",
       "Canada",
       100.0,
       0.0,
@@ -455,6 +496,7 @@
     [
       "Novie McCabe",
       6651,
+      "L",
       "USA",
       21.6,
       0.0,
@@ -466,6 +508,7 @@
     [
       "Katherine Sauerbrey",
       1727,
+      "L",
       "Germany",
       41.4,
       0.0,
@@ -477,6 +520,7 @@
     [
       "Rosie Brennan",
       627,
+      "L",
       "USA",
       84.6,
       0.0,
@@ -488,6 +532,7 @@
     [
       "Nadine Fähndrich",
       1590,
+      "L",
       "Switzerland",
       84.3,
       0.0,
@@ -499,6 +544,7 @@
     [
       "Marina Kälin",
       7433,
+      "L",
       "Switzerland",
       98.2,
       0.0,
@@ -510,6 +556,7 @@
     [
       "Laura Gimmler",
       1495,
+      "L",
       "Germany",
       18.1,
       0.0,
@@ -521,6 +568,7 @@
     [
       "Sonjaa Schmidt",
       7874,
+      "L",
       "Canada",
       30.7,
       0.0,
@@ -532,6 +580,7 @@
     [
       "Liliane Gagnon",
       7427,
+      "L",
       "Canada",
       86.3,
       0.0,
@@ -543,6 +592,7 @@
     [
       "Katharina Brudermann",
       5040,
+      "L",
       "Austria",
       71.0,
       0.0,
@@ -554,6 +604,7 @@
     [
       "Theresa Fürstenberg",
       6801,
+      "L",
       "Germany",
       48.9,
       0.0,
@@ -565,6 +616,7 @@
     [
       "Martina Di Centa",
       9084,
+      "L",
       "Italy",
       0.0,
       0.0,
@@ -576,6 +628,7 @@
     [
       "Kendall Kramer",
       6650,
+      "L",
       "USA",
       34.9,
       0.0,
@@ -587,6 +640,7 @@
     [
       "Masae Tsuchiya",
       3498,
+      "L",
       "Japan",
       100.0,
       0.0,
@@ -598,6 +652,7 @@
     [
       "Fabienne Alder",
       11191,
+      "L",
       "Switzerland",
       22.7,
       0.0,
@@ -609,6 +664,7 @@
     [
       "Anja Mandeljc",
       1868,
+      "L",
       "Slovenia",
       100.0,
       0.0,
@@ -620,6 +676,7 @@
     [
       "Chunxue Chi",
       1660,
+      "L",
       "China",
       0.0,
       0.0,
@@ -631,6 +688,7 @@
     [
       "Melissa Gal",
       4034,
+      "L",
       "France",
       72.8,
       0.0,
@@ -642,6 +700,7 @@
     [
       "Anna Comarella",
       1724,
+      "L",
       "Italy",
       99.5,
       0.0,
@@ -653,6 +712,7 @@
     [
       "Coletta Rydzek",
       3254,
+      "L",
       "Germany",
       33.6,
       0.0,
@@ -664,6 +724,7 @@
     [
       "Julie Pierrel",
       7444,
+      "L",
       "France",
       66.6,
       0.0,
@@ -675,6 +736,7 @@
     [
       "Cloe Pagnier",
       10319,
+      "L",
       "France",
       38.6,
       0.0,
@@ -686,6 +748,7 @@
     [
       "Kaidy Kaasiku",
       4943,
+      "L",
       "Estonia",
       80.4,
       0.0,
@@ -697,6 +760,7 @@
     [
       "Alina Meier",
       1680,
+      "L",
       "Switzerland",
       28.1,
       0.0,
@@ -708,6 +772,7 @@
     [
       "Izabela Marcisz",
       6327,
+      "L",
       "Poland",
       100.0,
       0.0,
@@ -719,6 +784,7 @@
     [
       "Milla Grosberghaugen Andreassen",
       10424,
+      "L",
       "Norway",
       26.0,
       0.0,
@@ -730,6 +796,7 @@
     [
       "Iris De Martin Pinter",
       7422,
+      "L",
       "Italy",
       17.9,
       0.0,
@@ -741,6 +808,7 @@
     [
       "Olivia Bouffard-Nesbitt",
       1685,
+      "L",
       "Canada",
       39.8,
       0.0,
@@ -752,6 +820,7 @@
     [
       "Lauren Jortberg",
       3997,
+      "L",
       "USA",
       5.0,
       0.0,
@@ -763,6 +832,7 @@
     [
       "Clemence Didierlaurent",
       10690,
+      "L",
       "France",
       75.9,
       0.0,
@@ -774,6 +844,7 @@
     [
       "Keidy Kaasiku",
       4942,
+      "L",
       "Estonia",
       99.7,
       0.0,
@@ -785,6 +856,7 @@
     [
       "Jasmine Drolet",
       6656,
+      "L",
       "Canada",
       27.2,
       0.0,
@@ -796,6 +868,7 @@
     [
       "Eduarda Ribera",
       7448,
+      "L",
       "Brazil",
       0.0,
       0.0,
@@ -807,6 +880,7 @@
     [
       "Heidi Bucher",
       10823,
+      "L",
       "Austria",
       0.0,
       0.0,
@@ -818,6 +892,7 @@
     [
       "Justine Gaillard",
       11576,
+      "L",
       "France",
       0.0,
       0.0,
@@ -829,6 +904,7 @@
     [
       "Anna Pryce",
       6640,
+      "L",
       "Great Britain",
       100.0,
       0.0,
@@ -840,6 +916,7 @@
     [
       "Daryna Mihal",
       10773,
+      "L",
       "Ukraine",
       0.0,
       0.0,
@@ -851,6 +928,7 @@
     [
       "Nadja Kälin",
       6380,
+      "L",
       "Switzerland",
       54.6,
       0.0,
@@ -862,6 +940,7 @@
     [
       "Johanna Hagström",
       3212,
+      "L",
       "Sweden",
       28.0,
       0.0,
@@ -873,6 +952,7 @@
     [
       "Larissza Vanda Bere",
       10909,
+      "L",
       "Hungary",
       0.0,
       0.0,
@@ -884,6 +964,7 @@
     [
       "Mariel Merlii Pulles",
       1969,
+      "L",
       "Estonia",
       53.7,
       0.0,
@@ -895,6 +976,7 @@
     [
       "Kristrun Gudnadottir",
       3512,
+      "L",
       "Iceland",
       100.0,
       0.0,
@@ -906,6 +988,7 @@
     [
       "Anna Milerska",
       10398,
+      "L",
       "Czechia",
       41.0,
       0.0,
@@ -917,6 +1000,7 @@
     [
       "Yundi Wang",
       12303,
+      "L",
       "China",
       0.0,
       0.0,
@@ -928,6 +1012,7 @@
     [
       "Anna Marie Jaklova",
       10190,
+      "L",
       "Czechia",
       41.0,
       0.0,
@@ -939,6 +1024,7 @@
     [
       "Ariuntungalag Enkhbayar",
       567,
+      "L",
       "Mongolia",
       100.0,
       0.0,
@@ -950,6 +1036,7 @@
     [
       "Ema Sobol",
       10875,
+      "L",
       "Croatia",
       0.0,
       0.0,
@@ -961,6 +1048,7 @@
     [
       "Sammy Smith",
       10228,
+      "L",
       "USA",
       25.8,
       0.0,
@@ -972,6 +1060,7 @@
     [
       "Barbora Antosova",
       6633,
+      "L",
       "Czechia",
       0.0,
       0.0,
@@ -983,6 +1072,7 @@
     [
       "Amanda Saari",
       7905,
+      "L",
       "Finland",
       0.0,
       0.0,
@@ -994,6 +1084,7 @@
     [
       "Agustina Groetzner",
       7428,
+      "L",
       "Argentina",
       100.0,
       0.0,
@@ -1005,6 +1096,7 @@
     [
       "Konstantina Charalampidou",
       8340,
+      "L",
       "Greece",
       0.0,
       0.0,
@@ -1016,6 +1108,7 @@
     [
       "Tia Janezic",
       10321,
+      "L",
       "Slovenia",
       0.0,
       0.0,
@@ -1027,6 +1120,7 @@
     [
       "Linda Kaparkaleja",
       10843,
+      "L",
       "Latvia",
       0.0,
       0.0,
@@ -1038,6 +1132,7 @@
     [
       "Magdalena Scherz",
       6707,
+      "L",
       "Austria",
       61.6,
       0.0,
@@ -1049,6 +1144,7 @@
     [
       "Nahiara Diaz Gonzalez",
       10264,
+      "L",
       "Argentina",
       100.0,
       0.0,
@@ -1060,6 +1156,7 @@
     [
       "Neza Zerjav",
       4035,
+      "L",
       "Slovenia",
       34.0,
       0.0,
@@ -1071,6 +1168,7 @@
     [
       "Irem Dursun",
       9329,
+      "L",
       "Turkey",
       0.0,
       0.0,
@@ -1082,6 +1180,7 @@
     [
       "Federica Cassol",
       9082,
+      "L",
       "Italy",
       62.4,
       0.0,
@@ -1093,6 +1192,7 @@
     [
       "Ingrid Bergene Aabrekk",
       6828,
+      "L",
       "Norway",
       21.0,
       0.0,
@@ -1104,6 +1204,7 @@
     [
       "Samanta Krampe",
       6758,
+      "L",
       "Latvia",
       4.8,
       0.0,
@@ -1115,6 +1216,7 @@
     [
       "Sara Ponya",
       4064,
+      "L",
       "Hungary",
       100.0,
       0.0,
@@ -1126,6 +1228,7 @@
     [
       "Lisa Achleitner",
       3255,
+      "L",
       "Austria",
       96.7,
       0.0,
@@ -1137,6 +1240,7 @@
     [
       "Phoebe Cridland",
       5184,
+      "L",
       "Australia",
       100.0,
       0.0,
@@ -1148,6 +1252,7 @@
     [
       "Samaneh Beyrami Baher",
       6748,
+      "L",
       "Iran",
       100.0,
       0.0,
@@ -1159,6 +1264,7 @@
     [
       "Kaile He",
       12304,
+      "L",
       "China",
       0.0,
       0.0,
@@ -1170,6 +1276,7 @@
     [
       "Lucija Medja",
       9083,
+      "L",
       "Slovenia",
       0.0,
       0.0,
@@ -1181,6 +1288,7 @@
     [
       "Tena Hadzic",
       7430,
+      "L",
       "Croatia",
       100.0,
       0.0,
@@ -1192,6 +1300,7 @@
     [
       "Teiloora Ojaste",
       1970,
+      "L",
       "Estonia",
       28.1,
       0.0,
@@ -1203,6 +1312,7 @@
     [
       "Amelia Wells",
       7931,
+      "L",
       "Canada",
       24.2,
       0.0,
@@ -1214,6 +1324,7 @@
     [
       "Teodora Delipara",
       10330,
+      "L",
       "Bosnia&Herzegovina",
       100.0,
       0.0,
@@ -1225,6 +1336,7 @@
     [
       "Elizaveta Hlusovici",
       11962,
+      "L",
       "Moldova",
       100.0,
       0.0,
@@ -1236,6 +1348,7 @@
     [
       "Bruna Moura",
       3180,
+      "L",
       "Brazil",
       100.0,
       0.0,
@@ -1247,6 +1360,7 @@
     [
       "Yelizaveta Nopriienko",
       10799,
+      "L",
       "Ukraine",
       0.0,
       0.0,
@@ -1258,6 +1372,7 @@
     [
       "Maria Danielova",
       6491,
+      "L",
       "Slovakia",
       0.0,
       0.0,
@@ -1269,6 +1384,7 @@
     [
       "Kristine Stavås Skistad",
       3207,
+      "L",
       "Norway",
       16.2,
       0.0,
@@ -1280,6 +1396,7 @@
     [
       "Nicole Monsorno",
       6631,
+      "L",
       "Italy",
       52.6,
       0.0,
@@ -1291,6 +1408,7 @@
     [
       "Kalina Nedyalkova",
       6737,
+      "L",
       "Bulgaria",
       100.0,
       0.0,
@@ -1302,6 +1420,7 @@
     [
       "Delia Ioana Reit",
       9362,
+      "L",
       "Romania",
       0.0,
       0.0,
@@ -1313,6 +1432,7 @@
     [
       "Hanna Karaliova",
       3225,
+      "L",
       "Belarus",
       100.0,
       0.0,
@@ -1324,6 +1444,7 @@
     [
       "Jenny Axisa Eriksen",
       11009,
+      "L",
       "Malta",
       0.0,
       0.0,
@@ -1335,6 +1456,7 @@
     [
       "Kitija Auzina",
       1651,
+      "L",
       "Latvia",
       66.7,
       0.0,
@@ -1346,6 +1468,7 @@
     [
       "Nefeli Tita",
       5219,
+      "L",
       "Greece",
       100.0,
       0.0,
@@ -1357,6 +1480,7 @@
     [
       "Ieva Dainyte",
       9326,
+      "L",
       "Lithuania",
       0.0,
       0.0,
@@ -1368,6 +1492,7 @@
     [
       "Regina Martinez Lorenzo",
       9054,
+      "L",
       "Mexico",
       0.0,
       0.0,
@@ -1379,6 +1504,7 @@
     [
       "Monika Skinder",
       6335,
+      "L",
       "Poland",
       52.9,
       0.0,
@@ -1390,6 +1516,7 @@
     [
       "Anna Melnik",
       6157,
+      "L",
       "Kazakhstan",
       49.3,
       0.0,
@@ -1401,6 +1528,7 @@
     [
       "Anja Ilic",
       1873,
+      "L",
       "Serbia",
       100.0,
       0.0,
@@ -1412,6 +1540,7 @@
     [
       "Egle Savickaite",
       7450,
+      "L",
       "Lithuania",
       0.0,
       0.0,
@@ -1423,6 +1552,7 @@
     [
       "Aleksandra Kolodziej",
       8064,
+      "L",
       "Poland",
       100.0,
       0.0,
@@ -1434,6 +1564,7 @@
     [
       "Lea Fischer",
       2284,
+      "L",
       "Switzerland",
       23.2,
       0.0,
@@ -1445,6 +1576,7 @@
     [
       "Sandra Schutzova",
       560,
+      "L",
       "Czechia",
       0.0,
       0.0,
@@ -1456,6 +1588,7 @@
     [
       "Maddie Hooker",
       10268,
+      "L",
       "Australia",
       0.0,
       0.0,
@@ -1467,6 +1600,7 @@
     [
       "Ellen Søhol Lie",
       6627,
+      "L",
       "Australia",
       76.3,
       0.0,
@@ -1478,6 +1612,7 @@
     [
       "Barbora Havlickova",
       3216,
+      "L",
       "Czechia",
       81.9,
       0.0,
@@ -1489,6 +1624,7 @@
     [
       "Tereza Beranova",
       3618,
+      "L",
       "Czechia",
       51.3,
       0.0,
@@ -1500,6 +1636,7 @@
     [
       "Sofiia Shkatula",
       10768,
+      "L",
       "Ukraine",
       100.0,
       0.0,
@@ -1511,6 +1648,7 @@
     [
       "Sophia Tsu Velicer",
       7036,
+      "L",
       "Taiwan",
       100.0,
       0.0,
@@ -1522,6 +1660,7 @@
     [
       "Katya Galstyan",
       568,
+      "L",
       "Armenia",
       100.0,
       0.0,
@@ -1533,6 +1672,7 @@
     [
       "Ana Cvetanovska",
       4070,
+      "L",
       "North Macedonia",
       100.0,
       0.0,
@@ -1544,6 +1684,7 @@
     [
       "Dinigeer Yilamujiang",
       6575,
+      "L",
       "China",
       100.0,
       0.0,
@@ -1555,6 +1696,7 @@
     [
       "Kseniya Shalygina",
       5390,
+      "L",
       "Kazakhstan",
       91.4,
       0.0,
@@ -1566,6 +1708,7 @@
     [
       "Teesi Tuul",
       3328,
+      "L",
       "Estonia",
       100.0,
       0.0,
@@ -1577,6 +1720,7 @@
     [
       "Karen Chanloung",
       3813,
+      "L",
       "Thailand",
       100.0,
       0.0,
@@ -1588,6 +1732,7 @@
     [
       "Eui Jin Lee",
       6644,
+      "L",
       "South Korea",
       100.0,
       0.0,
@@ -1599,6 +1744,7 @@
     [
       "Da-Som Han",
       1519,
+      "L",
       "South Korea",
       100.0,
       0.0,
@@ -1610,6 +1756,7 @@
     [
       "Nadezhda Stepashkina",
       6922,
+      "L",
       "Kazakhstan",
       100.0,
       0.0,
@@ -1621,6 +1768,7 @@
     [
       "Anastasiia Nikon",
       6954,
+      "L",
       "Ukraine",
       100.0,
       0.0,
@@ -1632,6 +1780,7 @@
     [
       "Darya Ryazhko",
       3468,
+      "L",
       "Kazakhstan",
       100.0,
       0.0,

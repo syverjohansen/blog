@@ -3,6 +3,7 @@
   "headers": [
     "Skier",
     "ID",
+    "Sex",
     "Nation",
     "Start",
     "Win",
@@ -15,6 +16,7 @@
     [
       "Domen Prevc",
       1868,
+      "M",
       "Slovenia",
       100.0,
       47.6374156219865,
@@ -26,6 +28,7 @@
     [
       "Ren Nikaido",
       2283,
+      "M",
       "Japan",
       100.0,
       15.718418514947,
@@ -37,6 +40,7 @@
     [
       "Jan Hörl",
       2416,
+      "M",
       "Austria",
       98.4,
       8.48601735776278,
@@ -48,6 +52,7 @@
     [
       "Ryoyu Kobayashi",
       1637,
+      "M",
       "Japan",
       100.0,
       5.49662487945998,
@@ -59,6 +64,7 @@
     [
       "Anze Lanisek",
       1166,
+      "M",
       "Slovenia",
       100.0,
       5.40019286403086,
@@ -70,6 +76,7 @@
     [
       "Daniel Tschofenig",
       2542,
+      "M",
       "Austria",
       100.0,
       3.56798457087753,
@@ -81,6 +88,7 @@
     [
       "Stephan Embacher",
       2638,
+      "M",
       "Austria",
       92.7,
       2.31436837029894,
@@ -92,6 +100,7 @@
     [
       "Stefan Kraft",
       432,
+      "M",
       "Austria",
       97.3,
       2.1215043394407,
@@ -103,6 +112,7 @@
     [
       "Marius Lindvik",
       1920,
+      "M",
       "Norway",
       100.0,
       1.7357762777242,
@@ -114,6 +124,7 @@
     [
       "Kristoffer Eriksen Sundal",
       2575,
+      "M",
       "Norway",
       100.0,
       1.35004821600771,
@@ -125,6 +136,7 @@
     [
       "Felix Hoffmann",
       1893,
+      "M",
       "Germany",
       94.3,
       1.15718418514947,
@@ -136,6 +148,7 @@
     [
       "Philipp Raimund",
       2401,
+      "M",
       "Germany",
       100.0,
       1.15718418514947,
@@ -147,6 +160,7 @@
     [
       "Naoki Nakamura",
       1845,
+      "M",
       "Japan",
       100.0,
       0.964320154291225,
@@ -158,6 +172,7 @@
     [
       "Vladimir Zografski",
       61,
+      "M",
       "Bulgaria",
       100.0,
       0.578592092574735,
@@ -169,6 +184,7 @@
     [
       "Johann Forfang",
       902,
+      "M",
       "Norway",
       100.0,
       0.482160077145612,
@@ -180,6 +196,7 @@
     [
       "Andreas Wellinger",
       553,
+      "M",
       "Germany",
       87.2,
       0.38572806171649,
@@ -191,6 +208,7 @@
     [
       "Kacper Tomasiak",
       2673,
+      "M",
       "Poland",
       100.0,
       0.38572806171649,
@@ -202,6 +220,7 @@
     [
       "Niko Kytösaho",
       1830,
+      "M",
       "Finland",
       100.0,
       0.192864030858245,
@@ -213,6 +232,7 @@
     [
       "Pius Paschke",
       1556,
+      "M",
       "Germany",
       100.0,
       0.192864030858245,
@@ -224,6 +244,7 @@
     [
       "Timi Zajc",
       2106,
+      "M",
       "Slovenia",
       100.0,
       0.192864030858245,
@@ -235,6 +256,7 @@
     [
       "Antti Aalto",
       924,
+      "M",
       "Finland",
       100.0,
       0.0964320154291225,
@@ -246,6 +268,7 @@
     [
       "Kamil Stoch",
       40,
+      "M",
       "Poland",
       100.0,
       0.0964320154291225,
@@ -257,6 +280,7 @@
     [
       "Pawel Wasek",
       2189,
+      "M",
       "Poland",
       100.0,
       0.0964320154291225,
@@ -268,6 +292,7 @@
     [
       "Gregor Deschwanden",
       273,
+      "M",
       "Switzerland",
       100.0,
       0.0964320154291225,
@@ -279,6 +304,7 @@
     [
       "Sandro Hauswirth",
       2116,
+      "M",
       "Switzerland",
       100.0,
       0.0964320154291225,
@@ -290,6 +316,7 @@
     [
       "Mackenzie Boyd-Clowes",
       95,
+      "M",
       "Canada",
       100.0,
       0.0,
@@ -301,6 +328,7 @@
     [
       "Qiwu Song",
       2559,
+      "M",
       "China",
       100.0,
       0.0,
@@ -312,6 +340,7 @@
     [
       "Roman Koudelka",
       24,
+      "M",
       "Czechia",
       100.0,
       0.0,
@@ -323,6 +352,7 @@
     [
       "Artti Aigro",
       1871,
+      "M",
       "Estonia",
       100.0,
       0.0,
@@ -334,6 +364,7 @@
     [
       "Kaimar Vagul",
       2626,
+      "M",
       "Estonia",
       100.0,
       0.0,
@@ -345,6 +376,7 @@
     [
       "Vilho Palosaari",
       2533,
+      "M",
       "Finland",
       100.0,
       0.0,
@@ -356,6 +388,7 @@
     [
       "Jules Chervet",
       2571,
+      "M",
       "France",
       100.0,
       0.0,
@@ -367,6 +400,7 @@
     [
       "Valentin Foubert",
       2423,
+      "M",
       "France",
       100.0,
       0.0,
@@ -378,6 +412,7 @@
     [
       "Enzo Milesi",
       2507,
+      "M",
       "France",
       71.5,
       0.0,
@@ -389,6 +424,7 @@
     [
       "Giovanni Bresadola",
       2277,
+      "M",
       "Italy",
       100.0,
       0.0,
@@ -400,6 +436,7 @@
     [
       "Francesco Cecon",
       2431,
+      "M",
       "Italy",
       46.4,
       0.0,
@@ -411,6 +448,7 @@
     [
       "Alex Insam",
       915,
+      "M",
       "Italy",
       100.0,
       0.0,
@@ -422,6 +460,7 @@
     [
       "Ilya Mizernykh",
       2685,
+      "M",
       "Kazakhstan",
       100.0,
       0.0,
@@ -433,6 +472,7 @@
     [
       "Danil Vassilyev",
       2476,
+      "M",
       "Kazakhstan",
       100.0,
       0.0,
@@ -444,6 +484,7 @@
     [
       "Daniel Andrei Cacina",
       2329,
+      "M",
       "Romania",
       100.0,
       0.0,
@@ -455,6 +496,7 @@
     [
       "Mihnea Alexandru Spulber",
       2143,
+      "M",
       "Romania",
       100.0,
       0.0,
@@ -466,6 +508,7 @@
     [
       "Hektor Kapustik",
       2674,
+      "M",
       "Slovakia",
       100.0,
       0.0,
@@ -477,6 +520,7 @@
     [
       "Felix Trunz",
       2654,
+      "M",
       "Switzerland",
       100.0,
       0.0,
@@ -488,6 +532,7 @@
     [
       "Muhammed Ali Bedir",
       2117,
+      "M",
       "Turkey",
       100.0,
       0.0,
@@ -499,6 +544,7 @@
     [
       "Fatih Arda Ipcioglu",
       1890,
+      "M",
       "Turkey",
       100.0,
       0.0,
@@ -510,6 +556,7 @@
     [
       "Kevin Bickner",
       1644,
+      "M",
       "USA",
       100.0,
       0.0,
@@ -521,6 +568,7 @@
     [
       "Jason Colby",
       2679,
+      "M",
       "USA",
       100.0,
       0.0,
@@ -532,6 +580,7 @@
     [
       "Tate Frantz",
       2628,
+      "M",
       "USA",
       100.0,
       0.0,
@@ -543,6 +592,7 @@
     [
       "Vitaliy Kalinichenko",
       1839,
+      "M",
       "Ukraine",
       100.0,
       0.0,
@@ -554,6 +604,7 @@
     [
       "Yevhen Marusiak",
       2089,
+      "M",
       "Ukraine",
       100.0,
       0.0,

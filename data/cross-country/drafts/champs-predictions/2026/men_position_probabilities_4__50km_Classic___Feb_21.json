@@ -3,6 +3,7 @@
   "headers": [
     "Skier",
     "ID",
+    "Sex",
     "Nation",
     "Start",
     "Win",
@@ -15,6 +16,7 @@
     [
       "Johannes Høsflot Klæbo",
       5164,
+      "M",
       "Norway",
       82.4,
       67.7,
@@ -26,6 +28,7 @@
     [
       "Harald Østberg Amundsen",
       5449,
+      "M",
       "Norway",
       71.3,
       17.8,
@@ -37,6 +40,7 @@
     [
       "Martin Løwstrøm Nyenget",
       2295,
+      "M",
       "Norway",
       79.0,
       6.5,
@@ -48,6 +52,7 @@
     [
       "Federico Pellegrino",
       44,
+      "M",
       "Italy",
       96.2,
       2.6,
@@ -59,6 +64,7 @@
     [
       "Erik Valnes",
       5923,
+      "M",
       "Norway",
       88.8,
       1.6,
@@ -70,6 +76,7 @@
     [
       "Mattis Stenshagen",
       5165,
+      "M",
       "Norway",
       50.0,
       1.2,
@@ -81,6 +88,7 @@
     [
       "Gus Schumacher",
       9172,
+      "M",
       "USA",
       89.0,
       0.6,
@@ -92,6 +100,7 @@
     [
       "Emil Iversen",
       1467,
+      "M",
       "Norway",
       28.4,
       0.6,
@@ -103,6 +112,7 @@
     [
       "Iivo Niskanen",
       1470,
+      "M",
       "Finland",
       90.9,
       0.2,
@@ -114,6 +124,7 @@
     [
       "Saveliy Korostelev",
       13188,
+      "M",
       "Russia",
       100.0,
       0.2,
@@ -125,6 +136,7 @@
     [
       "Jules Chappaz",
       12181,
+      "M",
       "France",
       31.9,
       0.2,
@@ -136,6 +148,7 @@
     [
       "Mika Vermeulen",
       12673,
+      "M",
       "Austria",
       100.0,
       0.1,
@@ -147,6 +160,7 @@
     [
       "Edvin Anger",
       14039,
+      "M",
       "Sweden",
       79.1,
       0.1,
@@ -158,6 +172,7 @@
     [
       "William Poromaa",
       12573,
+      "M",
       "Sweden",
       95.5,
       0.1,
@@ -169,6 +184,7 @@
     [
       "Elia Barp",
       14042,
+      "M",
       "Italy",
       66.9,
       0.1,
@@ -180,6 +196,7 @@
     [
       "Antoine Cyr",
       9225,
+      "M",
       "Canada",
       100.0,
       0.1,
@@ -191,6 +208,7 @@
     [
       "Ben Ogden",
       9179,
+      "M",
       "USA",
       55.5,
       0.1,
@@ -202,6 +220,7 @@
     [
       "Hugo Lapalus",
       6018,
+      "M",
       "France",
       93.3,
       0.1,
@@ -213,6 +232,7 @@
     [
       "Mathis Desloges",
       12767,
+      "M",
       "France",
       77.8,
       0.0,
@@ -224,6 +244,7 @@
     [
       "Theo Schely",
       12166,
+      "M",
       "France",
       59.5,
       0.0,
@@ -235,6 +256,7 @@
     [
       "Ondrej Cerny",
       8094,
+      "M",
       "Czechia",
       0.0,
       0.0,
@@ -246,6 +268,7 @@
     [
       "Arsi Ruuskanen",
       8120,
+      "M",
       "Finland",
       73.8,
       0.0,
@@ -257,6 +280,7 @@
     [
       "Andrew Musgrave",
       277,
+      "M",
       "Great Britain",
       100.0,
       0.0,
@@ -268,6 +292,7 @@
     [
       "Benjamin Moser",
       5989,
+      "M",
       "Austria",
       39.7,
       0.0,
@@ -279,6 +304,7 @@
     [
       "Lauri Vuorinen",
       2874,
+      "M",
       "Finland",
       64.4,
       0.0,
@@ -290,6 +316,7 @@
     [
       "Calle Halfvarsson",
       73,
+      "M",
       "Sweden",
       48.8,
       0.0,
@@ -301,6 +328,7 @@
     [
       "Oskar Opstad Vike",
       19279,
+      "M",
       "Norway",
       0.0,
       0.0,
@@ -312,6 +340,7 @@
     [
       "Truls Gisselman",
       12782,
+      "M",
       "Sweden",
       59.6,
       0.0,
@@ -323,6 +352,7 @@
     [
       "Beda Klee",
       3651,
+      "M",
       "Switzerland",
       100.0,
       0.0,
@@ -334,6 +364,7 @@
     [
       "Xavier McKeever",
       12676,
+      "M",
       "Canada",
       88.0,
       0.0,
@@ -345,6 +376,7 @@
     [
       "Janik Riebli",
       7725,
+      "M",
       "Switzerland",
       52.8,
       0.0,
@@ -356,6 +388,7 @@
     [
       "Emil Liekari",
       12440,
+      "M",
       "Finland",
       16.9,
       0.0,
@@ -367,6 +400,7 @@
     [
       "Zak Ketterson",
       5988,
+      "M",
       "USA",
       61.2,
       0.0,
@@ -378,6 +412,7 @@
     [
       "Michal Novak",
       3655,
+      "M",
       "Czechia",
       100.0,
       0.0,
@@ -389,6 +424,7 @@
     [
       "Richard Jouve",
       2768,
+      "M",
       "France",
       47.3,
       0.0,
@@ -400,6 +436,7 @@
     [
       "Davide Graz",
       12165,
+      "M",
       "Italy",
       56.0,
       0.0,
@@ -411,6 +448,7 @@
     [
       "Joni Mäki",
       3586,
+      "M",
       "Finland",
       10.8,
       0.0,
@@ -422,6 +460,7 @@
     [
       "Martino Carollo",
       19980,
+      "M",
       "Italy",
       66.2,
       0.0,
@@ -433,6 +472,7 @@
     [
       "James Clinton Schoonmaker",
       9201,
+      "M",
       "USA",
       44.9,
       0.0,
@@ -444,6 +484,7 @@
     [
       "Ristomatti Hakola",
       2553,
+      "M",
       "Finland",
       54.9,
       0.0,
@@ -455,6 +496,7 @@
     [
       "Einar Hedegart",
       20631,
+      "M",
       "Norway",
       0.0,
       0.0,
@@ -466,6 +508,7 @@
     [
       "Jules Lapierre",
       3646,
+      "M",
       "France",
       56.6,
       0.0,
@@ -477,6 +520,7 @@
     [
       "Nilo Moilanen",
       12446,
+      "M",
       "Finland",
       0.0,
       0.0,
@@ -488,6 +532,7 @@
     [
       "Simone Dapra",
       6019,
+      "M",
       "Italy",
       100.0,
       0.0,
@@ -499,6 +544,7 @@
     [
       "Alvar Johannes Alev",
       1996,
+      "M",
       "Estonia",
       100.0,
       0.0,
@@ -510,6 +556,7 @@
     [
       "Florian Notz",
       1488,
+      "M",
       "Germany",
       100.0,
       0.0,
@@ -521,6 +568,7 @@
     [
       "Friedrich Moch",
       9323,
+      "M",
       "Germany",
       100.0,
       0.0,
@@ -532,6 +580,7 @@
     [
       "Jan Stölben",
       14033,
+      "M",
       "Germany",
       42.4,
       0.0,
@@ -543,6 +592,7 @@
     [
       "Niko Anttola",
       17474,
+      "M",
       "Finland",
       88.4,
       0.0,
@@ -554,6 +604,7 @@
     [
       "Valerio Grond",
       12164,
+      "M",
       "Switzerland",
       22.4,
       0.0,
@@ -565,6 +616,7 @@
     [
       "Janosch Brugger",
       3657,
+      "M",
       "Germany",
       90.3,
       0.0,
@@ -576,6 +628,7 @@
     [
       "Alvar Myhlback",
       19652,
+      "M",
       "Sweden",
       0.0,
       0.0,
@@ -587,6 +640,7 @@
     [
       "Joe Davies",
       14110,
+      "M",
       "Great Britain",
       0.0,
       0.0,
@@ -598,6 +652,7 @@
     [
       "Michael Föttinger",
       5978,
+      "M",
       "Austria",
       29.4,
       0.0,
@@ -609,6 +664,7 @@
     [
       "Anton Grahn",
       18667,
+      "M",
       "Sweden",
       17.9,
       0.0,
@@ -620,6 +676,7 @@
     [
       "Johan Häggström",
       4399,
+      "M",
       "Sweden",
       40.0,
       0.0,
@@ -631,6 +688,7 @@
     [
       "Dominik Bury",
       3623,
+      "M",
       "Poland",
       100.0,
       0.0,
@@ -642,6 +700,7 @@
     [
       "Lucas Chanavat",
       3582,
+      "M",
       "France",
       14.8,
       0.0,
@@ -653,6 +712,7 @@
     [
       "Noe Näff",
       19984,
+      "M",
       "Switzerland",
       54.9,
       0.0,
@@ -664,6 +724,7 @@
     [
       "James Clugnet",
       3615,
+      "M",
       "Great Britain",
       100.0,
       0.0,
@@ -675,6 +736,7 @@
     [
       "Simone Mocellini",
       12168,
+      "M",
       "Italy",
       12.5,
       0.0,
@@ -686,6 +748,7 @@
     [
       "Tom Stephen",
       12678,
+      "M",
       "Canada",
       0.0,
       0.0,
@@ -697,6 +760,7 @@
     [
       "Martin Himma",
       8092,
+      "M",
       "Estonia",
       59.9,
       0.0,
@@ -708,6 +772,7 @@
     [
       "Jiri Tuz",
       17348,
+      "M",
       "Czechia",
       73.2,
       0.0,
@@ -719,6 +784,7 @@
     [
       "Zanden McMullen",
       12698,
+      "M",
       "USA",
       62.4,
       0.0,
@@ -730,6 +796,7 @@
     [
       "Qiang Wang",
       11198,
+      "M",
       "China",
       100.0,
       0.0,
@@ -741,6 +808,7 @@
     [
       "Jack Young",
       14687,
+      "M",
       "USA",
       18.0,
       0.0,
@@ -752,6 +820,7 @@
     [
       "Victor Lovera",
       17106,
+      "M",
       "France",
       18.6,
       0.0,
@@ -763,6 +832,7 @@
     [
       "Nicola Wigger",
       12697,
+      "M",
       "Switzerland",
       75.5,
       0.0,
@@ -774,6 +844,7 @@
     [
       "Irineu Esteve Altimiras",
       3632,
+      "M",
       "Andorra",
       100.0,
       0.0,
@@ -785,6 +856,7 @@
     [
       "Johnny Hagenbuch",
       12699,
+      "M",
       "USA",
       16.8,
       0.0,
@@ -796,6 +868,7 @@
     [
       "Naoto Baba",
       5186,
+      "M",
       "Japan",
       100.0,
       0.0,
@@ -807,6 +880,7 @@
     [
       "Jaume Pueyo",
       12682,
+      "M",
       "Spain",
       0.0,
       0.0,
@@ -818,6 +892,7 @@
     [
       "Miha Simenc",
       2808,
+      "M",
       "Slovenia",
       100.0,
       0.0,
@@ -829,6 +904,7 @@
     [
       "Jakob Elias Moch",
       19936,
+      "M",
       "Germany",
       0.0,
       0.0,
@@ -840,6 +916,7 @@
     [
       "Thomas Hjalmar Westgård",
       5553,
+      "M",
       "Ireland",
       100.0,
       0.0,
@@ -851,6 +928,7 @@
     [
       "Vili Crv",
       5931,
+      "M",
       "Slovenia",
       100.0,
       0.0,
@@ -862,6 +940,7 @@
     [
       "Nejc Stern",
       18932,
+      "M",
       "Slovenia",
       0.0,
       0.0,
@@ -873,6 +952,7 @@
     [
       "Max Hollmann",
       18737,
+      "M",
       "Canada",
       58.1,
       0.0,
@@ -884,6 +964,7 @@
     [
       "Mike Ophoff",
       12702,
+      "M",
       "Czechia",
       0.0,
       0.0,
@@ -895,6 +976,7 @@
     [
       "Remi Drolet",
       8051,
+      "M",
       "Canada",
       100.0,
       0.0,
@@ -906,6 +988,7 @@
     [
       "Hunter Wonders",
       5946,
+      "M",
       "USA",
       52.2,
       0.0,
@@ -917,6 +1000,7 @@
     [
       "Ryo Hirose",
       12172,
+      "M",
       "Japan",
       100.0,
       0.0,
@@ -928,6 +1012,7 @@
     [
       "Haruki Yamashita",
       6555,
+      "M",
       "Japan",
       50.4,
       0.0,
@@ -939,6 +1024,7 @@
     [
       "Matyas Bauer",
       18927,
+      "M",
       "Czechia",
       100.0,
       0.0,
@@ -950,6 +1036,7 @@
     [
       "Maciej Starega",
       139,
+      "M",
       "Poland",
       0.0,
       0.0,
@@ -961,6 +1048,7 @@
     [
       "Sebastian Bryja",
       12700,
+      "M",
       "Poland",
       100.0,
       0.0,
@@ -972,6 +1060,7 @@
     [
       "Modestas Vaiciulis",
       1652,
+      "M",
       "Lithuania",
       0.0,
       0.0,
@@ -983,6 +1072,7 @@
     [
       "Karl Sebastian Dremljuga",
       12667,
+      "M",
       "Estonia",
       0.0,
       0.0,
@@ -994,6 +1084,7 @@
     [
       "Raimo Vigants",
       4153,
+      "M",
       "Latvia",
       100.0,
       0.0,
@@ -1005,6 +1096,7 @@
     [
       "Mateo Lorenzo Sauma",
       14069,
+      "M",
       "Argentina",
       0.0,
       0.0,
@@ -1016,6 +1108,7 @@
     [
       "Rakan Alireza",
       18666,
+      "M",
       "Saudi Arabia",
       0.0,
       0.0,
@@ -1027,6 +1120,7 @@
     [
       "Gustaf Berglund",
       340,
+      "M",
       "Sweden",
       59.1,
       0.0,
@@ -1038,6 +1132,7 @@
     [
       "Allan Corona",
       20012,
+      "M",
       "Mexico",
       0.0,
       0.0,
@@ -1049,6 +1144,7 @@
     [
       "Artur Saparbekov",
       19795,
+      "M",
       "Kyrgyzstan",
       0.0,
       0.0,
@@ -1060,6 +1156,7 @@
     [
       "Matthew Smith",
       20251,
+      "M",
       "South Africa",
       0.0,
       0.0,
@@ -1071,6 +1168,7 @@
     [
       "Lauris Kaparkalejs",
       14054,
+      "M",
       "Latvia",
       100.0,
       0.0,
@@ -1082,6 +1180,7 @@
     [
       "Tomas Cenek",
       19862,
+      "M",
       "Slovakia",
       0.0,
       0.0,
@@ -1093,6 +1192,7 @@
     [
       "Chieh-Han Lee",
       19988,
+      "M",
       "Taiwan",
       0.0,
       0.0,
@@ -1104,6 +1204,7 @@
     [
       "Hugo Hinckfuss",
       12412,
+      "M",
       "Australia",
       100.0,
       0.0,
@@ -1115,6 +1216,7 @@
     [
       "Lars Young Vik",
       12386,
+      "M",
       "Australia",
       53.4,
       0.0,
@@ -1126,6 +1228,7 @@
     [
       "Peter Hinds",
       14864,
+      "M",
       "Slovakia",
       0.0,
       0.0,
@@ -1137,6 +1240,7 @@
     [
       "Mario Matikanov",
       16167,
+      "M",
       "Bulgaria",
       0.0,
       0.0,
@@ -1148,6 +1252,7 @@
     [
       "Abderrahim Kemmissa",
       17604,
+      "M",
       "Morocco",
       0.0,
       0.0,
@@ -1159,6 +1264,7 @@
     [
       "Stanzin Lundup",
       20961,
+      "M",
       "India",
       0.0,
       0.0,
@@ -1170,6 +1276,7 @@
     [
       "Marc Colell Pantebre",
       17552,
+      "M",
       "Spain",
       0.0,
       0.0,
@@ -1181,6 +1288,7 @@
     [
       "Manex Silva",
       12689,
+      "M",
       "Brazil",
       100.0,
       0.0,
@@ -1192,6 +1300,7 @@
     [
       "Samuel Uduigowme Ikpefan",
       13235,
+      "M",
       "Nigeria",
       100.0,
       0.0,
@@ -1203,6 +1312,7 @@
     [
       "Amirgali Muratbekov",
       17590,
+      "M",
       "Kazakhstan",
       0.0,
       0.0,
@@ -1214,6 +1324,7 @@
     [
       "Nail Bashmakov",
       10385,
+      "M",
       "Kazakhstan",
       100.0,
       0.0,
@@ -1225,6 +1336,7 @@
     [
       "Bernat Selles Gasch",
       17556,
+      "M",
       "Spain",
       0.0,
       0.0,
@@ -1236,6 +1348,7 @@
     [
       "Dagur Benediktsson",
       5956,
+      "M",
       "Iceland",
       0.0,
       0.0,
@@ -1247,6 +1360,7 @@
     [
       "Vitaliy Pukhkalo",
       5195,
+      "M",
       "Kazakhstan",
       100.0,
       0.0,
@@ -1258,6 +1372,7 @@
     [
       "Apostolos Angelis",
       2848,
+      "M",
       "Greece",
       0.0,
       0.0,
@@ -1269,6 +1384,7 @@
     [
       "Aleksandar Grbovic",
       12827,
+      "M",
       "Montenegro",
       0.0,
       0.0,
@@ -1280,6 +1396,7 @@
     [
       "Robin Frommelt",
       12795,
+      "M",
       "Liechtenstein",
       100.0,
       0.0,
@@ -1291,6 +1408,7 @@
     [
       "Achbadrakh Batmunkh",
       5223,
+      "M",
       "Mongolia",
       100.0,
       0.0,
@@ -1302,6 +1420,7 @@
     [
       "Nicolas Claveau-Laviolette",
       18755,
+      "M",
       "Venezuela",
       0.0,
       0.0,
@@ -1313,6 +1432,7 @@
     [
       "Strahinja Eric",
       8126,
+      "M",
       "Bosnia&Herzegovina",
       0.0,
       0.0,
@@ -1324,6 +1444,7 @@
     [
       "Daniel Peshkov",
       17082,
+      "M",
       "Bulgaria",
       0.0,
       0.0,
@@ -1335,6 +1456,7 @@
     [
       "Timo Juhani Gronlund",
       12119,
+      "M",
       "Bolivia",
       0.0,
       0.0,
@@ -1346,6 +1468,7 @@
     [
       "Iulian Luchin",
       19898,
+      "M",
       "Moldova",
       0.0,
       0.0,
@@ -1357,6 +1480,7 @@
     [
       "Seve De Campo",
       8036,
+      "M",
       "Australia",
       100.0,
       0.0,
@@ -1368,6 +1492,7 @@
     [
       "Gabriel Cojocaru",
       16169,
+      "M",
       "Romania",
       0.0,
       0.0,
@@ -1379,6 +1504,7 @@
     [
       "Mikayel Mikayelyan",
       5226,
+      "M",
       "Armenia",
       100.0,
       0.0,
@@ -1390,6 +1516,7 @@
     [
       "Paul Constantin Pepene",
       219,
+      "M",
       "Romania",
       100.0,
       0.0,
@@ -1401,6 +1528,7 @@
     [
       "Franco Dal Farra",
       8039,
+      "M",
       "Argentina",
       100.0,
       0.0,
@@ -1412,6 +1540,7 @@
     [
       "Jose Cabeca",
       17344,
+      "M",
       "Portugal",
       0.0,
       0.0,
@@ -1423,6 +1552,7 @@
     [
       "Danyal Saveh Shemshaki",
       14082,
+      "M",
       "Iran",
       0.0,
       0.0,
@@ -1434,6 +1564,7 @@
     [
       "Stevenson Savart",
       19979,
+      "M",
       "Haiti",
       0.0,
       0.0,
@@ -1445,6 +1576,7 @@
     [
       "Dmytro Dragun",
       8058,
+      "M",
       "Ukraine",
       0.0,
       0.0,
@@ -1456,6 +1588,7 @@
     [
       "Abdullah Yilmaz",
       6740,
+      "M",
       "Turkey",
       0.0,
       0.0,
@@ -1467,6 +1600,7 @@
     [
       "Minglin Li",
       18931,
+      "M",
       "China",
       0.0,
       0.0,
@@ -1478,6 +1612,7 @@
     [
       "Samer Tawk",
       12177,
+      "M",
       "Lebanon",
       0.0,
       0.0,
@@ -1489,6 +1624,7 @@
     [
       "Nika Saulitis",
       8270,
+      "M",
       "Latvia",
       0.0,
       0.0,
@@ -1500,6 +1636,7 @@
     [
       "Oleksandr Lisohor",
       13173,
+      "M",
       "Ukraine",
       0.0,
       0.0,
@@ -1511,6 +1648,7 @@
     [
       "Klaus Jungbluth Rodriguez",
       8141,
+      "M",
       "Ecuador",
       0.0,
       0.0,
@@ -1522,6 +1660,7 @@
     [
       "Joon-Seo Lee",
       13376,
+      "M",
       "South Korea",
       100.0,
       0.0,
@@ -1533,6 +1672,7 @@
     [
       "Attila Mihaly Kertesz",
       21619,
+      "M",
       "Israel",
       0.0,
       0.0,
@@ -1544,6 +1684,7 @@
     [
       "Tautvydas Strolia",
       2281,
+      "M",
       "Lithuania",
       100.0,
       0.0,
@@ -1555,6 +1696,7 @@
     [
       "Stavre Jada",
       5957,
+      "M",
       "North Macedonia",
       0.0,
       0.0,
@@ -1566,6 +1708,7 @@
     [
       "Marko Skender",
       8034,
+      "M",
       "Croatia",
       100.0,
       0.0,
@@ -1577,6 +1720,7 @@
     [
       "Fredrik Gerardo Fodstad",
       13076,
+      "M",
       "Colombia",
       0.0,
       0.0,
@@ -1588,6 +1732,7 @@
     [
       "Mark Chanloung",
       5172,
+      "M",
       "Thailand",
       100.0,
       0.0,
@@ -1599,6 +1744,7 @@
     [
       "Milos Milosavljevic",
       12094,
+      "M",
       "Serbia",
       0.0,
       0.0,
@@ -1610,6 +1756,7 @@
     [
       "Sebastian Kristoffer Endrestad",
       12661,
+      "M",
       "Chile",
       0.0,
       0.0,
@@ -1621,6 +1768,7 @@
     [
       "Adam Konya",
       2259,
+      "M",
       "Hungary",
       88.9,
       0.0,
@@ -1632,6 +1780,7 @@
     [
       "Adam Büki",
       8078,
+      "M",
       "Hungary",
       100.0,
       0.0,
