@@ -12,4 +12,6 @@ Linear regression if GAM approaches encounter fitting issues
 Simple ELO-only model as the ultimate fallback.  Please look into that and if we need to change the layout of the site to accomodate, let's do that.
 10) Elo Calculations Methodology: The exmaple race section is all messed up, let's fix that table.  Same with the season discount section and Sport-Specific K adjustments
 11) For all-time rankings methodology, the Base Point Values, Race Type Modifiers, and Complete Points Tables parts are not showing up in the tables.  Output columns is also not showing any entries in the table.
+12) The links for ladies in the champs predictions are leading to other athletes.  Race-picks is still working correctly.  
+13) In race archives all the races are listed as one day before they actually happen.  Why is that?  Something to do with local time vs gmt when they get uploaded?
 12) In ~/Documents/shrek-preview.md I have written a preview of the Olympics for cross-country skiing for a friend.  Please proofread the file and make any grammatical or stylistic suggestions.  I would also like to create an html file of the md that uses a Winter Olympic theme and emojis next to countries.  I really liked what was done with Users/syverjohansen/fantasy/recap2025.html and should have a similar feel but Winter Olympics instead of fantasy football

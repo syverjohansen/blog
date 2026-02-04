@@ -110,6 +110,80 @@ Going page by page through the website to identify and fix issues before the 202
 - Files updated: layouts/partials/{alpine,biathlon,cross-country,nordic-combined,skijump}/small-table.html
 - Removed: `<h1 class="section-title" id="Ladies">Ladies</h1>` and `<h1 class="section-title" id="Men">Men</h1>`
 
+#### 12. Ranks Table Sticky Columns and Mobile Truncation (2026-02-04)
+- Removed Nation from being a sticky column - now only Rank and Skier are sticky
+- Added border-right to sticky-col-2 (Skier) since it's now the last sticky column
+- Added mobile truncation for skier name (max-width: 80px with ellipsis), matching Elo tables
+- Both Rank and Skier stay sticky on mobile with adjusted positions (left: 0, left: 40px)
+- Files updated: layouts/partials/{alpine,biathlon,cross-country,nordic-combined,skijump}/ranks-table.html
+
+#### 13. Weekly Recap Methodology Updates (2026-02-04)
+- Updated Elo Change Tracking Purpose to: "Track the changes in Elo ratings for athletes who have competed in the last week."
+- Removed Data Processing subsection from Elo Change Tracking
+- Specified that **10 most recent races** are used from athlete history
+- Added **participation probability** documentation - simulation determines if athlete participates in each race based on historical participation patterns
+- Converted system bullets from numbered list to bullet points
+- Removed Technical Notes section at bottom
+- File updated: content/post/methods/race-recap.md
+
+#### 14. Race Picks Methodology Improvements (2026-02-04)
+- **Added BLUF section** - Technical summary for data science audience covering GAMs, BIC feature selection, binomial GAMs with REML, 7-phase normalization
+- **Fixed numbered list formatting** - Removed leading spaces from numbered lists (`  1.` → `1.`) so they render properly as markdown lists
+- **Consolidated repetitive Normalization section** - The identical 7-phase normalization process appeared 10 times (Individual + Relay × 5 sports). Created a single "Common Methodology" section at the top and replaced all 10 occurrences with references to it
+- **Reduced file size** - From ~1213 lines to ~1090 lines by eliminating duplicate content
+- File updated: content/post/methods/race-picks.md
+
+#### 15. Elo Calculations Methodology Tables Fixed (2026-02-04)
+- **Created new `simple-table` shortcode** - A lightweight table shortcode with nice styling (borders, alternating row colors, header formatting) but without the heavy pagination/search/sorting controls of datatable
+- **Replaced datatable with simple-table** for all 3 methodology tables:
+  - Example Race table (4 rows)
+  - Season Discount Example table (4 rows)
+  - K Adjustments table (8 rows)
+- New shortcode created: layouts/shortcodes/simple-table.html
+- File updated: content/post/methods/elo-calculations.md
+
+#### 16. All-Time Rankings Methodology Tables Fixed (2026-02-04)
+- **Root cause**: The `datatable` shortcode uses `.` as path separator, but the content was using `/` (e.g., `methods/ranks/base_points`). The `simple-table` shortcode correctly uses `/` as separator.
+- **Replaced all 8 datatable calls with simple-table** in ranks.md:
+  - base_points, race_modifiers
+  - alpine_points, biathlon_points, crosscountry_points, nordic_combined_points, skijump_points
+  - output_columns
+- File updated: content/post/methods/ranks.md
+
+#### 17. Champs Predictions Ladies Gender Links Fixed (2026-02-04)
+- **Root cause**: The champs-predictions.R scripts were not including a Sex column in the Excel output, unlike race-picks.R which does. Without the Sex column, the datatable2 shortcode fell back to filename detection which incorrectly matched "m_" in distance strings like "20km_" (detecting "k**m_**Skiathlon").
+- **Solution**: Added Sex column to all 5 champs-predictions.R files. The datatable2 shortcode already hides the Sex column from display but uses it for athlete link generation.
+- Files updated:
+  - content/post/alpine/drafts/champs-predictions.R
+  - content/post/biathlon/drafts/champs-predictions.R
+  - content/post/cross-country/drafts/champs-predictions.R
+  - content/post/nordic-combined/drafts/champs-predictions.R
+  - content/post/skijump/drafts/champs-predictions.R
+- **Action needed**: Re-run `champs_script.sh 2026` to regenerate the JSON files with the Sex column
+
+#### 18. Search Switched from Algolia to Pagefind (2026-02-04)
+- **Issue**: Algolia search was configured but API credentials were empty, causing search to not work.
+- **Solution**: Switched to Pagefind, a free static search solution that runs entirely client-side.
+- Files updated:
+  - `config.toml`: Set `algolia_search = false`, removed "Algolia" from home outputs
+  - `content/search/_index.md`: Created proper search index page
+  - Removed `content/search/placeholder.md`
+- **Cloudflare Pages build command**: Changed from `hugo` to `hugo && npx pagefind --site public`
+- Pagefind generates search index in `public/_pagefind/` at build time
+
+#### 19. Race Archive Dates Off By One Day Fixed (2026-02-04)
+- **Issue**: Race dates in archives showed one day before the actual race date (e.g., Feb 4 race showed as Feb 3).
+- **Root cause**: Dates stored in ISO format (e.g., `"2025-11-28"`) were parsed by JavaScript's `new Date()` as UTC midnight. In US timezones (behind UTC), midnight UTC is the previous day local time.
+- **Solution**: Parse dates as local time by splitting the date string and constructing the Date object with explicit year/month/day components:
+  ```javascript
+  const dateParts = race.date.split(/[-T ]/);
+  const raceDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+  ```
+- Files updated (10 total):
+  - `layouts/partials/{sport}/race-results.html` (5 files)
+  - `layouts/partials/{sport}/year-races.html` (5 files)
+- Note: Graph files also use `new Date()` for sorting/axes, but those don't cause visible user issues since the relative order is preserved.
+
 ---
 
 ## Recent Changes (2026-02-03)

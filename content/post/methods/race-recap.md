@@ -21,7 +21,7 @@ This methodology applies to all winter sports covered: Alpine, Biathlon, Cross-C
 
 ### Purpose
 
-Track how athlete Elo ratings change week-to-week to identify trending performers and athletes experiencing rating declines.
+Track the changes in Elo ratings for athletes who have competed in the last week.
 
 ### Calculation
 
@@ -34,14 +34,6 @@ Elo_Change = Current_Elo - Previous_Week_Elo
 Where:
 - `Current_Elo` is the athlete's Elo rating after their most recent race
 - `Previous_Week_Elo` is the athlete's Elo rating from 7+ days ago
-
-### Data Processing
-
-1. Load chronological race data for each gender
-2. Filter to athletes who competed in the current week
-3. For each athlete, compare their current Elo to their Elo from before the past week
-4. Only include athletes with non-zero Elo changes
-5. Sort by Elo change (descending) to highlight top gainers and losers
 
 ### Output
 
@@ -85,11 +77,11 @@ The system dynamically calculates remaining races from the official race calenda
 
 #### Historical Performance Modeling
 
-For each athlete, the simulation uses their historical race results to model expected performance. The system:
+For each athlete, the simulation uses their **10 most recent races** of each type to model expected performance. The system:
 
-1. Retrieves the athlete's points history for each race type (distance/sprint categories)
-2. If the athlete has discipline-specific history, uses weighted recent performances
-3. If not, falls back to overall race type history
+- Retrieves the athlete's points history for each race type (distance/sprint categories)
+- Uses exponentially weighted recent performances (more recent races weighted higher)
+- Falls back to overall race type history if discipline-specific data is insufficient
 
 #### Single Race Simulation
 
@@ -113,10 +105,13 @@ The full simulation process:
 1. Initialize each athlete's total with their current season points
 2. For each of `n` simulations (default: 100-500):
    - For each remaining race:
-     - Simulate points for all athletes
+     - Determine if each athlete participates using their **participation probability** (based on exponentially-weighted historical participation in that race type)
+     - For participating athletes, simulate points based on historical performance
      - Add simulated points to running totals
    - Record final standings
 3. Calculate win probability as `(Simulations_Won / Total_Simulations)`
+
+The participation probability ensures that athletes who frequently skip certain race types (e.g., sprinters skipping distance races) are modeled realistically.
 
 #### Output Metrics
 
@@ -201,41 +196,3 @@ The magic numbers report includes only athletes with a mathematical chance, show
 - **Points**: Current season points
 - **Magic #**: Points leader needs to clinch over this athlete
 
----
-
-## Technical Notes
-
-### Date Handling
-
-All date comparisons use UTC time to ensure consistency across time zones. The system:
-- Parses race dates in `MM/DD/YYYY` format
-- Compares against `Sys.time()` converted to UTC date
-- Uses the same date boundary for all calculations
-
-### Race Type Categorization
-
-Each sport has specific race type mappings that determine:
-1. Which races count toward the overall standings
-2. The maximum points available per race
-3. How historical performances are categorized for simulation
-
-**Cross-Country Techniques:**
-- "C" = Classic
-- "F" = Freestyle
-- "P" = Skiathlon (pursuit format)
-- "" = Unspecified (typically mass start or skiathlon)
-
-### Simulation Stability
-
-The Monte Carlo simulation uses:
-- Minimum 100 iterations for quick estimates
-- 500+ iterations for stable probability estimates
-- Seeded random number generation for reproducibility when needed
-
-### Edge Cases
-
-The system handles:
-- Athletes with no historical data (assigned 0 expected points)
-- Athletes not in current standings (assigned 0 current points)
-- Empty remaining race schedules (returns current standings as final)
-- Tied points (uses minimum rank assignment)

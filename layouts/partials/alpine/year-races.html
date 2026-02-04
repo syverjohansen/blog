@@ -204,14 +204,18 @@
             const isTeamEvent = race.distance === "Rel" || race.distance === "Ts";
             const podiumHtml = race.podium.map((skier, index) => {
                 if (!skier) return `<li>N/A</li>`;
-                return isTeamEvent ? 
-                    `<li>${skier.nation}</li>` : 
+                return isTeamEvent ?
+                    `<li>${skier.nation}</li>` :
                     `<li>${skier.name} (${skier.nation})</li>`;
             }).join('');
-            
+
+            // Parse date as local time to avoid timezone shift
+            const dateParts = race.date.split(/[-T ]/);
+            const raceDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
             row.innerHTML = `
                 <td class="px-6 py-4">${race.race_number}</td>
-                <td class="px-6 py-4">${new Date(race.date).toLocaleDateString()}</td>
+                <td class="px-6 py-4">${raceDate.toLocaleDateString()}</td>
                 <td class="px-6 py-4">${race.city}, ${race.country}</td>
                 <td class="px-6 py-4">${race.event}</td>
                 <td class="px-6 py-4">${race.distance}</td>

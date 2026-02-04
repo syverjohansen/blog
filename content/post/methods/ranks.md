@@ -15,13 +15,13 @@ Points are only awarded for **top 3 finishes**. No points are given for 4th plac
 
 ### Base Point Values
 
-{{< datatable "methods/ranks/base_points" >}}
+{{< simple-table "methods/ranks/base_points" >}}
 
 ### Race Type Modifiers
 
 Points are reduced for team/relay events where results are shared among team members:
 
-{{< datatable "methods/ranks/race_modifiers" >}}
+{{< simple-table "methods/ranks/race_modifiers" >}}
 
 ### Sport-Specific Events
 
@@ -37,23 +37,23 @@ Additional prestige events:
 
 ### Alpine (Individual Only)
 
-{{< datatable "methods/ranks/alpine_points" >}}
+{{< simple-table "methods/ranks/alpine_points" >}}
 
 ### Biathlon
 
-{{< datatable "methods/ranks/biathlon_points" >}}
+{{< simple-table "methods/ranks/biathlon_points" >}}
 
 ### Cross-Country
 
-{{< datatable "methods/ranks/crosscountry_points" >}}
+{{< simple-table "methods/ranks/crosscountry_points" >}}
 
 ### Nordic Combined
 
-{{< datatable "methods/ranks/nordic_combined_points" >}}
+{{< simple-table "methods/ranks/nordic_combined_points" >}}
 
 ### Ski Jumping
 
-{{< datatable "methods/ranks/skijump_points" >}}
+{{< simple-table "methods/ranks/skijump_points" >}}
 
 ## Current Season Handling
 
@@ -61,7 +61,7 @@ During an active season, current season standings are excluded from the rankings
 
 ## Output Columns
 
-{{< datatable "methods/ranks/output_columns" >}}
+{{< simple-table "methods/ranks/output_columns" >}}
 
 ### Sport-Specific Columns
 

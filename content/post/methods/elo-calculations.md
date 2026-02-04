@@ -46,7 +46,7 @@ New Elo = Old Elo + K x (S - E)
 
 Consider a 4-person race with K=3:
 
-{{< datatable "methods/elo/example_race" >}}
+{{< simple-table "methods/elo/example_race" >}}
 
 **How it works:**
 - Athlete A (1500 Elo) wins. Expected to beat ~2.1 opponents on average, actually beat 3. Gains 2.7 points.
@@ -72,7 +72,7 @@ This prevents rating inflation and accounts for offseason changes in athlete abi
 
 **Example:**
 
-{{< datatable "methods/elo/season_discount_example" >}}
+{{< simple-table "methods/elo/season_discount_example" >}}
 
 Notice how top performers lose more (1600 -> 1555, loss of 45), while struggling athletes actually gain (1200 -> 1245, gain of 45). This regression to the mean helps account for form changes over the offseason.
 
@@ -80,7 +80,7 @@ Notice how top performers lose more (1600 -> 1555, loss of 45), while struggling
 
 Team and combined events receive reduced K-factors to account for shared responsibility:
 
-{{< datatable "methods/elo/k_adjustments" >}}
+{{< simple-table "methods/elo/k_adjustments" >}}
 
 ## Discipline-Specific Elos
 

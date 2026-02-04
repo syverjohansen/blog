@@ -16,7 +16,7 @@ hasCJKLanguage = false  #For Chinese, Japanese and Korean.   I don't want this
   shortname = ""
 
 [outputs] #Output formats for the homepage
-home = ["HTML", "RSS", "Algolia"] #Home page should be rendered in HTML, that an RSS feed should be generated for my home page, and that it should be indexed by Algolia
+home = ["HTML", "RSS"] #Home page should be rendered in HTML and an RSS feed should be generated
 
 [params]
   summaryLength=0
@@ -36,11 +36,8 @@ home = ["HTML", "RSS", "Algolia"] #Home page should be rendered in HTML, that an
   leancloud_app_id = ""
   leancloud_app_key = ""
 
-  # algolia site search
-  algolia_search = true
-  algolia_appId = ""
-  algolia_indexName = ""
-  algolia_apiKey = ""
+  # site search (using Pagefind)
+  algolia_search = false
 
   # Sidebar settings
   sidebar_about_description = "Bored Data Scientist in Washington DC.  Perenniel American Birkebeiner skier, and devout club runner"

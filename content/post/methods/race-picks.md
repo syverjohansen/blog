@@ -7,6 +7,34 @@ tags: ["methodology", "skiing", "race-picks"]
 
 ## BLUF
 
+Race predictions use Generalized Additive Models (GAMs) with BIC-optimized feature selection. Key predictors are Elo rating percentages (athlete's pre-race Elo divided by startlist maximum) and exponentially-weighted recent performance (last 5 races). Points predictions use standard GAMs; position probabilities use binomial GAMs with REML estimation trained independently for each threshold (1st, 3rd, 5th, 10th, 30th). Post-model adjustments correct for athlete-specific biases in altitude, seasonal period, and discipline. A 7-phase normalization process ensures probability coherence: target sum scaling, 100% caps with redistribution, monotonic constraints (P(top-1) ≤ P(top-3) ≤ ...), and participation probability bounds. Cross-country relays uniquely train leg-specific models with position-weighted importance. All predictions multiply by participation probability when using mock startlists.
+
+---
+
+## Common Methodology
+
+### Normalization and Monotonic Constraints
+
+After modeling is complete, points and position probabilities are multiplied by race participation probabilities. For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points. After this, a 7-phase normalization and monotonic constraint process is applied to position probabilities:
+
+1. **Scale to target sum**: Probabilities are scaled so they sum to the correct total (100% for top-1, 300% for top-3, etc.)
+
+2. **Cap at 100% and redistribute**: Individual athlete probabilities are capped at 100% since anything above would be impossible. Excess probability is redistributed proportionally to athletes below 100%.
+
+3. **Monotonic constraints**: Ensures top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so an athlete cannot have a higher chance of finishing top-1 than top-3.
+
+4. **Re-normalize**: After monotonic adjustment, probabilities are re-scaled to maintain target sums.
+
+5. **Cap at 100% again**: Any values pushed above 100% by re-normalization are capped.
+
+6. **Final monotonic constraint**: A second pass ensures no inversions were introduced by re-normalization.
+
+7. **Final cap at start probability**: No position probability can exceed the athlete's participation probability. An athlete with 80% chance of starting cannot have more than 80% chance of any finishing position.
+
+At this time, normalization and monotonic constraints are not applied to points predictions.
+
+---
+
 ## Alpine
 
 ### Individual
@@ -50,15 +78,14 @@ The models used to predict points are Generalized Additive Models (GAM) that cap
 
 In the case that there is insufficient data, the following fallback measures are in store:
 
-  1. Full GAM with all BIC-selected variables and flexible smoothing
-  2. Simplified GAM with reduced complexity and discipline-specific terms
-  3. Linear regression if GAM approaches encounter fitting issues
-  4. Simple ELO-only model as the ultimate fallback
-
+1. Full GAM with all BIC-selected variables and flexible smoothing
+2. Simplified GAM with reduced complexity and discipline-specific terms
+3. Linear regression if GAM approaches encounter fitting issues
+4. Simple ELO-only model as the ultimate fallback
 
 ###### Adjustments
 
-While the modeling captures the majority of the accuracy in points predictions, additional adjustments are applied to individual skiers depending on their trends and how they typically overperform/underperform the predictions.  
+While the modeling captures the majority of the accuracy in points predictions, additional adjustments are applied to individual skiers depending on their trends and how they typically overperform/underperform the predictions.
 
 There are two post-model adjustments applied to skiers for the points prediction.  The first is World Cup period and the second is differences between technical disciplines.  The period adjustment is for the different stages of the World Cup season as some skiers perform better earlier or later in the season than others.  The technical adjustment is if skiers perform better or worse in a specific discipline than they're predicted for, they will get an adjustment.  The determination if an adjustment is needed Actual Points - Predicted Points with a p-value of p < 0.05.
 
@@ -133,23 +160,7 @@ Adjustments for probability predictions are disabled as testing showed larger in
 
 #### Normalization and Monotonic Constraints
 
-After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, a 7-phase normalization and monotonic constraint process is applied to position probabilities:
-
-1. **Scale to target sum**: Probabilities are scaled so they sum to the correct total (100% for top-1, 300% for top-3, etc.)
-
-2. **Cap at 100% and redistribute**: Individual athlete probabilities are capped at 100% since anything above would be impossible. Excess probability is redistributed proportionally to athletes below 100%.
-
-3. **Monotonic constraints**: Ensures top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so an athlete cannot have a higher chance of finishing top-1 than top-3.
-
-4. **Re-normalize**: After monotonic adjustment, probabilities are re-scaled to maintain target sums.
-
-5. **Cap at 100% again**: Any values pushed above 100% by re-normalization are capped.
-
-6. **Final monotonic constraint**: A second pass ensures no inversions were introduced by re-normalization.
-
-7. **Final cap at start probability**: No position probability can exceed the athlete's participation probability. An athlete with 80% chance of starting cannot have more than 80% chance of any finishing position.
-
-At this time, normalization and monotonic constraints are not applied to points predictions.
+See [Common Methodology: Normalization and Monotonic Constraints](#normalization-and-monotonic-constraints) above.
 
 ## Biathlon
 
@@ -194,10 +205,10 @@ The models used to predict points are Generalized Additive Models (GAM) that cap
 
 In the case that there is insufficient data, the following fallback measures are in store:
 
-  1. Full GAM with all BIC-selected variables and flexible smoothing
-  2. Simplified GAM with reduced complexity and discipline-specific terms
-  3. Linear regression if GAM approaches encounter fitting issues
-  4. Simple ELO-only model as the ultimate fallback 
+1. Full GAM with all BIC-selected variables and flexible smoothing
+2. Simplified GAM with reduced complexity and discipline-specific terms
+3. Linear regression if GAM approaches encounter fitting issues
+4. Simple ELO-only model as the ultimate fallback 
 
 ###### Adjustments
 
@@ -275,23 +286,7 @@ Adjustments for position probabilities are currently disabled in the production 
 
 #### Normalization and Monotonic Constraints
 
-After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, a 7-phase normalization and monotonic constraint process is applied to position probabilities:
-
-1. **Scale to target sum**: Probabilities are scaled so they sum to the correct total (100% for top-1, 300% for top-3, etc.)
-
-2. **Cap at 100% and redistribute**: Individual athlete probabilities are capped at 100% since anything above would be impossible. Excess probability is redistributed proportionally to athletes below 100%.
-
-3. **Monotonic constraints**: Ensures top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so an athlete cannot have a higher chance of finishing top-1 than top-3.
-
-4. **Re-normalize**: After monotonic adjustment, probabilities are re-scaled to maintain target sums.
-
-5. **Cap at 100% again**: Any values pushed above 100% by re-normalization are capped.
-
-6. **Final monotonic constraint**: A second pass ensures no inversions were introduced by re-normalization.
-
-7. **Final cap at start probability**: No position probability can exceed the athlete's participation probability. An athlete with 80% chance of starting cannot have more than 80% chance of any finishing position.
-
-At this time, normalization and monotonic constraints are not applied to points predictions.
+See [Common Methodology: Normalization and Monotonic Constraints](#normalization-and-monotonic-constraints) above.
 
 ### Relay
 
@@ -329,10 +324,10 @@ The models used to predict points are Generalized Additive Models (GAM) that cap
 
 In the case that there is insufficient data, the following fallback measures are in store:
 
-  1. Full GAM with all BIC-selected variables and flexible smoothing
-  2. Simplified GAM with reduced complexity and discipline-specific terms
-  3. Linear regression if GAM approaches encounter fitting issues
-  4. Simple ELO-only model as the ultimate fallback 
+1. Full GAM with all BIC-selected variables and flexible smoothing
+2. Simplified GAM with reduced complexity and discipline-specific terms
+3. Linear regression if GAM approaches encounter fitting issues
+4. Simple ELO-only model as the ultimate fallback 
 
 ###### Adjustments
 
@@ -397,23 +392,7 @@ No adjustments are made for relay races as lineups change between races and samp
 
 #### Normalization and Monotonic Constraints
 
-After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, a 7-phase normalization and monotonic constraint process is applied to position probabilities:
-
-1. **Scale to target sum**: Probabilities are scaled so they sum to the correct total (100% for top-1, 300% for top-3, etc.)
-
-2. **Cap at 100% and redistribute**: Individual athlete probabilities are capped at 100% since anything above would be impossible. Excess probability is redistributed proportionally to athletes below 100%.
-
-3. **Monotonic constraints**: Ensures top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so an athlete cannot have a higher chance of finishing top-1 than top-3.
-
-4. **Re-normalize**: After monotonic adjustment, probabilities are re-scaled to maintain target sums.
-
-5. **Cap at 100% again**: Any values pushed above 100% by re-normalization are capped.
-
-6. **Final monotonic constraint**: A second pass ensures no inversions were introduced by re-normalization.
-
-7. **Final cap at start probability**: No position probability can exceed the athlete's participation probability. An athlete with 80% chance of starting cannot have more than 80% chance of any finishing position.
-
-At this time, normalization and monotonic constraints are not applied to points predictions.
+See [Common Methodology: Normalization and Monotonic Constraints](#normalization-and-monotonic-constraints) above.
 
 ## Cross-Country
 
@@ -460,10 +439,10 @@ The models used to predict points are Generalized Additive Models (GAM) that cap
 
 In the case that there is insufficient data, the following fallback measures are in store:
 
-  1. Full GAM with all BIC-selected variables and flexible smoothing
-  2. Simplified GAM with reduced complexity and discipline-specific terms
-  3. Linear regression if GAM approaches encounter fitting issues
-  4. Simple ELO-only model as the ultimate fallback 
+1. Full GAM with all BIC-selected variables and flexible smoothing
+2. Simplified GAM with reduced complexity and discipline-specific terms
+3. Linear regression if GAM approaches encounter fitting issues
+4. Simple ELO-only model as the ultimate fallback 
 
 ###### Adjustments
 
@@ -533,23 +512,7 @@ Points adjustments from the training data are applied to the athletes who qualif
 
 #### Normalization and Monotonic Constraints
 
-After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, a 7-phase normalization and monotonic constraint process is applied to position probabilities:
-
-1. **Scale to target sum**: Probabilities are scaled so they sum to the correct total (100% for top-1, 300% for top-3, etc.)
-
-2. **Cap at 100% and redistribute**: Individual athlete probabilities are capped at 100% since anything above would be impossible. Excess probability is redistributed proportionally to athletes below 100%.
-
-3. **Monotonic constraints**: Ensures top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so an athlete cannot have a higher chance of finishing top-1 than top-3.
-
-4. **Re-normalize**: After monotonic adjustment, probabilities are re-scaled to maintain target sums.
-
-5. **Cap at 100% again**: Any values pushed above 100% by re-normalization are capped.
-
-6. **Final monotonic constraint**: A second pass ensures no inversions were introduced by re-normalization.
-
-7. **Final cap at start probability**: No position probability can exceed the athlete's participation probability. An athlete with 80% chance of starting cannot have more than 80% chance of any finishing position.
-
-At this time, normalization and monotonic constraints are not applied to points predictions.
+See [Common Methodology: Normalization and Monotonic Constraints](#normalization-and-monotonic-constraints) above.
 
 #### Fantasy
 
@@ -656,23 +619,7 @@ No adjustments are made for relay races.
 
 #### Normalization and Monotonic Constraints
 
-After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, a 7-phase normalization and monotonic constraint process is applied to position probabilities:
-
-1. **Scale to target sum**: Probabilities are scaled so they sum to the correct total (100% for top-1, 300% for top-3, etc.)
-
-2. **Cap at 100% and redistribute**: Individual athlete probabilities are capped at 100% since anything above would be impossible. Excess probability is redistributed proportionally to athletes below 100%.
-
-3. **Monotonic constraints**: Ensures top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so an athlete cannot have a higher chance of finishing top-1 than top-3.
-
-4. **Re-normalize**: After monotonic adjustment, probabilities are re-scaled to maintain target sums.
-
-5. **Cap at 100% again**: Any values pushed above 100% by re-normalization are capped.
-
-6. **Final monotonic constraint**: A second pass ensures no inversions were introduced by re-normalization.
-
-7. **Final cap at start probability**: No position probability can exceed the athlete's participation probability. An athlete with 80% chance of starting cannot have more than 80% chance of any finishing position.
-
-At this time, normalization and monotonic constraints are not applied to points predictions.
+See [Common Methodology: Normalization and Monotonic Constraints](#normalization-and-monotonic-constraints) above.
 
 #### Fantasy
 
@@ -720,10 +667,10 @@ The models used to predict points are Generalized Additive Models (GAM) that cap
 
 In the case that there is insufficient data, the following fallback measures are in store:
 
-  1. Full GAM with all BIC-selected variables and flexible smoothing
-  2. Simplified GAM with reduced complexity and discipline-specific terms
-  3. Linear regression if GAM approaches encounter fitting issues
-  4. Simple ELO-only model as the ultimate fallback 
+1. Full GAM with all BIC-selected variables and flexible smoothing
+2. Simplified GAM with reduced complexity and discipline-specific terms
+3. Linear regression if GAM approaches encounter fitting issues
+4. Simple ELO-only model as the ultimate fallback 
 
 ###### Adjustments
 
@@ -801,23 +748,7 @@ Adjustments for position probabilities are currently disabled in the production 
 
 #### Normalization and Monotonic Constraints
 
-After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, a 7-phase normalization and monotonic constraint process is applied to position probabilities:
-
-1. **Scale to target sum**: Probabilities are scaled so they sum to the correct total (100% for top-1, 300% for top-3, etc.)
-
-2. **Cap at 100% and redistribute**: Individual athlete probabilities are capped at 100% since anything above would be impossible. Excess probability is redistributed proportionally to athletes below 100%.
-
-3. **Monotonic constraints**: Ensures top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so an athlete cannot have a higher chance of finishing top-1 than top-3.
-
-4. **Re-normalize**: After monotonic adjustment, probabilities are re-scaled to maintain target sums.
-
-5. **Cap at 100% again**: Any values pushed above 100% by re-normalization are capped.
-
-6. **Final monotonic constraint**: A second pass ensures no inversions were introduced by re-normalization.
-
-7. **Final cap at start probability**: No position probability can exceed the athlete's participation probability. An athlete with 80% chance of starting cannot have more than 80% chance of any finishing position.
-
-At this time, normalization and monotonic constraints are not applied to points predictions.
+See [Common Methodology: Normalization and Monotonic Constraints](#normalization-and-monotonic-constraints) above.
 
 ### Relay
 
@@ -855,10 +786,10 @@ The models used to predict points are Generalized Additive Models (GAM) that cap
 
 In the case that there is insufficient data, the following fallback measures are in store:
 
-  1. Full GAM with all BIC-selected variables and flexible smoothing
-  2. Simplified GAM with reduced complexity and discipline-specific terms
-  3. Linear regression if GAM approaches encounter fitting issues
-  4. Simple ELO-only model as the ultimate fallback 
+1. Full GAM with all BIC-selected variables and flexible smoothing
+2. Simplified GAM with reduced complexity and discipline-specific terms
+3. Linear regression if GAM approaches encounter fitting issues
+4. Simple ELO-only model as the ultimate fallback 
 
 ###### Adjustments
 
@@ -923,23 +854,7 @@ No adjustments are made for relay races as lineups change between races and samp
 
 #### Normalization and Monotonic Constraints
 
-After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, a 7-phase normalization and monotonic constraint process is applied to position probabilities:
-
-1. **Scale to target sum**: Probabilities are scaled so they sum to the correct total (100% for top-1, 300% for top-3, etc.)
-
-2. **Cap at 100% and redistribute**: Individual athlete probabilities are capped at 100% since anything above would be impossible. Excess probability is redistributed proportionally to athletes below 100%.
-
-3. **Monotonic constraints**: Ensures top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so an athlete cannot have a higher chance of finishing top-1 than top-3.
-
-4. **Re-normalize**: After monotonic adjustment, probabilities are re-scaled to maintain target sums.
-
-5. **Cap at 100% again**: Any values pushed above 100% by re-normalization are capped.
-
-6. **Final monotonic constraint**: A second pass ensures no inversions were introduced by re-normalization.
-
-7. **Final cap at start probability**: No position probability can exceed the athlete's participation probability. An athlete with 80% chance of starting cannot have more than 80% chance of any finishing position.
-
-At this time, normalization and monotonic constraints are not applied to points predictions.
+See [Common Methodology: Normalization and Monotonic Constraints](#normalization-and-monotonic-constraints) above.
 
 ## Ski Jumping
 
@@ -982,10 +897,10 @@ The models used to predict points are Generalized Additive Models (GAM) that cap
 
 In the case that there is insufficient data, the following fallback measures are in store:
 
-  1. Full GAM with all BIC-selected variables and flexible smoothing
-  2. Simplified GAM with reduced complexity and discipline-specific terms
-  3. Linear regression if GAM approaches encounter fitting issues
-  4. Simple ELO-only model as the ultimate fallback
+1. Full GAM with all BIC-selected variables and flexible smoothing
+2. Simplified GAM with reduced complexity and discipline-specific terms
+3. Linear regression if GAM approaches encounter fitting issues
+4. Simple ELO-only model as the ultimate fallback
 
 ###### Adjustments
 
@@ -1063,23 +978,7 @@ Adjustments for position probabilities are currently disabled in the production 
 
 #### Normalization and Monotonic Constraints
 
-After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, a 7-phase normalization and monotonic constraint process is applied to position probabilities:
-
-1. **Scale to target sum**: Probabilities are scaled so they sum to the correct total (100% for top-1, 300% for top-3, etc.)
-
-2. **Cap at 100% and redistribute**: Individual athlete probabilities are capped at 100% since anything above would be impossible. Excess probability is redistributed proportionally to athletes below 100%.
-
-3. **Monotonic constraints**: Ensures top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so an athlete cannot have a higher chance of finishing top-1 than top-3.
-
-4. **Re-normalize**: After monotonic adjustment, probabilities are re-scaled to maintain target sums.
-
-5. **Cap at 100% again**: Any values pushed above 100% by re-normalization are capped.
-
-6. **Final monotonic constraint**: A second pass ensures no inversions were introduced by re-normalization.
-
-7. **Final cap at start probability**: No position probability can exceed the athlete's participation probability. An athlete with 80% chance of starting cannot have more than 80% chance of any finishing position.
-
-At this time, normalization and monotonic constraints are not applied to points predictions.
+See [Common Methodology: Normalization and Monotonic Constraints](#normalization-and-monotonic-constraints) above.
 
 ### Relay
 
@@ -1117,10 +1016,10 @@ The models used to predict points are Generalized Additive Models (GAM) that cap
 
 In the case that there is insufficient data, the following fallback measures are in store:
 
-  1. Full GAM with all BIC-selected variables and flexible smoothing
-  2. Simplified GAM with reduced complexity and discipline-specific terms
-  3. Linear regression if GAM approaches encounter fitting issues
-  4. Simple ELO-only model as the ultimate fallback 
+1. Full GAM with all BIC-selected variables and flexible smoothing
+2. Simplified GAM with reduced complexity and discipline-specific terms
+3. Linear regression if GAM approaches encounter fitting issues
+4. Simple ELO-only model as the ultimate fallback 
 
 ###### Adjustments
 
@@ -1185,27 +1084,7 @@ No adjustments are made for relay races as lineups change between races and samp
 
 #### Normalization and Monotonic Constraints
 
-After modeling is complete, points and position probabilities are multiplied by race participation probabilities.  For example, a skier with an estimated World Cup points of 80 with a participation probability of 80% would get a final estimation of 64 points.  After this, a 7-phase normalization and monotonic constraint process is applied to position probabilities:
-
-1. **Scale to target sum**: Probabilities are scaled so they sum to the correct total (100% for top-1, 300% for top-3, etc.)
-
-2. **Cap at 100% and redistribute**: Individual athlete probabilities are capped at 100% since anything above would be impossible. Excess probability is redistributed proportionally to athletes below 100%.
-
-3. **Monotonic constraints**: Ensures top-1 ≤ top-3 ≤ top-5 ≤ top-10 ≤ top-30, so an athlete cannot have a higher chance of finishing top-1 than top-3.
-
-4. **Re-normalize**: After monotonic adjustment, probabilities are re-scaled to maintain target sums.
-
-5. **Cap at 100% again**: Any values pushed above 100% by re-normalization are capped.
-
-6. **Final monotonic constraint**: A second pass ensures no inversions were introduced by re-normalization.
-
-7. **Final cap at start probability**: No position probability can exceed the athlete's participation probability. An athlete with 80% chance of starting cannot have more than 80% chance of any finishing position.
-
-At this time, normalization and monotonic constraints are not applied to points predictions.
-
-
-
-
+See [Common Methodology: Normalization and Monotonic Constraints](#normalization-and-monotonic-constraints) above.
 
 
 

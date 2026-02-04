@@ -1221,8 +1221,11 @@ for (race_name in names(results_list)) {
   race_entry <- results_list[[race_name]]
   race_data <- race_entry$data
 
+  # Get gender early for Sex column
+  gender <- race_entry$gender
+
   # Select columns, convert to percentages, and rename for user-friendly display
-  # ID is second column (after Skier)
+  # ID is second column (after Skier), Sex is hidden in display but used for links
   race_data <- race_data %>%
     mutate(
       start_prob = round(start_prob * 100, 1),
@@ -1230,9 +1233,10 @@ for (race_name in names(results_list)) {
       podium_prob = round(podium_prob * 100, 1),
       top5_prob = round(top5_prob * 100, 1),
       top10_prob = round(top10_prob * 100, 1),
-      top30_prob = round(top30_prob * 100, 1)
+      top30_prob = round(top30_prob * 100, 1),
+      Sex = ifelse(gender == "men", "M", "L")
     ) %>%
-    select(Skier, ID, Nation, start_prob, win_prob, podium_prob, top5_prob, top10_prob, top30_prob) %>%
+    select(Skier, ID, Sex, Nation, start_prob, win_prob, podium_prob, top5_prob, top10_prob, top30_prob) %>%
     rename(
       Start = start_prob,
       Win = win_prob,

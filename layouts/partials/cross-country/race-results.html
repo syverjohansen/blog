@@ -71,8 +71,13 @@
                 const raceInfo = summaryData.find(race => race.race_number == raceNumber);
                 
                 if (raceInfo) {
+                    // Parse date as local time to avoid timezone shift
+                    // ISO date "2025-11-28" interpreted as UTC midnight shows previous day in US timezones
+                    const dateParts = raceInfo.date.split(/[-T ]/);
+                    const raceDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
                     document.getElementById('raceInfo').innerHTML = `
-                        <p>${new Date(raceInfo.date).toLocaleDateString()}</p>
+                        <p>${raceDate.toLocaleDateString()}</p>
                         <p>${raceInfo.city}, ${raceInfo.country}</p>
                         <p>${raceInfo.distance} - ${raceInfo.technique}</p>
                     `;

@@ -1036,14 +1036,16 @@ process_gender_championships <- function(gender, races) {
 
     # Select and rename columns to simplified format (no underscores)
     # start_prob was added by normalization function
-    # ID is second column (after Skier)
+    # ID is second column (after Skier), Sex is hidden in display but used for athlete links
     race_data <- race_data %>%
       mutate(
-        Start = round(start_prob, 1)
+        Start = round(start_prob, 1),
+        Sex = ifelse(gender == "men", "M", "L")
       ) %>%
       dplyr::select(
         Skier,
         ID,
+        Sex,
         Nation,
         Start,
         prob_top1, prob_top3, prob_top5, prob_top10, prob_top30

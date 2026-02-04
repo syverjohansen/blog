@@ -1145,6 +1145,7 @@ process_gender_championships <- function(gender, races) {
 
     # Select and rename columns to simplified format
     # Values are already percentages from normalization, just round them
+    # Sex column is hidden in display but used for athlete links
     race_data <- race_data %>%
       mutate(
         Start = round(if("start_prob" %in% names(.)) start_prob else 100, 1),
@@ -1152,9 +1153,10 @@ process_gender_championships <- function(gender, races) {
         prob_top3 = round(prob_top3, 1),
         prob_top5 = round(prob_top5, 1),
         prob_top10 = round(prob_top10, 1),
-        prob_top30 = round(prob_top30, 1)
+        prob_top30 = round(prob_top30, 1),
+        Sex = ifelse(gender == "men", "M", "L")
       ) %>%
-      dplyr::select(Skier, ID, Nation, Start, prob_top1, prob_top3, prob_top5, prob_top10, prob_top30) %>%
+      dplyr::select(Skier, ID, Sex, Nation, Start, prob_top1, prob_top3, prob_top5, prob_top10, prob_top30) %>%
       rename(
         Win = prob_top1,
         Podium = prob_top3,
