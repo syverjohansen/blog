@@ -62,11 +62,7 @@
                 {{ end }}
                 -->
                 {{ .Content }}
-                <!-- Test content -->
-                <div style="background-color: yellow; padding: 10px; margin-top: 20px;">
-                    <p>This is a test content area to check if single.html is being used.</p>
-                </div>
-                
+
                 {{ if .Site.Params.reward }}
                 {{ partial "reward.html" . }}
                 {{ end }}
@@ -96,7 +92,8 @@
             {{ if not (eq (.Param "showtoc") false) }}
             <div class="
                 col-lg-2 col-lg-offset-0
-                visible-lg-block
+                col-md-2 col-md-offset-0
+                hidden-sm hidden-xs
                 sidebar-container
                 catalog-container">
                 <div class="side-catalog">

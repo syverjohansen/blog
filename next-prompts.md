@@ -41,7 +41,49 @@ Going page by page through the website to identify and fix issues before the 202
 
 ### Issues Found and Fixed
 
-*(Issues will be documented here as they are identified and resolved)*
+#### 1. Friends Section Removed
+- Changed `friends = true` to `friends = false` in config.toml
+
+#### 2. RSS Button Replaced with Strava
+- Changed `rss = true` to `rss = false` in config.toml
+- Added Strava support to themes/white/layouts/partials/footer.html
+
+#### 3. Duplicate Title in Race Picks Removed
+- Removed `# $title` from predict_script.sh (weekend picks, TdS picks, race picks templates)
+
+#### 4. Heading Hierarchy Fixed
+- Updated .post-container h4, h5, h6 styles with proper hierarchy (22px, 19px, 16px) and font-weight: 600
+
+#### 5. Catalog Scrolling Fixed (2026-02-03)
+**Issue:** Catalog sidebar cuts off sections when window is smaller. Extends to medium-sized desktop windows.
+
+**Root Cause:** Multiple issues:
+- JavaScript scroll handling only activated for windows > 1170px
+- CSS hid catalog at max-width: 1200px (inconsistent with JS)
+- `.side-catalog.fixed` lacked height constraints, causing overflow
+- Bootstrap `visible-lg-block` class only showed catalog on screens ≥1200px
+
+**Files Modified:**
+- `themes/white/static/css/hugo-theme-cleanwhite.css`:
+  - `.side-catalog`: Removed `height: 100%`, changed `overflow: auto` to `overflow: visible`
+  - `.side-catalog.fixed`: Added `top: 70px`, `max-height: calc(100vh - 90px)`, `overflow: hidden`
+  - `.catalog-body`: Changed `max-height` to `calc(100vh - 160px)`, added `overflow-x: hidden`
+  - Media query: Changed `max-width: 1200px` to `max-width: 991px`
+- `themes/white/static/js/hux-blog.js`:
+  - Changed MQL threshold from 1170 to 992 (matches Bootstrap md breakpoint)
+- `themes/white/layouts/_default/single.html`:
+  - Replaced `visible-lg-block` with `col-md-2 col-md-offset-0 hidden-sm hidden-xs`
+  - Removed test content div (yellow background)
+
+**Result:** Catalog now:
+- Scrolls properly within viewport bounds when fixed
+- Shows on medium and large screens (≥992px)
+- Hidden on small screens and mobile (<992px)
+
+#### 6. Datatable Style Unified (2026-02-03)
+- Replaced all 5 datatable.html shortcodes with datatable2.html style (baseball-reference inspired)
+- Features: sticky first column with max-width 220px (truncation on scroll), search, pagination, sorting
+- Files: alpine, biathlon, cross-country, nordic-combined, skijump datatable.html
 
 ---
 

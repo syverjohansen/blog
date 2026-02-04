@@ -911,14 +911,15 @@ body{
   }
   .side-catalog {
     display: block;
-    overflow: auto;
-    height: 100%;
+    overflow: visible;
     padding-bottom: 40px;
     width: 195px;
   }
   .side-catalog.fixed {
     position: fixed;
-    top: 20px;
+    top: 70px;
+    max-height: calc(100vh - 90px);
+    overflow: hidden;
   }
   .side-catalog.fold .catalog-toggle::before {
     content: "+";
@@ -936,8 +937,9 @@ body{
     position: relative;
     list-style: none;
     height: auto;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 160px);
     overflow-y: auto;
+    overflow-x: hidden;
     padding-left: 0px;
     padding-right: 5px;
     text-indent: 0;
@@ -994,7 +996,7 @@ body{
   .side-catalog .catalog-body .active a {
     color: #0085a1 !important;
   }
-  @media (max-width: 1200px) {
+  @media (max-width: 991px) {
     .side-catalog {
       display: none;
     }
