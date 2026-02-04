@@ -5,7 +5,5 @@ draft: true
 tags: ["predictions", "olympics", "2026", "nations"]
 ---
 
-# 2026 Winter Olympics - Nations Preview
-
 [Content to be written]
 

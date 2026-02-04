@@ -5,8 +5,6 @@ draft: false
 tags: ["predictions", "olympics", "2026", "nordic-combined"]
 ---
 
-# 2026 Winter Olympics - Nordic Combined Predictions
-
 *See [Championship Predictions Methodology](/post/methods/champs-predictions/) for details on how these predictions are generated.*
 
 ## Calendar

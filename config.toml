@@ -44,7 +44,7 @@ home = ["HTML", "RSS", "Algolia"] #Home page should be rendered in HTML, that an
 
   # Sidebar settings
   sidebar_about_description = "Bored Data Scientist in Washington DC.  Perenniel American Birkebeiner skier, and devout club runner"
-  sidebar_avatar = "img/headshot.jpg"      # use absolute URL, seeing it's used in both `/` and `/about/`
+  sidebar_avatar = "img/me.jpeg"      # use absolute URL, seeing it's used in both `/` and `/about/`
 
   featured_tags = false #Enables featured tags on the site
   featured_condition_size = 1 #How many posts required for a tag to be featured

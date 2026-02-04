@@ -5,7 +5,5 @@ draft: true
 tags: ["predictions", "olympics", "2026", "race-predictions"]
 ---
 
-# 2026 Winter Olympics - Race by Race Predictions
-
 [Content to be written]
 

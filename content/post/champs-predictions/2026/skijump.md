@@ -5,8 +5,6 @@ draft: false
 tags: ["predictions", "olympics", "2026", "skijump"]
 ---
 
-# 2026 Winter Olympics - Ski Jumping Predictions
-
 *See [Championship Predictions Methodology](/post/methods/champs-predictions/) for details on how these predictions are generated.*
 
 ## Calendar

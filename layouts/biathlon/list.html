@@ -14,26 +14,6 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <div class="tags">
-                        {{ range .Params.tags }}
-                        <a class="tag" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" title="{{ . }}">
-                            {{ . }}
-                        </a>
-                        {{ end }}
-                    </div>
-                    <h1>{{ .Title }}</h1>
-                    <h2 class="subheading">{{ .Params.subtitle }}</h2>
-                    <span class="meta">
-                        {{ if .Params.metadata }}
-                            {{ range $index, $element := .Params.metadata }}
-                                {{ if .link }}
-                                    <a href="{{ .link }}">{{ .text }}</a>
-                                {{ else }}
-                                    {{ .text }}
-                                {{ end }}
-                            {{ end }}
-                        {{ end }}    
-                    </span>
                 </div>
             </div>
         </div>

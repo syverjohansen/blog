@@ -85,6 +85,31 @@ Going page by page through the website to identify and fix issues before the 202
 - Features: sticky first column with max-width 220px (truncation on scroll), search, pagination, sorting
 - Files: alpine, biathlon, cross-country, nordic-combined, skijump datatable.html
 
+#### 7. Sidebar Avatar Updated (2026-02-03)
+- Changed `sidebar_avatar` from `img/headshot.jpg` to `img/me.jpeg` in config.toml
+
+#### 8. Sport Page Header Text Removed (2026-02-03)
+- Removed redundant title/subtitle/metadata from header image on sport landing pages
+- Title already appears in the body section, so header image now shows only the image
+- Files: layouts/{alpine,biathlon,cross-country,nordic-combined,skijump}/list.html
+
+#### 9. Olympics Predictions Duplicate Title Removed (2026-02-03)
+- Removed redundant H1 title from body of Winter Olympics prediction pages
+- Title already appears in header image, no need to repeat in body
+- Files updated: content/post/champs-predictions/2026/{alpine,biathlon,cross-country,nordic-combined,skijump,nations,race-by-race}.md
+- Script updated: champs_script.sh (removed `# $CURRENT_YEAR Winter Olympics...` line)
+
+#### 10. Weekly Recap Duplicate Title Removed (2026-02-03)
+- Removed redundant H1 title from body of weekly recap posts
+- Title already appears in header image
+- Scripts updated: recap_script.sh and recap_script_ubuntu.sh (removed `# $title` line)
+
+#### 11. Elo Page Redundant Labels Removed (2026-02-03)
+- Removed redundant "Ladies" and "Men" h1 labels above "Ladies Elo" and "Men Elo" headings
+- The h2 headings ("Ladies Elo", "Men Elo") are sufficient; the h1 labels were redundant
+- Files updated: layouts/partials/{alpine,biathlon,cross-country,nordic-combined,skijump}/small-table.html
+- Removed: `<h1 class="section-title" id="Ladies">Ladies</h1>` and `<h1 class="section-title" id="Men">Men</h1>`
+
 ---
 
 ## Recent Changes (2026-02-03)

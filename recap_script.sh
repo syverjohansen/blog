@@ -347,8 +347,6 @@ draft: false
 tags: ["recap", "skiing", "weekly-recap", "standings", "elo"]
 ---
 
-# $title
-
 EOF
     
     log_message "Created weekly recap post header"
