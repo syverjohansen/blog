@@ -191,10 +191,11 @@ Relay teams configured by nation with leg assignments. Classic legs (1-2) and Fr
 
 #### Team Selection
 
-**Podium-Optimized Selection**: Teams are selected to maximize podium probability (threshold = 3) using leg-specific models. The selection algorithm:
-1. Trains leg-specific binomial GAMs predicting P(team podium | athlete on leg X)
-2. Uses combinatorial optimization to find the 4-athlete lineup maximizing team podium probability
+**Dual-Optimized Selection**: Teams are selected to maximize both podium probability (threshold = 3) and win probability (threshold = 1) using leg-specific models. The selection algorithm:
+1. Trains leg-specific binomial GAMs for both P(team podium | athlete on leg X) and P(team win | athlete on leg X)
+2. Uses combinatorial optimization to find optimal 4-athlete lineups for each objective
 3. Considers athlete availability and leg-appropriate technique
+4. Outputs both podium-optimized and win-optimized team rosters
 
 #### Probability
 
@@ -202,10 +203,15 @@ Relay teams configured by nation with leg assignments. Classic legs (1-2) and Fr
 
 Cross-country relay uses a hybrid approach combining production models with simulation:
 
-1. **Leg-Specific GAM Models**: Binomial GAMs are trained for each leg position predicting P(team podium | athlete on this leg)
+1. **Leg-Specific GAM Models**: Binomial GAMs are trained for each leg position predicting P(team podium | athlete on this leg) and P(team win | athlete on this leg)
 2. **Leg Importance Calculation**: Model deviance explained determines relative importance of each leg position
 3. **Team Distribution**: Athlete predictions are combined with importance weights to create team score distributions
 4. **Monte Carlo Simulation**: Teams are ranked across 10,000 simulations
+
+**Exponential Decay for prev_points_weighted**: Relay uses the same exponential decay weighting as individual races:
+- Legs 1-2 (Classic): Uses classic distance race history with exponential decay
+- Legs 3-4 (Freestyle): Uses freestyle distance race history with exponential decay
+- Formula: `weight = exp(-DECAY_LAMBDA * days_ago)` where DECAY_LAMBDA = 0.002
 
 **Leg Features** (matching technique requirements):
 - Legs 1-2 (Classic): `prev_points_weighted, Pelo_pct, Distance_Pelo_pct, Distance_C_Pelo_pct, Classic_Pelo_pct, Sprint_Pelo_pct, Sprint_C_Pelo_pct`
@@ -233,6 +239,15 @@ Unlike 4-leg relay, team sprint uses **technique-specific features and models**:
 - **Freestyle Team Sprint (F)**: Uses `Sprint_F_Pelo_pct, Freestyle_Pelo_pct, Distance_F_Pelo_pct`
 
 Separate models are trained for each technique at the championship.
+
+**Exponential Decay for prev_points_weighted**: Team sprint uses technique-specific sprint history with exponential decay:
+- Classic (C): Uses classic sprint race history
+- Freestyle (F): Uses freestyle sprint race history
+- Formula: `weight = exp(-DECAY_LAMBDA * days_ago)` where DECAY_LAMBDA = 0.002
+
+#### Team Selection
+
+Same dual-optimized approach as relay, producing both podium-optimized and win-optimized team rosters.
 
 #### Probability
 

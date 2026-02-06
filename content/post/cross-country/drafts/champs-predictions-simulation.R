@@ -475,7 +475,8 @@ ladies_ts_leg_importance <- calculate_leg_importance_from_models(ladies_team_spr
 
 log_info("=== END LEG IMPORTANCE CALCULATION ===\n")
 
-# Calculate weighted prev_points for GAM training
+# Calculate weighted prev_points for GAM training using exponential decay
+# Uses DECAY_LAMBDA for date-based weighting (consistent with testing/prediction)
 calculate_weighted_prev_points <- function(chrono_data) {
   chrono_data %>%
     arrange(ID, Date) %>%
@@ -484,12 +485,15 @@ calculate_weighted_prev_points <- function(chrono_data) {
       prev_points_weighted = sapply(1:n(), function(i) {
         if (i == 1) return(0)
 
+        current_date <- Date[i]
         current_distance <- Distance[i]
         current_technique <- Technique[i]
         prev_distances <- Distance[1:(i-1)]
         prev_techniques <- Technique[1:(i-1)]
         prev_points_values <- points[1:(i-1)]
+        prev_dates <- Date[1:(i-1)]
 
+        # Determine matching race type
         if (current_distance == "Sprint" && current_technique == "C") {
           matching <- prev_distances == "Sprint" & prev_techniques == "C"
         } else if (current_distance == "Sprint" && current_technique == "F") {
@@ -505,11 +509,14 @@ calculate_weighted_prev_points <- function(chrono_data) {
         }
 
         matching_points <- prev_points_values[matching]
+        matching_dates <- prev_dates[matching]
         if (length(matching_points) == 0) return(0)
 
-        recent_points <- tail(matching_points, 5)
-        weights <- seq(1, length(recent_points))
-        weighted.mean(recent_points, weights, na.rm = TRUE)
+        # Calculate exponential decay weights based on days ago
+        days_ago <- as.numeric(difftime(current_date, matching_dates, units = "days"))
+        weights <- exp(-DECAY_LAMBDA * days_ago)
+
+        weighted.mean(matching_points, weights, na.rm = TRUE)
       })
     ) %>%
     ungroup()
