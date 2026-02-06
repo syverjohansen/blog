@@ -142,6 +142,8 @@ Same 5-phase process with relay-specific thresholds.
 
 ## Cross-Country
 
+Cross-country skiing predictions use a **Monte Carlo simulation approach** that differs from other sports. This approach naturally handles varying field sizes without normalization artifacts and produces more calibrated probability distributions.
+
 ### Individual
 
 #### Data Gathering
@@ -152,19 +154,34 @@ Championship athletes configured by nation. Race schedule filtered for `Champion
 
 ##### Training
 
-Training data filtered to last 10 seasons and 75% Elo threshold.
+Training data filtered to last 10 seasons.
 
 Position thresholds: Win, Podium, Top 5, Top 10, Top 30 for all individual events.
 
-BIC feature selection uses discipline-appropriate Elo columns. Binomial GAM models with REML. Altitude (≥1300m), period, and mass start adjustments calculated.
+**Feature Selection** uses BIC optimization via `regsubsets` with a **positive coefficient constraint**. Features that receive negative coefficients in the model are excluded, as all features should be positive indicators of performance. This prevents counterintuitive situations where higher Elo predicts lower probability.
+
+**Exponential Decay Weighting**: Historical races are weighted using exponential decay based on date:
+- Formula: `weight = exp(-DECAY_LAMBDA * days_ago)`
+- DECAY_LAMBDA = 0.002 gives approximately 50% weight after 1 year
+- More recent races have greater influence on predictions
 
 ##### Testing
 
-Elo percentages from startlist maximum. Exponential decay (α = 0.1) for participation. Models applied with adjustments.
+For each athlete, a performance distribution is built by:
 
-#### Normalization and Monotonic Constraints
+1. **Historical Performance**: Recent discipline-specific race results weighted by exponential decay
+2. **GAM Prediction**: Expected points from the trained model
+3. **Variance Estimation**: Standard deviation based on historical variability, scaled and bounded
 
-Same 5-phase process as Alpine.
+**Monte Carlo Simulation**: 10,000 race simulations are run where each athlete samples from their distribution. Position is determined by ranking all samples. Position probabilities are the proportion of simulations where each athlete achieved each threshold.
+
+**Variance Control Parameters** (calibrated via Brier score grid search):
+- SD_SCALE_FACTOR: Scales athlete variance (lower = favorites win more)
+- SD_MIN/SD_MAX: Bounds on variance to prevent extreme values
+
+#### Normalization
+
+Simulation naturally produces correctly-summed probabilities (exactly 1 winner, 3 podium spots, etc.). No post-hoc normalization is required, avoiding artifacts from iterative capping/redistribution.
 
 ### Relay
 
@@ -172,19 +189,36 @@ Same 5-phase process as Alpine.
 
 Relay teams configured by nation with leg assignments. Classic legs (1-2) and Freestyle legs (3-4) use appropriate technique-specific Elos.
 
+#### Team Selection
+
+**Podium-Optimized Selection**: Teams are selected to maximize podium probability (threshold = 3) using leg-specific models. The selection algorithm:
+1. Trains leg-specific binomial GAMs predicting P(team podium | athlete on leg X)
+2. Uses combinatorial optimization to find the 4-athlete lineup maximizing team podium probability
+3. Considers athlete availability and leg-appropriate technique
+
 #### Probability
 
-##### Training
+##### Hybrid Approach (GAM + Simulation)
 
-Position thresholds: Win, Podium, Top 5, Top 10. Leg-specific models account for classic vs freestyle and anchor leg importance.
+Cross-country relay uses a hybrid approach combining production models with simulation:
 
-##### Testing
+1. **Leg-Specific GAM Models**: Binomial GAMs are trained for each leg position predicting P(team podium | athlete on this leg)
+2. **Leg Importance Calculation**: Model deviance explained determines relative importance of each leg position
+3. **Team Distribution**: Athlete predictions are combined with importance weights to create team score distributions
+4. **Monte Carlo Simulation**: Teams are ranked across 10,000 simulations
 
-Team Elos calculated from configured rosters with leg-appropriate weightings.
+**Leg Features** (matching technique requirements):
+- Legs 1-2 (Classic): `prev_points_weighted, Pelo_pct, Distance_Pelo_pct, Distance_C_Pelo_pct, Classic_Pelo_pct, Sprint_Pelo_pct, Sprint_C_Pelo_pct`
+- Legs 3-4 (Freestyle): `prev_points_weighted, Pelo_pct, Distance_Pelo_pct, Distance_F_Pelo_pct, Freestyle_Pelo_pct, Sprint_Pelo_pct, Sprint_F_Pelo_pct`
 
-#### Normalization and Monotonic Constraints
+##### Variance Control
 
-Same 5-phase process with relay thresholds.
+Relay-specific variance parameters (calibrated separately from individual races):
+- RELAY_SCORE_SD_MIN/MAX: Bounds on team score variance
+
+#### Output
+
+Team probabilities for Win, Podium, Top 5, Top 10 from simulation. Leg-level probabilities are derived by scaling the leg model predictions by team-level threshold ratios.
 
 ### Team Sprint
 
@@ -192,9 +226,25 @@ Same 5-phase process with relay thresholds.
 
 Team sprint pairs configured by nation. Each team has two athletes alternating legs.
 
+#### Technique-Specific Models
+
+Unlike 4-leg relay, team sprint uses **technique-specific features and models**:
+- **Classic Team Sprint (C)**: Uses `Sprint_C_Pelo_pct, Classic_Pelo_pct, Distance_C_Pelo_pct`
+- **Freestyle Team Sprint (F)**: Uses `Sprint_F_Pelo_pct, Freestyle_Pelo_pct, Distance_F_Pelo_pct`
+
+Separate models are trained for each technique at the championship.
+
 #### Probability
 
-Same methodology as relay with team sprint-specific thresholds.
+Same hybrid approach as relay with 2 legs instead of 4. Variance parameters (TS_SCORE_SD_MIN/MAX) are calibrated separately.
+
+#### Calibration System
+
+Three independent calibration processes using Brier score on historical data (2018+):
+
+1. **Individual Race Calibration**: Grid search over DECAY_LAMBDA, SD_SCALE_FACTOR, SD_MIN, SD_MAX
+2. **Relay Calibration**: Grid search over RELAY_SCORE_SD_MIN, RELAY_SCORE_SD_MAX
+3. **Team Sprint Calibration**: Grid search over TS_SCORE_SD_MIN, TS_SCORE_SD_MAX
 
 ## Nordic Combined
 

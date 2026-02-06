@@ -1,6 +1,6 @@
 # 2026 Winter Olympics Championship Predictions
 
-## Current Status (2026-02-03)
+## Current Status (2026-02-06)
 
 ### Project Overview
 Creating championship prediction blog posts for the 2026 Winter Olympics with:
@@ -18,973 +18,255 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 
 ## Sport-by-Sport Status
 
-| Sport | Date Ordering | ID Column | Percentages | Relay Support | Status |
-|-------|---------------|-----------|-------------|---------------|--------|
-| Alpine | ✅ Complete | ✅ Complete | ✅ Complete | N/A | ✅ Ready |
-| Biathlon | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
-| Cross-Country | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
-| Nordic Combined | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
-| Ski Jumping | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Complete | ✅ Ready |
-
-### Features Implemented (All Sports)
-- Two-phase normalization (scale proportionally → cap and redistribute iteratively)
-- Exponential decay weighted participation probability
-- Nations Excel with Summary sheet and per-nation breakdown
-- Clean column names (no underscores)
-- Sport-specific Elo columns in skier tables
+| Sport | Production Script | Simulation Script | Status |
+|-------|-------------------|-------------------|--------|
+| Alpine | Ready | N/A | Ready |
+| Biathlon | Ready | N/A | Ready |
+| Cross-Country | Ready | Ready (Hybrid) | Ready |
+| Nordic Combined | Ready | N/A | Ready |
+| Ski Jumping | Ready | N/A | Ready |
 
 ---
 
-## Olympics Website Review (2026-02-03)
-
-Going page by page through the website to identify and fix issues before the 2026 Winter Olympics.
-
-### Issues Found and Fixed
-
-#### 1. Friends Section Removed
-- Changed `friends = true` to `friends = false` in config.toml
-
-#### 2. RSS Button Replaced with Strava
-- Changed `rss = true` to `rss = false` in config.toml
-- Added Strava support to themes/white/layouts/partials/footer.html
-
-#### 3. Duplicate Title in Race Picks Removed
-- Removed `# $title` from predict_script.sh (weekend picks, TdS picks, race picks templates)
-
-#### 4. Heading Hierarchy Fixed
-- Updated .post-container h4, h5, h6 styles with proper hierarchy (22px, 19px, 16px) and font-weight: 600
-
-#### 5. Catalog Scrolling Fixed (2026-02-03)
-**Issue:** Catalog sidebar cuts off sections when window is smaller. Extends to medium-sized desktop windows.
-
-**Root Cause:** Multiple issues:
-- JavaScript scroll handling only activated for windows > 1170px
-- CSS hid catalog at max-width: 1200px (inconsistent with JS)
-- `.side-catalog.fixed` lacked height constraints, causing overflow
-- Bootstrap `visible-lg-block` class only showed catalog on screens ≥1200px
-
-**Files Modified:**
-- `themes/white/static/css/hugo-theme-cleanwhite.css`:
-  - `.side-catalog`: Removed `height: 100%`, changed `overflow: auto` to `overflow: visible`
-  - `.side-catalog.fixed`: Added `top: 70px`, `max-height: calc(100vh - 90px)`, `overflow: hidden`
-  - `.catalog-body`: Changed `max-height` to `calc(100vh - 160px)`, added `overflow-x: hidden`
-  - Media query: Changed `max-width: 1200px` to `max-width: 991px`
-- `themes/white/static/js/hux-blog.js`:
-  - Changed MQL threshold from 1170 to 992 (matches Bootstrap md breakpoint)
-- `themes/white/layouts/_default/single.html`:
-  - Replaced `visible-lg-block` with `col-md-2 col-md-offset-0 hidden-sm hidden-xs`
-  - Removed test content div (yellow background)
-
-**Result:** Catalog now:
-- Scrolls properly within viewport bounds when fixed
-- Shows on medium and large screens (≥992px)
-- Hidden on small screens and mobile (<992px)
-
-#### 6. Datatable Style Unified (2026-02-03)
-- Replaced all 5 datatable.html shortcodes with datatable2.html style (baseball-reference inspired)
-- Features: sticky first column with max-width 220px (truncation on scroll), search, pagination, sorting
-- Files: alpine, biathlon, cross-country, nordic-combined, skijump datatable.html
-
-#### 7. Sidebar Avatar Updated (2026-02-03)
-- Changed `sidebar_avatar` from `img/headshot.jpg` to `img/me.jpeg` in config.toml
-
-#### 8. Sport Page Header Text Removed (2026-02-03)
-- Removed redundant title/subtitle/metadata from header image on sport landing pages
-- Title already appears in the body section, so header image now shows only the image
-- Files: layouts/{alpine,biathlon,cross-country,nordic-combined,skijump}/list.html
-
-#### 9. Olympics Predictions Duplicate Title Removed (2026-02-03)
-- Removed redundant H1 title from body of Winter Olympics prediction pages
-- Title already appears in header image, no need to repeat in body
-- Files updated: content/post/champs-predictions/2026/{alpine,biathlon,cross-country,nordic-combined,skijump,nations,race-by-race}.md
-- Script updated: champs_script.sh (removed `# $CURRENT_YEAR Winter Olympics...` line)
-
-#### 10. Weekly Recap Duplicate Title Removed (2026-02-03)
-- Removed redundant H1 title from body of weekly recap posts
-- Title already appears in header image
-- Scripts updated: recap_script.sh and recap_script_ubuntu.sh (removed `# $title` line)
-
-#### 11. Elo Page Redundant Labels Removed (2026-02-03)
-- Removed redundant "Ladies" and "Men" h1 labels above "Ladies Elo" and "Men Elo" headings
-- The h2 headings ("Ladies Elo", "Men Elo") are sufficient; the h1 labels were redundant
-- Files updated: layouts/partials/{alpine,biathlon,cross-country,nordic-combined,skijump}/small-table.html
-- Removed: `<h1 class="section-title" id="Ladies">Ladies</h1>` and `<h1 class="section-title" id="Men">Men</h1>`
-
-#### 12. Ranks Table Sticky Columns and Mobile Truncation (2026-02-04)
-- Removed Nation from being a sticky column - now only Rank and Skier are sticky
-- Added border-right to sticky-col-2 (Skier) since it's now the last sticky column
-- Added mobile truncation for skier name (max-width: 80px with ellipsis), matching Elo tables
-- Both Rank and Skier stay sticky on mobile with adjusted positions (left: 0, left: 40px)
-- Files updated: layouts/partials/{alpine,biathlon,cross-country,nordic-combined,skijump}/ranks-table.html
-
-#### 13. Weekly Recap Methodology Updates (2026-02-04)
-- Updated Elo Change Tracking Purpose to: "Track the changes in Elo ratings for athletes who have competed in the last week."
-- Removed Data Processing subsection from Elo Change Tracking
-- Specified that **10 most recent races** are used from athlete history
-- Added **participation probability** documentation - simulation determines if athlete participates in each race based on historical participation patterns
-- Converted system bullets from numbered list to bullet points
-- Removed Technical Notes section at bottom
-- File updated: content/post/methods/race-recap.md
-
-#### 14. Race Picks Methodology Improvements (2026-02-04)
-- **Added BLUF section** - Technical summary for data science audience covering GAMs, BIC feature selection, binomial GAMs with REML, 7-phase normalization
-- **Fixed numbered list formatting** - Removed leading spaces from numbered lists (`  1.` → `1.`) so they render properly as markdown lists
-- **Consolidated repetitive Normalization section** - The identical 7-phase normalization process appeared 10 times (Individual + Relay × 5 sports). Created a single "Common Methodology" section at the top and replaced all 10 occurrences with references to it
-- **Reduced file size** - From ~1213 lines to ~1090 lines by eliminating duplicate content
-- File updated: content/post/methods/race-picks.md
-
-#### 15. Elo Calculations Methodology Tables Fixed (2026-02-04)
-- **Created new `simple-table` shortcode** - A lightweight table shortcode with nice styling (borders, alternating row colors, header formatting) but without the heavy pagination/search/sorting controls of datatable
-- **Replaced datatable with simple-table** for all 3 methodology tables:
-  - Example Race table (4 rows)
-  - Season Discount Example table (4 rows)
-  - K Adjustments table (8 rows)
-- New shortcode created: layouts/shortcodes/simple-table.html
-- File updated: content/post/methods/elo-calculations.md
-
-#### 16. All-Time Rankings Methodology Tables Fixed (2026-02-04)
-- **Root cause**: The `datatable` shortcode uses `.` as path separator, but the content was using `/` (e.g., `methods/ranks/base_points`). The `simple-table` shortcode correctly uses `/` as separator.
-- **Replaced all 8 datatable calls with simple-table** in ranks.md:
-  - base_points, race_modifiers
-  - alpine_points, biathlon_points, crosscountry_points, nordic_combined_points, skijump_points
-  - output_columns
-- File updated: content/post/methods/ranks.md
-
-#### 17. Champs Predictions Ladies Gender Links Fixed (2026-02-04)
-- **Root cause**: The champs-predictions.R scripts were not including a Sex column in the Excel output, unlike race-picks.R which does. Without the Sex column, the datatable2 shortcode fell back to filename detection which incorrectly matched "m_" in distance strings like "20km_" (detecting "k**m_**Skiathlon").
-- **Solution**: Added Sex column to all 5 champs-predictions.R files. The datatable2 shortcode already hides the Sex column from display but uses it for athlete link generation.
-- Files updated:
-  - content/post/alpine/drafts/champs-predictions.R
-  - content/post/biathlon/drafts/champs-predictions.R
-  - content/post/cross-country/drafts/champs-predictions.R
-  - content/post/nordic-combined/drafts/champs-predictions.R
-  - content/post/skijump/drafts/champs-predictions.R
-- **Action needed**: Re-run `champs_script.sh 2026` to regenerate the JSON files with the Sex column
-
-#### 18. Search Switched from Algolia to Pagefind (2026-02-04)
-- **Issue**: Algolia search was configured but API credentials were empty, causing search to not work.
-- **Solution**: Switched to Pagefind, a free static search solution that runs entirely client-side.
-- Files updated:
-  - `config.toml`: Set `algolia_search = false`, removed "Algolia" from home outputs
-  - `content/search/_index.md`: Created proper search index page
-  - Removed `content/search/placeholder.md`
-- **Cloudflare Pages build command**: Changed from `hugo` to `hugo && npx pagefind --site public`
-- Pagefind generates search index in `public/_pagefind/` at build time
-
-#### 19. Race Archive Dates Off By One Day Fixed (2026-02-04)
-- **Issue**: Race dates in archives showed one day before the actual race date (e.g., Feb 4 race showed as Feb 3).
-- **Root cause**: Dates stored in ISO format (e.g., `"2025-11-28"`) were parsed by JavaScript's `new Date()` as UTC midnight. In US timezones (behind UTC), midnight UTC is the previous day local time.
-- **Solution**: Parse dates as local time by splitting the date string and constructing the Date object with explicit year/month/day components:
-  ```javascript
-  const dateParts = race.date.split(/[-T ]/);
-  const raceDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-  ```
-- Files updated (10 total):
-  - `layouts/partials/{sport}/race-results.html` (5 files)
-  - `layouts/partials/{sport}/year-races.html` (5 files)
-- Note: Graph files also use `new Date()` for sorting/axes, but those don't cause visible user issues since the relative order is preserved.
-
----
-
-## Recent Changes (2026-02-03)
-
-### Two-Phase Normalization Applied to All Prediction Scripts
-
-Applied two-phase normalization to both champs-predictions.R and race-picks.R files across all sports.
-
-**Algorithm:**
-1. **Phase A**: Scale proportionally to target sum first (no capping)
-2. **Phase B**: Cap at 100% and redistribute excess iteratively
-
-**Why:** Prevents unfair treatment when multiple athletes have over-predicted raw probabilities (e.g., 5 athletes at 120% each now get 20% each instead of all being capped at 100%).
-
-**Files Updated:**
-- All 5 champs-predictions.R files
-- All 5 race-picks.R files
-- 3 cross-country relay files (race-picks-relay.R, race-picks-mixed-relay.R, race-picks-team-sprint.R)
-
-### Team Event Column Names Fixed (Ski Jumping & Nordic Combined)
-
-Fixed underscore column names in team/summary Excel outputs:
-- `Win_Prob` → `Win`
-- `Podium_Prob` → `Podium`
-- `Top5_Prob` → `Top-5`
-- `Top10_Prob` → `Top-10`
-- `Races_Participating` → `Races`
-
-**Files Updated:**
-- `content/post/skijump/drafts/champs-predictions.R` (team predictions + athlete summary)
-- `content/post/nordic-combined/drafts/champs-predictions.R` (athlete summary + team summary)
-
----
-
-## Completed Tasks
-
-### Apply Two-Phase Normalization to race-picks.R - COMPLETED (2026-02-03)
-
-Applied two-phase normalization to all race-picks.R files:
-
-**Individual race files (0-100 scale):**
-- `content/post/alpine/drafts/race-picks.R` ✓
-- `content/post/biathlon/drafts/race-picks.R` ✓
-- `content/post/cross-country/drafts/race-picks.R` ✓
-- `content/post/nordic-combined/drafts/race-picks.R` ✓
-- `content/post/skijump/drafts/race-picks.R` ✓
-
-**Cross-country relay/team files (0-1 scale):**
-- `content/post/cross-country/drafts/race-picks-relay.R` ✓
-- `content/post/cross-country/drafts/race-picks-mixed-relay.R` ✓
-- `content/post/cross-country/drafts/race-picks-team-sprint.R` ✓
-
-**Changes made:**
-1. Added `normalize_with_cap()` helper function to each file
-2. Updated initial normalization to use two-phase approach
-3. Updated re-normalization after monotonic constraints to use two-phase approach
-4. Biathlon uses participating athletes subset for normalization (preserved)
-
-### Standard Output Format (Target for All Sports)
-- **Columns**: Skier, ID, Nation, Start, Win, Podium, Top5, Top-10, Top-30
-- **Values**: Percentages (0-100 scale), rounded to 1 decimal
-- **Sheet names**: `"N. RaceType - Mon DD"` format (e.g., "1. Sprint Classic - Feb 12")
-- **Nations Summary**: Expected medal counts (divide percentage sums by 100)
-
-### Cross-Country Race Naming
-- "P" technique = Skiathlon (e.g., "20km Skiathlon")
-- "C" technique = Classic (e.g., "10km Classic", "Sprint Classic")
-- "F" technique = Freestyle (e.g., "10km Freestyle", "Sprint Freestyle")
-
----
-
-## Completed Task: Race-Picks Methodology Verification (2026-01-31)
-
-### Task Description
-Verified the accuracy of `~/blog/daehl-e/content/post/methods/race-picks.md` methodology documentation and applied corrections based on actual R and Python implementation.
-
-### Files to Review
-
-**Documentation File:**
-- `~/blog/daehl-e/content/post/methods/race-picks.md` (1123 lines covering all sports)
-
-**R Source Files (Individual Race Picks):**
-- `~/blog/daehl-e/content/post/alpine/drafts/race-picks.R`
-- `~/blog/daehl-e/content/post/biathlon/drafts/race-picks.R`
-- `~/blog/daehl-e/content/post/cross-country/drafts/race-picks.R`
-- `~/blog/daehl-e/content/post/nordic-combined/drafts/race-picks.R`
-- `~/blog/daehl-e/content/post/skijump/drafts/race-picks.R`
-
-**R Source Files (Cross-Country Relays):**
-- `~/blog/daehl-e/content/post/cross-country/drafts/race-picks-relay.R`
-- `~/blog/daehl-e/content/post/cross-country/drafts/race-picks-mixed-relay.R`
-- `~/blog/daehl-e/content/post/cross-country/drafts/race-picks-team-sprint.R`
-
-**Python Startlist Scraper Files (Individual):**
-- `~/ski/elo/python/alpine/polars/startlist-scrape-race*.py`
-- `~/ski/elo/python/biathlon/polars/startlist-scrape-race*.py`
-- `~/ski/elo/python/cross-country/polars/startlist-scrape-race*.py`
-- `~/ski/elo/python/nordic-combined/polars/startlist-scrape-race*.py`
-- `~/ski/elo/python/skijump/polars/startlist-scrape-race*.py`
-
-**Python Startlist Scraper Files (Relays):**
-- `~/ski/elo/python/biathlon/polars/relay/`
-- `~/ski/elo/python/cross-country/polars/relay/`
-- `~/ski/elo/python/nordic-combined/polars/relay/`
-- `~/ski/elo/python/skijump/polars/relay/`
-
-### Verification Process (Sport by Sport)
-
-For each sport, verify:
-
-1. **Conceptual Accuracy:**
-   - Is the overall approach described correctly?
-   - Are the model types (GAM with binomial family) accurately described?
-   - Is the feature selection process (BIC) correctly explained?
-   - Is the exponential decay participation probability described accurately?
-
-2. **Detailed Accuracy:**
-   - Are the input data sources and columns correct?
-   - Are the specific features/variables mentioned accurate?
-   - Is the normalization process (7-phase) correctly documented?
-   - Are sport-specific differences (event types, Elo columns) accurate?
-   - Are relay/team variations correctly described?
-
-3. **Cross-Reference Python Scrapers:**
-   - What data do the scrapers collect?
-   - How does this feed into the R prediction scripts?
-   - Are there any data transformations in the scrapers that affect predictions?
-
-### Sports Checklist (COMPLETED 2026-01-31)
-
-- [x] Alpine (Individual only - no team events)
-- [x] Biathlon (Individual + Relay)
-- [x] Cross-Country (Individual + Relay + Mixed Relay + Team Sprint)
-- [x] Nordic Combined (Individual + Team)
-- [x] Ski Jumping (Individual + Team + Mixed Team)
-
-### Verification Results Summary
-
-#### Issues Found and FIXED in race-picks.md:
-
-**1. ALL SPORTS - Normalization Section Incomplete**
-Documentation describes ~3 phases but code uses 7 phases:
-1. Scale to target sum
-2. Cap at 100%, redistribute excess
-3. Monotonic constraints
-4. Re-normalize
-5. Cap at 100% again
-6. Final monotonic constraint (recently added)
-7. Final cap at start_prob (recently added)
-
-**2. Exponential Decay α Value WRONG (4 sports)**
-- **Documentation says α = 0.3** for Biathlon, Nordic Combined, Ski Jumping
-- **Code uses α = 0.1** for ALL sports
-- Only Alpine documentation correctly states α = 0.1
-
-**3. Cross-Country - Period Definition WRONG**
-- Documentation describes semantic periods: pre-TdS, TdS, post-TdS, championships, post-championships
-- Code uses simple race count buckets: 1-5, 6-10, 11-15, 16-20, 21-25+
-
-**4. Nordic Combined - Multiple Errors**
-- Documentation says "Pursuit" Elo, code uses "Sprint_Elo" (no Pursuit in NC)
-- Documentation claims NO 75% Elo filter, but code DOES filter by 75%
-- Documentation says "IBU site" but NC uses FIS
-
-**5. Ski Jumping - Multiple Errors**
-- Elo columns incomplete: missing Small_Elo, Medium_Elo from documentation
-- Copy-paste error: lists Nordic Combined disciplines for weighted points
-- Claims elevation adjustment but code uses hillsize_adjustment instead
-
-#### Verified as Correct:
-- Overall approach (GAM with binomial family, BIC feature selection)
-- Alpine: All major claims verified correct
-- Biathlon: Elo columns, elevation threshold (1300m), relay methodology
-- Cross-Country: Sprint thresholds (1,3,6,12,30), Elo columns, altitude threshold, relay leg structure
-- Relay: XGBoost for n>500, GLM for smaller datasets (cross-country)
-- Data sources: FIS (alpine, XC, NC, SJ), IBU (biathlon)
-
-### Weekly Recap Improvements (2026-02-02)
-
-**Column Naming Improvements:**
-Updated ALL 5 sports' race-recap2.R files to use user-friendly column names:
-
-1. **Elo Change Section:**
-   - `Current_Elo` → `Current Elo`
-   - `Previous_Week_Elo` → `Previous Elo`
-   - `Elo_Change` → `Change`
-
-2. **Magic Numbers Section:**
-   - `Current_Place` → `Rank`
-   - `Magic_Number` → `Magic #`
-
-**Files Updated:**
-- `content/post/alpine/drafts/race-recap2.R`
-- `content/post/biathlon/drafts/race-recap2.R`
-- `content/post/cross-country/drafts/race-recap2.R`
-- `content/post/nordic-combined/drafts/race-recap2.R`
-- `content/post/skijump/drafts/race-recap2.R`
-
-**Methodology Documentation:**
-Created `content/post/methods/race-recap.md` documenting:
-- Elo change tracking methodology
-- Monte Carlo season simulation (formula, noise model, iterations)
-- Magic number calculation with mathematical definition
-- Points remaining calculation per sport
-- Technical notes on date handling and edge cases
-
-**Shell Script Update:**
-Updated `weekly-recap.sh` to include methodology link in generated posts:
-```markdown
-*For details on how these predictions are generated, see the [Weekly Recap Methodology](/post/methods/race-recap/).*
-```
-
-### Start Probability Testing (2026-02-01) - HISTORICAL
-
-Start probability multiplication and capping was commented out in all 5 champs-predictions.R files for testing purposes. All changes marked with `# NOTE:` comments in the code. This was an experimental change to evaluate the impact of start_prob on predictions.
-
-### Methodology Page Dates (2026-02-01)
-
-Updated all methodology page dates to 2020-01-01 to hide from post feed:
-- elo-calculations.md
-- ranks.md
-- champs-predictions.md
-- race-picks.md
-
-### Methodology Documentation Improvements (2026-02-01)
-
-1. **ranks.md** - Converted to use datatable shortcodes for better readability
-   - Created JSON data files in `data/methods/ranks/`
-   - Tables: base_points, race_modifiers, alpine_points, biathlon_points, crosscountry_points, nordic_combined_points, skijump_points, output_columns
-
-2. **elo-calculations.md** - Fixed and improved
-   - Fixed formula: End Elo = Elo x 0.85 + 1300 x 0.15 (not "Pre-race Elo")
-   - Added example race showing how Elo changes
-   - Added season discount example
-   - Created JSON data files in `data/methods/elo/`
-
-3. **ranks-table.html fixes** - Fixed sport-specific columns
-   - Alpine: Removed Tour de Ski column (doesn't exist for alpine)
-   - Biathlon: Removed Tour de Ski column (doesn't exist for biathlon)
-   - Nordic Combined: Removed Tour de Ski column (doesn't exist for NC)
-   - Ski Jumping: Replaced Tour de Ski with 4 Hills + Ski Flying WC + World Cup columns
-
-### Elo Calculations Documentation (2026-02-01)
-
-Created `content/post/methods/elo-calculations.md` documenting:
-- Core algorithm: Base Elo 1300, multi-player Elo formula E = 1/(1 + 10^((Rj - Ri)/400))
-- Dynamic K-factor: max_racers/current_season_racers, capped 1-5
-- Season discount: 0.85 regression toward base
-- Sport-specific K adjustments:
-  - Alpine Combined: K × 0.8
-  - Biathlon Relay/Mixed Relay: K / 4, Single Mixed Relay: K / 2
-  - Cross-Country Relay: K / 4, Team Sprint: K / 2
-  - Nordic Combined Team: K / 4, Team Sprint: K / 2
-  - Ski Jumping Team: K / 4
-- Pipeline: scrape.py → elo.py → chrono.py (website) or elo_predict.py → chrono_predict.py (predictions)
-- Discipline-specific Elos for each sport
-
-### Completed Tasks (2026-02-01)
-
-1. **Ranks Methodology Documentation** - DONE
-   - Created `content/post/methods/ranks.md` documenting:
-     - Points system: Only top 3 finishes earn points
-     - Base points: Olympics (80/40/20), WSC (40/20/10), WC (8/4/4), Standings (80/40/20)
-     - Race type modifiers: Individual (1.0×), Team Sprint/SMR (0.5×), Relay/Team (0.25×)
-     - Sport-specific events: Tour de Ski, 4 Hills Tournament, Ski Flying WC
-
-2. **Methodology Links in Blog Posts** - DONE
-   - `predict_script.sh`: Added race-picks methodology link to weekly-picks, TdS, and race-picks posts
-   - `champs_script.sh`: Added champs-predictions methodology link to championship posts
-   - Elo pages: Added elo-calculations methodology link to all 10 elo/all-elo pages
-   - Ranks pages: Added ranks methodology link to all 5 ranks pages
-
-### Championship Predictions Documentation (2026-01-31, updated 2026-02-02)
-
-Created `content/post/methods/champs-predictions.md` documenting:
-- Config-based athlete selection (vs scraped startlists)
-- Probability-only predictions (no points)
-- 5-phase iterative constrained normalization process (updated 2026-02-02)
-- Sport-specific thresholds:
-  - Individual: 1, 3, 5, 10, 30
-  - Relay/Team: 1, 3, 5, 10 (biathlon, XC, NC) or 1, 3, 5 (ski jumping)
-- All sports: α = 0.1 exponential decay, 75% Elo filter
-
----
-
-## Recent Changes
-
-### Two-Phase Normalization Fix (2026-02-03)
-
-**Issue:** The original iterative constrained normalization had a flaw: if multiple athletes all had raw predictions above 100% (e.g., 5 athletes at 120% each), the algorithm would cap them all at 100% immediately, resulting in a 500% total instead of the target 100%.
-
-**Problem Example:**
-- 5 athletes each have raw Win probability of 120% (model over-predicting)
-- Old algorithm: Cap all 5 at 100% → Total = 500% (wrong!)
-- The issue: When everyone is above cap, there's no one to redistribute excess to
-
-**Solution:** Implemented two-phase `normalize_with_cap()`:
-1. **Phase A**: Scale proportionally to target sum FIRST (no capping)
-2. **Phase B**: THEN cap at 100% and redistribute excess iteratively
-
-**Algorithm:**
+## Simulation Script: Completed Features
+
+### Hybrid Approach (Production Models + Simulation)
+Combines the best of both approaches:
+- **From Production**: Sophisticated leg-specific GAM models predicting team podium probability
+- **From Simulation**: Natural field-size handling, no normalization artifacts
+
+**How it works:**
+1. Train leg-specific binomial GAMs predicting `is_podium = (Place <= 3)`
+2. For each team member, predict P(team podium | athlete on this leg)
+3. Convert weighted probabilities to logit scores for simulation
+4. Monte Carlo simulation ranks teams naturally
+
+### Variance Control Parameters (Calibrated 2026-02-05)
 ```r
-normalize_with_cap <- function(probs, target_sum, max_prob = 100) {
-  # Phase A: Scale proportionally first
-  current_sum <- sum(probs, na.rm = TRUE)
-  if (current_sum > 0) {
-    probs <- probs * (target_sum / current_sum)
-  }
+# Individual races
+DECAY_LAMBDA <- 0.002     # Exponential decay rate (0.002 = 50% weight after 1 year)
+SD_SCALE_FACTOR <- 0.77   # Multiply all SDs (lower = favorites win more)
+SD_MIN <- 4               # Minimum SD
+SD_MAX <- 16              # Maximum SD
 
-  # Phase B: Cap and redistribute iteratively
-  repeat {
-    above_cap <- probs > max_prob
-    if (!any(above_cap)) break
+# Relay (4 legs)
+RELAY_SCORE_SD_MIN <- 0.5
+RELAY_SCORE_SD_MAX <- 1.15
 
-    probs[above_cap] <- max_prob
-    remaining_target <- target_sum - sum(above_cap) * max_prob
-    uncapped_sum <- sum(probs[!above_cap])
-
-    probs[!above_cap] <- probs[!above_cap] * (remaining_target / uncapped_sum)
-  }
-  return(probs)
-}
+# Team Sprint (2 legs)
+TS_SCORE_SD_MIN <- 0.45
+TS_SCORE_SD_MAX <- 0.8
 ```
 
-**Why this works:**
-- After Phase A, total = target (100% for Win, 300% for Podium, etc.)
-- Mathematically, at most `target/100` athletes can exceed 100% after Phase A
-- For Win (100%): At most 1 athlete can exceed 100%
-- For Podium (300%): At most 3 can exceed 100%
-- This guarantees Phase B always has room to redistribute
-
-**Example with 5 athletes at 120% (target = 100%):**
-- Phase A: Scale 600% → 100%, each gets 20%
-- Phase B: No one above 100%, done
-- Result: [20, 20, 20, 20, 20] = 100% ✓
-
-**Files Updated (all 5 sports):**
-- `content/post/alpine/drafts/champs-predictions.R`
-- `content/post/biathlon/drafts/champs-predictions.R`
-- `content/post/cross-country/drafts/champs-predictions.R`
-- `content/post/nordic-combined/drafts/champs-predictions.R`
-- `content/post/skijump/drafts/champs-predictions.R`
-
-### run_champs_predictions.sh Restructure (2026-02-02)
-
-**Issue:** The shell script was using bash associative arrays (`declare -A`) which failed silently, causing cross-country to run in the wrong directory.
-
-**Debug Output Showed:**
-```
->>> RUNNING SCRAPER for alpine <<<
-Working directory: /Users/syverjohansen/ski/elo/python/skijump/polars  # WRONG!
-```
-
-**Fix:** Replaced associative array with a `case` statement function and restructured to run each sport completely before moving to the next:
-
-```bash
-get_elo_folder() {
-    case "$1" in
-        alpine) echo "alpine" ;;
-        biathlon) echo "biathlon" ;;
-        cross-country) echo "ski" ;;
-        nordic-combined) echo "nordic-combined" ;;
-        skijump) echo "skijump" ;;
-        *) echo "" ;;
-    esac
-}
-```
-
-**New Structure (per sport):**
-1. Step 1: Run elo_predict_script.sh
-2. Step 2: Run chrono_predict.py
-3. Step 3: Run startlist-scrape-champs.py
-4. Step 4: Run champs-predictions.R
-
-**Files Modified:**
-- `~/blog/daehl-e/run_champs_predictions.sh`
-
-### Cross-Country Startlist Scraper chrono_pred Fix (2026-02-02)
-
-**Issue:** Team sprint and mixed relay were using `_chrono.csv` (historical data) instead of `_chrono_pred.csv` (prediction data) for startlist generation.
-
-**Files Fixed:**
-- `~/ski/elo/python/ski/polars/startlist-scrape-champs.py`
-  - Line 308: Team sprint `_chrono.csv` → `_chrono_pred.csv`
-  - Lines 538-539: Mixed relay `_chrono.csv` → `_chrono_pred.csv`
-
-**Audit Results (all sports/relay scrapers verified):**
-All other startlist scrapers (races, weekend, champs) across all sports and relay directories correctly use `_chrono_pred.csv`.
-
-### Champs-Predictions Methodology Documentation Update (2026-02-02)
-
-Updated `content/post/methods/champs-predictions.md` to document the new iterative constrained normalization approach in the Normalization section. The documentation now describes the 5-phase process with the key insight that athletes at 100% cap are "locked" and excluded from further scaling.
-
-### Magic Number Calculation Bug Fix (2026-02-02)
-
-**Issue:** Cross-country magic number calculation was missing Skiathlon races (technique "P"). The `calculate_remaining_races()` function only handled techniques "", "C", and "F" but not "P".
-
-**Impact:** Magic numbers were undercounted by 100 points per Skiathlon race remaining. For Feb 2, 2026, this meant 800 points calculated instead of 900 points (missing Falun 20P on 03/01).
-
-**Fix:** Added Skiathlon handling in `content/post/cross-country/drafts/race-recap2.R`:
-```r
-is_distance & technique_clean == "P" & is_world_cup ~ "WC_Distance",  # Skiathlon
-is_distance & technique_clean == "P" & is_stage_race ~ "Stage_Distance",  # Skiathlon
-```
-
-**Audit Results (all sports checked):**
-- Alpine: OK - All disciplines mapped correctly
-- Biathlon: OK - All race types mapped correctly
-- Cross-Country: FIXED - Skiathlon was missing
-- Nordic Combined: OK - All race types mapped correctly
-- Ski Jumping: OK - All race types mapped correctly
-
-### Biathlon Champs-Predictions ID Column Fix (2026-02-02)
-
-**Issue:** Biathlon champs-predictions.R was missing the ID column in `prepare_startlist_data()`, causing "Column `ID` doesn't exist" error.
-
-**Fix:** Added ID to the select statement at line 577:
-```r
-base_df <- startlist %>%
-  dplyr::select(Skier, ID, Nation, Price, all_of(race_prob_cols), any_of(elo_cols))
-```
-
-### Final Monotonic Constraint in Race Picks (2026-01-31)
-
-**Issue:** After the re-normalization step, small probability inversions could occur (e.g., Top-30 slightly lower than Top-10), which undermines user trust in predictions regardless of how small the difference.
-
-**Fix:** Added a final monotonic constraint check after the last re-normalization step to ensure probabilities always satisfy: Win ≤ Podium ≤ Top5 ≤ Top10 ≤ Top30.
-
-**Files Updated (8 files):**
-
-Individual race files:
-- `content/post/alpine/drafts/race-picks.R`
-- `content/post/biathlon/drafts/race-picks.R`
-- `content/post/cross-country/drafts/race-picks.R`
-- `content/post/nordic-combined/drafts/race-picks.R`
-- `content/post/skijump/drafts/race-picks.R`
-
-Cross-country relay/team files:
-- `content/post/cross-country/drafts/race-picks-relay.R`
-- `content/post/cross-country/drafts/race-picks-mixed-relay.R`
-- `content/post/cross-country/drafts/race-picks-team-sprint.R`
-
-**Code Pattern Added (after re-normalization block):**
-```r
-# FINAL MONOTONIC CONSTRAINT CHECK after re-normalization
-# This ensures no inversions were introduced by the re-normalization step
-log_info("Applying final monotonic constraints after re-normalization...")
-for(i in 1:nrow(normalized)) {
-  probs <- numeric(length(prob_cols))
-  for(j in 1:length(prob_cols)) {
-    probs[j] <- normalized[[prob_cols[j]]][i]
-  }
-
-  # Apply monotonic adjustment: each probability should be >= previous one
-  for(j in 2:length(probs)) {
-    if(probs[j] < probs[j-1]) {
-      probs[j] <- probs[j-1]  # Set to previous value
-    }
-  }
-
-  # Update the normalized dataframe
-  for(j in 1:length(prob_cols)) {
-    normalized[[prob_cols[j]]][i] <- probs[j]
-  }
-}
-
-# FINAL CAP AT START_PROB: No probability should exceed participation probability
-if(race_prob_col %in% names(normalized)) {
-  log_info("Applying final cap at start probability...")
-  for(prob_col in prob_cols) {
-    if(prob_col %in% names(normalized)) {
-      # Cap each probability at the participant's start probability (converted to percentage)
-      start_probs <- normalized[[race_prob_col]] * 100
-      normalized[[prob_col]] <- pmin(normalized[[prob_col]], start_probs)
-    }
-  }
-}
-```
-
-**Note:** For relay/team files, teams are confirmed participants (start_prob = 1.0), so the existing cap at 1.0 serves as the start_prob cap.
-
----
-
-### Column Display Fixes (2026-01-31)
-
-#### small-table.html - Clean Column Names
-**Issue:** Columns displayed as "Downhill_Pelo", "Super G_Pelo" instead of "Downhill", "Super G".
-
-**Fix:** Updated `titleMap` and added `formatColumnTitle()` function in all 5 sports.
-
-**Sport-specific titleMaps:**
-- **Alpine:** Downhill, Super G, Giant Slalom, Slalom, Combined, Tech, Speed
-- **Biathlon:** Overall, Sprint, Pursuit, Individual, Mass Start
-- **Cross-Country:** Overall, Distance, Sprint, Distance Classic/Freestyle, Sprint Classic/Freestyle, Classic, Freestyle
-- **Nordic Combined:** Overall, Individual, Individual Compact, Sprint, Mass Start
-- **Ski Jump:** Overall, Small, Medium, Normal, Large, Flying
-
-#### skier-table.html - Sport-Specific Elo Columns
-**Issue:** All sports were using cross-country column definitions, causing missing columns for other sports.
-
-**Fix:** Updated `eloColumns`, `pctColumns`, and `titleMap` for each sport with correct discipline-specific columns.
-
-**Sport-specific eloColumns:**
-- **Alpine:** Elo, Downhill_Elo, Super G_Elo, Giant Slalom_Elo, Slalom_Elo, Combined_Elo, Tech_Elo, Speed_Elo
-- **Biathlon:** Elo, Individual_Elo, Sprint_Elo, Pursuit_Elo, MassStart_Elo
-- **Cross-Country:** (unchanged - already correct)
-- **Nordic Combined:** Elo, Individual_Elo, IndividualCompact_Elo, Sprint_Elo, MassStart_Elo
-- **Ski Jump:** Elo, Small_Elo, Medium_Elo, Normal_Elo, Large_Elo, Flying_Elo
-
-**Files Updated:**
-- `layouts/partials/{sport}/small-table.html` (all 5 sports)
-- `layouts/partials/{sport}/skier-table.html` (all 5 sports)
-
----
-
-### Mobile Display Updates (2026-01-30)
-
-**Files Updated (all 5 sports: alpine, biathlon, cross-country, nordic-combined, skijump):**
-
-#### ranks-table.html
-- Hide middle columns on mobile (show only Rank, Skier, Nation, Total)
-- Remove sticky from Skier and Nation columns on mobile
-- Keep only Rank column sticky
-
-#### small-table.html (Elo pages) - REVISED APPROACH
-- Keep all Elo columns visible for horizontal scrolling
-- Truncate skier name with ellipsis (max-width: 80px)
-- Both Rank and Skier columns stay sticky on mobile
-- Hide graph sections on mobile via `.graph-section { display: none; }`
-- Wrapped graph partials in `<div class="graph-section">`
-
-#### all-table.html (All-Time Elo pages) - REVISED APPROACH
-- Keep all Elo columns visible for horizontal scrolling
-- Truncate skier name with ellipsis (max-width: 80px)
-- Both Rank and Skier columns stay sticky on mobile
-- Hide graph sections on mobile
-- Wrapped graph partials in `<div class="graph-section">`
-
-#### skier-table.html (Individual skier pages) - REVISED APPROACH
-- Keep all columns visible for horizontal scrolling
-- Truncate city name with ellipsis (max-width: 80px)
-- Both Date and City columns stay sticky on mobile
-- Consistent approach across all 5 sports
-
-#### radar.html (Skier performance radar charts)
-- Filter out disciplines with zero values (skier hasn't competed)
-- Only show axes for disciplines with actual data
-- Show message if fewer than 3 disciplines have data
-
-**CSS Pattern for Truncation (small-table.html, all-table.html):**
-```css
-@media (max-width: 600px) {
-    .bbref-table-wrapper { font-size: 13px; }
-    .bbref-table th, .bbref-table td { padding: 5px 6px; }
-    .bbref-controls { flex-direction: column; align-items: stretch; }
-    .bbref-controls input[type="text"] { width: 100%; }
-    /* Truncate skier name with ellipsis on mobile */
-    .bbref-table td.sticky-col-2 {
-        max-width: 80px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .bbref-table th.sticky-col-2 { max-width: 80px; }
-    /* Adjust sticky positions for mobile */
-    .bbref-table .sticky-col { left: 0; }
-    .bbref-table .sticky-col-2 { left: 40px; }
-    /* Hide graphs */
-    .graph-section { display: none; }
-}
-```
-
----
-
-### Ski Jumping Team Predictions Fix (2026-01-30)
-
-**Issue:** Team predictions for ski jumping were being generated in Excel files but not appearing on the site.
-
-**Root Cause:** The `champs_script.sh` looked for files named `men_teams_position_probabilities*.json` (plural "teams" + "position_probabilities"), but ski jumping generates files named `men_team.json` and `mixed_team.json` (singular "team", no suffix).
-
-**Fix:** Updated `champs_script.sh` to also check for ski jumping style naming:
-```bash
-# Ski jumping style naming (men_team.json, mixed_team.json)
-if [[ -z "$men_team" ]]; then
-    men_team=$(find "$json_dir" -name "men_team.json" -type f 2>/dev/null | head -1)
-fi
-if [[ -z "$ladies_team" ]]; then
-    ladies_team=$(find "$json_dir" -name "ladies_team.json" -type f 2>/dev/null | head -1)
-fi
-if [[ -z "$mixed_team" ]]; then
-    mixed_team=$(find "$json_dir" -name "mixed_team.json" -type f 2>/dev/null | head -1)
-fi
-```
-
-**Files Modified:**
-- `~/blog/daehl-e/champs_script.sh`
-
----
-
-### Cross-Country Race Name Expansion (2026-01-29)
-
-**Changes Made:**
-1. Added `expand_race_name()` helper function to convert abbreviated race names to full names
-2. Technique expansion: "P" → "Skiathlon", "C" → "Classic", "F" → "Freestyle"
-3. Distance format: "10" → "10km", "20" → "20km", etc.
-4. Examples: "20 P" → "20km Skiathlon", "Sprint C" → "Sprint Classic", "10 F" → "10km Freestyle"
-
-**Files Modified:**
-- `~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions.R`
-
-### Nordic Combined Percentage Fix (2026-01-29)
-
-**Issue:** Values were 100x too high (e.g., 10000 instead of 100 for Start)
-**Fix:** Removed extra `* 100` multiplication in Excel output - values were already percentages from normalization
-
-**Files Modified:**
-- `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions.R`
-
-### Ski Jumping Full Update (2026-01-29)
-
-**Changes Made:**
-1. **Chronological ordering**: Added `arrange(Date)` before assigning `OriginalRaceNum`
-2. **Race date in dataframes**: Added `race_date` column to all race dataframes (men_races, ladies_races, teams)
-3. **ID in prepare_startlist_data**: Added ID to base_df select
-4. **ID in position_preds**: Added `position_preds$ID <- startlist_prepared$ID`
-5. **Start percentage fix**: Multiplied start_prob by 100 in Excel output
-6. **ID in Excel output**: Added ID as second column (Skier, ID, Nation, ...)
-7. **Sheet naming**: Format `"1. Normal - Feb 20"` with numeric prefix and date
-8. **Nations Race column**: Extracts just race type from sheet name
-9. **Nations select_and_rename_cols**: Added ID as second column
-10. **Nations Summary**: Changed to expected medal counts (sum/100) instead of averages
-
-**Files Modified:**
-- `~/blog/daehl-e/content/post/skijump/drafts/champs-predictions.R`
-
-### Nordic Combined Full Update (2026-01-29)
-
-**Changes Made:**
-1. **Chronological ordering**: Added `Race_Date` parsing and `arrange(Race_Date)` for all race dataframes
-2. **ID in prepare_startlist_data**: Added ID to base_df select
-3. **ID in position_preds**: Added `position_preds$ID <- startlist_prepared$ID`
-4. **Converted to percentages**: Multiplied all probabilities by 100 in Excel output
-5. **Sheet naming**: Format `"1. Individual - Feb 20"` with numeric prefix and date
-6. **Nations Race column**: Extracts just race type from sheet name
-7. **Nations select_and_rename_cols**: Added ID as second column
-
-**Files Modified:**
-- `~/blog/daehl-e/content/post/nordic-combined/drafts/champs-predictions.R`
-
-### Alpine ID Column (2026-01-29) ✅ Tested
-
-**Changes Made:**
-1. **ID in prepare_startlist_data**: Added ID to base_df select (line 337)
-2. **ID in position_preds**: Added `position_preds$ID <- startlist_prepared$ID`
-3. **ID in Excel output**: Added ID as second column (Skier, ID, Nation, ...)
-4. **ID in nations**: Updated `select_and_rename_cols` to include ID
-
-**Files Modified:**
-- `~/blog/daehl-e/content/post/alpine/drafts/champs-predictions.R`
-
-### Cross-Country Calendar Date Ordering, ID Column, and Percentages (2026-01-29)
-
-**Changes Made:**
-1. **Chronological ordering**: Added `Race_Date` parsing and `arrange(Race_Date)` before assigning `OriginalRaceNum`
-2. **Race metadata storage**: Changed `results_list` to store metadata (gender, distance, technique, race_date, race_num) alongside data
-3. **Sheet naming**: Format `"1. 10 C - Feb 22"` with numeric prefix and date
-4. **ID column**: Added ID as second column (Skier, ID, Nation, ...)
-5. **Converted to percentages**: Multiplied all probabilities by 100
-6. **Nations Race column**: Extracts just race type from sheet name
-7. **Nations Summary**: Divides by 100 to show expected medal counts
-
-**Files Modified:**
-- `~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions.R`
-
-### Biathlon Calendar Date Ordering and ID Column (2026-01-29)
-
-**Changes Made:**
-1. **Chronological ordering**: Added `arrange(Race_Date)` before assigning `OriginalRaceNum`
-2. **Race_Date in dataframes**: Added `race_date` column to all race dataframes
-3. **Sheet naming**: Format `"1. Sprint - Feb 12"` with numeric prefix and date
-4. **Nations Race column**: Shows just race type (e.g., "Sprint"), not full sheet name
-5. **ID column**: Added ID as second column in all Excel outputs (Skier, ID, Nation, ...)
-6. **Removed old JSON files**: Deleted `Ladies_Individual`, `Men_Sprint`, etc. from data folder
-
-**Files Modified:**
-- `~/blog/daehl-e/content/post/biathlon/drafts/champs-predictions.R`
-
-### Alpine Calendar Date Ordering (2026-01-28)
-
-**Changes Made:**
-1. Parse `Race_Date` from weekends.csv
-2. Order races chronologically with `arrange(Race_Date)`
-3. Sheet naming: `"1. Downhill - Feb 07"` format
-4. Nations Race column shows just discipline
-5. Blog post formatting in champs_script.sh
-
-**Files Modified:**
-- `~/blog/daehl-e/content/post/alpine/drafts/champs-predictions.R`
-- `~/blog/daehl-e/champs_script.sh`
+### Exponential Decay for Historical Weighting
+- Uses date-based exponential decay instead of race-count weighting
+- Formula: `weight = exp(-lambda * days_ago)`
+- DECAY_LAMBDA = 0.002 means 50% weight after ~1 year
+- Higher lambda = faster decay, more emphasis on recent races
+- Applied to:
+  - Individual race prev_points_weighted calculation
+  - Relay prev_points_weighted (technique-specific: classic for legs 1-2, freestyle for legs 3-4)
+  - Team sprint prev_points_weighted (technique-specific: C or F based on race)
+- Added to individual race calibration grid search
+
+### Technique-Specific Team Sprint (2026-02-06)
+Team sprint now uses technique-specific features and models (matching champs-predictions.R):
+- **Classic team sprint (C)**: Uses `Sprint_C_Pelo_pct`, `Classic_Pelo_pct`, `Distance_C_Pelo_pct`
+- **Freestyle team sprint (F)**: Uses `Sprint_F_Pelo_pct`, `Freestyle_Pelo_pct`, `Distance_F_Pelo_pct`
+- Separate models trained for each technique at the championship
+- `prev_points_weighted` uses technique-specific sprint history
+
+### Podium-Optimized Team Selection
+- Team selection optimizes for podium probability (threshold=3)
+- Matches champs-predictions.R approach (no separate win-optimized team)
+- Uses leg-specific binomial models to predict P(team podium | athlete on leg X)
+
+### Calibration System
+Three independent calibration processes using Brier score on historical data (2018+):
+
+1. **Individual Race Calibration** (`RUN_CALIBRATION <- TRUE`)
+   - Grid search over DECAY_LAMBDA, SD_SCALE_FACTOR, SD_MIN, SD_MAX
+   - Tests predictions against actual race results
+
+2. **Relay Calibration** (`RUN_RELAY_CALIBRATION <- TRUE`)
+   - Grid search over RELAY_SCORE_SD_MIN, RELAY_SCORE_SD_MAX
+   - Uses 4-leg relay events
+
+3. **Team Sprint Calibration** (`RUN_TEAM_SPRINT_CALIBRATION <- TRUE`)
+   - Grid search over TS_SCORE_SD_MIN, TS_SCORE_SD_MAX
+   - Uses 2-leg team sprint events
+
+**Usage:** Set the appropriate flag to TRUE, run the script, copy recommended values to the config section, set flag back to FALSE.
 
 ---
 
 ## Key File Locations
 
-### Hugo Layout Partials (Tables & Charts)
-```
-~/blog/daehl-e/layouts/partials/{sport}/ranks-table.html     # All-time rankings
-~/blog/daehl-e/layouts/partials/{sport}/small-table.html     # Current Elo table
-~/blog/daehl-e/layouts/partials/{sport}/all-table.html       # All-time Elo table
-~/blog/daehl-e/layouts/partials/{sport}/skier-table.html     # Individual skier data
-~/blog/daehl-e/layouts/partials/{sport}/radar.html           # Performance radar chart
-~/blog/daehl-e/layouts/partials/{sport}/men-graph.html       # Men's Elo graph
-~/blog/daehl-e/layouts/partials/{sport}/ladies-graph.html    # Ladies' Elo graph
-~/blog/daehl-e/layouts/partials/{sport}/men-graph-all.html   # Men's all-time Elo graph
-~/blog/daehl-e/layouts/partials/{sport}/ladies-graph-all.html # Ladies' all-time Elo graph
-```
-Where `{sport}` = alpine, biathlon, cross-country, nordic-combined, skijump
-
 ### R Prediction Scripts
 ```
-~/blog/daehl-e/content/post/{sport}/drafts/champs-predictions.R
+~/blog/daehl-e/content/post/{sport}/drafts/champs-predictions.R            # Production
+~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions-simulation.R  # Simulation
 ```
-Where `{sport}` = alpine, biathlon, cross-country, nordic-combined, skijump
 
 ### Excel Outputs
 ```
 ~/blog/daehl-e/content/post/{sport}/drafts/champs-predictions/2026/
+~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions-simulation/2026/
 ```
-
-### JSON Data (for Hugo)
-```
-~/blog/daehl-e/data/{sport}/drafts/champs-predictions/2026/
-```
-
-### Blog Posts
-```
-~/blog/daehl-e/content/post/champs-predictions/2026/{sport}.md
-```
-
----
-
-## Excel Output Structure
-
-### Individual Position Probabilities (`{gender}_position_probabilities.xlsx`)
-- One sheet per race: `"1. Sprint - Feb 12"`, `"2. Individual - Feb 14"`, etc.
-- Columns: Skier, ID, Nation, Start, Win, Podium, Top5, Top-10, Top-30
-- Values: Percentages (0-100 scale)
-
-### Nations Individual (`nations_individual.xlsx`)
-- One sheet per nation with 4+ athletes (e.g., "Norway Men", "France Ladies")
-- "Other Men" / "Other Ladies" sheets for nations with <4 athletes
-- "Summary" sheet with expected medal counts by nation
-- Columns: Athlete, ID, Race, [Nation if Other], Start, Win, Podium, Top5, Top-10, Top-30
-
-### Relay Outputs (`{gender}_relay_position_probabilities.xlsx`)
-- Columns: Nation, Team, Start, Win, Podium, Top5, Top-10
 
 ---
 
 ## Technical Reference
 
-### 7-Phase Normalization
-1. **Phase 1**: Scale to target sum, cap at 100%, redistribute excess
-2. **Phase 2**: Monotonic constraints (Win ≤ Podium ≤ Top5 ≤ Top10 ≤ Top30)
-3. **Phase 3**: Re-normalize after constraint adjustments
-4. **Phase 4**: Cap at 100% again
-5. **Phase 5**: Final monotonic constraint enforcement (ensures no inversions from re-normalization)
-6. **Phase 6**: Final cap at start_prob (no probability can exceed participation probability)
-7. **Phase 7**: Log final sums for verification
+### Key Code Sections (champs-predictions-simulation.R)
+- **Lines 27-50**: Configuration parameters (variance control, decay lambda, calibration flags)
+- **Lines 189-228**: `get_relay_explanatory_vars()` - technique-specific feature selection
+- **Lines 232-430**: `calculate_leg_importance_from_models()` - model deviance approach
+- **Lines 967-1177**: `train_relay_leg_models_for_simulation()` - leg-specific GAMs with technique support
+- **Lines 2034-2055**: `get_race_prev_points()` - technique-specific prev_points
+- **Lines 2213-2290**: `calculate_team_points()` - technique-aware team scoring
+- **Lines 2300-2405**: `select_relay_team()` - podium-optimized team selection with technique
+- **Lines 2410-2550**: `build_team_distribution_hybrid()` - hybrid scoring with technique
 
-### Target Sums (as percentages)
-- Individual: Win=100, Podium=300, Top5=500, Top10=1000, Top30=3000
-- Relay: Win=100, Podium=300, Top5=500, Top10=1000
+### Feature Selection (matches champs-predictions.R)
 
-### Monotonic Constraint Chain
-```
-Win ≤ Podium ≤ Top5 ≤ Top10 ≤ Top30 ≤ Start
-```
+**4-Leg Relay:**
+- Leg 1: `prev_points_weighted, Pelo_pct, Distance_Pelo_pct, Distance_C_Pelo_pct, Sprint_Pelo_pct, Sprint_C_Pelo_pct, Classic_Pelo_pct`
+- Leg 2: `prev_points_weighted, Pelo_pct, Distance_Pelo_pct, Distance_C_Pelo_pct, Classic_Pelo_pct`
+- Leg 3: `prev_points_weighted, Pelo_pct, Distance_Pelo_pct, Distance_F_Pelo_pct, Freestyle_Pelo_pct`
+- Leg 4: `prev_points_weighted, Pelo_pct, Distance_Pelo_pct, Distance_F_Pelo_pct, Sprint_Pelo_pct, Sprint_F_Pelo_pct, Freestyle_Pelo_pct`
 
-### Exponential Decay Participation
-```r
-# Time window: later of 5 years ago OR athlete's first race
-# Exponential decay (alpha = 0.1) - recent races weighted more heavily
-race_weights <- exp(-0.1 * ((n_races - 1):0))
-weighted_participation <- sum(participation * race_weights) / sum(race_weights)
-```
+**Team Sprint (technique-specific):**
+- Classic (C): `prev_points_weighted, Pelo_pct, Sprint_Pelo_pct, Sprint_C_Pelo_pct, Classic_Pelo_pct, Distance_Pelo_pct, Distance_C_Pelo_pct`
+- Freestyle (F): `prev_points_weighted, Pelo_pct, Sprint_Pelo_pct, Sprint_F_Pelo_pct, Freestyle_Pelo_pct, Distance_Pelo_pct, Distance_F_Pelo_pct`
+
+### Leg Importance Calculation
+- Matches production `champs-predictions.R` methodology
+- Trains leg-specific binomial GAMs predicting team podium (Place <= 3)
+- Importance = deviance explained by each leg's model
+- Higher deviance = athlete quality on that leg better predicts team success
+
+### Tuning Tips
+If top athletes' win probabilities seem too low:
+- **Individual races**: Lower SD_SCALE_FACTOR (e.g., 0.77 → 0.6)
+- **Relay/Team Sprint**: Lower SCORE_SD_MAX (e.g., 1.0 → 0.7)
+
+If predictions are too deterministic (favorites always win):
+- Increase the relevant SD parameters
 
 ---
 
 ## Running the Pipeline
 
-### 1. Generate Excel predictions
+### Production Predictions
 ```bash
 cd ~/blog/daehl-e/content/post/{sport}/drafts
 Rscript champs-predictions.R
-```
 
-### 2. Convert Excel to JSON and generate blog posts
-```bash
 cd ~/blog/daehl-e
 ./champs_script.sh 2026
 ```
+
+### Simulation Predictions
+```bash
+cd ~/blog/daehl-e/content/post/cross-country/drafts
+Rscript champs-predictions-simulation.R
+```
+
+### Running Calibration
+```bash
+# Edit champs-predictions-simulation.R, set ONE of:
+# RUN_CALIBRATION <- TRUE
+# RUN_RELAY_CALIBRATION <- TRUE
+# RUN_TEAM_SPRINT_CALIBRATION <- TRUE
+
+Rscript champs-predictions-simulation.R
+
+# Script will output recommended values and stop
+# Copy values to config section, set flag back to FALSE
+```
+
+---
+
+## Recent Changes (2026-02-06)
+
+### Technique-Specific Team Sprint
+- Updated `get_relay_explanatory_vars()` to accept `technique` parameter for team sprint
+- Updated `train_relay_leg_models_for_simulation()` to train separate models per technique
+- Team sprint models now stored as `men_ts_leg_models[["C"]]` and `men_ts_leg_models[["F"]]`
+- Updated `calculate_team_points()` to use technique-specific `prev_points_weighted`
+- Updated `select_relay_team()` to accept technique parameter
+- Updated `build_team_distribution_hybrid()` to accept technique parameter
+- Updated `get_race_prev_points()` to handle "Sprint", "Sprint_C", "Sprint_F" race types
+
+### Dual-Optimized Team Selection (Updated 2026-02-06)
+- Team selection now optimizes for both podium (threshold=3) and win (threshold=1)
+- Matches champs-predictions.R approach with both optimization types
+- Separate leg-specific models trained for podium and win outcomes
+- Outputs both `nations_relay_podium.xlsx`/`nations_ts_podium.xlsx` and `nations_relay_win.xlsx`/`nations_ts_win.xlsx`
+
+---
+
+## COMPLETED: Simulation Moved to Production (2026-02-06)
+
+### Summary
+The cross-country simulation script (`champs-predictions-simulation.R`) has been fully integrated into the production pipeline. All tasks completed:
+
+### Completed Tasks
+
+#### Task 1: Positive Coefficient Constraint ✓
+Added `filter_positive_coefficients()` helper function that iteratively removes features with negative coefficients. Applied to:
+- `train_points_gam()` for individual race models
+- `train_relay_leg_models_for_simulation()` for relay/team sprint leg models
+- `calculate_leg_importance_from_models()` for leg importance calculation
+
+#### Task 2: Excel Output Format ✓
+Updated Excel output to match production format:
+- `relay_final_predictions.xlsx` with sheets "Men All Thresholds Final", "Ladies All Thresholds Final"
+- `team_sprint_final_predictions.xlsx` with same sheet structure
+- `nations_relay_podium.xlsx` with per-nation sheets "{Nation} Men", "{Nation} Ladies"
+- `nations_ts_podium.xlsx` with same per-nation structure
+- `nations_relay_win.xlsx` - win-optimized team rosters (added 2026-02-06)
+- `nations_ts_win.xlsx` - win-optimized team rosters (added 2026-02-06)
+
+Columns: Country, Leg, Athlete, Nation, ID, Leg Win, Leg Podium, Leg Top5, Leg Top-10, Team Win, Team Podium, Team Top5, Team Top-10
+
+#### Win-Optimized Team Selection (Added 2026-02-06)
+- `train_relay_leg_models_for_simulation()` now trains both `podium_model` and `win_model` for each leg
+- `calculate_team_points()` accepts `opt_type` parameter ("podium" or "win") to use appropriate model
+- `select_relay_team()` returns both `podium_team` and `win_team` with their respective leg probabilities
+- Team distributions store both team rosters for Excel output
+
+#### Task 3: Output Directory ✓
+Changed output from `champs-predictions-simulation/` to `champs-predictions/`
+
+#### Task 4: Pipeline Integration ✓
+Updated `run_champs_predictions.sh` to run `champs-predictions-simulation.R` for cross-country specifically (other sports still use `champs-predictions.R`)
+
+#### Task 5: Methodology Documentation ✓
+Updated `~/blog/daehl-e/content/post/methods/champs-predictions.md` with:
+- Monte Carlo simulation approach explanation
+- Exponential decay for historical weighting
+- Positive coefficient constraint in feature selection
+- Hybrid approach for relay/team sprint
+- Technique-specific team sprint models
+- Calibration system documentation
+
+### Running the Pipeline
+
+```bash
+# Run all sports predictions (cross-country uses simulation)
+cd ~/blog/daehl-e
+./run_champs_predictions.sh
+
+# Convert Excel to JSON and generate blog posts
+./champs_script.sh 2026
+```
+
+### Files Modified
+- `content/post/cross-country/drafts/champs-predictions-simulation.R` - Production-ready simulation script
+- `run_champs_predictions.sh` - Updated to run simulation for cross-country
+- `content/post/methods/champs-predictions.md` - Updated methodology documentation
 
 ---
 
@@ -992,8 +274,7 @@ cd ~/blog/daehl-e
 
 If starting a new session:
 1. Read this file to understand current status
-2. Check the Sport-by-Sport Status table for what needs work
-3. Apply changes following the Cross-Country or Biathlon patterns documented above
-4. Run the R scripts to regenerate Excel files
-5. Run champs_script.sh to update JSON and blog posts
-6. **Update this file** with any changes made
+2. **Cross-country simulation is now production-ready**
+3. Run `./run_champs_predictions.sh` followed by `./champs_script.sh 2026` to generate predictions
+4. The original `champs-predictions.R` is preserved but no longer used for cross-country
+5. **Update this file** with any changes made
