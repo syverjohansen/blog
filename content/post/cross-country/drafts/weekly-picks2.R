@@ -324,8 +324,19 @@ process_gender_probabilities <- function(startlist, chronos, races) {
     log_info(paste("Set Race1_Prob: ", sum(startlist$Race1_Prob == 1), "athletes with prob=1,",
                    sum(startlist$Race1_Prob == 0), "with prob=0"))
   } else {
-    log_info("No FIS startlist (all In_FIS_List=False), will calculate Race1_Prob")
-    # Race1_Prob will be calculated like other races below
+    log_info("No FIS startlist (all In_FIS_List=False)")
+    # No FIS startlist - use In_Config to set probability
+    if(!"Race1_Prob" %in% names(startlist)) {
+      startlist$Race1_Prob <- NA_real_
+    }
+    # Config athletes get probability = 1 when no FIS startlist exists
+    if("In_Config" %in% names(startlist)) {
+      startlist$Race1_Prob <- ifelse(startlist$In_Config, 1, startlist$Race1_Prob)
+      log_info(paste("Set Race1_Prob from In_Config:", sum(startlist$Race1_Prob == 1, na.rm = TRUE),
+                     "athletes with prob=1"))
+    }
+    # OLD METHOD (commented out): Race1_Prob will be calculated like other races below
+    # log_info("No FIS startlist (all In_FIS_List=False), will calculate Race1_Prob")
   }
   
   # Handle Config_Nation and In_Config status for all races
@@ -378,7 +389,16 @@ if("Config_Nation" %in% names(startlist) && "In_Config" %in% names(startlist)) {
     if(!(race_prob_col %in% names(startlist))) {
       startlist[[race_prob_col]] <- NA_real_
     }
-    
+
+    # When no FIS startlist exists, set In_Config athletes to probability = 1
+    if(!has_fis_startlist && "In_Config" %in% names(startlist)) {
+      config_athletes <- which(startlist$In_Config == TRUE & (is.na(startlist[[race_prob_col]]) | startlist[[race_prob_col]] != 1))
+      if(length(config_athletes) > 0) {
+        startlist[config_athletes, race_prob_col] <- 1
+        log_info(paste("Set", race_prob_col, "= 1 for", length(config_athletes), "In_Config athletes (no FIS startlist)"))
+      }
+    }
+
     # Rest of the existing processing by nation logic...
       
       # Process by nation
@@ -1075,12 +1095,38 @@ run_fantasy_optimization <- function(men_results, ladies_results, weekend_date) 
   }
   
   log_info("Optimizing fantasy teams...")
-  
-  # Create all three team types
-  normal_team <- optimize_weekly_team(men_results, ladies_results, "normal")
-  safe_team <- optimize_weekly_team(men_results, ladies_results, "safe")
-  upside_team <- optimize_weekly_team(men_results, ladies_results, "upside")
-  
+
+  # OLD METHOD (MIP optimization with budget constraints) - commented out for now
+  # normal_team <- optimize_weekly_team(men_results, ladies_results, "normal")
+  # safe_team <- optimize_weekly_team(men_results, ladies_results, "safe")
+  # upside_team <- optimize_weekly_team(men_results, ladies_results, "upside")
+
+  # NEW METHOD: Simply take top 8 men and top 8 ladies by predicted points
+  log_info("Selecting top 8 men and top 8 ladies by Total_Points...")
+
+  top8_men <- men_results$full_predictions %>%
+    arrange(desc(Total_Points)) %>%
+    head(8) %>%
+    mutate(Sex = "M") %>%
+    dplyr::select(Skier, ID, Sex, Nation, Price, Points = Total_Points)
+
+  top8_ladies <- ladies_results$full_predictions %>%
+    arrange(desc(Total_Points)) %>%
+    head(8) %>%
+    mutate(Sex = "L") %>%
+    dplyr::select(Skier, ID, Sex, Nation, Price, Points = Total_Points)
+
+  # Combine into fantasy team
+  normal_team <- bind_rows(top8_men, top8_ladies) %>%
+    arrange(Sex, desc(Points))
+
+  log_info(sprintf("Fantasy team total predicted points: %.2f", sum(normal_team$Points)))
+  log_info(paste("Men:", nrow(top8_men), "| Ladies:", nrow(top8_ladies)))
+
+  # Create placeholder teams for backward compatibility (same as normal for now)
+  safe_team <- normal_team
+  upside_team <- normal_team
+
   # Save all teams to one Excel file with multiple sheets
   log_info("Saving fantasy team results...")
   # write.xlsx(list(
@@ -1088,9 +1134,9 @@ run_fantasy_optimization <- function(men_results, ladies_results, weekend_date) 
   #   "Safe Team" = safe_team %>% rename(`Safe Points` = Points),
   #   "Upside Team" = upside_team %>% rename(`Upside Points` = Points)
   # ), file.path(race_picks_dir_path, "fantasy-teams.xlsx"))
-  
-  # Save the normal team as the main recommendation to race-picks directory
-  normal_team %>% 
+
+  # Save the fantasy team to race-picks directory
+  normal_team %>%
     rename(`Predicted Points` = Points) %>%
     write.xlsx(file.path(race_picks_dir_path, "fantasy_team.xlsx"))
   
