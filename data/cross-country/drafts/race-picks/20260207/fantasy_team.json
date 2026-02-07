@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      17493,
+      90.8953702354327
+    ],
+    [
+      "Ebba Andersson",
+      1789,
+      "L",
+      "Sweden",
+      8493,
+      80.8571311671015
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "L",
+      "Norway",
+      9139,
+      78.8031185374118
+    ],
+    [
+      "Astrid Øyre Slind",
+      115,
+      "L",
+      "Norway",
+      3542,
+      78.034732063191
+    ],
+    [
+      "Teresa Stadlober",
+      529,
+      "L",
+      "Austria",
+      6709,
+      69.5172258135865
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      2300,
+      "L",
+      "Norway",
+      3306,
+      63.6671325106869
+    ],
+    [
+      "Kristin Austgulen Fosnæs",
+      4268,
+      "L",
+      "Norway",
+      2067,
+      62.2098369195594
+    ],
+    [
+      "Pia Fink",
+      4004,
+      "L",
+      "Germany",
+      3256,
+      60.9963855589829
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      18045,
+      85.5802545618211
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      "M",
+      "USA",
+      6574,
+      58.8180772968286
+    ],
+    [
+      "Mika Vermeulen",
+      12673,
+      "M",
+      "Austria",
+      4902,
+      58.384370022981
+    ],
+    [
+      "Elia Barp",
+      14042,
+      "M",
+      "Italy",
+      4586,
+      57.3077704640302
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "M",
+      "France",
+      4553,
+      57.071607694661
+    ],
+    [
+      "Iivo Niskanen",
+      1470,
+      "M",
+      "Finland",
+      5410,
+      56.3015136095945
+    ],
+    [
+      "Antoine Cyr",
+      9225,
+      "M",
+      "Canada",
+      937,
+      48.2401786785533
+    ],
+    [
+      "Arsi Ruuskanen",
+      8120,
+      "M",
+      "Finland",
+      789,
+      47.0288866458947
+    ]
+  ]
+}

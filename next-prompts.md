@@ -278,3 +278,89 @@ If starting a new session:
 3. Run `./run_champs_predictions.sh` followed by `./champs_script.sh 2026` to generate predictions
 4. The original `champs-predictions.R` is preserved but no longer used for cross-country
 5. **Update this file** with any changes made
+
+---
+
+## FUTURE: Extend Simulation Approach to Other Scripts
+
+### Overview
+Apply the Monte Carlo simulation methodology (developed for cross-country champs-predictions-simulation.R) to other prediction scripts across all sports.
+
+### Scripts to Convert
+
+#### Championship Predictions (champs-predictions.R)
+| Sport | Location | Status |
+|-------|----------|--------|
+| Alpine | `content/post/alpine/drafts/champs-predictions.R` | Pending |
+| Biathlon | `content/post/biathlon/drafts/champs-predictions.R` | Pending |
+| Cross-Country | `content/post/cross-country/drafts/champs-predictions-simulation.R` | **DONE** |
+| Nordic Combined | `content/post/nordic-combined/drafts/champs-predictions.R` | Pending |
+| Ski Jumping | `content/post/skijump/drafts/champs-predictions.R` | Pending |
+
+#### Race Picks (Weekly World Cup Predictions)
+| Sport | Script | Location | Status |
+|-------|--------|----------|--------|
+| Cross-Country | race-picks.R | `content/post/cross-country/drafts/` | Pending |
+| Cross-Country | weekly-picks2.R | `content/post/cross-country/drafts/` | Pending |
+| Alpine | race-picks.R (or equivalent) | `content/post/alpine/drafts/` | Pending |
+| Biathlon | race-picks.R (or equivalent) | `content/post/biathlon/drafts/` | Pending |
+| Nordic Combined | race-picks.R (or equivalent) | `content/post/nordic-combined/drafts/` | Pending |
+| Ski Jumping | race-picks.R (or equivalent) | `content/post/skijump/drafts/` | Pending |
+
+### Key Features to Implement (per script)
+
+1. **Monte Carlo Simulation**
+   - Build athlete distributions from GAM predictions + historical variance
+   - Run 10,000 simulations per race
+   - Natural probability normalization (no post-hoc adjustments)
+
+2. **Exponential Decay Weighting**
+   - Apply to prev_points_weighted calculation
+   - Use DECAY_LAMBDA = 0.002 (or sport-specific calibrated value)
+   - Consistent between training and testing
+
+3. **Positive Coefficient Constraint**
+   - Filter features with negative coefficients during selection
+   - Ensures all predictors positively correlate with success
+
+4. **Calibration System**
+   - Grid search over variance parameters (SD_SCALE_FACTOR, SD_MIN, SD_MAX)
+   - Minimize Brier score on historical data
+   - Sport-specific and event-specific calibration
+
+5. **Team Event Handling** (where applicable)
+   - Dual optimization (podium + win)
+   - Leg-specific models
+   - Technique-specific features (for cross-country)
+
+### Sport-Specific Considerations
+
+**Alpine:**
+- Speed vs Technical discipline distinction
+- Downhill/Super-G vs Slalom/Giant Slalom feature sets
+
+**Biathlon:**
+- Shooting accuracy as additional feature
+- Pursuit/Mass Start starting position effects
+
+**Nordic Combined:**
+- Two-phase competition (jumping + skiing)
+- Gap-start considerations
+
+**Ski Jumping:**
+- Hill size distinctions (Normal/Large/Flying)
+- Wind/conditions factors if available
+
+### Implementation Order (Suggested)
+1. Cross-country race-picks.R / weekly-picks2.R (closest to existing simulation)
+2. Biathlon champs-predictions.R (similar structure to cross-country)
+3. Alpine champs-predictions.R
+4. Nordic Combined champs-predictions.R
+5. Ski Jumping champs-predictions.R
+6. Remaining race-picks scripts
+
+### Methodology Documentation
+For each converted script, update:
+- `content/post/methods/champs-predictions.md` (for championship scripts)
+- `content/post/methods/race-picks.md` (for weekly picks scripts)
+- Create Reddit-style explanation post (like `reddit-post.md`)
