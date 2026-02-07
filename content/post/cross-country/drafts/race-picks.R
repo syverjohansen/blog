@@ -553,7 +553,7 @@ normalize_with_cap <- function(probs, target_sum, max_prob = 100, max_iterations
 }
 
 # Normalization function for position probabilities
-normalize_position_probabilities <- function(predictions, position_thresholds) {
+normalize_position_probabilities <- function(predictions, position_thresholds, race_prob_col = NULL) {
   normalized <- predictions
 
   # Log initial sums before any modifications
@@ -649,7 +649,7 @@ normalize_position_probabilities <- function(predictions, position_thresholds) {
   }
 
   # FINAL CAP AT START_PROB: No probability should exceed participation probability
-  if(race_prob_col %in% names(normalized)) {
+  if(!is.null(race_prob_col) && race_prob_col %in% names(normalized)) {
     log_info("Applying final cap at start probability...")
     for(prob_col in prob_cols) {
       if(prob_col %in% names(normalized)) {
@@ -1430,7 +1430,7 @@ predict_races <- function(gender) {
     }
     
     # Normalize position probabilities to ensure they sum to the correct totals
-    position_preds <- normalize_position_probabilities(position_preds, position_thresholds)
+    position_preds <- normalize_position_probabilities(position_preds, position_thresholds, race_prob_col)
     
     # Store position predictions for this race
     position_predictions[[i]] <- position_preds
