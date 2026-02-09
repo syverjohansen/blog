@@ -1,0 +1,89 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      1,
+      1539,
+      901
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      2,
+      1158,
+      520
+    ],
+    [
+      "Mattis Stenshagen",
+      5165,
+      3,
+      1008,
+      370
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      4,
+      892,
+      254
+    ],
+    [
+      "Lars Heggen",
+      19104,
+      5,
+      843,
+      205
+    ],
+    [
+      "Edvin Anger",
+      14039,
+      6,
+      828,
+      190
+    ],
+    [
+      "Emil Iversen",
+      1467,
+      7,
+      766,
+      128
+    ],
+    [
+      "Elia Barp",
+      14042,
+      8,
+      703,
+      65
+    ],
+    [
+      "Erik Valnes",
+      5923,
+      9,
+      694,
+      56
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      10,
+      690,
+      52
+    ],
+    [
+      "Andreas Fjorden Ree",
+      8678,
+      11,
+      671,
+      33
+    ]
+  ]
+}
