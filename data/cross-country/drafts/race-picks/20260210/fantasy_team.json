@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jonna Sundling",
+      1486,
+      "L",
+      "Sweden",
+      13380,
+      79.7185044930126
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      "L",
+      "Sweden",
+      10229,
+      77.2522764599831
+    ],
+    [
+      "Linn Svahn",
+      3190,
+      "L",
+      "Sweden",
+      3088,
+      76.779849797172
+    ],
+    [
+      "Jasmi Joensuu",
+      1675,
+      "L",
+      "Finland",
+      6626,
+      73.5870396536522
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      5956,
+      71.3324094599697
+    ],
+    [
+      "Johanna Hagström",
+      3212,
+      "L",
+      "Sweden",
+      2817,
+      69.3684969206488
+    ],
+    [
+      "Laura Gimmler",
+      1495,
+      "L",
+      "Germany",
+      2107,
+      65.3667971674246
+    ],
+    [
+      "Kristine Stavås Skistad",
+      3207,
+      "L",
+      "Norway",
+      3136,
+      60.9401285233673
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      18045,
+      98.146659770926
+    ],
+    [
+      "Erik Valnes",
+      5923,
+      "M",
+      "Norway",
+      7840,
+      74.1157883429162
+    ],
+    [
+      "Oskar Opstad Vike",
+      19279,
+      "M",
+      "Norway",
+      2031,
+      63.8276942058243
+    ],
+    [
+      "Edvin Anger",
+      14039,
+      "M",
+      "Sweden",
+      9128,
+      63.0287248073047
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "M",
+      "Italy",
+      11210,
+      62.8344927006177
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "M",
+      "Norway",
+      10196,
+      59.0523394679148
+    ],
+    [
+      "Ben Ogden",
+      9179,
+      "M",
+      "USA",
+      4225,
+      57.0806998089519
+    ],
+    [
+      "Jules Chappaz",
+      12181,
+      "M",
+      "France",
+      1375,
+      56.6994056673234
+    ]
+  ]
+}
