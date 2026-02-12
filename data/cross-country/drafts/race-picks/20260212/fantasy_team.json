@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      17493,
+      91.9803862777332
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "L",
+      "Sweden",
+      12793,
+      71.4624409222599
+    ],
+    [
+      "Ebba Andersson",
+      1789,
+      "L",
+      "Sweden",
+      8493,
+      70.312616600902
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "L",
+      "Norway",
+      9139,
+      70.1029043817529
+    ],
+    [
+      "Astrid Øyre Slind",
+      115,
+      "L",
+      "Norway",
+      3542,
+      67.1901167693324
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      2300,
+      "L",
+      "Norway",
+      3306,
+      65.3837923740006
+    ],
+    [
+      "Emma Ribom",
+      1844,
+      "L",
+      "Sweden",
+      4606,
+      60.9115567997081
+    ],
+    [
+      "Teresa Stadlober",
+      529,
+      "L",
+      "Austria",
+      6709,
+      59.4601040518805
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "M",
+      "Norway",
+      10196,
+      53.7612498151912
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      "M",
+      "USA",
+      6574,
+      53.4704870191036
+    ],
+    [
+      "Mika Vermeulen",
+      12673,
+      "M",
+      "Austria",
+      4902,
+      52.6547753901126
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "M",
+      "Italy",
+      11210,
+      52.3403621712498
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "M",
+      "France",
+      4553,
+      52.2619953566047
+    ],
+    [
+      "Elia Barp",
+      14042,
+      "M",
+      "Italy",
+      4586,
+      51.1532834911711
+    ],
+    [
+      "Andrew Musgrave",
+      277,
+      "M",
+      "Great Britain",
+      1306,
+      46.5460121458406
+    ],
+    [
+      "Jules Lapierre",
+      3646,
+      "M",
+      "France",
+      455,
+      45.6510886978486
+    ]
+  ]
+}
