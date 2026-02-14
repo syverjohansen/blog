@@ -860,9 +860,96 @@ get_leg_predictions_with_startlist <- function(current_skiers, leg_models, start
   return(leg_predictions)
 }
 
+# Helper function to safely extract team importance from model
+safe_team_importance <- function(model) {
+  tryCatch({
+    # For GLM models
+    if(inherits(model$finalModel, "glm")) {
+      coefs <- coef(model$finalModel)
+      # Remove intercept
+      coefs <- coefs[!names(coefs) == "(Intercept)"]
+      # Take absolute values
+      importance <- abs(coefs)
+      return(importance)
+    } else {
+      # Try using varImp for other model types
+      imp <- varImp(model)
+      if(is.list(imp) && "importance" %in% names(imp)) {
+        # Extract the importance values
+        importance <- imp$importance$Overall
+        names(importance) <- rownames(imp$importance)
+        return(importance)
+      }
+    }
+    # Default if we couldn't extract importance
+    return(c(leg1_prob = 0.25, leg2_prob = 0.25, leg3_prob = 0.25, leg4_prob = 0.25))
+  }, error = function(e) {
+    log_warn(paste("Error extracting team feature importance:", e$message))
+    # Default equal weights
+    return(c(leg1_prob = 0.25, leg2_prob = 0.25, leg3_prob = 0.25, leg4_prob = 0.25))
+  })
+}
+
 # Function to calculate leg importance from historical data
 calculate_leg_importance <- function(leg_models) {
-  # Default weights for mixed relay
+  # Debug which option is being used
+  log_info("Attempting Option 1: Team model coefficients")
+
+  # Option 1: Use model coefficients if available
+  option1_result <- tryCatch({
+    # Try extracting from team-level model if it exists
+    if("team_podium" %in% names(leg_models)) {
+      team_importance <- safe_team_importance(leg_models$team_podium)
+      log_info("Option 1 succeeded: Found team model coefficients")
+      # Normalize to sum to 1
+      return(team_importance / sum(team_importance))
+    } else {
+      log_info("Option 1 failed: No team_podium model found")
+      stop("No team model")
+    }
+  }, error = function(e) {
+    log_info(paste("Option 1 failed:", e$message))
+    return(NULL)
+  })
+
+  if(!is.null(option1_result)) return(option1_result)
+
+  # Option 2: Use individual model performance as proxy for importance
+  log_info("Attempting Option 2: Individual model accuracy")
+  option2_result <- tryCatch({
+    # Use individual leg model accuracy as proxy for importance
+    leg_accuracy <- sapply(1:4, function(leg) {
+      # Extract model performance metrics from cross-validation results
+      if("results" %in% names(leg_models[[leg]]$podium)) {
+        acc <- max(leg_models[[leg]]$podium$results$Accuracy)
+        log_info(paste("Leg", leg, "accuracy:", acc))
+        return(acc)
+      } else {
+        log_info(paste("Leg", leg, "has no accuracy results"))
+        return(NA)
+      }
+    })
+
+    if(all(is.na(leg_accuracy))) {
+      log_info("Option 2 failed: No accuracy metrics found")
+      stop("No accuracy metrics")
+    }
+
+    # Replace NAs with mean of non-NA values
+    leg_accuracy[is.na(leg_accuracy)] <- mean(leg_accuracy, na.rm = TRUE)
+
+    log_info("Option 2 succeeded: Using model accuracy weights")
+    # Normalize to sum to 1
+    return(leg_accuracy / sum(leg_accuracy))
+  }, error = function(e) {
+    log_info(paste("Option 2 failed:", e$message))
+    return(NULL)
+  })
+
+  if(!is.null(option2_result)) return(option2_result)
+
+  # Option 3: Use default weights for mixed relay (slightly more weight on anchor legs)
+  log_info("Using Option 3: Default leg importance weights for mixed relay")
   default_weights <- c(0.2, 0.25, 0.25, 0.3)  # Slight emphasis on later legs
   return(default_weights)
 }

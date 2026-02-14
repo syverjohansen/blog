@@ -11,27 +11,27 @@
   "rows": [
     [
       "SWEDEN I",
-      "Moa Ilar",
-      "Jonna Sundling",
-      "Frida Karlsson",
+      "Linn Svahn",
       "Ebba Andersson",
-      171.379862398824
+      "Frida Karlsson",
+      "Jonna Sundling",
+      156.68104712234
     ],
     [
       "NORWAY I",
-      "Mathilde Myhrvold",
-      "Julie Bjervig Drivenes",
-      "Heidi Weng",
+      "Kristin Austgulen Fosnæs",
       "Astrid Øyre Slind",
-      157.004069749793
+      "Karoline Simpson-Larsen",
+      "Heidi Weng",
+      149.941757820692
     ],
     [
       "FINLAND I",
-      "Jasmi Joensuu",
       "Johanna Matintalo",
       "Kerttu Niskanen",
       "Vilma Ryytty",
-      136.441476138699
+      "Jasmi Joensuu",
+      138.774011313962
     ],
     [
       "GERMANY I",
@@ -39,367 +39,127 @@
       "Katharina Hennig Dotzler",
       "Helen Hoffmann",
       "Pia Fink",
-      123.697180931934
+      127.599657963129
     ],
     [
       "UNITED STATES OF AMERICA I",
       "Julia Kern",
-      "Jessie Diggins",
+      "Rosie Brennan",
       "Novie McCabe",
-      "Sophia Laukli",
-      115.731803097013
-    ],
-    [
-      "ITALY I",
-      "Federica Cassol",
-      "Nicole Monsorno",
-      "Caterina Ganz",
-      "Iris De Martin Pinter",
-      92.3043717204728
+      "Jessie Diggins",
+      123.749252038267
     ],
     [
       "SWITZERLAND I",
-      "Nadine Fähndrich",
+      "Anja Weber",
       "Nadja Kälin",
       "Marina Kälin",
-      "Anja Weber",
-      82.9954015877111
+      "Nadine Fähndrich",
+      99.4338417380734
     ],
     [
-      "AUSTRIA I",
-      "Magdalena Scherz",
-      "Heidi Bucher",
-      "Katharina Brudermann",
-      "Teresa Stadlober",
-      76.7764278631629
+      "ITALY I",
+      "Iris De Martin Pinter",
+      "Caterina Ganz",
+      "Martina di Centa",
+      "Federica Cassol",
+      91.4424614005434
     ],
     [
-      "CZECH REPUBLIC I",
-      "Barbora Antosova",
-      "Tereza Beranova",
-      "Katerina Janatova",
-      "Anna Marie Jaklova",
-      76.7583275137003
+      "FRANCE I",
+      "Julie Pierrel",
+      "Cloe Pagnier",
+      "Leonie Perry",
+      "Delphine Claudel",
+      65.0653487423615
     ],
     [
       "POLAND I",
       "Monika Skinder",
-      "Izabela Marcisz",
       "Eliza Rucka-Michalek",
-      "Oliwia Busko",
-      70.4218436151205
-    ],
-    [
-      "FRANCE I",
-      "Lena Quintin",
-      "Delphine Claudel",
-      "Julie Pierrel",
-      "Leonie Perry",
-      61.4605071988559
+      "Aleksandra Kolodziej",
+      "Izabela Marcisz",
+      59.2194745063947
     ],
     [
       "CANADA I",
-      "Liliane Gagnon",
-      "Kathrine Stewart-Jones",
       "Alison Mackie",
+      "Jasmine Drolet",
+      "Liliane Gagnon",
       "Sonjaa Schmidt",
-      56.8038309780879
+      53.7022900588708
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Katerina Janatova",
+      "Sandra Schützova",
+      "Anna Milerska",
+      "Anna Marie Jaklova",
+      47.2900843723548
+    ],
+    [
+      "AUSTRIA I",
+      "Teresa Stadlober",
+      "Heidi Bucher",
+      "Katharina Brudermann",
+      "Lisa Achleitner",
+      42.0514226900433
     ],
     [
       "SLOVENIA I",
-      "Neza Zerjav",
-      "Lucija Medja",
       "Anja Mandeljc",
+      "Neza Zerjav",
       "Tia Janezic",
-      36.8804828530374
-    ],
-    [
-      "ESTONIA I",
-      "Mariel Merlii Pulles",
-      "Teiloora Ojaste",
-      "Kaidy Kaasiku",
-      "Keidy Kaasiku",
-      33.8556786105964
-    ],
-    [
-      "RUSSIA I",
-      "Dariya Nepryaeva",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      29.0447670596164
-    ],
-    [
-      "JAPAN I",
-      "Chika Kobayashi",
-      "Hikari Miyazaki",
-      "Masae Tsuchiya",
-      "Chika Honda",
-      24.5831685129423
-    ],
-    [
-      "GREAT BRITAIN I",
-      "Tabitha Williams",
-      "NO ELIGIBLE SKIER",
-      "Anna Pryce",
-      "NO ELIGIBLE SKIER",
-      21.8021428606516
+      "Lucija Medja",
+      34.8676549385624
     ],
     [
       "LATVIA I",
+      "Patricijia Eiduka",
       "Kitija Auzina",
       "Linda Kaparkaleja",
-      "Patricijia Eiduka",
       "Samanta Krampe",
-      21.5387555163993
+      27.3397170719989
     ],
     [
-      "BELARUS I",
-      "Hanna Machakhina",
-      "NO ELIGIBLE SKIER",
-      "Hanna Karaliova",
-      "NO ELIGIBLE SKIER",
-      19.4305712801552
-    ],
-    [
-      "Hungary I",
-      "Sara Ponya",
-      "NO ELIGIBLE SKIER",
-      "Larissza Vanda Bere",
-      "NO ELIGIBLE SKIER",
-      18.7319164659051
-    ],
-    [
-      "GREECE I",
-      "Nefeli Tita",
-      "NO ELIGIBLE SKIER",
-      "Konstantina Charalampidou",
-      "NO ELIGIBLE SKIER",
-      17.0227626860543
-    ],
-    [
-      "Moldova I",
-      "Arina Rusu",
-      "NO ELIGIBLE SKIER",
-      "Elizaveta Hlusovici",
-      "NO ELIGIBLE SKIER",
-      16.3801016220898
-    ],
-    [
-      "TURKEY I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Irem Dursun",
-      "NO ELIGIBLE SKIER",
-      15.1645737101476
+      "ESTONIA I",
+      "Kaidy Kaasiku",
+      "Keidy Kaasiku",
+      "Mariel Merlii Pulles",
+      "Teesi Tuul",
+      24.8180235863202
     ],
     [
       "AUSTRALIA I",
-      "Phoebe Cridland",
       "Ellen Søhol Lie",
+      "Phoebe Cridland",
       "Rosie Fordham",
       "Maddi Hooker",
-      13.7607135142686
-    ],
-    [
-      "SLOVAKIA I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Maria Danielova",
-      "NO ELIGIBLE SKIER",
-      13.0654723015929
-    ],
-    [
-      "PEOPLES REPUBLIC OF CHINA I",
-      "Kaile He",
-      "Yundi Wang",
-      "Chunxue Chi",
-      "Dinigeer Yilamujiang",
-      12.9106950142814
-    ],
-    [
-      "NORTH MACEDONIA I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Ana Cvetanovska",
-      "NO ELIGIBLE SKIER",
-      12.8369588242887
-    ],
-    [
-      "Taiwan I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Sophia Tsu Velicer",
-      "NO ELIGIBLE SKIER",
-      9.76197177235003
-    ],
-    [
-      "Iran I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Samaneh Beyrami Baher",
-      "NO ELIGIBLE SKIER",
-      9.45294573084902
-    ],
-    [
-      "Armenia I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Katya Galstyan",
-      "NO ELIGIBLE SKIER",
-      9.43943008935355
-    ],
-    [
-      "Thailand I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Karen Chanloung",
-      "NO ELIGIBLE SKIER",
-      9.276787801987
-    ],
-    [
-      "Chile I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Martina Flores",
-      "NO ELIGIBLE SKIER",
-      9.11339013380881
-    ],
-    [
-      "India I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Bhavani Thekkada Nanjunda",
-      "NO ELIGIBLE SKIER",
-      9.11339013380881
-    ],
-    [
-      "Bosnia&Herzegovina I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Teodora Delipara",
-      "NO ELIGIBLE SKIER",
-      9.11339013380881
-    ],
-    [
-      "Bulgaria I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Kalina Nedyalkova",
-      "NO ELIGIBLE SKIER",
-      9.11339013380881
-    ],
-    [
-      "Liechtenstein I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Nina Riedener",
-      "NO ELIGIBLE SKIER",
-      9.11339013380881
-    ],
-    [
-      "Romania I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Delia Ioana Reit",
-      "NO ELIGIBLE SKIER",
-      9.11339013380881
-    ],
-    [
-      "Mexico I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Regina Martinez Lorenzo",
-      "NO ELIGIBLE SKIER",
-      9.11339013380881
-    ],
-    [
-      "CROATIA I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Ema Sobol",
-      "Tena Hadzic",
-      8.9725844030122
-    ],
-    [
-      "LITHUANIA I",
-      "Ieva Dainyte",
-      "NO ELIGIBLE SKIER",
-      "Egle Savickaite",
-      "NO ELIGIBLE SKIER",
-      8.96828602110054
-    ],
-    [
-      "ICELAND I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Kristrun Gudnadottir",
-      "NO ELIGIBLE SKIER",
-      8.77676175167018
-    ],
-    [
-      "SERBIA I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Anja Ilic",
-      "NO ELIGIBLE SKIER",
-      8.71872895927312
-    ],
-    [
-      "ARGENTINA I",
-      "Nahiara Diaz Gonzalez",
-      "NO ELIGIBLE SKIER",
-      "Agustina Groetzner",
-      "NO ELIGIBLE SKIER",
-      7.67226085693296
-    ],
-    [
-      "Andorra I",
-      "Gina del Rio",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      6.85755048646205
+      9.50606395847302
     ],
     [
       "KAZAKHSTAN I",
+      "Kseniya Shalygina",
+      "Anna Melnik",
       "Nadezhda Stepashkina",
-      "Angelina Shuryga",
-      "Yelizaveta Tolmachyova",
       "Darya Ryazhko",
-      3.83022221803697
+      6.16293807225298
     ],
     [
-      "BRAZIL I",
-      "Bruna Moura",
-      "NO ELIGIBLE SKIER",
-      "Eduarda Ribera",
-      "NO ELIGIBLE SKIER",
-      3.50387044531025
-    ],
-    [
-      "MONGOLIA I",
-      "NO ELIGIBLE SKIER",
-      "NO ELIGIBLE SKIER",
-      "Ariuntungalag Enkhbayar",
-      "NO ELIGIBLE SKIER",
-      3.27795147016364
+      "PEOPLES REPUBLIC OF CHINA I",
+      "Dinigeer Yilamujiang",
+      "Chunxue Chi",
+      "Kaile He",
+      "Yundi Wang",
+      4.57787560708027
     ],
     [
       "UKRAINE I",
-      "Sofiia Shkatula",
       "Anastasiia Nikon",
       "Daryna Myhal",
+      "Sofiia Shkatula",
       "Yelizaveta Nopriienko",
-      2.61694889676614
-    ],
-    [
-      "KOREA I",
-      "Da-Som Han",
-      "NO ELIGIBLE SKIER",
-      "Eui Jin Lee",
-      "NO ELIGIBLE SKIER",
-      2.48188811157885
+      2.81305847321245
     ]
   ]
 }

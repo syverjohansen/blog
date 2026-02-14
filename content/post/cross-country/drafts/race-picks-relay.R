@@ -868,12 +868,65 @@ get_leg_predictions_with_startlist <- function(current_skiers, leg_models, start
 
 # Function to calculate leg importance from historical data
 calculate_leg_importance <- function(leg_models) {
-  # Default weights with emphasis on later legs
+  # Debug which option is being used
+  log_info("Attempting Option 1: Team model coefficients")
+
+  # Option 1: Use model coefficients if available
+  option1_result <- tryCatch({
+    # Try extracting from team-level model if it exists
+    if("team_podium" %in% names(leg_models)) {
+      team_importance <- varImp(leg_models$team_podium)$importance$Overall
+      log_info("Option 1 succeeded: Found team model coefficients")
+      # Normalize to sum to 1
+      return(team_importance / sum(team_importance))
+    } else {
+      log_info("Option 1 failed: No team_podium model found")
+      stop("No team model")
+    }
+  }, error = function(e) {
+    log_info(paste("Option 1 failed:", e$message))
+    return(NULL)
+  })
+
+  if(!is.null(option1_result)) return(option1_result)
+
+  # Option 2: Use individual model performance as proxy for importance
+  log_info("Attempting Option 2: Individual model accuracy")
+  option2_result <- tryCatch({
+    # Use individual leg model accuracy as proxy for importance
+    leg_accuracy <- sapply(1:4, function(leg) {
+      # Extract model performance metrics from cross-validation results
+      if("results" %in% names(leg_models[[leg]]$podium)) {
+        acc <- max(leg_models[[leg]]$podium$results$Accuracy)
+        log_info(paste("Leg", leg, "accuracy:", acc))
+        return(acc)
+      } else {
+        log_info(paste("Leg", leg, "has no accuracy results"))
+        return(NA)
+      }
+    })
+
+    if(all(is.na(leg_accuracy))) {
+      log_info("Option 2 failed: No accuracy metrics found")
+      stop("No accuracy metrics")
+    }
+
+    # Replace NAs with mean of non-NA values
+    leg_accuracy[is.na(leg_accuracy)] <- mean(leg_accuracy, na.rm = TRUE)
+
+    log_info("Option 2 succeeded: Using model accuracy weights")
+    # Normalize to sum to 1
+    return(leg_accuracy / sum(leg_accuracy))
+  }, error = function(e) {
+    log_info(paste("Option 2 failed:", e$message))
+    return(NULL)
+  })
+
+  if(!is.null(option2_result)) return(option2_result)
+
+  # Option 3: Use default weights with emphasis on later legs
+  log_info("Using Option 3: Default leg importance weights")
   default_weights <- c(0.2, 0.2, 0.25, 0.35)  # Slight emphasis on later legs
-  
-  # For race day predictions, we just use default weights
-  log_info("Using default leg importance weights for relay race day")
-  
   return(default_weights)
 }
 
@@ -1130,7 +1183,7 @@ save_prediction_results <- function(team_predictions, race_date, gender, output_
   
   # Set default output directory if not provided
   if(is.null(output_dir)) {
-    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/archive/", date_str)
+    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", date_str)
   }
   
   # Create directory if it doesn't exist

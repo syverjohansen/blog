@@ -399,3 +399,108 @@ For each converted script, update:
 - `content/post/methods/champs-predictions.md` (for championship scripts)
 - `content/post/methods/race-picks.md` (for weekly picks scripts)
 - Create Reddit-style explanation post (like `reddit-post.md`)
+
+---
+
+## COMPLETED: Align Leg Importance Calculation Across Scripts (2026-02-13)
+
+### Problem
+The `race-picks-relay.R` and `race-picks-team-sprint.R` scripts use simple hardcoded default weights for leg importance, while `weekly-picks-relay.R`, `weekly-picks-team-sprint.R`, and `champs-predictions-simulation.R` use more sophisticated model-based approaches.
+
+### Current Implementations
+
+| Script | Leg Importance Method |
+|--------|----------------------|
+| `weekly-picks-relay.R` | `calculate_leg_importance()` - 3 options with fallbacks |
+| `weekly-picks-team-sprint.R` | `calculate_leg_importance()` - 3 options with fallbacks |
+| `race-picks-relay.R` | Hardcoded `c(0.2, 0.2, 0.25, 0.35)` |
+| `race-picks-team-sprint.R` | Likely hardcoded defaults |
+| `champs-predictions-simulation.R` | `calculate_leg_importance_from_models()` - model deviance approach |
+
+### `calculate_leg_importance()` in weekly-picks-*.R (lines 1150-1211)
+```r
+calculate_leg_importance <- function(leg_models) {
+  # Option 1: Use team model coefficients if available (from trained team_podium model)
+  # Option 2: Use individual leg model accuracy as proxy for importance
+  # Option 3: Default weights c(0.2, 0.2, 0.25, 0.35) for relay, c(0.5, 0.5) for team sprint
+}
+```
+
+### `calculate_leg_importance_from_models()` in champs-predictions-simulation.R (lines 288-462)
+More sophisticated approach:
+1. Calculate `prev_points_weighted` with exponential decay from individual race history
+2. Create `Pelo_pct` columns normalized per race
+3. Train leg-specific GLM models predicting `is_top3 = (Place <= 3)`
+4. Calculate importance based on model deviance (pseudo-R²)
+5. Higher deviance = athlete quality on that leg better predicts team success
+
+### Tasks (COMPLETED)
+
+#### Task 1: Update race-picks-relay.R ✓
+**Location**: `~/blog/daehl-e/content/post/cross-country/drafts/race-picks-relay.R`
+
+Replaced the simple `calculate_leg_importance()` function (line 870) with the full 3-option version from `weekly-picks-relay.R`:
+- Option 1: Team model coefficients via `varImp()`
+- Option 2: Individual leg model accuracy
+- Option 3: Default weights `c(0.2, 0.2, 0.25, 0.35)`
+
+#### Task 2: Update race-picks-team-sprint.R ✓
+**Location**: `~/blog/daehl-e/content/post/cross-country/drafts/race-picks-team-sprint.R`
+
+Applied the same pattern for 2-leg team sprint:
+- Added `safe_team_importance()` helper function (line 850)
+- Added full 3-option `calculate_leg_importance()` function (line 882)
+- Default weights for team sprint: `c(0.5, 0.5)`
+
+#### Task 2b: Update race-picks-mixed-relay.R ✓
+**Location**: `~/blog/daehl-e/content/post/cross-country/drafts/race-picks-mixed-relay.R`
+
+Applied the same pattern for 4-leg mixed relay:
+- Added `safe_team_importance()` helper function (line 863)
+- Added full 3-option `calculate_leg_importance()` function (line 893)
+- Default weights for mixed relay: `c(0.2, 0.25, 0.25, 0.3)`
+
+#### Task 3: Verify Consistency ✓
+Verified that:
+1. Both race-picks-*.R scripts now have the same 3-option fallback logic as weekly-picks-*.R
+2. Relay uses 4-leg weights, team sprint uses 2-leg weights
+3. Log messages indicate which option was used at runtime
+
+### Files to Modify
+- `~/blog/daehl-e/content/post/cross-country/drafts/race-picks-relay.R`
+- `~/blog/daehl-e/content/post/cross-country/drafts/race-picks-team-sprint.R`
+
+### Reference Files
+- `~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks-relay.R` (lines 1150-1211)
+- `~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks-team-sprint.R`
+- `~/blog/daehl-e/content/post/cross-country/drafts/champs-predictions-simulation.R` (lines 288-462)
+
+---
+
+## Recent Changes (2026-02-13)
+
+### Fantasy Output Updated (weekly-picks*.R)
+Changed fantasy prediction output from top 8 men + 8 ladies to **top 20 men + top 20 ladies** (or max available):
+
+**Files modified:**
+- `weekly-picks2.R` - Lines 1104-1124: Now outputs top 20 men + top 20 ladies by `Total_Points`
+- `weekly-picks-relay.R` - `save_fantasy_results()`: Filters by Gender, takes top 20 each, sorted by `Expected_Points`
+- `weekly-picks-team-sprint.R` - `save_fantasy_results()`: Same pattern as relay
+
+### Relay Scraper Fix (startlist_scrape_races_relay.py)
+Fixed sponsor names being appended to athlete names (e.g., "SVAHN Linn Fischer" instead of "SVAHN Linn"):
+- Changed selector from `.g-lg-14.g-md-14.g-sm-11.g-xs-10.justify-left.bold` to `.athlete-name`
+- The sponsor is in a separate `.constructor-name` sibling div
+
+**Files modified:**
+- `~/ski/elo/python/ski/polars/relay/startlist_scrape_races_relay.py` (line 275)
+- `~/ski/elo/python/ski/polars/relay/startlist_scrape_races_mixed_relay.py` (line 280)
+
+### Request Headers Added (startlist_scrape_races_relay.py)
+Added User-Agent header to avoid 403 Forbidden errors from FIS website:
+```python
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+}
+response = requests.get(url, headers=headers)
+```
