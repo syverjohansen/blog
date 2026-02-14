@@ -1101,27 +1101,27 @@ run_fantasy_optimization <- function(men_results, ladies_results, weekend_date) 
   # safe_team <- optimize_weekly_team(men_results, ladies_results, "safe")
   # upside_team <- optimize_weekly_team(men_results, ladies_results, "upside")
 
-  # NEW METHOD: Simply take top 8 men and top 8 ladies by predicted points
-  log_info("Selecting top 8 men and top 8 ladies by Total_Points...")
+  # NEW METHOD: Take top 20 men and top 20 ladies by predicted points (or max available)
+  log_info("Selecting top 20 men and top 20 ladies by Total_Points...")
 
-  top8_men <- men_results$full_predictions %>%
+  top20_men <- men_results$full_predictions %>%
     arrange(desc(Total_Points)) %>%
-    head(8) %>%
+    head(20) %>%
     mutate(Sex = "M") %>%
     dplyr::select(Skier, ID, Sex, Nation, Price, Points = Total_Points)
 
-  top8_ladies <- ladies_results$full_predictions %>%
+  top20_ladies <- ladies_results$full_predictions %>%
     arrange(desc(Total_Points)) %>%
-    head(8) %>%
+    head(20) %>%
     mutate(Sex = "L") %>%
     dplyr::select(Skier, ID, Sex, Nation, Price, Points = Total_Points)
 
   # Combine into fantasy team
-  normal_team <- bind_rows(top8_men, top8_ladies) %>%
+  normal_team <- bind_rows(top20_men, top20_ladies) %>%
     arrange(Sex, desc(Points))
 
   log_info(sprintf("Fantasy team total predicted points: %.2f", sum(normal_team$Points)))
-  log_info(paste("Men:", nrow(top8_men), "| Ladies:", nrow(top8_ladies)))
+  log_info(paste("Men:", nrow(top20_men), "| Ladies:", nrow(top20_ladies)))
 
   # Create placeholder teams for backward compatibility (same as normal for now)
   safe_team <- normal_team

@@ -1,0 +1,225 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Team_Name",
+    "Member_1",
+    "Member_2",
+    "Member_3",
+    "Member_4",
+    "Win_Prob",
+    "Podium_Prob",
+    "Top5_Prob",
+    "Top10_Prob"
+  ],
+  "rows": [
+    [
+      "SWEDEN I",
+      "Linn Svahn",
+      "Ebba Andersson",
+      "Frida Karlsson",
+      "Jonna Sundling",
+      "0.298168901700063",
+      "0.644940387468145",
+      "0.671202058439973",
+      "0.853579568606281"
+    ],
+    [
+      "NORWAY I",
+      "Kristin Austgulen Fosnæs",
+      "Astrid Øyre Slind",
+      "Karoline Simpson-Larsen",
+      "Heidi Weng",
+      "0.241639958877376",
+      "0.578501062402146",
+      "0.6593379354539",
+      "0.85276769960035"
+    ],
+    [
+      "GERMANY I",
+      "Laura Gimmler",
+      "Katharina Hennig Dotzler",
+      "Helen Hoffmann",
+      "Pia Fink",
+      "0.0921544396904048",
+      "0.396695023796923",
+      "0.604980187596748",
+      "0.852483125093909"
+    ],
+    [
+      "FINLAND I",
+      "Johanna Matintalo",
+      "Kerttu Niskanen",
+      "Vilma Ryytty",
+      "Jasmi Joensuu",
+      "0.185049959126819",
+      "0.392483878079947",
+      "0.666072567877664",
+      "0.853591328139948"
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "Julia Kern",
+      "Rosie Brennan",
+      "Novie McCabe",
+      "Jessie Diggins",
+      "0.167863515696352",
+      "0.276175653233983",
+      "0.471993490018106",
+      "0.848765290687983"
+    ],
+    [
+      "AUSTRIA I",
+      "Teresa Stadlober",
+      "Heidi Bucher",
+      "Katharina Brudermann",
+      "Lisa Achleitner",
+      "0.000354044660352614",
+      "0.178688513673366",
+      "0.199299932160867",
+      "0.464916700751225"
+    ],
+    [
+      "SWITZERLAND I",
+      "Anja Weber",
+      "Nadja Kälin",
+      "Marina Kälin",
+      "Nadine Fähndrich",
+      "0.013290485875179",
+      "0.152832559662177",
+      "0.539383805313316",
+      "0.852991421393251"
+    ],
+    [
+      "FRANCE I",
+      "Julie Pierrel",
+      "Cloe Pagnier",
+      "Leonie Perry",
+      "Delphine Claudel",
+      "0.00012728077673921",
+      "0.0968062526542972",
+      "0.186150615881858",
+      "0.644666107527562"
+    ],
+    [
+      "ITALY I",
+      "Iris De Martin Pinter",
+      "Caterina Ganz",
+      "Martina di Centa",
+      "Federica Cassol",
+      "0.000770214916670727",
+      "0.0937479846948795",
+      "0.446369141294551",
+      "0.849597812394297"
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Katerina Janatova",
+      "Sandra Schützova",
+      "Anna Milerska",
+      "Anna Marie Jaklova",
+      "0.000381114724853151",
+      "0.0779462096101833",
+      "0.159945480768192",
+      "0.480793397304297"
+    ],
+    [
+      "CANADA I",
+      "Alison Mackie",
+      "Jasmine Drolet",
+      "Liliane Gagnon",
+      "Sonjaa Schmidt",
+      "6.66165864586495e-05",
+      "0.0439507476261949",
+      "0.114289236624773",
+      "0.572903305983014"
+    ],
+    [
+      "LATVIA I",
+      "Patricijia Eiduka",
+      "Kitija Auzina",
+      "Linda Kaparkaleja",
+      "Samanta Krampe",
+      "3.64366969503044e-05",
+      "0.0279824203749623",
+      "0.103318380143388",
+      "0.250458150614923"
+    ],
+    [
+      "POLAND I",
+      "Monika Skinder",
+      "Eliza Rucka-Michalek",
+      "Aleksandra Kolodziej",
+      "Izabela Marcisz",
+      "8.78000356311039e-05",
+      "0.0111546724870609",
+      "0.0491043143167385",
+      "0.739155655957509"
+    ],
+    [
+      "AUSTRALIA I",
+      "Ellen Søhol Lie",
+      "Phoebe Cridland",
+      "Rosie Fordham",
+      "Maddi Hooker",
+      "0.0",
+      "0.00821752661070285",
+      "0.0200117665989656",
+      "0.128013556354863"
+    ],
+    [
+      "SLOVENIA I",
+      "Anja Mandeljc",
+      "Neza Zerjav",
+      "Tia Janezic",
+      "Lucija Medja",
+      "5.08352109489635e-06",
+      "0.00660989716163205",
+      "0.0328125774939594",
+      "0.372791299334357"
+    ],
+    [
+      "ESTONIA I",
+      "Kaidy Kaasiku",
+      "Keidy Kaasiku",
+      "Mariel Merlii Pulles",
+      "Teesi Tuul",
+      "4.14711505494992e-06",
+      "0.00646716502766402",
+      "0.0222711637816759",
+      "0.267471510846278"
+    ],
+    [
+      "PEOPLES REPUBLIC OF CHINA I",
+      "Dinigeer Yilamujiang",
+      "Chunxue Chi",
+      "Kaile He",
+      "Yundi Wang",
+      "0.0",
+      "0.00369902818024151",
+      "0.0238823104524389",
+      "0.0453242284733561"
+    ],
+    [
+      "KAZAKHSTAN I",
+      "Kseniya Shalygina",
+      "Anna Melnik",
+      "Nadezhda Stepashkina",
+      "Darya Ryazhko",
+      "0.0",
+      "0.00182644646538762",
+      "0.00596680559748044",
+      "0.0461264349640485"
+    ],
+    [
+      "UKRAINE I",
+      "Anastasiia Nikon",
+      "Daryna Myhal",
+      "Sofiia Shkatula",
+      "Yelizaveta Nopriienko",
+      "0.0",
+      "0.00127457079010568",
+      "0.0236082301854065",
+      "0.0236034059725483"
+    ]
+  ]
+}

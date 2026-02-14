@@ -270,6 +270,39 @@ cd ~/blog/daehl-e
 
 ---
 
+## Recent Changes (2026-02-11)
+
+### race-picks.R Bug Fix
+Fixed error `object 'race_prob_col' not found` in `normalize_position_probabilities`:
+- Added `race_prob_col = NULL` as optional parameter to function (line 556)
+- Updated function call at line 1433 to pass `race_prob_col`
+- Updated condition at line 652 to check `!is.null(race_prob_col)` before use
+
+### weekly-picks2.R Changes (Cross-Country)
+
+#### Fantasy Output Simplified (lines 1097-1141)
+- **Old method** (commented out): MIP optimization with budget constraints (100,000 budget, price-based selection)
+- **New method**: Simply takes top 8 men + top 8 ladies by `Total_Points`, ignoring prices
+- The `optimize_weekly_team()` function is preserved for future use
+
+#### Race Probability Logic Updated (lines 326-340, 391-400)
+Priority system for race probability:
+1. **If FIS startlist exists** (any `In_FIS_List == TRUE`): Use FIS list (athletes with `In_FIS_List == TRUE` get prob=1)
+2. **If NO FIS startlist** (all `In_FIS_List == FALSE`): Athletes with `In_Config == TRUE` get prob=1
+
+Old logic is preserved as comments for when the fantasy game changes back.
+
+### daily_cleanup.sh Review
+Current script only does git gc and removes `.log` files older than 7 days. Potential future improvements discussed:
+- Clean up `*pred*.csv` files older than 7 days in `~/ski/elo`
+- Clean up old dated `race-picks/` directories older than 30 days
+- Clean up R/Python temp files (`.Rhistory`, `__pycache__`)
+- Ubuntu system cleanup (`apt autoremove`, `journalctl --vacuum-time`)
+
+Not implemented yet - revisit if disk space becomes an issue again.
+
+---
+
 ## Session Resume Instructions
 
 If starting a new session:
@@ -277,7 +310,9 @@ If starting a new session:
 2. **Cross-country simulation is now production-ready**
 3. Run `./run_champs_predictions.sh` followed by `./champs_script.sh 2026` to generate predictions
 4. The original `champs-predictions.R` is preserved but no longer used for cross-country
-5. **Update this file** with any changes made
+5. **weekly-picks2.R**: Fantasy output now uses simple top-8 selection (old MIP method commented out)
+6. **weekly-picks2.R**: Race probability uses FIS startlist when available, falls back to In_Config
+7. **Update this file** with any changes made
 
 ---
 

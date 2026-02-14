@@ -1746,7 +1746,7 @@ save_prediction_results <- function(team_predictions, race_date, gender, output_
   
   # Set default output directory if not provided
   if(is.null(output_dir)) {
-    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", date_str)
+    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", date_str)
   }
   
   # Create directory if it doesn't exist
@@ -1813,25 +1813,39 @@ save_fantasy_results <- function(fantasy_team, race_date, output_dir = NULL) {
     dir.create(output_dir, recursive = TRUE)
   }
   
-  # Prepare fantasy team data
-  fantasy_df <- fantasy_team$team %>%
-    select(Team_Name, Gender, Price, Expected_Points) %>%
-    arrange(desc(Expected_Points))
-  
+  # Prepare fantasy team data - top 20 men and top 20 ladies by Expected_Points (or max available)
+  men_teams <- fantasy_team$team %>%
+    filter(Gender == "men") %>%
+    arrange(desc(Expected_Points)) %>%
+    head(20)
+
+  ladies_teams <- fantasy_team$team %>%
+    filter(Gender == "ladies") %>%
+    arrange(desc(Expected_Points)) %>%
+    head(20)
+
+  fantasy_df <- bind_rows(men_teams, ladies_teams) %>%
+    select(Team_Name, Gender, Price, Expected_Points)
+
   # Add team members if available
   if("Member_1" %in% names(fantasy_team$team)) {
+    combined_teams <- bind_rows(men_teams, ladies_teams)
     fantasy_df <- bind_cols(
       fantasy_df,
-      fantasy_team$team %>% select(starts_with("Member_"))
+      combined_teams %>% select(starts_with("Member_"))
     )
   }
-  
+
+  # Sort by Gender then Expected_Points
+  fantasy_df <- fantasy_df %>%
+    arrange(Gender, desc(Expected_Points))
+
   # Save fantasy team results
   fantasy_file <- file.path(output_dir, "fantasy_relay_team.xlsx")
   write.xlsx(list(
     Team = fantasy_df
   ), fantasy_file)
-  log_info(paste("Saved fantasy team results to", fantasy_file))
+  log_info(paste("Saved top 20 men and top 20 ladies fantasy team results to", fantasy_file))
   
   return(fantasy_file)
 }

@@ -1,0 +1,565 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Team_Name",
+    "Member_1",
+    "Member_2",
+    "Member_3",
+    "Member_4",
+    "Expected_Points"
+  ],
+  "rows": [
+    [
+      "NORWAY I",
+      "Martin Løwstrøm Nyenget",
+      "Harald Østberg Amundsen",
+      "Einar Hedegart",
+      "Johannes Høsflot Klæbo",
+      166.101731060921
+    ],
+    [
+      "ITALY I",
+      "Federico Pellegrino",
+      "Elia Barp",
+      "Martino Carollo",
+      "Davide Graz",
+      107.043562298607
+    ],
+    [
+      "FRANCE I",
+      "Mathis Desloges",
+      "Hugo Lapalus",
+      "Jules Chappaz",
+      "Jules Lapierre",
+      101.640544679319
+    ],
+    [
+      "FINLAND I",
+      "Arsi Ruuskanen",
+      "Iivo Niskanen",
+      "Niilo Moilanen",
+      "Perttu Hyvärinen",
+      89.3096814932599
+    ],
+    [
+      "SWEDEN I",
+      "William Poromaa",
+      "Edvin Anger",
+      "Calle Halfvarsson",
+      "Johan Ekberg",
+      76.4485418549197
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "Gus Schumacher",
+      "Zak Ketterson",
+      "Ben Ogden",
+      "James Clinton Schoonmaker",
+      74.6848268790293
+    ],
+    [
+      "AUSTRIA I",
+      "Tobias Ganner",
+      "Michael Föttinger",
+      "Benjamin Moser",
+      "Mika Vermeulen",
+      65.523820485795
+    ],
+    [
+      "GREAT BRITAIN I",
+      "Andrew Musgrave",
+      "Joe Davies",
+      "James Clugnet",
+      "Andrew Young",
+      60.8394958656704
+    ],
+    [
+      "GERMANY I",
+      "Florian Notz",
+      "Janosch Brugger",
+      "Jan Stölben",
+      "Friedrich Moch",
+      59.8812144352109
+    ],
+    [
+      "CANADA I",
+      "Antoine Cyr",
+      "Xavier McKeever",
+      "Thomas Stephen",
+      "Max Hollmann",
+      57.1874117444228
+    ],
+    [
+      "SWITZERLAND I",
+      "Beda Klee",
+      "Jason Rüesch",
+      "Valerio Grond",
+      "Janik Riebli",
+      49.1684057467621
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Michal Novak",
+      "Matyas Bauer",
+      "Ondrej Cerny",
+      "Jiri Tuz",
+      45.0176270661799
+    ],
+    [
+      "RUSSIA I",
+      "Saveliy Korostelev",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      38.828060223809
+    ],
+    [
+      "ESTONIA I",
+      "Alvar Johannes Alev",
+      "Martin Himma",
+      "Karl Sebastian Dremljuga",
+      "Christopher Kalev",
+      32.861455113455
+    ],
+    [
+      "JAPAN I",
+      "Naoto Baba",
+      "Ryo Hirose",
+      "Daito Yamazaki",
+      "Takatsugu Uda",
+      28.1551605841598
+    ],
+    [
+      "POLAND I",
+      "Dominik Bury",
+      "Lukasz Gazurek",
+      "Maciej Starega",
+      "Przemyslaw Legierski",
+      21.3920604953215
+    ],
+    [
+      "SLOVENIA I",
+      "Vili Crv",
+      "Miha Licef",
+      "Miha Simenc",
+      "Nejc Stern",
+      17.4427506994299
+    ],
+    [
+      "KAZAKHSTAN I",
+      "Vitaliy Pukhkalo",
+      "Svyatoslav Matassov",
+      "Amirgali Muratbekov",
+      "Yernar Nursbekov",
+      14.3502245864588
+    ],
+    [
+      "Spain I",
+      "Jaume Pueyo",
+      "Bernat Selles Gasch",
+      "Imanol Rojo",
+      "Marc Colell Pantebre",
+      13.135910758102
+    ],
+    [
+      "Moldova I",
+      "Iulian Luchin",
+      "Dinu Belevac",
+      "Mihail Carpov",
+      "Victor Sendrea",
+      13.0297654186935
+    ],
+    [
+      "SLOVAKIA I",
+      "Elisey Kuzmin",
+      "Jachym Cenek",
+      "Tomas Cenek",
+      "Peter Hinds",
+      11.9899245562357
+    ],
+    [
+      "PEOPLES REPUBLIC OF CHINA I",
+      "Entemake Maowulietibieke",
+      "Degen Chen",
+      "Qiang Wang",
+      "Rongsheng Liu",
+      10.8840750378739
+    ],
+    [
+      "Bulgaria I",
+      "Simeon Deyanov",
+      "Daniel Peshkov",
+      "Mario Matikanov",
+      "NO ELIGIBLE SKIER",
+      10.3971085446246
+    ],
+    [
+      "Romania I",
+      "Paul Constantin Pepene",
+      "NO ELIGIBLE SKIER",
+      "Gabriel Cojocaru",
+      "NO ELIGIBLE SKIER",
+      8.27409277761957
+    ],
+    [
+      "LATVIA I",
+      "Jekabs Skolnieks",
+      "Niks Saulitis",
+      "Raimo Vigants",
+      "Lauris Kaparkalejs",
+      8.20514363197262
+    ],
+    [
+      "Armenia I",
+      "Spartak Voskanyan",
+      "NO ELIGIBLE SKIER",
+      "Mikayel Mikayelyan",
+      "NO ELIGIBLE SKIER",
+      8.20116383505983
+    ],
+    [
+      "Hungary I",
+      "Adam Büki",
+      "NO ELIGIBLE SKIER",
+      "Adam Konya",
+      "NO ELIGIBLE SKIER",
+      8.14883045186691
+    ],
+    [
+      "Peru I",
+      "Jaime Luis Huerta Osorio",
+      "NO ELIGIBLE SKIER",
+      "Victor Olsgard",
+      "NO ELIGIBLE SKIER",
+      8.14883045186691
+    ],
+    [
+      "Belgium I",
+      "Samuel Maes",
+      "NO ELIGIBLE SKIER",
+      "Mathis Poutot",
+      "NO ELIGIBLE SKIER",
+      8.14883045186691
+    ],
+    [
+      "Liechtenstein I",
+      "Robin Frommelt",
+      "NO ELIGIBLE SKIER",
+      "Micha Büchel",
+      "NO ELIGIBLE SKIER",
+      8.14883045186691
+    ],
+    [
+      "AUSTRALIA I",
+      "Hugo Hinckfuss",
+      "Seve De Campo",
+      "Lars Young Vik",
+      "Fedele De Campo",
+      7.8264727093275
+    ],
+    [
+      "UKRAINE I",
+      "Dmytro Drahun",
+      "Andriy Dotsenko",
+      "Oleksandr Lisohor",
+      "Ruslan Denysenko",
+      6.85137456184721
+    ],
+    [
+      "Ireland I",
+      "Thomas Hjalmar Westgård",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      5.87272034200267
+    ],
+    [
+      "ARGENTINA I",
+      "Franco Dal Farra",
+      "Mateo Lorenzo Sauma",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      4.94526609358854
+    ],
+    [
+      "LITHUANIA I",
+      "Tautvydas Strolia",
+      "NO ELIGIBLE SKIER",
+      "Modestas Vaiciulis",
+      "NO ELIGIBLE SKIER",
+      4.86310593581338
+    ],
+    [
+      "Andorra I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Irineu Esteve Altimiras",
+      "NO ELIGIBLE SKIER",
+      4.07392144864271
+    ],
+    [
+      "Thailand I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Mark Chanloung",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Ecuador I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Klaus Jungbluth Rodriguez",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Israel I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Attila Mihaly Kertesz",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Venezuela I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Guillermo Racero",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Bermuda I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Tucker Murphy",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Philippines I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Edward Limbaga",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Colombia I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Fredrik Gerardo Fodstad",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Chile I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Sebastian Kristoffer Endrestad",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Lebanon I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Samer Tawk",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Morocco I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Abderrahim Kemmissa",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Trinidad & Tobago I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Nicholas Lau",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Bosnia&Herzegovina I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Strahinja Eric",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Haiti I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Stevenson Stavart",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Bolivia I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Timo Juhani Gronlund",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Montenegro I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Aleksandar Grbovic",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Nigeria I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Samuel Uduigowme Ikpefan",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "TURKEY I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Abdullah Yilmaz",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Portugal I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Jose Cabeca",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Kyrgyzstan I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Artur Saparbekov",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Iran I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Danial Savehshemshki",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "India I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Stanzin Lundup",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Mexico I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Allan Corona",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Taiwan I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Chieh-Han Lee",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "South Africa I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Matthew Smith",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "Saudi Arabia I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Rakan Alireza",
+      "NO ELIGIBLE SKIER",
+      3.72490012597669
+    ],
+    [
+      "KOREA I",
+      "Joon-Seo Lee",
+      "NO ELIGIBLE SKIER",
+      "Ji-Yeong Byun",
+      "NO ELIGIBLE SKIER",
+      3.4551883530418
+    ],
+    [
+      "ICELAND I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Dagur Benediktsson",
+      "NO ELIGIBLE SKIER",
+      3.09688956457333
+    ],
+    [
+      "GREECE I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Apostolos Angelis",
+      "NO ELIGIBLE SKIER",
+      2.00810634945847
+    ],
+    [
+      "BRAZIL I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Manex Silva",
+      "NO ELIGIBLE SKIER",
+      1.78425704848843
+    ],
+    [
+      "NORTH MACEDONIA I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Stavre Jada",
+      "NO ELIGIBLE SKIER",
+      1.11374774402737
+    ],
+    [
+      "MONGOLIA I",
+      "NO ELIGIBLE SKIER",
+      "Achbadrakh Batmunkh",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      0.880652541063745
+    ],
+    [
+      "SERBIA I",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      "Milos Milosavljevic",
+      "NO ELIGIBLE SKIER",
+      0.861813427130826
+    ],
+    [
+      "CROATIA I",
+      "NO ELIGIBLE SKIER",
+      "Marko Skender",
+      "NO ELIGIBLE SKIER",
+      "NO ELIGIBLE SKIER",
+      0.345563256887475
+    ]
+  ]
+}
