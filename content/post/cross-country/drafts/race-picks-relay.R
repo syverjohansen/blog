@@ -1205,7 +1205,18 @@ save_prediction_results <- function(team_predictions, race_date, gender, output_
       select(Team_Name, Expected_Points) %>%
       arrange(desc(Expected_Points))
   }
-  
+
+  # Rename columns to user-friendly format for points_df
+  points_df <- points_df %>%
+    rename("Team" = Team_Name, "Expected Points" = Expected_Points)
+  for (i in 1:4) {
+    old_name <- paste0("Member_", i)
+    new_name <- paste0("Leg ", i)
+    if (old_name %in% names(points_df)) {
+      points_df <- points_df %>% rename(!!new_name := !!old_name)
+    }
+  }
+
   # Create probability dataframe with correct columns
   if(has_members) {
     # Include member columns in the original selection to maintain row correspondence
@@ -1216,6 +1227,23 @@ save_prediction_results <- function(team_predictions, race_date, gender, output_
     prob_df <- team_predictions %>%
       select(Team_Name, Win_Prob, Podium_Prob, Top5_Prob, Top10_Prob) %>%
       arrange(desc(Podium_Prob))
+  }
+
+  # Rename columns to user-friendly format for prob_df
+  prob_df <- prob_df %>%
+    rename(
+      "Team" = Team_Name,
+      "Win" = Win_Prob,
+      "Podium" = Podium_Prob,
+      "Top 5" = Top5_Prob,
+      "Top 10" = Top10_Prob
+    )
+  for (i in 1:4) {
+    old_name <- paste0("Member_", i)
+    new_name <- paste0("Leg ", i)
+    if (old_name %in% names(prob_df)) {
+      prob_df <- prob_df %>% rename(!!new_name := !!old_name)
+    }
   }
   
   # Save points results

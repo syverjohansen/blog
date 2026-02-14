@@ -484,8 +484,15 @@ Changed fantasy prediction output from top 8 men + 8 ladies to **top 20 men + to
 
 **Files modified:**
 - `weekly-picks2.R` - Lines 1104-1124: Now outputs top 20 men + top 20 ladies by `Total_Points`
-- `weekly-picks-relay.R` - `save_fantasy_results()`: Filters by Gender, takes top 20 each, sorted by `Expected_Points`
-- `weekly-picks-team-sprint.R` - `save_fantasy_results()`: Same pattern as relay
+- `weekly-picks-relay.R`:
+  - `save_fantasy_results()` (lines 1816-1841): Filters by Gender, takes top 20 each, sorted by `Expected_Points`
+  - Line 2102: Commented out `optimize_fantasy_team()` knapsack call, now passes `list(team = combined_teams)` directly
+- `weekly-picks-team-sprint.R`:
+  - `save_fantasy_results()` (lines 1768-1800): Filters by Gender, takes top 20 each, sorted by `Expected_Points`
+  - Line 2039: Commented out `optimize_fantasy_team()` knapsack call, now passes `list(team = combined_teams)` directly
+- `weekly-picks-mixed-relay.R`:
+  - `save_fantasy_results()` (lines 1853-1871): Takes top 20 teams overall (mixed relay teams are mixed gender)
+  - Line 1973: Commented out `optimize_fantasy_team()` knapsack call, now passes `list(team = team_predictions)` directly
 
 ### Relay Scraper Fix (startlist_scrape_races_relay.py)
 Fixed sponsor names being appended to athlete names (e.g., "SVAHN Linn Fischer" instead of "SVAHN Linn"):
@@ -504,3 +511,23 @@ headers = {
 }
 response = requests.get(url, headers=headers)
 ```
+
+### User-Friendly Column Names in Excel Output
+Updated all fantasy and race-picks output files to use user-friendly column names instead of underscored variable names:
+
+**Column Renames Applied:**
+- `Team_Name` → `Team`
+- `Expected_Points` → `Expected Points`
+- `Member_1`, `Member_2`, etc. → `Leg 1`, `Leg 2`, etc.
+- `Win_Prob` → `Win`
+- `Podium_Prob` → `Podium`
+- `Top5_Prob` → `Top 5`
+- `Top10_Prob` → `Top 10`
+
+**Files modified:**
+- `weekly-picks-relay.R` - `save_fantasy_results()` (lines 1843-1854)
+- `weekly-picks-team-sprint.R` - `save_fantasy_results()` (lines 1795-1806)
+- `weekly-picks-mixed-relay.R` - `save_fantasy_results()` (lines 1870-1881)
+- `race-picks-relay.R` - `save_prediction_results()` (lines 1207-1248)
+- `race-picks-team-sprint.R` - `save_prediction_results()` (lines 1244-1285)
+- `race-picks-mixed-relay.R` - `save_prediction_results()` (lines 1207-1260)

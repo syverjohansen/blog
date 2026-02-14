@@ -1218,16 +1218,27 @@ save_prediction_results <- function(team_predictions, race_date, output_dir = NU
       select(Team_Name, Expected_Points) %>%
       arrange(desc(Expected_Points))
   }
-  
+
+  # Rename columns to user-friendly format for points_df
+  points_df <- points_df %>%
+    rename("Team" = Team_Name, "Expected Points" = Expected_Points)
+  for (i in 1:4) {
+    old_name <- paste0("Member_", i)
+    new_name <- paste0("Leg ", i)
+    if (old_name %in% names(points_df)) {
+      points_df <- points_df %>% rename(!!new_name := !!old_name)
+    }
+  }
+
   # Prepare probability data with reordered columns
   if(has_members) {
     prob_df <- team_predictions %>%
       select(
         Team_Name,
         starts_with("Member_"),  # Add member columns right after Team_Name
-        Win_Prob, 
-        Podium_Prob, 
-        Top5_Prob, 
+        Win_Prob,
+        Podium_Prob,
+        Top5_Prob,
         Top10_Prob
       ) %>%
       arrange(desc(Podium_Prob))
@@ -1235,14 +1246,31 @@ save_prediction_results <- function(team_predictions, race_date, output_dir = NU
     prob_df <- team_predictions %>%
       select(
         Team_Name,
-        Win_Prob, 
-        Podium_Prob, 
-        Top5_Prob, 
+        Win_Prob,
+        Podium_Prob,
+        Top5_Prob,
         Top10_Prob
       ) %>%
       arrange(desc(Podium_Prob))
   }
-  
+
+  # Rename columns to user-friendly format for prob_df
+  prob_df <- prob_df %>%
+    rename(
+      "Team" = Team_Name,
+      "Win" = Win_Prob,
+      "Podium" = Podium_Prob,
+      "Top 5" = Top5_Prob,
+      "Top 10" = Top10_Prob
+    )
+  for (i in 1:4) {
+    old_name <- paste0("Member_", i)
+    new_name <- paste0("Leg ", i)
+    if (old_name %in% names(prob_df)) {
+      prob_df <- prob_df %>% rename(!!new_name := !!old_name)
+    }
+  }
+
   # Save points results
   points_file <- file.path(output_dir, "mixed_relay.xlsx")
   write.xlsx(points_df, points_file)

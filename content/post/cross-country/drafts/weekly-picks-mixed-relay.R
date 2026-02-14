@@ -1850,25 +1850,44 @@ save_fantasy_results <- function(fantasy_team, race_date, output_dir = NULL) {
     dir.create(output_dir, recursive = TRUE)
   }
   
-  # Prepare fantasy team data
+  # Prepare fantasy team data - top 20 teams by Expected_Points (mixed relay teams are already mixed gender)
   fantasy_df <- fantasy_team$team %>%
-    select(Team_Name, Nation, Price, Expected_Points) %>%
-    arrange(desc(Expected_Points))
-  
+    arrange(desc(Expected_Points)) %>%
+    head(20) %>%
+    select(Team_Name, Nation, Price, Expected_Points)
+
   # Add team members if available
   if("Member_1" %in% names(fantasy_team$team)) {
+    top20_teams <- fantasy_team$team %>%
+      arrange(desc(Expected_Points)) %>%
+      head(20)
     fantasy_df <- bind_cols(
       fantasy_df,
-      fantasy_team$team %>% select(starts_with("Member_"))
+      top20_teams %>% select(starts_with("Member_"))
     )
   }
-  
+
+  # Rename columns to user-friendly format
+  fantasy_df <- fantasy_df %>%
+    rename(
+      "Team" = Team_Name,
+      "Expected Points" = Expected_Points
+    )
+  # Rename Member columns to Leg columns (mixed relay has 4 legs)
+  for (i in 1:4) {
+    old_name <- paste0("Member_", i)
+    new_name <- paste0("Leg ", i)
+    if (old_name %in% names(fantasy_df)) {
+      fantasy_df <- fantasy_df %>% rename(!!new_name := !!old_name)
+    }
+  }
+
   # Save fantasy team results
   fantasy_file <- file.path(output_dir, "fantasy_mixed_relay_team.xlsx")
   write.xlsx(list(
     Team = fantasy_df
   ), fantasy_file)
-  log_info(paste("Saved fantasy team results to", fantasy_file))
+  log_info(paste("Saved top 20 fantasy mixed relay team results to", fantasy_file))
   
   return(fantasy_file)
 }
@@ -1968,10 +1987,14 @@ run_mixed_relay_predictions <- function() {
   log_info("Normalizing team probabilities")
   team_predictions <- normalize_probabilities(team_predictions)
   
-  # Optimize fantasy team
-  log_info("Optimizing fantasy mixed relay team")
-  fantasy_team <- optimize_fantasy_team(team_predictions)
-  
+  # OLD METHOD: Knapsack optimization (commented out)
+  # log_info("Optimizing fantasy mixed relay team")
+  # fantasy_team <- optimize_fantasy_team(team_predictions)
+
+  # NEW METHOD: Simply pass all teams - save_fantasy_results will take top 20 men + top 20 ladies
+  log_info("Preparing fantasy mixed relay team (top 20 per gender)")
+  fantasy_team <- list(team = team_predictions)
+
   # Save results
   prediction_files <- save_prediction_results(team_predictions, race_info$race_date)
   fantasy_file <- save_fantasy_results(fantasy_team, race_info$race_date)

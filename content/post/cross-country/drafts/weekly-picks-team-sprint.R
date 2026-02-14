@@ -1792,6 +1792,21 @@ save_fantasy_results <- function(fantasy_team, race_date, output_dir = NULL) {
   fantasy_df <- fantasy_df %>%
     arrange(Gender, desc(Expected_Points))
 
+  # Rename columns to user-friendly format
+  fantasy_df <- fantasy_df %>%
+    rename(
+      "Team" = Team_Name,
+      "Expected Points" = Expected_Points
+    )
+  # Rename Member columns to Leg columns (team sprint has 2 legs)
+  for (i in 1:2) {
+    old_name <- paste0("Member_", i)
+    new_name <- paste0("Leg ", i)
+    if (old_name %in% names(fantasy_df)) {
+      fantasy_df <- fantasy_df %>% rename(!!new_name := !!old_name)
+    }
+  }
+
   # Save fantasy team results
   fantasy_file <- file.path(output_dir, "fantasy_team_sprint_team.xlsx")
   write.xlsx(list(
@@ -2035,9 +2050,12 @@ run_team_sprint_predictions <- function() {
       )
   }
   
-  # Run the optimization
-  fantasy_team <- optimize_fantasy_team(combined_teams)
-  
+  # OLD METHOD: Knapsack optimization (commented out)
+  # fantasy_team <- optimize_fantasy_team(combined_teams)
+
+  # NEW METHOD: Simply pass all teams - save_fantasy_results will take top 20 men + top 20 ladies
+  fantasy_team <- list(team = combined_teams)
+
   # Save results
   men_files <- save_prediction_results(men_team_predictions, race_info$race_date, "men")
   ladies_files <- save_prediction_results(ladies_team_predictions, race_info$race_date, "ladies")

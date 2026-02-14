@@ -1,12 +1,12 @@
 {
   "sheet_name": "Sheet 1",
   "headers": [
-    "Team_Name",
-    "Member_1",
-    "Member_2",
-    "Member_3",
-    "Member_4",
-    "Expected_Points"
+    "Team",
+    "Leg 1",
+    "Leg 2",
+    "Leg 3",
+    "Leg 4",
+    "Expected Points"
   ],
   "rows": [
     [
@@ -15,7 +15,7 @@
       "Ebba Andersson",
       "Frida Karlsson",
       "Jonna Sundling",
-      156.68104712234
+      156.311394593207
     ],
     [
       "NORWAY I",
@@ -23,7 +23,7 @@
       "Astrid Øyre Slind",
       "Karoline Simpson-Larsen",
       "Heidi Weng",
-      149.941757820692
+      149.417503833678
     ],
     [
       "FINLAND I",
@@ -31,7 +31,7 @@
       "Kerttu Niskanen",
       "Vilma Ryytty",
       "Jasmi Joensuu",
-      138.774011313962
+      138.40428583898
     ],
     [
       "GERMANY I",
@@ -39,7 +39,7 @@
       "Katharina Hennig Dotzler",
       "Helen Hoffmann",
       "Pia Fink",
-      127.599657963129
+      127.519744338461
     ],
     [
       "UNITED STATES OF AMERICA I",
@@ -47,7 +47,7 @@
       "Rosie Brennan",
       "Novie McCabe",
       "Jessie Diggins",
-      123.749252038267
+      122.949288788706
     ],
     [
       "SWITZERLAND I",
@@ -55,7 +55,7 @@
       "Nadja Kälin",
       "Marina Kälin",
       "Nadine Fähndrich",
-      99.4338417380734
+      99.3960995364293
     ],
     [
       "ITALY I",
@@ -63,7 +63,7 @@
       "Caterina Ganz",
       "Martina di Centa",
       "Federica Cassol",
-      91.4424614005434
+      91.3528586759481
     ],
     [
       "FRANCE I",
@@ -71,7 +71,7 @@
       "Cloe Pagnier",
       "Leonie Perry",
       "Delphine Claudel",
-      65.0653487423615
+      64.7624629776482
     ],
     [
       "POLAND I",
@@ -79,7 +79,7 @@
       "Eliza Rucka-Michalek",
       "Aleksandra Kolodziej",
       "Izabela Marcisz",
-      59.2194745063947
+      59.1714985477978
     ],
     [
       "CANADA I",
@@ -87,7 +87,7 @@
       "Jasmine Drolet",
       "Liliane Gagnon",
       "Sonjaa Schmidt",
-      53.7022900588708
+      53.5615236572049
     ],
     [
       "CZECH REPUBLIC I",
@@ -95,7 +95,7 @@
       "Sandra Schützova",
       "Anna Milerska",
       "Anna Marie Jaklova",
-      47.2900843723548
+      47.1687202020138
     ],
     [
       "AUSTRIA I",
@@ -103,7 +103,7 @@
       "Heidi Bucher",
       "Katharina Brudermann",
       "Lisa Achleitner",
-      42.0514226900433
+      42.090189015189
     ],
     [
       "SLOVENIA I",
@@ -111,7 +111,7 @@
       "Neza Zerjav",
       "Tia Janezic",
       "Lucija Medja",
-      34.8676549385624
+      34.9226336023169
     ],
     [
       "LATVIA I",
@@ -119,7 +119,7 @@
       "Kitija Auzina",
       "Linda Kaparkaleja",
       "Samanta Krampe",
-      27.3397170719989
+      27.5781525009443
     ],
     [
       "ESTONIA I",
@@ -127,7 +127,7 @@
       "Keidy Kaasiku",
       "Mariel Merlii Pulles",
       "Teesi Tuul",
-      24.8180235863202
+      25.0247420977061
     ],
     [
       "AUSTRALIA I",
@@ -135,7 +135,7 @@
       "Phoebe Cridland",
       "Rosie Fordham",
       "Maddi Hooker",
-      9.50606395847302
+      9.59725977521107
     ],
     [
       "KAZAKHSTAN I",
@@ -143,7 +143,7 @@
       "Anna Melnik",
       "Nadezhda Stepashkina",
       "Darya Ryazhko",
-      6.16293807225298
+      6.20289002143386
     ],
     [
       "PEOPLES REPUBLIC OF CHINA I",
@@ -151,7 +151,7 @@
       "Chunxue Chi",
       "Kaile He",
       "Yundi Wang",
-      4.57787560708027
+      4.55628441150666
     ],
     [
       "UKRAINE I",
@@ -159,7 +159,7 @@
       "Daryna Myhal",
       "Sofiia Shkatula",
       "Yelizaveta Nopriienko",
-      2.81305847321245
+      2.83335394839531
     ]
   ]
 }
