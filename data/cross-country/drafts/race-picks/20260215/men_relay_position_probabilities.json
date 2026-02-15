@@ -1,0 +1,126 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Team",
+    "Leg 1",
+    "Leg 2",
+    "Leg 3",
+    "Leg 4",
+    "Win",
+    "Podium",
+    "Top 5",
+    "Top 10"
+  ],
+  "rows": [
+    [
+      "NORWAY I",
+      "Emil Iversen",
+      "Martin Løwstrøm Nyenget",
+      "Einar Hedegart",
+      "Johannes Høsflot Klæbo",
+      0.698221582887586,
+      1.0,
+      1.0,
+      1
+    ],
+    [
+      "ITALY I",
+      "Davide Graz",
+      "Elia Barp",
+      "Martino Carollo",
+      "Federico Pellegrino",
+      0.117135561206261,
+      0.555146736040343,
+      0.742820047659732,
+      1
+    ],
+    [
+      "FRANCE I",
+      "Theo Schely",
+      "Hugo Lapalus",
+      "Mathis Desloges",
+      "Victor Lovera",
+      0.0553094170230907,
+      0.446916730216791,
+      0.806490101987596,
+      1
+    ],
+    [
+      "FINLAND I",
+      "Lauri Vuorinen",
+      "Iivo Niskanen",
+      "Arsi Ruuskanen",
+      "Niko Anttola",
+      0.0537325934979798,
+      0.288706909457192,
+      0.658051319741225,
+      1
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "Ben Ogden",
+      "Gus Schumacher",
+      "Johnny Hagenbuch",
+      "Zak Ketterson",
+      0.017984292169019,
+      0.19367653288044,
+      0.441365255089851,
+      1
+    ],
+    [
+      "SWEDEN I",
+      "Johan Häggström",
+      "Calle Halfvarsson",
+      "William Poromaa",
+      "Edvin Anger",
+      0.0380104670406746,
+      0.142564589580033,
+      0.419453318056876,
+      1
+    ],
+    [
+      "GERMANY I",
+      "Janosch Brugger",
+      "Friedrich Moch",
+      "Florian Notz",
+      "Jan Stölben",
+      0.00524209363678911,
+      0.112672751224952,
+      0.311851044336982,
+      1
+    ],
+    [
+      "CANADA I",
+      "Xavier McKeever",
+      "Antoine Cyr",
+      "Remi Drolet",
+      "Thomas Stephen",
+      0.00511635663564623,
+      0.104161175859233,
+      0.243141609195304,
+      1
+    ],
+    [
+      "SWITZERLAND I",
+      "Valerio Grond",
+      "Nicola Wigger",
+      "Beda Klee",
+      "Janik Riebli",
+      0.00440174706325093,
+      0.0810752484549403,
+      0.206151786503526,
+      1
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Jiri Tuz",
+      "Michal Novak",
+      "Matyas Bauer",
+      "Mike Ophoff",
+      0.00484588883970289,
+      0.0750793262860765,
+      0.170675517428907,
+      1
+    ]
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Team",
+    "Leg 1",
+    "Leg 2",
+    "Leg 3",
+    "Leg 4",
+    "Expected Points"
+  ],
+  "rows": [
+    [
+      "NORWAY I",
+      "Emil Iversen",
+      "Martin Løwstrøm Nyenget",
+      "Einar Hedegart",
+      "Johannes Høsflot Klæbo",
+      167.02995176686
+    ],
+    [
+      "ITALY I",
+      "Davide Graz",
+      "Elia Barp",
+      "Martino Carollo",
+      "Federico Pellegrino",
+      98.5150367090982
+    ],
+    [
+      "FRANCE I",
+      "Theo Schely",
+      "Hugo Lapalus",
+      "Mathis Desloges",
+      "Victor Lovera",
+      95.4716590323821
+    ],
+    [
+      "FINLAND I",
+      "Lauri Vuorinen",
+      "Iivo Niskanen",
+      "Arsi Ruuskanen",
+      "Niko Anttola",
+      84.5255104527471
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "Ben Ogden",
+      "Gus Schumacher",
+      "Johnny Hagenbuch",
+      "Zak Ketterson",
+      71.828161142315
+    ],
+    [
+      "SWEDEN I",
+      "Johan Häggström",
+      "Calle Halfvarsson",
+      "William Poromaa",
+      "Edvin Anger",
+      68.6940043117926
+    ],
+    [
+      "GERMANY I",
+      "Janosch Brugger",
+      "Friedrich Moch",
+      "Florian Notz",
+      "Jan Stölben",
+      59.6719203248785
+    ],
+    [
+      "CANADA I",
+      "Xavier McKeever",
+      "Antoine Cyr",
+      "Remi Drolet",
+      "Thomas Stephen",
+      54.6010162098239
+    ],
+    [
+      "SWITZERLAND I",
+      "Valerio Grond",
+      "Nicola Wigger",
+      "Beda Klee",
+      "Janik Riebli",
+      48.3811463371157
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Jiri Tuz",
+      "Michal Novak",
+      "Matyas Bauer",
+      "Mike Ophoff",
+      45.3526010532811
+    ]
+  ]
+}
