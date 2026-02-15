@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Podium",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Podium%"
+  ],
+  "rows": [
+    [
+      "Federica Brignone",
+      "ITA",
+      48.0657934815717
+    ],
+    [
+      "Camille Rast",
+      "SUI",
+      44.4106000609199
+    ],
+    [
+      "Sara Hector",
+      "SWE",
+      40.2985074626866
+    ],
+    [
+      "Mikaela Shiffrin",
+      "USA",
+      39.5674687785562
+    ],
+    [
+      "Julia Scheib",
+      "AUT",
+      32.3484617727688
+    ]
+  ]
+}

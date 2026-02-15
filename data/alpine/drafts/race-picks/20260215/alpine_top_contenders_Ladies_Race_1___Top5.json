@@ -1,0 +1,35 @@
+{
+  "sheet_name": "Ladies Race 1 - Top5",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Top5%"
+  ],
+  "rows": [
+    [
+      "Federica Brignone",
+      "ITA",
+      60.5841849930181
+    ],
+    [
+      "Mikaela Shiffrin",
+      "USA",
+      58.7132028094102
+    ],
+    [
+      "Camille Rast",
+      "SUI",
+      57.0204094051935
+    ],
+    [
+      "Sara Hector",
+      "SWE",
+      53.2784450379777
+    ],
+    [
+      "Julia Scheib",
+      "AUT",
+      49.6255750604575
+    ]
+  ]
+}
