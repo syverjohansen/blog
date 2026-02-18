@@ -1,0 +1,239 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Team",
+    "Leg 1",
+    "Leg 2",
+    "Win",
+    "Podium",
+    "Top 5",
+    "Top 10"
+  ],
+  "rows": [
+    [
+      "SWEDEN I",
+      "Jonna Sundling",
+      "Maja Dahlqvist",
+      0.347112012241266,
+      0.895025082197437,
+      1.0,
+      1.0
+    ],
+    [
+      "UNITED STATES OF AMERICA I",
+      "Jessie Diggins",
+      "Julia Kern",
+      0.00103541308465534,
+      0.516733711147194,
+      0.68633713632719,
+      1.0
+    ],
+    [
+      "GERMANY I",
+      "Laura Gimmler",
+      "Coletta Rydzek",
+      0.328377645536258,
+      0.450281969669317,
+      0.870470651411421,
+      1.0
+    ],
+    [
+      "NORWAY I",
+      "Astrid Øyre Slind",
+      "Julie Bjervig Drivenes",
+      0.0,
+      0.388232508852105,
+      0.480917064016133,
+      1.0
+    ],
+    [
+      "FINLAND I",
+      "Jasmi Joensuu",
+      "Jasmin Kähärä",
+      0.322835949587849,
+      0.376949248004189,
+      0.619216317584525,
+      1.0
+    ],
+    [
+      "SWITZERLAND I",
+      "Nadja Kälin",
+      "Nadine Fähndrich",
+      0.0,
+      0.112794877921156,
+      0.412392837071885,
+      0.992714841362336
+    ],
+    [
+      "CZECH REPUBLIC I",
+      "Sandra Schützova",
+      "Katerina Janatova",
+      6.25592044636726e-06,
+      0.0661622969710773,
+      0.196148470364205,
+      0.574925332496026
+    ],
+    [
+      "LATVIA I",
+      "Kitija Auzina",
+      "Patricijia Eiduka",
+      0.000632723629525536,
+      0.0459666208764827,
+      0.140837628582898,
+      0.448466141842366
+    ],
+    [
+      "ITALY I",
+      "Caterina Ganz",
+      "Iris De Martin Pinter",
+      0.0,
+      0.0411391944523471,
+      0.209767269523843,
+      0.933773678243491
+    ],
+    [
+      "FRANCE I",
+      "Leonie Perry",
+      "Melissa Gal",
+      0.0,
+      0.0346344137959224,
+      0.0601941951914416,
+      0.433673715207308
+    ],
+    [
+      "CANADA I",
+      "Alison Mackie",
+      "Liliane Gagnon",
+      0.0,
+      0.0319814563494454,
+      0.0812387925232093,
+      0.408421048964956
+    ],
+    [
+      "AUSTRALIA I",
+      "Phoebe Cridland",
+      "Rosie Fordham",
+      0.0,
+      0.0083035262604848,
+      0.0296010936613152,
+      0.0676668674013074
+    ],
+    [
+      "AUSTRIA I",
+      "Heidi Bucher",
+      "Magdalena Scherz",
+      0.0,
+      0.0064541235715975,
+      0.0468975296790348,
+      0.414553649256523
+    ],
+    [
+      "ESTONIA I",
+      "Mariel Merlii Pulles",
+      "Keidy Kaasiku",
+      0.0,
+      0.00520887637937013,
+      0.0368387896331334,
+      0.141671315772393
+    ],
+    [
+      "POLAND I",
+      "Izabela Marcisz",
+      "Monika Skinder",
+      0.0,
+      0.00461672098893741,
+      0.0328635956735178,
+      0.275076409884677
+    ],
+    [
+      "SLOVENIA I",
+      "Lucija Medja",
+      "Anja Mandeljc",
+      0.0,
+      0.00304941091844764,
+      0.019101880572249,
+      0.0684969959628254
+    ],
+    [
+      "GREECE I",
+      "Konstantina Charalampidou",
+      "Nefeli Tita",
+      0.0,
+      0.00220255783557834,
+      0.0186502096968597,
+      0.072647484306561
+    ],
+    [
+      "BRAZIL I",
+      "Eduarda Ribera",
+      "Bruna Moura",
+      0.0,
+      0.00180263920107849,
+      0.00632218724480755,
+      0.0228175396225956
+    ],
+    [
+      "LITHUANIA I",
+      "Egle Savickaite",
+      "Ieva Dainyte",
+      0.0,
+      0.00171481900715761,
+      0.00909093359829223,
+      0.0243018401758151
+    ],
+    [
+      "CROATIA I",
+      "Tena Hadzic",
+      "Ema Sobol",
+      0.0,
+      0.00164569390531152,
+      0.0115779268780245,
+      0.0403027656962549
+    ],
+    [
+      "PEOPLES REPUBLIC OF CHINA I",
+      "Dinigeer Yilamujiang",
+      "Chunxue Chi",
+      0.0,
+      0.00138833512929567,
+      0.00898215012877077,
+      0.0253472680526364
+    ],
+    [
+      "ARGENTINA I",
+      "Nahiara Diaz Gonzalez",
+      "Agustina Groetzner",
+      0.0,
+      0.00136317315218482,
+      0.00800635683649276,
+      0.0267125914523068
+    ],
+    [
+      "UKRAINE I",
+      "Anastasiia Nikon",
+      "Sofiia Shkatula",
+      0.0,
+      0.000927810186118154,
+      0.00382764440873722,
+      0.00591469920382124
+    ],
+    [
+      "KAZAKHSTAN I",
+      "Darya Ryazhko",
+      "Nadezhda Stepashkina",
+      0.0,
+      0.000887187893616305,
+      0.00699707540209111,
+      0.0149361489826533
+    ],
+    [
+      "KOREA I",
+      "Da-Som Han",
+      "Eui Jin Lee",
+      0.0,
+      0.000533745334148294,
+      0.00372226398992297,
+      0.0075796661131481
+    ]
+  ]
+}
