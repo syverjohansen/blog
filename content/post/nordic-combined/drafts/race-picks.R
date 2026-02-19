@@ -585,12 +585,18 @@ create_team_chronos <- function() {
         # Team rank is the first Place value within each group
         Place = first(Place),
         Points = first(Points),
-        # Calculate average Elo values for the team
+        # Calculate average Elo values for the team (post-race)
         Avg_Elo = mean(Elo, na.rm = TRUE),
         Avg_Individual_Elo = mean(Individual_Elo, na.rm = TRUE),
         Avg_Sprint_Elo = mean(Sprint_Elo, na.rm = TRUE),
         Avg_MassStart_Elo = mean(MassStart_Elo, na.rm = TRUE),
         Avg_IndividualCompact_Elo = mean(IndividualCompact_Elo, na.rm = TRUE),
+        # Calculate average Pelo values for the team (pre-race, used for training)
+        Avg_Pelo = mean(Pelo, na.rm = TRUE),
+        Avg_Individual_Pelo = mean(Individual_Pelo, na.rm = TRUE),
+        Avg_Sprint_Pelo = mean(Sprint_Pelo, na.rm = TRUE),
+        Avg_MassStart_Pelo = mean(MassStart_Pelo, na.rm = TRUE),
+        Avg_IndividualCompact_Pelo = mean(IndividualCompact_Pelo, na.rm = TRUE),
         # Additional metadata
         MassStart = first(MassStart),
         Sex = "M",
@@ -615,12 +621,18 @@ create_team_chronos <- function() {
         # Team rank is the first Place value within each group
         Place = first(Place),
         Points = first(Points),
-        # Calculate average Elo values for the team
+        # Calculate average Elo values for the team (post-race)
         Avg_Elo = mean(Elo, na.rm = TRUE),
         Avg_Individual_Elo = mean(Individual_Elo, na.rm = TRUE),
         Avg_Sprint_Elo = mean(Sprint_Elo, na.rm = TRUE),
         Avg_MassStart_Elo = mean(MassStart_Elo, na.rm = TRUE),
         Avg_IndividualCompact_Elo = mean(IndividualCompact_Elo, na.rm = TRUE),
+        # Calculate average Pelo values for the team (pre-race, used for training)
+        Avg_Pelo = mean(Pelo, na.rm = TRUE),
+        Avg_Individual_Pelo = mean(Individual_Pelo, na.rm = TRUE),
+        Avg_Sprint_Pelo = mean(Sprint_Pelo, na.rm = TRUE),
+        Avg_MassStart_Pelo = mean(MassStart_Pelo, na.rm = TRUE),
+        Avg_IndividualCompact_Pelo = mean(IndividualCompact_Pelo, na.rm = TRUE),
         # Additional metadata
         MassStart = first(MassStart),
         Sex = "L",
@@ -1140,7 +1152,8 @@ preprocess_data <- function(df, is_team = FALSE) {
         all_of(elo_cols),
         ~{
           max_val <- max(.x, na.rm = TRUE)
-          if (max_val == 0) return(rep(0, length(.x)))
+          # Handle cases where max is 0, -Inf (all NA), or NA - use first quartile (0.25) as default
+          if (is.na(max_val) || is.infinite(max_val) || max_val == 0) return(rep(0.25, length(.x)))
           .x / max_val
         },
         .names = "{.col}_Pct"
@@ -1152,7 +1165,8 @@ preprocess_data <- function(df, is_team = FALSE) {
         all_of(pelo_cols),
         ~{
           max_val <- max(.x, na.rm = TRUE)
-          if (max_val == 0) return(rep(0, length(.x)))
+          # Handle cases where max is 0, -Inf (all NA), or NA - use first quartile (0.25) as default
+          if (is.na(max_val) || is.infinite(max_val) || max_val == 0) return(rep(0.25, length(.x)))
           .x / max_val
         },
         .names = "{.col}_Pct"
@@ -1359,7 +1373,11 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
     result_cols <- c("Nation", elo_cols, race_prob_cols)
     result_df <- startlist %>%
       select(any_of(result_cols))
-    
+
+    # Rename Elo columns to Pelo for prediction (model is trained on Pelo values)
+    result_df <- result_df %>%
+      rename_with(~gsub("_Elo$", "_Pelo", .), ends_with("_Elo"))
+
     # Get recent points from historical data if available
     if("Points" %in% names(race_df)) {
       recent_points <- race_df %>%
@@ -1386,14 +1404,14 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
       result_df$Prev_Points_Weighted <- 0
     }
     
-    # Set default values for missing Elo columns
-    for(col in elo_cols) {
+    # Set default values for missing Pelo columns (after rename from Elo)
+    for(col in pelo_cols) {
       if(!col %in% names(result_df)) {
-        log_info(paste("Adding missing Elo column:", col))
+        log_info(paste("Adding missing Pelo column:", col))
         result_df[[col]] <- 0
       }
     }
-    
+
   } else {
     # For individual races
     elo_cols <- c("Sprint_Elo", "Individual_Elo", "MassStart_Elo", "IndividualCompact_Elo", "Elo")
@@ -1420,8 +1438,13 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
     # Combine all data - Elos already in base_df from startlist, just add points
     result_df <- base_df %>%
       left_join(recent_points, by = "Skier")
+
+    # Rename Elo columns to Pelo for prediction (model is trained on Pelo values)
+    result_df <- result_df %>%
+      rename_with(~gsub("_Elo$", "_Pelo", .), ends_with("_Elo")) %>%
+      rename_with(~gsub("^Elo$", "Pelo", .), matches("^Elo$"))
   }
-  
+
   # For both team and individual: create Pelo percentage columns
   # Ensure we have all the required Pelo_Pct columns for model prediction
   if(is_team) {
@@ -1434,33 +1457,38 @@ prepare_startlist_data <- function(startlist, race_df, elo_col, is_team = FALSE)
   
   for(i in seq_along(pelo_cols)) {
     pelo_pct_col <- paste0(pelo_cols[i], "_Pct")
-    
-    # First check if we have the corresponding Elo column to map from
+    pelo_col <- pelo_cols[i]
     elo_col <- elo_cols[i]
-    if(elo_col %in% names(result_df)) {
-      # If we have race_df with this column, get max values for normalization
-      if(elo_col %in% names(race_df)) {
-        max_val <- max(race_df[[elo_col]], na.rm = TRUE)
-        if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Calculating", pelo_pct_col, "from", elo_col))
-          result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+
+    # For teams, result_df has Pelo columns (renamed from Elo in startlist)
+    # For individuals, result_df has Elo columns
+    # Check which column exists in result_df
+    source_col <- if(pelo_col %in% names(result_df)) pelo_col else if(elo_col %in% names(result_df)) elo_col else NULL
+
+    if(!is.null(source_col)) {
+      # Get max value from race_df for normalization (race_df always has Pelo columns)
+      if(pelo_col %in% names(race_df)) {
+        max_val <- max(race_df[[pelo_col]], na.rm = TRUE)
+        if(!is.na(max_val) && !is.infinite(max_val) && max_val > 0) {
+          log_info(paste("Calculating", pelo_pct_col, "from", source_col))
+          result_df[[pelo_pct_col]] <- result_df[[source_col]] / max_val
         } else {
           log_info(paste("Using default value for", pelo_pct_col, "(max value issue)"))
           result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
         }
       } else {
         # If not available in race_df, normalize within the current dataset
-        max_val <- max(result_df[[elo_col]], na.rm = TRUE)
-        if(!is.na(max_val) && max_val > 0) {
-          log_info(paste("Calculating", pelo_pct_col, "from", elo_col, "(internal max)"))
-          result_df[[pelo_pct_col]] <- result_df[[elo_col]] / max_val
+        max_val <- max(result_df[[source_col]], na.rm = TRUE)
+        if(!is.na(max_val) && !is.infinite(max_val) && max_val > 0) {
+          log_info(paste("Calculating", pelo_pct_col, "from", source_col, "(internal max)"))
+          result_df[[pelo_pct_col]] <- result_df[[source_col]] / max_val
         } else {
           log_info(paste("Using default value for", pelo_pct_col, "(internal max issue)"))
           result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
         }
       }
     } else if(!pelo_pct_col %in% names(result_df)) {
-      # If we don't have the Elo column and the PCT doesn't exist yet
+      # If we don't have either column and the PCT doesn't exist yet
       log_info(paste("Creating missing Pelo Pct column:", pelo_pct_col))
       result_df[[pelo_pct_col]] <- replace_na_with_quartile(rep(NA, nrow(result_df)))
     }
