@@ -260,9 +260,13 @@ calculate_race_probabilities <- function() {
     # Check if we have biathlon startlist (at least one skier has In_Startlist=True)
     has_biathlonworld_startlist <- FALSE
     if("In_Startlist" %in% names(startlist)) {
+      # Convert character "True"/"False" to logical if needed
+      if(is.character(startlist$In_Startlist)) {
+        startlist$In_Startlist <- tolower(startlist$In_Startlist) == "true"
+      }
       has_biathlonworld_startlist <- any(startlist$In_Startlist, na.rm = TRUE)
     }
-    
+
     # Handle Race1_Prob based on biathlon startlist existence
     if(has_biathlonworld_startlist) {
       log_info("Biathlon startlist exists (at least one In_Startlist=True), keeping existing Race1_Prob values")
@@ -1151,12 +1155,13 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     }
     
     # Apply monotonic adjustment: each probability should be >= previous one
+    # Skip NA values to avoid comparison errors
     for(j in 2:length(probs)) {
-      if(probs[j] < probs[j-1]) {
+      if(!is.na(probs[j]) && !is.na(probs[j-1]) && probs[j] < probs[j-1]) {
         probs[j] <- probs[j-1]  # Set to previous value
       }
     }
-    
+
     # Update the normalized dataframe
     for(j in 1:length(prob_cols)) {
       normalized[[prob_cols[j]]][i] <- probs[j]
@@ -1198,8 +1203,9 @@ normalize_position_probabilities <- function(predictions, race_prob_col, positio
     }
 
     # Apply monotonic adjustment: each probability should be >= previous one
+    # Skip NA values to avoid comparison errors
     for(j in 2:length(probs)) {
-      if(probs[j] < probs[j-1]) {
+      if(!is.na(probs[j]) && !is.na(probs[j-1]) && probs[j] < probs[j-1]) {
         probs[j] <- probs[j-1]  # Set to previous value
       }
     }
