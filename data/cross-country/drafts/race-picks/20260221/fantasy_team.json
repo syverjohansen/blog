@@ -1,0 +1,333 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      17493,
+      90.0098977722695
+    ],
+    [
+      "Astrid Øyre Slind",
+      115,
+      "L",
+      "Norway",
+      3542,
+      85.7382519944666
+    ],
+    [
+      "Teresa Stadlober",
+      529,
+      "L",
+      "Austria",
+      6709,
+      85.320274809016
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "L",
+      "Sweden",
+      12793,
+      83.4815650800205
+    ],
+    [
+      "Heidi Weng",
+      60,
+      "L",
+      "Norway",
+      9139,
+      80.1164223259427
+    ],
+    [
+      "Frida Karlsson",
+      3998,
+      "L",
+      "Sweden",
+      6379,
+      79.4142582871959
+    ],
+    [
+      "Jonna Sundling",
+      1486,
+      "L",
+      "Sweden",
+      13380,
+      78.1420454571925
+    ],
+    [
+      "Ebba Andersson",
+      1789,
+      "L",
+      "Sweden",
+      8493,
+      77.9588558093607
+    ],
+    [
+      "Kerttu Niskanen",
+      37,
+      "L",
+      "Finland",
+      5377,
+      76.1194188606852
+    ],
+    [
+      "Katharina Hennig Dotzler",
+      1618,
+      "L",
+      "Germany",
+      2209,
+      72.1687600892888
+    ],
+    [
+      "Johanna Matintalo",
+      1761,
+      "L",
+      "Finland",
+      3721,
+      72.0239536681682
+    ],
+    [
+      "Jasmi Joensuu",
+      1675,
+      "L",
+      "Finland",
+      6626,
+      64.4862309458949
+    ],
+    [
+      "Linn Svahn",
+      3190,
+      "L",
+      "Sweden",
+      3088,
+      62.8908145097511
+    ],
+    [
+      "Emma Ribom",
+      1844,
+      "L",
+      "Sweden",
+      4606,
+      59.7340955611339
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      "L",
+      "Sweden",
+      10229,
+      58.6215978587151
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      2300,
+      "L",
+      "Norway",
+      3306,
+      57.553564890399
+    ],
+    [
+      "Pia Fink",
+      4004,
+      "L",
+      "Germany",
+      3256,
+      55.8566880563801
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      5956,
+      54.2872571015831
+    ],
+    [
+      "Julie Bjervig Drivenes",
+      3357,
+      "L",
+      "Norway",
+      3728,
+      51.4888927049954
+    ],
+    [
+      "Dariya Nepryaeva",
+      6555,
+      "L",
+      "Russia",
+      1463,
+      50.3751731129528
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      18045,
+      90.3789728363145
+    ],
+    [
+      "Martin Løwstrøm Nyenget",
+      2295,
+      "M",
+      "Norway",
+      6811,
+      81.0717941396852
+    ],
+    [
+      "Iivo Niskanen",
+      1470,
+      "M",
+      "Finland",
+      5410,
+      76.305394097712
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "M",
+      "Norway",
+      10196,
+      74.6228380093723
+    ],
+    [
+      "Emil Iversen",
+      1467,
+      "M",
+      "Norway",
+      5366,
+      67.6733513938522
+    ],
+    [
+      "Elia Barp",
+      14042,
+      "M",
+      "Italy",
+      4586,
+      60.429220098097
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "M",
+      "Italy",
+      11210,
+      60.0401281185934
+    ],
+    [
+      "Saveliy Korostelev",
+      13188,
+      "M",
+      "Russia",
+      2594,
+      54.5587361644989
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "M",
+      "France",
+      4553,
+      51.7459662828793
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      "M",
+      "USA",
+      6574,
+      48.9539534495096
+    ],
+    [
+      "Arsi Ruuskanen",
+      8120,
+      "M",
+      "Finland",
+      789,
+      46.4278978279265
+    ],
+    [
+      "Mathis Desloges",
+      12767,
+      "M",
+      "France",
+      1688,
+      45.0029592838667
+    ],
+    [
+      "Andrew Musgrave",
+      277,
+      "M",
+      "Great Britain",
+      1306,
+      40.7557612041159
+    ],
+    [
+      "Theo Schely",
+      12166,
+      "M",
+      "France",
+      212,
+      40.2034058447402
+    ],
+    [
+      "Antoine Cyr",
+      9225,
+      "M",
+      "Canada",
+      937,
+      37.7584659941724
+    ],
+    [
+      "Calle Halfvarsson",
+      73,
+      "M",
+      "Sweden",
+      497,
+      35.8188492209207
+    ],
+    [
+      "Ristomatti Hakola",
+      2553,
+      "M",
+      "Finland",
+      605,
+      32.7138353709652
+    ],
+    [
+      "Michal Novak",
+      3655,
+      "M",
+      "Czechia",
+      859,
+      29.7299169644664
+    ],
+    [
+      "Lauri Vuorinen",
+      2874,
+      "M",
+      "Finland",
+      2190,
+      28.2528936495718
+    ],
+    [
+      "Ben Ogden",
+      9179,
+      "M",
+      "USA",
+      4225,
+      28.2273363817501
+    ]
+  ]
+}
