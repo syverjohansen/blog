@@ -126,11 +126,11 @@ def process_rankings(gender='M'):
                     'Skier': latest_record['Skier'],
                     'Nation': latest_record['Nation'],
                     'ID': latest_record['ID'],
-                    'Olympics': float(skier_data[skier_data['Event'] == 'Olympic Winter Games']['Points'].sum()),
+                    'Olympics': float(skier_data[skier_data['Event'].str.lower().str.contains('olympic', na=False)]['Points'].sum()),
                     'WSC': float(skier_data[skier_data['Event'] == 'World Championship']['Points'].sum()),
                     'WC': float(skier_data[
-                        (skier_data['Event'] != 'Olympic Winter Games') & 
-                        (skier_data['Event'] != 'World Championship') & 
+                        (~skier_data['Event'].str.lower().str.contains('olympic', na=False)) &
+                        (skier_data['Event'] != 'World Championship') &
                         (skier_data['Event'] != 'Standings')
                     ]['Points'].sum()),
                     'Table': float(skier_data[skier_data['Event'] == 'Standings']['Points'].sum()),

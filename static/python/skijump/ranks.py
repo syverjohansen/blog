@@ -134,7 +134,7 @@ def process_rankings(gender='M'):
                     'Skier': latest_record['Skier'],
                     'Nation': latest_record['Nation'],
                     'ID': latest_record['ID'],
-                    'Olympics': float(skier_data[skier_data['Event'] == 'Olympic Winter Games']['Points'].sum()),
+                    'Olympics': float(skier_data[skier_data['Event'].str.lower().str.contains('olympic', na=False)]['Points'].sum()),
                     'WSC': float(skier_data[skier_data['Event'] == 'World Championship']['Points'].sum()),
                     '4 Hills': float(skier_data[skier_data['City'] == '4 Hill Tournament']['Points'].sum()),
                     'Ski Flying WC': float(skier_data[skier_data['Event'] == 'Ski Flying World Championship']['Points'].sum()),
