@@ -39,7 +39,7 @@ def calculate_points(row):
     race_type = 'individual'
     
     # Determine event type
-    if event == "Olympic Winter Games":
+    if "olympic" in event.lower():
         event_type = 'Olympic Winter Games'
     elif event == "WSC":
         event_type = 'WSC'
