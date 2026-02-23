@@ -1,0 +1,47 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      1,
+      1539,
+      701
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      2,
+      1158,
+      320
+    ],
+    [
+      "Mattis Stenshagen",
+      5165,
+      3,
+      1008,
+      170
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      4,
+      892,
+      54
+    ],
+    [
+      "Lars Heggen",
+      19104,
+      5,
+      843,
+      5
+    ]
+  ]
+}
