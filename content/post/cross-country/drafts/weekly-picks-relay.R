@@ -28,6 +28,9 @@ log_appender(appender_file(log_file))
 log_threshold(INFO)
 log_info("Starting relay predictions process")
 
+# ===== TEST MODE =====
+# Set to TRUE to use test_weekends.csv for EDA/sandbox testing
+TEST_MODE <- FALSE
 
 ## Step 1: Load Data and Find Tomorrow's Races
 
@@ -43,9 +46,14 @@ get_tomorrow_date <- function() {
 # Function to load weekends.csv and find races for tomorrow
 load_upcoming_races <- function() {
   log_info("Loading weekend race data")
-  
+
   # Read in the race schedule
-  weekends_path <- "~/ski/elo/python/ski/polars/excel365/weekends.csv"
+  weekends_path <- if(TEST_MODE) {
+    "~/ski/elo/python/ski/polars/excel365/test_weekends.csv"
+  } else {
+    "~/ski/elo/python/ski/polars/excel365/weekends.csv"
+  }
+  log_info(paste("Reading weekends from:", weekends_path))
   weekends <- read.csv(weekends_path, stringsAsFactors = FALSE) %>%
     mutate(Date = mdy(Date))
   

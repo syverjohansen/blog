@@ -19,8 +19,12 @@ log_appender(appender_file(log_file))
 log_threshold(INFO)
 log_info("Starting mixed relay race day predictions process")
 
+# ===== TEST MODE =====
+# Set to TRUE to use test_races.csv for EDA/sandbox testing
+TEST_MODE <- FALSE
+
 # Define points system
-relay_points <- c(200, 160, 120, 100, 90, 80, 72, 64, 58, 52, 48, 44, 40, 36, 
+relay_points <- c(200, 160, 120, 100, 90, 80, 72, 64, 58, 52, 48, 44, 40, 36,
                   32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2)
 
 # Function to find today's date
@@ -41,9 +45,14 @@ replace_na_with_quartile <- function(x) {
 # Function to load races.csv and find mixed relay races for today
 load_today_mixed_relay_races <- function() {
   log_info("Loading race data for today")
-  
+
   # Read in the race schedule
-  races_path <- "~/ski/elo/python/ski/polars/excel365/races.csv"
+  races_path <- if(TEST_MODE) {
+    "~/ski/elo/python/ski/polars/excel365/test_races.csv"
+  } else {
+    "~/ski/elo/python/ski/polars/excel365/races.csv"
+  }
+  log_info(paste("Reading races from:", races_path))
   races <- read.csv(races_path, stringsAsFactors = FALSE) %>%
     mutate(Date = mdy(Date))
   

@@ -10,6 +10,10 @@ library(purrr)
 library(lubridate) # For better date handling
 library(slider)    # For sliding window operations
 
+# ===== TEST MODE =====
+# Set to TRUE to use test_weekends.csv for EDA/sandbox testing
+TEST_MODE <- FALSE
+
 # Define points systems
 regular_points <- c(90,75,65,55,50,45,41,37,34,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
 mass_start_points <- c(90,75,65,55,50,45,41,37,34,31,30,29,28,27,26,25,24,23,22,21,20,18,16,14,12,10,8,6,4,2)
@@ -32,9 +36,13 @@ log_appender(appender_file(file.path(log_dir, "weekly_picks_processing.log")))
 log_info("Starting biathlon weekly predictions process")
 
 # Read in the race schedule from weekends.csv with proper date parsing
-log_info("Reading weekends data")
-weekends <- read.csv("~/ski/elo/python/biathlon/polars/excel365/weekends.csv", 
-                     stringsAsFactors = FALSE) %>%
+weekends_file <- if(TEST_MODE) {
+  "~/ski/elo/python/biathlon/polars/excel365/test_weekends.csv"
+} else {
+  "~/ski/elo/python/biathlon/polars/excel365/weekends.csv"
+}
+log_info(paste("Reading weekends from:", weekends_file))
+weekends <- read.csv(weekends_file, stringsAsFactors = FALSE) %>%
   mutate(Date = as.Date(Date, format="%m/%d/%Y")) # Parse date in month/day/year format with 4-digit year
 
 # Find the next race weekend after today

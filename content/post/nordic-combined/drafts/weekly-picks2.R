@@ -10,6 +10,10 @@ library(purrr)
 library(lubridate) # For better date handling
 library(slider)    # For sliding window operations
 
+# ===== TEST MODE =====
+# Set to TRUE to use test_weekends.csv for EDA/sandbox testing
+TEST_MODE <- FALSE
+
 # Define points systems for Nordic Combined
 # Individual: Top 50 get points
 individual_points <- c(100, 90, 80, 70, 60, 55, 52, 49, 46, 43, 40, 38, 36, 34, 32, 30, 28, 26, 24, 22, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
@@ -36,9 +40,13 @@ log_appender(appender_file(file.path(log_dir, "weekly_picks_processing.log")))
 log_info("Starting Nordic Combined weekly predictions process")
 
 # Read in the race schedule from weekends.csv with proper date parsing
-log_info("Reading weekends data")
-weekends <- read.csv("~/ski/elo/python/nordic-combined/polars/excel365/weekends.csv", 
-                     stringsAsFactors = FALSE) %>%
+weekends_file <- if(TEST_MODE) {
+  "~/ski/elo/python/nordic-combined/polars/excel365/test_weekends.csv"
+} else {
+  "~/ski/elo/python/nordic-combined/polars/excel365/weekends.csv"
+}
+log_info(paste("Reading weekends from:", weekends_file))
+weekends <- read.csv(weekends_file, stringsAsFactors = FALSE) %>%
   mutate(Date = as.Date(Date, format="%m/%d/%Y"))
 
 # Find the next race weekend after today

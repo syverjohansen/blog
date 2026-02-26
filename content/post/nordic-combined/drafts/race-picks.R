@@ -11,6 +11,10 @@ library(lubridate) # For better date handling
 library(slider)    # For sliding window operations
 library(stringr)   # For string manipulation functions like str_replace
 
+# ===== TEST MODE =====
+# Set to TRUE to use test_races.csv for EDA/sandbox testing
+TEST_MODE <- FALSE
+
 # Define points systems for Nordic Combined
 # Individual: Top 50 get points
 individual_points <- c(100, 90, 80, 70, 60, 55, 52, 49, 46, 43, 40, 38, 36, 34, 32, 30, 28, 26, 24, 22, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
@@ -40,8 +44,13 @@ log_info("Starting Nordic Combined race predictions process")
 # Fix for race-picks.R to only process today's races
 
 # First, read in all races
-races <- read.csv("~/ski/elo/python/nordic-combined/polars/excel365/races.csv", 
-                  stringsAsFactors = FALSE)
+races_file <- if(TEST_MODE) {
+  "~/ski/elo/python/nordic-combined/polars/excel365/test_races.csv"
+} else {
+  "~/ski/elo/python/nordic-combined/polars/excel365/races.csv"
+}
+races <- read.csv(races_file, stringsAsFactors = FALSE)
+log_info(paste("Reading races from:", races_file))
 
 # Get today's date in the right format
 today_date <- format(as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d"), "%m/%d/%Y")

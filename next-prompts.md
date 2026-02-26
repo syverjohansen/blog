@@ -1,30 +1,23 @@
-# 2026 Winter Olympics Championship Predictions
+# Winter Sports Prediction System
 
-## Current Status (2026-02-06)
+## Current Status (2026-02-26)
 
-### Project Overview
-Creating championship prediction blog posts for the 2026 Winter Olympics with:
-- Race-by-race predictions with participation, winning, and podium probabilities
-- Nations breakdown showing athletes and expected medal counts
+**IMPORTANT**: Update this file (`next-prompts.md`) whenever changes are made to the codebase. This ensures session continuity and accurate status tracking.
 
 ### Pipeline
 ```
 Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 ```
 
-**IMPORTANT**: Update this file (`next-prompts.md`) whenever changes are made to the codebase. This ensures session continuity and accurate status tracking.
+### Sport-by-Sport Status
 
----
-
-## Sport-by-Sport Status
-
-| Sport | Production Script | Simulation Script | Status |
-|-------|-------------------|-------------------|--------|
-| Alpine | Ready | N/A | Ready |
-| Biathlon | Ready | N/A | Ready |
-| Cross-Country | Ready | Ready (Hybrid) | Ready |
-| Nordic Combined | Ready | N/A | Ready |
-| Ski Jumping | Ready | N/A | Ready |
+| Sport | champs-predictions | race-picks | Status |
+|-------|-------------------|------------|--------|
+| Alpine | Ready | Ready | Production |
+| Biathlon | Ready | Ready | Production |
+| Cross-Country | Ready (Simulation) | **In Progress** | Converting race-picks to simulation |
+| Nordic Combined | Ready | Ready | Production |
+| Ski Jumping | Ready | Ready | Production |
 
 ---
 
@@ -307,98 +300,133 @@ Not implemented yet - revisit if disk space becomes an issue again.
 
 If starting a new session:
 1. Read this file to understand current status
-2. **Cross-country simulation is now production-ready**
-3. Run `./run_champs_predictions.sh` followed by `./champs_script.sh 2026` to generate predictions
-4. The original `champs-predictions.R` is preserved but no longer used for cross-country
-5. **weekly-picks2.R**: Fantasy output now uses simple top-8 selection (old MIP method commented out)
-6. **weekly-picks2.R**: Race probability uses FIS startlist when available, falls back to In_Config
-7. **Update this file** with any changes made
+2. **Current task**: Creating `race-picks-simulation.R` for cross-country
+3. **Update this file** with any changes made
 
 ---
 
-## FUTURE: Extend Simulation Approach to Other Scripts
+## ACTIVE: Cross-Country race-picks-simulation.R
 
-### Overview
-Apply the Monte Carlo simulation methodology (developed for cross-country champs-predictions-simulation.R) to other prediction scripts across all sports.
+### Goal
+Create a single unified `race-picks-simulation.R` script that:
+1. Uses Monte Carlo simulation (like `champs-predictions-simulation.R`)
+2. Consolidates all race types: individual, relay, team sprint, mixed relay
+3. Replaces the 4 separate scripts (~6,300 lines total) with one unified script
 
-### Scripts to Convert
+### Current Scripts Being Replaced
+| Script | Lines | Purpose |
+|--------|-------|---------|
+| `race-picks.R` | 2,010 | Individual races (distance, sprint) |
+| `race-picks-relay.R` | 1,454 | 4-leg relay |
+| `race-picks-team-sprint.R` | 1,504 | 2-leg team sprint |
+| `race-picks-mixed-relay.R` | 1,387 | 4-leg mixed relay |
 
-#### Championship Predictions (champs-predictions.R)
-| Sport | Location | Status |
-|-------|----------|--------|
-| Alpine | `content/post/alpine/drafts/champs-predictions.R` | Pending |
-| Biathlon | `content/post/biathlon/drafts/champs-predictions.R` | Pending |
-| Cross-Country | `content/post/cross-country/drafts/champs-predictions-simulation.R` | **DONE** |
-| Nordic Combined | `content/post/nordic-combined/drafts/champs-predictions.R` | Pending |
-| Ski Jumping | `content/post/skijump/drafts/champs-predictions.R` | Pending |
+### Reference: champs-predictions-simulation.R (3,543 lines)
+Key sections to replicate:
+- **Lines 23-50**: Configuration (variance control, decay lambda, calibration flags)
+- **Lines 95-150**: `filter_positive_coefficients()` - iterative feature selection
+- **Lines 150-300**: Data loading and preprocessing
+- **Lines 300-500**: `calculate_leg_importance_from_models()` - model deviance approach
+- **Lines 500-800**: `train_points_gam()` - GAM model training with positive coefficients
+- **Lines 800-1200**: `train_relay_leg_models_for_simulation()` - leg-specific models
+- **Lines 1200-1600**: `run_individual_simulation()` - Monte Carlo for individuals
+- **Lines 1600-2000**: `run_relay_simulation_hybrid()` - Monte Carlo for relays
+- **Lines 2000-2500**: Team selection and optimization
+- **Lines 2500-3543**: Excel output formatting
 
-#### Race Picks (Weekly World Cup Predictions)
-| Sport | Script | Location | Status |
-|-------|--------|----------|--------|
-| Cross-Country | race-picks.R | `content/post/cross-country/drafts/` | Pending |
-| Cross-Country | weekly-picks2.R | `content/post/cross-country/drafts/` | Pending |
-| Alpine | race-picks.R (or equivalent) | `content/post/alpine/drafts/` | Pending |
-| Biathlon | race-picks.R (or equivalent) | `content/post/biathlon/drafts/` | Pending |
-| Nordic Combined | race-picks.R (or equivalent) | `content/post/nordic-combined/drafts/` | Pending |
-| Ski Jumping | race-picks.R (or equivalent) | `content/post/skijump/drafts/` | Pending |
+### Key Differences from champs-predictions
+| Aspect | champs-predictions | race-picks |
+|--------|-------------------|------------|
+| Field | Championship entries (known) | World Cup startlists (daily) |
+| Date handling | Fixed championship dates | Today's UTC date |
+| Participation | All entered athletes race | FIS startlist or probability-based |
+| Output | Per-championship Excel | Per-race-day Excel |
+| TEST_MODE | Not needed | Uses `test_races.csv` when enabled |
 
-### Key Features to Implement (per script)
+### Implementation Plan
 
-1. **Monte Carlo Simulation**
-   - Build athlete distributions from GAM predictions + historical variance
-   - Run 10,000 simulations per race
-   - Natural probability normalization (no post-hoc adjustments)
+#### Phase 1: Core Structure
+- [ ] Create `race-picks-simulation.R` with configuration section
+- [ ] Add TEST_MODE support (already in other race-picks scripts)
+- [ ] Load races.csv and filter for today's date
+- [ ] Determine which race types are scheduled today (individual/relay/ts/mixed)
 
-2. **Exponential Decay Weighting**
-   - Apply to prev_points_weighted calculation
-   - Use DECAY_LAMBDA = 0.002 (or sport-specific calibrated value)
-   - Consistent between training and testing
+#### Phase 2: Individual Race Simulation
+- [ ] Port `filter_positive_coefficients()` from champs-predictions-simulation.R
+- [ ] Port `train_points_gam()` with exponential decay weighting
+- [ ] Port `run_individual_simulation()` with variance control parameters
+- [ ] Handle FIS startlist / participation probability logic
 
-3. **Positive Coefficient Constraint**
-   - Filter features with negative coefficients during selection
-   - Ensures all predictors positively correlate with success
+#### Phase 3: Relay/Team Sprint Simulation
+- [ ] Port `train_relay_leg_models_for_simulation()` (handles both 4-leg and 2-leg)
+- [ ] Port `calculate_leg_importance_from_models()`
+- [ ] Port `run_relay_simulation_hybrid()`
+- [ ] Port team selection with dual optimization (podium + win)
+- [ ] Handle technique-specific features (C/F for team sprint)
 
-4. **Calibration System**
-   - Grid search over variance parameters (SD_SCALE_FACTOR, SD_MIN, SD_MAX)
-   - Minimize Brier score on historical data
-   - Sport-specific and event-specific calibration
+#### Phase 4: Mixed Relay Support
+- [ ] Extend relay logic for mixed gender teams
+- [ ] Handle leg gender assignments (typically L-L-M-M or similar)
 
-5. **Team Event Handling** (where applicable)
-   - Dual optimization (podium + win)
-   - Leg-specific models
-   - Technique-specific features (for cross-country)
+#### Phase 5: Output and Integration
+- [ ] Format Excel output matching current race-picks format
+- [ ] User-friendly column names (Team, Expected Points, Win, Podium, etc.)
+- [ ] Update `predict_script.sh` to use new simulation script
+
+#### Phase 6: Calibration
+- [ ] Port calibration system for individual races
+- [ ] Port calibration system for relay/team sprint
+- [ ] Validate against historical World Cup results
+
+### Variance Control Parameters (from champs-predictions-simulation.R)
+```r
+# Individual races
+DECAY_LAMBDA <- 0.002      # Exponential decay (50% weight after ~1 year)
+SD_SCALE_FACTOR <- 0.77    # Multiply all SDs (lower = favorites win more)
+SD_MIN <- 4                # Minimum SD
+SD_MAX <- 16               # Maximum SD
+
+# Relay (4 legs)
+RELAY_SCORE_SD_MIN <- 0.5
+RELAY_SCORE_SD_MAX <- 1.15
+
+# Team Sprint (2 legs)
+TS_SCORE_SD_MIN <- 0.45
+TS_SCORE_SD_MAX <- 0.8
+```
+
+### Files
+- **New**: `content/post/cross-country/drafts/race-picks-simulation.R`
+- **Reference**: `content/post/cross-country/drafts/champs-predictions-simulation.R`
+- **Data**: `~/ski/elo/python/ski/polars/excel365/races.csv` (or `test_races.csv`)
+
+---
+
+## FUTURE: Extend Simulation to Other Sports
+
+### Championship Predictions
+| Sport | Status |
+|-------|--------|
+| Alpine | Pending |
+| Biathlon | Pending |
+| Cross-Country | **DONE** |
+| Nordic Combined | Pending |
+| Ski Jumping | Pending |
+
+### Race Picks
+| Sport | Status |
+|-------|--------|
+| Cross-Country | **In Progress** |
+| Alpine | Pending |
+| Biathlon | Pending |
+| Nordic Combined | Pending |
+| Ski Jumping | Pending |
 
 ### Sport-Specific Considerations
-
-**Alpine:**
-- Speed vs Technical discipline distinction
-- Downhill/Super-G vs Slalom/Giant Slalom feature sets
-
-**Biathlon:**
-- Shooting accuracy as additional feature
-- Pursuit/Mass Start starting position effects
-
-**Nordic Combined:**
-- Two-phase competition (jumping + skiing)
-- Gap-start considerations
-
-**Ski Jumping:**
-- Hill size distinctions (Normal/Large/Flying)
-- Wind/conditions factors if available
-
-### Implementation Order (Suggested)
-1. Cross-country race-picks.R / weekly-picks2.R (closest to existing simulation)
-2. Biathlon champs-predictions.R (similar structure to cross-country)
-3. Alpine champs-predictions.R
-4. Nordic Combined champs-predictions.R
-5. Ski Jumping champs-predictions.R
-6. Remaining race-picks scripts
-
-### Methodology Documentation
-For each converted script, update:
-- `content/post/methods/champs-predictions.md` (for championship scripts)
-- `content/post/methods/race-picks.md` (for weekly picks scripts)
-- Create Reddit-style explanation post (like `reddit-post.md`)
+- **Alpine**: Speed vs Technical discipline distinction
+- **Biathlon**: Shooting accuracy, pursuit/mass start effects
+- **Nordic Combined**: Two-phase competition, gap-start
+- **Ski Jumping**: Hill size distinctions, wind factors
 
 ---
 
@@ -531,3 +559,73 @@ Updated all fantasy and race-picks output files to use user-friendly column name
 - `race-picks-relay.R` - `save_prediction_results()` (lines 1207-1248)
 - `race-picks-team-sprint.R` - `save_prediction_results()` (lines 1244-1285)
 - `race-picks-mixed-relay.R` - `save_prediction_results()` (lines 1207-1260)
+
+---
+
+## COMPLETED: TEST_MODE for Sandbox/QA Testing (2026-02-26)
+
+### Overview
+Added `TEST_MODE` flag to all race-picks and weekly-picks R scripts across all sports. When enabled, scripts read from `test_races.csv` or `test_weekends.csv` instead of production files, allowing EDA and testing without modifying production data.
+
+### Usage
+1. Set `TEST_MODE <- TRUE` at the top of any script
+2. Create your test file (e.g., `test_races.csv`) in the same directory as the production file
+3. Run the script - it will use the test file instead
+4. Set `TEST_MODE <- FALSE` when done testing
+
+### Test File Locations
+All test files have been created (copied from production files on 2026-02-26):
+
+| Sport | test_races.csv | test_weekends.csv |
+|-------|----------------|-------------------|
+| Alpine | `~/ski/elo/python/alpine/polars/excel365/test_races.csv` ✓ | `~/ski/elo/python/alpine/polars/excel365/test_weekends.csv` ✓ |
+| Biathlon | `~/ski/elo/python/biathlon/polars/excel365/test_races.csv` ✓ | `~/ski/elo/python/biathlon/polars/excel365/test_weekends.csv` ✓ |
+| Cross-Country | `~/ski/elo/python/ski/polars/excel365/test_races.csv` ✓ | `~/ski/elo/python/ski/polars/excel365/test_weekends.csv` ✓ |
+| Nordic Combined | `~/ski/elo/python/nordic-combined/polars/excel365/test_races.csv` ✓ | `~/ski/elo/python/nordic-combined/polars/excel365/test_weekends.csv` ✓ |
+| Ski Jump | `~/ski/elo/python/skijump/polars/excel365/test_races.csv` ✓ | `~/ski/elo/python/skijump/polars/excel365/test_weekends.csv` ✓ |
+
+Edit these test files to set up your test scenarios (e.g., change dates to today's date to trigger predictions).
+
+### Files Modified (16 total)
+
+**Alpine:**
+- `content/post/alpine/drafts/race-picks.R`
+- `content/post/alpine/drafts/weekly-picks2.R`
+
+**Biathlon:**
+- `content/post/biathlon/drafts/race-picks.R`
+- `content/post/biathlon/drafts/weekly-picks2.R`
+
+**Cross-Country:**
+- `content/post/cross-country/drafts/race-picks.R`
+- `content/post/cross-country/drafts/race-picks-relay.R`
+- `content/post/cross-country/drafts/race-picks-team-sprint.R`
+- `content/post/cross-country/drafts/race-picks-mixed-relay.R`
+- `content/post/cross-country/drafts/weekly-picks2.R`
+- `content/post/cross-country/drafts/weekly-picks-relay.R`
+- `content/post/cross-country/drafts/weekly-picks-team-sprint.R`
+- `content/post/cross-country/drafts/weekly-picks-mixed-relay.R`
+
+**Nordic Combined:**
+- `content/post/nordic-combined/drafts/race-picks.R`
+- `content/post/nordic-combined/drafts/weekly-picks2.R`
+
+**Ski Jump:**
+- `content/post/skijump/drafts/race-picks.R`
+- `content/post/skijump/drafts/weekly-picks2.R`
+
+### Implementation Pattern
+```r
+# ===== TEST MODE =====
+# Set to TRUE to use test_races.csv for EDA/sandbox testing
+TEST_MODE <- FALSE
+
+# ... later in the script ...
+races_file <- if(TEST_MODE) {
+  "~/ski/elo/python/{sport}/polars/excel365/test_races.csv"
+} else {
+  "~/ski/elo/python/{sport}/polars/excel365/races.csv"
+}
+races <- read.csv(races_file, stringsAsFactors = FALSE)
+log_info(paste("Reading races from:", races_file))
+```

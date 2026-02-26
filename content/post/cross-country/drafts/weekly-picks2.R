@@ -14,6 +14,10 @@ library(ompr.roi)      # For optimization solver interface
 library(ROI.plugin.glpk) # For GLPK solver
 library(slider)        # For sliding window operations
 
+# ===== TEST MODE =====
+# Set to TRUE to use test_weekends.csv for EDA/sandbox testing
+TEST_MODE <- FALSE
+
 # Define points systems
 wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
 stage_points <- c(50,47,44,41,38,35,32,30,28,26,24,22,20,18,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
@@ -37,9 +41,13 @@ log_appender(appender_file(file.path(log_dir, "weekly_picks_processing.log")))
 log_info("Starting weekly predictions process")
 
 # Read in the race schedule from weekends.csv with proper date parsing
-log_info("Reading weekends data")
-weekends <- read.csv("~/ski/elo/python/ski/polars/excel365/weekends.csv", 
-                     stringsAsFactors = FALSE) %>%
+weekends_file <- if(TEST_MODE) {
+  "~/ski/elo/python/ski/polars/excel365/test_weekends.csv"
+} else {
+  "~/ski/elo/python/ski/polars/excel365/weekends.csv"
+}
+log_info(paste("Reading weekends from:", weekends_file))
+weekends <- read.csv(weekends_file, stringsAsFactors = FALSE) %>%
   mutate(Date = mdy(Date)) # Use lubridate's mdy function to parse MM/DD/YY format
 
 # Find the next race weekend after today (March 1, 2025)

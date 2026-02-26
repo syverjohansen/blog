@@ -11,6 +11,10 @@ library(lubridate) # For better date handling
 library(slider) # For sliding window operations
 library(stringr)
 
+# ===== TEST MODE =====
+# Set to TRUE to use test_races.csv for EDA/sandbox testing
+TEST_MODE <- FALSE
+
 # Define points systems for Alpine Skiing
 # World Cup: Top 30 get points
 world_cup_points <- c(100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
@@ -36,8 +40,13 @@ log_info("Starting Alpine Skiing race predictions process")
 # Process today's races only
 
 # First, read in all races
-races <- read.csv("~/ski/elo/python/alpine/polars/excel365/races.csv", 
-                  stringsAsFactors = FALSE)
+races_file <- if(TEST_MODE) {
+  "~/ski/elo/python/alpine/polars/excel365/test_races.csv"
+} else {
+  "~/ski/elo/python/alpine/polars/excel365/races.csv"
+}
+races <- read.csv(races_file, stringsAsFactors = FALSE)
+log_info(paste("Reading races from:", races_file))
 
 # Get today's date in the right format
 # Get today's date in the right format using UTC

@@ -10,6 +10,10 @@ library(purrr)
 library(lubridate) # For better date handling
 library(slider)    # For sliding window operations
 
+# ===== TEST MODE =====
+# Set to TRUE to use test_races.csv for EDA/sandbox testing
+TEST_MODE <- FALSE
+
 # Define points systems for Ski Jumping
 # Individual: Top 30 get points
 individual_points <- c(100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
@@ -38,8 +42,13 @@ log_info("Starting Ski Jumping race predictions process")
 # Fix for race-picks.R to only process today's races
 
 # First, read in all races
-races <- read.csv("~/ski/elo/python/skijump/polars/excel365/races.csv", 
-                  stringsAsFactors = FALSE)
+races_file <- if(TEST_MODE) {
+  "~/ski/elo/python/skijump/polars/excel365/test_races.csv"
+} else {
+  "~/ski/elo/python/skijump/polars/excel365/races.csv"
+}
+races <- read.csv(races_file, stringsAsFactors = FALSE)
+log_info(paste("Reading races from:", races_file))
 
 # Get today's date in the right format
 today_date <- format(as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d"), "%m/%d/%Y")
