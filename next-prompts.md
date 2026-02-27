@@ -15,9 +15,15 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 |-------|-------------------|------------|--------|
 | Alpine | Ready | Ready | Production |
 | Biathlon | Ready | Ready | Production |
-| Cross-Country | Ready (Simulation) | **Ready** | `race-picks-simulation.R` complete |
+| Cross-Country | Ready (Simulation) | **Ready** | `race-picks-simulation.R` with adjustments |
 | Nordic Combined | Ready | Ready | Production |
 | Ski Jumping | Ready | Ready | Production |
+
+### Active Work: Simulation Scripts
+- [x] `race-picks-simulation.R` - Individual/Relay/TS/Mixed (with condition adjustments)
+- [ ] `weekly-picks-simulation.R` - Fantasy predictions (NEXT)
+- [ ] `tds-picks-simulation.R` - Tour de Ski overall
+- [ ] `final_climb-simulation.R` - Final Climb race-day
 
 ---
 
@@ -347,7 +353,7 @@ load_env <- function(env_path = "~/ski/elo/.env") {
         key <- trimws(parts[1])
         value <- trimws(paste(parts[-1], collapse = "="))
         value <- gsub("^[\"']|[\"']$", "", value)
-        Sys.setenv(key = value)
+        do.call(Sys.setenv, setNames(list(value), key))  # Dynamically set env var
       }
     }
   }
@@ -355,6 +361,8 @@ load_env <- function(env_path = "~/ski/elo/.env") {
 load_env()
 TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 ```
+
+**Important**: Must use `do.call(Sys.setenv, setNames(list(value), key))` instead of `Sys.setenv(key = value)` - the latter literally creates an env var named "key" instead of using the variable's value.
 
 **Updated R scripts:**
 - `race-picks.R`
@@ -399,8 +407,20 @@ Apply the same pattern to other sports by updating their Python scripts to:
 
 If starting a new session:
 1. Read this file to understand current status
-2. **Current task**: .env configuration complete for cross-country - extend to other sports as needed
-3. **Update this file** with any changes made
+2. **Current task**: Create `weekly-picks-simulation.R` (Priority 2 in the pending simulation scripts)
+3. **Completed**: Condition-specific adjustments (altitude/period/MS) in `race-picks-simulation.R`
+4. **Update this file** with any changes made
+
+### Current Session Status (2026-02-27)
+
+**Last completed**: Added condition-specific adjustments to `race-picks-simulation.R`:
+- `add_period_column()` - calculates season phase (1-5) based on race number
+- `add_altitude_category()` - categorizes elevation (high ≥1300m vs low)
+- Adjustments calculated INSIDE `build_athlete_distribution()` using same decay weighting as distribution mean
+- T-test based (p < 0.05 threshold) for altitude, period, and MS adjustments
+- Adjustment = `condition_weighted_mean - history_weighted_mean` (deviation from skier's own baseline)
+
+**Next up**: Create `weekly-picks-simulation.R` (see "PENDING: Simulation Scripts" section below)
 
 ---
 
@@ -729,4 +749,248 @@ races_file <- if(TEST_MODE) {
 }
 races <- read.csv(races_file, stringsAsFactors = FALSE)
 log_info(paste("Reading races from:", races_file))
+```
+
+---
+
+## PENDING: Simulation Scripts for Cross-Country (2026-02-27)
+
+### Overview
+Create simulation versions of the remaining cross-country prediction scripts using the Monte Carlo approach from `race-picks-simulation.R` and `champs-predictions-simulation.R`.
+
+### 1. race-picks.R Adjustments Analysis
+
+**Current Adjustments in race-picks.R (lines 1075-1125):**
+
+The production `race-picks.R` applies three personalized adjustments using t-tests on historical residuals:
+
+#### Altitude/Elevation Adjustment
+```r
+# Creates altitude category: high (>=1300m) vs low (<1300m)
+AltitudeCategory = ifelse(Elevation >= 1300, 1, 0)
+
+# For each skier, compares performance at high vs low altitude
+# If t-test p < 0.05, applies correction:
+altitude_correction = mean(Prediction_Diff[AltitudeCategory == AltitudeCategory])
+```
+
+#### Period Adjustment (Season Phase)
+```r
+# Compares performance in same vs different periods of the season
+# If t-test p < 0.05, applies correction:
+period_correction = mean(Course_Diff[Period == Period])
+```
+
+#### Mass Start (MS) Adjustment
+```r
+# Compares performance in mass start vs interval start races
+# If t-test p < 0.05, applies correction:
+ms_correction = mean(Period_Diff[MS == MS])
+```
+
+**Can These Be Applied to race-picks-simulation.R?**
+
+YES, using the adjustments approach (preferred over separating prev_points_weighted by MS):
+
+| Adjustment | Production Approach | Simulation Approach |
+|------------|--------------------|--------------------|
+| Altitude | T-test on residuals, apply if p<0.05 | Add altitude_effect to mean in distribution building |
+| Period | T-test on residuals, apply if p<0.05 | Add period_effect to mean in distribution building |
+| MS | T-test on residuals, apply if p<0.05 | Add ms_effect to mean in distribution building |
+
+**Why Adjustments vs Separating prev_points_weighted by MS:**
+- Many skiers haven't competed in both mass start AND individual races → small sample sizes
+- Adjustments approach only applies when statistically significant (p < 0.05)
+- Base prediction uses ALL matching races for robust sample size
+- Skiers without enough data in one format simply get no adjustment (0 effect)
+
+**Implementation in race-picks-simulation.R (COMPLETED 2026-02-27):**
+
+Adjustments are calculated INSIDE `build_athlete_distribution()` using the same decay-weighted approach as the distribution mean. This ensures adjustments are relative to what's actually used for predictions.
+
+**Key insight**: The adjustment must be `condition_mean - history_mean` (both using decay weights), NOT relative to GAM residuals. The distribution is built from historical performance, so adjustments should be relative to that baseline.
+
+**Implementation Details:**
+```r
+# Inside build_athlete_distribution():
+history_weighted_mean <- weighted.mean(history_points, history_weights, na.rm = TRUE)
+
+# For each condition (altitude/period/MS):
+# 1. Split historical races by condition
+# 2. Run t-test between groups
+# 3. If p < 0.05:
+#    high_wmean <- weighted.mean(high_points, high_weights)
+#    adjustment <- high_wmean - history_weighted_mean  # (if racing at high altitude)
+
+# Apply total adjustment
+adjusted_mean <- weighted_mean + altitude_adj + period_adj + ms_adj
+```
+
+**Helper Functions Added:**
+- `add_period_column()` - Calculates season phase (1-5) based on race number
+- `add_altitude_category()` - Creates binary high/low altitude category (≥1300m)
+
+**Parameters:**
+- `min_samples_for_adjustment = 3` - Minimum races in each condition group for t-test
+- `p < 0.05` threshold for statistical significance
+
+---
+
+### 2. weekly-picks-simulation.R Plan
+
+**Purpose**: Weekly fantasy predictions using Monte Carlo simulation instead of GAM predictions.
+
+**Current weekly-picks2.R Approach:**
+- Uses GAM models with regsubsets feature selection
+- Applies same altitude/period/MS adjustments as race-picks.R
+- Fantasy output: Top 20 men + top 20 ladies by Total_Points
+- Output: `fantasy_team.xlsx`
+
+**Simulation Approach:**
+1. Build athlete distributions for each race in the weekend
+2. Run Monte Carlo simulation (N_SIMULATIONS = 10000)
+3. Calculate expected points from simulation results
+4. Apply race participation probabilities
+5. Sum across races for Total_Points
+6. Output top 20 men + top 20 ladies
+
+**Key Differences from race-picks-simulation.R:**
+- Uses `weekends.csv` instead of `races.csv`
+- Handles multiple races per weekend
+- Probability-weighted expected points across races
+- Fantasy-specific output format
+
+**Files to Create:**
+- `content/post/cross-country/drafts/weekly-picks-simulation.R`
+
+---
+
+### 3. tds-picks-simulation.R Plan
+
+**Purpose**: Tour de Ski overall predictions using Monte Carlo simulation.
+
+**Current tds-picks.R Approach:**
+- Uses rolling weighted features (Last_5 columns by technique/distance)
+- XGBoost and GAM hybrid modeling
+- Special handling for Final Climb race
+- TdS-specific points system (300, 285, 270...)
+- Stage race scoring
+
+**Simulation Approach:**
+1. Build athlete distributions for each TdS stage
+2. Run Monte Carlo simulation for each stage
+3. Sum stage points for overall TdS prediction
+4. Special handling for Final Climb (uses Distance_F features heavily)
+5. Account for accumulated fatigue (optional: increase variance in later stages)
+
+**Key Features from tds-picks.R to Port:**
+- `process_dataframe_for_points()` - rolling weighted features
+- `impute_features()` - first quartile imputation
+- `create_percentage_columns()` - Elo/Pelo percentages
+- `fc_feature_selection()` - Final Climb specific features
+- Stage race points system
+
+**Files to Create:**
+- `content/post/cross-country/drafts/tds-picks-simulation.R`
+
+---
+
+### 4. final_climb-simulation.R Plan
+
+**Purpose**: Tour de Ski Final Climb race-day predictions using Monte Carlo simulation.
+
+**Current final_climb.R Approach:**
+- Filters training data to `Final_Climb == 1` only
+- Key features: `Distance_F_Pelo_Pct`, `Distance_F_Last_5`
+- Uses fc_points (same as tds_points: 300, 285, 270...)
+- GAM model trained on Final Climb historical data only
+
+**Simulation Approach:**
+1. Load Final Climb startlist from `startlist_races_*.csv`
+2. Build distributions using Distance_F specific features
+3. Run Monte Carlo simulation
+4. Output Final Climb predictions with probabilities
+
+**Key Considerations:**
+- Small training dataset (only one Final Climb per year since 2007)
+- Heavy reliance on Distance_F_Pelo_Pct as predictor
+- May need wider variance due to unique nature of race
+
+**Files to Create:**
+- `content/post/cross-country/drafts/final_climb-simulation.R`
+
+---
+
+### Implementation Priority
+
+| Script | Priority | Complexity | Dependencies | Status |
+|--------|----------|------------|--------------|--------|
+| Add adjustments to race-picks-simulation.R | 1 | Medium | None | **DONE** (2026-02-27) |
+| weekly-picks-simulation.R | 2 | Medium | race-picks-simulation.R | Pending |
+| tds-picks-simulation.R | 3 | High | weekly-picks-simulation.R | Pending |
+| final_climb-simulation.R | 4 | Medium | tds-picks-simulation.R | Pending |
+
+---
+
+### Shared Functions to Port
+
+These functions from the production scripts should be adapted for simulation:
+
+```r
+# From race-picks.R / weekly-picks2.R:
+calculate_skier_adjustments()      # T-test based altitude/period/MS adjustments
+prepare_startlist_data()           # Startlist preparation with Elo percentages
+normalize_position_probabilities() # Probability normalization with caps
+
+# From tds-picks.R:
+process_dataframe_for_points()     # Rolling weighted features
+impute_features()                  # First quartile imputation by Season/Race
+create_percentage_columns()        # Elo/Pelo percentage calculations
+
+# From final_climb.R:
+fc_feature_selection()             # Final Climb specific feature selection
+filter_zero_probability_athletes() # Filter by race participation probability
+```
+
+---
+
+### Variance Control Parameters (Proposed)
+
+```r
+# Individual races (from race-picks-simulation.R)
+DECAY_LAMBDA <- 0.002
+SD_SCALE_FACTOR <- 0.77
+SD_MIN <- 4
+SD_MAX <- 16
+
+# TdS Stage races (may need calibration)
+TDS_SD_SCALE_FACTOR <- 0.8    # Slightly higher variance for stage races
+TDS_SD_MIN <- 3
+TDS_SD_MAX <- 14
+
+# Final Climb (unique race, may need higher variance)
+FC_SD_SCALE_FACTOR <- 0.85
+FC_SD_MIN <- 5
+FC_SD_MAX <- 18
+```
+
+---
+
+### File Locations Summary
+
+**Scripts to Create:**
+```
+content/post/cross-country/drafts/weekly-picks-simulation.R
+content/post/cross-country/drafts/tds-picks-simulation.R
+content/post/cross-country/drafts/final_climb-simulation.R
+```
+
+**Reference Scripts:**
+```
+content/post/cross-country/drafts/race-picks-simulation.R      # Monte Carlo base
+content/post/cross-country/drafts/champs-predictions-simulation.R # Hybrid approach
+content/post/cross-country/drafts/race-picks.R                 # Adjustments
+content/post/cross-country/drafts/weekly-picks2.R              # Fantasy logic
+content/post/cross-country/drafts/tds-picks.R                  # TdS features
+content/post/cross-country/drafts/final_climb.R                # FC features
 ```

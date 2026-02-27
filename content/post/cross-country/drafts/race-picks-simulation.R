@@ -343,6 +343,36 @@ calculate_percentage_columns <- function(chrono_data) {
     ungroup()
 }
 
+# Add Period column to chrono data (season phases)
+add_period_column <- function(chrono_data) {
+  chrono_data %>%
+    group_by(Season) %>%
+    mutate(
+      Num_Races = max(Race, na.rm = TRUE),
+      Period = case_when(
+        Num_Races <= 5 ~ 1,
+        Num_Races <= 10 ~ 2,
+        Num_Races <= 15 ~ 3,
+        Num_Races <= 20 ~ 4,
+        Num_Races <= 25 ~ 5,
+        TRUE ~ ceiling((Race / (Num_Races / 5)))
+      )
+    ) %>%
+    ungroup() %>%
+    select(-Num_Races)
+}
+
+# Add AltitudeCategory column (high >= 1300m, low < 1300m)
+add_altitude_category <- function(chrono_data) {
+  chrono_data %>%
+    mutate(AltitudeCategory = ifelse(!is.na(Elevation) & Elevation >= 1300, 1, 0))
+}
+
+# NOTE: Condition-specific adjustments (altitude, period, MS) are now calculated
+# INSIDE build_athlete_distribution() using the same decay-weighted approach
+# as the distribution mean. This ensures adjustments are relative to what's
+# actually used for predictions.
+
 # ============================================================================
 # GAM MODEL TRAINING
 # ============================================================================
@@ -420,13 +450,16 @@ train_points_gam <- function(chrono_data, race_type_key, gender) {
 # ============================================================================
 
 # Build athlete distribution combining history + GAM samples
+# Calculates condition-specific adjustments (altitude/period/MS) using same decay weighting
 build_athlete_distribution <- function(athlete_id, race_type_key, chrono_data,
                                         gam_prediction, gam_residual_sd,
                                         n_history = N_HISTORY_REQUIRED,
                                         n_gam_samples = N_GAM_SAMPLES,
                                         gam_fill_weight_factor = GAM_FILL_WEIGHT_FACTOR,
                                         decay_lambda = DECAY_LAMBDA,
-                                        reference_date = NULL) {
+                                        reference_date = NULL,
+                                        today_race = NULL,
+                                        min_samples_for_adjustment = 3) {
 
   # Define race filter
   race_filter <- switch(race_type_key,
@@ -451,6 +484,8 @@ build_athlete_distribution <- function(athlete_id, race_type_key, chrono_data,
 
   all_points <- c()
   all_weights <- c()
+  history_points <- c()
+  history_weights <- c()
 
   # Part 1: Historical races with exponential decay weighting
   if (n_actual_races > 0) {
@@ -499,22 +534,147 @@ build_athlete_distribution <- function(athlete_id, race_type_key, chrono_data,
     all_weights <- c(all_weights, gam_sample_weights)
   }
 
-  # Calculate distribution parameters
+  # Calculate base distribution parameters (before adjustments)
   weighted_mean <- weighted.mean(all_points, all_weights, na.rm = TRUE)
   weighted_var <- sum(all_weights * (all_points - weighted_mean)^2) / sum(all_weights)
   weighted_sd <- sqrt(weighted_var)
   weighted_sd <- max(weighted_sd, 5)
 
-  if (is.na(weighted_mean) || is.na(weighted_sd)) {
+  # ============================================================================
+  # CONDITION-SPECIFIC ADJUSTMENTS
+  # Calculate using same decay-weighted approach on historical races only
+  # Adjustment = condition_weighted_mean - overall_weighted_mean (from history)
+  # ============================================================================
+
+  adjustment <- 0
+  altitude_adj <- 0
+  period_adj <- 0
+  ms_adj <- 0
+
+  # Only calculate adjustments if we have enough historical races AND today_race info
+  if (n_actual_races >= 2 * min_samples_for_adjustment && !is.null(today_race)) {
+
+    # Calculate overall weighted mean from HISTORY ONLY (not GAM fill)
+    history_weighted_mean <- weighted.mean(history_points, history_weights, na.rm = TRUE)
+
+    # Get today's race conditions
+    today_altitude_cat <- if (!is.null(today_race$Elevation) && !is.na(today_race$Elevation)) {
+      ifelse(today_race$Elevation >= 1300, 1, 0)
+    } else 0
+
+    today_period <- if (!is.null(today_race$Period) && !is.na(today_race$Period)) {
+      today_race$Period
+    } else 3
+
+    today_ms <- if (!is.null(today_race$MS) && !is.na(today_race$MS)) {
+      today_race$MS
+    } else 0
+
+    # --- ALTITUDE ADJUSTMENT ---
+    if ("AltitudeCategory" %in% names(athlete_history)) {
+      high_idx <- athlete_history$AltitudeCategory == 1
+      low_idx <- athlete_history$AltitudeCategory == 0
+
+      if (sum(high_idx) >= min_samples_for_adjustment && sum(low_idx) >= min_samples_for_adjustment) {
+        high_points <- history_points[high_idx]
+        high_weights <- history_weights[high_idx]
+        low_points <- history_points[low_idx]
+        low_weights <- history_weights[low_idx]
+
+        # T-test on points
+        t_result <- tryCatch({
+          t.test(high_points, low_points)
+        }, error = function(e) NULL)
+
+        if (!is.null(t_result) && !is.na(t_result$p.value) && t_result$p.value < 0.05) {
+          high_wmean <- weighted.mean(high_points, high_weights, na.rm = TRUE)
+          low_wmean <- weighted.mean(low_points, low_weights, na.rm = TRUE)
+
+          if (today_altitude_cat == 1) {
+            altitude_adj <- high_wmean - history_weighted_mean
+          } else {
+            altitude_adj <- low_wmean - history_weighted_mean
+          }
+        }
+      }
+    }
+
+    # --- PERIOD ADJUSTMENT ---
+    if ("Period" %in% names(athlete_history)) {
+      same_idx <- athlete_history$Period == today_period
+      diff_idx <- athlete_history$Period != today_period
+
+      if (sum(same_idx) >= min_samples_for_adjustment && sum(diff_idx) >= min_samples_for_adjustment) {
+        same_points <- history_points[same_idx]
+        same_weights <- history_weights[same_idx]
+        diff_points <- history_points[diff_idx]
+
+        # T-test on points
+        t_result <- tryCatch({
+          t.test(same_points, diff_points)
+        }, error = function(e) NULL)
+
+        if (!is.null(t_result) && !is.na(t_result$p.value) && t_result$p.value < 0.05) {
+          same_wmean <- weighted.mean(same_points, same_weights, na.rm = TRUE)
+          period_adj <- same_wmean - history_weighted_mean
+        }
+      }
+    }
+
+    # --- MASS START ADJUSTMENT (distance races only) ---
+    if ("MS" %in% names(athlete_history) && !grepl("Sprint", race_type_key)) {
+      ms_idx <- athlete_history$MS == 1
+      ind_idx <- athlete_history$MS == 0
+
+      if (sum(ms_idx) >= min_samples_for_adjustment && sum(ind_idx) >= min_samples_for_adjustment) {
+        ms_points <- history_points[ms_idx]
+        ms_weights <- history_weights[ms_idx]
+        ind_points <- history_points[ind_idx]
+        ind_weights <- history_weights[ind_idx]
+
+        # T-test on points
+        t_result <- tryCatch({
+          t.test(ms_points, ind_points)
+        }, error = function(e) NULL)
+
+        if (!is.null(t_result) && !is.na(t_result$p.value) && t_result$p.value < 0.05) {
+          ms_wmean <- weighted.mean(ms_points, ms_weights, na.rm = TRUE)
+          ind_wmean <- weighted.mean(ind_points, ind_weights, na.rm = TRUE)
+
+          if (today_ms == 1) {
+            ms_adj <- ms_wmean - history_weighted_mean
+          } else {
+            ms_adj <- ind_wmean - history_weighted_mean
+          }
+        }
+      }
+    }
+
+    # Total adjustment (sum of all condition effects)
+    adjustment <- altitude_adj + period_adj + ms_adj
+  }
+
+  # Apply adjustment to the weighted mean
+  adjusted_mean <- weighted_mean + adjustment
+
+  # Ensure adjusted mean stays in reasonable bounds (0-100 points)
+  adjusted_mean <- pmax(0, pmin(100, adjusted_mean))
+
+  if (is.na(adjusted_mean) || is.na(weighted_sd)) {
     log_warn(paste("Invalid distribution for athlete:", athlete_id))
   }
 
   return(list(
     athlete_id = athlete_id,
-    mean = weighted_mean,
+    mean = adjusted_mean,
     sd = weighted_sd,
     n_actual_races = n_actual_races,
-    n_gam_fill = n_missing_history
+    n_gam_fill = n_missing_history,
+    adjustment = adjustment,
+    altitude_adj = altitude_adj,
+    period_adj = period_adj,
+    ms_adj = ms_adj,
+    unadjusted_mean = weighted_mean
   ))
 }
 
@@ -579,6 +739,9 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
     mean_points = sapply(valid_distributions, function(x) x$mean),
     sd_points = sapply(valid_distributions, function(x) x$sd),
     n_actual_races = sapply(valid_distributions, function(x) x$n_actual_races),
+    adjustment = sapply(valid_distributions, function(x) {
+      if(!is.null(x$adjustment)) x$adjustment else 0
+    }),
     stringsAsFactors = FALSE
   )
 
@@ -1365,6 +1528,16 @@ if(PROCESS_INDIVIDUAL) {
   men_chrono <- calculate_percentage_columns(men_chrono)
   ladies_chrono <- calculate_percentage_columns(ladies_chrono)
 
+  # Add Period column for season-phase adjustments
+  men_chrono <- add_period_column(men_chrono)
+  ladies_chrono <- add_period_column(ladies_chrono)
+  log_info("Added Period column for season-phase adjustments")
+
+  # Add AltitudeCategory for elevation-based adjustments
+  men_chrono <- add_altitude_category(men_chrono)
+  ladies_chrono <- add_altitude_category(ladies_chrono)
+  log_info("Added AltitudeCategory column for elevation adjustments")
+
   # Quartile imputation for PELO columns
   pelo_cols <- c("Pelo", "Distance_Pelo", "Distance_C_Pelo", "Distance_F_Pelo",
                  "Sprint_Pelo", "Sprint_C_Pelo", "Sprint_F_Pelo", "Classic_Pelo", "Freestyle_Pelo")
@@ -1572,6 +1745,9 @@ if(PROCESS_INDIVIDUAL) {
       next
     }
 
+    # Log today's race conditions for adjustments
+    log_info(paste("Race conditions - Elevation:", race$Elevation, "m, MS:", race$MS, ", Period:", race$Period))
+
     # Get athletes from startlist - filter to FIS startlist only
     if (nrow(startlist) == 0 || !"ID" %in% names(startlist)) {
       log_warn(paste("No startlist data for", gender))
@@ -1591,9 +1767,11 @@ if(PROCESS_INDIVIDUAL) {
     }
 
     athlete_ids <- unique(startlist$ID)
-    log_info(paste("Building distributions for", length(athlete_ids), "athletes"))
+    log_info(paste("Building distributions for", length(athlete_ids), "athletes (with condition adjustments)"))
 
     # Build distributions for each athlete
+    # Adjustments (altitude/period/MS) are calculated inside build_athlete_distribution
+    # using the same decay-weighted approach as the distribution mean
     athlete_distributions <- list()
 
     for (athlete_id in athlete_ids) {
@@ -1615,14 +1793,15 @@ if(PROCESS_INDIVIDUAL) {
         })
       }
 
-      # Build distribution
+      # Build distribution with condition-specific adjustments calculated internally
       dist <- build_athlete_distribution(
         athlete_id = athlete_id,
         race_type_key = race_type_key,
         chrono_data = chrono_data,
         gam_prediction = gam_prediction,
         gam_residual_sd = model_info$residual_sd,
-        reference_date = current_date
+        reference_date = current_date,
+        today_race = race
       )
 
       athlete_distributions[[as.character(athlete_id)]] <- dist
@@ -1639,9 +1818,25 @@ if(PROCESS_INDIVIDUAL) {
         by = c("athlete_id" = "ID")
       ) %>%
       rename(ID = athlete_id, Name = Skier) %>%
-      select(Name, Nation, ID, mean_points, sd_points, n_actual_races,
+      select(Name, Nation, ID, mean_points, sd_points, adjustment, n_actual_races,
              starts_with("prob_top_")) %>%
       arrange(desc(prob_top_1))
+
+    # Log adjustment summary for this race
+    n_with_adj <- sum(race_results$adjustment != 0, na.rm = TRUE)
+    if (n_with_adj > 0) {
+      log_info(paste("Athletes with adjustments:", n_with_adj, "of", nrow(race_results)))
+      top_adj <- race_results %>%
+        filter(adjustment != 0) %>%
+        arrange(desc(abs(adjustment))) %>%
+        head(5)
+      if (nrow(top_adj) > 0) {
+        log_info("Top 5 adjustments:")
+        for (j in 1:nrow(top_adj)) {
+          log_info(paste("  ", top_adj$Name[j], ":", round(top_adj$adjustment[j], 2), "points"))
+        }
+      }
+    }
 
     # Store results
     race_key <- paste(gender, race_type_key, sep = "_")
