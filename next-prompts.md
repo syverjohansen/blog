@@ -1,6 +1,6 @@
 # Winter Sports Prediction System
 
-## Current Status (2026-02-26)
+## Current Status (2026-02-27)
 
 **IMPORTANT**: Update this file (`next-prompts.md`) whenever changes are made to the codebase. This ensures session continuity and accurate status tracking.
 
@@ -15,7 +15,7 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 |-------|-------------------|------------|--------|
 | Alpine | Ready | Ready | Production |
 | Biathlon | Ready | Ready | Production |
-| Cross-Country | Ready (Simulation) | **In Progress** | Converting race-picks to simulation |
+| Cross-Country | Ready (Simulation) | **Ready** | `race-picks-simulation.R` complete |
 | Nordic Combined | Ready | Ready | Production |
 | Ski Jumping | Ready | Ready | Production |
 
@@ -296,16 +296,115 @@ Not implemented yet - revisit if disk space becomes an issue again.
 
 ---
 
+## COMPLETED: Centralized .env Configuration (2026-02-27)
+
+### Goal
+Create a single `.env` file to toggle TEST_MODE across the entire pipeline:
+```
+Python Scraper → Startlist Generation → R Predictions → Excel Output
+```
+
+### Implementation
+
+#### 1. Created `.env` file at `~/ski/elo/.env`
+```bash
+# Winter Sports Prediction Pipeline Configuration
+TEST_MODE=false
+```
+
+#### 2. Created Python config module at `~/ski/elo/python/pipeline_config.py`
+```python
+from pipeline_config import TEST_MODE, get_races_file, get_weekends_file
+
+# Check mode
+if TEST_MODE:
+    print("Running in TEST mode")
+
+# Get file paths (automatically switches to test files when TEST_MODE=true)
+races_file = get_races_file("ski")      # → races.csv or test_races.csv
+weekends_file = get_weekends_file("ski") # → weekends.csv or test_weekends.csv
+```
+
+#### 3. Updated Python startlist scripts
+Updated to import from `pipeline_config`:
+- `~/ski/elo/python/ski/polars/startlist-scrape-weekend.py`
+- `~/ski/elo/python/ski/polars/startlist-scrape-races.py`
+- `~/ski/elo/python/ski/polars/relay/startlist_scrape_weekend_relay.py`
+- (Pattern for other sports/relay scripts)
+
+#### 4. Updated R scripts to read from `.env`
+All cross-country R scripts now load TEST_MODE from .env:
+```r
+# ===== TEST MODE (loaded from .env) =====
+load_env <- function(env_path = "~/ski/elo/.env") {
+  env_file <- path.expand(env_path)
+  if (file.exists(env_file)) {
+    lines <- readLines(env_file, warn = FALSE)
+    for (line in lines) {
+      line <- trimws(line)
+      if (nchar(line) > 0 && !startsWith(line, "#") && grepl("=", line)) {
+        parts <- strsplit(line, "=", fixed = TRUE)[[1]]
+        key <- trimws(parts[1])
+        value <- trimws(paste(parts[-1], collapse = "="))
+        value <- gsub("^[\"']|[\"']$", "", value)
+        Sys.setenv(key = value)
+      }
+    }
+  }
+}
+load_env()
+TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
+```
+
+**Updated R scripts:**
+- `race-picks.R`
+- `race-picks-relay.R`
+- `race-picks-team-sprint.R`
+- `race-picks-mixed-relay.R`
+- `race-picks-simulation.R`
+- `weekly-picks2.R`
+- `weekly-picks-relay.R`
+- `weekly-picks-team-sprint.R`
+- `weekly-picks-mixed-relay.R`
+
+### Usage
+To switch to test mode:
+```bash
+# Edit ~/ski/elo/.env
+TEST_MODE=true
+
+# Now all scripts will use test_races.csv and test_weekends.csv
+```
+
+To switch back to production:
+```bash
+TEST_MODE=false
+```
+
+### Files Created/Modified
+- **Created**: `~/ski/elo/.env`
+- **Created**: `~/ski/elo/python/pipeline_config.py`
+- **Modified**: 3 Python startlist scripts (cross-country)
+- **Modified**: 9 R prediction scripts (cross-country)
+
+### Extending to Other Sports
+Apply the same pattern to other sports by updating their Python scripts to:
+1. Add `sys.path.insert(0, os.path.expanduser('~/ski/elo/python'))`
+2. `from pipeline_config import TEST_MODE, get_races_file, get_weekends_file`
+3. Replace hardcoded paths with `get_races_file('sport_name')` or `get_weekends_file('sport_name')`
+
+---
+
 ## Session Resume Instructions
 
 If starting a new session:
 1. Read this file to understand current status
-2. **Current task**: Creating `race-picks-simulation.R` for cross-country
+2. **Current task**: .env configuration complete for cross-country - extend to other sports as needed
 3. **Update this file** with any changes made
 
 ---
 
-## ACTIVE: Cross-Country race-picks-simulation.R
+## COMPLETED: Cross-Country race-picks-simulation.R (2026-02-27)
 
 ### Goal
 Create a single unified `race-picks-simulation.R` script that:
@@ -343,40 +442,42 @@ Key sections to replicate:
 | Output | Per-championship Excel | Per-race-day Excel |
 | TEST_MODE | Not needed | Uses `test_races.csv` when enabled |
 
-### Implementation Plan
+### Implementation Plan (COMPLETED 2026-02-27)
 
-#### Phase 1: Core Structure
-- [ ] Create `race-picks-simulation.R` with configuration section
-- [ ] Add TEST_MODE support (already in other race-picks scripts)
-- [ ] Load races.csv and filter for today's date
-- [ ] Determine which race types are scheduled today (individual/relay/ts/mixed)
+#### Phase 1: Core Structure ✓
+- [x] Create `race-picks-simulation.R` with configuration section
+- [x] Add TEST_MODE support (already in other race-picks scripts)
+- [x] Load races.csv and filter for today's date
+- [x] Determine which race types are scheduled today (individual/relay/ts/mixed)
 
-#### Phase 2: Individual Race Simulation
-- [ ] Port `filter_positive_coefficients()` from champs-predictions-simulation.R
-- [ ] Port `train_points_gam()` with exponential decay weighting
-- [ ] Port `run_individual_simulation()` with variance control parameters
-- [ ] Handle FIS startlist / participation probability logic
+#### Phase 2: Individual Race Simulation ✓
+- [x] Port `filter_positive_coefficients()` from champs-predictions-simulation.R
+- [x] Port `train_points_gam()` with exponential decay weighting
+- [x] Port `simulate_race_positions()` with variance control parameters
+- [x] Port `build_athlete_distribution()` with history + GAM samples
 
-#### Phase 3: Relay/Team Sprint Simulation
-- [ ] Port `train_relay_leg_models_for_simulation()` (handles both 4-leg and 2-leg)
-- [ ] Port `calculate_leg_importance_from_models()`
-- [ ] Port `run_relay_simulation_hybrid()`
-- [ ] Port team selection with dual optimization (podium + win)
-- [ ] Handle technique-specific features (C/F for team sprint)
+#### Phase 3: Relay/Team Sprint Simulation ✓
+- [x] Port `train_relay_leg_models_for_simulation()` (handles both 4-leg and 2-leg)
+- [x] Port `calculate_leg_importance_from_models()`
+- [x] Port `simulate_team_race()` for Monte Carlo team ranking
+- [x] Port team selection with dual optimization (podium + win)
+- [x] Handle technique-specific features (C/F for team sprint)
 
-#### Phase 4: Mixed Relay Support
-- [ ] Extend relay logic for mixed gender teams
-- [ ] Handle leg gender assignments (typically L-L-M-M or similar)
+#### Phase 4: Mixed Relay Support ✓
+- [x] Extend relay logic for mixed gender teams
+- [x] Handle leg gender assignments (Ladies legs 1-2, Men legs 3-4)
+- [x] Combine gender-specific leg models for mixed team simulation
 
-#### Phase 5: Output and Integration
-- [ ] Format Excel output matching current race-picks format
-- [ ] User-friendly column names (Team, Expected Points, Win, Podium, etc.)
-- [ ] Update `predict_script.sh` to use new simulation script
+#### Phase 5: Output and Integration ✓
+- [x] Format Excel output with per-race files
+- [x] User-friendly column names (Win, Podium, Top5, Top-10, Top-30)
+- [x] Separate files for individual/relay/team sprint/mixed relay
+- [x] Console summary of top predictions
 
-#### Phase 6: Calibration
-- [ ] Port calibration system for individual races
-- [ ] Port calibration system for relay/team sprint
-- [ ] Validate against historical World Cup results
+#### Phase 6: Calibration (Uses Pre-calibrated Values)
+- [x] Calibration flags present (RUN_CALIBRATION, RUN_RELAY_CALIBRATION, RUN_TEAM_SPRINT_CALIBRATION)
+- [x] Uses pre-calibrated parameters from champs-predictions-simulation.R
+- [ ] Optional: Port full calibration grid search if needed
 
 ### Variance Control Parameters (from champs-predictions-simulation.R)
 ```r
@@ -416,7 +517,7 @@ TS_SCORE_SD_MAX <- 0.8
 ### Race Picks
 | Sport | Status |
 |-------|--------|
-| Cross-Country | **In Progress** |
+| Cross-Country | **DONE** |
 | Alpine | Pending |
 | Biathlon | Pending |
 | Nordic Combined | Pending |

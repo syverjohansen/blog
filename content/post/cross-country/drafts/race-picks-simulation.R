@@ -30,9 +30,33 @@ library(lubridate)
 # CONFIGURATION
 # ============================================================================
 
-# ===== TEST MODE =====
-# Set to TRUE to use test_races.csv for EDA/sandbox testing
-TEST_MODE <- FALSE
+# ===== TEST MODE (loaded from .env) =====
+# Reads TEST_MODE from ~/ski/elo/.env for centralized pipeline configuration
+# Set TEST_MODE=true in .env for EDA/sandbox testing, TEST_MODE=false for production
+load_env <- function(env_path = "~/ski/elo/.env") {
+  env_file <- path.expand(env_path)
+  if (file.exists(env_file)) {
+    lines <- readLines(env_file, warn = FALSE)
+    for (line in lines) {
+      line <- trimws(line)
+      if (nchar(line) > 0 && !startsWith(line, "#") && grepl("=", line)) {
+        parts <- strsplit(line, "=", fixed = TRUE)[[1]]
+        key <- trimws(parts[1])
+        value <- trimws(paste(parts[-1], collapse = "="))
+        value <- gsub("^[\"']|[\"']$", "", value)  # Remove quotes
+        do.call(Sys.setenv, setNames(list(value), key))  # Dynamically set env var
+      }
+    }
+    return(TRUE)
+  }
+  return(FALSE)
+}
+
+# Load .env file
+env_loaded <- load_env()
+
+# Get TEST_MODE from environment (defaults to FALSE if not set)
+TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 
 # Simulation parameters
 N_HISTORY_REQUIRED <- 10      # Target number of historical races per athlete
@@ -500,8 +524,26 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
                                      sd_scale_factor = SD_SCALE_FACTOR,
                                      sd_min = SD_MIN, sd_max = SD_MAX) {
 
-  n_athletes <- length(athlete_distributions)
-  athlete_ids <- sapply(athlete_distributions, function(x) x$athlete_id)
+  # Filter out invalid distributions (NA mean or sd)
+  valid_distributions <- Filter(function(dist) {
+    !is.null(dist) &&
+    !is.null(dist$athlete_id) && !is.na(dist$athlete_id) &&
+    !is.null(dist$mean) && !is.na(dist$mean) &&
+    !is.null(dist$sd) && !is.na(dist$sd)
+  }, athlete_distributions)
+
+  if (length(valid_distributions) == 0) {
+    log_error("No valid athlete distributions to simulate")
+    return(data.frame())
+  }
+
+  if (length(valid_distributions) < length(athlete_distributions)) {
+    log_info(paste("Filtered out", length(athlete_distributions) - length(valid_distributions),
+                   "invalid distributions, keeping", length(valid_distributions), "valid"))
+  }
+
+  n_athletes <- length(valid_distributions)
+  athlete_ids <- sapply(valid_distributions, function(x) x$athlete_id)
 
   # Initialize position counts
   position_counts <- matrix(0, nrow = n_athletes, ncol = length(position_thresholds),
@@ -510,10 +552,7 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   # Run simulations
   for (sim in 1:n_simulations) {
     # Sample points from each athlete's distribution
-    simulated_points <- sapply(athlete_distributions, function(dist) {
-      if (is.null(dist$mean) || is.na(dist$mean) || is.null(dist$sd) || is.na(dist$sd)) {
-        return(0)
-      }
+    simulated_points <- sapply(valid_distributions, function(dist) {
       scaled_sd <- dist$sd * sd_scale_factor
       bounded_sd <- pmax(sd_min, pmin(sd_max, scaled_sd))
       rnorm(1, mean = dist$mean, sd = bounded_sd)
@@ -537,9 +576,9 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   # Build results dataframe
   results <- data.frame(
     athlete_id = athlete_ids,
-    mean_points = sapply(athlete_distributions, function(x) x$mean),
-    sd_points = sapply(athlete_distributions, function(x) x$sd),
-    n_actual_races = sapply(athlete_distributions, function(x) x$n_actual_races),
+    mean_points = sapply(valid_distributions, function(x) x$mean),
+    sd_points = sapply(valid_distributions, function(x) x$sd),
+    n_actual_races = sapply(valid_distributions, function(x) x$n_actual_races),
     stringsAsFactors = FALSE
   )
 
@@ -1533,9 +1572,21 @@ if(PROCESS_INDIVIDUAL) {
       next
     }
 
-    # Get athletes from startlist
+    # Get athletes from startlist - filter to FIS startlist only
     if (nrow(startlist) == 0 || !"ID" %in% names(startlist)) {
       log_warn(paste("No startlist data for", gender))
+      next
+    }
+
+    # Filter to athletes actually on the FIS startlist
+    if ("In_FIS_List" %in% names(startlist)) {
+      startlist_filtered <- startlist %>% filter(In_FIS_List == TRUE | In_FIS_List == "True")
+      log_info(paste("Filtered startlist from", nrow(startlist), "to", nrow(startlist_filtered), "athletes (FIS list)"))
+      startlist <- startlist_filtered
+    }
+
+    if (nrow(startlist) == 0) {
+      log_warn(paste("No athletes in FIS startlist for", gender))
       next
     }
 
@@ -2035,14 +2086,196 @@ if(PROCESS_MIXED_RELAY) {
 }
 
 # ============================================================================
-# PLACEHOLDER: OUTPUT
+# OUTPUT: GENERATE EXCEL FILES
 # ============================================================================
 
-log_info("=== OUTPUT GENERATION (TODO) ===")
-# TODO: Format Excel output
-# - Individual predictions
-# - Relay predictions
-# - Team sprint predictions
-# - Mixed relay predictions
+log_info("=== OUTPUT GENERATION ===")
+
+# Output directory
+output_dir <- "~/blog/daehl-e/content/post/cross-country/drafts/race-picks"
+if (!dir.exists(output_dir)) {
+  dir.create(output_dir, recursive = TRUE)
+}
+
+# Helper function to format individual race results for Excel
+format_individual_results <- function(results_list) {
+  formatted <- list()
+
+  for (race_key in names(results_list)) {
+    entry <- results_list[[race_key]]
+    predictions <- entry$predictions
+
+    # Format probabilities as percentages
+    output_data <- predictions %>%
+      mutate(
+        Win = round(prob_top_1 * 100, 1),
+        Podium = round(prob_top_3 * 100, 1),
+        Top5 = round(prob_top_5 * 100, 1),
+        `Top-10` = round(prob_top_10 * 100, 1),
+        `Top-30` = round(prob_top_30 * 100, 1)
+      ) %>%
+      select(Name, Nation, ID, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
+      arrange(desc(Win))
+
+    race_name <- paste(entry$gender, race_types[[entry$race_type]]$name, sep = " - ")
+    formatted[[race_name]] <- output_data
+  }
+
+  return(formatted)
+}
+
+# Helper function to format team race results for Excel
+format_team_results <- function(results_list) {
+  formatted <- list()
+
+  for (race_key in names(results_list)) {
+    entry <- results_list[[race_key]]
+    predictions <- entry$predictions
+    team_distributions <- entry$team_distributions
+
+    # Format probabilities as percentages
+    output_data <- predictions %>%
+      mutate(
+        Win = round(prob_top_1 * 100, 1),
+        Podium = round(prob_top_3 * 100, 1),
+        Top5 = round(prob_top_5 * 100, 1),
+        `Top-10` = round(prob_top_10 * 100, 1)
+      )
+
+    # Add team members column
+    output_data$Team <- sapply(output_data$Nation, function(nation) {
+      if (nation %in% names(team_distributions)) {
+        dist <- team_distributions[[nation]]
+        if (!is.null(dist$member_names)) {
+          return(paste(dist$member_names, collapse = " + "))
+        }
+      }
+      return("")
+    })
+
+    output_data <- output_data %>%
+      select(Nation, Team, Win, Podium, Top5, `Top-10`) %>%
+      arrange(desc(Win))
+
+    formatted[[race_key]] <- output_data
+  }
+
+  return(formatted)
+}
+
+# Generate output files
+timestamp <- format(Sys.time(), "%Y%m%d")
+
+# Individual races
+if (length(individual_results) > 0) {
+  individual_formatted <- format_individual_results(individual_results)
+
+  # Separate by gender
+  men_individual <- individual_formatted[grep("^men", names(individual_formatted), ignore.case = TRUE)]
+  ladies_individual <- individual_formatted[grep("^ladies", names(individual_formatted), ignore.case = TRUE)]
+
+  if (length(men_individual) > 0) {
+    men_file <- file.path(output_dir, paste0("men_individual_", timestamp, ".xlsx"))
+    write.xlsx(men_individual, men_file)
+    log_info(paste("Saved men's individual predictions to", men_file))
+  }
+
+  if (length(ladies_individual) > 0) {
+    ladies_file <- file.path(output_dir, paste0("ladies_individual_", timestamp, ".xlsx"))
+    write.xlsx(ladies_individual, ladies_file)
+    log_info(paste("Saved ladies' individual predictions to", ladies_file))
+  }
+}
+
+# Relay races
+if (length(relay_results) > 0) {
+  relay_formatted <- format_team_results(relay_results)
+
+  men_relay <- relay_formatted[grep("^men", names(relay_formatted), ignore.case = TRUE)]
+  ladies_relay <- relay_formatted[grep("^ladies", names(relay_formatted), ignore.case = TRUE)]
+
+  if (length(men_relay) > 0) {
+    men_relay_file <- file.path(output_dir, paste0("men_relay_", timestamp, ".xlsx"))
+    write.xlsx(men_relay, men_relay_file)
+    log_info(paste("Saved men's relay predictions to", men_relay_file))
+  }
+
+  if (length(ladies_relay) > 0) {
+    ladies_relay_file <- file.path(output_dir, paste0("ladies_relay_", timestamp, ".xlsx"))
+    write.xlsx(ladies_relay, ladies_relay_file)
+    log_info(paste("Saved ladies' relay predictions to", ladies_relay_file))
+  }
+}
+
+# Team sprint races
+if (length(team_sprint_results) > 0) {
+  ts_formatted <- format_team_results(team_sprint_results)
+
+  men_ts <- ts_formatted[grep("^men", names(ts_formatted), ignore.case = TRUE)]
+  ladies_ts <- ts_formatted[grep("^ladies", names(ts_formatted), ignore.case = TRUE)]
+
+  if (length(men_ts) > 0) {
+    men_ts_file <- file.path(output_dir, paste0("men_team_sprint_", timestamp, ".xlsx"))
+    write.xlsx(men_ts, men_ts_file)
+    log_info(paste("Saved men's team sprint predictions to", men_ts_file))
+  }
+
+  if (length(ladies_ts) > 0) {
+    ladies_ts_file <- file.path(output_dir, paste0("ladies_team_sprint_", timestamp, ".xlsx"))
+    write.xlsx(ladies_ts, ladies_ts_file)
+    log_info(paste("Saved ladies' team sprint predictions to", ladies_ts_file))
+  }
+}
+
+# Mixed relay races
+if (length(mixed_relay_results) > 0) {
+  mixed_formatted <- format_team_results(mixed_relay_results)
+  mixed_relay_file <- file.path(output_dir, paste0("mixed_relay_", timestamp, ".xlsx"))
+  write.xlsx(mixed_formatted, mixed_relay_file)
+  log_info(paste("Saved mixed relay predictions to", mixed_relay_file))
+}
+
+# Print summary to console
+cat("\n=== RACE PICKS SIMULATION COMPLETE ===\n")
+cat(paste("Date:", current_date, "\n"))
+
+if (length(individual_results) > 0) {
+  cat(paste("Individual races processed:", length(individual_results), "\n"))
+  for (race_key in names(individual_results)) {
+    entry <- individual_results[[race_key]]
+    top_pred <- entry$predictions[1, ]
+    cat(paste("  ", race_key, "- Winner pick:", top_pred$Name, "(", round(top_pred$prob_top_1 * 100, 1), "%)\n"))
+  }
+}
+
+if (length(relay_results) > 0) {
+  cat(paste("Relay races processed:", length(relay_results), "\n"))
+  for (race_key in names(relay_results)) {
+    entry <- relay_results[[race_key]]
+    top_pred <- entry$predictions[1, ]
+    cat(paste("  ", race_key, "- Winner pick:", top_pred$Nation, "(", round(top_pred$prob_top_1 * 100, 1), "%)\n"))
+  }
+}
+
+if (length(team_sprint_results) > 0) {
+  cat(paste("Team sprint races processed:", length(team_sprint_results), "\n"))
+  for (race_key in names(team_sprint_results)) {
+    entry <- team_sprint_results[[race_key]]
+    top_pred <- entry$predictions[1, ]
+    cat(paste("  ", race_key, "- Winner pick:", top_pred$Nation, "(", round(top_pred$prob_top_1 * 100, 1), "%)\n"))
+  }
+}
+
+if (length(mixed_relay_results) > 0) {
+  cat(paste("Mixed relay races processed:", length(mixed_relay_results), "\n"))
+  for (race_key in names(mixed_relay_results)) {
+    entry <- mixed_relay_results[[race_key]]
+    top_pred <- entry$predictions[1, ]
+    cat(paste("  ", race_key, "- Winner pick:", top_pred$Nation, "(", round(top_pred$prob_top_1 * 100, 1), "%)\n"))
+  }
+}
+
+cat(paste("\nOutput directory:", output_dir, "\n"))
 
 log_info("=== RACE-PICKS-SIMULATION.R COMPLETE ===")
+

@@ -21,9 +21,26 @@ log_appender(appender_file(log_file))
 log_threshold(INFO)
 log_info("Starting relay race day predictions process")
 
-# ===== TEST MODE =====
-# Set to TRUE to use test_races.csv for EDA/sandbox testing
-TEST_MODE <- FALSE
+# ===== TEST MODE (loaded from .env) =====
+# Reads TEST_MODE from ~/ski/elo/.env for centralized pipeline configuration
+load_env <- function(env_path = "~/ski/elo/.env") {
+  env_file <- path.expand(env_path)
+  if (file.exists(env_file)) {
+    lines <- readLines(env_file, warn = FALSE)
+    for (line in lines) {
+      line <- trimws(line)
+      if (nchar(line) > 0 && !startsWith(line, "#") && grepl("=", line)) {
+        parts <- strsplit(line, "=", fixed = TRUE)[[1]]
+        key <- trimws(parts[1])
+        value <- trimws(paste(parts[-1], collapse = "="))
+        value <- gsub("^[\"']|[\"']$", "", value)
+        do.call(Sys.setenv, setNames(list(value), key))  # Dynamically set env var
+      }
+    }
+  }
+}
+load_env()
+TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 
 # Define points system
 relay_points <- c(200, 160, 120, 100, 90, 80, 72, 64, 58, 52, 48, 44, 40, 36,

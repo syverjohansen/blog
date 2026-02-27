@@ -14,9 +14,26 @@ library(ompr.roi)      # For optimization solver interface
 library(ROI.plugin.glpk) # For GLPK solver
 library(slider)        # For sliding window operations
 
-# ===== TEST MODE =====
-# Set to TRUE to use test_weekends.csv for EDA/sandbox testing
-TEST_MODE <- FALSE
+# ===== TEST MODE (loaded from .env) =====
+# Reads TEST_MODE from ~/ski/elo/.env for centralized pipeline configuration
+load_env <- function(env_path = "~/ski/elo/.env") {
+  env_file <- path.expand(env_path)
+  if (file.exists(env_file)) {
+    lines <- readLines(env_file, warn = FALSE)
+    for (line in lines) {
+      line <- trimws(line)
+      if (nchar(line) > 0 && !startsWith(line, "#") && grepl("=", line)) {
+        parts <- strsplit(line, "=", fixed = TRUE)[[1]]
+        key <- trimws(parts[1])
+        value <- trimws(paste(parts[-1], collapse = "="))
+        value <- gsub("^[\"']|[\"']$", "", value)
+        do.call(Sys.setenv, setNames(list(value), key))  # Dynamically set env var
+      }
+    }
+  }
+}
+load_env()
+TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 
 # Define points systems
 wc_points <- c(100,95,90,85,80,75,72,69,66,63,60,58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
