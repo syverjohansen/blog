@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      16296,
+      149.807486094214
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      "L",
+      "Sweden",
+      7745,
+      135.457153058356
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "L",
+      "Sweden",
+      10405,
+      124.947871945588
+    ],
+    [
+      "Linn Svahn",
+      3190,
+      "L",
+      "Sweden",
+      2374,
+      124.644465964319
+    ],
+    [
+      "Emma Ribom",
+      1844,
+      "L",
+      "Sweden",
+      3627,
+      123.493638559593
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      4396,
+      107.429829438142
+    ],
+    [
+      "Moa Lundgren",
+      3211,
+      "L",
+      "Sweden",
+      1695,
+      102.724113064357
+    ],
+    [
+      "Katerina Janatova",
+      3198,
+      "L",
+      "Czechia",
+      1258,
+      98.0739983099306
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      19689,
+      173.483812257642
+    ],
+    [
+      "Lars Heggen",
+      19104,
+      "M",
+      "Norway",
+      5839,
+      106.818457591425
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      "M",
+      "USA",
+      6984,
+      89.33433526706
+    ],
+    [
+      "Martin Løwstrøm Nyenget",
+      2295,
+      "M",
+      "Norway",
+      11152,
+      77.9420933984109
+    ],
+    [
+      "Lucas Chanavat",
+      3582,
+      "M",
+      "France",
+      1766,
+      74.7923712423109
+    ],
+    [
+      "Martino Carollo",
+      19980,
+      "M",
+      "Italy",
+      622,
+      68.1489464981803
+    ],
+    [
+      "Davide Graz",
+      12165,
+      "M",
+      "Italy",
+      739,
+      64.8361265727313
+    ],
+    [
+      "Elia Barp",
+      14042,
+      "M",
+      "Italy",
+      4464,
+      64.0569474373783
+    ]
+  ]
+}

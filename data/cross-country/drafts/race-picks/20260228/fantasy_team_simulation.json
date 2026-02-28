@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      16296,
+      145.948569928682
+    ],
+    [
+      "Linn Svahn",
+      3190,
+      "L",
+      "Sweden",
+      2374,
+      130.450510146092
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      "L",
+      "Sweden",
+      7745,
+      127.02098718023
+    ],
+    [
+      "Emma Ribom",
+      1844,
+      "L",
+      "Sweden",
+      3627,
+      109.980780227641
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      4396,
+      105.537858313152
+    ],
+    [
+      "Lotta Udnes Weng",
+      1671,
+      "L",
+      "Norway",
+      788,
+      101.775372371849
+    ],
+    [
+      "Katerina Janatova",
+      3198,
+      "L",
+      "Czechia",
+      1258,
+      100.540218250131
+    ],
+    [
+      "Tiril Udnes Weng",
+      1668,
+      "L",
+      "Norway",
+      633,
+      98.0185476542866
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      19689,
+      180.832418152007
+    ],
+    [
+      "Lars Heggen",
+      19104,
+      "M",
+      "Norway",
+      5839,
+      112.31870071963
+    ],
+    [
+      "Saveliy Korostelev",
+      13188,
+      "M",
+      "Russia",
+      5539,
+      91.3065443864046
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      "M",
+      "USA",
+      6984,
+      90.8054708308201
+    ],
+    [
+      "Martin Løwstrøm Nyenget",
+      2295,
+      "M",
+      "Norway",
+      11152,
+      85.304356389216
+    ],
+    [
+      "Emil Iversen",
+      1467,
+      "M",
+      "Norway",
+      9974,
+      83.4086719195073
+    ],
+    [
+      "Lucas Chanavat",
+      3582,
+      "M",
+      "France",
+      1766,
+      74.875293989183
+    ],
+    [
+      "Davide Graz",
+      12165,
+      "M",
+      "Italy",
+      739,
+      74.1193677979868
+    ]
+  ]
+}

@@ -2286,8 +2286,9 @@ if(PROCESS_MIXED_RELAY) {
 
 log_info("=== OUTPUT GENERATION ===")
 
-# Output directory
-output_dir <- "~/blog/daehl-e/content/post/cross-country/drafts/race-picks"
+# Output directory with date folder
+utc_date <- format(Sys.time(), "%Y%m%d", tz = "UTC")
+output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", utc_date)
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }
@@ -2359,7 +2360,7 @@ format_team_results <- function(results_list) {
 }
 
 # Generate output files
-timestamp <- format(Sys.time(), "%Y%m%d")
+# File names match production conventions (no timestamp in filename - directory has date)
 
 # Individual races
 if (length(individual_results) > 0) {
@@ -2370,13 +2371,13 @@ if (length(individual_results) > 0) {
   ladies_individual <- individual_formatted[grep("^ladies", names(individual_formatted), ignore.case = TRUE)]
 
   if (length(men_individual) > 0) {
-    men_file <- file.path(output_dir, paste0("men_individual_", timestamp, ".xlsx"))
+    men_file <- file.path(output_dir, "men_position_probabilities.xlsx")
     write.xlsx(men_individual, men_file)
     log_info(paste("Saved men's individual predictions to", men_file))
   }
 
   if (length(ladies_individual) > 0) {
-    ladies_file <- file.path(output_dir, paste0("ladies_individual_", timestamp, ".xlsx"))
+    ladies_file <- file.path(output_dir, "ladies_position_probabilities.xlsx")
     write.xlsx(ladies_individual, ladies_file)
     log_info(paste("Saved ladies' individual predictions to", ladies_file))
   }
@@ -2390,13 +2391,13 @@ if (length(relay_results) > 0) {
   ladies_relay <- relay_formatted[grep("^ladies", names(relay_formatted), ignore.case = TRUE)]
 
   if (length(men_relay) > 0) {
-    men_relay_file <- file.path(output_dir, paste0("men_relay_", timestamp, ".xlsx"))
+    men_relay_file <- file.path(output_dir, "men_relay_position_probabilities.xlsx")
     write.xlsx(men_relay, men_relay_file)
     log_info(paste("Saved men's relay predictions to", men_relay_file))
   }
 
   if (length(ladies_relay) > 0) {
-    ladies_relay_file <- file.path(output_dir, paste0("ladies_relay_", timestamp, ".xlsx"))
+    ladies_relay_file <- file.path(output_dir, "ladies_relay_position_probabilities.xlsx")
     write.xlsx(ladies_relay, ladies_relay_file)
     log_info(paste("Saved ladies' relay predictions to", ladies_relay_file))
   }
@@ -2410,13 +2411,13 @@ if (length(team_sprint_results) > 0) {
   ladies_ts <- ts_formatted[grep("^ladies", names(ts_formatted), ignore.case = TRUE)]
 
   if (length(men_ts) > 0) {
-    men_ts_file <- file.path(output_dir, paste0("men_team_sprint_", timestamp, ".xlsx"))
+    men_ts_file <- file.path(output_dir, "men_team_sprint_position_probabilities.xlsx")
     write.xlsx(men_ts, men_ts_file)
     log_info(paste("Saved men's team sprint predictions to", men_ts_file))
   }
 
   if (length(ladies_ts) > 0) {
-    ladies_ts_file <- file.path(output_dir, paste0("ladies_team_sprint_", timestamp, ".xlsx"))
+    ladies_ts_file <- file.path(output_dir, "ladies_team_sprint_position_probabilities.xlsx")
     write.xlsx(ladies_ts, ladies_ts_file)
     log_info(paste("Saved ladies' team sprint predictions to", ladies_ts_file))
   }
@@ -2425,7 +2426,7 @@ if (length(team_sprint_results) > 0) {
 # Mixed relay races
 if (length(mixed_relay_results) > 0) {
   mixed_formatted <- format_team_results(mixed_relay_results)
-  mixed_relay_file <- file.path(output_dir, paste0("mixed_relay_", timestamp, ".xlsx"))
+  mixed_relay_file <- file.path(output_dir, "mixed_relay_position_probabilities.xlsx")
   write.xlsx(mixed_formatted, mixed_relay_file)
   log_info(paste("Saved mixed relay predictions to", mixed_relay_file))
 }

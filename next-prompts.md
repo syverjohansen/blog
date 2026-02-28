@@ -19,11 +19,41 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 | Nordic Combined | Ready | Ready | Production |
 | Ski Jumping | Ready | Ready | Production |
 
-### Active Work: Simulation Scripts
+### Active Work: Simulation Scripts - ALL COMPLETE + PIPELINE INTEGRATED
 - [x] `race-picks-simulation.R` - Individual/Relay/TS/Mixed (with condition adjustments)
-- [ ] `weekly-picks-simulation.R` - Fantasy predictions (NEXT)
-- [ ] `tds-picks-simulation.R` - Tour de Ski overall
-- [ ] `final_climb-simulation.R` - Final Climb race-day
+- [x] `weekly-picks-simulation.R` - Fantasy predictions with knapsack optimization (DONE 2026-02-27)
+- [x] `tds-picks-simulation.R` - Tour de Ski overall (DONE 2026-02-27)
+- [x] `final_climb-simulation.R` - Final Climb race-day (DONE 2026-02-27)
+- [x] **Pipeline Integration** - Added to predict_script.sh (DONE 2026-02-28)
+
+### Pipeline Integration (2026-02-28)
+
+**Files Modified:**
+- `predict_script.sh` - Added R script calls for cross-country
+- `predict_script_ubuntu.sh` - Added R script calls for cross-country
+
+**Output File Names (Production Conventions):**
+```
+race-picks/YYYYMMDD/
+├── men_position_probabilities.xlsx
+├── ladies_position_probabilities.xlsx
+├── men_relay_position_probabilities.xlsx
+├── ladies_relay_position_probabilities.xlsx
+├── men_team_sprint_position_probabilities.xlsx
+├── ladies_team_sprint_position_probabilities.xlsx
+├── mixed_relay_position_probabilities.xlsx
+├── fantasy_team.xlsx
+└── fantasy_position_probabilities.xlsx
+```
+
+**When Scripts Run:**
+- `weekly-picks-simulation.R` - Runs during weekend events (weekends.csv match)
+- `race-picks-simulation.R` - Runs during race events (races.csv match)
+- Fantasy files processed during weekend flow (even if no races in races.csv)
+
+**Pending Integration:**
+- `tds-picks-simulation.R` - To be added for Tour de Ski events (Period 2)
+- `final_climb-simulation.R` - To be added for Final Climb events
 
 ---
 
@@ -407,20 +437,41 @@ Apply the same pattern to other sports by updating their Python scripts to:
 
 If starting a new session:
 1. Read this file to understand current status
-2. **Current task**: Create `weekly-picks-simulation.R` (Priority 2 in the pending simulation scripts)
-3. **Completed**: Condition-specific adjustments (altitude/period/MS) in `race-picks-simulation.R`
+2. **Current task**: Simulation scripts are integrated into the pipeline
+3. **Completed**: All simulation scripts + pipeline integration
 4. **Update this file** with any changes made
 
-### Current Session Status (2026-02-27)
+### Current Session Status (2026-02-28)
 
-**Last completed**: Added condition-specific adjustments to `race-picks-simulation.R`:
-- `add_period_column()` - calculates season phase (1-5) based on race number
-- `add_altitude_category()` - categorizes elevation (high ≥1300m vs low)
-- Adjustments calculated INSIDE `build_athlete_distribution()` using same decay weighting as distribution mean
-- T-test based (p < 0.05 threshold) for altitude, period, and MS adjustments
-- Adjustment = `condition_weighted_mean - history_weighted_mean` (deviation from skier's own baseline)
+**Completed this session (Pipeline Integration)**:
 
-**Next up**: Create `weekly-picks-simulation.R` (see "PENDING: Simulation Scripts" section below)
+1. **race-picks-simulation.R** - Updated output:
+   - Output directory: `race-picks/YYYYMMDD` (dated folder)
+   - File names: `men_position_probabilities.xlsx`, `ladies_position_probabilities.xlsx`
+   - Team events: `men_relay_position_probabilities.xlsx`, `men_team_sprint_position_probabilities.xlsx`, etc.
+   - Mixed relay: `mixed_relay_position_probabilities.xlsx`
+
+2. **weekly-picks-simulation.R** - Updated output:
+   - Output directory: `race-picks/YYYYMMDD` (fantasy files go to race-picks per user request)
+   - File names: `fantasy_team.xlsx`, `fantasy_position_probabilities.xlsx`
+
+3. **predict_script.sh** and **predict_script_ubuntu.sh** - Added R script calls:
+   - After weekend scrapers: calls `weekly-picks-simulation.R` for cross-country
+   - After race scrapers: calls `race-picks-simulation.R` for cross-country
+   - Added fantasy file processing: processes `fantasy*.xlsx` from race-picks during weekend events
+
+**Pipeline Integration Complete** - Cross-country simulation scripts now run automatically via master_automation.
+
+### Previous Session (2026-02-27)
+
+**Simulation Scripts Created**:
+
+1. **race-picks-simulation.R** - Individual/Relay/TS/Mixed predictions
+2. **weekly-picks-simulation.R** - Weekend fantasy predictions with knapsack optimization
+3. **tds-picks-simulation.R** - Tour de Ski overall predictions (~450 lines)
+4. **final_climb-simulation.R** - Final Climb race-day predictions (~400 lines)
+
+**ALL SIMULATION SCRIPTS COMPLETE** - All four cross-country simulation scripts are now ready for testing.
 
 ---
 
@@ -926,9 +977,9 @@ adjusted_mean <- weighted_mean + altitude_adj + period_adj + ms_adj
 | Script | Priority | Complexity | Dependencies | Status |
 |--------|----------|------------|--------------|--------|
 | Add adjustments to race-picks-simulation.R | 1 | Medium | None | **DONE** (2026-02-27) |
-| weekly-picks-simulation.R | 2 | Medium | race-picks-simulation.R | Pending |
-| tds-picks-simulation.R | 3 | High | weekly-picks-simulation.R | Pending |
-| final_climb-simulation.R | 4 | Medium | tds-picks-simulation.R | Pending |
+| weekly-picks-simulation.R | 2 | Medium | race-picks-simulation.R | **DONE** (2026-02-27) |
+| tds-picks-simulation.R | 3 | Medium | weekly-picks-simulation.R | **DONE** (2026-02-27) |
+| final_climb-simulation.R | 4 | Medium | tds-picks-simulation.R | **DONE** (2026-02-27) |
 
 ---
 

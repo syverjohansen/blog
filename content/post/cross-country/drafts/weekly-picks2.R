@@ -1121,36 +1121,10 @@ run_fantasy_optimization <- function(men_results, ladies_results, weekend_date) 
   
   log_info("Optimizing fantasy teams...")
 
-  # OLD METHOD (MIP optimization with budget constraints) - commented out for now
-  # normal_team <- optimize_weekly_team(men_results, ladies_results, "normal")
-  # safe_team <- optimize_weekly_team(men_results, ladies_results, "safe")
-  # upside_team <- optimize_weekly_team(men_results, ladies_results, "upside")
-
-  # NEW METHOD: Take top 20 men and top 20 ladies by predicted points (or max available)
-  log_info("Selecting top 20 men and top 20 ladies by Total_Points...")
-
-  top20_men <- men_results$full_predictions %>%
-    arrange(desc(Total_Points)) %>%
-    head(20) %>%
-    mutate(Sex = "M") %>%
-    dplyr::select(Skier, ID, Sex, Nation, Price, Points = Total_Points)
-
-  top20_ladies <- ladies_results$full_predictions %>%
-    arrange(desc(Total_Points)) %>%
-    head(20) %>%
-    mutate(Sex = "L") %>%
-    dplyr::select(Skier, ID, Sex, Nation, Price, Points = Total_Points)
-
-  # Combine into fantasy team
-  normal_team <- bind_rows(top20_men, top20_ladies) %>%
-    arrange(Sex, desc(Points))
-
-  log_info(sprintf("Fantasy team total predicted points: %.2f", sum(normal_team$Points)))
-  log_info(paste("Men:", nrow(top20_men), "| Ladies:", nrow(top20_ladies)))
-
-  # Create placeholder teams for backward compatibility (same as normal for now)
-  safe_team <- normal_team
-  upside_team <- normal_team
+  # MIP optimization with budget constraints (knapsack approach)
+  normal_team <- optimize_weekly_team(men_results, ladies_results, "normal")
+  safe_team <- optimize_weekly_team(men_results, ladies_results, "safe")
+  upside_team <- optimize_weekly_team(men_results, ladies_results, "upside")
 
   # Save all teams to one Excel file with multiple sheets
   log_info("Saving fantasy team results...")

@@ -239,6 +239,20 @@ process_sport_data() {
             fi
         fi
 
+        # Run R prediction scripts for cross-country (ski)
+        if [[ "$sport_dir" == "ski" ]]; then
+            local xc_drafts_dir="$CONTENT_DIR/$content_sport/drafts"
+
+            # Run weekly-picks-simulation.R for fantasy predictions
+            if [[ -f "$xc_drafts_dir/weekly-picks-simulation.R" ]]; then
+                log_message "Running weekly-picks-simulation.R for cross-country..."
+                cd "$xc_drafts_dir" && Rscript weekly-picks-simulation.R >/dev/null 2>&1
+                log_message "Completed weekly-picks-simulation.R"
+            else
+                log_message "Warning: weekly-picks-simulation.R not found"
+            fi
+        fi
+
         # Process weekend predictions - check if this was a TdS event for cross-country
         local weekend_source_dir=""
         local weekend_output_dir=""
@@ -290,6 +304,40 @@ process_sport_data() {
             else
                 data_generated="$content_sport:$weekend_type:true"
             fi
+
+            # For cross-country: also process race-picks directory for fantasy files
+            # (weekly-picks-simulation.R outputs fantasy files to race-picks)
+            if [[ "$sport_dir" == "ski" ]]; then
+                local fantasy_race_source_dir="$CONTENT_DIR/$content_sport/drafts/race-picks/$TODAY_YYYYMMDD"
+                local fantasy_race_output_dir="$BLOG_DIR/data/$content_sport/drafts/race-picks/$TODAY_YYYYMMDD"
+
+                if [[ -d "$fantasy_race_source_dir" ]]; then
+                    local fantasy_excel_count=$(find "$fantasy_race_source_dir" -name "fantasy*.xlsx" 2>/dev/null | wc -l)
+                    if [[ $fantasy_excel_count -gt 0 ]]; then
+                        log_message "Processing $fantasy_excel_count fantasy Excel files from race-picks"
+                        mkdir -p "$fantasy_race_output_dir"
+
+                        for excel_file in "$fantasy_race_source_dir"/fantasy*.xlsx; do
+                            if [[ -f "$excel_file" ]]; then
+                                log_message "Processing fantasy Excel file: $(basename "$excel_file")"
+                                source ~/blog/venv/bin/activate && python "$BLOG_DIR/static/python/excel_to_hugo_multiple_sheets.py" "$excel_file" "$fantasy_race_output_dir" >/dev/null 2>&1
+                                if [[ $? -eq 0 ]]; then
+                                    log_message "✓ Successfully processed fantasy $(basename "$excel_file")"
+                                else
+                                    log_message "✗ Error processing fantasy $(basename "$excel_file")"
+                                fi
+                            fi
+                        done
+
+                        # Add race-picks to data generated for fantasy
+                        if [[ -n "$data_generated" ]]; then
+                            data_generated="$data_generated|$content_sport:race-picks:true"
+                        else
+                            data_generated="$content_sport:race-picks:true"
+                        fi
+                    fi
+                fi
+            fi
         else
             log_message "Weekend source directory not found: $weekend_source_dir"
         fi
@@ -308,6 +356,20 @@ process_sport_data() {
             log_message "Completed startlist-scrape-races.py for $sport_dir"
         else
             log_message "Warning: startlist-scrape-races.py not found for $sport_dir"
+        fi
+
+        # Run R race-picks prediction script for cross-country (ski)
+        if [[ "$sport_dir" == "ski" ]]; then
+            local xc_drafts_dir="$CONTENT_DIR/$content_sport/drafts"
+
+            # Run race-picks-simulation.R for race day predictions
+            if [[ -f "$xc_drafts_dir/race-picks-simulation.R" ]]; then
+                log_message "Running race-picks-simulation.R for cross-country..."
+                cd "$xc_drafts_dir" && Rscript race-picks-simulation.R >/dev/null 2>&1
+                log_message "Completed race-picks-simulation.R"
+            else
+                log_message "Warning: race-picks-simulation.R not found"
+            fi
         fi
 
         # Process race predictions
