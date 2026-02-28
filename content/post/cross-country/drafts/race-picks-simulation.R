@@ -85,7 +85,8 @@ RUN_TEAM_SPRINT_CALIBRATION <- FALSE  # Calibrate team sprint parameters (2 legs
 CALIBRATION_START_SEASON <- 2018      # Calibrate on races from this season onward
 
 # Position thresholds to track
-POSITION_THRESHOLDS <- c(1, 3, 5, 10, 30)
+POSITION_THRESHOLDS <- c(1, 3, 5, 10, 30)           # Distance races: Win, Podium, Top5, Top10, Top30
+SPRINT_POSITION_THRESHOLDS <- c(1, 3, 6, 12, 30)    # Sprint races: Win, Podium, Final, Semifinal, Quarterfinal
 
 # Relay data season cutoff
 RELAY_SEASON_CUTOFF <- 2010
@@ -1807,9 +1808,13 @@ if(PROCESS_INDIVIDUAL) {
       athlete_distributions[[as.character(athlete_id)]] <- dist
     }
 
-    # Run Monte Carlo simulation
-    log_info(paste("Running", N_SIMULATIONS, "Monte Carlo simulations"))
-    race_results <- simulate_race_positions(athlete_distributions)
+    # Run Monte Carlo simulation with race-type-specific thresholds
+    is_sprint <- grepl("^Sprint", race_type_key)
+    race_thresholds <- if(is_sprint) SPRINT_POSITION_THRESHOLDS else POSITION_THRESHOLDS
+    log_info(paste("Running", N_SIMULATIONS, "Monte Carlo simulations (",
+                   ifelse(is_sprint, "sprint", "distance"), "thresholds)"))
+    race_results <- simulate_race_positions(athlete_distributions,
+                                            position_thresholds = race_thresholds)
 
     # Add athlete names and other info
     race_results <- race_results %>%
@@ -1817,8 +1822,8 @@ if(PROCESS_INDIVIDUAL) {
         startlist %>% select(ID, Skier, Nation) %>% distinct(),
         by = c("athlete_id" = "ID")
       ) %>%
-      rename(ID = athlete_id, Name = Skier) %>%
-      select(Name, Nation, ID, mean_points, sd_points, adjustment, n_actual_races,
+      rename(ID = athlete_id) %>%
+      select(Skier, Nation, ID, mean_points, sd_points, adjustment, n_actual_races,
              starts_with("prob_top_")) %>%
       arrange(desc(prob_top_1))
 
@@ -1833,22 +1838,24 @@ if(PROCESS_INDIVIDUAL) {
       if (nrow(top_adj) > 0) {
         log_info("Top 5 adjustments:")
         for (j in 1:nrow(top_adj)) {
-          log_info(paste("  ", top_adj$Name[j], ":", round(top_adj$adjustment[j], 2), "points"))
+          log_info(paste("  ", top_adj$Skier[j], ":", round(top_adj$adjustment[j], 2), "points"))
         }
       }
     }
 
-    # Store results
+    # Store results with race number for sheet naming
     race_key <- paste(gender, race_type_key, sep = "_")
     individual_results[[race_key]] <- list(
       race_info = race,
       predictions = race_results,
       gender = gender,
-      race_type = race_type_key
+      race_type = race_type_key,
+      is_sprint = is_sprint,
+      race_number = i  # Track race number for sheet naming
     )
 
     log_info(paste("Completed", race_key, "- Top 3:"))
-    print(head(race_results %>% select(Name, Nation, prob_top_1, prob_top_3), 3))
+    print(head(race_results %>% select(Skier, Nation, prob_top_1, prob_top_3), 3))
   }
 
   log_info(paste("Individual race simulation complete.", length(individual_results), "races processed"))
@@ -2297,24 +2304,52 @@ if (!dir.exists(output_dir)) {
 format_individual_results <- function(results_list) {
   formatted <- list()
 
+  # Track race numbers per gender for sheet naming
+  men_race_num <- 0
+  ladies_race_num <- 0
+
   for (race_key in names(results_list)) {
     entry <- results_list[[race_key]]
     predictions <- entry$predictions
+    is_sprint <- entry$is_sprint
 
-    # Format probabilities as percentages
-    output_data <- predictions %>%
-      mutate(
-        Win = round(prob_top_1 * 100, 1),
-        Podium = round(prob_top_3 * 100, 1),
-        Top5 = round(prob_top_5 * 100, 1),
-        `Top-10` = round(prob_top_10 * 100, 1),
-        `Top-30` = round(prob_top_30 * 100, 1)
-      ) %>%
-      select(Name, Nation, ID, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
-      arrange(desc(Win))
+    # Format probabilities as percentages based on race type
+    if (is_sprint) {
+      # Sprint: Win, Podium, Final (top6), Semifinal (top12), Quarterfinal (top30)
+      output_data <- predictions %>%
+        mutate(
+          Win = round(prob_top_1 * 100, 1),
+          Podium = round(prob_top_3 * 100, 1),
+          Final = round(prob_top_6 * 100, 1),
+          Semifinal = round(prob_top_12 * 100, 1),
+          Quarterfinal = round(prob_top_30 * 100, 1)
+        ) %>%
+        select(Skier, ID, Nation, Win, Podium, Final, Semifinal, Quarterfinal) %>%
+        arrange(desc(Win))
+    } else {
+      # Distance: Win, Podium, Top5, Top10, Top30
+      output_data <- predictions %>%
+        mutate(
+          Win = round(prob_top_1 * 100, 1),
+          Podium = round(prob_top_3 * 100, 1),
+          Top5 = round(prob_top_5 * 100, 1),
+          Top10 = round(prob_top_10 * 100, 1),
+          Top30 = round(prob_top_30 * 100, 1)
+        ) %>%
+        select(Skier, ID, Nation, Win, Podium, Top5, Top10, Top30) %>%
+        arrange(desc(Win))
+    }
 
-    race_name <- paste(entry$gender, race_types[[entry$race_type]]$name, sep = " - ")
-    formatted[[race_name]] <- output_data
+    # Create sheet name matching race-picks.R format: "Men Race 1", "Ladies Race 1", etc.
+    if (entry$gender == "men") {
+      men_race_num <- men_race_num + 1
+      sheet_name <- paste("Men Race", men_race_num)
+    } else {
+      ladies_race_num <- ladies_race_num + 1
+      sheet_name <- paste("Ladies Race", ladies_race_num)
+    }
+
+    formatted[[sheet_name]] <- output_data
   }
 
   return(formatted)
@@ -2329,13 +2364,13 @@ format_team_results <- function(results_list) {
     predictions <- entry$predictions
     team_distributions <- entry$team_distributions
 
-    # Format probabilities as percentages
+    # Format probabilities as percentages (no hyphens in column names)
     output_data <- predictions %>%
       mutate(
         Win = round(prob_top_1 * 100, 1),
         Podium = round(prob_top_3 * 100, 1),
         Top5 = round(prob_top_5 * 100, 1),
-        `Top-10` = round(prob_top_10 * 100, 1)
+        Top10 = round(prob_top_10 * 100, 1)
       )
 
     # Add team members column
@@ -2350,7 +2385,7 @@ format_team_results <- function(results_list) {
     })
 
     output_data <- output_data %>%
-      select(Nation, Team, Win, Podium, Top5, `Top-10`) %>%
+      select(Nation, Team, Win, Podium, Top5, Top10) %>%
       arrange(desc(Win))
 
     formatted[[race_key]] <- output_data
@@ -2440,7 +2475,7 @@ if (length(individual_results) > 0) {
   for (race_key in names(individual_results)) {
     entry <- individual_results[[race_key]]
     top_pred <- entry$predictions[1, ]
-    cat(paste("  ", race_key, "- Winner pick:", top_pred$Name, "(", round(top_pred$prob_top_1 * 100, 1), "%)\n"))
+    cat(paste("  ", race_key, "- Winner pick:", top_pred$Skier, "(", round(top_pred$prob_top_1 * 100, 1), "%)\n"))
   }
 }
 

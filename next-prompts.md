@@ -443,7 +443,7 @@ If starting a new session:
 
 ### Current Session Status (2026-02-28)
 
-**Completed this session (Pipeline Integration)**:
+**Completed this session (Pipeline Integration + Output Format Fixes)**:
 
 1. **race-picks-simulation.R** - Updated output:
    - Output directory: `race-picks/YYYYMMDD` (dated folder)
@@ -459,6 +459,15 @@ If starting a new session:
    - After weekend scrapers: calls `weekly-picks-simulation.R` for cross-country
    - After race scrapers: calls `race-picks-simulation.R` for cross-country
    - Added fantasy file processing: processes `fantasy*.xlsx` from race-picks during weekend events
+
+4. **race-picks-simulation.R** - Output format fixes to match race-picks.R:
+   - Added sprint-specific thresholds: `c(1, 3, 6, 12, 30)` for sprint races
+   - Sprint columns: `Skier, ID, Nation, Win, Podium, Final, Semifinal, Quarterfinal`
+   - Distance columns: `Skier, ID, Nation, Win, Podium, Top5, Top10, Top30`
+   - Changed `Name` to `Skier` (matching race-picks.R)
+   - Removed hyphens from column names (`Top10` not `Top-10`)
+   - Sheet names now: `"Men Race 1"`, `"Ladies Race 1"` (matching race-picks.R)
+   - Team events: `Top10` instead of `Top-10`
 
 **Pipeline Integration Complete** - Cross-country simulation scripts now run automatically via master_automation.
 
