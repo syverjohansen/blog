@@ -576,22 +576,22 @@ prepare_probabilities_output <- function(results, gender) {
 men_probs_output <- prepare_probabilities_output(men_final_results, "men")
 ladies_probs_output <- prepare_probabilities_output(ladies_final_results, "ladies")
 
-# Save Excel files
-write.xlsx(men_points_output, file.path(output_dir, "men_simulation.xlsx"))
-write.xlsx(ladies_points_output, file.path(output_dir, "ladies_simulation.xlsx"))
-write.xlsx(men_probs_output, file.path(output_dir, "men_position_probabilities_simulation.xlsx"))
-write.xlsx(ladies_probs_output, file.path(output_dir, "ladies_position_probabilities_simulation.xlsx"))
+# Save Excel files (matching final_climb.R output format)
+write.xlsx(men_points_output, file.path(output_dir, "men.xlsx"))
+write.xlsx(ladies_points_output, file.path(output_dir, "ladies.xlsx"))
+
+# Save position probabilities with custom sheet names (matching final_climb.R)
+men_probs_wb <- createWorkbook()
+addWorksheet(men_probs_wb, "Men Race 1")
+writeData(men_probs_wb, "Men Race 1", men_probs_output)
+saveWorkbook(men_probs_wb, file.path(output_dir, "men_position_probabilities.xlsx"), overwrite = TRUE)
+
+ladies_probs_wb <- createWorkbook()
+addWorksheet(ladies_probs_wb, "Ladies Race 1")
+writeData(ladies_probs_wb, "Ladies Race 1", ladies_probs_output)
+saveWorkbook(ladies_probs_wb, file.path(output_dir, "ladies_position_probabilities.xlsx"), overwrite = TRUE)
 
 log_info("Saved points and probability files")
-
-# Save full results with all columns
-write.xlsx(
-  list(
-    "Men" = men_final_results,
-    "Ladies" = ladies_final_results
-  ),
-  file.path(output_dir, "final_climb_simulation_full_results.xlsx")
-)
 
 log_info("Saved full simulation results")
 

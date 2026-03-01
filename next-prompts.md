@@ -47,13 +47,13 @@ race-picks/YYYYMMDD/
 ```
 
 **When Scripts Run:**
-- `weekly-picks-simulation.R` - Runs during weekend events (weekends.csv match)
+- `weekly-picks-simulation.R` - Runs during regular weekend events
 - `race-picks-simulation.R` - Runs during race events (races.csv match)
+- `tds-picks-simulation.R` - Runs on first day of Tour de Ski (Period 2)
+- `final_climb-simulation.R` - Runs on Final Climb day (Val Di Fiemme + Distance + Freestyle)
 - Fantasy files processed during weekend flow (even if no races in races.csv)
 
-**Pending Integration:**
-- `tds-picks-simulation.R` - To be added for Tour de Ski events (Period 2)
-- `final_climb-simulation.R` - To be added for Final Climb events
+**All Simulation Scripts Now Integrated** ✓
 
 ---
 
@@ -469,7 +469,19 @@ If starting a new session:
    - Sheet names now: `"Men Race 1"`, `"Ladies Race 1"` (matching race-picks.R)
    - Team events: `Top10` instead of `Top-10`
 
-**Pipeline Integration Complete** - Cross-country simulation scripts now run automatically via master_automation.
+5. **tds-picks-simulation.R** - Output format fixes to match tds-picks.R:
+   - Removed `_simulation` suffix from file names
+   - Files: `men.xlsx`, `ladies.xlsx`, `men_position_probabilities.xlsx`, `ladies_position_probabilities.xlsx`
+   - Sheet names: `"Men Tour de Ski"`, `"Ladies Tour de Ski"`
+   - Added to pipeline: runs on first day of Tour de Ski (Period 2)
+
+6. **final_climb-simulation.R** - Output format fixes to match final_climb.R:
+   - Removed `_simulation` suffix from file names
+   - Files: `men.xlsx`, `ladies.xlsx`, `men_position_probabilities.xlsx`, `ladies_position_probabilities.xlsx`
+   - Sheet names: `"Men Race 1"`, `"Ladies Race 1"`
+   - Added to pipeline: runs when Val Di Fiemme + Distance + Freestyle detected
+
+**ALL SIMULATION SCRIPTS NOW INTEGRATED** - Cross-country simulation scripts run automatically via master_automation.
 
 ### Previous Session (2026-02-27)
 

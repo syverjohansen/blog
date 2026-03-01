@@ -243,13 +243,46 @@ process_sport_data() {
         if [[ "$sport_dir" == "ski" ]]; then
             local xc_drafts_dir="$CONTENT_DIR/$content_sport/drafts"
 
-            # Run weekly-picks-simulation.R for fantasy predictions
-            if [[ -f "$xc_drafts_dir/weekly-picks-simulation.R" ]]; then
-                log_message "Running weekly-picks-simulation.R for cross-country..."
-                cd "$xc_drafts_dir" && Rscript weekly-picks-simulation.R >/dev/null 2>&1
-                log_message "Completed weekly-picks-simulation.R"
+            # Check if this is a Tour de Ski event (Period 2)
+            if [[ "$earliest_period2_date" == "$TODAY_MMDDYYYY" ]]; then
+                # First day of TdS - run tds-picks-simulation.R for overall TdS predictions
+                if [[ -f "$xc_drafts_dir/tds-picks-simulation.R" ]]; then
+                    log_message "Running tds-picks-simulation.R for Tour de Ski predictions..."
+                    cd "$xc_drafts_dir" && Rscript tds-picks-simulation.R >/dev/null 2>&1
+                    log_message "Completed tds-picks-simulation.R"
+                else
+                    log_message "Warning: tds-picks-simulation.R not found"
+                fi
             else
-                log_message "Warning: weekly-picks-simulation.R not found"
+                # Regular weekend - run weekly-picks-simulation.R for fantasy predictions
+                if [[ -f "$xc_drafts_dir/weekly-picks-simulation.R" ]]; then
+                    log_message "Running weekly-picks-simulation.R for cross-country..."
+                    cd "$xc_drafts_dir" && Rscript weekly-picks-simulation.R >/dev/null 2>&1
+                    log_message "Completed weekly-picks-simulation.R"
+                else
+                    log_message "Warning: weekly-picks-simulation.R not found"
+                fi
+            fi
+
+            # Check for Final Climb race (last day of TdS - Val Di Fiemme, Distance, Freestyle)
+            # Final Climb is identified by checking races.csv for Val Di Fiemme + Distance + Freestyle on today's date
+            local races_csv="$SKI_DIR/$sport_dir/polars/excel365/races.csv"
+            if [[ -f "$races_csv" ]]; then
+                local is_final_climb=$(awk -F',' -v date="$TODAY_MMDDYYYY" '
+                    NR>1 && $1 == date && $3 ~ /Val Di Fiemme|Val di Fiemme/ && $5 != "Sprint" && $6 == "F" {
+                        print "yes"; exit
+                    }
+                ' "$races_csv" 2>/dev/null)
+
+                if [[ "$is_final_climb" == "yes" ]]; then
+                    log_message "✓ Final Climb race detected - running final_climb-simulation.R"
+                    if [[ -f "$xc_drafts_dir/final_climb-simulation.R" ]]; then
+                        cd "$xc_drafts_dir" && Rscript final_climb-simulation.R >/dev/null 2>&1
+                        log_message "Completed final_climb-simulation.R"
+                    else
+                        log_message "Warning: final_climb-simulation.R not found"
+                    fi
+                fi
             fi
         fi
 
