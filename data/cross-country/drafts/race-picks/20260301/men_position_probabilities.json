@@ -1,0 +1,645 @@
+{
+  "sheet_name": "Men Race 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Win",
+    "Podium",
+    "Top5",
+    "Top10",
+    "Top30"
+  ],
+  "rows": [
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "Norway",
+      44.2,
+      79.5,
+      92.6,
+      98.9,
+      100.0
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "Norway",
+      26.9,
+      87.0,
+      99.0,
+      100.0,
+      100.0
+    ],
+    [
+      "Martin Løwstrøm Nyenget",
+      2295,
+      "Norway",
+      20.0,
+      77.4,
+      95.6,
+      99.9,
+      100.0
+    ],
+    [
+      "Saveliy Korostelev",
+      13188,
+      "Russia",
+      3.0,
+      13.8,
+      37.9,
+      72.2,
+      99.2
+    ],
+    [
+      "Andreas Fjorden Ree",
+      8678,
+      "Norway",
+      1.7,
+      9.8,
+      32.3,
+      68.6,
+      98.6
+    ],
+    [
+      "Mika Vermeulen",
+      12673,
+      "Austria",
+      1.6,
+      7.7,
+      22.0,
+      51.5,
+      97.4
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "Italy",
+      0.9,
+      4.0,
+      15.9,
+      49.1,
+      97.6
+    ],
+    [
+      "Jules Lapierre",
+      3646,
+      "France",
+      0.4,
+      3.2,
+      12.5,
+      40.8,
+      94.3
+    ],
+    [
+      "Andrew Musgrave",
+      277,
+      "Great Britain",
+      0.3,
+      3.6,
+      19.4,
+      65.7,
+      99.9
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      "USA",
+      0.3,
+      0.9,
+      6.0,
+      23.8,
+      87.9
+    ],
+    [
+      "Truls Gisselman",
+      12782,
+      "Sweden",
+      0.2,
+      0.3,
+      1.4,
+      8.1,
+      69.8
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "France",
+      0.1,
+      1.6,
+      11.8,
+      42.6,
+      98.8
+    ],
+    [
+      "Lars Heggen",
+      19104,
+      "Norway",
+      0.1,
+      1.0,
+      7.1,
+      29.9,
+      95.2
+    ],
+    [
+      "Arsi Ruuskanen",
+      8120,
+      "Finland",
+      0.1,
+      1.6,
+      6.0,
+      23.9,
+      90.5
+    ],
+    [
+      "Elia Barp",
+      14042,
+      "Italy",
+      0.1,
+      1.0,
+      5.1,
+      21.6,
+      87.8
+    ],
+    [
+      "Beda Klee",
+      3651,
+      "Switzerland",
+      0.1,
+      0.5,
+      2.3,
+      9.2,
+      70.2
+    ],
+    [
+      "Joe Davies",
+      14110,
+      "Great Britain",
+      0.0,
+      1.7,
+      6.3,
+      32.0,
+      95.9
+    ],
+    [
+      "Alvar Johannes Alev",
+      1996,
+      "Estonia",
+      0.0,
+      0.9,
+      5.8,
+      30.1,
+      95.9
+    ],
+    [
+      "Victor Lovera",
+      17106,
+      "France",
+      0.0,
+      1.8,
+      5.8,
+      26.9,
+      94.9
+    ],
+    [
+      "Michal Novak",
+      3655,
+      "Czechia",
+      0.0,
+      0.1,
+      1.0,
+      13.0,
+      92.7
+    ],
+    [
+      "Friedrich Moch",
+      9323,
+      "Germany",
+      0.0,
+      0.8,
+      3.7,
+      21.1,
+      84.5
+    ],
+    [
+      "Theo Schely",
+      12166,
+      "France",
+      0.0,
+      0.6,
+      3.0,
+      15.6,
+      81.3
+    ],
+    [
+      "Davide Graz",
+      12165,
+      "Italy",
+      0.0,
+      0.8,
+      3.0,
+      15.0,
+      81.1
+    ],
+    [
+      "Antoine Cyr",
+      9225,
+      "Canada",
+      0.0,
+      0.1,
+      1.4,
+      10.7,
+      81.0
+    ],
+    [
+      "Martino Carollo",
+      19980,
+      "Italy",
+      0.0,
+      0.1,
+      1.3,
+      10.4,
+      75.6
+    ],
+    [
+      "Florian Notz",
+      1488,
+      "Germany",
+      0.0,
+      0.0,
+      0.0,
+      3.0,
+      80.0
+    ],
+    [
+      "Perttu Hyvärinen",
+      1441,
+      "Finland",
+      0.0,
+      0.0,
+      0.5,
+      5.5,
+      72.1
+    ],
+    [
+      "Simone Dapra",
+      6019,
+      "Italy",
+      0.0,
+      0.0,
+      0.0,
+      1.2,
+      71.0
+    ],
+    [
+      "Petteri Koivisto",
+      8104,
+      "Finland",
+      0.0,
+      0.2,
+      1.1,
+      5.0,
+      60.3
+    ],
+    [
+      "Benjamin Moser",
+      5989,
+      "Austria",
+      0.0,
+      0.0,
+      0.2,
+      2.8,
+      52.4
+    ],
+    [
+      "Remi Bourdin",
+      17445,
+      "France",
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      43.5
+    ],
+    [
+      "Jesper Persson",
+      14715,
+      "Sweden",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      39.5
+    ],
+    [
+      "Nicola Wigger",
+      12697,
+      "Switzerland",
+      0.0,
+      0.0,
+      0.0,
+      0.6,
+      41.2
+    ],
+    [
+      "Olivier Leveille",
+      14108,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      36.6
+    ],
+    [
+      "Markus Vuorela",
+      5635,
+      "Finland",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      31.8
+    ],
+    [
+      "Niko Anttola",
+      17474,
+      "Finland",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      29.1
+    ],
+    [
+      "Leo Johansson",
+      8047,
+      "Sweden",
+      0.0,
+      0.0,
+      0.0,
+      0.9,
+      34.1
+    ],
+    [
+      "Johan Ekberg",
+      13290,
+      "Sweden",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      24.1
+    ],
+    [
+      "Eric Rosjö",
+      5940,
+      "Sweden",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      14.6
+    ],
+    [
+      "Johan Häggström",
+      4399,
+      "Sweden",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      15.3
+    ],
+    [
+      "Cyril Fähndrich",
+      9975,
+      "Switzerland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      20.2
+    ],
+    [
+      "Antonin Savary",
+      12775,
+      "Switzerland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      12.3
+    ],
+    [
+      "Zanden McMullen",
+      12698,
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      19.1
+    ],
+    [
+      "Kevin Bolger",
+      9159,
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      11.6
+    ],
+    [
+      "Hunter Wonders",
+      5946,
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.3
+    ],
+    [
+      "Alexander Mathisen",
+      17641,
+      "Norway",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.2
+    ],
+    [
+      "Max Hollmann",
+      18737,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.5
+    ],
+    [
+      "Adam Fellner",
+      2162,
+      "Czechia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.8
+    ],
+    [
+      "Sasha Masson",
+      14060,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.5
+    ],
+    [
+      "Theo Mattei",
+      19775,
+      "Sweden",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      3.0
+    ],
+    [
+      "Jonas Eriksson",
+      5590,
+      "Sweden",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      "Gustaf Berglund",
+      340,
+      "Sweden",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1
+    ],
+    [
+      "Michael Föttinger",
+      5978,
+      "Austria",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.4
+    ],
+    [
+      "Remi Drolet",
+      8051,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      "Simone Mocellini",
+      12168,
+      "Italy",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    [
+      "James Clinton Schoonmaker",
+      9201,
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.2
+    ],
+    [
+      "Dagur Benediktsson",
+      5956,
+      "Iceland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1
+    ],
+    [
+      "Sebastian Bryja",
+      12700,
+      "Poland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      "Franco Dal Farra",
+      8039,
+      "Argentina",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      "Miha Licef",
+      5911,
+      "Slovenia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      "Jan Stölben",
+      14033,
+      "Germany",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      "Christopher Kalev",
+      6469,
+      "Estonia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      "Maciej Starega",
+      139,
+      "Poland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  ]
+}
