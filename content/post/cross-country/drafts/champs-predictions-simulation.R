@@ -1460,52 +1460,53 @@ build_athlete_distribution <- function(athlete_id, race_type_key, chrono_data,
   ))
 }
 
-# Simulate race positions
+# Simulate race positions (vectorized for performance)
 simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIMULATIONS,
-                                     position_thresholds = POSITION_THRESHOLDS) {
+                                     position_thresholds = POSITION_THRESHOLDS,
+                                     max_points = 100) {
 
-  n_athletes <- length(athlete_distributions)
-  athlete_ids <- sapply(athlete_distributions, function(x) x$athlete_id)
+  # Filter out invalid distributions
+  valid_distributions <- Filter(function(dist) {
+    !is.null(dist) &&
+    !is.null(dist$athlete_id) && !is.na(dist$athlete_id) &&
+    !is.null(dist$mean) && !is.na(dist$mean) &&
+    !is.null(dist$sd) && !is.na(dist$sd)
+  }, athlete_distributions)
 
-  # Initialize position counts
-  position_counts <- matrix(0, nrow = n_athletes, ncol = length(position_thresholds),
-                            dimnames = list(athlete_ids, paste0("top_", position_thresholds)))
-
-  # Check for invalid distributions before simulation
-  for (i in seq_along(athlete_distributions)) {
-    dist <- athlete_distributions[[i]]
-    if (is.null(dist$mean) || is.na(dist$mean) || is.null(dist$sd) || is.na(dist$sd)) {
-      log_warn(paste("Invalid distribution for athlete:", dist$athlete_id,
-                     "- mean:", dist$mean, "sd:", dist$sd,
-                     "n_actual_races:", dist$n_actual_races))
-    }
+  if (length(valid_distributions) == 0) {
+    log_error("No valid athlete distributions to simulate")
+    return(data.frame())
   }
 
-  # Run simulations
-  for (sim in 1:n_simulations) {
-    # Sample points from each athlete's distribution
-    # Apply SD_SCALE_FACTOR to control randomness (lower = favorites win more)
-    simulated_points <- sapply(athlete_distributions, function(dist) {
-      # Skip if invalid
-      if (is.null(dist$mean) || is.na(dist$mean) || is.null(dist$sd) || is.na(dist$sd)) {
-        return(0)  # Return 0 for invalid distributions
-      }
-      # Apply variance controls: scale, then bound
-      scaled_sd <- dist$sd * SD_SCALE_FACTOR
-      bounded_sd <- pmax(SD_MIN, pmin(SD_MAX, scaled_sd))
-      rnorm(1, mean = dist$mean, sd = bounded_sd)
-    })
-    simulated_points <- pmax(0, pmin(100, simulated_points))
+  if (length(valid_distributions) < length(athlete_distributions)) {
+    log_info(paste("Filtered out", length(athlete_distributions) - length(valid_distributions),
+                   "invalid distributions"))
+  }
 
-    # Rank (higher points = better = lower rank)
-    ranks <- rank(-simulated_points, ties.method = "random")
+  n_athletes <- length(valid_distributions)
+  athlete_ids <- sapply(valid_distributions, function(x) x$athlete_id)
 
-    # Count positions
-    for (t_idx in seq_along(position_thresholds)) {
-      threshold <- position_thresholds[t_idx]
-      achieved <- ranks <= threshold
-      position_counts[achieved, t_idx] <- position_counts[achieved, t_idx] + 1
-    }
+  # Extract means and sds as vectors for vectorized operations
+  means <- sapply(valid_distributions, function(x) x$mean)
+  sds <- sapply(valid_distributions, function(x) x$sd)
+
+  # Apply SD scaling and bounds
+  scaled_sds <- pmax(SD_MIN, pmin(SD_MAX, sds * SD_SCALE_FACTOR))
+
+  # Generate all simulations at once (n_athletes x n_simulations matrix)
+  all_sims <- matrix(rnorm(n_athletes * n_simulations),
+                     nrow = n_athletes, ncol = n_simulations)
+  all_sims <- all_sims * scaled_sds + means
+  all_sims <- pmax(0, pmin(max_points, all_sims))
+
+  # Rank each simulation (column) - higher points = better = rank 1
+  ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
+
+  # Count position achievements using vectorized rowSums
+  position_counts <- matrix(0, nrow = n_athletes, ncol = length(position_thresholds))
+  for (t_idx in seq_along(position_thresholds)) {
+    threshold <- position_thresholds[t_idx]
+    position_counts[, t_idx] <- rowSums(ranks_matrix <= threshold)
   }
 
   # Convert to probabilities
@@ -1514,9 +1515,9 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   # Build results dataframe
   results <- data.frame(
     athlete_id = athlete_ids,
-    mean_points = sapply(athlete_distributions, function(x) x$mean),
-    sd_points = sapply(athlete_distributions, function(x) x$sd),
-    n_actual_races = sapply(athlete_distributions, function(x) x$n_actual_races),
+    mean_points = means,
+    sd_points = sds,
+    n_actual_races = sapply(valid_distributions, function(x) x$n_actual_races),
     stringsAsFactors = FALSE
   )
 
@@ -3017,11 +3018,11 @@ for (race_name in names(results_list)) {
       Start = round(start_prob * 100, 1),
       Win = round(prob_top_1 * 100, 1),
       Podium = round(prob_top_3 * 100, 1),
-      Top5 = round(prob_top_5 * 100, 1),
+      `Top-5` = round(prob_top_5 * 100, 1),
       `Top-10` = round(prob_top_10 * 100, 1),
       `Top-30` = round(prob_top_30 * 100, 1)
     ) %>%
-    select(Skier, ID, Sex, Nation, Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
+    select(Skier, ID, Sex, Nation, Start, Win, Podium, `Top-5`, `Top-10`, `Top-30`) %>%
     arrange(desc(Win))
 
   race_type <- if (entry$technique == "") entry$distance else expand_race_name(entry$distance, entry$technique)
@@ -3107,12 +3108,12 @@ select_and_rename_cols <- function(df, include_nation = FALSE) {
   if (include_nation) {
     df %>%
       select(Athlete = Skier, ID, Race, Nation,
-             Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
+             Start, Win, Podium, `Top-5`, `Top-10`, `Top-30`) %>%
       arrange(Race, Nation, desc(Start))
   } else {
     df %>%
       select(Athlete = Skier, ID, Race,
-             Start, Win, Podium, Top5, `Top-10`, `Top-30`) %>%
+             Start, Win, Podium, `Top-5`, `Top-10`, `Top-30`) %>%
       arrange(Race, desc(Start))
   }
 }
@@ -3274,11 +3275,11 @@ format_predictions_for_excel <- function(results_list, n_legs_expected, opt_type
           ID = team_members$ID[leg],
           `Leg Win` = round(leg_win, 4),
           `Leg Podium` = round(leg_podium, 4),
-          `Leg Top5` = round(leg_top5, 4),
+          `Leg Top-5` = round(leg_top5, 4),
           `Leg Top-10` = round(leg_top10, 4),
           `Team Win` = round(team_win, 4),
           `Team Podium` = round(team_podium, 4),
-          `Team Top5` = round(team_top5, 4),
+          `Team Top-5` = round(team_top5, 4),
           `Team Top-10` = round(team_top10, 4),
           check.names = FALSE,
           stringsAsFactors = FALSE
@@ -3396,8 +3397,8 @@ create_nations_relay_workbook <- function(men_data, ladies_data) {
     for (nation in sort(men_nations)) {
       nation_data <- men_data %>%
         filter(Country == nation) %>%
-        select(Athlete, ID, Nation, Leg, `Leg Win`, `Leg Podium`, `Leg Top5`, `Leg Top-10`,
-               `Team Win`, `Team Podium`, `Team Top5`, `Team Top-10`) %>%
+        select(Athlete, ID, Nation, Leg, `Leg Win`, `Leg Podium`, `Leg Top-5`, `Leg Top-10`,
+               `Team Win`, `Team Podium`, `Team Top-5`, `Team Top-10`) %>%
         arrange(Leg)
 
       if (nrow(nation_data) > 0) {
@@ -3413,8 +3414,8 @@ create_nations_relay_workbook <- function(men_data, ladies_data) {
     for (nation in sort(ladies_nations)) {
       nation_data <- ladies_data %>%
         filter(Country == nation) %>%
-        select(Athlete, ID, Nation, Leg, `Leg Win`, `Leg Podium`, `Leg Top5`, `Leg Top-10`,
-               `Team Win`, `Team Podium`, `Team Top5`, `Team Top-10`) %>%
+        select(Athlete, ID, Nation, Leg, `Leg Win`, `Leg Podium`, `Leg Top-5`, `Leg Top-10`,
+               `Team Win`, `Team Podium`, `Team Top-5`, `Team Top-10`) %>%
         arrange(Leg)
 
       if (nrow(nation_data) > 0) {
@@ -3436,7 +3437,7 @@ create_nations_relay_workbook <- function(men_data, ladies_data) {
       summarise(
         `Team Win` = round(first(`Team Win`), 4),
         `Team Podium` = round(first(`Team Podium`), 4),
-        `Team Top5` = round(first(`Team Top5`), 4),
+        `Team Top-5` = round(first(`Team Top-5`), 4),
         `Team Top-10` = round(first(`Team Top-10`), 4),
         .groups = "drop"
       ) %>%

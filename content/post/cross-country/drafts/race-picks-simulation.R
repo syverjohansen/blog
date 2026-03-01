@@ -679,11 +679,12 @@ build_athlete_distribution <- function(athlete_id, race_type_key, chrono_data,
   ))
 }
 
-# Simulate race positions using Monte Carlo
+# Simulate race positions using Monte Carlo (vectorized for performance)
 simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIMULATIONS,
                                      position_thresholds = POSITION_THRESHOLDS,
                                      sd_scale_factor = SD_SCALE_FACTOR,
-                                     sd_min = SD_MIN, sd_max = SD_MAX) {
+                                     sd_min = SD_MIN, sd_max = SD_MAX,
+                                     max_points = 100) {
 
   # Filter out invalid distributions (NA mean or sd)
   valid_distributions <- Filter(function(dist) {
@@ -706,29 +707,27 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   n_athletes <- length(valid_distributions)
   athlete_ids <- sapply(valid_distributions, function(x) x$athlete_id)
 
-  # Initialize position counts
-  position_counts <- matrix(0, nrow = n_athletes, ncol = length(position_thresholds),
-                            dimnames = list(athlete_ids, paste0("top_", position_thresholds)))
+  # Extract means and sds as vectors for vectorized operations
+  means <- sapply(valid_distributions, function(x) x$mean)
+  sds <- sapply(valid_distributions, function(x) x$sd)
 
-  # Run simulations
-  for (sim in 1:n_simulations) {
-    # Sample points from each athlete's distribution
-    simulated_points <- sapply(valid_distributions, function(dist) {
-      scaled_sd <- dist$sd * sd_scale_factor
-      bounded_sd <- pmax(sd_min, pmin(sd_max, scaled_sd))
-      rnorm(1, mean = dist$mean, sd = bounded_sd)
-    })
-    simulated_points <- pmax(0, pmin(100, simulated_points))
+  # Apply SD scaling and bounds
+  scaled_sds <- pmax(sd_min, pmin(sd_max, sds * sd_scale_factor))
 
-    # Rank (higher points = better = lower rank)
-    ranks <- rank(-simulated_points, ties.method = "random")
+  # Generate all simulations at once (n_athletes x n_simulations matrix)
+  all_sims <- matrix(rnorm(n_athletes * n_simulations),
+                     nrow = n_athletes, ncol = n_simulations)
+  all_sims <- all_sims * scaled_sds + means
+  all_sims <- pmax(0, pmin(max_points, all_sims))
 
-    # Count positions
-    for (t_idx in seq_along(position_thresholds)) {
-      threshold <- position_thresholds[t_idx]
-      achieved <- ranks <= threshold
-      position_counts[achieved, t_idx] <- position_counts[achieved, t_idx] + 1
-    }
+  # Rank each simulation (column) - higher points = better = rank 1
+  ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
+
+  # Count position achievements using vectorized rowSums
+  position_counts <- matrix(0, nrow = n_athletes, ncol = length(position_thresholds))
+  for (t_idx in seq_along(position_thresholds)) {
+    threshold <- position_thresholds[t_idx]
+    position_counts[, t_idx] <- rowSums(ranks_matrix <= threshold)
   }
 
   # Convert to probabilities
@@ -737,8 +736,8 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   # Build results dataframe
   results <- data.frame(
     athlete_id = athlete_ids,
-    mean_points = sapply(valid_distributions, function(x) x$mean),
-    sd_points = sapply(valid_distributions, function(x) x$sd),
+    mean_points = means,
+    sd_points = sds,
     n_actual_races = sapply(valid_distributions, function(x) x$n_actual_races),
     adjustment = sapply(valid_distributions, function(x) {
       if(!is.null(x$adjustment)) x$adjustment else 0
@@ -2327,16 +2326,16 @@ format_individual_results <- function(results_list) {
         select(Skier, ID, Nation, Win, Podium, Final, Semifinal, Quarterfinal) %>%
         arrange(desc(Win))
     } else {
-      # Distance: Win, Podium, Top5, Top10, Top30
+      # Distance: Win, Podium, Top-5, Top-10, Top-30
       output_data <- predictions %>%
         mutate(
           Win = round(prob_top_1 * 100, 1),
           Podium = round(prob_top_3 * 100, 1),
-          Top5 = round(prob_top_5 * 100, 1),
-          Top10 = round(prob_top_10 * 100, 1),
-          Top30 = round(prob_top_30 * 100, 1)
+          `Top-5` = round(prob_top_5 * 100, 1),
+          `Top-10` = round(prob_top_10 * 100, 1),
+          `Top-30` = round(prob_top_30 * 100, 1)
         ) %>%
-        select(Skier, ID, Nation, Win, Podium, Top5, Top10, Top30) %>%
+        select(Skier, ID, Nation, Win, Podium, `Top-5`, `Top-10`, `Top-30`) %>%
         arrange(desc(Win))
     }
 
@@ -2364,13 +2363,13 @@ format_team_results <- function(results_list) {
     predictions <- entry$predictions
     team_distributions <- entry$team_distributions
 
-    # Format probabilities as percentages (no hyphens in column names)
+    # Format probabilities as percentages
     output_data <- predictions %>%
       mutate(
         Win = round(prob_top_1 * 100, 1),
         Podium = round(prob_top_3 * 100, 1),
-        Top5 = round(prob_top_5 * 100, 1),
-        Top10 = round(prob_top_10 * 100, 1)
+        `Top-5` = round(prob_top_5 * 100, 1),
+        `Top-10` = round(prob_top_10 * 100, 1)
       )
 
     # Add team members column
@@ -2385,7 +2384,7 @@ format_team_results <- function(results_list) {
     })
 
     output_data <- output_data %>%
-      select(Nation, Team, Win, Podium, Top5, Top10) %>%
+      select(Nation, Team, Win, Podium, `Top-5`, `Top-10`) %>%
       arrange(desc(Win))
 
     formatted[[race_key]] <- output_data

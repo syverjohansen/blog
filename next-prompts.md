@@ -441,7 +441,33 @@ If starting a new session:
 3. **Completed**: All simulation scripts + pipeline integration
 4. **Update this file** with any changes made
 
-### Current Session Status (2026-02-28)
+### Current Session Status (2026-03-01)
+
+**Completed this session (Biathlon Simulation Scripts)**:
+
+1. **biathlon/drafts/race-picks-simulation.R** (~565 lines):
+   - Monte Carlo simulation for Biathlon individual races
+   - Race type-specific distributions (Sprint, Individual, Pursuit, Mass Start)
+   - Uses biathlon points systems (regular_points, mass_start_points)
+   - Filters out relay races (Relay, Mixed Relay, Single Mixed Relay)
+   - Output: `men_position_probabilities.xlsx`, `ladies_position_probabilities.xlsx`
+
+2. **biathlon/drafts/champs-predictions-simulation.R** (~725 lines):
+   - Monte Carlo simulation for World Championships
+   - Race start probability calculation per athlete/race type
+   - 4-person quota constraint per nation
+   - Nations Excel file with per-nation sheets
+   - Output: `men_position_probabilities.xlsx`, `ladies_position_probabilities.xlsx`, `men.xlsx`, `ladies.xlsx`, `nations_individual.xlsx`
+
+3. **Pipeline Integration**:
+   - `predict_script.sh` - Added biathlon race-picks-simulation.R call (lines 421-432)
+   - `run_champs_predictions.sh` - Updated to use champs-predictions-simulation.R for biathlon (line 93)
+
+**Next up: Nordic Combined and Ski Jumping simulation scripts**
+
+---
+
+### Previous Session Status (2026-02-28)
 
 **Completed this session (Pipeline Integration + Output Format Fixes)**:
 
@@ -481,7 +507,14 @@ If starting a new session:
    - Sheet names: `"Men Race 1"`, `"Ladies Race 1"`
    - Added to pipeline: runs when Val Di Fiemme + Distance + Freestyle detected
 
-**ALL SIMULATION SCRIPTS NOW INTEGRATED** - Cross-country simulation scripts run automatically via master_automation.
+7. **Alpine race-picks-simulation.R** - Created new file (~450 lines):
+   - Monte Carlo simulation for Alpine skiing individual races
+   - Discipline-specific distributions (Downhill, Super G, Giant Slalom, Slalom, Combined)
+   - Speed vs Tech grouping for historical performance
+   - Output: `men_position_probabilities.xlsx`, `ladies_position_probabilities.xlsx`
+   - Integrated into pipeline (predict_script.sh)
+
+**ALL SIMULATION SCRIPTS NOW INTEGRATED** - Cross-country and Alpine simulation scripts run automatically via master_automation.
 
 ### Previous Session (2026-02-27)
 
@@ -606,14 +639,52 @@ TS_SCORE_SD_MAX <- 0.8
 | Nordic Combined | Pending |
 | Ski Jumping | Pending |
 
+### Championship Predictions (Simulation)
+| Sport | Status |
+|-------|--------|
+| Cross-Country | **DONE** |
+| Alpine | **DONE** (2026-03-01) |
+| Biathlon | **DONE** (2026-03-01) |
+| Nordic Combined | Pending |
+| Ski Jumping | Pending |
+
 ### Race Picks
 | Sport | Status |
 |-------|--------|
 | Cross-Country | **DONE** |
-| Alpine | Pending |
-| Biathlon | Pending |
+| Alpine | **DONE** (2026-03-01) |
+| Biathlon | **DONE** (2026-03-01) |
 | Nordic Combined | Pending |
 | Ski Jumping | Pending |
+
+### Alpine Simulation (2026-03-01)
+- Created `alpine/drafts/race-picks-simulation.R`
+- Created `alpine/drafts/champs-predictions-simulation.R`
+- Features:
+  - Monte Carlo simulation (10,000 iterations)
+  - Discipline-specific distributions (Downhill, Super G, Giant Slalom, Slalom, Combined)
+  - Speed vs Tech grouping for historical performance
+  - Exponential decay weighting (DECAY_LAMBDA = 0.002)
+  - 4-person quota constraint per nation (champs)
+- race-picks Output: `men_position_probabilities.xlsx`, `ladies_position_probabilities.xlsx`
+- champs-predictions Output: `men_position_probabilities.xlsx`, `ladies_position_probabilities.xlsx`, `men.xlsx`, `ladies.xlsx`, `nations_individual.xlsx`
+  - Sheet names: `"1. Downhill - Feb 07"` format
+- Integrated into `predict_script.sh` and `predict_script_ubuntu.sh`
+
+### Biathlon Simulation (2026-03-01)
+- Created `biathlon/drafts/race-picks-simulation.R`
+- Created `biathlon/drafts/champs-predictions-simulation.R`
+- Features:
+  - Monte Carlo simulation (10,000 iterations)
+  - Race type-specific distributions (Sprint, Individual, Pursuit, Mass Start)
+  - Biathlon points systems: regular_points (90, 75, 65...) and mass_start_points
+  - RaceType column filtering (excludes relay races)
+  - Exponential decay weighting (DECAY_LAMBDA = 0.002)
+  - 4-person quota constraint per nation (champs)
+- race-picks Output: `men_position_probabilities.xlsx`, `ladies_position_probabilities.xlsx`
+- champs-predictions Output: `men_position_probabilities.xlsx`, `ladies_position_probabilities.xlsx`, `men.xlsx`, `ladies.xlsx`, `nations_individual.xlsx`
+  - Sheet names: `"1. Sprint - Feb 07"` format
+- Integrated into `predict_script.sh` and `run_champs_predictions.sh`
 
 ### Sport-Specific Considerations
 - **Alpine**: Speed vs Technical discipline distinction

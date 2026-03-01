@@ -375,7 +375,8 @@ ladies_distributions <- build_all_distributions(
 log_info("=== RUNNING MONTE CARLO SIMULATION ===")
 
 simulate_tds_standings <- function(distributions, n_simulations = N_SIMULATIONS,
-                                    position_thresholds = POSITION_THRESHOLDS) {
+                                    position_thresholds = POSITION_THRESHOLDS,
+                                    max_points = 300) {
 
   # Filter valid distributions
   valid_distributions <- Filter(function(d) {
@@ -392,27 +393,24 @@ simulate_tds_standings <- function(distributions, n_simulations = N_SIMULATIONS,
 
   log_info(paste("Simulating", n_athletes, "athletes over", n_simulations, "iterations"))
 
-  # Initialize position counts
-  position_counts <- matrix(0, nrow = n_athletes, ncol = length(position_thresholds),
-                            dimnames = list(athlete_ids, paste0("top_", position_thresholds)))
+  # Extract means and sds as vectors for vectorized operations
+  means <- sapply(valid_distributions, function(x) x$mean)
+  sds <- sapply(valid_distributions, function(x) x$sd)
 
-  # Run simulations
-  for (sim in 1:n_simulations) {
-    # Sample points for each athlete
-    simulated_points <- sapply(valid_distributions, function(d) {
-      rnorm(1, mean = d$mean, sd = d$sd)
-    })
-    simulated_points <- pmax(0, pmin(300, simulated_points))
+  # Generate all simulations at once (n_athletes x n_simulations matrix)
+  all_sims <- matrix(rnorm(n_athletes * n_simulations),
+                     nrow = n_athletes, ncol = n_simulations)
+  all_sims <- all_sims * sds + means
+  all_sims <- pmax(0, pmin(max_points, all_sims))
 
-    # Rank athletes (higher points = better rank)
-    ranks <- rank(-simulated_points, ties.method = "random")
+  # Rank each simulation (column) - higher points = better = rank 1
+  ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
 
-    # Count position achievements
-    for (t_idx in seq_along(position_thresholds)) {
-      threshold <- position_thresholds[t_idx]
-      achieved <- ranks <= threshold
-      position_counts[achieved, t_idx] <- position_counts[achieved, t_idx] + 1
-    }
+  # Count position achievements using vectorized rowSums
+  position_counts <- matrix(0, nrow = n_athletes, ncol = length(position_thresholds))
+  for (t_idx in seq_along(position_thresholds)) {
+    threshold <- position_thresholds[t_idx]
+    position_counts[, t_idx] <- rowSums(ranks_matrix <= threshold)
   }
 
   # Convert to probabilities
@@ -421,8 +419,8 @@ simulate_tds_standings <- function(distributions, n_simulations = N_SIMULATIONS,
   # Build results dataframe
   results <- data.frame(
     athlete_id = athlete_ids,
-    mean_points = sapply(valid_distributions, function(x) x$mean),
-    sd_points = sapply(valid_distributions, function(x) x$sd),
+    mean_points = means,
+    sd_points = sds,
     n_tds_races = sapply(valid_distributions, function(x) x$n_tds_races),
     source = sapply(valid_distributions, function(x) x$source),
     stringsAsFactors = FALSE
@@ -526,9 +524,9 @@ prepare_probabilities_output <- function(results, gender) {
       Skier, ID, Nation,
       Win = prob_top_1,
       Podium = prob_top_3,
-      `Top 5` = prob_top_5,
-      `Top 10` = prob_top_10,
-      `Top 30` = prob_top_30
+      `Top-5` = prob_top_5,
+      `Top-10` = prob_top_10,
+      `Top-30` = prob_top_30
     ) %>%
     arrange(desc(Win))
 }

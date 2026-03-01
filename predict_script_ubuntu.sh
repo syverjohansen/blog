@@ -405,6 +405,20 @@ process_sport_data() {
             fi
         fi
 
+        # Run R race-picks prediction script for alpine
+        if [[ "$sport_dir" == "alpine" ]]; then
+            local alpine_drafts_dir="$CONTENT_DIR/$content_sport/drafts"
+
+            # Run race-picks-simulation.R for race day predictions
+            if [[ -f "$alpine_drafts_dir/race-picks-simulation.R" ]]; then
+                log_message "Running race-picks-simulation.R for alpine..."
+                cd "$alpine_drafts_dir" && Rscript race-picks-simulation.R >/dev/null 2>&1
+                log_message "Completed race-picks-simulation.R"
+            else
+                log_message "Warning: race-picks-simulation.R not found for alpine"
+            fi
+        fi
+
         # Process race predictions
         local race_source_dir="$CONTENT_DIR/$content_sport/drafts/race-picks/$TODAY_YYYYMMDD"
         local race_output_dir="$BLOG_DIR/data/$content_sport/drafts/race-picks/$TODAY_YYYYMMDD"

@@ -553,7 +553,8 @@ build_athlete_distribution <- function(athlete_id, race_type_key, chrono_data,
 simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIMULATIONS,
                                      position_thresholds = POSITION_THRESHOLDS,
                                      sd_scale_factor = SD_SCALE_FACTOR,
-                                     sd_min = SD_MIN, sd_max = SD_MAX) {
+                                     sd_min = SD_MIN, sd_max = SD_MAX,
+                                     max_points = 100) {
 
   valid_distributions <- Filter(function(dist) {
     !is.null(dist) &&
@@ -570,32 +571,35 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   n_athletes <- length(valid_distributions)
   athlete_ids <- sapply(valid_distributions, function(x) x$athlete_id)
 
-  position_counts <- matrix(0, nrow = n_athletes, ncol = length(position_thresholds),
-                            dimnames = list(athlete_ids, paste0("top_", position_thresholds)))
+  # Extract means and sds as vectors for vectorized operations
+  means <- sapply(valid_distributions, function(x) x$mean)
+  sds <- sapply(valid_distributions, function(x) x$sd)
 
-  for (sim in 1:n_simulations) {
-    simulated_points <- sapply(valid_distributions, function(dist) {
-      scaled_sd <- dist$sd * sd_scale_factor
-      bounded_sd <- pmax(sd_min, pmin(sd_max, scaled_sd))
-      rnorm(1, mean = dist$mean, sd = bounded_sd)
-    })
-    simulated_points <- pmax(0, pmin(100, simulated_points))
+  # Apply SD scaling and bounds
+  scaled_sds <- pmax(sd_min, pmin(sd_max, sds * sd_scale_factor))
 
-    ranks <- rank(-simulated_points, ties.method = "random")
+  # Generate all simulations at once (n_athletes x n_simulations matrix)
+  all_sims <- matrix(rnorm(n_athletes * n_simulations),
+                     nrow = n_athletes, ncol = n_simulations)
+  all_sims <- all_sims * scaled_sds + means
+  all_sims <- pmax(0, pmin(max_points, all_sims))
 
-    for (t_idx in seq_along(position_thresholds)) {
-      threshold <- position_thresholds[t_idx]
-      achieved <- ranks <= threshold
-      position_counts[achieved, t_idx] <- position_counts[achieved, t_idx] + 1
-    }
+  # Rank each simulation (column) - higher points = better = rank 1
+  ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
+
+  # Count position achievements using vectorized rowSums
+  position_counts <- matrix(0, nrow = n_athletes, ncol = length(position_thresholds))
+  for (t_idx in seq_along(position_thresholds)) {
+    threshold <- position_thresholds[t_idx]
+    position_counts[, t_idx] <- rowSums(ranks_matrix <= threshold)
   }
 
   position_probs <- position_counts / n_simulations
 
   results <- data.frame(
     athlete_id = athlete_ids,
-    mean_points = sapply(valid_distributions, function(x) x$mean),
-    sd_points = sapply(valid_distributions, function(x) x$sd),
+    mean_points = means,
+    sd_points = sds,
     n_actual_races = sapply(valid_distributions, function(x) x$n_actual_races),
     adjustment = sapply(valid_distributions, function(x) {
       if(!is.null(x$adjustment)) x$adjustment else 0

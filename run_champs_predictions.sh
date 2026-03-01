@@ -89,8 +89,8 @@ for sport in alpine biathlon cross-country nordic-combined skijump; do
     cd ~/blog/daehl-e/content/post/$sport/drafts
     echo "Working directory: $(pwd)"
 
-    # Cross-country uses simulation-based predictions
-    if [ "$sport" = "cross-country" ]; then
+    # Cross-country and biathlon use simulation-based predictions
+    if [ "$sport" = "cross-country" ] || [ "$sport" = "biathlon" ]; then
         if [ -f "champs-predictions-simulation.R" ]; then
             echo "Running champs-predictions-simulation.R (simulation-based)..."
             Rscript champs-predictions-simulation.R
