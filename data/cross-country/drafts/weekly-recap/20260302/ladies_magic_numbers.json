@@ -1,0 +1,33 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      1,
+      1744,
+      701
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      2,
+      1482,
+      439
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      3,
+      1233,
+      190
+    ]
+  ]
+}

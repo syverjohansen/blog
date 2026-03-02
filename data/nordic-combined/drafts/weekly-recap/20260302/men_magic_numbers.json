@@ -1,0 +1,26 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Johannes Lamparter",
+      1469,
+      1,
+      1212,
+      201
+    ],
+    [
+      "Jens Lurås Oftebro",
+      1329,
+      2,
+      1039,
+      28
+    ]
+  ]
+}

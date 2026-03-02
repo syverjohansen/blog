@@ -1,0 +1,61 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Marco Odermatt",
+      3040,
+      1,
+      1485,
+      901
+    ],
+    [
+      "Lucas Pinheiro Braathen",
+      4748,
+      2,
+      798,
+      214
+    ],
+    [
+      "Atle Lie McGrath",
+      4711,
+      3,
+      694,
+      110
+    ],
+    [
+      "Loic Meillard",
+      2565,
+      4,
+      683,
+      99
+    ],
+    [
+      "Franjo von Allmen",
+      5674,
+      5,
+      664,
+      80
+    ],
+    [
+      "Henrik Kristoffersen",
+      2391,
+      6,
+      655,
+      71
+    ],
+    [
+      "Timon Haugan",
+      3049,
+      7,
+      609,
+      25
+    ]
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      1,
+      1781,
+      701
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      2,
+      1265,
+      185
+    ]
+  ]
+}
