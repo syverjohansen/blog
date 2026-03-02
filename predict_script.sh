@@ -433,6 +433,34 @@ process_sport_data() {
             fi
         fi
 
+        # Run R race-picks prediction script for nordic-combined
+        if [[ "$sport_dir" == "nordic-combined" ]]; then
+            local nc_drafts_dir="$CONTENT_DIR/$content_sport/drafts"
+
+            # Run race-picks-simulation.R for race day predictions
+            if [[ -f "$nc_drafts_dir/race-picks-simulation.R" ]]; then
+                log_message "Running race-picks-simulation.R for nordic-combined..."
+                cd "$nc_drafts_dir" && Rscript race-picks-simulation.R >/dev/null 2>&1
+                log_message "Completed race-picks-simulation.R"
+            else
+                log_message "Warning: race-picks-simulation.R not found for nordic-combined"
+            fi
+        fi
+
+        # Run R race-picks prediction script for skijump
+        if [[ "$sport_dir" == "skijump" ]]; then
+            local sj_drafts_dir="$CONTENT_DIR/$content_sport/drafts"
+
+            # Run race-picks-simulation.R for race day predictions
+            if [[ -f "$sj_drafts_dir/race-picks-simulation.R" ]]; then
+                log_message "Running race-picks-simulation.R for skijump..."
+                cd "$sj_drafts_dir" && Rscript race-picks-simulation.R >/dev/null 2>&1
+                log_message "Completed race-picks-simulation.R"
+            else
+                log_message "Warning: race-picks-simulation.R not found for skijump"
+            fi
+        fi
+
         # Process race predictions
         local race_source_dir="$CONTENT_DIR/$content_sport/drafts/race-picks/$TODAY_YYYYMMDD"
         local race_output_dir="$BLOG_DIR/data/$content_sport/drafts/race-picks/$TODAY_YYYYMMDD"
