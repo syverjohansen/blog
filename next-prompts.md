@@ -56,19 +56,37 @@ Python Scraper → R Predictions → Excel → JSON → Hugo Blog Post
 
 ## ACTIVE TASKS
 
-### Task 1.5: Complete GAM Support (COMPLETED 2026-03-02)
+### Task 2: Create Testing Harness (COMPLETED 2026-03-03)
 
-All simulation scripts now have GAM support for athletes with insufficient history.
+Created comprehensive testing infrastructure for the prediction pipeline.
 
-### Task 2: Create Testing Harness (PENDING)
+**What was done:**
 
-Create a testing harness using test_races.csv and test_weekends.csv files.
+1. **Expanded test_races.csv Files** - Created curated test files for all 5 sports:
+   | Sport | Races | Coverage |
+   |-------|-------|----------|
+   | Alpine | 28 | All 4 disciplines, Periods 1-5, M/L, Championships |
+   | Biathlon | 37 | All 7 race types, Periods 1-5, M/L/Mixed, Multiple elevations, Championships |
+   | Cross-Country | 44 | All distances/techniques, MS/Pursuit/Stage/Final_Climb flags, Championships |
+   | Nordic Combined | 30 | Individual/IndividualCompact/Mass Start/Team Sprint, M/L/Mixed, Championships |
+   | Ski Jumping | 40 | Large/Normal/Flying/Team Large/Team Normal, Hill sizes 90-240, Championships |
 
-**Goals:**
-- Test all race types for each sport
-- Verify correct output file generation
-- Enable detailed logging at each step
-- Validate data integrity throughout the pipeline
+2. **Updated Startlist Scrapers** - Added TEST_MODE support via `pipeline_config`:
+   - ✅ alpine/polars/startlist-scrape-races.py
+   - ✅ biathlon/polars/startlist-scrape-races.py
+   - ✅ nordic-combined/polars/startlist-scrape-races.py
+   - ✅ skijump/polars/startlist-scrape-races.py
+   - (cross-country already had TEST_MODE support)
+
+3. **Created Test Harness** - `~/ski/elo/python/test_harness.py`:
+   ```bash
+   # Usage examples:
+   python test_harness.py                    # Test all sports
+   python test_harness.py alpine             # Test specific sport
+   python test_harness.py --scrape-only      # Only run scraping phase
+   python test_harness.py --simulate-only    # Only run simulation phase
+   python test_harness.py -v                 # Verbose output
+   ```
 
 **Test File Locations:**
 ```
@@ -77,6 +95,67 @@ Create a testing harness using test_races.csv and test_weekends.csv files.
 ~/ski/elo/python/ski/polars/excel365/test_races.csv
 ~/ski/elo/python/nordic-combined/polars/excel365/test_races.csv
 ~/ski/elo/python/skijump/polars/excel365/test_races.csv
+```
+
+**Note:** Run test harness from within the venv to avoid numpy path conflicts.
+
+### Task 2.5: Shared R Library & Enhanced Logging (IN PROGRESS)
+
+**Goal:** Extract common functions into a shared library and add comprehensive logging to enable full pipeline visibility.
+
+**Why:**
+- ~60-70% code duplication across 5 sport scripts (~2,500+ lines)
+- Current logging is moderate - missing timing, distribution stats, data quality checks
+- Future goal: sport/event-specific parameter tuning (easier with shared config)
+
+**Approach (Safe Rollout):**
+1. Keep existing production scripts intact (no changes to working code)
+2. Create shared library alongside existing scripts
+3. Create v2 scripts that use shared library
+4. Test v2 thoroughly before any production switchover
+5. Gradual rollout - one sport at a time
+
+**Files to Create:**
+```
+~/blog/daehl-e/content/post/shared/race-picks-common.R          # Shared functions + logging
+~/blog/daehl-e/content/post/shared/logging-utils.R              # Logging utilities
+~/blog/daehl-e/content/post/cross-country/drafts/race-picks-simulation-v2.R  # Test v2
+```
+
+**Common Functions to Extract:**
+| Function | Lines | Purpose |
+|----------|-------|---------|
+| `load_env()` | ~20 | Load .env configuration |
+| `replace_na_with_quartile()` | ~5 | Fill NAs for feature prep |
+| `filter_positive_coefficients()` | ~25 | Remove negative GAM coefficients |
+| `calculate_percentage_columns()` | ~15 | Normalize Pelo columns |
+| `calculate_weighted_prev_points()` | ~50 | Decay-weighted history |
+| `train_points_gam()` | ~70 | Train GAM model |
+| `build_athlete_distribution()` | ~140 | Build performance distribution |
+| `simulate_race_positions()` | ~100 | Monte Carlo simulation |
+| `preprocess_chrono()` | ~12 | Preprocessing pipeline |
+
+**Enhanced Logging to Add:**
+- Timing: Start/end timestamps, duration per phase
+- Distribution stats: Mean/SD/min/max for athlete distributions
+- Data quality: Row counts, NA percentages, outlier detection
+- Progress: "Processing athlete 50/120..."
+- Validation: Sanity checks (probabilities sum to ~1, etc.)
+
+**Also:** Add logging to existing production scripts (non-breaking changes)
+
+**Parameterization for Future Tuning:**
+```r
+# Each sport will define its config
+sport_config <- list(
+  sport = "alpine",
+  decay_lambda = 0.002,
+  sd_scale_factor = 0.77,
+  event_params = list(
+    "Downhill" = list(decay_lambda = 0.0015),
+    "Slalom" = list(decay_lambda = 0.0025)
+  )
+)
 ```
 
 ### Task 3: Update Race Picks Methodology Documentation (PENDING)
@@ -151,6 +230,40 @@ TEST_MODE=false  # Set to true for testing
 If starting a new session:
 1. Read this file to understand current status
 2. Check the ACTIVE TASKS section for current work
-3. Task 1.5 (GAM support) is complete - all scripts have GAM-based fill
-4. Next task: Create testing harness (Task 2)
+3. **Current:** Task 2.5 - Creating shared R library with enhanced logging
+4. Approach: Keep production scripts intact, create v2 alongside, test before switchover
 5. Update this file with any changes made
+
+**Task 2.5 Progress:**
+- [x] Create `shared/logging-utils.R` - Logging utilities (DONE)
+- [x] Create `shared/race-picks-common.R` - Common functions (DONE)
+- [x] Add logging to cross-country production script (DONE)
+- [x] Fix GAM/distribution filter consistency for Distance_Ms (DONE 2026-03-03)
+- [x] Remove dead MS adjustment code (DONE 2026-03-03)
+- [x] Add tracer athlete/team logging (DONE 2026-03-03)
+- [ ] Add logging to other sports (alpine, biathlon, nordic-combined, skijump)
+- [ ] Create `cross-country/drafts/race-picks-simulation-v2.R`
+- [ ] Test v2 against production with test harness
+
+**Bug Fix (2026-03-03): GAM/Distribution Filter Consistency**
+- Problem: GAM trained on `Technique == 'P'` but distribution built from `MS == 1` history
+- Solution: Changed GAM filter for `Distance_Ms` to `Distance != 'Sprint' & MS == 1`
+- Also removed dead MS adjustment code (never fired with type-specific filters)
+- Race type filters now cleanly separate mass start from individual races
+
+**Feature (2026-03-03): Tracer Athlete/Team Logging**
+- Added end-to-end tracer logging to follow one athlete/team through entire pipeline
+- Uses first ID from startlist (individuals) or first Nation (teams)
+- Logs at each stage:
+  - **DATA LOAD**: Historical races found, most recent result, date range
+  - **GAM PREDICTION**: Race type, key features, prediction, residual SD
+  - **DISTRIBUTION BUILDING**: Filtered races, adjustments, final mean/SD
+  - **SIMULATION RESULTS**: Predicted rank, win/podium probabilities
+- For teams: Logs team composition (members per leg), team mean/SD, simulation results
+- Tracer functions added to `shared/logging-utils.R`:
+  - `init_tracer()` - Initialize tracer from startlist
+  - `is_tracer()` / `is_tracer_team()` - Check if athlete/team is tracer
+  - `log_tracer_gam()` - Log GAM prediction details
+  - `log_tracer_distribution()` - Log distribution building
+  - `log_tracer_simulation()` - Log simulation results
+  - `log_tracer_team()` - Log team composition and results

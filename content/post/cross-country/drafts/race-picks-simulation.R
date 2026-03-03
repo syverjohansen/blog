@@ -104,18 +104,47 @@ relay_points <- c(200, 160, 120, 100, 90, 80, 72, 64, 58, 52, 48, 44, 40, 36,
 # LOGGING SETUP
 # ============================================================================
 
-log_dir <- "~/ski/elo/python/ski/polars/excel365/race-picks-simulation"
-if (!dir.exists(log_dir)) {
-  dir.create(log_dir, recursive = TRUE)
+# Try to load enhanced logging utilities (optional, falls back to basic if not available)
+ENHANCED_LOGGING <- FALSE
+logging_utils_path <- "~/blog/daehl-e/content/post/shared/logging-utils.R"
+if (file.exists(path.expand(logging_utils_path))) {
+  tryCatch({
+    source(logging_utils_path)
+    ENHANCED_LOGGING <- TRUE
+    init_logging("cross-country", "race-picks")
+    log_config(list(
+      TEST_MODE = TEST_MODE,
+      N_HISTORY_REQUIRED = N_HISTORY_REQUIRED,
+      N_GAM_SAMPLES = N_GAM_SAMPLES,
+      N_SIMULATIONS = N_SIMULATIONS,
+      DECAY_LAMBDA = DECAY_LAMBDA,
+      SD_SCALE_FACTOR = SD_SCALE_FACTOR,
+      SD_MIN = SD_MIN,
+      SD_MAX = SD_MAX
+    ))
+  }, error = function(e) {
+    ENHANCED_LOGGING <- FALSE
+  })
 }
 
-log_threshold(DEBUG)
-log_appender(appender_file(file.path(log_dir, "race_picks_simulation.log")))
+# Fallback to basic logging if enhanced not available
+if (!ENHANCED_LOGGING) {
+  log_dir <- path.expand("~/ski/elo/python/ski/polars/excel365/race-picks-simulation")
+  if (!dir.exists(log_dir)) {
+    dir.create(log_dir, recursive = TRUE)
+  }
+  log_threshold(DEBUG)
+  log_appender(appender_file(file.path(log_dir, "race_picks_simulation.log")))
+}
+
+log_info("============================================================")
 log_info("Starting Cross-Country race day predictions (UNIFIED SIMULATION approach)")
 log_info(paste("Config: N_HISTORY =", N_HISTORY_REQUIRED,
                ", N_GAM_SAMPLES =", N_GAM_SAMPLES,
                ", N_SIMULATIONS =", N_SIMULATIONS,
                ", TEST_MODE =", TEST_MODE))
+log_info(paste("Enhanced logging:", ENHANCED_LOGGING))
+log_info("============================================================")
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -226,6 +255,10 @@ get_relay_explanatory_vars <- function(leg_number, n_legs = 4, technique = NULL)
 # ============================================================================
 
 # Race type definitions for individual races
+# Race type definitions for GAM training
+# Note: GAM training filters match the distribution building filters exactly
+# This ensures consistency between model training and prediction contexts
+# Pursuit/Skiathlon (Technique == 'P') races use Distance_Ms since they're rarely raced
 race_types <- list(
   "Sprint_C" = list(filter = "Distance == 'Sprint' & Technique == 'C'", name = "Sprint Classic"),
   "Sprint_F" = list(filter = "Distance == 'Sprint' & Technique == 'F'", name = "Sprint Freestyle"),
@@ -234,7 +267,7 @@ race_types <- list(
   "Distance_F_Ind" = list(filter = "Distance != 'Sprint' & Technique == 'F' & MS == 0", name = "Distance Freestyle Individual"),
   "Distance_F_Ms" = list(filter = "Distance != 'Sprint' & Technique == 'F' & MS == 1", name = "Distance Freestyle Mass Start"),
   "Distance_Ind" = list(filter = "Distance != 'Sprint' & MS == 0", name = "Distance Individual"),
-  "Distance_Ms" = list(filter = "Technique == 'P'", name = "Skiathlon")
+  "Distance_Ms" = list(filter = "Distance != 'Sprint' & MS == 1", name = "Distance Mass Start")
 )
 
 # Get technique-dependent explanatory variables for individual races
@@ -550,7 +583,6 @@ build_athlete_distribution <- function(athlete_id, race_type_key, chrono_data,
   adjustment <- 0
   altitude_adj <- 0
   period_adj <- 0
-  ms_adj <- 0
 
   # Only calculate adjustments if we have enough historical races AND today_race info
   if (n_actual_races >= 2 * min_samples_for_adjustment && !is.null(today_race)) {
@@ -566,10 +598,6 @@ build_athlete_distribution <- function(athlete_id, race_type_key, chrono_data,
     today_period <- if (!is.null(today_race$Period) && !is.na(today_race$Period)) {
       today_race$Period
     } else 3
-
-    today_ms <- if (!is.null(today_race$MS) && !is.na(today_race$MS)) {
-      today_race$MS
-    } else 0
 
     # --- ALTITUDE ADJUSTMENT ---
     if ("AltitudeCategory" %in% names(athlete_history)) {
@@ -622,37 +650,12 @@ build_athlete_distribution <- function(athlete_id, race_type_key, chrono_data,
       }
     }
 
-    # --- MASS START ADJUSTMENT (distance races only) ---
-    if ("MS" %in% names(athlete_history) && !grepl("Sprint", race_type_key)) {
-      ms_idx <- athlete_history$MS == 1
-      ind_idx <- athlete_history$MS == 0
+    # Note: MS adjustment removed - race type filters now separate mass start from individual
+    # races, so athlete history is already filtered to the appropriate race format.
+    # This eliminates the need for a post-hoc adjustment.
 
-      if (sum(ms_idx) >= min_samples_for_adjustment && sum(ind_idx) >= min_samples_for_adjustment) {
-        ms_points <- history_points[ms_idx]
-        ms_weights <- history_weights[ms_idx]
-        ind_points <- history_points[ind_idx]
-        ind_weights <- history_weights[ind_idx]
-
-        # T-test on points
-        t_result <- tryCatch({
-          t.test(ms_points, ind_points)
-        }, error = function(e) NULL)
-
-        if (!is.null(t_result) && !is.na(t_result$p.value) && t_result$p.value < 0.05) {
-          ms_wmean <- weighted.mean(ms_points, ms_weights, na.rm = TRUE)
-          ind_wmean <- weighted.mean(ind_points, ind_weights, na.rm = TRUE)
-
-          if (today_ms == 1) {
-            ms_adj <- ms_wmean - history_weighted_mean
-          } else {
-            ms_adj <- ind_wmean - history_weighted_mean
-          }
-        }
-      }
-    }
-
-    # Total adjustment (sum of all condition effects)
-    adjustment <- altitude_adj + period_adj + ms_adj
+    # Total adjustment (sum of condition effects)
+    adjustment <- altitude_adj + period_adj
   }
 
   # Apply adjustment to the weighted mean
@@ -661,8 +664,16 @@ build_athlete_distribution <- function(athlete_id, race_type_key, chrono_data,
   # Ensure adjusted mean stays in reasonable bounds (0-100 points)
   adjusted_mean <- pmax(0, pmin(100, adjusted_mean))
 
+  # Handle invalid distributions - use GAM prediction as fallback
   if (is.na(adjusted_mean) || is.na(weighted_sd)) {
-    log_warn(paste("Invalid distribution for athlete:", athlete_id))
+    log_warn(paste("Invalid distribution for athlete:", athlete_id, "- using GAM fallback"))
+    # Use GAM prediction as mean, and a reasonable default SD
+    adjusted_mean <- if (!is.na(gam_prediction)) gam_prediction else 25
+    weighted_sd <- if (!is.na(gam_residual_sd)) gam_residual_sd else 15
+    adjustment <- 0
+    altitude_adj <- 0
+    period_adj <- 0
+    weighted_mean <- adjusted_mean
   }
 
   return(list(
@@ -674,7 +685,6 @@ build_athlete_distribution <- function(athlete_id, race_type_key, chrono_data,
     adjustment = adjustment,
     altitude_adj = altitude_adj,
     period_adj = period_adj,
-    ms_adj = ms_adj,
     unadjusted_mean = weighted_mean
   ))
 }
@@ -711,14 +721,92 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   means <- sapply(valid_distributions, function(x) x$mean)
   sds <- sapply(valid_distributions, function(x) x$sd)
 
+  # Safety check: ensure no NA values in means/sds after extraction
+  valid_idx <- !is.na(means) & !is.na(sds) & sds > 0
+  if (sum(valid_idx) < n_athletes) {
+    log_warn(paste("Removing", n_athletes - sum(valid_idx), "additional athletes with NA mean/sd"))
+    means <- means[valid_idx]
+    sds <- sds[valid_idx]
+    athlete_ids <- athlete_ids[valid_idx]
+    valid_distributions <- valid_distributions[valid_idx]
+    n_athletes <- length(athlete_ids)
+  }
+
+  # Final check: need at least 1 athlete
+  if (n_athletes == 0) {
+    log_error("No valid athletes remaining after NA filtering")
+    return(data.frame())
+  }
+
   # Apply SD scaling and bounds
   scaled_sds <- pmax(sd_min, pmin(sd_max, sds * sd_scale_factor))
 
   # Generate all simulations at once (n_athletes x n_simulations matrix)
-  all_sims <- matrix(rnorm(n_athletes * n_simulations),
-                     nrow = n_athletes, ncol = n_simulations)
-  all_sims <- all_sims * scaled_sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  log_info(paste("Simulating", n_athletes, "athletes x", n_simulations, "simulations"))
+
+  # Debug: check for any issues with vectors
+  if (length(means) == 0 || length(scaled_sds) == 0) {
+    log_error(paste("Empty vectors - means:", length(means), "sds:", length(scaled_sds)))
+    return(data.frame())
+  }
+
+  # Check for infinite/NaN values
+  if (any(!is.finite(means)) || any(!is.finite(scaled_sds))) {
+    log_warn(paste("Non-finite values found - means:", sum(!is.finite(means)),
+                   "sds:", sum(!is.finite(scaled_sds))))
+    # Remove non-finite values
+    finite_idx <- is.finite(means) & is.finite(scaled_sds)
+    if (sum(finite_idx) == 0) {
+      log_error("No finite values remaining")
+      return(data.frame())
+    }
+    means <- means[finite_idx]
+    scaled_sds <- scaled_sds[finite_idx]
+    athlete_ids <- athlete_ids[finite_idx]
+    valid_distributions <- valid_distributions[finite_idx]
+    n_athletes <- length(athlete_ids)
+    log_info(paste("After removing non-finite:", n_athletes, "athletes remaining"))
+  }
+
+  # Create simulation matrix with robust error handling
+  log_info(paste("Creating matrix:", n_athletes, "x", n_simulations,
+                 "| means:", length(means), "| sds:", length(scaled_sds)))
+
+  # Generate random draws
+  random_draws <- rnorm(n_athletes * n_simulations)
+
+  # Create matrix
+  all_sims <- matrix(random_draws, nrow = n_athletes, ncol = n_simulations)
+  log_info(paste("Raw matrix created:", nrow(all_sims), "x", ncol(all_sims)))
+
+  # Apply scaling - need to replicate vectors for proper matrix multiplication
+  all_sims <- sweep(all_sims, 1, scaled_sds, "*")  # multiply each row by its SD
+  all_sims <- sweep(all_sims, 1, means, "+")       # add each row's mean
+  log_info(paste("After scaling:", nrow(all_sims), "x", ncol(all_sims)))
+
+  # Check for NaN/Inf values
+  nan_count <- sum(is.nan(all_sims))
+  inf_count <- sum(is.infinite(all_sims))
+  if (nan_count > 0 || inf_count > 0) {
+    log_warn(paste("NaN:", nan_count, "Inf:", inf_count, "- replacing with bounds"))
+    all_sims[is.nan(all_sims)] <- 50
+    all_sims[is.infinite(all_sims) & all_sims > 0] <- max_points
+    all_sims[is.infinite(all_sims) & all_sims < 0] <- 0
+  }
+
+  # Apply bounds (preserve matrix structure)
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  # Final dimension check
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error(paste("Invalid matrix after processing:",
+                    "dim=", paste(dim(all_sims), collapse="x"),
+                    "class=", class(all_sims)))
+    return(data.frame())
+  }
+
+  log_info(paste("Final matrix:", nrow(all_sims), "x", ncol(all_sims)))
 
   # Rank each simulation (column) - higher points = better = rank 1
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
@@ -1416,6 +1504,7 @@ simulate_team_race <- function(team_distributions, n_simulations = N_SIMULATIONS
 # PART 1: LOAD RACE SCHEDULE AND DETERMINE TODAY'S RACES
 # ============================================================================
 
+if (ENHANCED_LOGGING) phase_start("Load Race Schedule")
 log_info("=== PART 1: LOADING RACE SCHEDULE ===")
 
 # Read race schedule
@@ -1486,6 +1575,10 @@ log_info(paste("Points system:", if(is_stage_today) "STAGE" else "WORLD CUP"))
 # PART 2: LOAD CHRONOLOGICAL DATA
 # ============================================================================
 
+if (ENHANCED_LOGGING) {
+  phase_end("Load Race Schedule", sprintf("%d races for today", nrow(today_races)))
+  phase_start("Load Chronological Data")
+}
 log_info("=== PART 2: LOADING CHRONOLOGICAL DATA ===")
 
 # Load individual chrono data
@@ -1612,6 +1705,10 @@ if(PROCESS_RELAY || PROCESS_TEAM_SPRINT || PROCESS_MIXED_RELAY) {
 # PART 3: LOAD STARTLISTS
 # ============================================================================
 
+if (ENHANCED_LOGGING) {
+  phase_end("Load Chronological Data")
+  phase_start("Load Startlists")
+}
 log_info("=== PART 3: LOADING STARTLISTS ===")
 
 # Individual startlists
@@ -1684,6 +1781,47 @@ if(PROCESS_MIXED_RELAY) {
 }
 
 log_info("=== DATA LOADING COMPLETE ===")
+if (ENHANCED_LOGGING) phase_end("Load Startlists")
+
+# ============================================================================
+# INITIALIZE TRACER ATHLETES/TEAMS
+# ============================================================================
+# Tracer logging follows one athlete (or team) through the entire pipeline
+# to provide end-to-end visibility. Uses first athlete/team from each startlist.
+
+if (ENHANCED_LOGGING) {
+  log_info("")
+  log_info("=== INITIALIZING TRACER LOGGING ===")
+
+  # Individual race tracers
+  if (PROCESS_INDIVIDUAL && nrow(men_startlist) > 0) {
+    init_tracer(men_startlist, "men", "individual")
+  }
+  if (PROCESS_INDIVIDUAL && nrow(ladies_startlist) > 0) {
+    init_tracer(ladies_startlist, "ladies", "individual")
+  }
+
+  # Relay team tracers
+  if (PROCESS_RELAY && exists("men_relay_startlist") && nrow(men_relay_startlist) > 0) {
+    init_tracer(men_relay_startlist, "men", "team")
+  }
+  if (PROCESS_RELAY && exists("ladies_relay_startlist") && nrow(ladies_relay_startlist) > 0) {
+    init_tracer(ladies_relay_startlist, "ladies", "team")
+  }
+
+  # Team sprint tracers
+  if (PROCESS_TEAM_SPRINT && exists("men_ts_startlist") && nrow(men_ts_startlist) > 0) {
+    init_tracer(men_ts_startlist, "men", "team")
+  }
+  if (PROCESS_TEAM_SPRINT && exists("ladies_ts_startlist") && nrow(ladies_ts_startlist) > 0) {
+    init_tracer(ladies_ts_startlist, "ladies", "team")
+  }
+
+  # Mixed relay tracer
+  if (PROCESS_MIXED_RELAY && exists("mixed_relay_startlist") && nrow(mixed_relay_startlist) > 0) {
+    init_tracer(mixed_relay_startlist, "mixed", "team")
+  }
+}
 
 # ============================================================================
 # INDIVIDUAL RACE SIMULATION
@@ -1692,6 +1830,7 @@ log_info("=== DATA LOADING COMPLETE ===")
 individual_results <- list()
 
 if(PROCESS_INDIVIDUAL) {
+  if (ENHANCED_LOGGING) phase_start("Individual Race Simulation")
   log_info("=== INDIVIDUAL RACE SIMULATION ===")
 
   # Determine race types for today's individual races
@@ -1787,11 +1926,30 @@ if(PROCESS_INDIVIDUAL) {
       } else {
         # Predict from GAM
         gam_prediction <- tryCatch({
-          predict(model_info$model, newdata = athlete_features, type = "response")
+          pred <- predict(model_info$model, newdata = athlete_features, type = "response")
+          # Check if prediction is NA (can happen with missing features)
+          if (is.na(pred) || is.null(pred) || length(pred) == 0) {
+            median(chrono_data$points, na.rm = TRUE)
+          } else {
+            pred
+          }
         }, error = function(e) {
           median(chrono_data$points, na.rm = TRUE)
         })
       }
+
+      # Final safety check for gam_prediction
+      if (is.na(gam_prediction) || is.null(gam_prediction)) {
+        gam_prediction <- median(chrono_data$points, na.rm = TRUE)
+        log_warn(paste("GAM prediction fallback to median for athlete:", athlete_id))
+      }
+
+      # Tracer logging: GAM prediction (wrapped in tryCatch to avoid breaking pipeline)
+      tryCatch({
+        if (ENHANCED_LOGGING && isTRUE(is_tracer(athlete_id, gender))) {
+          log_tracer_gam(athlete_id, gender, race_type_key, athlete_features, gam_prediction, model_info$residual_sd)
+        }
+      }, error = function(e) NULL)
 
       # Build distribution with condition-specific adjustments calculated internally
       dist <- build_athlete_distribution(
@@ -1804,16 +1962,36 @@ if(PROCESS_INDIVIDUAL) {
         today_race = race
       )
 
+      # Tracer logging: distribution building (wrapped in tryCatch)
+      tryCatch({
+        if (ENHANCED_LOGGING && isTRUE(is_tracer(athlete_id, gender))) {
+          log_tracer_distribution(athlete_id, gender, dist)
+        }
+      }, error = function(e) NULL)
+
       athlete_distributions[[as.character(athlete_id)]] <- dist
     }
 
     # Run Monte Carlo simulation with race-type-specific thresholds
     is_sprint <- grepl("^Sprint", race_type_key)
     race_thresholds <- if(is_sprint) SPRINT_POSITION_THRESHOLDS else POSITION_THRESHOLDS
+
+    # Debug: check distribution validity before simulation
+    valid_dists <- sum(sapply(athlete_distributions, function(d) {
+      !is.null(d) && !is.na(d$mean) && !is.na(d$sd) && is.finite(d$mean) && is.finite(d$sd)
+    }))
+    log_info(paste("Distributions:", length(athlete_distributions), "total,", valid_dists, "valid"))
+
     log_info(paste("Running", N_SIMULATIONS, "Monte Carlo simulations (",
                    ifelse(is_sprint, "sprint", "distance"), "thresholds)"))
     race_results <- simulate_race_positions(athlete_distributions,
                                             position_thresholds = race_thresholds)
+
+    # Check if simulation returned valid results
+    if (nrow(race_results) == 0 || !"athlete_id" %in% names(race_results)) {
+      log_warn(paste("Simulation returned no results for", gender, race_type_key, "- skipping"))
+      next
+    }
 
     # Add athlete names and other info
     race_results <- race_results %>%
@@ -1825,6 +2003,16 @@ if(PROCESS_INDIVIDUAL) {
       select(Skier, Nation, ID, mean_points, sd_points, adjustment, n_actual_races,
              starts_with("prob_top_")) %>%
       arrange(desc(prob_top_1))
+
+    # Tracer logging: simulation results (wrapped in tryCatch)
+    tryCatch({
+      if (ENHANCED_LOGGING) {
+        tracer_id <- if(gender == "men") .tracer_state$men_id else .tracer_state$ladies_id
+        if (!is.null(tracer_id)) {
+          log_tracer_simulation(tracer_id, gender, race_results)
+        }
+      }
+    }, error = function(e) NULL)
 
     # Log adjustment summary for this race
     n_with_adj <- sum(race_results$adjustment != 0, na.rm = TRUE)
@@ -1858,6 +2046,7 @@ if(PROCESS_INDIVIDUAL) {
   }
 
   log_info(paste("Individual race simulation complete.", length(individual_results), "races processed"))
+  if (ENHANCED_LOGGING) phase_end("Individual Race Simulation", sprintf("%d races", length(individual_results)))
 }
 
 # ============================================================================
@@ -1867,6 +2056,7 @@ if(PROCESS_INDIVIDUAL) {
 relay_results <- list()
 
 if(PROCESS_RELAY) {
+  if (ENHANCED_LOGGING) phase_start("Relay Simulation")
   log_info("=== RELAY SIMULATION ===")
 
   # Calculate leg importance from historical data
@@ -1939,6 +2129,13 @@ if(PROCESS_RELAY) {
           dist$podium_team <- team_result$podium_team
           dist$win_team <- team_result$win_team
           team_distributions[[nation]] <- dist
+
+          # Tracer logging: team distribution (wrapped in tryCatch)
+          tryCatch({
+            if (ENHANCED_LOGGING && isTRUE(is_tracer_team(nation, gender))) {
+              log_tracer_team(nation, gender, dist)
+            }
+          }, error = function(e) NULL)
         }
       }
     }
@@ -1948,6 +2145,16 @@ if(PROCESS_RELAY) {
     # Simulate relay
     if (length(team_distributions) > 1) {
       race_results <- simulate_team_race(team_distributions, N_SIMULATIONS)
+
+      # Tracer logging: team simulation results (wrapped in tryCatch)
+      tryCatch({
+        if (ENHANCED_LOGGING) {
+          tracer_team <- if(gender == "men") .tracer_state$men_team else .tracer_state$ladies_team
+          if (!is.null(tracer_team) && tracer_team %in% names(team_distributions)) {
+            log_tracer_team(tracer_team, gender, team_distributions[[tracer_team]], race_results)
+          }
+        }
+      }, error = function(e) NULL)
 
       race_key <- paste(gender, "Relay")
       relay_results[[race_key]] <- list(
@@ -1965,6 +2172,7 @@ if(PROCESS_RELAY) {
   }
 
   log_info(paste("Relay simulation complete.", length(relay_results), "races processed"))
+  if (ENHANCED_LOGGING) phase_end("Relay Simulation", sprintf("%d races", length(relay_results)))
 }
 
 # ============================================================================
@@ -1974,6 +2182,7 @@ if(PROCESS_RELAY) {
 team_sprint_results <- list()
 
 if(PROCESS_TEAM_SPRINT) {
+  if (ENHANCED_LOGGING) phase_start("Team Sprint Simulation")
   log_info("=== TEAM SPRINT SIMULATION ===")
 
   # Process each team sprint race
@@ -2045,6 +2254,14 @@ if(PROCESS_TEAM_SPRINT) {
           dist$win_team <- team_result$win_team
           team_distributions[[nation]] <- dist
 
+          # Tracer logging: team sprint distribution
+          # Tracer logging: team sprint distribution (wrapped in tryCatch)
+          tryCatch({
+            if (ENHANCED_LOGGING && isTRUE(is_tracer_team(nation, gender))) {
+              log_tracer_team(nation, gender, dist)
+            }
+          }, error = function(e) NULL)
+
           log_info(paste("  ", nation, ":", paste(team_result$podium_team$Skier, collapse = " + "),
                          "score:", round(team_result$podium_weighted_points, 3)))
         }
@@ -2056,6 +2273,16 @@ if(PROCESS_TEAM_SPRINT) {
     # Simulate team sprint
     if (length(team_distributions) > 1) {
       race_results <- simulate_team_race(team_distributions, N_SIMULATIONS)
+
+      # Tracer logging: team sprint simulation results (wrapped in tryCatch)
+      tryCatch({
+        if (ENHANCED_LOGGING) {
+          tracer_team <- if(gender == "men") .tracer_state$men_team else .tracer_state$ladies_team
+          if (!is.null(tracer_team) && tracer_team %in% names(team_distributions)) {
+            log_tracer_team(tracer_team, gender, team_distributions[[tracer_team]], race_results)
+          }
+        }
+      }, error = function(e) NULL)
 
       race_key <- paste(gender, "Team Sprint", technique)
       team_sprint_results[[race_key]] <- list(
@@ -2074,6 +2301,7 @@ if(PROCESS_TEAM_SPRINT) {
   }
 
   log_info(paste("Team sprint simulation complete.", length(team_sprint_results), "races processed"))
+  if (ENHANCED_LOGGING) phase_end("Team Sprint Simulation", sprintf("%d races", length(team_sprint_results)))
 }
 
 # ============================================================================
@@ -2083,6 +2311,7 @@ if(PROCESS_TEAM_SPRINT) {
 mixed_relay_results <- list()
 
 if(PROCESS_MIXED_RELAY) {
+  if (ENHANCED_LOGGING) phase_start("Mixed Relay Simulation")
   log_info("=== MIXED RELAY SIMULATION ===")
 
   # For mixed relay, we need to combine ladies (legs 1-2) and men (legs 3-4)
@@ -2258,6 +2487,20 @@ if(PROCESS_MIXED_RELAY) {
         member_sds = leg_sds
       )
 
+      # Tracer logging: mixed relay team distribution (wrapped in tryCatch)
+      tryCatch({
+        if (ENHANCED_LOGGING && isTRUE(is_tracer_team(nation, "mixed"))) {
+          log_info("")
+          log_info(sprintf("[TRACER TEAM %s] MIXED RELAY COMPOSITION", nation))
+          log_info(sprintf("  Leg 1 (L): %s", mixed_team$Skier[1]))
+          log_info(sprintf("  Leg 2 (L): %s", mixed_team$Skier[2]))
+          log_info(sprintf("  Leg 3 (M): %s", mixed_team$Skier[3]))
+          log_info(sprintf("  Leg 4 (M): %s", mixed_team$Skier[4]))
+          log_info(sprintf("  Team probability: %.3f", team_prob))
+          log_info(sprintf("  Team score: %.2f, SD: %.2f", team_score, score_sd))
+        }
+      }, error = function(e) NULL)
+
       log_info(paste("  ", nation, ": L1=", mixed_team$Skier[1], "+ L2=", mixed_team$Skier[2],
                      "+ M1=", mixed_team$Skier[3], "+ M2=", mixed_team$Skier[4],
                      "prob:", round(team_prob, 3)))
@@ -2268,6 +2511,24 @@ if(PROCESS_MIXED_RELAY) {
     # Simulate mixed relay
     if (length(team_distributions) > 1) {
       race_results <- simulate_team_race(team_distributions, N_SIMULATIONS)
+
+      # Tracer logging: mixed relay simulation results (wrapped in tryCatch)
+      tryCatch({
+        if (ENHANCED_LOGGING) {
+          tracer_team <- .tracer_state$mixed_team
+          if (!is.null(tracer_team) && tracer_team %in% names(team_distributions)) {
+            team_result <- race_results %>% filter(Nation == tracer_team)
+            if (nrow(team_result) > 0) {
+              log_info("")
+              log_info(sprintf("[TRACER TEAM %s] MIXED RELAY RESULTS", tracer_team))
+              log_info(sprintf("  Predicted rank: %d of %d",
+                               which(race_results$Nation == tracer_team), nrow(race_results)))
+              log_info(sprintf("  Win probability: %.1f%%", team_result$prob_top_1 * 100))
+              log_info(sprintf("  Podium probability: %.1f%%", team_result$prob_top_3 * 100))
+            }
+          }
+        }
+      }, error = function(e) NULL)
 
       mixed_relay_results[["Mixed Relay"]] <- list(
         race_info = race,
@@ -2284,12 +2545,14 @@ if(PROCESS_MIXED_RELAY) {
   }
 
   log_info(paste("Mixed relay simulation complete.", length(mixed_relay_results), "races processed"))
+  if (ENHANCED_LOGGING) phase_end("Mixed Relay Simulation", sprintf("%d races", length(mixed_relay_results)))
 }
 
 # ============================================================================
 # OUTPUT: GENERATE EXCEL FILES
 # ============================================================================
 
+if (ENHANCED_LOGGING) phase_start("Output Generation")
 log_info("=== OUTPUT GENERATION ===")
 
 # Output directory with date folder
@@ -2506,6 +2769,26 @@ if (length(mixed_relay_results) > 0) {
 }
 
 cat(paste("\nOutput directory:", output_dir, "\n"))
+
+if (ENHANCED_LOGGING) {
+  phase_end("Output Generation")
+
+  # Calculate total races processed
+  total_races <- length(individual_results) + length(relay_results) +
+                 length(team_sprint_results) + length(mixed_relay_results)
+
+  # List files saved
+  files_saved <- c()
+  if (exists("men_output_file") && file.exists(men_output_file)) files_saved <- c(files_saved, men_output_file)
+  if (exists("ladies_output_file") && file.exists(ladies_output_file)) files_saved <- c(files_saved, ladies_output_file)
+  if (exists("men_relay_file") && file.exists(men_relay_file)) files_saved <- c(files_saved, men_relay_file)
+  if (exists("ladies_relay_file") && file.exists(ladies_relay_file)) files_saved <- c(files_saved, ladies_relay_file)
+  if (exists("men_ts_file") && file.exists(men_ts_file)) files_saved <- c(files_saved, men_ts_file)
+  if (exists("ladies_ts_file") && file.exists(ladies_ts_file)) files_saved <- c(files_saved, ladies_ts_file)
+  if (exists("mixed_relay_file") && file.exists(mixed_relay_file)) files_saved <- c(files_saved, mixed_relay_file)
+
+  log_script_complete(races_processed = total_races, files_saved = files_saved)
+}
 
 log_info("=== RACE-PICKS-SIMULATION.R COMPLETE ===")
 
