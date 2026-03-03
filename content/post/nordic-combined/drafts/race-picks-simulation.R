@@ -5,7 +5,7 @@
 # - Monte Carlo simulation (10,000 iterations)
 # - Exponential decay weighting for historical performance
 # - Race type distributions (Individual, IndividualCompact, Mass Start, Sprint)
-# - Team event support: Team, Team Sprint, Mixed Team
+# - Team event support: Team, Team Sprint, Mixed Team, Mixed Team Sprint
 # - Position probability output (Win, Podium, Top-5, Top-10, Top-30)
 
 library(dplyr)
@@ -71,7 +71,7 @@ nc_points <- c(100, 90, 80, 70, 60, 55, 52, 49, 46, 43, 40, 38, 36, 34, 32,
 INDIVIDUAL_DISCIPLINES <- c("Individual", "IndividualCompact")
 MASS_START_DISCIPLINES <- c("Mass Start")
 SPRINT_DISCIPLINES <- c("Sprint")
-TEAM_DISCIPLINES <- c("Team", "Team Sprint", "Mixed Team")
+TEAM_DISCIPLINES <- c("Team", "Team Sprint", "Mixed Team", "Mixed Team Sprint")
 
 # ============================================================================
 # LOGGING SETUP
@@ -149,10 +149,11 @@ ladies_teams <- today_races %>% filter(RaceType == "Team", Sex == "L")
 men_team_sprint <- today_races %>% filter(RaceType == "Team Sprint", Sex == "M")
 ladies_team_sprint <- today_races %>% filter(RaceType == "Team Sprint", Sex == "L")
 mixed_teams <- today_races %>% filter(RaceType == "Mixed Team" | (RaceType == "Team" & Sex == "Mixed"))
+mixed_team_sprint <- today_races %>% filter(RaceType == "Mixed Team Sprint" | (RaceType == "Team Sprint" & Sex == "Mixed"))
 
 has_individual <- nrow(individual_races) > 0
 has_team <- nrow(men_teams) + nrow(ladies_teams) + nrow(men_team_sprint) +
-            nrow(ladies_team_sprint) + nrow(mixed_teams) > 0
+            nrow(ladies_team_sprint) + nrow(mixed_teams) + nrow(mixed_team_sprint) > 0
 
 if(!has_individual && !has_team) {
   log_info("No individual or team races found for today. Exiting.")
@@ -161,7 +162,7 @@ if(!has_individual && !has_team) {
 
 log_info(paste("Teams found - Men:", nrow(men_teams), "| Ladies:", nrow(ladies_teams),
                "| Men Sprint:", nrow(men_team_sprint), "| Ladies Sprint:", nrow(ladies_team_sprint),
-               "| Mixed:", nrow(mixed_teams)))
+               "| Mixed:", nrow(mixed_teams), "| Mixed Sprint:", nrow(mixed_team_sprint)))
 
 # Separate individual races by gender
 men_races <- individual_races %>% filter(Sex == "M")
@@ -220,8 +221,41 @@ ladies_startlist <- tryCatch({
 log_info(paste("Loaded startlists - Men:", nrow(men_startlist), "| Ladies:", nrow(ladies_startlist)))
 
 # Load team startlists
+normalize_team_startlist_columns <- function(df) {
+  if (nrow(df) == 0) {
+    return(df)
+  }
+
+  elo_to_pelo <- c(
+    "Avg_Elo" = "Avg_Pelo",
+    "Avg_Individual_Elo" = "Avg_Individual_Pelo",
+    "Avg_Sprint_Elo" = "Avg_Sprint_Pelo",
+    "Avg_MassStart_Elo" = "Avg_MassStart_Pelo",
+    "Avg_IndividualCompact_Elo" = "Avg_IndividualCompact_Pelo"
+  )
+
+  for (src_col in names(elo_to_pelo)) {
+    dst_col <- elo_to_pelo[[src_col]]
+    if (src_col %in% names(df) && !dst_col %in% names(df)) {
+      df[[dst_col]] <- df[[src_col]]
+    }
+  }
+
+  pelo_cols <- intersect(unname(elo_to_pelo), names(df))
+  for (pelo_col in pelo_cols) {
+    pct_col <- paste0(pelo_col, "_pct")
+    col_max <- suppressWarnings(max(df[[pelo_col]], na.rm = TRUE))
+    if (is.finite(col_max) && !is.na(col_max) && col_max > 0) {
+      df[[pct_col]] <- df[[pelo_col]] / col_max
+    }
+  }
+
+  df
+}
+
 men_team_startlist <- tryCatch({
   df <- read.csv(file.path(team_base_path, "startlist_team_races_men.csv"), stringsAsFactors = FALSE)
+  df <- normalize_team_startlist_columns(df)
   log_info(paste("Loaded men's team startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
@@ -231,6 +265,7 @@ men_team_startlist <- tryCatch({
 
 ladies_team_startlist <- tryCatch({
   df <- read.csv(file.path(team_base_path, "startlist_team_races_ladies.csv"), stringsAsFactors = FALSE)
+  df <- normalize_team_startlist_columns(df)
   log_info(paste("Loaded ladies' team startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
@@ -240,6 +275,7 @@ ladies_team_startlist <- tryCatch({
 
 men_team_sprint_startlist <- tryCatch({
   df <- read.csv(file.path(team_base_path, "startlist_team_sprint_races_men.csv"), stringsAsFactors = FALSE)
+  df <- normalize_team_startlist_columns(df)
   log_info(paste("Loaded men's team sprint startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
@@ -249,6 +285,7 @@ men_team_sprint_startlist <- tryCatch({
 
 ladies_team_sprint_startlist <- tryCatch({
   df <- read.csv(file.path(team_base_path, "startlist_team_sprint_races_ladies.csv"), stringsAsFactors = FALSE)
+  df <- normalize_team_startlist_columns(df)
   log_info(paste("Loaded ladies' team sprint startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
@@ -258,10 +295,21 @@ ladies_team_sprint_startlist <- tryCatch({
 
 mixed_team_startlist <- tryCatch({
   df <- read.csv(file.path(team_base_path, "startlist_mixed_team_races_teams.csv"), stringsAsFactors = FALSE)
+  df <- normalize_team_startlist_columns(df)
   log_info(paste("Loaded mixed team startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
   log_info(paste("No mixed team startlist:", e$message))
+  data.frame()
+})
+
+mixed_team_sprint_startlist <- tryCatch({
+  df <- read.csv(file.path(team_base_path, "startlist_mixed_team_sprint_races_teams.csv"), stringsAsFactors = FALSE)
+  df <- normalize_team_startlist_columns(df)
+  log_info(paste("Loaded mixed team sprint startlist:", nrow(df), "teams"))
+  df
+}, error = function(e) {
+  log_info(paste("No mixed team sprint startlist:", e$message))
   data.frame()
 })
 
@@ -296,6 +344,16 @@ mixed_team_chrono <- tryCatch({
   data.frame()
 })
 
+team_sprint_chrono <- tryCatch({
+  df <- read.csv(file.path(team_base_path, "team_sprint_chrono.csv"), stringsAsFactors = FALSE)
+  df$Date <- as.Date(df$Date)
+  log_info(paste("Loaded team sprint chrono:", nrow(df), "rows"))
+  df
+}, error = function(e) {
+  log_info(paste("No team sprint chrono:", e$message))
+  data.frame()
+})
+
 # ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
@@ -306,6 +364,18 @@ get_points <- function(place, race_type = "Individual") {
     return(0)
   }
   return(nc_points[place])
+}
+
+if (nrow(men_chrono) > 0 && !"Points" %in% names(men_chrono) && "Place" %in% names(men_chrono)) {
+  men_place <- suppressWarnings(as.integer(men_chrono$Place))
+  men_chrono$Points <- vapply(men_place, get_points, numeric(1))
+  log_info("Derived Points column for men_chrono from Place using get_points()")
+}
+
+if (nrow(ladies_chrono) > 0 && !"Points" %in% names(ladies_chrono) && "Place" %in% names(ladies_chrono)) {
+  ladies_place <- suppressWarnings(as.integer(ladies_chrono$Place))
+  ladies_chrono$Points <- vapply(ladies_place, get_points, numeric(1))
+  log_info("Derived Points column for ladies_chrono from Place using get_points()")
 }
 
 # Replace NA with first quartile
@@ -411,24 +481,45 @@ calculate_percentage_columns <- function(chrono_data) {
 }
 
 calculate_weighted_prev_points <- function(chrono_data, decay_lambda = DECAY_LAMBDA) {
-  chrono_data %>%
-    arrange(ID, Date) %>%
-    group_by(ID) %>%
-    mutate(
-      prev_points_weighted = sapply(row_number(), function(i) {
-        if (i == 1) return(0)
-        prev_data <- cur_data()[1:(i-1), ]
-        if (nrow(prev_data) == 0) return(0)
-        prev_points <- if ("Points" %in% names(prev_data)) prev_data$Points else
-          sapply(prev_data$Place, function(p) get_points(p, "Individual"))
-        prev_dates <- prev_data$Date
-        current_date <- cur_data()$Date[i]
-        days_ago <- as.numeric(difftime(current_date, prev_dates, units = "days"))
-        weights <- exp(-decay_lambda * days_ago)
-        weighted.mean(prev_points, weights, na.rm = TRUE)
-      })
-    ) %>%
-    ungroup()
+  chrono_data <- chrono_data %>% arrange(ID, Date)
+
+  n_rows <- nrow(chrono_data)
+  if (n_rows == 0) {
+    chrono_data$prev_points_weighted <- numeric(0)
+    return(chrono_data)
+  }
+
+  if (!"Points" %in% names(chrono_data) && "Place" %in% names(chrono_data)) {
+    place_num <- suppressWarnings(as.integer(chrono_data$Place))
+    chrono_data$Points <- vapply(place_num, get_points, numeric(1))
+  }
+
+  prev_points_weighted <- numeric(n_rows)
+  athlete_row_groups <- split(seq_len(n_rows), chrono_data$ID)
+
+  for (row_idx in athlete_row_groups) {
+    if (length(row_idx) <= 1) {
+      next
+    }
+
+    athlete_points <- chrono_data$Points[row_idx]
+    athlete_dates <- chrono_data$Date[row_idx]
+
+    for (local_idx in 2:length(row_idx)) {
+      prev_local_idx <- seq_len(local_idx - 1)
+      days_ago <- as.numeric(difftime(athlete_dates[local_idx], athlete_dates[prev_local_idx], units = "days"))
+      weights <- exp(-decay_lambda * days_ago)
+
+      prev_points_weighted[row_idx[local_idx]] <- weighted.mean(
+        athlete_points[prev_local_idx],
+        weights,
+        na.rm = TRUE
+      )
+    }
+  }
+
+  chrono_data$prev_points_weighted <- prev_points_weighted
+  chrono_data
 }
 
 # ============================================================================
@@ -593,7 +684,13 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   all_sims <- matrix(rnorm(n_athletes * n_simulations),
                      nrow = n_athletes, ncol = n_simulations)
   all_sims <- all_sims * scaled_sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error("Simulation matrix is invalid after bounds enforcement")
+    return(data.frame())
+  }
 
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
 
@@ -679,20 +776,20 @@ build_team_distribution <- function(nation, team_chrono, startlist_row,
 
   hist_stats <- get_team_weighted_prev_points(team_chrono, nation, reference_date)
 
-  # Use average Pelo values from startlist if available
-  avg_pelo <- NA
-  pelo_cols <- grep("^Avg_.*Pelo", names(startlist_row), value = TRUE)
-  if (length(pelo_cols) > 0) {
-    pelo_values <- unlist(startlist_row[pelo_cols])
-    avg_pelo <- mean(pelo_values, na.rm = TRUE)
+  # Use normalized average Pelo values from the current lineup as the primary signal.
+  avg_pelo_pct <- NA
+  pelo_pct_cols <- grep("^Avg_.*Pelo_pct$", names(startlist_row), value = TRUE)
+  if (length(pelo_pct_cols) > 0) {
+    pelo_pct_values <- suppressWarnings(as.numeric(unlist(startlist_row[pelo_pct_cols])))
+    avg_pelo_pct <- mean(pelo_pct_values, na.rm = TRUE)
   }
 
-  if (!is.na(hist_stats$mean) && hist_stats$n >= 2) {
+  if (!is.na(avg_pelo_pct) && avg_pelo_pct > 0) {
+    mean_points <- avg_pelo_pct * 70
+    sd_points <- if (!is.na(hist_stats$sd)) hist_stats$sd else TEAM_SD_MAX / 2
+  } else if (!is.na(hist_stats$mean) && hist_stats$n >= 2) {
     mean_points <- hist_stats$mean
     sd_points <- hist_stats$sd
-  } else if (!is.na(avg_pelo) && avg_pelo > 0) {
-    mean_points <- avg_pelo * 70
-    sd_points <- TEAM_SD_MAX / 2
   } else if (!is.na(hist_stats$mean)) {
     mean_points <- hist_stats$mean
     sd_points <- if (!is.na(hist_stats$sd)) hist_stats$sd else TEAM_SD_MAX / 2
@@ -736,7 +833,13 @@ simulate_team_positions <- function(team_distributions, n_simulations = N_SIMULA
   all_sims <- matrix(rnorm(n_teams * n_simulations),
                      nrow = n_teams, ncol = n_simulations)
   all_sims <- all_sims * scaled_sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error("Simulation matrix is invalid after bounds enforcement")
+    return(data.frame())
+  }
 
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
 
@@ -849,8 +952,23 @@ for (gender in c("men", "ladies")) {
 
     log_info(paste("Race", i, ":", gender, race_type))
 
+    race_prob_col <- NULL
+    candidate_prob_cols <- c(paste0("Race", i, "_Prob"), paste0("Race_Prob", i))
+    matching_prob_cols <- candidate_prob_cols[candidate_prob_cols %in% names(startlist)]
+    if (length(matching_prob_cols) > 0) {
+      race_prob_col <- matching_prob_cols[1]
+      log_info(paste("Using startlist probability column:", race_prob_col))
+    } else {
+      log_warn(paste("No race probability column found for race", i, "- using full startlist"))
+    }
+
     race_startlist <- startlist %>%
       filter(!is.na(ID), !is.na(Skier))
+
+    if (!is.null(race_prob_col)) {
+      race_startlist <- race_startlist %>%
+        filter(!is.na(.data[[race_prob_col]]), .data[[race_prob_col]] > 0)
+    }
 
     if (nrow(race_startlist) == 0) {
       log_warn(paste("No athletes in startlist for", gender, race_type))
@@ -1123,6 +1241,41 @@ if (nrow(mixed_teams) > 0 && nrow(mixed_team_startlist) > 0) {
   print(head(team_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
 }
 
+# Process Mixed Team Sprint
+if (nrow(mixed_team_sprint) > 0 && nrow(mixed_team_sprint_startlist) > 0) {
+  log_info("Processing Mixed Team Sprint")
+
+  team_distributions <- list()
+
+  for (i in 1:nrow(mixed_team_sprint_startlist)) {
+    nation <- mixed_team_sprint_startlist$Nation[i]
+
+    dist <- build_team_distribution(
+      nation = nation,
+      team_chrono = team_sprint_chrono,
+      startlist_row = mixed_team_sprint_startlist[i, ],
+      reference_date = current_date
+    )
+
+    team_distributions[[nation]] <- dist
+  }
+
+  team_sim_results <- simulate_team_positions(team_distributions)
+
+  team_sim_results <- team_sim_results %>%
+    mutate(Sex = "Mixed", RaceType = "Mixed Team Sprint") %>%
+    arrange(desc(prob_top_1))
+
+  team_results[["mixed_team_sprint"]] <- list(
+    race_type = "Mixed Team Sprint",
+    gender = "mixed",
+    predictions = team_sim_results
+  )
+
+  log_info(paste("Mixed Team Sprint complete - Top 3:"))
+  print(head(team_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
+}
+
 log_info(paste("Team simulation complete.", length(team_results), "team races processed"))
 
 # ============================================================================
@@ -1192,7 +1345,7 @@ format_team_results <- function(results_list) {
       select(Nation, Sex, RaceType, Win, Podium, `Top-5`, `Top-10`, `Top-30`) %>%
       arrange(desc(Win))
 
-    sheet_name <- entry$race_type
+    sheet_name <- team_key
     formatted[[sheet_name]] <- output_data
   }
 
@@ -1224,15 +1377,17 @@ if (length(team_results) > 0) {
   team_formatted <- format_team_results(team_results)
 
   # Men's Team
-  if ("Team" %in% names(team_formatted)) {
-    men_team_data <- team_formatted[["Team"]] %>% filter(Sex == "M")
+  if ("men_team" %in% names(team_formatted)) {
+    men_team_data <- team_formatted[["men_team"]] %>% filter(Sex == "M")
     if (nrow(men_team_data) > 0) {
       men_team_file <- file.path(output_dir, "men_team_position_probabilities.xlsx")
       write.xlsx(list("Men Team" = men_team_data), men_team_file)
       log_info(paste("Saved men's team predictions to", men_team_file))
     }
+  }
 
-    ladies_team_data <- team_formatted[["Team"]] %>% filter(Sex == "L")
+  if ("ladies_team" %in% names(team_formatted)) {
+    ladies_team_data <- team_formatted[["ladies_team"]] %>% filter(Sex == "L")
     if (nrow(ladies_team_data) > 0) {
       ladies_team_file <- file.path(output_dir, "ladies_team_position_probabilities.xlsx")
       write.xlsx(list("Ladies Team" = ladies_team_data), ladies_team_file)
@@ -1241,15 +1396,17 @@ if (length(team_results) > 0) {
   }
 
   # Team Sprint
-  if ("Team Sprint" %in% names(team_formatted)) {
-    men_ts_data <- team_formatted[["Team Sprint"]] %>% filter(Sex == "M")
+  if ("men_team_sprint" %in% names(team_formatted)) {
+    men_ts_data <- team_formatted[["men_team_sprint"]] %>% filter(Sex == "M")
     if (nrow(men_ts_data) > 0) {
       men_ts_file <- file.path(output_dir, "men_team_sprint_position_probabilities.xlsx")
       write.xlsx(list("Men Team Sprint" = men_ts_data), men_ts_file)
       log_info(paste("Saved men's team sprint predictions to", men_ts_file))
     }
+  }
 
-    ladies_ts_data <- team_formatted[["Team Sprint"]] %>% filter(Sex == "L")
+  if ("ladies_team_sprint" %in% names(team_formatted)) {
+    ladies_ts_data <- team_formatted[["ladies_team_sprint"]] %>% filter(Sex == "L")
     if (nrow(ladies_ts_data) > 0) {
       ladies_ts_file <- file.path(output_dir, "ladies_team_sprint_position_probabilities.xlsx")
       write.xlsx(list("Ladies Team Sprint" = ladies_ts_data), ladies_ts_file)
@@ -1258,10 +1415,17 @@ if (length(team_results) > 0) {
   }
 
   # Mixed Team
-  if ("Mixed Team" %in% names(team_formatted)) {
+  if ("mixed_team" %in% names(team_formatted)) {
     mixed_team_file <- file.path(output_dir, "mixed_team_position_probabilities.xlsx")
-    write.xlsx(list("Mixed Team" = team_formatted[["Mixed Team"]]), mixed_team_file)
+    write.xlsx(list("Mixed Team" = team_formatted[["mixed_team"]]), mixed_team_file)
     log_info(paste("Saved mixed team predictions to", mixed_team_file))
+  }
+
+  # Mixed Team Sprint
+  if ("mixed_team_sprint" %in% names(team_formatted)) {
+    mixed_team_sprint_file <- file.path(output_dir, "mixed_team_sprint_position_probabilities.xlsx")
+    write.xlsx(list("Mixed Team Sprint" = team_formatted[["mixed_team_sprint"]]), mixed_team_sprint_file)
+    log_info(paste("Saved mixed team sprint predictions to", mixed_team_sprint_file))
   }
 }
 

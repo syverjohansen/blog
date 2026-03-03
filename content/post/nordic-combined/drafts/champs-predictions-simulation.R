@@ -206,6 +206,18 @@ get_points <- function(place, race_type = "Individual") {
   return(nc_points[place])
 }
 
+if (nrow(men_chrono) > 0 && !"Points" %in% names(men_chrono) && "Place" %in% names(men_chrono)) {
+  men_place <- suppressWarnings(as.integer(men_chrono$Place))
+  men_chrono$Points <- vapply(men_place, get_points, numeric(1))
+  log_info("Derived Points column for men_chrono from Place using get_points()")
+}
+
+if (nrow(ladies_chrono) > 0 && !"Points" %in% names(ladies_chrono) && "Place" %in% names(ladies_chrono)) {
+  ladies_place <- suppressWarnings(as.integer(ladies_chrono$Place))
+  ladies_chrono$Points <- vapply(ladies_place, get_points, numeric(1))
+  log_info("Derived Points column for ladies_chrono from Place using get_points()")
+}
+
 # Replace NA with first quartile (for feature preparation)
 replace_na_with_quartile <- function(x) {
   if(all(is.na(x))) return(rep(0, length(x)))
@@ -270,24 +282,45 @@ calculate_percentage_columns <- function(chrono_data) {
 
 # Calculate exponential decay weighted prev_points for GAM training
 calculate_weighted_prev_points <- function(chrono_data, decay_lambda = DECAY_LAMBDA) {
-  chrono_data %>%
-    arrange(ID, Date) %>%
-    group_by(ID) %>%
-    mutate(
-      prev_points_weighted = sapply(row_number(), function(i) {
-        if (i == 1) return(0)
-        prev_data <- cur_data()[1:(i-1), ]
-        if (nrow(prev_data) == 0) return(0)
-        prev_points_values <- prev_data$Points
-        prev_dates <- prev_data$Date
-        current_date <- cur_data()$Date[i]
-        if (length(prev_points_values) == 0) return(0)
-        days_ago <- as.numeric(difftime(current_date, prev_dates, units = "days"))
-        weights <- exp(-decay_lambda * days_ago)
-        weighted.mean(prev_points_values, weights, na.rm = TRUE)
-      })
-    ) %>%
-    ungroup()
+  chrono_data <- chrono_data %>% arrange(ID, Date)
+
+  n_rows <- nrow(chrono_data)
+  if (n_rows == 0) {
+    chrono_data$prev_points_weighted <- numeric(0)
+    return(chrono_data)
+  }
+
+  if (!"Points" %in% names(chrono_data) && "Place" %in% names(chrono_data)) {
+    place_num <- suppressWarnings(as.integer(chrono_data$Place))
+    chrono_data$Points <- vapply(place_num, get_points, numeric(1))
+  }
+
+  prev_points_weighted <- numeric(n_rows)
+  athlete_row_groups <- split(seq_len(n_rows), chrono_data$ID)
+
+  for (row_idx in athlete_row_groups) {
+    if (length(row_idx) <= 1) {
+      next
+    }
+
+    athlete_points <- chrono_data$Points[row_idx]
+    athlete_dates <- chrono_data$Date[row_idx]
+
+    for (local_idx in 2:length(row_idx)) {
+      prev_local_idx <- seq_len(local_idx - 1)
+      days_ago <- as.numeric(difftime(athlete_dates[local_idx], athlete_dates[prev_local_idx], units = "days"))
+      weights <- exp(-decay_lambda * days_ago)
+
+      prev_points_weighted[row_idx[local_idx]] <- weighted.mean(
+        athlete_points[prev_local_idx],
+        weights,
+        na.rm = TRUE
+      )
+    }
+  }
+
+  chrono_data$prev_points_weighted <- prev_points_weighted
+  chrono_data
 }
 
 # ============================================================================
@@ -497,7 +530,13 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   all_sims <- matrix(rnorm(n_athletes * n_simulations),
                      nrow = n_athletes, ncol = n_simulations)
   all_sims <- all_sims * scaled_sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error("Simulation matrix is invalid after bounds enforcement")
+    return(data.frame())
+  }
 
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
 

@@ -401,7 +401,13 @@ simulate_tds_standings <- function(distributions, n_simulations = N_SIMULATIONS,
   all_sims <- matrix(rnorm(n_athletes * n_simulations),
                      nrow = n_athletes, ncol = n_simulations)
   all_sims <- all_sims * sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error("Simulation matrix is invalid after bounds enforcement")
+    return(data.frame())
+  }
 
   # Rank each simulation (column) - higher points = better = rank 1
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))

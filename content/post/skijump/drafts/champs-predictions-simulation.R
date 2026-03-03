@@ -216,8 +216,42 @@ ladies_startlist <- tryCatch({
 log_info(paste("Loaded champs startlists - Men:", nrow(men_startlist), "| Ladies:", nrow(ladies_startlist)))
 
 # Load team startlists
+normalize_team_startlist_columns <- function(df) {
+  if (nrow(df) == 0) {
+    return(df)
+  }
+
+  elo_to_pelo <- c(
+    "Avg_Elo" = "Avg_Pelo",
+    "Avg_Small_Elo" = "Avg_Small_Pelo",
+    "Avg_Medium_Elo" = "Avg_Medium_Pelo",
+    "Avg_Normal_Elo" = "Avg_Normal_Pelo",
+    "Avg_Large_Elo" = "Avg_Large_Pelo",
+    "Avg_Flying_Elo" = "Avg_Flying_Pelo"
+  )
+
+  for (src_col in names(elo_to_pelo)) {
+    dst_col <- elo_to_pelo[[src_col]]
+    if (src_col %in% names(df) && !dst_col %in% names(df)) {
+      df[[dst_col]] <- df[[src_col]]
+    }
+  }
+
+  pelo_cols <- intersect(unname(elo_to_pelo), names(df))
+  for (pelo_col in pelo_cols) {
+    pct_col <- paste0(pelo_col, "_pct")
+    col_max <- suppressWarnings(max(df[[pelo_col]], na.rm = TRUE))
+    if (is.finite(col_max) && !is.na(col_max) && col_max > 0) {
+      df[[pct_col]] <- df[[pelo_col]] / col_max
+    }
+  }
+
+  df
+}
+
 men_team_startlist <- tryCatch({
   df <- read.csv(file.path(team_base_path, "startlist_team_champs_men.csv"), stringsAsFactors = FALSE)
+  df <- normalize_team_startlist_columns(df)
   log_info(paste("Loaded men's team champs startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
@@ -227,6 +261,7 @@ men_team_startlist <- tryCatch({
 
 ladies_team_startlist <- tryCatch({
   df <- read.csv(file.path(team_base_path, "startlist_team_champs_ladies.csv"), stringsAsFactors = FALSE)
+  df <- normalize_team_startlist_columns(df)
   log_info(paste("Loaded ladies' team champs startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
@@ -236,6 +271,7 @@ ladies_team_startlist <- tryCatch({
 
 mixed_team_startlist <- tryCatch({
   df <- read.csv(file.path(team_base_path, "startlist_mixed_team_champs.csv"), stringsAsFactors = FALSE)
+  df <- normalize_team_startlist_columns(df)
   log_info(paste("Loaded mixed team champs startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
@@ -283,6 +319,18 @@ get_points <- function(place, race_type = "Large") {
     return(0)
   }
   return(sj_points[place])
+}
+
+if (nrow(men_chrono) > 0 && !"Points" %in% names(men_chrono) && "Place" %in% names(men_chrono)) {
+  men_place <- suppressWarnings(as.integer(men_chrono$Place))
+  men_chrono$Points <- vapply(men_place, get_points, numeric(1))
+  log_info("Derived Points column for men_chrono from Place using get_points()")
+}
+
+if (nrow(ladies_chrono) > 0 && !"Points" %in% names(ladies_chrono) && "Place" %in% names(ladies_chrono)) {
+  ladies_place <- suppressWarnings(as.integer(ladies_chrono$Place))
+  ladies_chrono$Points <- vapply(ladies_place, get_points, numeric(1))
+  log_info("Derived Points column for ladies_chrono from Place using get_points()")
 }
 
 # Get hill category for grouping similar hills
@@ -370,39 +418,60 @@ calculate_percentage_columns <- function(chrono_data) {
 
 # Calculate exponential decay weighted prev_points for GAM training
 calculate_weighted_prev_points <- function(chrono_data, decay_lambda = DECAY_LAMBDA) {
-  chrono_data %>%
-    arrange(ID, Date) %>%
-    group_by(ID) %>%
-    mutate(
-      prev_points_weighted = sapply(row_number(), function(i) {
-        if (i == 1) return(0)
-        prev_data <- cur_data()[1:(i-1), ]
-        if (nrow(prev_data) == 0) return(0)
-        prev_points_values <- prev_data$Points
-        prev_dates <- prev_data$Date
-        prev_race_types <- prev_data$RaceType
-        current_date <- cur_data()$Date[i]
-        current_race_type <- cur_data()$RaceType[i]
-        current_hill <- get_hill_category(current_race_type)
-        # Weight by similar hill types
-        if (current_hill == "Flying") {
-          matching <- prev_race_types %in% c("Flying", "Large")
-        } else if (current_hill == "Large") {
-          matching <- prev_race_types %in% c("Large", "Flying")
-        } else if (current_hill == "Normal") {
-          matching <- prev_race_types %in% c("Normal", "Large")
-        } else {
-          matching <- rep(TRUE, length(prev_race_types))
-        }
-        matching_points <- prev_points_values[matching]
-        matching_dates <- prev_dates[matching]
-        if (length(matching_points) == 0) return(0)
-        days_ago <- as.numeric(difftime(current_date, matching_dates, units = "days"))
-        weights <- exp(-decay_lambda * days_ago)
-        weighted.mean(matching_points, weights, na.rm = TRUE)
-      })
-    ) %>%
-    ungroup()
+  chrono_data <- chrono_data %>% arrange(ID, Date)
+
+  n_rows <- nrow(chrono_data)
+  if (n_rows == 0) {
+    chrono_data$prev_points_weighted <- numeric(0)
+    return(chrono_data)
+  }
+
+  if (!"Points" %in% names(chrono_data) && "Place" %in% names(chrono_data)) {
+    place_num <- suppressWarnings(as.integer(chrono_data$Place))
+    chrono_data$Points <- vapply(place_num, get_points, numeric(1))
+  }
+
+  prev_points_weighted <- numeric(n_rows)
+  athlete_row_groups <- split(seq_len(n_rows), chrono_data$ID)
+
+  for (row_idx in athlete_row_groups) {
+    if (length(row_idx) <= 1) {
+      next
+    }
+
+    athlete_points <- chrono_data$Points[row_idx]
+    athlete_dates <- chrono_data$Date[row_idx]
+    athlete_race_types <- chrono_data$RaceType[row_idx]
+
+    for (local_idx in 2:length(row_idx)) {
+      prev_local_idx <- seq_len(local_idx - 1)
+      current_hill <- get_hill_category(athlete_race_types[local_idx])
+
+      if (current_hill == "Flying") {
+        matching <- athlete_race_types[prev_local_idx] %in% c("Flying", "Large")
+      } else if (current_hill == "Large") {
+        matching <- athlete_race_types[prev_local_idx] %in% c("Large", "Flying")
+      } else if (current_hill == "Normal") {
+        matching <- athlete_race_types[prev_local_idx] %in% c("Normal", "Large")
+      } else {
+        matching <- rep(TRUE, length(prev_local_idx))
+      }
+
+      if (!any(matching)) {
+        next
+      }
+
+      matching_points <- athlete_points[prev_local_idx][matching]
+      matching_dates <- athlete_dates[prev_local_idx][matching]
+      days_ago <- as.numeric(difftime(athlete_dates[local_idx], matching_dates, units = "days"))
+      weights <- exp(-decay_lambda * days_ago)
+
+      prev_points_weighted[row_idx[local_idx]] <- weighted.mean(matching_points, weights, na.rm = TRUE)
+    }
+  }
+
+  chrono_data$prev_points_weighted <- prev_points_weighted
+  chrono_data
 }
 
 # ============================================================================
@@ -619,7 +688,13 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   all_sims <- matrix(rnorm(n_athletes * n_simulations),
                      nrow = n_athletes, ncol = n_simulations)
   all_sims <- all_sims * scaled_sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error("Simulation matrix is invalid after bounds enforcement")
+    return(data.frame())
+  }
 
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
 
@@ -792,19 +867,19 @@ build_team_distribution <- function(nation, team_chrono, startlist_row,
 
   hist_stats <- get_team_weighted_prev_points(team_chrono, nation, reference_date)
 
-  avg_pelo <- NA
-  pelo_cols <- grep("^Avg_.*Pelo", names(startlist_row), value = TRUE)
-  if (length(pelo_cols) > 0) {
-    pelo_values <- unlist(startlist_row[pelo_cols])
-    avg_pelo <- mean(pelo_values, na.rm = TRUE)
+  avg_pelo_pct <- NA
+  pelo_pct_cols <- grep("^Avg_.*Pelo_pct$", names(startlist_row), value = TRUE)
+  if (length(pelo_pct_cols) > 0) {
+    pelo_pct_values <- suppressWarnings(as.numeric(unlist(startlist_row[pelo_pct_cols])))
+    avg_pelo_pct <- mean(pelo_pct_values, na.rm = TRUE)
   }
 
-  if (!is.na(hist_stats$mean) && hist_stats$n >= 2) {
+  if (!is.na(avg_pelo_pct) && avg_pelo_pct > 0) {
+    mean_points <- avg_pelo_pct * 70
+    sd_points <- if (!is.na(hist_stats$sd)) hist_stats$sd else TEAM_SD_MAX / 2
+  } else if (!is.na(hist_stats$mean) && hist_stats$n >= 2) {
     mean_points <- hist_stats$mean
     sd_points <- hist_stats$sd
-  } else if (!is.na(avg_pelo) && avg_pelo > 0) {
-    mean_points <- avg_pelo * 70
-    sd_points <- TEAM_SD_MAX / 2
   } else if (!is.na(hist_stats$mean)) {
     mean_points <- hist_stats$mean
     sd_points <- if (!is.na(hist_stats$sd)) hist_stats$sd else TEAM_SD_MAX / 2
@@ -847,7 +922,13 @@ simulate_team_positions <- function(team_distributions, n_simulations = N_SIMULA
   all_sims <- matrix(rnorm(n_teams * n_simulations),
                      nrow = n_teams, ncol = n_simulations)
   all_sims <- all_sims * scaled_sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error("Simulation matrix is invalid after bounds enforcement")
+    return(data.frame())
+  }
 
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
 

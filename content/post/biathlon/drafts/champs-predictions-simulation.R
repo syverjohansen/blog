@@ -204,6 +204,20 @@ get_points <- function(place, race_type = "Sprint") {
   return(points_list[place])
 }
 
+if (nrow(men_chrono) > 0 && !"Points" %in% names(men_chrono) &&
+    all(c("Place", "RaceType") %in% names(men_chrono))) {
+  men_place <- suppressWarnings(as.integer(men_chrono$Place))
+  men_chrono$Points <- mapply(get_points, men_place, men_chrono$RaceType)
+  log_info("Derived Points column for men_chrono from Place using get_points()")
+}
+
+if (nrow(ladies_chrono) > 0 && !"Points" %in% names(ladies_chrono) &&
+    all(c("Place", "RaceType") %in% names(ladies_chrono))) {
+  ladies_place <- suppressWarnings(as.integer(ladies_chrono$Place))
+  ladies_chrono$Points <- mapply(get_points, ladies_place, ladies_chrono$RaceType)
+  log_info("Derived Points column for ladies_chrono from Place using get_points()")
+}
+
 # Calculate exponential decay weighted previous points
 get_weighted_prev_points <- function(chrono_data, athlete_id, race_type, reference_date) {
   # Filter for this athlete and race type
@@ -333,7 +347,13 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   all_sims <- matrix(rnorm(n_athletes * n_simulations),
                      nrow = n_athletes, ncol = n_simulations)
   all_sims <- all_sims * scaled_sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error("Simulation matrix is invalid after bounds enforcement")
+    return(data.frame())
+  }
 
   # Rank each simulation (column) - higher points = better = rank 1
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))

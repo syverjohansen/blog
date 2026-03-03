@@ -582,7 +582,13 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   all_sims <- matrix(rnorm(n_athletes * n_simulations),
                      nrow = n_athletes, ncol = n_simulations)
   all_sims <- all_sims * scaled_sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error("Simulation matrix is invalid after bounds enforcement")
+    return(data.frame())
+  }
 
   # Rank each simulation (column) - higher points = better = rank 1
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
@@ -1072,9 +1078,10 @@ combined_totals <- bind_rows(
   arrange(desc(Total_Points))
 
 if (nrow(combined_totals) > 0) {
-  fantasy_probs_file <- file.path(output_dir, "fantasy_position_probabilities.xlsx")
-  write.xlsx(combined_totals, fantasy_probs_file)
-  log_info(paste("Fantasy position probabilities saved to:", fantasy_probs_file))
+  # Disabled: do not write the intermediate fantasy position probabilities workbook.
+  # fantasy_probs_file <- file.path(output_dir, "fantasy_position_probabilities.xlsx")
+  # write.xlsx(combined_totals, fantasy_probs_file)
+  # log_info(paste("Fantasy position probabilities saved to:", fantasy_probs_file))
 }
 
 # Print summary

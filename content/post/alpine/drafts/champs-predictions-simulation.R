@@ -143,7 +143,7 @@ log_info(paste("Current date:", current_date))
 
 # Load chronological data with error handling
 men_chrono <- tryCatch({
-  df <- read.csv(file.path(base_path, "men_chrono.csv"), stringsAsFactors = FALSE)
+  df <- read.csv(file.path(base_path, "men_chrono.csv"), stringsAsFactors = FALSE, check.names = FALSE)
   df$Date <- as.Date(df$Date)
   log_info(paste("Loaded men_chrono:", nrow(df), "rows"))
   df
@@ -153,7 +153,7 @@ men_chrono <- tryCatch({
 })
 
 ladies_chrono <- tryCatch({
-  df <- read.csv(file.path(base_path, "ladies_chrono.csv"), stringsAsFactors = FALSE)
+  df <- read.csv(file.path(base_path, "ladies_chrono.csv"), stringsAsFactors = FALSE, check.names = FALSE)
   df$Date <- as.Date(df$Date)
   log_info(paste("Loaded ladies_chrono:", nrow(df), "rows"))
   df
@@ -342,35 +342,53 @@ calculate_percentage_columns <- function(chrono_data) {
 
 # Calculate exponential decay weighted prev_points for GAM training
 calculate_weighted_prev_points <- function(chrono_data, decay_lambda = DECAY_LAMBDA) {
-  chrono_data %>%
-    arrange(ID, Date) %>%
-    group_by(ID) %>%
-    mutate(
-      prev_points_weighted = sapply(row_number(), function(i) {
-        if (i == 1) return(0)
-        prev_data <- cur_data()[1:(i-1), ]
-        if (nrow(prev_data) == 0) return(0)
-        prev_points_values <- prev_data$Points
-        prev_dates <- prev_data$Date
-        prev_distances <- prev_data$Distance
-        current_date <- cur_data()$Date[i]
-        current_distance <- cur_data()$Distance[i]
-        if (current_distance %in% SPEED_DISCIPLINES) {
-          matching <- prev_distances %in% SPEED_DISCIPLINES
-        } else if (current_distance %in% TECH_DISCIPLINES) {
-          matching <- prev_distances %in% TECH_DISCIPLINES
-        } else {
-          matching <- rep(TRUE, length(prev_distances))
-        }
-        matching_points <- prev_points_values[matching]
-        matching_dates <- prev_dates[matching]
-        if (length(matching_points) == 0) return(0)
-        days_ago <- as.numeric(difftime(current_date, matching_dates, units = "days"))
-        weights <- exp(-decay_lambda * days_ago)
-        weighted.mean(matching_points, weights, na.rm = TRUE)
-      })
-    ) %>%
-    ungroup()
+  chrono_data <- chrono_data %>% arrange(ID, Date)
+
+  n_rows <- nrow(chrono_data)
+  if (n_rows == 0) {
+    chrono_data$prev_points_weighted <- numeric(0)
+    return(chrono_data)
+  }
+
+  prev_points_weighted <- numeric(n_rows)
+  athlete_row_groups <- split(seq_len(n_rows), chrono_data$ID)
+
+  for (row_idx in athlete_row_groups) {
+    if (length(row_idx) <= 1) {
+      next
+    }
+
+    athlete_points <- chrono_data$Points[row_idx]
+    athlete_dates <- chrono_data$Date[row_idx]
+    athlete_distances <- chrono_data$Distance[row_idx]
+
+    for (local_idx in 2:length(row_idx)) {
+      prev_local_idx <- seq_len(local_idx - 1)
+      current_distance <- athlete_distances[local_idx]
+
+      if (current_distance %in% SPEED_DISCIPLINES) {
+        matching <- athlete_distances[prev_local_idx] %in% SPEED_DISCIPLINES
+      } else if (current_distance %in% TECH_DISCIPLINES) {
+        matching <- athlete_distances[prev_local_idx] %in% TECH_DISCIPLINES
+      } else {
+        matching <- rep(TRUE, length(prev_local_idx))
+      }
+
+      if (!any(matching)) {
+        next
+      }
+
+      matching_points <- athlete_points[prev_local_idx][matching]
+      matching_dates <- athlete_dates[prev_local_idx][matching]
+      days_ago <- as.numeric(difftime(athlete_dates[local_idx], matching_dates, units = "days"))
+      weights <- exp(-decay_lambda * days_ago)
+
+      prev_points_weighted[row_idx[local_idx]] <- weighted.mean(matching_points, weights, na.rm = TRUE)
+    }
+  }
+
+  chrono_data$prev_points_weighted <- prev_points_weighted
+  chrono_data
 }
 
 # ============================================================================
@@ -531,7 +549,13 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   all_sims <- matrix(rnorm(n_athletes * n_simulations),
                      nrow = n_athletes, ncol = n_simulations)
   all_sims <- all_sims * scaled_sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error("Simulation matrix is invalid after bounds enforcement")
+    return(data.frame())
+  }
 
   # Rank each simulation (column) - higher points = better = rank 1
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))

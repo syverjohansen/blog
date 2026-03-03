@@ -221,8 +221,42 @@ log_info(paste("Loaded startlists - Men:", nrow(men_startlist), "| Ladies:", nro
 # Load relay startlists
 relay_base_path <- "~/ski/elo/python/biathlon/polars/relay/excel365"
 
+normalize_relay_startlist_columns <- function(df) {
+  if (nrow(df) == 0) {
+    return(df)
+  }
+
+  elo_to_pelo <- c(
+    "Avg_Elo" = "Avg_Pelo",
+    "Avg_Individual_Elo" = "Avg_Individual_Pelo",
+    "Avg_Sprint_Elo" = "Avg_Sprint_Pelo",
+    "Avg_Pursuit_Elo" = "Avg_Pursuit_Pelo",
+    "Avg_MassStart_Elo" = "Avg_MassStart_Pelo"
+  )
+
+  for (src_col in names(elo_to_pelo)) {
+    dst_col <- elo_to_pelo[[src_col]]
+    if (src_col %in% names(df) && !dst_col %in% names(df)) {
+      df[[dst_col]] <- df[[src_col]]
+    }
+  }
+
+  pelo_cols <- intersect(unname(elo_to_pelo), names(df))
+  for (pelo_col in pelo_cols) {
+    pct_col <- paste0(pelo_col, "_pct")
+    col_max <- suppressWarnings(max(df[[pelo_col]], na.rm = TRUE))
+
+    if (is.finite(col_max) && !is.na(col_max) && col_max > 0) {
+      df[[pct_col]] <- df[[pelo_col]] / col_max
+    }
+  }
+
+  df
+}
+
 men_relay_startlist <- tryCatch({
   df <- read.csv(file.path(relay_base_path, "startlist_relay_races_teams_men.csv"), stringsAsFactors = FALSE)
+  df <- normalize_relay_startlist_columns(df)
   log_info(paste("Loaded men's relay startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
@@ -232,6 +266,7 @@ men_relay_startlist <- tryCatch({
 
 ladies_relay_startlist <- tryCatch({
   df <- read.csv(file.path(relay_base_path, "startlist_relay_races_teams_ladies.csv"), stringsAsFactors = FALSE)
+  df <- normalize_relay_startlist_columns(df)
   log_info(paste("Loaded ladies' relay startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
@@ -241,6 +276,7 @@ ladies_relay_startlist <- tryCatch({
 
 mixed_relay_startlist <- tryCatch({
   df <- read.csv(file.path(relay_base_path, "startlist_mixed_relay_races_teams.csv"), stringsAsFactors = FALSE)
+  df <- normalize_relay_startlist_columns(df)
   log_info(paste("Loaded mixed relay startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
@@ -250,6 +286,7 @@ mixed_relay_startlist <- tryCatch({
 
 single_mixed_relay_startlist <- tryCatch({
   df <- read.csv(file.path(relay_base_path, "startlist_single_mixed_relay_races_teams.csv"), stringsAsFactors = FALSE)
+  df <- normalize_relay_startlist_columns(df)
   log_info(paste("Loaded single mixed relay startlist:", nrow(df), "teams"))
   df
 }, error = function(e) {
@@ -309,6 +346,20 @@ get_points <- function(place, race_type = "Sprint") {
     return(0)
   }
   return(points_list[place])
+}
+
+if (nrow(men_chrono) > 0 && !"Points" %in% names(men_chrono) &&
+    all(c("Place", "RaceType") %in% names(men_chrono))) {
+  men_place <- suppressWarnings(as.integer(men_chrono$Place))
+  men_chrono$Points <- mapply(get_points, men_place, men_chrono$RaceType)
+  log_info("Derived Points column for men_chrono from Place using get_points()")
+}
+
+if (nrow(ladies_chrono) > 0 && !"Points" %in% names(ladies_chrono) &&
+    all(c("Place", "RaceType") %in% names(ladies_chrono))) {
+  ladies_place <- suppressWarnings(as.integer(ladies_chrono$Place))
+  ladies_chrono$Points <- mapply(get_points, ladies_place, ladies_chrono$RaceType)
+  log_info("Derived Points column for ladies_chrono from Place using get_points()")
 }
 
 # Replace NA with first quartile (for feature preparation)
@@ -435,24 +486,46 @@ calculate_percentage_columns <- function(chrono_data) {
 }
 
 calculate_weighted_prev_points <- function(chrono_data, decay_lambda = DECAY_LAMBDA) {
-  chrono_data %>%
-    arrange(ID, Date) %>%
-    group_by(ID) %>%
-    mutate(
-      prev_points_weighted = sapply(row_number(), function(i) {
-        if (i == 1) return(0)
-        prev_data <- cur_data()[1:(i-1), ]
-        if (nrow(prev_data) == 0) return(0)
-        prev_points <- if ("Points" %in% names(prev_data)) prev_data$Points else
-          mapply(function(p, rt) get_points(p, rt), prev_data$Place, prev_data$RaceType)
-        prev_dates <- prev_data$Date
-        current_date <- cur_data()$Date[i]
-        days_ago <- as.numeric(difftime(current_date, prev_dates, units = "days"))
-        weights <- exp(-decay_lambda * days_ago)
-        weighted.mean(prev_points, weights, na.rm = TRUE)
-      })
-    ) %>%
-    ungroup()
+  chrono_data <- chrono_data %>% arrange(ID, Date)
+
+  n_rows <- nrow(chrono_data)
+  if (n_rows == 0) {
+    chrono_data$prev_points_weighted <- numeric(0)
+    return(chrono_data)
+  }
+
+  if (!"Points" %in% names(chrono_data) &&
+      all(c("Place", "RaceType") %in% names(chrono_data))) {
+    place_num <- suppressWarnings(as.integer(chrono_data$Place))
+    chrono_data$Points <- mapply(get_points, place_num, chrono_data$RaceType)
+  }
+
+  prev_points_weighted <- numeric(n_rows)
+  athlete_row_groups <- split(seq_len(n_rows), chrono_data$ID)
+
+  for (row_idx in athlete_row_groups) {
+    if (length(row_idx) <= 1) {
+      next
+    }
+
+    athlete_points <- chrono_data$Points[row_idx]
+    athlete_dates <- chrono_data$Date[row_idx]
+
+    for (local_idx in 2:length(row_idx)) {
+      prev_local_idx <- seq_len(local_idx - 1)
+      days_ago <- as.numeric(difftime(athlete_dates[local_idx], athlete_dates[prev_local_idx], units = "days"))
+      weights <- exp(-decay_lambda * days_ago)
+
+      prev_points_weighted[row_idx[local_idx]] <- weighted.mean(
+        athlete_points[prev_local_idx],
+        weights,
+        na.rm = TRUE
+      )
+    }
+  }
+
+  chrono_data$prev_points_weighted <- prev_points_weighted
+  chrono_data
 }
 
 # ============================================================================
@@ -627,7 +700,13 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   all_sims <- matrix(rnorm(n_athletes * n_simulations),
                      nrow = n_athletes, ncol = n_simulations)
   all_sims <- all_sims * scaled_sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error("Simulation matrix is invalid after bounds enforcement")
+    return(data.frame())
+  }
 
   # Rank each simulation (column) - higher points = better = rank 1
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
@@ -723,23 +802,22 @@ build_relay_team_distribution <- function(nation, relay_chrono, startlist_row,
   hist_stats <- get_relay_weighted_prev_points(relay_chrono, nation, reference_date)
 
   # Use average Pelo values from startlist if available
-  avg_pelo <- NA
-  pelo_cols <- grep("^Avg_.*Pelo", names(startlist_row), value = TRUE)
-  if (length(pelo_cols) > 0) {
-    pelo_values <- unlist(startlist_row[pelo_cols])
-    avg_pelo <- mean(pelo_values, na.rm = TRUE)
+  avg_pelo_pct <- NA
+  pelo_pct_cols <- grep("^Avg_.*Pelo_pct$", names(startlist_row), value = TRUE)
+  if (length(pelo_pct_cols) > 0) {
+    pelo_pct_values <- suppressWarnings(as.numeric(unlist(startlist_row[pelo_pct_cols])))
+    avg_pelo_pct <- mean(pelo_pct_values, na.rm = TRUE)
   }
 
   # Determine mean and sd
-  if (!is.na(hist_stats$mean) && hist_stats$n >= 2) {
-    # Good history - use weighted historical performance
+  if (!is.na(avg_pelo_pct) && avg_pelo_pct > 0) {
+    # Nation-agnostic: use normalized current-lineup Avg_*Pelo percentages.
+    mean_points <- avg_pelo_pct * 60
+    sd_points <- if (!is.na(hist_stats$sd)) hist_stats$sd else RELAY_SD_MAX / 2
+  } else if (!is.na(hist_stats$mean) && hist_stats$n >= 2) {
+    # Fallback to historical team performance only when lineup strength is unavailable.
     mean_points <- hist_stats$mean
     sd_points <- hist_stats$sd
-  } else if (!is.na(avg_pelo) && avg_pelo > 0) {
-    # Use Pelo estimate - convert Pelo percentage to expected points
-    # Assume top Pelo (~100%) correlates to ~80 points, lower Pelo to less
-    mean_points <- avg_pelo * 60
-    sd_points <- RELAY_SD_MAX / 2
   } else if (!is.na(hist_stats$mean)) {
     # Some history but limited
     mean_points <- hist_stats$mean
@@ -791,7 +869,13 @@ simulate_relay_positions <- function(team_distributions, n_simulations = N_SIMUL
   all_sims <- matrix(rnorm(n_teams * n_simulations),
                      nrow = n_teams, ncol = n_simulations)
   all_sims <- all_sims * scaled_sds + means
-  all_sims <- pmax(0, pmin(max_points, all_sims))
+  all_sims[all_sims < 0] <- 0
+  all_sims[all_sims > max_points] <- max_points
+
+  if (is.null(dim(all_sims)) || nrow(all_sims) == 0 || ncol(all_sims) == 0) {
+    log_error("Simulation matrix is invalid after bounds enforcement")
+    return(data.frame())
+  }
 
   # Rank each simulation
   ranks_matrix <- apply(all_sims, 2, function(x) rank(-x, ties.method = "random"))
@@ -910,9 +994,24 @@ for (gender in c("men", "ladies")) {
 
     log_info(paste("Race", i, ":", gender, race_type))
 
+    race_prob_col <- NULL
+    candidate_prob_cols <- c(paste0("Race", i, "_Prob"), paste0("Race_Prob", i))
+    matching_prob_cols <- candidate_prob_cols[candidate_prob_cols %in% names(startlist)]
+    if (length(matching_prob_cols) > 0) {
+      race_prob_col <- matching_prob_cols[1]
+      log_info(paste("Using startlist probability column:", race_prob_col))
+    } else {
+      log_warn(paste("No race probability column found for race", i, "- using full startlist"))
+    }
+
     # Get athletes on startlist for this race
     race_startlist <- startlist %>%
       filter(!is.na(ID), !is.na(Skier))
+
+    if (!is.null(race_prob_col)) {
+      race_startlist <- race_startlist %>%
+        filter(!is.na(.data[[race_prob_col]]), .data[[race_prob_col]] > 0)
+    }
 
     if (nrow(race_startlist) == 0) {
       log_warn(paste("No athletes in startlist for", gender, race_type))
@@ -1252,8 +1351,8 @@ format_relay_results <- function(results_list) {
       select(Nation, Sex, RaceType, Win, Podium, `Top-5`, `Top-10`, `Top-30`) %>%
       arrange(desc(Win))
 
-    # Create sheet name
-    sheet_name <- entry$race_type
+    # Keep men/ladies relays separate; both use RaceType == "Relay".
+    sheet_name <- relay_key
     formatted[[sheet_name]] <- output_data
   }
 
@@ -1265,8 +1364,8 @@ if (length(relay_results) > 0) {
   relay_formatted <- format_relay_results(relay_results)
 
   # Save men's relay
-  if ("Relay" %in% names(relay_formatted)) {
-    men_relay_data <- relay_formatted[["Relay"]] %>% filter(Sex == "M")
+  if ("men_relay" %in% names(relay_formatted)) {
+    men_relay_data <- relay_formatted[["men_relay"]] %>% filter(Sex == "M")
     if (nrow(men_relay_data) > 0) {
       men_relay_file <- file.path(output_dir, "men_relay_position_probabilities.xlsx")
       write.xlsx(list("Men Relay" = men_relay_data), men_relay_file)
@@ -1275,8 +1374,8 @@ if (length(relay_results) > 0) {
   }
 
   # Save ladies' relay
-  if ("Relay" %in% names(relay_formatted)) {
-    ladies_relay_data <- relay_formatted[["Relay"]] %>% filter(Sex == "L")
+  if ("ladies_relay" %in% names(relay_formatted)) {
+    ladies_relay_data <- relay_formatted[["ladies_relay"]] %>% filter(Sex == "L")
     if (nrow(ladies_relay_data) > 0) {
       ladies_relay_file <- file.path(output_dir, "ladies_relay_position_probabilities.xlsx")
       write.xlsx(list("Ladies Relay" = ladies_relay_data), ladies_relay_file)
@@ -1285,16 +1384,16 @@ if (length(relay_results) > 0) {
   }
 
   # Save mixed relay
-  if ("Mixed Relay" %in% names(relay_formatted)) {
+  if ("mixed_relay" %in% names(relay_formatted)) {
     mixed_relay_file <- file.path(output_dir, "mixed_relay_position_probabilities.xlsx")
-    write.xlsx(list("Mixed Relay" = relay_formatted[["Mixed Relay"]]), mixed_relay_file)
+    write.xlsx(list("Mixed Relay" = relay_formatted[["mixed_relay"]]), mixed_relay_file)
     log_info(paste("Saved mixed relay predictions to", mixed_relay_file))
   }
 
   # Save single mixed relay
-  if ("Single Mixed Relay" %in% names(relay_formatted)) {
+  if ("single_mixed_relay" %in% names(relay_formatted)) {
     single_mixed_relay_file <- file.path(output_dir, "single_mixed_relay_position_probabilities.xlsx")
-    write.xlsx(list("Single Mixed Relay" = relay_formatted[["Single Mixed Relay"]]), single_mixed_relay_file)
+    write.xlsx(list("Single Mixed Relay" = relay_formatted[["single_mixed_relay"]]), single_mixed_relay_file)
     log_info(paste("Saved single mixed relay predictions to", single_mixed_relay_file))
   }
 }
