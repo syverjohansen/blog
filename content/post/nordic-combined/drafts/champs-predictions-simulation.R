@@ -12,6 +12,8 @@
 library(dplyr)
 library(tidyr)
 library(openxlsx)
+library(mgcv)
+library(leaps)
 library(logger)
 library(lubridate)
 
@@ -48,6 +50,10 @@ DECAY_LAMBDA <- 0.002
 SD_SCALE_FACTOR <- 0.77
 SD_MIN <- 4
 SD_MAX <- 16
+
+# GAM parameters for athletes with insufficient history
+N_HISTORY_REQUIRED <- 10              # Target number of historical races per athlete
+GAM_FILL_WEIGHT_FACTOR <- 0.25        # Weight multiplier for GAM-filled history slots
 
 # Position thresholds
 POSITION_THRESHOLDS <- c(1, 3, 5, 10, 30)
@@ -200,6 +206,145 @@ get_points <- function(place, race_type = "Individual") {
   return(nc_points[place])
 }
 
+# Replace NA with first quartile (for feature preparation)
+replace_na_with_quartile <- function(x) {
+  if(all(is.na(x))) return(rep(0, length(x)))
+  q1 <- quantile(x, 0.25, na.rm = TRUE)
+  ifelse(is.na(x), q1, x)
+}
+
+# Filter features to keep only those with positive coefficients
+filter_positive_coefficients <- function(data, response_var, candidate_vars, family = "gaussian") {
+  if (length(candidate_vars) == 0) return(character(0))
+
+  current_vars <- candidate_vars
+  max_iterations <- length(candidate_vars)
+
+  for (iter in 1:max_iterations) {
+    if (length(current_vars) == 0) break
+
+    formula_str <- paste(response_var, "~", paste(current_vars, collapse = " + "))
+
+    model <- tryCatch({
+      if (family == "binomial") {
+        glm(as.formula(formula_str), data = data, family = binomial())
+      } else {
+        lm(as.formula(formula_str), data = data)
+      }
+    }, error = function(e) NULL)
+
+    if (is.null(model)) break
+
+    coefs <- coef(model)
+    coefs <- coefs[names(coefs) != "(Intercept)"]
+
+    negative_vars <- names(coefs[coefs < 0])
+
+    if (length(negative_vars) == 0) break
+
+    current_vars <- setdiff(current_vars, negative_vars)
+  }
+
+  return(current_vars)
+}
+
+# Get explanatory variables for GAM (Nordic Combined has simpler feature set)
+get_explanatory_vars <- function(race_type) {
+  # Nordic Combined uses overall Pelo as primary feature
+  return(c("prev_points_weighted", "Pelo_pct"))
+}
+
+# ============================================================================
+# DATA PREPROCESSING FUNCTIONS
+# ============================================================================
+
+# Calculate PELO percentage columns (normalized within each race)
+calculate_percentage_columns <- function(chrono_data) {
+  chrono_data %>%
+    group_by(Season, Race) %>%
+    mutate(
+      Pelo_pct = Pelo / max(Pelo, na.rm = TRUE)
+    ) %>%
+    ungroup()
+}
+
+# Calculate exponential decay weighted prev_points for GAM training
+calculate_weighted_prev_points <- function(chrono_data, decay_lambda = DECAY_LAMBDA) {
+  chrono_data %>%
+    arrange(ID, Date) %>%
+    group_by(ID) %>%
+    mutate(
+      prev_points_weighted = sapply(row_number(), function(i) {
+        if (i == 1) return(0)
+        prev_data <- cur_data()[1:(i-1), ]
+        if (nrow(prev_data) == 0) return(0)
+        prev_points_values <- prev_data$Points
+        prev_dates <- prev_data$Date
+        current_date <- cur_data()$Date[i]
+        if (length(prev_points_values) == 0) return(0)
+        days_ago <- as.numeric(difftime(current_date, prev_dates, units = "days"))
+        weights <- exp(-decay_lambda * days_ago)
+        weighted.mean(prev_points_values, weights, na.rm = TRUE)
+      })
+    ) %>%
+    ungroup()
+}
+
+# ============================================================================
+# GAM MODEL TRAINING
+# ============================================================================
+
+# Train GAM for POINTS prediction
+train_points_gam <- function(chrono_data, race_type, gender) {
+  log_info(paste("Training", gender, race_type, "POINTS GAM"))
+
+  # Filter for relevant race types
+  if (race_type %in% INDIVIDUAL_DISCIPLINES) {
+    filtered_data <- chrono_data %>% filter(RaceType %in% INDIVIDUAL_DISCIPLINES)
+  } else if (race_type %in% MASS_START_DISCIPLINES) {
+    filtered_data <- chrono_data %>% filter(RaceType %in% MASS_START_DISCIPLINES)
+  } else if (race_type %in% SPRINT_DISCIPLINES) {
+    filtered_data <- chrono_data %>% filter(RaceType %in% SPRINT_DISCIPLINES)
+  } else {
+    filtered_data <- chrono_data
+  }
+
+  if (nrow(filtered_data) < 50) {
+    log_warn(paste("Insufficient data for", race_type))
+    return(NULL)
+  }
+
+  explanatory_vars <- get_explanatory_vars(race_type)
+  available_vars <- intersect(explanatory_vars, names(filtered_data))
+  if (length(available_vars) == 0) return(NULL)
+
+  tryCatch({
+    formula <- as.formula(paste("Points ~", paste(available_vars, collapse = " + ")))
+    feature_selection <- regsubsets(formula, data = filtered_data, nbest = 1, method = "exhaustive")
+    feature_summary <- summary(feature_selection)
+    best_bic_vars <- names(coef(feature_selection, which.min(feature_summary$bic)))[-1]
+    positive_vars <- filter_positive_coefficients(filtered_data, "Points", best_bic_vars)
+    if (length(positive_vars) == 0) positive_vars <- "prev_points_weighted"
+
+    smooth_terms <- paste("s(", positive_vars, ")", collapse = " + ")
+    gam_formula <- as.formula(paste("Points ~", smooth_terms))
+    points_model <- gam(gam_formula, data = filtered_data, method = "REML")
+
+    residual_sd <- sqrt(points_model$sig2)
+    if (is.null(residual_sd) || is.na(residual_sd)) {
+      residual_sd <- sqrt(points_model$deviance / points_model$df.residual)
+    }
+    residual_sd <- max(residual_sd, 5)
+
+    log_info(paste("GAM trained. Residual SD:", round(residual_sd, 2)))
+
+    return(list(model = points_model, residual_sd = residual_sd, features = positive_vars, race_type = race_type))
+  }, error = function(e) {
+    log_error(paste("Error training GAM:", e$message))
+    return(NULL)
+  })
+}
+
 get_weighted_prev_points <- function(chrono_data, athlete_id, race_type, reference_date) {
   if (race_type %in% INDIVIDUAL_DISCIPLINES) {
     races <- chrono_data %>%
@@ -254,33 +399,78 @@ get_weighted_prev_points <- function(chrono_data, athlete_id, race_type, referen
   ))
 }
 
+# Build athlete distribution combining history + GAM fill
 build_athlete_distribution <- function(athlete_id, race_type, chrono_data,
+                                       gam_prediction, gam_residual_sd,
+                                       n_history = N_HISTORY_REQUIRED,
+                                       gam_fill_weight_factor = GAM_FILL_WEIGHT_FACTOR,
+                                       decay_lambda = DECAY_LAMBDA,
                                        reference_date = NULL) {
-  if (is.null(reference_date)) {
-    reference_date <- Sys.Date()
-  }
+  if (is.null(reference_date)) reference_date <- Sys.Date()
 
-  hist_stats <- get_weighted_prev_points(chrono_data, athlete_id, race_type, reference_date)
-
-  if (!is.na(hist_stats$mean) && hist_stats$n >= 3) {
-    mean_points <- hist_stats$mean
-    sd_points <- hist_stats$sd
-  } else if (!is.na(hist_stats$mean)) {
-    mean_points <- hist_stats$mean
-    sd_points <- if (!is.na(hist_stats$sd)) hist_stats$sd else SD_MAX / 2
+  # Get athlete's recent race history for this race type
+  if (race_type %in% INDIVIDUAL_DISCIPLINES) {
+    athlete_history <- chrono_data %>%
+      filter(ID == athlete_id, RaceType %in% INDIVIDUAL_DISCIPLINES) %>%
+      arrange(desc(Date)) %>% head(n_history)
+  } else if (race_type %in% MASS_START_DISCIPLINES) {
+    athlete_history <- chrono_data %>%
+      filter(ID == athlete_id, RaceType %in% MASS_START_DISCIPLINES) %>%
+      arrange(desc(Date)) %>% head(n_history)
+  } else if (race_type %in% SPRINT_DISCIPLINES) {
+    athlete_history <- chrono_data %>%
+      filter(ID == athlete_id, RaceType %in% SPRINT_DISCIPLINES) %>%
+      arrange(desc(Date)) %>% head(n_history)
   } else {
-    mean_points <- 5
-    sd_points <- SD_MAX
+    athlete_history <- chrono_data %>%
+      filter(ID == athlete_id) %>%
+      arrange(desc(Date)) %>% head(n_history)
   }
 
-  sd_points <- pmax(SD_MIN, pmin(SD_MAX, sd_points))
+  n_actual_races <- nrow(athlete_history)
+  all_points <- c()
+  all_weights <- c()
 
-  return(list(
-    athlete_id = athlete_id,
-    mean = mean_points,
-    sd = sd_points,
-    n_actual_races = hist_stats$n
-  ))
+  # Add actual race history
+  if (n_actual_races > 0) {
+    history_points <- athlete_history$Points
+    days_ago <- as.numeric(reference_date - athlete_history$Date)
+    history_weights <- exp(-decay_lambda * days_ago)
+    all_points <- c(all_points, history_points)
+    all_weights <- c(all_weights, history_weights)
+  }
+
+  # Fill missing history slots with GAM predictions
+  n_missing_history <- n_history - n_actual_races
+  if (n_missing_history > 0 && !is.null(gam_prediction) && !is.na(gam_prediction)) {
+    gam_fill_points <- rnorm(n_missing_history, mean = gam_prediction, sd = gam_residual_sd)
+    gam_fill_points <- pmax(0, pmin(100, gam_fill_points))
+    if (n_actual_races > 0) {
+      median_weight <- median(all_weights) * gam_fill_weight_factor
+    } else {
+      median_weight <- exp(-decay_lambda * 365) * gam_fill_weight_factor
+    }
+    all_points <- c(all_points, gam_fill_points)
+    all_weights <- c(all_weights, rep(median_weight, n_missing_history))
+  }
+
+  # Calculate weighted mean and SD
+  if (length(all_points) > 0 && length(all_weights) > 0) {
+    weighted_mean <- weighted.mean(all_points, all_weights, na.rm = TRUE)
+    weighted_var <- sum(all_weights * (all_points - weighted_mean)^2) / sum(all_weights)
+    weighted_sd <- sqrt(weighted_var)
+    weighted_sd <- max(weighted_sd, SD_MIN)
+  } else if (!is.null(gam_prediction) && !is.na(gam_prediction)) {
+    weighted_mean <- gam_prediction
+    weighted_sd <- gam_residual_sd
+  } else {
+    weighted_mean <- 5
+    weighted_sd <- SD_MAX
+  }
+
+  weighted_sd <- pmax(SD_MIN, pmin(SD_MAX, weighted_sd))
+
+  return(list(athlete_id = athlete_id, mean = weighted_mean, sd = weighted_sd, n_actual_races = n_actual_races))
 }
 
 simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIMULATIONS,
@@ -395,12 +585,64 @@ apply_quota_constraint <- function(startlist, race_prob_col, target_per_nation =
 }
 
 # ============================================================================
+# DATA PREPROCESSING
+# ============================================================================
+
+log_info("=== PREPROCESSING DATA FOR GAM ===")
+
+preprocess_chrono <- function(chrono_df) {
+  if (nrow(chrono_df) == 0) return(chrono_df)
+  chrono_df <- calculate_percentage_columns(chrono_df)
+  chrono_df <- calculate_weighted_prev_points(chrono_df)
+  pelo_cols <- grep("_pct$", names(chrono_df), value = TRUE)
+  for (col in pelo_cols) {
+    chrono_df[[col]] <- replace_na_with_quartile(chrono_df[[col]])
+  }
+  return(chrono_df)
+}
+
+if (nrow(men_chrono) > 0) {
+  men_chrono <- preprocess_chrono(men_chrono)
+  log_info(paste("Preprocessed men's chrono data:", nrow(men_chrono), "rows"))
+}
+
+if (nrow(ladies_chrono) > 0) {
+  ladies_chrono <- preprocess_chrono(ladies_chrono)
+  log_info(paste("Preprocessed ladies' chrono data:", nrow(ladies_chrono), "rows"))
+}
+
+# ============================================================================
+# GAM MODEL TRAINING
+# ============================================================================
+
+log_info("=== TRAINING GAM MODELS ===")
+
+all_race_types <- unique(c(men_races$race_type, ladies_races$race_type))
+all_race_types <- all_race_types[!is.na(all_race_types) & !all_race_types %in% TEAM_DISCIPLINES]
+log_info(paste("Race types to train:", paste(all_race_types, collapse = ", ")))
+
+men_gam_models <- list()
+ladies_gam_models <- list()
+
+for (race_type in all_race_types) {
+  if (nrow(men_chrono) > 0) {
+    men_gam_models[[race_type]] <- train_points_gam(men_chrono, race_type, "men")
+  }
+  if (nrow(ladies_chrono) > 0) {
+    ladies_gam_models[[race_type]] <- train_points_gam(ladies_chrono, race_type, "ladies")
+  }
+}
+
+log_info(paste("Trained", sum(!sapply(men_gam_models, is.null)), "men's GAM models"))
+log_info(paste("Trained", sum(!sapply(ladies_gam_models, is.null)), "ladies' GAM models"))
+
+# ============================================================================
 # CHAMPIONSHIPS SIMULATION
 # ============================================================================
 
 log_info("=== CHAMPIONSHIPS SIMULATION ===")
 
-process_gender_championships <- function(gender, races) {
+process_gender_championships <- function(gender, races, gam_models) {
   log_info(paste("Processing", gender, "Championships with", nrow(races), "races"))
 
   startlist <- if (gender == "men") men_startlist else ladies_startlist
@@ -445,15 +687,53 @@ process_gender_championships <- function(gender, races) {
 
     log_info(paste("Athletes in startlist:", nrow(race_startlist)))
 
+    # Get GAM model for this race type
+    model_info <- gam_models[[race_type]]
+    if (is.null(model_info)) {
+      # Try to find a similar race type model
+      if (race_type %in% INDIVIDUAL_DISCIPLINES) {
+        for (rt in INDIVIDUAL_DISCIPLINES) {
+          if (!is.null(gam_models[[rt]])) {
+            model_info <- gam_models[[rt]]
+            break
+          }
+        }
+      }
+    }
+
     athlete_distributions <- list()
 
     for (j in 1:nrow(race_startlist)) {
       athlete_id <- race_startlist$ID[j]
 
+      # Get GAM prediction for this athlete
+      gam_prediction <- NULL
+      gam_residual_sd <- SD_MAX / 2
+
+      if (!is.null(model_info)) {
+        athlete_features <- chrono_data %>%
+          filter(ID == athlete_id) %>%
+          arrange(desc(Date)) %>%
+          slice(1)
+
+        if (nrow(athlete_features) == 0) {
+          gam_prediction <- median(chrono_data$Points, na.rm = TRUE)
+        } else {
+          gam_prediction <- tryCatch({
+            predict(model_info$model, newdata = athlete_features, type = "response")
+          }, error = function(e) {
+            median(chrono_data$Points, na.rm = TRUE)
+          })
+        }
+        gam_residual_sd <- model_info$residual_sd
+      }
+
       dist <- build_athlete_distribution(
         athlete_id = athlete_id,
         race_type = race_type,
         chrono_data = chrono_data,
+        gam_prediction = gam_prediction,
+        gam_residual_sd = gam_residual_sd,
         reference_date = current_date
       )
 
@@ -554,12 +834,12 @@ process_gender_championships <- function(gender, races) {
 # Process both genders
 men_results <- NULL
 if (nrow(men_races) > 0) {
-  men_results <- process_gender_championships("men", men_races)
+  men_results <- process_gender_championships("men", men_races, men_gam_models)
 }
 
 ladies_results <- NULL
 if (nrow(ladies_races) > 0) {
-  ladies_results <- process_gender_championships("ladies", ladies_races)
+  ladies_results <- process_gender_championships("ladies", ladies_races, ladies_gam_models)
 }
 
 # ============================================================================

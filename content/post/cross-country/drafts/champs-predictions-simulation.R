@@ -24,6 +24,29 @@ library(lubridate)
 # CONFIGURATION
 # ============================================================================
 
+# Load environment variables
+load_env <- function(env_path = "~/ski/elo/.env") {
+  env_file <- path.expand(env_path)
+  if (file.exists(env_file)) {
+    lines <- readLines(env_file, warn = FALSE)
+    for (line in lines) {
+      line <- trimws(line)
+      if (nchar(line) > 0 && !startsWith(line, "#") && grepl("=", line)) {
+        parts <- strsplit(line, "=", fixed = TRUE)[[1]]
+        key <- trimws(parts[1])
+        value <- trimws(paste(parts[-1], collapse = "="))
+        value <- gsub("^[\"']|[\"']$", "", value)
+        do.call(Sys.setenv, setNames(list(value), key))
+      }
+    }
+    return(TRUE)
+  }
+  return(FALSE)
+}
+
+load_env()
+TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
+
 N_HISTORY_REQUIRED <- 10      # Target number of historical races per athlete
 N_GAM_SAMPLES <- 0           # Number of GAM samples (equal total weight to history)
 GAM_FILL_WEIGHT_FACTOR <- .25 # Weight multiplier for GAM-filled history slots
@@ -61,6 +84,7 @@ if (!dir.exists(log_dir)) {
 log_threshold(DEBUG)
 log_appender(appender_file(file.path(log_dir, "champs_simulation_processing.log")))
 log_info("Starting Cross-Country Championships predictions (SIMULATION approach)")
+log_info(paste("TEST_MODE:", TEST_MODE))
 log_info(paste("Config: N_HISTORY =", N_HISTORY_REQUIRED,
                ", N_GAM_SAMPLES =", N_GAM_SAMPLES,
                ", N_SIMULATIONS =", N_SIMULATIONS))
