@@ -5,6 +5,18 @@ echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 # First, commit and push changes in ~/ski directory
 echo -e "\033[0;33mUpdating ski directory...\033[0m"
 cd ~/ski
+
+# Ensure local env file is never committed
+if [ ! -f .gitignore ]; then
+  touch .gitignore
+fi
+if ! grep -qxF "elo/.env" .gitignore; then
+  echo "elo/.env" >> .gitignore
+fi
+if git ls-files --error-unmatch elo/.env >/dev/null 2>&1; then
+  git rm --cached elo/.env >/dev/null 2>&1
+fi
+
 git add .
 
 # Commit changes in ski directory
