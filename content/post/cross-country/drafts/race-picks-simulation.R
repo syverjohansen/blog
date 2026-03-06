@@ -311,52 +311,66 @@ determine_race_type_key <- function(distance, technique, ms = 0) {
 calculate_weighted_prev_points <- function(chrono_data, decay_lambda = DECAY_LAMBDA) {
   log_info("Calculating weighted prev_points with exponential decay...")
 
-  chrono_data %>%
-    arrange(ID, Date) %>%
-    group_by(ID) %>%
-    mutate(
-      prev_points_weighted = sapply(row_number(), function(i) {
-        if (i == 1) return(0)
+  chrono_data <- chrono_data %>% arrange(ID, Date)
 
-        prev_data <- cur_data()[1:(i-1), ]
-        if (nrow(prev_data) == 0) return(0)
+  n_rows <- nrow(chrono_data)
+  if (n_rows == 0) {
+    chrono_data$prev_points_weighted <- numeric(0)
+    return(chrono_data)
+  }
 
-        prev_points_values <- prev_data$points
-        prev_dates <- prev_data$Date
-        prev_distances <- prev_data$Distance
-        prev_techniques <- prev_data$Technique
+  points_col <- if ("points" %in% names(chrono_data)) "points" else "Points"
+  prev_points_weighted <- numeric(n_rows)
+  athlete_row_groups <- split(seq_len(n_rows), chrono_data$ID)
 
-        current_date <- cur_data()$Date[i]
-        current_distance <- cur_data()$Distance[i]
-        current_technique <- cur_data()$Technique[i]
+  for (row_idx in athlete_row_groups) {
+    if (length(row_idx) <= 1) {
+      next
+    }
 
-        # Match by race type
-        if (current_distance == "Sprint" && current_technique == "C") {
-          matching <- prev_distances == "Sprint" & prev_techniques == "C"
-        } else if (current_distance == "Sprint" && current_technique == "F") {
-          matching <- prev_distances == "Sprint" & prev_techniques == "F"
-        } else if (current_distance != "Sprint" && current_technique == "C") {
-          matching <- prev_distances != "Sprint" & prev_techniques == "C"
-        } else if (current_distance != "Sprint" && current_technique == "F") {
-          matching <- prev_distances != "Sprint" & prev_techniques == "F"
-        } else if (current_distance != "Sprint") {
-          matching <- prev_distances != "Sprint"
-        } else {
-          return(0)
-        }
+    athlete_points <- chrono_data[[points_col]][row_idx]
+    athlete_dates <- chrono_data$Date[row_idx]
+    athlete_distances <- chrono_data$Distance[row_idx]
+    athlete_techniques <- chrono_data$Technique[row_idx]
 
-        matching_points <- prev_points_values[matching]
-        matching_dates <- prev_dates[matching]
-        if (length(matching_points) == 0) return(0)
+    for (local_idx in 2:length(row_idx)) {
+      prev_local_idx <- seq_len(local_idx - 1)
+      current_distance <- athlete_distances[local_idx]
+      current_technique <- athlete_techniques[local_idx]
 
-        # Calculate exponential decay weights
-        days_ago <- as.numeric(difftime(current_date, matching_dates, units = "days"))
-        weights <- exp(-decay_lambda * days_ago)
+      if (current_distance == "Sprint" && current_technique == "C") {
+        matching <- athlete_distances[prev_local_idx] == "Sprint" &
+          athlete_techniques[prev_local_idx] == "C"
+      } else if (current_distance == "Sprint" && current_technique == "F") {
+        matching <- athlete_distances[prev_local_idx] == "Sprint" &
+          athlete_techniques[prev_local_idx] == "F"
+      } else if (current_distance != "Sprint" && current_technique == "C") {
+        matching <- athlete_distances[prev_local_idx] != "Sprint" &
+          athlete_techniques[prev_local_idx] == "C"
+      } else if (current_distance != "Sprint" && current_technique == "F") {
+        matching <- athlete_distances[prev_local_idx] != "Sprint" &
+          athlete_techniques[prev_local_idx] == "F"
+      } else if (current_distance != "Sprint") {
+        matching <- athlete_distances[prev_local_idx] != "Sprint"
+      } else {
+        next
+      }
 
-        weighted.mean(matching_points, weights, na.rm = TRUE)
-      })
-    ) %>%
-    ungroup()
+      if (!any(matching)) {
+        next
+      }
+
+      matching_points <- athlete_points[prev_local_idx][matching]
+      matching_dates <- athlete_dates[prev_local_idx][matching]
+      days_ago <- as.numeric(difftime(athlete_dates[local_idx], matching_dates, units = "days"))
+      weights <- exp(-decay_lambda * days_ago)
+
+      prev_points_weighted[row_idx[local_idx]] <- weighted.mean(matching_points, weights, na.rm = TRUE)
+    }
+  }
+
+  chrono_data$prev_points_weighted <- prev_points_weighted
+  chrono_data
 }
 
 # Calculate PELO percentage columns (normalized within each race)
@@ -2791,4 +2805,3 @@ if (ENHANCED_LOGGING) {
 }
 
 log_info("=== RACE-PICKS-SIMULATION.R COMPLETE ===")
-
