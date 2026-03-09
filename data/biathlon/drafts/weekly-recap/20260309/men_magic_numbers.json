@@ -1,0 +1,68 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Eric Perrot",
+      4591,
+      1,
+      999,
+      451
+    ],
+    [
+      "Tommaso Giacomel",
+      4387,
+      2,
+      797,
+      249
+    ],
+    [
+      "Sebastian Samuelsson",
+      1345,
+      3,
+      723,
+      175
+    ],
+    [
+      "Johan-Olav Smørdal Botn",
+      4479,
+      4,
+      707,
+      159
+    ],
+    [
+      "Sturla Holm Lægreid",
+      2753,
+      5,
+      569,
+      21
+    ],
+    [
+      "Johannes Dale-Skjevdal",
+      3027,
+      6,
+      563,
+      15
+    ],
+    [
+      "Vetle Sjåstad Christiansen",
+      509,
+      7,
+      559,
+      11
+    ],
+    [
+      "Martin Ponsiluoma",
+      1135,
+      8,
+      550,
+      2
+    ]
+  ]
+}

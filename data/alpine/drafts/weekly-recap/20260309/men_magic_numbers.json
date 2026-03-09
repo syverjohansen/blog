@@ -1,0 +1,33 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Marco Odermatt",
+      3040,
+      1,
+      1530,
+      701
+    ],
+    [
+      "Lucas Pinheiro Braathen",
+      4748,
+      2,
+      958,
+      129
+    ],
+    [
+      "Atle Lie McGrath",
+      4711,
+      3,
+      844,
+      15
+    ]
+  ]
+}

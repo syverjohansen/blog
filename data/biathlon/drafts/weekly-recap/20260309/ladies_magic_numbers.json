@@ -1,0 +1,96 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Lou Jeanmonnot",
+      1769,
+      1,
+      879,
+      451
+    ],
+    [
+      "Suvi Minkkinen",
+      1233,
+      2,
+      703,
+      275
+    ],
+    [
+      "Anna Magnusson",
+      1305,
+      3,
+      695,
+      267
+    ],
+    [
+      "Elvira Öberg",
+      2266,
+      4,
+      671,
+      243
+    ],
+    [
+      "Hanna Öberg",
+      1384,
+      5,
+      649,
+      221
+    ],
+    [
+      "Maren Kirkeeide",
+      2898,
+      6,
+      582,
+      154
+    ],
+    [
+      "Lisa Vittozzi",
+      1292,
+      7,
+      555,
+      127
+    ],
+    [
+      "Camille Bened",
+      2166,
+      8,
+      533,
+      105
+    ],
+    [
+      "Julia Simon",
+      1300,
+      9,
+      528,
+      100
+    ],
+    [
+      "Justine Braisaz-Bouchet",
+      1217,
+      10,
+      490,
+      62
+    ],
+    [
+      "Oceane Michelon",
+      2736,
+      11,
+      485,
+      57
+    ],
+    [
+      "Dorothea Wierer",
+      54,
+      12,
+      456,
+      28
+    ]
+  ]
+}

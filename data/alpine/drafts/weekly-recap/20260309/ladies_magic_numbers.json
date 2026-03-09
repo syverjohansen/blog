@@ -1,0 +1,96 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Mikaela Shiffrin",
+      72,
+      1,
+      1141,
+      601
+    ],
+    [
+      "Emma Aicher",
+      4194,
+      2,
+      1016,
+      476
+    ],
+    [
+      "Camille Rast",
+      3229,
+      3,
+      963,
+      423
+    ],
+    [
+      "Sofia Goggia",
+      331,
+      4,
+      853,
+      313
+    ],
+    [
+      "Alice Robinson",
+      3891,
+      5,
+      719,
+      179
+    ],
+    [
+      "Laura Pirovano",
+      2916,
+      6,
+      617,
+      77
+    ],
+    [
+      "Paula Moltzan",
+      294,
+      7,
+      614,
+      74
+    ],
+    [
+      "Sara Hector",
+      133,
+      8,
+      597,
+      57
+    ],
+    [
+      "Lindsey Vonn",
+      2,
+      9,
+      590,
+      50
+    ],
+    [
+      "Julia Scheib",
+      2970,
+      10,
+      572,
+      32
+    ],
+    [
+      "Kajsa Vickhoff Lie",
+      2963,
+      11,
+      561,
+      21
+    ],
+    [
+      "Cornelia Hütter",
+      94,
+      12,
+      543,
+      3
+    ]
+  ]
+}
