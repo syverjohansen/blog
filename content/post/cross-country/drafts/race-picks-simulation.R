@@ -58,25 +58,48 @@ env_loaded <- load_env()
 # Get TEST_MODE from environment (defaults to FALSE if not set)
 TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 
-# Simulation parameters
-N_HISTORY_REQUIRED <- 10      # Target number of historical races per athlete
+# ===== LOAD SPORT-SPECIFIC PARAMETERS =====
+# Source optimized parameters from sport_params.R
+# These values are calibrated via param-optimizer.R using historical backtesting
+sport_params_path <- "~/blog/daehl-e/content/post/shared/sport_params.R"
+if (file.exists(path.expand(sport_params_path))) {
+  source(sport_params_path)
+  DEFAULT_PARAMS <- get_sport_params("cross-country")
+  RELAY_PARAMS <- get_sport_params("cross-country", event_type = "Relay")
+  TEAM_SPRINT_PARAMS <- get_sport_params("cross-country", event_type = "Team_Sprint")
+} else {
+  # Fallback to hardcoded defaults if sport_params.R not available
+  DEFAULT_PARAMS <- list(
+    decay_lambda = 0.002,
+    sd_scale_factor = 0.77,
+    sd_min = 4,
+    sd_max = 16,
+    n_history_required = 10,
+    gam_fill_weight_factor = 0.25
+  )
+  RELAY_PARAMS <- list(sd_scale_factor = 0.8, sd_min = 3, sd_max = 12)
+  TEAM_SPRINT_PARAMS <- list(sd_scale_factor = 0.8, sd_min = 3, sd_max = 12)
+}
+
+# Simulation parameters (from optimized sport params)
+N_HISTORY_REQUIRED <- DEFAULT_PARAMS$n_history_required
 N_GAM_SAMPLES <- 0            # Number of GAM samples (equal total weight to history)
-GAM_FILL_WEIGHT_FACTOR <- 0.25 # Weight multiplier for GAM-filled history slots
+GAM_FILL_WEIGHT_FACTOR <- DEFAULT_PARAMS$gam_fill_weight_factor
 N_SIMULATIONS <- 1000         # Number of Monte Carlo simulations per race
-DECAY_LAMBDA <- 0.002         # Exponential decay rate (0.002 = 50% weight after 1 year)
+DECAY_LAMBDA <- DEFAULT_PARAMS$decay_lambda
 
-# Variance control parameters (calibrated from champs-predictions-simulation.R)
-SD_SCALE_FACTOR <- 0.77       # Multiply all SDs by this (lower = more deterministic)
-SD_MIN <- 4                   # Minimum SD (prevents degenerate distributions)
-SD_MAX <- 16                  # Maximum SD (prevents too much randomness)
+# Variance control parameters (from optimized sport params)
+SD_SCALE_FACTOR <- DEFAULT_PARAMS$sd_scale_factor
+SD_MIN <- DEFAULT_PARAMS$sd_min
+SD_MAX <- DEFAULT_PARAMS$sd_max
 
-# Relay variance control (for hybrid approach)
-RELAY_SCORE_SD_MIN <- 0.5     # Minimum score SD for relay simulation
-RELAY_SCORE_SD_MAX <- 1.15    # Maximum score SD for relay simulation
+# Relay variance control (from optimized team event params)
+RELAY_SCORE_SD_MIN <- RELAY_PARAMS$sd_min / 10    # Scale for score-based simulation
+RELAY_SCORE_SD_MAX <- RELAY_PARAMS$sd_max / 10    # Scale for score-based simulation
 
-# Team Sprint variance control (for hybrid approach)
-TS_SCORE_SD_MIN <- 0.45       # Minimum score SD for team sprint simulation
-TS_SCORE_SD_MAX <- 0.8        # Maximum score SD for team sprint simulation
+# Team Sprint variance control (from optimized team event params)
+TS_SCORE_SD_MIN <- TEAM_SPRINT_PARAMS$sd_min / 10     # Scale for score-based simulation
+TS_SCORE_SD_MAX <- TEAM_SPRINT_PARAMS$sd_max / 10     # Scale for score-based simulation
 
 # Calibration settings
 RUN_CALIBRATION <- FALSE              # Calibrate individual race parameters
@@ -477,8 +500,13 @@ train_points_gam <- function(chrono_data, race_type_key, gender) {
     }
     residual_sd <- max(residual_sd, 5)
 
-    log_info(paste("GAM trained. Residual SD:", round(residual_sd, 2)))
-    log_info(paste("Final features:", paste(positive_vars, collapse = ", ")))
+    # Comprehensive GAM training logging
+    if (ENHANCED_LOGGING) {
+      log_gam_training(points_model, positive_vars, residual_sd, race_type_key, gender)
+    } else {
+      log_info(paste("GAM trained. Residual SD:", round(residual_sd, 2)))
+      log_info(paste("Final features:", paste(positive_vars, collapse = ", ")))
+    }
 
     return(list(
       model = points_model,
@@ -1607,6 +1635,14 @@ ladies_chrono <- read.csv("~/ski/elo/python/ski/polars/excel365/ladies_chrono_el
 log_info(paste("Loaded", nrow(men_chrono), "men's chronological records"))
 log_info(paste("Loaded", nrow(ladies_chrono), "ladies' chronological records"))
 
+# Data quality logging for chrono data
+if (ENHANCED_LOGGING) {
+  log_data_quality(men_chrono, "Men's Chrono (raw)",
+                   key_columns = c("ID", "Date", "Place", "Pelo", "Distance", "Technique"))
+  log_data_quality(ladies_chrono, "Ladies' Chrono (raw)",
+                   key_columns = c("ID", "Date", "Place", "Pelo", "Distance", "Technique"))
+}
+
 # Add points column
 men_chrono <- men_chrono %>%
   mutate(points = sapply(Place, function(p) get_points(p, wc_points))) %>%
@@ -1658,6 +1694,29 @@ if(PROCESS_INDIVIDUAL) {
   }
 
   log_info("Individual chrono preprocessing complete")
+
+  # Data quality logging after preprocessing
+  if (ENHANCED_LOGGING) {
+    log_info("  [POST-PREPROCESSING DATA QUALITY]")
+    log_data_quality(men_chrono, "Men's Chrono (preprocessed)",
+                     key_columns = c("prev_points_weighted", "Pelo_pct", "Period", "AltitudeCategory"))
+    log_data_quality(ladies_chrono, "Ladies' Chrono (preprocessed)",
+                     key_columns = c("prev_points_weighted", "Pelo_pct", "Period", "AltitudeCategory"))
+
+    # Log unique athlete counts
+    log_info(sprintf("    Unique men athletes: %d", n_distinct(men_chrono$ID)))
+    log_info(sprintf("    Unique ladies athletes: %d", n_distinct(ladies_chrono$ID)))
+
+    # Log race type distribution
+    log_info("    Men's race type distribution:")
+    men_race_types <- men_chrono %>%
+      mutate(race_type = paste(Distance, Technique, ifelse(MS == 1, "MS", "Ind"))) %>%
+      count(race_type) %>%
+      arrange(desc(n))
+    for (j in 1:min(6, nrow(men_race_types))) {
+      log_info(sprintf("      %s: %d races", men_race_types$race_type[j], men_race_types$n[j]))
+    }
+  }
 }
 
 # Load relay chrono data (for relay, team sprint, mixed relay)
@@ -1684,6 +1743,18 @@ if(PROCESS_RELAY || PROCESS_TEAM_SPRINT || PROCESS_MIXED_RELAY) {
 
   log_info(paste("Loaded", nrow(men_relay_chrono), "men's relay chronological records"))
   log_info(paste("Loaded", nrow(ladies_relay_chrono), "ladies' relay chronological records"))
+
+  # Data quality logging for relay chrono
+  if (ENHANCED_LOGGING) {
+    if (nrow(men_relay_chrono) > 0) {
+      log_data_quality(men_relay_chrono, "Men's Relay Chrono",
+                       key_columns = c("ID", "Date", "Nation", "Distance", "Leg"))
+    }
+    if (nrow(ladies_relay_chrono) > 0) {
+      log_data_quality(ladies_relay_chrono, "Ladies' Relay Chrono",
+                       key_columns = c("ID", "Date", "Nation", "Distance", "Leg"))
+    }
+  }
 
   # Filter to season cutoff
   if (nrow(men_relay_chrono) > 0 && "Season" %in% names(men_relay_chrono)) {
@@ -1742,6 +1813,20 @@ if(PROCESS_INDIVIDUAL) {
   }
 
   log_info(paste("Loaded individual startlists:", nrow(men_startlist), "men,", nrow(ladies_startlist), "ladies"))
+
+  # Data quality logging for individual startlists
+  if (ENHANCED_LOGGING) {
+    if (nrow(men_startlist) > 0) {
+      log_data_quality(men_startlist, "Men's Individual Startlist",
+                       key_columns = c("ID", "Skier", "Nation"))
+      log_categorical_summary(men_startlist, c("Nation"))
+    }
+    if (nrow(ladies_startlist) > 0) {
+      log_data_quality(ladies_startlist, "Ladies' Individual Startlist",
+                       key_columns = c("ID", "Skier", "Nation"))
+      log_categorical_summary(ladies_startlist, c("Nation"))
+    }
+  }
 }
 
 # Relay startlists
@@ -1761,6 +1846,20 @@ if(PROCESS_RELAY) {
   }
 
   log_info(paste("Loaded relay startlists:", nrow(men_relay_startlist), "men teams,", nrow(ladies_relay_startlist), "ladies teams"))
+
+  # Data quality logging for relay startlists
+  if (ENHANCED_LOGGING) {
+    if (nrow(men_relay_startlist) > 0) {
+      log_data_quality(men_relay_startlist, "Men's Relay Startlist",
+                       key_columns = c("Nation", "Leg_1", "Leg_2", "Leg_3", "Leg_4"))
+      log_info(sprintf("      Teams by nation: %s", paste(unique(men_relay_startlist$Nation), collapse = ", ")))
+    }
+    if (nrow(ladies_relay_startlist) > 0) {
+      log_data_quality(ladies_relay_startlist, "Ladies' Relay Startlist",
+                       key_columns = c("Nation", "Leg_1", "Leg_2", "Leg_3", "Leg_4"))
+      log_info(sprintf("      Teams by nation: %s", paste(unique(ladies_relay_startlist$Nation), collapse = ", ")))
+    }
+  }
 }
 
 # Team sprint startlists
@@ -1780,6 +1879,22 @@ if(PROCESS_TEAM_SPRINT) {
   }
 
   log_info(paste("Loaded team sprint startlists:", nrow(men_ts_startlist), "men teams,", nrow(ladies_ts_startlist), "ladies teams"))
+
+  # Data quality logging for team sprint startlists
+  if (ENHANCED_LOGGING) {
+    if (nrow(men_ts_startlist) > 0) {
+      log_data_quality(men_ts_startlist, "Men's Team Sprint Startlist",
+                       key_columns = c("Nation", "Team_Name", "Leg_1", "Leg_2"))
+      log_info(sprintf("      Teams: %d from %d nations",
+                       nrow(men_ts_startlist), n_distinct(men_ts_startlist$Nation)))
+    }
+    if (nrow(ladies_ts_startlist) > 0) {
+      log_data_quality(ladies_ts_startlist, "Ladies' Team Sprint Startlist",
+                       key_columns = c("Nation", "Team_Name", "Leg_1", "Leg_2"))
+      log_info(sprintf("      Teams: %d from %d nations",
+                       nrow(ladies_ts_startlist), n_distinct(ladies_ts_startlist$Nation)))
+    }
+  }
 }
 
 # Mixed relay startlists
@@ -1792,6 +1907,13 @@ if(PROCESS_MIXED_RELAY) {
   }
 
   log_info(paste("Loaded mixed relay startlist:", nrow(mixed_relay_startlist), "teams"))
+
+  # Data quality logging for mixed relay startlist
+  if (ENHANCED_LOGGING && nrow(mixed_relay_startlist) > 0) {
+    log_data_quality(mixed_relay_startlist, "Mixed Relay Startlist",
+                     key_columns = c("Nation", "Leg_1", "Leg_2", "Leg_3", "Leg_4"))
+    log_info(sprintf("      Nations: %s", paste(unique(mixed_relay_startlist$Nation), collapse = ", ")))
+  }
 }
 
 log_info("=== DATA LOADING COMPLETE ===")
@@ -1884,7 +2006,26 @@ if(PROCESS_INDIVIDUAL) {
     }
 
     gender <- if(race$Sex == "M") "men" else "ladies"
-    log_info(paste("Processing", gender, race_types[[race_type_key]]$name))
+
+    # Comprehensive race start logging
+    if (ENHANCED_LOGGING) {
+      log_race_start(
+        race_num = i,
+        total_races = nrow(individual_races),
+        gender = gender,
+        race_type = race_types[[race_type_key]]$name,
+        city = race$City,
+        n_athletes = if(gender == "men") nrow(men_startlist) else nrow(ladies_startlist)
+      )
+      log_info(sprintf("    Date: %s | Distance: %s | Technique: %s | MS: %s",
+                       race$Date, race$Distance, race$Technique, race$MS))
+      log_info(sprintf("    Elevation: %sm | Period: %s | Stage: %s",
+                       ifelse(is.na(race$Elevation), "N/A", race$Elevation),
+                       ifelse(is.na(race$Period), "N/A", race$Period),
+                       ifelse(is.na(race$Stage) || race$Stage == 0, "No", "Yes")))
+    } else {
+      log_info(paste("Processing", gender, race_types[[race_type_key]]$name))
+    }
 
     # Get appropriate model and data
     model_list <- if(gender == "men") men_models else ladies_models
@@ -1926,8 +2067,16 @@ if(PROCESS_INDIVIDUAL) {
     # Adjustments (altitude/period/MS) are calculated inside build_athlete_distribution
     # using the same decay-weighted approach as the distribution mean
     athlete_distributions <- list()
+    n_athletes <- length(athlete_ids)
 
-    for (athlete_id in athlete_ids) {
+    for (idx in seq_along(athlete_ids)) {
+      athlete_id <- athlete_ids[idx]
+
+      # Progress logging
+      if (ENHANCED_LOGGING) {
+        log_progress(idx, n_athletes, "Building distributions", every = 20)
+      }
+
       # Get athlete's current features for GAM prediction
       athlete_features <- chrono_data %>%
         filter(ID == athlete_id) %>%
@@ -1958,6 +2107,18 @@ if(PROCESS_INDIVIDUAL) {
         log_warn(paste("GAM prediction fallback to median for athlete:", athlete_id))
       }
 
+      # Tracer logging: data load (wrapped in tryCatch to avoid breaking pipeline)
+      tryCatch({
+        if (ENHANCED_LOGGING && isTRUE(is_tracer(athlete_id, gender))) {
+          # Get tracer athlete's full history for logging
+          tracer_history <- chrono_data %>%
+            filter(ID == athlete_id) %>%
+            arrange(desc(Date)) %>%
+            head(N_HISTORY_REQUIRED)
+          log_tracer_data_load(tracer_history, gender)
+        }
+      }, error = function(e) NULL)
+
       # Tracer logging: GAM prediction (wrapped in tryCatch to avoid breaking pipeline)
       tryCatch({
         if (ENHANCED_LOGGING && isTRUE(is_tracer(athlete_id, gender))) {
@@ -1984,6 +2145,30 @@ if(PROCESS_INDIVIDUAL) {
       }, error = function(e) NULL)
 
       athlete_distributions[[as.character(athlete_id)]] <- dist
+    }
+
+    # Log comprehensive distribution statistics
+    if (ENHANCED_LOGGING) {
+      log_distribution_stats(athlete_distributions, sprintf("%s %s", gender, race_types[[race_type_key]]$name))
+
+      # Additional distribution diagnostics
+      gam_fill_counts <- sapply(athlete_distributions, function(d) d$n_gam_fill)
+      adjustment_counts <- sapply(athlete_distributions, function(d) abs(d$adjustment) > 0.1)
+      log_info(sprintf("    Athletes needing GAM fill: %d (median fill: %d slots)",
+                       sum(gam_fill_counts > 0), median(gam_fill_counts)))
+      log_info(sprintf("    Athletes with condition adjustments: %d",
+                       sum(adjustment_counts, na.rm = TRUE)))
+
+      # Log distribution outliers (very high or low means)
+      means <- sapply(athlete_distributions, function(d) d$mean)
+      if (any(means > 90)) {
+        high_mean_athletes <- names(athlete_distributions)[means > 90]
+        log_info(sprintf("    High-mean athletes (>90 pts): %d", length(high_mean_athletes)))
+      }
+      if (any(means < 5)) {
+        low_mean_athletes <- names(athlete_distributions)[means < 5]
+        log_info(sprintf("    Low-mean athletes (<5 pts): %d", length(low_mean_athletes)))
+      }
     }
 
     # Run Monte Carlo simulation with race-type-specific thresholds
@@ -2055,6 +2240,22 @@ if(PROCESS_INDIVIDUAL) {
       race_number = i  # Track race number for sheet naming
     )
 
+    # Comprehensive race results logging
+    if (ENHANCED_LOGGING) {
+      log_race_results(race_results, race_types[[race_type_key]]$name)
+      validate_probabilities(race_results)
+
+      # Additional result diagnostics
+      log_info(sprintf("    Field size: %d athletes", nrow(race_results)))
+      log_info(sprintf("    Mean predicted points: %.1f (SD: %.1f)",
+                       mean(race_results$mean_points, na.rm = TRUE),
+                       sd(race_results$mean_points, na.rm = TRUE)))
+
+      # Favorite concentration check
+      top5_win_prob <- sum(head(race_results$prob_top_1, 5))
+      log_info(sprintf("    Top 5 athletes hold %.1f%% of win probability", top5_win_prob * 100))
+    }
+
     log_info(paste("Completed", race_key, "- Top 3:"))
     print(head(race_results %>% select(Skier, Nation, prob_top_1, prob_top_3), 3))
   }
@@ -2096,7 +2297,21 @@ if(PROCESS_RELAY) {
     race <- relay_races[i, ]
     gender <- if(race$Sex == "M") "men" else "ladies"
 
-    log_info(paste("Processing", gender, "relay"))
+    # Comprehensive relay race start logging
+    if (ENHANCED_LOGGING) {
+      log_race_start(
+        race_num = i,
+        total_races = nrow(relay_races),
+        gender = gender,
+        race_type = "4x Relay",
+        city = race$City,
+        n_athletes = if(gender == "men") nrow(men_relay_startlist) else nrow(ladies_relay_startlist)
+      )
+      log_info(sprintf("    Date: %s | Technique: Classic + Freestyle (legs 1-2 C, legs 3-4 F)",
+                       race$Date))
+    } else {
+      log_info(paste("Processing", gender, "relay"))
+    }
 
     if (gender == "men") {
       startlist <- men_relay_startlist
@@ -2122,8 +2337,15 @@ if(PROCESS_RELAY) {
     team_distributions <- list()
 
     log_info(paste("Optimizing relay teams for", length(nations), "nations..."))
+    n_nations <- length(nations)
 
-    for (nation in nations) {
+    for (nation_idx in seq_along(nations)) {
+      nation <- nations[nation_idx]
+
+      # Progress logging for team building
+      if (ENHANCED_LOGGING) {
+        log_progress(nation_idx, n_nations, "Building relay teams", every = 5)
+      }
       nation_athletes <- startlist %>% filter(Nation == nation)
 
       if (nrow(nation_athletes) >= 4) {
@@ -2156,6 +2378,26 @@ if(PROCESS_RELAY) {
 
     log_info(paste("Built distributions for", length(team_distributions), "national teams"))
 
+    # Log comprehensive team distribution statistics
+    if (ENHANCED_LOGGING && length(team_distributions) > 0) {
+      team_means <- sapply(team_distributions, function(d) if(!is.null(d)) d$mean else NA)
+      team_sds <- sapply(team_distributions, function(d) if(!is.null(d)) d$sd else NA)
+      log_info(sprintf("    [TEAM DISTRIBUTIONS] %s Relay", gender))
+      log_info(sprintf("      Teams: %d", length(team_distributions)))
+      log_info(sprintf("      Team mean scores: min=%.2f, median=%.2f, max=%.2f",
+                       min(team_means, na.rm = TRUE),
+                       median(team_means, na.rm = TRUE),
+                       max(team_means, na.rm = TRUE)))
+      log_info(sprintf("      Team SD scores: min=%.2f, median=%.2f, max=%.2f",
+                       min(team_sds, na.rm = TRUE),
+                       median(team_sds, na.rm = TRUE),
+                       max(team_sds, na.rm = TRUE)))
+
+      # Log top 3 favorites by mean
+      top_teams <- names(sort(team_means, decreasing = TRUE)[1:min(3, length(team_means))])
+      log_info(sprintf("      Top 3 by mean score: %s", paste(top_teams, collapse = ", ")))
+    }
+
     # Simulate relay
     if (length(team_distributions) > 1) {
       race_results <- simulate_team_race(team_distributions, N_SIMULATIONS)
@@ -2180,8 +2422,26 @@ if(PROCESS_RELAY) {
         n_legs = 4
       )
 
-      log_info(paste("Relay simulation complete - Top 3:", paste(head(race_results$Nation, 3), collapse = ", ")))
-      log_info(paste("Win probs:", paste(round(head(race_results$prob_top_1, 3) * 100, 1), "%", collapse = ", ")))
+      # Comprehensive relay results logging
+      if (ENHANCED_LOGGING) {
+        log_info("")
+        log_info(sprintf("    [RELAY RESULTS] %s Relay", gender))
+        log_info("    Top 3 predictions:")
+        for (j in 1:min(3, nrow(race_results))) {
+          log_info(sprintf("      %d. %s (Win: %.1f%%, Podium: %.1f%%)",
+                           j, race_results$Nation[j],
+                           race_results$prob_top_1[j] * 100,
+                           race_results$prob_top_3[j] * 100))
+        }
+        validate_probabilities(race_results)
+
+        # Field competitiveness
+        top3_win_prob <- sum(head(race_results$prob_top_1, 3))
+        log_info(sprintf("    Top 3 teams hold %.1f%% of win probability", top3_win_prob * 100))
+      } else {
+        log_info(paste("Relay simulation complete - Top 3:", paste(head(race_results$Nation, 3), collapse = ", ")))
+        log_info(paste("Win probs:", paste(round(head(race_results$prob_top_1, 3) * 100, 1), "%", collapse = ", ")))
+      }
     }
   }
 
@@ -2205,7 +2465,21 @@ if(PROCESS_TEAM_SPRINT) {
     gender <- if(race$Sex == "M") "men" else "ladies"
     technique <- race$Technique
 
-    log_info(paste("Processing", gender, "team sprint", technique))
+    # Comprehensive team sprint race start logging
+    if (ENHANCED_LOGGING) {
+      log_race_start(
+        race_num = i,
+        total_races = nrow(team_sprint_races),
+        gender = gender,
+        race_type = paste("Team Sprint", technique),
+        city = race$City,
+        n_athletes = if(gender == "men") nrow(men_ts_startlist) else nrow(ladies_ts_startlist)
+      )
+      log_info(sprintf("    Date: %s | Technique: %s | Format: 2-leg team sprint",
+                       race$Date, technique))
+    } else {
+      log_info(paste("Processing", gender, "team sprint", technique))
+    }
 
     if (gender == "men") {
       startlist <- men_ts_startlist
@@ -2244,8 +2518,16 @@ if(PROCESS_TEAM_SPRINT) {
     team_distributions <- list()
 
     log_info(paste("Optimizing team sprint teams for", length(nations), "nations (technique:", technique, ")..."))
+    n_nations <- length(nations)
 
-    for (nation in nations) {
+    for (nation_idx in seq_along(nations)) {
+      nation <- nations[nation_idx]
+
+      # Progress logging for team sprint team building
+      if (ENHANCED_LOGGING) {
+        log_progress(nation_idx, n_nations, "Building team sprint teams", every = 5)
+      }
+
       nation_athletes <- startlist %>% filter(Nation == nation)
 
       if (nrow(nation_athletes) >= 2) {
@@ -2284,6 +2566,26 @@ if(PROCESS_TEAM_SPRINT) {
 
     log_info(paste("Built distributions for", length(team_distributions), "team sprint teams"))
 
+    # Log comprehensive team sprint distribution statistics
+    if (ENHANCED_LOGGING && length(team_distributions) > 0) {
+      team_means <- sapply(team_distributions, function(d) if(!is.null(d)) d$mean else NA)
+      team_sds <- sapply(team_distributions, function(d) if(!is.null(d)) d$sd else NA)
+      log_info(sprintf("    [TEAM DISTRIBUTIONS] %s Team Sprint %s", gender, technique))
+      log_info(sprintf("      Teams: %d", length(team_distributions)))
+      log_info(sprintf("      Team mean scores: min=%.2f, median=%.2f, max=%.2f",
+                       min(team_means, na.rm = TRUE),
+                       median(team_means, na.rm = TRUE),
+                       max(team_means, na.rm = TRUE)))
+      log_info(sprintf("      Team SD scores: min=%.2f, median=%.2f, max=%.2f",
+                       min(team_sds, na.rm = TRUE),
+                       median(team_sds, na.rm = TRUE),
+                       max(team_sds, na.rm = TRUE)))
+
+      # Log top 3 favorites by mean
+      top_teams <- names(sort(team_means, decreasing = TRUE)[1:min(3, length(team_means))])
+      log_info(sprintf("      Top 3 by mean score: %s", paste(top_teams, collapse = ", ")))
+    }
+
     # Simulate team sprint
     if (length(team_distributions) > 1) {
       race_results <- simulate_team_race(team_distributions, N_SIMULATIONS)
@@ -2309,8 +2611,26 @@ if(PROCESS_TEAM_SPRINT) {
         technique = technique
       )
 
-      log_info(paste("Team sprint simulation complete - Top 3:", paste(head(race_results$Nation, 3), collapse = ", ")))
-      log_info(paste("Win probs:", paste(round(head(race_results$prob_top_1, 3) * 100, 1), "%", collapse = ", ")))
+      # Comprehensive team sprint results logging
+      if (ENHANCED_LOGGING) {
+        log_info("")
+        log_info(sprintf("    [TEAM SPRINT RESULTS] %s %s", gender, technique))
+        log_info("    Top 3 predictions:")
+        for (j in 1:min(3, nrow(race_results))) {
+          log_info(sprintf("      %d. %s (Win: %.1f%%, Podium: %.1f%%)",
+                           j, race_results$Nation[j],
+                           race_results$prob_top_1[j] * 100,
+                           race_results$prob_top_3[j] * 100))
+        }
+        validate_probabilities(race_results)
+
+        # Field competitiveness
+        top3_win_prob <- sum(head(race_results$prob_top_1, 3))
+        log_info(sprintf("    Top 3 teams hold %.1f%% of win probability", top3_win_prob * 100))
+      } else {
+        log_info(paste("Team sprint simulation complete - Top 3:", paste(head(race_results$Nation, 3), collapse = ", ")))
+        log_info(paste("Win probs:", paste(round(head(race_results$prob_top_1, 3) * 100, 1), "%", collapse = ", ")))
+      }
     }
   }
 
@@ -2373,7 +2693,21 @@ if(PROCESS_MIXED_RELAY) {
   for (i in 1:nrow(mixed_relay_races)) {
     race <- mixed_relay_races[i, ]
 
-    log_info("Processing mixed relay")
+    # Comprehensive mixed relay race start logging
+    if (ENHANCED_LOGGING) {
+      log_race_start(
+        race_num = i,
+        total_races = nrow(mixed_relay_races),
+        gender = "Mixed",
+        race_type = "Mixed Relay",
+        city = race$City,
+        n_athletes = nrow(mixed_relay_startlist)
+      )
+      log_info(sprintf("    Date: %s | Format: 4-leg (Ladies legs 1-2, Men legs 3-4)",
+                       race$Date))
+    } else {
+      log_info("Processing mixed relay")
+    }
 
     # Load mixed relay startlist if available
     if (nrow(mixed_relay_startlist) == 0) {
@@ -2387,8 +2721,16 @@ if(PROCESS_MIXED_RELAY) {
     team_distributions <- list()
 
     log_info(paste("Building mixed relay teams for", length(nations), "nations..."))
+    n_nations <- length(nations)
 
-    for (nation in nations) {
+    for (nation_idx in seq_along(nations)) {
+      nation <- nations[nation_idx]
+
+      # Progress logging for mixed relay team building
+      if (ENHANCED_LOGGING) {
+        log_progress(nation_idx, n_nations, "Building mixed relay teams", every = 5)
+      }
+
       # Get nation athletes from mixed startlist (should have both genders)
       nation_athletes <- mixed_relay_startlist %>% filter(Nation == nation)
 
@@ -2522,6 +2864,27 @@ if(PROCESS_MIXED_RELAY) {
 
     log_info(paste("Built distributions for", length(team_distributions), "mixed relay teams"))
 
+    # Log comprehensive mixed relay distribution statistics
+    if (ENHANCED_LOGGING && length(team_distributions) > 0) {
+      team_means <- sapply(team_distributions, function(d) if(!is.null(d)) d$mean else NA)
+      team_sds <- sapply(team_distributions, function(d) if(!is.null(d)) d$sd else NA)
+      team_probs <- sapply(team_distributions, function(d) if(!is.null(d)) d$team_prob else NA)
+      log_info(sprintf("    [TEAM DISTRIBUTIONS] Mixed Relay"))
+      log_info(sprintf("      Teams: %d", length(team_distributions)))
+      log_info(sprintf("      Team mean scores: min=%.2f, median=%.2f, max=%.2f",
+                       min(team_means, na.rm = TRUE),
+                       median(team_means, na.rm = TRUE),
+                       max(team_means, na.rm = TRUE)))
+      log_info(sprintf("      Team probabilities: min=%.3f, median=%.3f, max=%.3f",
+                       min(team_probs, na.rm = TRUE),
+                       median(team_probs, na.rm = TRUE),
+                       max(team_probs, na.rm = TRUE)))
+
+      # Log top 3 favorites by team probability
+      top_teams <- names(sort(team_probs, decreasing = TRUE)[1:min(3, length(team_probs))])
+      log_info(sprintf("      Top 3 by team probability: %s", paste(top_teams, collapse = ", ")))
+    }
+
     # Simulate mixed relay
     if (length(team_distributions) > 1) {
       race_results <- simulate_team_race(team_distributions, N_SIMULATIONS)
@@ -2553,8 +2916,26 @@ if(PROCESS_MIXED_RELAY) {
         n_legs = 4
       )
 
-      log_info(paste("Mixed relay simulation complete - Top 3:", paste(head(race_results$Nation, 3), collapse = ", ")))
-      log_info(paste("Win probs:", paste(round(head(race_results$prob_top_1, 3) * 100, 1), "%", collapse = ", ")))
+      # Comprehensive mixed relay results logging
+      if (ENHANCED_LOGGING) {
+        log_info("")
+        log_info(sprintf("    [MIXED RELAY RESULTS]"))
+        log_info("    Top 3 predictions:")
+        for (j in 1:min(3, nrow(race_results))) {
+          log_info(sprintf("      %d. %s (Win: %.1f%%, Podium: %.1f%%)",
+                           j, race_results$Nation[j],
+                           race_results$prob_top_1[j] * 100,
+                           race_results$prob_top_3[j] * 100))
+        }
+        validate_probabilities(race_results)
+
+        # Field competitiveness
+        top3_win_prob <- sum(head(race_results$prob_top_1, 3))
+        log_info(sprintf("    Top 3 teams hold %.1f%% of win probability", top3_win_prob * 100))
+      } else {
+        log_info(paste("Mixed relay simulation complete - Top 3:", paste(head(race_results$Nation, 3), collapse = ", ")))
+        log_info(paste("Win probs:", paste(round(head(race_results$prob_top_1, 3) * 100, 1), "%", collapse = ", ")))
+      }
     }
   }
 
@@ -2791,15 +3172,25 @@ if (ENHANCED_LOGGING) {
   total_races <- length(individual_results) + length(relay_results) +
                  length(team_sprint_results) + length(mixed_relay_results)
 
-  # List files saved
+  # List files saved (use correct variable names from earlier in script)
   files_saved <- c()
-  if (exists("men_output_file") && file.exists(men_output_file)) files_saved <- c(files_saved, men_output_file)
-  if (exists("ladies_output_file") && file.exists(ladies_output_file)) files_saved <- c(files_saved, ladies_output_file)
+  if (exists("men_file") && file.exists(men_file)) files_saved <- c(files_saved, men_file)
+  if (exists("ladies_file") && file.exists(ladies_file)) files_saved <- c(files_saved, ladies_file)
   if (exists("men_relay_file") && file.exists(men_relay_file)) files_saved <- c(files_saved, men_relay_file)
   if (exists("ladies_relay_file") && file.exists(ladies_relay_file)) files_saved <- c(files_saved, ladies_relay_file)
   if (exists("men_ts_file") && file.exists(men_ts_file)) files_saved <- c(files_saved, men_ts_file)
   if (exists("ladies_ts_file") && file.exists(ladies_ts_file)) files_saved <- c(files_saved, ladies_ts_file)
   if (exists("mixed_relay_file") && file.exists(mixed_relay_file)) files_saved <- c(files_saved, mixed_relay_file)
+
+  # Final summary statistics
+  log_info("")
+  log_info("=== FINAL SUMMARY ===")
+  log_info(sprintf("  Individual races: %d", length(individual_results)))
+  log_info(sprintf("  Relay races: %d", length(relay_results)))
+  log_info(sprintf("  Team sprint races: %d", length(team_sprint_results)))
+  log_info(sprintf("  Mixed relay races: %d", length(mixed_relay_results)))
+  log_info(sprintf("  Total races processed: %d", total_races))
+  log_info(sprintf("  Files saved: %d", length(files_saved)))
 
   log_script_complete(races_processed = total_races, files_saved = files_saved)
 }

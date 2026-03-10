@@ -77,21 +77,51 @@ TEAM_DISCIPLINES <- c("Team Large", "Team Normal", "Mixed Team")
 # LOGGING SETUP
 # ============================================================================
 
-log_dir <- "~/ski/elo/python/skijump/polars/excel365/champs-predictions-simulation"
-if (!dir.exists(log_dir)) {
-  dir.create(log_dir, recursive = TRUE)
+ENHANCED_LOGGING <- FALSE
+logging_utils_path <- "~/blog/daehl-e/content/post/shared/logging-utils.R"
+if (file.exists(path.expand(logging_utils_path))) {
+  tryCatch({
+    source(logging_utils_path)
+    ENHANCED_LOGGING <- TRUE
+    init_logging("skijump", "champs-predictions")
+    log_config(list(
+      TEST_MODE = TEST_MODE,
+      N_HISTORY_REQUIRED = N_HISTORY_REQUIRED,
+      N_SIMULATIONS = N_SIMULATIONS,
+      DECAY_LAMBDA = DECAY_LAMBDA,
+      SD_SCALE_FACTOR = SD_SCALE_FACTOR,
+      SD_MIN = SD_MIN,
+      SD_MAX = SD_MAX,
+      TEAM_SD_SCALE_FACTOR = TEAM_SD_SCALE_FACTOR,
+      TEAM_SD_MIN = TEAM_SD_MIN,
+      TEAM_SD_MAX = TEAM_SD_MAX,
+      GAM_FILL_WEIGHT_FACTOR = GAM_FILL_WEIGHT_FACTOR
+    ))
+  }, error = function(e) {
+    ENHANCED_LOGGING <- FALSE
+  })
 }
 
-log_threshold(DEBUG)
-log_appender(appender_file(file.path(log_dir, "simulation.log")))
+if (!ENHANCED_LOGGING) {
+  log_dir <- "~/ski/elo/python/skijump/polars/excel365/champs-predictions-simulation"
+  if (!dir.exists(log_dir)) {
+    dir.create(log_dir, recursive = TRUE)
+  }
+
+  log_threshold(DEBUG)
+  log_appender(appender_file(file.path(log_dir, "simulation.log")))
+}
+
 log_info("=== SKI JUMPING CHAMPS-PREDICTIONS-SIMULATION.R STARTED ===")
 log_info(paste("TEST_MODE:", TEST_MODE))
+log_info(paste("Enhanced logging:", ENHANCED_LOGGING))
 
 # ============================================================================
 # DATA LOADING
 # ============================================================================
 
 log_info("Loading data files...")
+if (ENHANCED_LOGGING) phase_start("Load Championship Schedule")
 
 base_path <- "~/ski/elo/python/skijump/polars/excel365"
 team_base_path <- "~/ski/elo/python/skijump/polars/relay/excel365"
@@ -160,6 +190,10 @@ mixed_team_races <- champs_races_with_race_num %>%
 
 log_info(paste("Found", nrow(men_races), "men's individual races,", nrow(ladies_races), "ladies' individual races"))
 log_info(paste("Team races - Men:", nrow(men_team_races), "| Ladies:", nrow(ladies_team_races), "| Mixed:", nrow(mixed_team_races)))
+if (ENHANCED_LOGGING) {
+  phase_end("Load Championship Schedule", sprintf("%d championship races", nrow(champs_races)))
+  phase_start("Load Chronological Data")
+}
 
 # Get current date
 current_date <- Sys.Date()
@@ -185,6 +219,15 @@ ladies_chrono <- tryCatch({
   log_error(paste("Failed to load ladies_chrono:", e$message))
   data.frame()
 })
+
+if (ENHANCED_LOGGING) {
+  if (nrow(men_chrono) > 0) {
+    log_data_quality(men_chrono, "Men's Chrono", c("ID", "Date", "RaceType", "Points"))
+  }
+  if (nrow(ladies_chrono) > 0) {
+    log_data_quality(ladies_chrono, "Ladies' Chrono", c("ID", "Date", "RaceType", "Points"))
+  }
+}
 
 # Load championships startlists
 men_startlist <- tryCatch({
@@ -309,6 +352,27 @@ mixed_team_chrono <- tryCatch({
   log_info(paste("No mixed team chrono:", e$message))
   data.frame()
 })
+
+if (ENHANCED_LOGGING) {
+  phase_end("Load Chronological Data")
+  phase_start("Load Startlists")
+  if (nrow(men_startlist) > 0) {
+    log_data_quality(men_startlist, "Men's Champs Startlist", c("ID", "Skier", "Nation"))
+  }
+  if (nrow(ladies_startlist) > 0) {
+    log_data_quality(ladies_startlist, "Ladies' Champs Startlist", c("ID", "Skier", "Nation"))
+  }
+  if (nrow(men_team_startlist) > 0) {
+    log_data_quality(men_team_startlist, "Men's Team Startlist", c("Nation"))
+  }
+  if (nrow(ladies_team_startlist) > 0) {
+    log_data_quality(ladies_team_startlist, "Ladies' Team Startlist", c("Nation"))
+  }
+  if (nrow(mixed_team_startlist) > 0) {
+    log_data_quality(mixed_team_startlist, "Mixed Team Startlist", c("Nation"))
+  }
+  phase_end("Load Startlists")
+}
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -1015,6 +1079,7 @@ log_info(paste("Trained", sum(!sapply(ladies_gam_models, is.null)), "ladies' GAM
 # ============================================================================
 
 log_info("=== CHAMPIONSHIPS SIMULATION - INDIVIDUAL ===")
+if (ENHANCED_LOGGING) phase_start("Individual Championships Simulation")
 
 process_gender_championships <- function(gender, races, gam_models) {
   log_info(paste("Processing", gender, "Championships with", nrow(races), "individual races"))
@@ -1040,8 +1105,8 @@ process_gender_championships <- function(gender, races, gam_models) {
   }
 
   # Process each race
-  race_results <- list()
   position_predictions <- list()
+  files_saved <- character(0)
 
   for (i in 1:nrow(races)) {
     race_info <- races[i, ]
@@ -1060,6 +1125,10 @@ process_gender_championships <- function(gender, races, gam_models) {
     }
 
     log_info(paste("Athletes in startlist:", nrow(race_startlist)))
+    if (ENHANCED_LOGGING) {
+      city <- if ("country" %in% names(race_info)) race_info$country else "Unknown"
+      log_race_start(i, nrow(races), gender, race_type, city, nrow(race_startlist))
+    }
 
     # Get GAM model for this race type
     model_info <- gam_models[[race_type]]
@@ -1079,6 +1148,9 @@ process_gender_championships <- function(gender, races, gam_models) {
 
     for (j in 1:nrow(race_startlist)) {
       athlete_id <- race_startlist$ID[j]
+      if (ENHANCED_LOGGING) {
+        log_progress(j, nrow(race_startlist), "Building distributions", every = 20)
+      }
 
       # Get GAM prediction for this athlete
       gam_prediction <- NULL
@@ -1114,6 +1186,10 @@ process_gender_championships <- function(gender, races, gam_models) {
       athlete_distributions[[as.character(athlete_id)]] <- dist
     }
 
+    if (ENHANCED_LOGGING) {
+      log_distribution_stats(athlete_distributions, sprintf("%s %s", gender, race_type))
+    }
+
     log_info(paste("Running", N_SIMULATIONS, "Monte Carlo simulations"))
     sim_results <- simulate_race_positions(athlete_distributions)
 
@@ -1126,6 +1202,11 @@ process_gender_championships <- function(gender, races, gam_models) {
 
     sim_results$Sex <- ifelse(gender == "men", "M", "L")
     sim_results$Race <- race_info$original_race_num
+
+    if (ENHANCED_LOGGING) {
+      log_race_results(sim_results %>% arrange(desc(prob_top_1)), race_type)
+      validate_probabilities(sim_results)
+    }
 
     position_predictions[[as.character(race_info$original_race_num)]] <- sim_results
   }
@@ -1179,6 +1260,7 @@ process_gender_championships <- function(gender, races, gam_models) {
     race_file <- file.path(output_dir, paste0(gender, "_position_probabilities.xlsx"))
     write.xlsx(race_sheets, race_file)
     log_info(paste("Saved", gender, "race probabilities to", race_file))
+    files_saved <- c(files_saved, race_file)
   }
 
   # Create athlete summary
@@ -1197,11 +1279,13 @@ process_gender_championships <- function(gender, races, gam_models) {
   summary_file <- file.path(output_dir, paste0(gender, ".xlsx"))
   write.xlsx(athlete_summary, summary_file)
   log_info(paste("Saved", gender, "summary to", summary_file))
+  files_saved <- c(files_saved, summary_file)
 
   return(list(
     summary = athlete_summary,
     race_results = all_position_predictions,
-    race_sheets = race_sheets
+    race_sheets = race_sheets,
+    files_saved = files_saved
   ))
 }
 
@@ -1214,6 +1298,10 @@ if (nrow(men_races) > 0) {
 ladies_results <- NULL
 if (nrow(ladies_races) > 0) {
   ladies_results <- process_gender_championships("ladies", ladies_races, ladies_gam_models)
+}
+if (ENHANCED_LOGGING) {
+  phase_end("Individual Championships Simulation")
+  phase_start("Team Championships Simulation")
 }
 
 # ============================================================================
@@ -1238,6 +1326,9 @@ if (nrow(men_team_races) > 0 && nrow(men_team_startlist) > 0) {
 
   for (i in 1:nrow(men_team_startlist)) {
     nation <- men_team_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(men_team_startlist), "Building team distributions", every = 5)
+    }
 
     dist <- build_team_distribution(
       nation = nation,
@@ -1247,6 +1338,10 @@ if (nrow(men_team_races) > 0 && nrow(men_team_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Men Team")
   }
 
   team_sim_results <- simulate_team_positions(team_distributions)
@@ -1269,6 +1364,10 @@ if (nrow(men_team_races) > 0 && nrow(men_team_startlist) > 0) {
   men_team_file <- file.path(output_dir, "men_team_position_probabilities.xlsx")
   write.xlsx(list("Men Team" = team_sim_results), men_team_file)
   log_info(paste("Saved men's team champs predictions to", men_team_file))
+  if (ENHANCED_LOGGING) {
+    log_validation("Men Team probability sum", abs(sum(team_sim_results$Win, na.rm = TRUE) - 100) < 5,
+                   sprintf("%.1f", sum(team_sim_results$Win, na.rm = TRUE)))
+  }
 }
 
 # Process Ladies' Team
@@ -1279,6 +1378,9 @@ if (nrow(ladies_team_races) > 0 && nrow(ladies_team_startlist) > 0) {
 
   for (i in 1:nrow(ladies_team_startlist)) {
     nation <- ladies_team_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(ladies_team_startlist), "Building team distributions", every = 5)
+    }
 
     dist <- build_team_distribution(
       nation = nation,
@@ -1288,6 +1390,10 @@ if (nrow(ladies_team_races) > 0 && nrow(ladies_team_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Ladies Team")
   }
 
   team_sim_results <- simulate_team_positions(team_distributions)
@@ -1310,6 +1416,10 @@ if (nrow(ladies_team_races) > 0 && nrow(ladies_team_startlist) > 0) {
   ladies_team_file <- file.path(output_dir, "ladies_team_position_probabilities.xlsx")
   write.xlsx(list("Ladies Team" = team_sim_results), ladies_team_file)
   log_info(paste("Saved ladies' team champs predictions to", ladies_team_file))
+  if (ENHANCED_LOGGING) {
+    log_validation("Ladies Team probability sum", abs(sum(team_sim_results$Win, na.rm = TRUE) - 100) < 5,
+                   sprintf("%.1f", sum(team_sim_results$Win, na.rm = TRUE)))
+  }
 }
 
 # Process Mixed Team
@@ -1320,6 +1430,9 @@ if (nrow(mixed_team_races) > 0 && nrow(mixed_team_startlist) > 0) {
 
   for (i in 1:nrow(mixed_team_startlist)) {
     nation <- mixed_team_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(mixed_team_startlist), "Building team distributions", every = 5)
+    }
 
     dist <- build_team_distribution(
       nation = nation,
@@ -1329,6 +1442,10 @@ if (nrow(mixed_team_races) > 0 && nrow(mixed_team_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Mixed Team")
   }
 
   team_sim_results <- simulate_team_positions(team_distributions)
@@ -1351,9 +1468,17 @@ if (nrow(mixed_team_races) > 0 && nrow(mixed_team_startlist) > 0) {
   mixed_team_file <- file.path(output_dir, "mixed_team_position_probabilities.xlsx")
   write.xlsx(list("Mixed Team" = team_sim_results), mixed_team_file)
   log_info(paste("Saved mixed team champs predictions to", mixed_team_file))
+  if (ENHANCED_LOGGING) {
+    log_validation("Mixed Team probability sum", abs(sum(team_sim_results$Win, na.rm = TRUE) - 100) < 5,
+                   sprintf("%.1f", sum(team_sim_results$Win, na.rm = TRUE)))
+  }
 }
 
 log_info(paste("Team simulation complete.", length(team_results), "team races processed"))
+if (ENHANCED_LOGGING) {
+  phase_end("Team Championships Simulation")
+  phase_start("Nations Output")
+}
 
 # ============================================================================
 # CREATE NATIONS EXCEL FILE
@@ -1486,6 +1611,9 @@ if (!is.null(men_results) || !is.null(ladies_results)) {
     log_info(paste("Saved nations individual results to", nations_file))
   }
 }
+if (ENHANCED_LOGGING) {
+  phase_end("Nations Output")
+}
 
 # ============================================================================
 # SUMMARY OUTPUT
@@ -1505,5 +1633,25 @@ if (!is.null(ladies_results)) {
 cat(paste("Team races processed:", length(team_results), "\n"))
 
 cat(paste("\nOutput directory:", output_dir, "\n"))
+
+files_saved <- c(
+  if (!is.null(men_results) && "files_saved" %in% names(men_results)) men_results$files_saved else character(0),
+  if (!is.null(ladies_results) && "files_saved" %in% names(ladies_results)) ladies_results$files_saved else character(0),
+  if (exists("men_team_file")) men_team_file else character(0),
+  if (exists("ladies_team_file")) ladies_team_file else character(0),
+  if (exists("mixed_team_file")) mixed_team_file else character(0),
+  if (exists("nations_file")) nations_file else character(0)
+)
+
+if (ENHANCED_LOGGING) {
+  log_script_complete(
+    races_processed = sum(
+      if (!is.null(men_results)) length(men_results$race_sheets) else 0,
+      if (!is.null(ladies_results)) length(ladies_results$race_sheets) else 0,
+      length(team_results)
+    ),
+    files_saved = files_saved
+  )
+}
 
 log_info("=== SKI JUMPING CHAMPS-PREDICTIONS-SIMULATION.R COMPLETE ===")

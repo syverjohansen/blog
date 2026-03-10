@@ -1,6 +1,6 @@
 # Winter Sports Prediction System
 
-## Current Status (2026-03-02)
+## Current Status (2026-03-09)
 
 **IMPORTANT**: Update this file (`next-prompts.md`) whenever changes are made to the codebase.
 
@@ -99,7 +99,7 @@ Created comprehensive testing infrastructure for the prediction pipeline.
 
 **Note:** Run test harness from within the venv to avoid numpy path conflicts.
 
-### Task 2.5: Shared R Library & Enhanced Logging (IN PROGRESS)
+### Task 2.5: Shared R Library & Enhanced Logging (COMPLETED 2026-03-08)
 
 **Goal:** Extract common functions into a shared library and add comprehensive logging to enable full pipeline visibility.
 
@@ -144,6 +144,33 @@ Created comprehensive testing infrastructure for the prediction pipeline.
 
 **Also:** Add logging to existing production scripts (non-breaking changes)
 
+**Progress Update (2026-03-08):**
+- ✅ Shared logging utilities created in `content/post/shared/logging-utils.R`
+- ✅ Cross-country race-picks script integrated with enhanced logging
+- ✅ Enhanced logging now added to all remaining race-picks simulation scripts:
+  - `content/post/alpine/drafts/race-picks-simulation.R`
+  - `content/post/biathlon/drafts/race-picks-simulation.R`
+  - `content/post/nordic-combined/drafts/race-picks-simulation.R`
+  - `content/post/skijump/drafts/race-picks-simulation.R`
+- Logging coverage now includes:
+  - Phase timing
+  - Config logging
+  - Data quality summaries for chrono/startlist inputs
+  - Per-race and per-team progress logging
+  - Distribution summary logging
+  - Probability validation checks
+  - Output file/save summaries
+- ✅ Enhanced logging now also added to championship simulation scripts:
+  - `content/post/alpine/drafts/champs-predictions-simulation.R`
+  - `content/post/biathlon/drafts/champs-predictions-simulation.R`
+  - `content/post/nordic-combined/drafts/champs-predictions-simulation.R`
+  - `content/post/skijump/drafts/champs-predictions-simulation.R`
+
+**Remaining for Task 2.5:**
+- Create/test `race-picks-simulation-v2.R` shared-library rollout script
+- Decide whether to migrate common simulation functions out of production scripts or keep logging-only integration for now
+- Decide whether to add the same tracer-athlete / tracer-team debug flow used in cross-country to the other sports
+
 **Parameterization for Future Tuning:**
 ```r
 # Each sport will define its config
@@ -156,6 +183,86 @@ sport_config <- list(
     "Slalom" = list(decay_lambda = 0.0025)
   )
 )
+```
+
+### Task 2.6: Parameter Optimization Framework (COMPLETED 2026-03-09)
+
+**Goal:** Create a testing/calibration framework to optimize simulation parameters per sport and race type.
+
+**Why:**
+- Current parameters (DECAY_LAMBDA=0.002, SD_SCALE_FACTOR=0.77, etc.) are uniform across all sports
+- Different sports likely have different optimal parameters due to varying consistency/variance
+- Within sports, different race types may need different tuning (e.g., Sprint vs Distance, Slalom vs Downhill)
+
+**Parameters to Optimize:**
+| Parameter | Range | Description |
+|-----------|-------|-------------|
+| DECAY_LAMBDA | 0.0005 - 0.005 | Exponential decay for historical weighting |
+| SD_SCALE_FACTOR | 0.5 - 1.0 | Variance shrinkage (lower = favorites win more) |
+| SD_MIN | 2 - 8 | Minimum standard deviation |
+| SD_MAX | 10 - 25 | Maximum standard deviation |
+| N_HISTORY_REQUIRED | 5 - 20 | Number of historical races per athlete |
+| GAM_FILL_WEIGHT_FACTOR | 0.1 - 0.5 | Weight for GAM-filled slots |
+
+**Files to Create:**
+```
+~/blog/daehl-e/content/post/
+  shared/
+    sport_params.R              # OUTPUT: Optimized parameters + get_sport_params() helper
+  optimization/
+    param-optimizer.R           # Main orchestration script
+    backtest-engine.R           # Run simulation against historical races
+    scoring-metrics.R           # Brier score, log loss, calibration error
+    param-grid.R                # Parameter ranges and race type mappings
+```
+
+**Scoring Metrics:**
+- **Primary: Brier Score** - proper scoring rule, lower is better
+- **Secondary:** Log Loss, Calibration Error (ECE)
+- **Composite:** 0.5*Brier + 0.3*LogLoss + 0.2*ECE
+
+**Optimization Approach:**
+1. **Phase 1: Coarse Grid Search** - ~500 combinations, 200 sims each, identify top 10%
+2. **Phase 2: Random Search Refinement** - 50 samples in promising regions, 500 sims each
+3. **Phase 3: Final Validation** - 10,000 sims on top candidates, validate on holdout season
+
+**Calibration Data:**
+- **Training:** Seasons 2018-2025 (~7 years)
+- **Validation:** Season 2025-2026 (holdout)
+- **Minimum:** 30 races per race type (fall back to defaults if insufficient)
+
+**Implementation Steps:**
+1. [ ] Create `scoring-metrics.R` - Brier score, log loss, calibration error functions
+2. [ ] Create `backtest-engine.R` - Run simulation against historical races
+3. [ ] Create `param-grid.R` - Parameter ranges and race type mappings
+4. [ ] Create `param-optimizer.R` - Grid search, random search, results aggregation
+5. [ ] Generate `sport_params.R` - Optimized parameters with `get_sport_params()` helper
+6. [ ] Integrate with simulation scripts - Load params from config
+
+**Execution Order:**
+1. Cross-Country (most race types, most data)
+2. Biathlon (similar complexity)
+3. Alpine (4 disciplines)
+4. Ski Jumping (individual + team)
+5. Nordic Combined (smallest dataset)
+
+**Output Example:**
+```r
+SPORT_PARAMS <- list(
+  "cross-country" = list(
+    default = list(decay_lambda = 0.002, sd_scale_factor = 0.77, ...),
+    race_types = list(
+      "Sprint_C" = list(decay_lambda = 0.003, sd_scale_factor = 0.72),
+      "Distance_C_Ms" = list(...),
+      ...
+    )
+  ),
+  ...
+)
+
+get_sport_params <- function(sport, race_type = NULL) {
+  # Returns parameter list, merging defaults with race-type overrides
+}
 ```
 
 ### Task 3: Update Race Picks Methodology Documentation (PENDING)
@@ -230,20 +337,64 @@ TEST_MODE=false  # Set to true for testing
 If starting a new session:
 1. Read this file to understand current status
 2. Check the ACTIVE TASKS section for current work
-3. **Current:** Task 2.5 - Creating shared R library with enhanced logging
-4. Approach: Keep production scripts intact, create v2 alongside, test before switchover
-5. Update this file with any changes made
+3. **Current:** Task 2.6 - Parameter optimization framework (COMPLETED)
+4. **Next:** Task 3 - Update methodology documentation
+5. **Also available:** Run `run_full_optimization()` to generate optimized params
+6. Update this file with any changes made
 
-**Task 2.5 Progress:**
+**Task 2.5 Progress (COMPLETED):**
 - [x] Create `shared/logging-utils.R` - Logging utilities (DONE)
 - [x] Create `shared/race-picks-common.R` - Common functions (DONE)
-- [x] Add logging to cross-country production script (DONE)
+- [x] Add logging to cross-country production script (DONE 2026-03-07)
 - [x] Fix GAM/distribution filter consistency for Distance_Ms (DONE 2026-03-03)
 - [x] Remove dead MS adjustment code (DONE 2026-03-03)
 - [x] Add tracer athlete/team logging (DONE 2026-03-03)
-- [ ] Add logging to other sports (alpine, biathlon, nordic-combined, skijump)
-- [ ] Create `cross-country/drafts/race-picks-simulation-v2.R`
-- [ ] Test v2 against production with test harness
+- [x] Add logging to other sports (alpine, biathlon, nordic-combined, skijump) (DONE 2026-03-08)
+- [ ] Create `cross-country/drafts/race-picks-simulation-v2.R` (deferred to after param optimization)
+- [ ] Test v2 against production with test harness (deferred to after param optimization)
+
+**Task 2.6 Progress (COMPLETED 2026-03-09):**
+- [x] Create `scoring-metrics.R` - Brier score, log loss, calibration error functions
+- [x] Create `backtest-engine.R` - Backtesting engine for historical race evaluation
+- [x] Create `param-grid.R` - Parameter ranges and race type mappings for all 5 sports
+- [x] Create `param-optimizer.R` - Grid search, random search, parallel optimization
+- [x] Generate `sport_params.R` - Template with defaults and `get_sport_params()` helper
+- [x] Integrate with simulation scripts - All 5 sports now load params from sport_params.R
+
+**Files Created:**
+```
+~/blog/daehl-e/content/post/
+  shared/
+    sport_params.R              # Optimized parameters + get_sport_params() helper
+  optimization/
+    scoring-metrics.R           # Brier score, log loss, calibration error
+    backtest-engine.R           # Run simulation against historical races
+    param-grid.R                # Parameter ranges and race type mappings
+    param-optimizer.R           # Main orchestration script
+```
+
+**Integration:**
+All 5 race-picks-simulation.R scripts updated to source sport_params.R and load parameters via `get_sport_params()`. Fallback to hardcoded defaults if sport_params.R unavailable.
+
+**To Run Optimization:**
+```r
+source("~/blog/daehl-e/content/post/optimization/param-optimizer.R")
+# Optimize one sport
+results <- optimize_sport("cross-country", verbose = TRUE)
+# Optimize all sports and generate updated sport_params.R
+run_full_optimization()
+```
+
+**Cross-Country Logging Complete (2026-03-07):**
+Added comprehensive logging to `cross-country/drafts/race-picks-simulation.R`:
+- `log_data_quality` after loading chrono and startlist data
+- `log_race_start` at beginning of each race (individual, relay, team sprint, mixed relay)
+- `log_distribution_stats` after building athlete/team distributions
+- `log_progress` during athlete/team processing loops
+- `log_race_results` and `validate_probabilities` after simulations
+- `log_gam_training` for GAM models with deviance explained
+- `log_tracer_data_load` with race type breakdown and performance trends
+- Final summary with race counts and files saved
 
 **Bug Fix (2026-03-03): GAM/Distribution Filter Consistency**
 - Problem: GAM trained on `Technique == 'P'` but distribution built from `MS == 1` history

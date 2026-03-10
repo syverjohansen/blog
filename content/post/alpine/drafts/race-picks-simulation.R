@@ -43,16 +43,35 @@ load_env <- function(env_path = "~/ski/elo/.env") {
 load_env()
 TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 
-# Simulation parameters
+# ===== LOAD SPORT-SPECIFIC PARAMETERS =====
+# Source optimized parameters from sport_params.R
+# These values are calibrated via param-optimizer.R using historical backtesting
+sport_params_path <- "~/blog/daehl-e/content/post/shared/sport_params.R"
+if (file.exists(path.expand(sport_params_path))) {
+  source(sport_params_path)
+  DEFAULT_PARAMS <- get_sport_params("alpine")
+} else {
+  # Fallback to hardcoded defaults if sport_params.R not available
+  DEFAULT_PARAMS <- list(
+    decay_lambda = 0.002,
+    sd_scale_factor = 0.77,
+    sd_min = 4,
+    sd_max = 16,
+    n_history_required = 10,
+    gam_fill_weight_factor = 0.25
+  )
+}
+
+# Simulation parameters (from optimized sport params)
 N_SIMULATIONS <- 10000                # Number of Monte Carlo iterations
-DECAY_LAMBDA <- 0.002                 # Exponential decay rate (0.002 = 50% weight after 1 year)
-SD_SCALE_FACTOR <- 0.77               # Multiply all SDs (lower = favorites win more)
-SD_MIN <- 4                           # Minimum SD
-SD_MAX <- 16                          # Maximum SD
+DECAY_LAMBDA <- DEFAULT_PARAMS$decay_lambda
+SD_SCALE_FACTOR <- DEFAULT_PARAMS$sd_scale_factor
+SD_MIN <- DEFAULT_PARAMS$sd_min
+SD_MAX <- DEFAULT_PARAMS$sd_max
 
 # GAM parameters for athletes with insufficient history
-N_HISTORY_REQUIRED <- 10              # Target number of historical races per athlete
-GAM_FILL_WEIGHT_FACTOR <- 0.25        # Weight multiplier for GAM-filled history slots
+N_HISTORY_REQUIRED <- DEFAULT_PARAMS$n_history_required
+GAM_FILL_WEIGHT_FACTOR <- DEFAULT_PARAMS$gam_fill_weight_factor
 
 # Position thresholds
 POSITION_THRESHOLDS <- c(1, 3, 5, 10, 30)  # Win, Podium, Top5, Top10, Top30
@@ -69,21 +88,48 @@ TECH_DISCIPLINES <- c("Slalom", "Giant Slalom")
 # LOGGING SETUP
 # ============================================================================
 
-log_dir <- "~/ski/elo/python/alpine/polars/excel365/race-picks-simulation"
-if (!dir.exists(log_dir)) {
-  dir.create(log_dir, recursive = TRUE)
+ENHANCED_LOGGING <- FALSE
+logging_utils_path <- "~/blog/daehl-e/content/post/shared/logging-utils.R"
+if (file.exists(path.expand(logging_utils_path))) {
+  tryCatch({
+    source(logging_utils_path)
+    ENHANCED_LOGGING <- TRUE
+    init_logging("alpine", "race-picks")
+    log_config(list(
+      TEST_MODE = TEST_MODE,
+      N_HISTORY_REQUIRED = N_HISTORY_REQUIRED,
+      N_SIMULATIONS = N_SIMULATIONS,
+      DECAY_LAMBDA = DECAY_LAMBDA,
+      SD_SCALE_FACTOR = SD_SCALE_FACTOR,
+      SD_MIN = SD_MIN,
+      SD_MAX = SD_MAX,
+      GAM_FILL_WEIGHT_FACTOR = GAM_FILL_WEIGHT_FACTOR
+    ))
+  }, error = function(e) {
+    ENHANCED_LOGGING <- FALSE
+  })
 }
 
-log_threshold(DEBUG)
-log_appender(appender_file(file.path(log_dir, "simulation.log")))
+if (!ENHANCED_LOGGING) {
+  log_dir <- "~/ski/elo/python/alpine/polars/excel365/race-picks-simulation"
+  if (!dir.exists(log_dir)) {
+    dir.create(log_dir, recursive = TRUE)
+  }
+
+  log_threshold(DEBUG)
+  log_appender(appender_file(file.path(log_dir, "simulation.log")))
+}
+
 log_info("=== ALPINE RACE-PICKS-SIMULATION.R STARTED ===")
 log_info(paste("TEST_MODE:", TEST_MODE))
+log_info(paste("Enhanced logging:", ENHANCED_LOGGING))
 
 # ============================================================================
 # DATA LOADING
 # ============================================================================
 
 log_info("Loading data files...")
+if (ENHANCED_LOGGING) phase_start("Load Race Schedule")
 
 base_path <- "~/ski/elo/python/alpine/polars/excel365"
 
@@ -129,6 +175,10 @@ if(nrow(today_races) == 0) {
 }
 
 log_info(paste("Found", nrow(today_races), "races for today"))
+if (ENHANCED_LOGGING) {
+  phase_end("Load Race Schedule", sprintf("%d races for today", nrow(today_races)))
+  phase_start("Load Chronological Data")
+}
 
 # Separate by gender
 men_races <- today_races %>% filter(Sex == "M")
@@ -158,6 +208,17 @@ ladies_chrono <- tryCatch({
   log_error(paste("Failed to load ladies_chrono.csv:", e$message))
   data.frame()
 })
+
+if (ENHANCED_LOGGING) {
+  if (nrow(men_chrono) > 0) {
+    log_data_quality(men_chrono, "Men's Chrono", c("ID", "Date", "Distance", "Points"))
+  }
+  if (nrow(ladies_chrono) > 0) {
+    log_data_quality(ladies_chrono, "Ladies' Chrono", c("ID", "Date", "Distance", "Points"))
+  }
+  phase_end("Load Chronological Data")
+  phase_start("Load Startlists")
+}
 
 # Load startlists with error handling
 men_startlist <- tryCatch({
@@ -189,6 +250,15 @@ ladies_startlist <- tryCatch({
 })
 
 log_info(paste("Loaded startlists - Men:", nrow(men_startlist), "| Ladies:", nrow(ladies_startlist)))
+if (ENHANCED_LOGGING) {
+  if (nrow(men_startlist) > 0) {
+    log_data_quality(men_startlist, "Men's Startlist", c("ID", "Skier", "Nation"))
+  }
+  if (nrow(ladies_startlist) > 0) {
+    log_data_quality(ladies_startlist, "Ladies' Startlist", c("ID", "Skier", "Nation"))
+  }
+  phase_end("Load Startlists")
+}
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -736,6 +806,7 @@ log_info(paste("Trained", sum(!sapply(ladies_gam_models, is.null)), "ladies' GAM
 # ============================================================================
 
 log_info("=== INDIVIDUAL RACE SIMULATION ===")
+if (ENHANCED_LOGGING) phase_start("Individual Race Simulation")
 
 individual_results <- list()
 
@@ -789,6 +860,10 @@ for (gender in c("men", "ladies")) {
     }
 
     log_info(paste("Athletes in startlist:", nrow(race_startlist)))
+    if (ENHANCED_LOGGING) {
+      city <- if ("City" %in% names(race)) race$City else "Unknown"
+      log_race_start(i, nrow(races_df), gender, discipline, city, nrow(race_startlist))
+    }
 
     # Get GAM model for this discipline
     model_info <- gam_models[[discipline]]
@@ -806,6 +881,9 @@ for (gender in c("men", "ladies")) {
 
     for (j in 1:nrow(race_startlist)) {
       athlete_id <- race_startlist$ID[j]
+      if (ENHANCED_LOGGING) {
+        log_progress(j, nrow(race_startlist), "Building distributions", every = 20)
+      }
 
       # Get GAM prediction for this athlete
       gam_prediction <- NULL
@@ -844,6 +922,10 @@ for (gender in c("men", "ladies")) {
       athlete_distributions[[as.character(athlete_id)]] <- dist
     }
 
+    if (ENHANCED_LOGGING) {
+      log_distribution_stats(athlete_distributions, sprintf("%s %s", gender, discipline))
+    }
+
     # Run Monte Carlo simulation
     log_info(paste("Running", N_SIMULATIONS, "Monte Carlo simulations"))
     race_results <- simulate_race_positions(athlete_distributions)
@@ -877,6 +959,11 @@ for (gender in c("men", "ladies")) {
              starts_with("prob_top_")) %>%
       arrange(desc(prob_top_1))
 
+    if (ENHANCED_LOGGING) {
+      log_race_results(race_results, discipline)
+      validate_probabilities(race_results)
+    }
+
     # Store results
     race_key <- paste(gender, discipline, sep = "_")
     individual_results[[race_key]] <- list(
@@ -892,6 +979,10 @@ for (gender in c("men", "ladies")) {
   }
 
   log_info(paste(gender, "simulation complete.", length(individual_results), "total races processed"))
+}
+if (ENHANCED_LOGGING) {
+  phase_end("Individual Race Simulation", sprintf("%d races", length(individual_results)))
+  phase_start("Output Generation")
 }
 
 # ============================================================================
@@ -948,6 +1039,7 @@ format_individual_results <- function(results_list) {
 }
 
 # Generate output files
+files_saved <- character(0)
 if (length(individual_results) > 0) {
   individual_formatted <- format_individual_results(individual_results)
 
@@ -959,12 +1051,14 @@ if (length(individual_results) > 0) {
     men_file <- file.path(output_dir, "men_position_probabilities.xlsx")
     write.xlsx(men_individual, men_file)
     log_info(paste("Saved men's predictions to", men_file))
+    files_saved <- c(files_saved, men_file)
   }
 
   if (length(ladies_individual) > 0) {
     ladies_file <- file.path(output_dir, "ladies_position_probabilities.xlsx")
     write.xlsx(ladies_individual, ladies_file)
     log_info(paste("Saved ladies' predictions to", ladies_file))
+    files_saved <- c(files_saved, ladies_file)
   }
 }
 
@@ -983,5 +1077,10 @@ if (length(individual_results) > 0) {
 }
 
 cat(paste("\nOutput directory:", output_dir, "\n"))
+
+if (ENHANCED_LOGGING) {
+  phase_end("Output Generation")
+  log_script_complete(races_processed = length(individual_results), files_saved = files_saved)
+}
 
 log_info("=== ALPINE RACE-PICKS-SIMULATION.R COMPLETE ===")

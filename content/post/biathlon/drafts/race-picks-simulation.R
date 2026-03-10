@@ -43,16 +43,37 @@ load_env <- function(env_path = "~/ski/elo/.env") {
 load_env()
 TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 
-# Simulation parameters
+# ===== LOAD SPORT-SPECIFIC PARAMETERS =====
+# Source optimized parameters from sport_params.R
+# These values are calibrated via param-optimizer.R using historical backtesting
+sport_params_path <- "~/blog/daehl-e/content/post/shared/sport_params.R"
+if (file.exists(path.expand(sport_params_path))) {
+  source(sport_params_path)
+  DEFAULT_PARAMS <- get_sport_params("biathlon")
+  RELAY_TEAM_PARAMS <- get_sport_params("biathlon", event_type = "Relay")
+} else {
+  # Fallback to hardcoded defaults if sport_params.R not available
+  DEFAULT_PARAMS <- list(
+    decay_lambda = 0.002,
+    sd_scale_factor = 0.77,
+    sd_min = 4,
+    sd_max = 16,
+    n_history_required = 10,
+    gam_fill_weight_factor = 0.25
+  )
+  RELAY_TEAM_PARAMS <- list(sd_scale_factor = 0.8, sd_min = 3, sd_max = 12)
+}
+
+# Simulation parameters (from optimized sport params)
 N_SIMULATIONS <- 10000                # Number of Monte Carlo iterations
-DECAY_LAMBDA <- 0.002                 # Exponential decay rate (0.002 = 50% weight after 1 year)
-SD_SCALE_FACTOR <- 0.77               # Multiply all SDs (lower = favorites win more)
-SD_MIN <- 4                           # Minimum SD
-SD_MAX <- 16                          # Maximum SD
+DECAY_LAMBDA <- DEFAULT_PARAMS$decay_lambda
+SD_SCALE_FACTOR <- DEFAULT_PARAMS$sd_scale_factor
+SD_MIN <- DEFAULT_PARAMS$sd_min
+SD_MAX <- DEFAULT_PARAMS$sd_max
 
 # GAM parameters for athletes with insufficient history
-N_HISTORY_REQUIRED <- 10              # Target number of historical races per athlete
-GAM_FILL_WEIGHT_FACTOR <- 0.25        # Weight multiplier for GAM-filled history slots
+N_HISTORY_REQUIRED <- DEFAULT_PARAMS$n_history_required
+GAM_FILL_WEIGHT_FACTOR <- DEFAULT_PARAMS$gam_fill_weight_factor
 
 # Position thresholds
 POSITION_THRESHOLDS <- c(1, 3, 5, 10, 30)  # Win, Podium, Top-5, Top-10, Top-30
@@ -71,30 +92,60 @@ PURSUIT_DISCIPLINES <- c("Pursuit")
 MASS_START_DISCIPLINES <- c("Mass Start")
 RELAY_DISCIPLINES <- c("Relay", "Mixed Relay", "Single Mixed Relay")
 
-# Relay variance parameters
-RELAY_SD_SCALE_FACTOR <- 0.8
-RELAY_SD_MIN <- 3
-RELAY_SD_MAX <- 12
+# Relay variance parameters (from optimized team event params)
+RELAY_SD_SCALE_FACTOR <- RELAY_TEAM_PARAMS$sd_scale_factor
+RELAY_SD_MIN <- RELAY_TEAM_PARAMS$sd_min
+RELAY_SD_MAX <- RELAY_TEAM_PARAMS$sd_max
 
 # ============================================================================
 # LOGGING SETUP
 # ============================================================================
 
-log_dir <- "~/ski/elo/python/biathlon/polars/excel365/race-picks-simulation"
-if (!dir.exists(log_dir)) {
-  dir.create(log_dir, recursive = TRUE)
+ENHANCED_LOGGING <- FALSE
+logging_utils_path <- "~/blog/daehl-e/content/post/shared/logging-utils.R"
+if (file.exists(path.expand(logging_utils_path))) {
+  tryCatch({
+    source(logging_utils_path)
+    ENHANCED_LOGGING <- TRUE
+    init_logging("biathlon", "race-picks")
+    log_config(list(
+      TEST_MODE = TEST_MODE,
+      N_HISTORY_REQUIRED = N_HISTORY_REQUIRED,
+      N_SIMULATIONS = N_SIMULATIONS,
+      DECAY_LAMBDA = DECAY_LAMBDA,
+      SD_SCALE_FACTOR = SD_SCALE_FACTOR,
+      SD_MIN = SD_MIN,
+      SD_MAX = SD_MAX,
+      RELAY_SD_SCALE_FACTOR = RELAY_SD_SCALE_FACTOR,
+      RELAY_SD_MIN = RELAY_SD_MIN,
+      RELAY_SD_MAX = RELAY_SD_MAX,
+      GAM_FILL_WEIGHT_FACTOR = GAM_FILL_WEIGHT_FACTOR
+    ))
+  }, error = function(e) {
+    ENHANCED_LOGGING <- FALSE
+  })
 }
 
-log_threshold(DEBUG)
-log_appender(appender_file(file.path(log_dir, "simulation.log")))
+if (!ENHANCED_LOGGING) {
+  log_dir <- "~/ski/elo/python/biathlon/polars/excel365/race-picks-simulation"
+  if (!dir.exists(log_dir)) {
+    dir.create(log_dir, recursive = TRUE)
+  }
+
+  log_threshold(DEBUG)
+  log_appender(appender_file(file.path(log_dir, "simulation.log")))
+}
+
 log_info("=== BIATHLON RACE-PICKS-SIMULATION.R STARTED ===")
 log_info(paste("TEST_MODE:", TEST_MODE))
+log_info(paste("Enhanced logging:", ENHANCED_LOGGING))
 
 # ============================================================================
 # DATA LOADING
 # ============================================================================
 
 log_info("Loading data files...")
+if (ENHANCED_LOGGING) phase_start("Load Race Schedule")
 
 base_path <- "~/ski/elo/python/biathlon/polars/excel365"
 
@@ -161,6 +212,10 @@ if(!has_individual && !has_relay) {
 
 log_info(paste("Relays found - Men:", nrow(men_relays), "| Ladies:", nrow(ladies_relays),
                "| Mixed:", nrow(mixed_relays), "| Single Mixed:", nrow(single_mixed_relays)))
+if (ENHANCED_LOGGING) {
+  phase_end("Load Race Schedule", sprintf("%d races for today", nrow(today_races)))
+  phase_start("Load Chronological Data")
+}
 
 # Separate by gender
 men_races <- individual_races %>% filter(Sex == "M")
@@ -188,6 +243,15 @@ ladies_chrono <- tryCatch({
   log_error(paste("Failed to load ladies_chrono.csv:", e$message))
   data.frame()
 })
+
+if (ENHANCED_LOGGING) {
+  if (nrow(men_chrono) > 0) {
+    log_data_quality(men_chrono, "Men's Chrono", c("ID", "Date", "RaceType", "Points"))
+  }
+  if (nrow(ladies_chrono) > 0) {
+    log_data_quality(ladies_chrono, "Ladies' Chrono", c("ID", "Date", "RaceType", "Points"))
+  }
+}
 
 # Load startlists with validation
 men_startlist <- tryCatch({
@@ -293,6 +357,30 @@ single_mixed_relay_startlist <- tryCatch({
   log_info(paste("No single mixed relay startlist:", e$message))
   data.frame()
 })
+
+if (ENHANCED_LOGGING) {
+  phase_end("Load Chronological Data")
+  phase_start("Load Startlists")
+  if (nrow(men_startlist) > 0) {
+    log_data_quality(men_startlist, "Men's Individual Startlist", c("ID", "Skier", "Nation"))
+  }
+  if (nrow(ladies_startlist) > 0) {
+    log_data_quality(ladies_startlist, "Ladies' Individual Startlist", c("ID", "Skier", "Nation"))
+  }
+  if (nrow(men_relay_startlist) > 0) {
+    log_data_quality(men_relay_startlist, "Men's Relay Startlist", c("Nation"))
+  }
+  if (nrow(ladies_relay_startlist) > 0) {
+    log_data_quality(ladies_relay_startlist, "Ladies' Relay Startlist", c("Nation"))
+  }
+  if (nrow(mixed_relay_startlist) > 0) {
+    log_data_quality(mixed_relay_startlist, "Mixed Relay Startlist", c("Nation"))
+  }
+  if (nrow(single_mixed_relay_startlist) > 0) {
+    log_data_quality(single_mixed_relay_startlist, "Single Mixed Relay Startlist", c("Nation"))
+  }
+  phase_end("Load Startlists")
+}
 
 # Load relay chronological data
 men_relay_chrono <- tryCatch({
@@ -966,6 +1054,7 @@ log_info(paste("Trained", sum(!sapply(ladies_gam_models, is.null)), "ladies' GAM
 # ============================================================================
 
 log_info("=== INDIVIDUAL RACE SIMULATION ===")
+if (ENHANCED_LOGGING) phase_start("Individual Race Simulation")
 
 individual_results <- list()
 
@@ -1019,6 +1108,10 @@ for (gender in c("men", "ladies")) {
     }
 
     log_info(paste("Athletes in startlist:", nrow(race_startlist)))
+    if (ENHANCED_LOGGING) {
+      city <- if ("City" %in% names(race)) race$City else "Unknown"
+      log_race_start(i, nrow(races_df), gender, race_type, city, nrow(race_startlist))
+    }
 
     # Get GAM model for this race type
     model_info <- gam_models[[race_type]]
@@ -1028,6 +1121,9 @@ for (gender in c("men", "ladies")) {
 
     for (j in 1:nrow(race_startlist)) {
       athlete_id <- race_startlist$ID[j]
+      if (ENHANCED_LOGGING) {
+        log_progress(j, nrow(race_startlist), "Building distributions", every = 20)
+      }
 
       # Get GAM prediction for this athlete
       gam_prediction <- NULL
@@ -1063,6 +1159,10 @@ for (gender in c("men", "ladies")) {
       athlete_distributions[[as.character(athlete_id)]] <- dist
     }
 
+    if (ENHANCED_LOGGING) {
+      log_distribution_stats(athlete_distributions, sprintf("%s %s", gender, race_type))
+    }
+
     # Run Monte Carlo simulation
     log_info(paste("Running", N_SIMULATIONS, "Monte Carlo simulations"))
     race_results <- simulate_race_positions(athlete_distributions)
@@ -1089,6 +1189,11 @@ for (gender in c("men", "ladies")) {
              starts_with("prob_top_")) %>%
       arrange(desc(prob_top_1))
 
+    if (ENHANCED_LOGGING) {
+      log_race_results(race_results, race_type)
+      validate_probabilities(race_results)
+    }
+
     # Store results
     race_key <- paste(gender, race_type, sep = "_")
     individual_results[[race_key]] <- list(
@@ -1104,6 +1209,10 @@ for (gender in c("men", "ladies")) {
   }
 
   log_info(paste(gender, "simulation complete.", length(individual_results), "total races processed"))
+}
+if (ENHANCED_LOGGING) {
+  phase_end("Individual Race Simulation", sprintf("%d races", length(individual_results)))
+  phase_start("Relay Simulation")
 }
 
 # ============================================================================
@@ -1122,6 +1231,9 @@ if (nrow(men_relays) > 0 && nrow(men_relay_startlist) > 0) {
 
   for (i in 1:nrow(men_relay_startlist)) {
     nation <- men_relay_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(men_relay_startlist), "Building relay teams", every = 5)
+    }
 
     dist <- build_relay_team_distribution(
       nation = nation,
@@ -1131,6 +1243,10 @@ if (nrow(men_relays) > 0 && nrow(men_relay_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Men Relay")
   }
 
   relay_sim_results <- simulate_relay_positions(team_distributions)
@@ -1146,6 +1262,11 @@ if (nrow(men_relays) > 0 && nrow(men_relay_startlist) > 0) {
     predictions = relay_sim_results
   )
 
+  if (ENHANCED_LOGGING) {
+    log_validation("Men Relay probability sum", abs(sum(relay_sim_results$prob_top_1, na.rm = TRUE) - 1) < 0.05,
+                   sprintf("%.3f", sum(relay_sim_results$prob_top_1, na.rm = TRUE)))
+  }
+
   log_info(paste("Men's Relay complete - Top 3:"))
   print(head(relay_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
 }
@@ -1158,6 +1279,9 @@ if (nrow(ladies_relays) > 0 && nrow(ladies_relay_startlist) > 0) {
 
   for (i in 1:nrow(ladies_relay_startlist)) {
     nation <- ladies_relay_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(ladies_relay_startlist), "Building relay teams", every = 5)
+    }
 
     dist <- build_relay_team_distribution(
       nation = nation,
@@ -1167,6 +1291,10 @@ if (nrow(ladies_relays) > 0 && nrow(ladies_relay_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Ladies Relay")
   }
 
   relay_sim_results <- simulate_relay_positions(team_distributions)
@@ -1181,6 +1309,11 @@ if (nrow(ladies_relays) > 0 && nrow(ladies_relay_startlist) > 0) {
     predictions = relay_sim_results
   )
 
+  if (ENHANCED_LOGGING) {
+    log_validation("Ladies Relay probability sum", abs(sum(relay_sim_results$prob_top_1, na.rm = TRUE) - 1) < 0.05,
+                   sprintf("%.3f", sum(relay_sim_results$prob_top_1, na.rm = TRUE)))
+  }
+
   log_info(paste("Ladies' Relay complete - Top 3:"))
   print(head(relay_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
 }
@@ -1193,6 +1326,9 @@ if (nrow(mixed_relays) > 0 && nrow(mixed_relay_startlist) > 0) {
 
   for (i in 1:nrow(mixed_relay_startlist)) {
     nation <- mixed_relay_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(mixed_relay_startlist), "Building relay teams", every = 5)
+    }
 
     dist <- build_relay_team_distribution(
       nation = nation,
@@ -1202,6 +1338,10 @@ if (nrow(mixed_relays) > 0 && nrow(mixed_relay_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Mixed Relay")
   }
 
   relay_sim_results <- simulate_relay_positions(team_distributions)
@@ -1216,6 +1356,11 @@ if (nrow(mixed_relays) > 0 && nrow(mixed_relay_startlist) > 0) {
     predictions = relay_sim_results
   )
 
+  if (ENHANCED_LOGGING) {
+    log_validation("Mixed Relay probability sum", abs(sum(relay_sim_results$prob_top_1, na.rm = TRUE) - 1) < 0.05,
+                   sprintf("%.3f", sum(relay_sim_results$prob_top_1, na.rm = TRUE)))
+  }
+
   log_info(paste("Mixed Relay complete - Top 3:"))
   print(head(relay_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
 }
@@ -1228,6 +1373,9 @@ if (nrow(single_mixed_relays) > 0 && nrow(single_mixed_relay_startlist) > 0) {
 
   for (i in 1:nrow(single_mixed_relay_startlist)) {
     nation <- single_mixed_relay_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(single_mixed_relay_startlist), "Building relay teams", every = 5)
+    }
 
     dist <- build_relay_team_distribution(
       nation = nation,
@@ -1237,6 +1385,10 @@ if (nrow(single_mixed_relays) > 0 && nrow(single_mixed_relay_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Single Mixed Relay")
   }
 
   relay_sim_results <- simulate_relay_positions(team_distributions)
@@ -1251,11 +1403,20 @@ if (nrow(single_mixed_relays) > 0 && nrow(single_mixed_relay_startlist) > 0) {
     predictions = relay_sim_results
   )
 
+  if (ENHANCED_LOGGING) {
+    log_validation("Single Mixed Relay probability sum", abs(sum(relay_sim_results$prob_top_1, na.rm = TRUE) - 1) < 0.05,
+                   sprintf("%.3f", sum(relay_sim_results$prob_top_1, na.rm = TRUE)))
+  }
+
   log_info(paste("Single Mixed Relay complete - Top 3:"))
   print(head(relay_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
 }
 
 log_info(paste("Relay simulation complete.", length(relay_results), "relay races processed"))
+if (ENHANCED_LOGGING) {
+  phase_end("Relay Simulation", sprintf("%d races", length(relay_results)))
+  phase_start("Output Generation")
+}
 
 # ============================================================================
 # OUTPUT: GENERATE EXCEL FILES
@@ -1311,6 +1472,7 @@ format_individual_results <- function(results_list) {
 }
 
 # Generate output files
+files_saved <- character(0)
 if (length(individual_results) > 0) {
   individual_formatted <- format_individual_results(individual_results)
 
@@ -1322,12 +1484,14 @@ if (length(individual_results) > 0) {
     men_file <- file.path(output_dir, "men_position_probabilities.xlsx")
     write.xlsx(men_individual, men_file)
     log_info(paste("Saved men's predictions to", men_file))
+    files_saved <- c(files_saved, men_file)
   }
 
   if (length(ladies_individual) > 0) {
     ladies_file <- file.path(output_dir, "ladies_position_probabilities.xlsx")
     write.xlsx(ladies_individual, ladies_file)
     log_info(paste("Saved ladies' predictions to", ladies_file))
+    files_saved <- c(files_saved, ladies_file)
   }
 }
 
@@ -1370,6 +1534,7 @@ if (length(relay_results) > 0) {
       men_relay_file <- file.path(output_dir, "men_relay_position_probabilities.xlsx")
       write.xlsx(list("Men Relay" = men_relay_data), men_relay_file)
       log_info(paste("Saved men's relay predictions to", men_relay_file))
+      files_saved <- c(files_saved, men_relay_file)
     }
   }
 
@@ -1380,6 +1545,7 @@ if (length(relay_results) > 0) {
       ladies_relay_file <- file.path(output_dir, "ladies_relay_position_probabilities.xlsx")
       write.xlsx(list("Ladies Relay" = ladies_relay_data), ladies_relay_file)
       log_info(paste("Saved ladies' relay predictions to", ladies_relay_file))
+      files_saved <- c(files_saved, ladies_relay_file)
     }
   }
 
@@ -1388,6 +1554,7 @@ if (length(relay_results) > 0) {
     mixed_relay_file <- file.path(output_dir, "mixed_relay_position_probabilities.xlsx")
     write.xlsx(list("Mixed Relay" = relay_formatted[["mixed_relay"]]), mixed_relay_file)
     log_info(paste("Saved mixed relay predictions to", mixed_relay_file))
+    files_saved <- c(files_saved, mixed_relay_file)
   }
 
   # Save single mixed relay
@@ -1395,6 +1562,7 @@ if (length(relay_results) > 0) {
     single_mixed_relay_file <- file.path(output_dir, "single_mixed_relay_position_probabilities.xlsx")
     write.xlsx(list("Single Mixed Relay" = relay_formatted[["single_mixed_relay"]]), single_mixed_relay_file)
     log_info(paste("Saved single mixed relay predictions to", single_mixed_relay_file))
+    files_saved <- c(files_saved, single_mixed_relay_file)
   }
 }
 
@@ -1425,5 +1593,13 @@ if (length(relay_results) > 0) {
 }
 
 cat(paste("\nOutput directory:", output_dir, "\n"))
+
+if (ENHANCED_LOGGING) {
+  phase_end("Output Generation")
+  log_script_complete(
+    races_processed = length(individual_results) + length(relay_results),
+    files_saved = files_saved
+  )
+}
 
 log_info("=== BIATHLON RACE-PICKS-SIMULATION.R COMPLETE ===")

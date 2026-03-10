@@ -603,13 +603,56 @@ log_tracer_data_load <- function(athlete_history, gender) {
 
   if (nrow(athlete_history) > 0) {
     most_recent <- athlete_history[1, ]
-    log_info(sprintf("  Most recent: %s %s (%s place, %s pts)",
-                     most_recent$Date, most_recent$City,
+
+    # Calculate points using get_points if available, otherwise use Place directly
+    points_str <- tryCatch({
+      if (exists("get_points") && exists("wc_points")) {
+        sprintf("%d pts", round(get_points(most_recent$Place, wc_points), 0))
+      } else if ("points" %in% names(most_recent)) {
+        sprintf("%d pts", round(most_recent$points, 0))
+      } else {
+        ""
+      }
+    }, error = function(e) "")
+
+    # Build log message
+    city_str <- if("City" %in% names(most_recent)) most_recent$City else "Unknown"
+    log_info(sprintf("  Most recent: %s %s (%s place%s)",
+                     most_recent$Date, city_str,
                      ordinal(most_recent$Place),
-                     round(get_points(most_recent$Place, wc_points), 0)))
+                     if(nchar(points_str) > 0) paste0(", ", points_str) else ""))
 
     date_range <- range(athlete_history$Date, na.rm = TRUE)
     log_info(sprintf("  Date range: %s to %s", date_range[1], date_range[2]))
+
+    # Log race type breakdown if available
+    if ("Distance" %in% names(athlete_history) && "Technique" %in% names(athlete_history)) {
+      race_types <- paste(athlete_history$Distance, athlete_history$Technique)
+      type_counts <- table(race_types)
+      top_types <- sort(type_counts, decreasing = TRUE)[1:min(3, length(type_counts))]
+      log_info(sprintf("  Race types: %s",
+                       paste(names(top_types), "(", top_types, ")", collapse = ", ")))
+    }
+
+    # Log average performance if points available
+    if ("points" %in% names(athlete_history)) {
+      log_info(sprintf("  Performance: mean=%.1f pts, best=%d pts, recent trend=%s",
+                       mean(athlete_history$points, na.rm = TRUE),
+                       max(athlete_history$points, na.rm = TRUE),
+                       if(nrow(athlete_history) >= 3) {
+                         recent_mean <- mean(head(athlete_history$points, 3), na.rm = TRUE)
+                         older_mean <- mean(tail(athlete_history$points, -3), na.rm = TRUE)
+                         if(is.na(older_mean) || length(tail(athlete_history$points, -3)) == 0) {
+                           "N/A"
+                         } else if(recent_mean > older_mean * 1.1) {
+                           "improving"
+                         } else if(recent_mean < older_mean * 0.9) {
+                           "declining"
+                         } else {
+                           "stable"
+                         }
+                       } else "N/A"))
+    }
   }
 }
 

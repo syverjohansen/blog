@@ -43,21 +43,42 @@ load_env <- function(env_path = "~/ski/elo/.env") {
 load_env()
 TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 
-# Simulation parameters
+# ===== LOAD SPORT-SPECIFIC PARAMETERS =====
+# Source optimized parameters from sport_params.R
+# These values are calibrated via param-optimizer.R using historical backtesting
+sport_params_path <- "~/blog/daehl-e/content/post/shared/sport_params.R"
+if (file.exists(path.expand(sport_params_path))) {
+  source(sport_params_path)
+  DEFAULT_PARAMS <- get_sport_params("nordic-combined")
+  TEAM_EVENT_PARAMS <- get_sport_params("nordic-combined", event_type = "Team")
+} else {
+  # Fallback to hardcoded defaults if sport_params.R not available
+  DEFAULT_PARAMS <- list(
+    decay_lambda = 0.002,
+    sd_scale_factor = 0.77,
+    sd_min = 4,
+    sd_max = 16,
+    n_history_required = 10,
+    gam_fill_weight_factor = 0.25
+  )
+  TEAM_EVENT_PARAMS <- list(sd_scale_factor = 0.8, sd_min = 3, sd_max = 12)
+}
+
+# Simulation parameters (from optimized sport params)
 N_SIMULATIONS <- 10000                # Number of Monte Carlo iterations
-DECAY_LAMBDA <- 0.002                 # Exponential decay rate (0.002 = 50% weight after 1 year)
-SD_SCALE_FACTOR <- 0.77               # Multiply all SDs (lower = favorites win more)
-SD_MIN <- 4                           # Minimum SD
-SD_MAX <- 16                          # Maximum SD
+DECAY_LAMBDA <- DEFAULT_PARAMS$decay_lambda
+SD_SCALE_FACTOR <- DEFAULT_PARAMS$sd_scale_factor
+SD_MIN <- DEFAULT_PARAMS$sd_min
+SD_MAX <- DEFAULT_PARAMS$sd_max
 
 # GAM parameters for athletes with insufficient history
-N_HISTORY_REQUIRED <- 10              # Target number of historical races per athlete
-GAM_FILL_WEIGHT_FACTOR <- 0.25        # Weight multiplier for GAM-filled history slots
+N_HISTORY_REQUIRED <- DEFAULT_PARAMS$n_history_required
+GAM_FILL_WEIGHT_FACTOR <- DEFAULT_PARAMS$gam_fill_weight_factor
 
-# Team variance parameters
-TEAM_SD_SCALE_FACTOR <- 0.8
-TEAM_SD_MIN <- 3
-TEAM_SD_MAX <- 12
+# Team variance parameters (from optimized team event params)
+TEAM_SD_SCALE_FACTOR <- TEAM_EVENT_PARAMS$sd_scale_factor
+TEAM_SD_MIN <- TEAM_EVENT_PARAMS$sd_min
+TEAM_SD_MAX <- TEAM_EVENT_PARAMS$sd_max
 
 # Position thresholds
 POSITION_THRESHOLDS <- c(1, 3, 5, 10, 30)  # Win, Podium, Top-5, Top-10, Top-30
@@ -77,21 +98,51 @@ TEAM_DISCIPLINES <- c("Team", "Team Sprint", "Mixed Team", "Mixed Team Sprint")
 # LOGGING SETUP
 # ============================================================================
 
-log_dir <- "~/ski/elo/python/nordic-combined/polars/excel365/race-picks-simulation"
-if (!dir.exists(log_dir)) {
-  dir.create(log_dir, recursive = TRUE)
+ENHANCED_LOGGING <- FALSE
+logging_utils_path <- "~/blog/daehl-e/content/post/shared/logging-utils.R"
+if (file.exists(path.expand(logging_utils_path))) {
+  tryCatch({
+    source(logging_utils_path)
+    ENHANCED_LOGGING <- TRUE
+    init_logging("nordic-combined", "race-picks")
+    log_config(list(
+      TEST_MODE = TEST_MODE,
+      N_HISTORY_REQUIRED = N_HISTORY_REQUIRED,
+      N_SIMULATIONS = N_SIMULATIONS,
+      DECAY_LAMBDA = DECAY_LAMBDA,
+      SD_SCALE_FACTOR = SD_SCALE_FACTOR,
+      SD_MIN = SD_MIN,
+      SD_MAX = SD_MAX,
+      TEAM_SD_SCALE_FACTOR = TEAM_SD_SCALE_FACTOR,
+      TEAM_SD_MIN = TEAM_SD_MIN,
+      TEAM_SD_MAX = TEAM_SD_MAX,
+      GAM_FILL_WEIGHT_FACTOR = GAM_FILL_WEIGHT_FACTOR
+    ))
+  }, error = function(e) {
+    ENHANCED_LOGGING <- FALSE
+  })
 }
 
-log_threshold(DEBUG)
-log_appender(appender_file(file.path(log_dir, "simulation.log")))
+if (!ENHANCED_LOGGING) {
+  log_dir <- "~/ski/elo/python/nordic-combined/polars/excel365/race-picks-simulation"
+  if (!dir.exists(log_dir)) {
+    dir.create(log_dir, recursive = TRUE)
+  }
+
+  log_threshold(DEBUG)
+  log_appender(appender_file(file.path(log_dir, "simulation.log")))
+}
+
 log_info("=== NORDIC COMBINED RACE-PICKS-SIMULATION.R STARTED ===")
 log_info(paste("TEST_MODE:", TEST_MODE))
+log_info(paste("Enhanced logging:", ENHANCED_LOGGING))
 
 # ============================================================================
 # DATA LOADING
 # ============================================================================
 
 log_info("Loading data files...")
+if (ENHANCED_LOGGING) phase_start("Load Race Schedule")
 
 base_path <- "~/ski/elo/python/nordic-combined/polars/excel365"
 team_base_path <- "~/ski/elo/python/nordic-combined/polars/relay/excel365"
@@ -163,6 +214,10 @@ if(!has_individual && !has_team) {
 log_info(paste("Teams found - Men:", nrow(men_teams), "| Ladies:", nrow(ladies_teams),
                "| Men Sprint:", nrow(men_team_sprint), "| Ladies Sprint:", nrow(ladies_team_sprint),
                "| Mixed:", nrow(mixed_teams), "| Mixed Sprint:", nrow(mixed_team_sprint)))
+if (ENHANCED_LOGGING) {
+  phase_end("Load Race Schedule", sprintf("%d races for today", nrow(today_races)))
+  phase_start("Load Chronological Data")
+}
 
 # Separate individual races by gender
 men_races <- individual_races %>% filter(Sex == "M")
@@ -190,6 +245,15 @@ ladies_chrono <- tryCatch({
   log_error(paste("Failed to load ladies_chrono:", e$message))
   data.frame()
 })
+
+if (ENHANCED_LOGGING) {
+  if (nrow(men_chrono) > 0) {
+    log_data_quality(men_chrono, "Men's Chrono", c("ID", "Date", "RaceType", "Points"))
+  }
+  if (nrow(ladies_chrono) > 0) {
+    log_data_quality(ladies_chrono, "Ladies' Chrono", c("ID", "Date", "RaceType", "Points"))
+  }
+}
 
 # Load startlists with validation
 men_startlist <- tryCatch({
@@ -312,6 +376,36 @@ mixed_team_sprint_startlist <- tryCatch({
   log_info(paste("No mixed team sprint startlist:", e$message))
   data.frame()
 })
+
+if (ENHANCED_LOGGING) {
+  phase_end("Load Chronological Data")
+  phase_start("Load Startlists")
+  if (nrow(men_startlist) > 0) {
+    log_data_quality(men_startlist, "Men's Individual Startlist", c("ID", "Skier", "Nation"))
+  }
+  if (nrow(ladies_startlist) > 0) {
+    log_data_quality(ladies_startlist, "Ladies' Individual Startlist", c("ID", "Skier", "Nation"))
+  }
+  if (nrow(men_team_startlist) > 0) {
+    log_data_quality(men_team_startlist, "Men's Team Startlist", c("Nation"))
+  }
+  if (nrow(ladies_team_startlist) > 0) {
+    log_data_quality(ladies_team_startlist, "Ladies' Team Startlist", c("Nation"))
+  }
+  if (nrow(men_team_sprint_startlist) > 0) {
+    log_data_quality(men_team_sprint_startlist, "Men's Team Sprint Startlist", c("Nation"))
+  }
+  if (nrow(ladies_team_sprint_startlist) > 0) {
+    log_data_quality(ladies_team_sprint_startlist, "Ladies' Team Sprint Startlist", c("Nation"))
+  }
+  if (nrow(mixed_team_startlist) > 0) {
+    log_data_quality(mixed_team_startlist, "Mixed Team Startlist", c("Nation"))
+  }
+  if (nrow(mixed_team_sprint_startlist) > 0) {
+    log_data_quality(mixed_team_sprint_startlist, "Mixed Team Sprint Startlist", c("Nation"))
+  }
+  phase_end("Load Startlists")
+}
 
 # Load team chronological data
 men_team_chrono <- tryCatch({
@@ -925,6 +1019,7 @@ log_info(paste("Trained", sum(!sapply(ladies_gam_models, is.null)), "ladies' GAM
 # ============================================================================
 
 log_info("=== INDIVIDUAL RACE SIMULATION ===")
+if (ENHANCED_LOGGING) phase_start("Individual Race Simulation")
 
 individual_results <- list()
 
@@ -976,6 +1071,10 @@ for (gender in c("men", "ladies")) {
     }
 
     log_info(paste("Athletes in startlist:", nrow(race_startlist)))
+    if (ENHANCED_LOGGING) {
+      city <- if ("City" %in% names(race)) race$City else "Unknown"
+      log_race_start(i, nrow(races_df), gender, race_type, city, nrow(race_startlist))
+    }
 
     # Get GAM model for this race type
     model_info <- gam_models[[race_type]]
@@ -984,6 +1083,9 @@ for (gender in c("men", "ladies")) {
 
     for (j in 1:nrow(race_startlist)) {
       athlete_id <- race_startlist$ID[j]
+      if (ENHANCED_LOGGING) {
+        log_progress(j, nrow(race_startlist), "Building distributions", every = 20)
+      }
 
       # Get GAM prediction for this athlete
       gam_prediction <- NULL
@@ -1019,6 +1121,10 @@ for (gender in c("men", "ladies")) {
       athlete_distributions[[as.character(athlete_id)]] <- dist
     }
 
+    if (ENHANCED_LOGGING) {
+      log_distribution_stats(athlete_distributions, sprintf("%s %s", gender, race_type))
+    }
+
     log_info(paste("Running", N_SIMULATIONS, "Monte Carlo simulations"))
     race_results <- simulate_race_positions(athlete_distributions)
 
@@ -1042,6 +1148,11 @@ for (gender in c("men", "ladies")) {
              starts_with("prob_top_")) %>%
       arrange(desc(prob_top_1))
 
+    if (ENHANCED_LOGGING) {
+      log_race_results(race_results, race_type)
+      validate_probabilities(race_results)
+    }
+
     race_key <- paste(gender, race_type, sep = "_")
     individual_results[[race_key]] <- list(
       race_info = race,
@@ -1056,6 +1167,10 @@ for (gender in c("men", "ladies")) {
   }
 
   log_info(paste(gender, "simulation complete.", length(individual_results), "total races processed"))
+}
+if (ENHANCED_LOGGING) {
+  phase_end("Individual Race Simulation", sprintf("%d races", length(individual_results)))
+  phase_start("Team Simulation")
 }
 
 # ============================================================================
@@ -1074,6 +1189,9 @@ if (nrow(men_teams) > 0 && nrow(men_team_startlist) > 0) {
 
   for (i in 1:nrow(men_team_startlist)) {
     nation <- men_team_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(men_team_startlist), "Building team distributions", every = 5)
+    }
 
     dist <- build_team_distribution(
       nation = nation,
@@ -1083,6 +1201,10 @@ if (nrow(men_teams) > 0 && nrow(men_team_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Men Team")
   }
 
   team_sim_results <- simulate_team_positions(team_distributions)
@@ -1097,6 +1219,11 @@ if (nrow(men_teams) > 0 && nrow(men_team_startlist) > 0) {
     predictions = team_sim_results
   )
 
+  if (ENHANCED_LOGGING) {
+    log_validation("Men Team probability sum", abs(sum(team_sim_results$prob_top_1, na.rm = TRUE) - 1) < 0.05,
+                   sprintf("%.3f", sum(team_sim_results$prob_top_1, na.rm = TRUE)))
+  }
+
   log_info(paste("Men's Team complete - Top 3:"))
   print(head(team_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
 }
@@ -1109,6 +1236,9 @@ if (nrow(ladies_teams) > 0 && nrow(ladies_team_startlist) > 0) {
 
   for (i in 1:nrow(ladies_team_startlist)) {
     nation <- ladies_team_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(ladies_team_startlist), "Building team distributions", every = 5)
+    }
 
     dist <- build_team_distribution(
       nation = nation,
@@ -1118,6 +1248,10 @@ if (nrow(ladies_teams) > 0 && nrow(ladies_team_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Ladies Team")
   }
 
   team_sim_results <- simulate_team_positions(team_distributions)
@@ -1132,6 +1266,11 @@ if (nrow(ladies_teams) > 0 && nrow(ladies_team_startlist) > 0) {
     predictions = team_sim_results
   )
 
+  if (ENHANCED_LOGGING) {
+    log_validation("Ladies Team probability sum", abs(sum(team_sim_results$prob_top_1, na.rm = TRUE) - 1) < 0.05,
+                   sprintf("%.3f", sum(team_sim_results$prob_top_1, na.rm = TRUE)))
+  }
+
   log_info(paste("Ladies' Team complete - Top 3:"))
   print(head(team_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
 }
@@ -1144,6 +1283,9 @@ if (nrow(men_team_sprint) > 0 && nrow(men_team_sprint_startlist) > 0) {
 
   for (i in 1:nrow(men_team_sprint_startlist)) {
     nation <- men_team_sprint_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(men_team_sprint_startlist), "Building team distributions", every = 5)
+    }
 
     dist <- build_team_distribution(
       nation = nation,
@@ -1153,6 +1295,10 @@ if (nrow(men_team_sprint) > 0 && nrow(men_team_sprint_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Men Team Sprint")
   }
 
   team_sim_results <- simulate_team_positions(team_distributions)
@@ -1167,6 +1313,11 @@ if (nrow(men_team_sprint) > 0 && nrow(men_team_sprint_startlist) > 0) {
     predictions = team_sim_results
   )
 
+  if (ENHANCED_LOGGING) {
+    log_validation("Men Team Sprint probability sum", abs(sum(team_sim_results$prob_top_1, na.rm = TRUE) - 1) < 0.05,
+                   sprintf("%.3f", sum(team_sim_results$prob_top_1, na.rm = TRUE)))
+  }
+
   log_info(paste("Men's Team Sprint complete - Top 3:"))
   print(head(team_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
 }
@@ -1179,6 +1330,9 @@ if (nrow(ladies_team_sprint) > 0 && nrow(ladies_team_sprint_startlist) > 0) {
 
   for (i in 1:nrow(ladies_team_sprint_startlist)) {
     nation <- ladies_team_sprint_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(ladies_team_sprint_startlist), "Building team distributions", every = 5)
+    }
 
     dist <- build_team_distribution(
       nation = nation,
@@ -1188,6 +1342,10 @@ if (nrow(ladies_team_sprint) > 0 && nrow(ladies_team_sprint_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Ladies Team Sprint")
   }
 
   team_sim_results <- simulate_team_positions(team_distributions)
@@ -1202,6 +1360,11 @@ if (nrow(ladies_team_sprint) > 0 && nrow(ladies_team_sprint_startlist) > 0) {
     predictions = team_sim_results
   )
 
+  if (ENHANCED_LOGGING) {
+    log_validation("Ladies Team Sprint probability sum", abs(sum(team_sim_results$prob_top_1, na.rm = TRUE) - 1) < 0.05,
+                   sprintf("%.3f", sum(team_sim_results$prob_top_1, na.rm = TRUE)))
+  }
+
   log_info(paste("Ladies' Team Sprint complete - Top 3:"))
   print(head(team_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
 }
@@ -1214,6 +1377,9 @@ if (nrow(mixed_teams) > 0 && nrow(mixed_team_startlist) > 0) {
 
   for (i in 1:nrow(mixed_team_startlist)) {
     nation <- mixed_team_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(mixed_team_startlist), "Building team distributions", every = 5)
+    }
 
     dist <- build_team_distribution(
       nation = nation,
@@ -1223,6 +1389,10 @@ if (nrow(mixed_teams) > 0 && nrow(mixed_team_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Mixed Team")
   }
 
   team_sim_results <- simulate_team_positions(team_distributions)
@@ -1237,6 +1407,11 @@ if (nrow(mixed_teams) > 0 && nrow(mixed_team_startlist) > 0) {
     predictions = team_sim_results
   )
 
+  if (ENHANCED_LOGGING) {
+    log_validation("Mixed Team probability sum", abs(sum(team_sim_results$prob_top_1, na.rm = TRUE) - 1) < 0.05,
+                   sprintf("%.3f", sum(team_sim_results$prob_top_1, na.rm = TRUE)))
+  }
+
   log_info(paste("Mixed Team complete - Top 3:"))
   print(head(team_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
 }
@@ -1249,6 +1424,9 @@ if (nrow(mixed_team_sprint) > 0 && nrow(mixed_team_sprint_startlist) > 0) {
 
   for (i in 1:nrow(mixed_team_sprint_startlist)) {
     nation <- mixed_team_sprint_startlist$Nation[i]
+    if (ENHANCED_LOGGING) {
+      log_progress(i, nrow(mixed_team_sprint_startlist), "Building team distributions", every = 5)
+    }
 
     dist <- build_team_distribution(
       nation = nation,
@@ -1258,6 +1436,10 @@ if (nrow(mixed_team_sprint) > 0 && nrow(mixed_team_sprint_startlist) > 0) {
     )
 
     team_distributions[[nation]] <- dist
+  }
+
+  if (ENHANCED_LOGGING) {
+    log_distribution_stats(team_distributions, "Mixed Team Sprint")
   }
 
   team_sim_results <- simulate_team_positions(team_distributions)
@@ -1272,11 +1454,20 @@ if (nrow(mixed_team_sprint) > 0 && nrow(mixed_team_sprint_startlist) > 0) {
     predictions = team_sim_results
   )
 
+  if (ENHANCED_LOGGING) {
+    log_validation("Mixed Team Sprint probability sum", abs(sum(team_sim_results$prob_top_1, na.rm = TRUE) - 1) < 0.05,
+                   sprintf("%.3f", sum(team_sim_results$prob_top_1, na.rm = TRUE)))
+  }
+
   log_info(paste("Mixed Team Sprint complete - Top 3:"))
   print(head(team_sim_results %>% select(Nation, prob_top_1, prob_top_3), 3))
 }
 
 log_info(paste("Team simulation complete.", length(team_results), "team races processed"))
+if (ENHANCED_LOGGING) {
+  phase_end("Team Simulation", sprintf("%d races", length(team_results)))
+  phase_start("Output Generation")
+}
 
 # ============================================================================
 # OUTPUT: GENERATE EXCEL FILES
@@ -1353,6 +1544,7 @@ format_team_results <- function(results_list) {
 }
 
 # Generate individual output files
+files_saved <- character(0)
 if (length(individual_results) > 0) {
   individual_formatted <- format_individual_results(individual_results)
 
@@ -1363,12 +1555,14 @@ if (length(individual_results) > 0) {
     men_file <- file.path(output_dir, "men_position_probabilities.xlsx")
     write.xlsx(men_individual, men_file)
     log_info(paste("Saved men's predictions to", men_file))
+    files_saved <- c(files_saved, men_file)
   }
 
   if (length(ladies_individual) > 0) {
     ladies_file <- file.path(output_dir, "ladies_position_probabilities.xlsx")
     write.xlsx(ladies_individual, ladies_file)
     log_info(paste("Saved ladies' predictions to", ladies_file))
+    files_saved <- c(files_saved, ladies_file)
   }
 }
 
@@ -1383,6 +1577,7 @@ if (length(team_results) > 0) {
       men_team_file <- file.path(output_dir, "men_team_position_probabilities.xlsx")
       write.xlsx(list("Men Team" = men_team_data), men_team_file)
       log_info(paste("Saved men's team predictions to", men_team_file))
+      files_saved <- c(files_saved, men_team_file)
     }
   }
 
@@ -1392,6 +1587,7 @@ if (length(team_results) > 0) {
       ladies_team_file <- file.path(output_dir, "ladies_team_position_probabilities.xlsx")
       write.xlsx(list("Ladies Team" = ladies_team_data), ladies_team_file)
       log_info(paste("Saved ladies' team predictions to", ladies_team_file))
+      files_saved <- c(files_saved, ladies_team_file)
     }
   }
 
@@ -1402,6 +1598,7 @@ if (length(team_results) > 0) {
       men_ts_file <- file.path(output_dir, "men_team_sprint_position_probabilities.xlsx")
       write.xlsx(list("Men Team Sprint" = men_ts_data), men_ts_file)
       log_info(paste("Saved men's team sprint predictions to", men_ts_file))
+      files_saved <- c(files_saved, men_ts_file)
     }
   }
 
@@ -1411,6 +1608,7 @@ if (length(team_results) > 0) {
       ladies_ts_file <- file.path(output_dir, "ladies_team_sprint_position_probabilities.xlsx")
       write.xlsx(list("Ladies Team Sprint" = ladies_ts_data), ladies_ts_file)
       log_info(paste("Saved ladies' team sprint predictions to", ladies_ts_file))
+      files_saved <- c(files_saved, ladies_ts_file)
     }
   }
 
@@ -1419,6 +1617,7 @@ if (length(team_results) > 0) {
     mixed_team_file <- file.path(output_dir, "mixed_team_position_probabilities.xlsx")
     write.xlsx(list("Mixed Team" = team_formatted[["mixed_team"]]), mixed_team_file)
     log_info(paste("Saved mixed team predictions to", mixed_team_file))
+    files_saved <- c(files_saved, mixed_team_file)
   }
 
   # Mixed Team Sprint
@@ -1426,6 +1625,7 @@ if (length(team_results) > 0) {
     mixed_team_sprint_file <- file.path(output_dir, "mixed_team_sprint_position_probabilities.xlsx")
     write.xlsx(list("Mixed Team Sprint" = team_formatted[["mixed_team_sprint"]]), mixed_team_sprint_file)
     log_info(paste("Saved mixed team sprint predictions to", mixed_team_sprint_file))
+    files_saved <- c(files_saved, mixed_team_sprint_file)
   }
 }
 
@@ -1456,5 +1656,13 @@ if (length(team_results) > 0) {
 }
 
 cat(paste("\nOutput directory:", output_dir, "\n"))
+
+if (ENHANCED_LOGGING) {
+  phase_end("Output Generation")
+  log_script_complete(
+    races_processed = length(individual_results) + length(team_results),
+    files_saved = files_saved
+  )
+}
 
 log_info("=== NORDIC COMBINED RACE-PICKS-SIMULATION.R COMPLETE ===")
