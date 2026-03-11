@@ -123,6 +123,12 @@ CROSS_COUNTRY_RACE_TYPES <- list(
     filter = function(d) !d$Distance %in% c("Sprint", "Rel", "Ts") &
                          d$Technique == "F" & d$MS == 1
   ),
+  # Combined mass start - includes all techniques (C, F, P/skiathlon)
+  # Used to predict skiathlons since they're distance mass start races
+  Distance_Ms = list(
+    name = "Distance Mass Start (All)",
+    filter = function(d) !d$Distance %in% c("Sprint", "Rel", "Ts") & d$MS == 1
+  ),
   # Team events
   Relay = list(
     name = "Relay",

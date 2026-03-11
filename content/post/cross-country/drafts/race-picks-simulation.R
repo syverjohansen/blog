@@ -1643,14 +1643,16 @@ if (ENHANCED_LOGGING) {
                    key_columns = c("ID", "Date", "Place", "Pelo", "Distance", "Technique"))
 }
 
-# Add points column
+# Add points column and filter out non-race rows
+# - Place == 0: offseason ELO reset rows
+# - Distance == "0": tour/event overall standings (TdS, Nordic Opening, WC Final, etc.)
 men_chrono <- men_chrono %>%
   mutate(points = sapply(Place, function(p) get_points(p, wc_points))) %>%
-  filter(City != "Tour de Ski", Place != 0)
+  filter(Place != 0, Distance != "0")
 
 ladies_chrono <- ladies_chrono %>%
   mutate(points = sapply(Place, function(p) get_points(p, wc_points))) %>%
-  filter(City != "Tour de Ski", Place != 0)
+  filter(Place != 0, Distance != "0")
 
 # Preprocess individual chrono data for simulation
 if(PROCESS_INDIVIDUAL) {

@@ -273,36 +273,25 @@ run_full_optimization()
 
 ### From Command Line
 
-```bash
-# Run optimizer for one sport (~3 hours)
-Rscript -e '
-source("~/blog/daehl-e/content/post/optimization/param-optimizer.R")
-results <- optimize_sport("cross-country")
-save_results(results, "cross-country", "men")
-'
+**IMPORTANT: Prevent Laptop Sleep**
 
-# Run in background (recommended for long runs)
-nohup Rscript -e '
-source("~/blog/daehl-e/content/post/optimization/param-optimizer.R")
-results <- optimize_sport("cross-country")
-save_results(results, "cross-country", "men")
-' > ~/optimization_xc.log 2>&1 &
+On macOS, laptop sleep will kill background processes. Use `caffeinate -s` to keep the system awake:
+
+```bash
+# Run optimizer for one sport (~3 hours) - keeps Mac awake
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_sport("cross-country")'
+
+# Run in background with caffeinate (recommended for long runs)
+caffeinate -s nohup Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_sport("cross-country")' > ~/optimization_xc.log 2>&1 &
 
 # Check progress
-tail -f ~/optimization_xc.log
 tail -f ~/blog/daehl-e/content/post/optimization/logs/optimization_cross-country*.log
 
-# Run full optimization for one sport (saves + generates sport_params.R)
-Rscript -e '
-source("~/blog/daehl-e/content/post/optimization/param-optimizer.R")
-run_full_optimization(sports = c("cross-country"))
-'
+# Run full optimization for one sport (saves results + generates sport_params.R)
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("cross-country"))'
 
 # Run full optimization (all 5 sports, ~30 hours)
-nohup Rscript -e '
-source("~/blog/daehl-e/content/post/optimization/param-optimizer.R")
-run_full_optimization()
-' > ~/optimization_full.log 2>&1 &
+caffeinate -s nohup Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization()' > ~/optimization_full.log 2>&1 &
 ```
 
 ### How Results Get Applied

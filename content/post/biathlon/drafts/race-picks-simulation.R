@@ -358,6 +358,16 @@ single_mixed_relay_startlist <- tryCatch({
   data.frame()
 })
 
+# Filter out offseason ELO reset rows (Place == 0)
+if (nrow(men_chrono) > 0) {
+  men_chrono <- men_chrono %>% filter(Place != 0)
+  log_info(paste("Filtered men_chrono to actual races:", nrow(men_chrono), "rows"))
+}
+if (nrow(ladies_chrono) > 0) {
+  ladies_chrono <- ladies_chrono %>% filter(Place != 0)
+  log_info(paste("Filtered ladies_chrono to actual races:", nrow(ladies_chrono), "rows"))
+}
+
 if (ENHANCED_LOGGING) {
   phase_end("Load Chronological Data")
   phase_start("Load Startlists")

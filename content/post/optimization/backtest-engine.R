@@ -390,9 +390,28 @@ get_calibration_races <- function(sport, chrono_data,
                                    min_field_size = 20) {
 
   # Get unique races from chrono data
-  races <- chrono_data %>%
-    filter(Season %in% season_range) %>%
-    group_by(Date, Sex, Distance, Technique, City) %>%
+  # Include MS (mass start) column if it exists
+  group_cols <- c("Date", "Sex", "Distance", "Technique", "City")
+  if ("MS" %in% names(chrono_data)) {
+    group_cols <- c(group_cols, "MS")
+  }
+
+  # Filter out offseason/reset rows before grouping
+  filtered_data <- chrono_data %>%
+    filter(Season %in% season_range)
+
+  # Exclude offseason rows: Event = "Offseason", Distance = "0", Place = 0
+  if ("Event" %in% names(filtered_data)) {
+    filtered_data <- filtered_data %>% filter(Event != "Offseason")
+  }
+  if ("Place" %in% names(filtered_data)) {
+    filtered_data <- filtered_data %>% filter(Place > 0)
+  }
+  # Exclude Distance = "0" (offseason reset rows)
+  filtered_data <- filtered_data %>% filter(Distance != "0")
+
+  races <- filtered_data %>%
+    group_by(across(all_of(group_cols))) %>%
     summarise(
       n_competitors = n(),
       .groups = "drop"
@@ -401,12 +420,56 @@ get_calibration_races <- function(sport, chrono_data,
 
   # Apply race type filter if specified
   if (!is.null(race_type)) {
-    # This depends on sport-specific logic
-    # For now, filter by Distance or Technique if they match
-    if ("Distance" %in% names(races)) {
-      races <- races %>%
-        filter(grepl(race_type, Distance, ignore.case = TRUE) |
-               grepl(race_type, Technique, ignore.case = TRUE))
+    # Get the filter function from RACE_TYPES defined in param-grid.R
+    race_types <- get_sport_race_types(sport)
+
+    if (!is.null(race_types) && race_type %in% names(race_types)) {
+      filter_func <- race_types[[race_type]]$filter
+      if (!is.null(filter_func)) {
+        # Apply the filter function row by row
+        keep_rows <- sapply(1:nrow(races), function(i) {
+          tryCatch({
+            result <- filter_func(races[i, ])
+            # Handle tibble/data.frame results
+            if (is.data.frame(result) || is.list(result)) {
+              as.logical(result[[1]])
+            } else {
+              as.logical(result)
+            }
+          }, error = function(e) FALSE)
+        })
+        races <- races[keep_rows, ]
+      }
+    } else {
+      # Fallback: try to parse race_type string (e.g., "Sprint_C" -> Distance="Sprint", Technique="C")
+      parts <- strsplit(race_type, "_")[[1]]
+      if (length(parts) >= 2) {
+        distance_part <- parts[1]
+        technique_part <- parts[2]
+
+        if (distance_part == "Sprint") {
+          races <- races %>% filter(Distance == "Sprint")
+        } else if (distance_part == "Distance") {
+          races <- races %>% filter(!Distance %in% c("Sprint", "Rel", "Ts"))
+        }
+
+        if (technique_part == "C") {
+          races <- races %>% filter(Technique == "C")
+        } else if (technique_part == "F") {
+          races <- races %>% filter(Technique == "F")
+        }
+
+        # Check for mass start vs individual (third part)
+        if (length(parts) >= 3) {
+          if (parts[3] == "Ms") {
+            races <- races %>% filter(grepl("Ms|Mass", Distance, ignore.case = TRUE) |
+                                       grepl("Ms|Mass", Technique, ignore.case = TRUE))
+          } else if (parts[3] == "Ind") {
+            races <- races %>% filter(!grepl("Ms|Mass", Distance, ignore.case = TRUE) &
+                                       !grepl("Ms|Mass", Technique, ignore.case = TRUE))
+          }
+        }
+      }
     }
   }
 
