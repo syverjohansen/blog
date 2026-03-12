@@ -2166,7 +2166,7 @@ if(PROCESS_INDIVIDUAL) {
       # Additional distribution diagnostics
       gam_fill_counts <- sapply(athlete_distributions, function(d) d$n_gam_fill)
       adjustment_counts <- sapply(athlete_distributions, function(d) abs(d$adjustment) > 0.1)
-      log_info(sprintf("    Athletes needing GAM fill: %d (median fill: %d slots)",
+      log_info(sprintf("    Athletes needing GAM fill: %d (median fill: %.0f slots)",
                        sum(gam_fill_counts > 0), median(gam_fill_counts)))
       log_info(sprintf("    Athletes with condition adjustments: %d",
                        sum(adjustment_counts, na.rm = TRUE)))

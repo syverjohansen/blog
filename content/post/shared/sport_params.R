@@ -75,6 +75,72 @@ SPORT_PARAMS <- list(
         gam_fill_weight_factor = 0.3243
       )
     )
+  ),
+
+  "alpine" = list(
+    default = list(
+      decay_lambda = 0.002,
+      sd_scale_factor = 0.77,
+      sd_min = 4,
+      sd_max = 16,
+      n_history_required = 10,
+      gam_fill_weight_factor = 0.25
+    ),
+    race_types = list()
+  ),
+
+  "biathlon" = list(
+    default = list(
+      decay_lambda = 0.002,
+      sd_scale_factor = 0.77,
+      sd_min = 4,
+      sd_max = 16,
+      n_history_required = 10,
+      gam_fill_weight_factor = 0.25
+    ),
+    race_types = list(
+      "Relay" = list(
+        sd_scale_factor = 0.8,
+        sd_min = 3,
+        sd_max = 12
+      )
+    )
+  ),
+
+  "nordic-combined" = list(
+    default = list(
+      decay_lambda = 0.002,
+      sd_scale_factor = 0.77,
+      sd_min = 4,
+      sd_max = 16,
+      n_history_required = 10,
+      gam_fill_weight_factor = 0.25
+    ),
+    race_types = list(
+      "Team" = list(
+        sd_scale_factor = 0.8,
+        sd_min = 3,
+        sd_max = 12
+      )
+    )
+  ),
+
+  "skijump" = list(
+    default = list(
+      decay_lambda = 0.002,
+      sd_scale_factor = 0.77,
+      sd_min = 4,
+      sd_max = 16,
+      n_history_required = 10,
+      gam_fill_weight_factor = 0.25
+    ),
+    race_types = list(
+      "Team_Large" = list(
+        sd_scale_factor = 0.8,
+        sd_min = 3,
+        sd_max = 12
+      )
+    )
   )
 
 )
@@ -83,8 +149,13 @@ SPORT_PARAMS <- list(
 #'
 #' @param sport Sport name
 #' @param race_type Optional race type (uses default if NULL)
+#' @param event_type Backward-compatible alias for race_type
 #' @return List of parameters
-get_sport_params <- function(sport, race_type = NULL) {
+get_sport_params <- function(sport, race_type = NULL, event_type = NULL) {
+  if (is.null(race_type) && !is.null(event_type)) {
+    race_type <- event_type
+  }
+
   sport_config <- SPORT_PARAMS[[sport]]
   
   if (is.null(sport_config)) {

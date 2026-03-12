@@ -199,6 +199,309 @@ add_altitude_category <- function(chrono_data) {
 }
 
 # ============================================================================
+# RACE PROBABILITY FUNCTIONS
+# ============================================================================
+
+# Calculate race participation probability for a skier based on historical participation
+get_race_probability <- function(chronos, skier, race_type, technique) {
+  log_debug(paste("Calculating probability for skier:", skier))
+
+  # Get skier's first ever race date
+  skier_first_race <- chronos %>%
+    filter(Skier == skier) %>%
+    arrange(Date) %>%
+    dplyr::slice(1) %>%
+    pull(Date)
+
+  # Use 5 years ago or skier's first race, whichever is later
+  five_years_ago <- Sys.Date() - (5 * 365)
+  start_date <- if(length(skier_first_race) == 0) {
+    five_years_ago
+  } else {
+    max(five_years_ago, as.Date(skier_first_race))
+  }
+
+  # Get all matching races since start_date
+  all_races <- chronos %>%
+    filter(
+      Event != "Offseason",
+      Date >= start_date,
+      if(race_type == "Sprint") {
+        Distance == "Sprint"
+      } else {
+        Distance != "Sprint"
+      },
+      if(!is.na(technique) && technique != "") {
+        Technique == technique
+      } else {
+        TRUE
+      }
+    ) %>%
+    distinct(Date, City)
+
+  # Get this skier's participations
+  skier_races <- chronos %>%
+    filter(
+      Event != "Offseason",
+      Date >= start_date,
+      Skier == skier,
+      if(race_type == "Sprint") {
+        Distance == "Sprint"
+      } else {
+        Distance != "Sprint"
+      },
+      if(!is.na(technique) && technique != "") {
+        Technique == technique
+      } else {
+        TRUE
+      }
+    ) %>%
+    distinct(Date, City)
+
+  total_races <- nrow(all_races)
+  if(total_races == 0) {
+    return(0)
+  }
+
+  races_participated <- nrow(skier_races)
+  prob <- min(1, races_participated / total_races)
+
+  return(prob)
+}
+
+# Get additional skiers from non-config nations who raced this season
+get_additional_nation_skiers <- function(chronos, startlist, nation) {
+  current_season <- max(chronos$Season, na.rm = TRUE)
+
+  # Get all skiers from this nation in current season
+  season_skiers <- chronos %>%
+    filter(Nation == nation, Season == current_season) %>%
+    distinct(Skier) %>%
+    pull(Skier)
+
+  # Get current skiers in startlist
+  current_skiers <- startlist %>%
+    filter(Nation == nation) %>%
+    pull(Skier)
+
+  # Find missing skiers
+  missing_skiers <- setdiff(season_skiers, current_skiers)
+  return(missing_skiers)
+}
+
+# Normalize probabilities to respect nation quotas
+normalize_to_quota <- function(startlist) {
+  log_info("Normalizing probabilities to nation quotas")
+
+  startlist %>%
+    group_by(Nation) %>%
+    mutate(
+      across(
+        starts_with("Race") & ends_with("_Prob"),
+        ~{
+          vec <- as.numeric(.)
+          vec[is.na(vec)] <- 0
+
+          quota <- as.numeric(first(Quota))
+          if(is.na(quota)) quota <- 2
+
+          # Keep track of fixed ones (exactly 1)
+          fixed_ones <- vec == 1
+          n_fixed <- sum(fixed_ones)
+          result <- vec
+
+          if(n_fixed >= quota) {
+            return(ifelse(fixed_ones, 1, 0))
+          }
+
+          # For remaining values, normalize based on original probabilities
+          remaining_quota <- quota - n_fixed
+          adjustable <- !fixed_ones & vec > 0
+
+          if(any(adjustable)) {
+            adj_sum <- sum(vec[adjustable])
+            if(adj_sum > 0) {
+              scaling_factor <- remaining_quota / adj_sum
+              result[adjustable] <- vec[adjustable] * scaling_factor
+              result <- pmin(result, 1)
+            }
+          }
+          result
+        }
+      )
+    ) %>%
+    ungroup()
+}
+
+# Process race probabilities for a gender
+process_gender_probabilities <- function(startlist, chronos, races) {
+  # Add Config_Nation if not present
+  if(!"Config_Nation" %in% names(startlist)) {
+    config_nations <- c("Norway", "Sweden", "Finland", "Germany", "Switzerland", "Russia", "Italy", "France")
+    startlist$Config_Nation <- startlist$Nation %in% config_nations
+  }
+
+  # Add Quota if not present
+  if(!"Quota" %in% names(startlist)) {
+    startlist$Quota <- 4
+    startlist$Quota[startlist$Nation %in% c("Norway", "Russia")] <- 8
+    startlist$Quota[startlist$Nation %in% c("Sweden", "Finland", "Germany", "Switzerland", "Italy", "France")] <- 6
+  }
+
+  # Convert character columns to logical (handles "True"/"False" strings from Python)
+  if("In_FIS_List" %in% names(startlist) && is.character(startlist$In_FIS_List)) {
+    startlist$In_FIS_List <- tolower(startlist$In_FIS_List) == "true"
+  }
+  if("In_Config" %in% names(startlist) && is.character(startlist$In_Config)) {
+    startlist$In_Config <- tolower(startlist$In_Config) == "true"
+  }
+  if("Config_Nation" %in% names(startlist) && is.character(startlist$Config_Nation)) {
+    startlist$Config_Nation <- tolower(startlist$Config_Nation) == "true"
+  }
+
+  # Check if we have FIS startlist
+  has_fis_startlist <- FALSE
+  if("In_FIS_List" %in% names(startlist)) {
+    has_fis_startlist <- any(startlist$In_FIS_List, na.rm = TRUE)
+  }
+
+  # Handle Race1_Prob based on FIS startlist existence
+  if(has_fis_startlist) {
+    log_info("FIS startlist exists - using for Race1_Prob")
+    if(!"Race1_Prob" %in% names(startlist)) {
+      startlist$Race1_Prob <- NA_real_
+    }
+    startlist$Race1_Prob <- ifelse(startlist$In_FIS_List, 1, 0)
+  } else {
+    log_info("No FIS startlist - using In_Config for Race1_Prob")
+    if(!"Race1_Prob" %in% names(startlist)) {
+      startlist$Race1_Prob <- NA_real_
+    }
+    if("In_Config" %in% names(startlist)) {
+      startlist$Race1_Prob <- ifelse(startlist$In_Config, 1, startlist$Race1_Prob)
+    }
+  }
+
+  # Handle Config_Nation athletes not in config
+  if("Config_Nation" %in% names(startlist) && "In_Config" %in% names(startlist)) {
+    in_fis_list <- if("In_FIS_List" %in% names(startlist)) startlist$In_FIS_List else FALSE
+    config_non_included <- which(startlist$Config_Nation & !startlist$In_Config & !in_fis_list)
+
+    if(length(config_non_included) > 0) {
+      for(i in 1:nrow(races)) {
+        race_prob_col <- paste0("Race", i, "_Prob")
+        if(race_prob_col %in% names(startlist)) {
+          startlist[config_non_included, race_prob_col] <- 0
+        } else {
+          startlist[[race_prob_col]] <- NA
+          startlist[config_non_included, race_prob_col] <- 0
+        }
+      }
+      log_info(paste("Set race probabilities to 0 for", length(config_non_included),
+                     "skiers from config nations not in configuration"))
+    }
+  }
+
+  # Process each race
+  for(i in 1:nrow(races)) {
+    race_prob_col <- paste0("Race", i, "_Prob")
+
+    # Skip Race1_Prob if we have a FIS startlist and it's already set
+    if(race_prob_col == "Race1_Prob" && has_fis_startlist && race_prob_col %in% names(startlist)) {
+      log_info("Using existing Race1_Prob from FIS startlist")
+      next
+    }
+
+    # Create the column if it doesn't exist
+    if(!(race_prob_col %in% names(startlist))) {
+      startlist[[race_prob_col]] <- NA_real_
+    }
+
+    # When no FIS startlist, set In_Config athletes to probability = 1
+    if(!has_fis_startlist && "In_Config" %in% names(startlist)) {
+      config_athletes <- which(startlist$In_Config == TRUE &
+                               (is.na(startlist[[race_prob_col]]) | startlist[[race_prob_col]] != 1))
+      if(length(config_athletes) > 0) {
+        startlist[config_athletes, race_prob_col] <- 1
+        log_info(paste("Set", race_prob_col, "= 1 for", length(config_athletes), "In_Config athletes"))
+      }
+    }
+
+    # Process by nation
+    nations <- unique(startlist$Nation)
+    for(nation in nations) {
+      nation_skiers <- startlist %>% filter(Nation == nation)
+      is_config_nation <- nation_skiers$Config_Nation[1]
+      quota <- nation_skiers$Quota[1]
+
+      # Calculate probabilities for skiers without preset values
+      for(j in 1:nrow(nation_skiers)) {
+        skier <- nation_skiers$Skier[j]
+        existing_prob <- startlist[startlist$Skier == skier, race_prob_col]
+
+        # Preserve prob==1 (confirmed racing)
+        if(!is.na(existing_prob) && existing_prob == 1) next
+
+        # Preserve prob==0 for config nation not in config
+        skier_in_config <- if("In_Config" %in% names(startlist)) {
+          startlist[startlist$Skier == skier, "In_Config"]
+        } else FALSE
+        skier_config_nation <- startlist[startlist$Skier == skier, "Config_Nation"]
+
+        if(!is.na(existing_prob) && existing_prob == 0 &&
+           isTRUE(skier_config_nation) && !isTRUE(skier_in_config)) next
+
+        # Calculate probability from history
+        startlist[startlist$Skier == skier, race_prob_col] <-
+          get_race_probability(chronos, skier, races$distance[i], races$technique[i])
+      }
+
+      # For non-config nations, add additional skiers from this season
+      if(!is_config_nation) {
+        additional_skiers <- get_additional_nation_skiers(chronos, startlist, nation)
+
+        if(length(additional_skiers) > 0) {
+          col_types <- sapply(startlist, class)
+
+          additional_rows <- data.frame(
+            Skier = additional_skiers,
+            Nation = nation,
+            Config_Nation = FALSE,
+            Quota = quota,
+            stringsAsFactors = FALSE
+          )
+
+          additional_rows$Race1_Prob <- 0
+          additional_rows[[race_prob_col]] <- sapply(additional_skiers, function(skier) {
+            get_race_probability(chronos, skier, races$distance[i], races$technique[i])
+          })
+
+          # Add required columns
+          for(col in names(startlist)) {
+            if(!(col %in% names(additional_rows))) {
+              if(col_types[col] == "logical") {
+                additional_rows[[col]] <- FALSE
+              } else if(col_types[col] %in% c("numeric", "integer")) {
+                additional_rows[[col]] <- 0
+              } else {
+                additional_rows[[col]] <- NA
+              }
+            }
+          }
+
+          startlist <- bind_rows(startlist, additional_rows[names(startlist)])
+        }
+      }
+    }
+  }
+
+  # Normalize probabilities to respect quotas
+  startlist <- normalize_to_quota(startlist)
+
+  return(startlist)
+}
+
+# ============================================================================
 # RACE TYPE DEFINITIONS
 # ============================================================================
 
@@ -663,69 +966,6 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
 }
 
 # ============================================================================
-# RACE PROBABILITY CALCULATION (from weekly-picks2.R)
-# ============================================================================
-
-get_race_probability <- function(chronos, skier, race_type, technique) {
-  skier_first_race <- chronos %>%
-    filter(Skier == skier) %>%
-    arrange(Date) %>%
-    dplyr::slice(1) %>%
-    pull(Date)
-
-  five_years_ago <- Sys.Date() - (5 * 365)
-
-  start_date <- if(length(skier_first_race) == 0) {
-    five_years_ago
-  } else {
-    max(five_years_ago, as.Date(skier_first_race))
-  }
-
-  all_races <- chronos %>%
-    filter(
-      Event != "Offseason",
-      Date >= start_date,
-      if(race_type == "Sprint") {
-        Distance == "Sprint"
-      } else {
-        Distance != "Sprint"
-      },
-      if(!is.na(technique) && technique != "") {
-        Technique == technique
-      } else {
-        TRUE
-      }
-    ) %>%
-    distinct(Date, City)
-
-  skier_races <- chronos %>%
-    filter(
-      Event != "Offseason",
-      Date >= start_date,
-      Skier == skier,
-      if(race_type == "Sprint") {
-        Distance == "Sprint"
-      } else {
-        Distance != "Sprint"
-      },
-      if(!is.na(technique) && technique != "") {
-        Technique == technique
-      } else {
-        TRUE
-      }
-    ) %>%
-    distinct(Date, City)
-
-  total_races <- nrow(all_races)
-  if(total_races == 0) return(0)
-
-  races_participated <- nrow(skier_races)
-  prob <- min(1, races_participated / total_races)
-
-  return(prob)
-}
-
-# ============================================================================
 # MAIN PREDICTION FUNCTION
 # ============================================================================
 
@@ -1078,9 +1318,25 @@ ladies_startlist <- read.csv("~/ski/elo/python/ski/polars/excel365/startlist_wee
 # Read chrono data
 log_info("Reading chronological data")
 men_chrono <- read.csv("~/ski/elo/python/ski/polars/excel365/men_chrono_elevation.csv",
-                       stringsAsFactors = FALSE)
+                       stringsAsFactors = FALSE) %>%
+  mutate(Date = as.Date(Date))
 ladies_chrono <- read.csv("~/ski/elo/python/ski/polars/excel365/ladies_chrono_elevation.csv",
-                          stringsAsFactors = FALSE)
+                          stringsAsFactors = FALSE) %>%
+  mutate(Date = as.Date(Date))
+
+# Calculate race participation probabilities
+log_info("Calculating race participation probabilities")
+if (nrow(men_races) > 0) {
+  log_info("Processing men's race probabilities")
+  men_startlist <- process_gender_probabilities(men_startlist, men_chrono, men_races)
+  log_info(paste("Men's startlist now has", nrow(men_startlist), "athletes"))
+}
+
+if (nrow(ladies_races) > 0) {
+  log_info("Processing ladies' race probabilities")
+  ladies_startlist <- process_gender_probabilities(ladies_startlist, ladies_chrono, ladies_races)
+  log_info(paste("Ladies' startlist now has", nrow(ladies_startlist), "athletes"))
+}
 
 # Run predictions
 men_results <- NULL

@@ -425,8 +425,11 @@ tail -f ~/blog/daehl-e/content/post/optimization/logs/optimization_cross-country
 - [x] Update run_full_optimization() to include both genders by default
 - [x] Add caffeinate instructions to HOW_TO_RUN.md
 - [x] Allow sd_min == sd_max in validation (equivalent to fixed_sd)
-- [ ] Run full optimization for cross-country (in progress)
-- [ ] Run full optimization for other sports
+- [x] Run full optimization for cross-country (men + ladies) - COMPLETED
+- [x] Update race-picks-simulation.R to use race-type-specific params
+- [x] Update weekly-picks-simulation.R to use race-type-specific params
+- [x] Add participation probability calculation to weekly-picks-simulation.R
+- [ ] Run full optimization for other sports (alpine, biathlon, nordic-combined, skijump)
 
 **Files Created:**
 ```

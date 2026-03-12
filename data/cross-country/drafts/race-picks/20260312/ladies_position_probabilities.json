@@ -1,0 +1,615 @@
+{
+  "sheet_name": "Ladies Race 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Win",
+    "Podium",
+    "Final",
+    "Semifinal",
+    "Quarterfinal"
+  ],
+  "rows": [
+    [
+      "Kristine Stavås Skistad",
+      3207,
+      "Norway",
+      38.4,
+      77.8,
+      95.2,
+      99.6,
+      100.0
+    ],
+    [
+      "Linn Svahn",
+      3190,
+      "Sweden",
+      18.9,
+      57.4,
+      84.5,
+      97.1,
+      99.9
+    ],
+    [
+      "Jonna Sundling",
+      1486,
+      "Sweden",
+      17.2,
+      50.2,
+      81.1,
+      97.5,
+      100.0
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      "Sweden",
+      8.4,
+      30.6,
+      61.7,
+      90.6,
+      99.9
+    ],
+    [
+      "Johanna Hagström",
+      3212,
+      "Sweden",
+      4.9,
+      24.4,
+      56.1,
+      87.0,
+      99.9
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "Switzerland",
+      4.5,
+      16.2,
+      40.8,
+      75.3,
+      97.7
+    ],
+    [
+      "Laura Gimmler",
+      1495,
+      "Germany",
+      3.2,
+      12.1,
+      37.7,
+      75.4,
+      99.1
+    ],
+    [
+      "Julie Myhre",
+      1841,
+      "Norway",
+      0.9,
+      4.9,
+      13.5,
+      35.9,
+      80.1
+    ],
+    [
+      "Johanna Matintalo",
+      1761,
+      "Finland",
+      0.7,
+      6.2,
+      22.2,
+      59.7,
+      97.7
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "Sweden",
+      0.5,
+      2.6,
+      12.2,
+      42.7,
+      91.9
+    ],
+    [
+      "Mathilde Myhrvold",
+      2298,
+      "Norway",
+      0.4,
+      1.6,
+      8.5,
+      33.6,
+      90.3
+    ],
+    [
+      "Julie Bjervig Drivenes",
+      3357,
+      "Norway",
+      0.4,
+      2.9,
+      11.5,
+      39.8,
+      88.0
+    ],
+    [
+      "Coletta Rydzek",
+      3254,
+      "Germany",
+      0.4,
+      1.8,
+      7.9,
+      31.8,
+      91.4
+    ],
+    [
+      "Ane Appelkvist Stenseth",
+      1829,
+      "Norway",
+      0.3,
+      1.9,
+      8.0,
+      27.6,
+      74.0
+    ],
+    [
+      "Jessie Diggins",
+      131,
+      "USA",
+      0.2,
+      2.6,
+      12.8,
+      42.5,
+      93.8
+    ],
+    [
+      "Moa Lundgren",
+      3211,
+      "Sweden",
+      0.2,
+      1.9,
+      9.5,
+      35.8,
+      89.6
+    ],
+    [
+      "Rosie Brennan",
+      627,
+      "USA",
+      0.2,
+      0.5,
+      3.0,
+      15.8,
+      72.9
+    ],
+    [
+      "Milla Grosberghaugen Andreassen",
+      10424,
+      "Norway",
+      0.1,
+      1.6,
+      8.5,
+      34.6,
+      90.8
+    ],
+    [
+      "Anja Weber",
+      6338,
+      "Switzerland",
+      0.1,
+      0.9,
+      5.7,
+      26.6,
+      87.1
+    ],
+    [
+      "Margrete Røssum Dyrhovd",
+      1778,
+      "Norway",
+      0.1,
+      0.5,
+      5.3,
+      26.3,
+      84.9
+    ],
+    [
+      "Jasmin Kähärä",
+      3528,
+      "Finland",
+      0.0,
+      0.1,
+      2.8,
+      17.1,
+      77.4
+    ],
+    [
+      "Ingrid Bergene Aabrekk",
+      6828,
+      "Norway",
+      0.0,
+      0.4,
+      2.3,
+      15.5,
+      76.3
+    ],
+    [
+      "Nicole Monsorno",
+      6631,
+      "Italy",
+      0.0,
+      0.1,
+      1.6,
+      12.6,
+      69.2
+    ],
+    [
+      "Caterina Ganz",
+      1721,
+      "Italy",
+      0.0,
+      0.2,
+      1.1,
+      10.3,
+      64.1
+    ],
+    [
+      "Iris De Martin Pinter",
+      7422,
+      "Italy",
+      0.0,
+      0.0,
+      0.9,
+      9.4,
+      64.6
+    ],
+    [
+      "Amanda Saari",
+      7905,
+      "Finland",
+      0.0,
+      0.1,
+      1.2,
+      7.8,
+      63.4
+    ],
+    [
+      "Hedda Bakkemo",
+      6437,
+      "Norway",
+      0.0,
+      0.0,
+      0.9,
+      9.7,
+      64.4
+    ],
+    [
+      "Federica Cassol",
+      9082,
+      "Italy",
+      0.0,
+      0.4,
+      1.4,
+      7.2,
+      58.8
+    ],
+    [
+      "Hilla Niemelä",
+      6296,
+      "Finland",
+      0.0,
+      0.1,
+      0.2,
+      5.5,
+      49.6
+    ],
+    [
+      "Katharina Hennig Dotzler",
+      1618,
+      "Germany",
+      0.0,
+      0.0,
+      0.1,
+      2.6,
+      36.6
+    ],
+    [
+      "Tiril Udnes Weng",
+      1668,
+      "Norway",
+      0.0,
+      0.0,
+      1.0,
+      7.7,
+      45.1
+    ],
+    [
+      "Sofie Krehl",
+      1695,
+      "Germany",
+      0.0,
+      0.0,
+      0.2,
+      3.7,
+      41.3
+    ],
+    [
+      "Jasmi Joensuu",
+      1675,
+      "Finland",
+      0.0,
+      0.0,
+      0.4,
+      3.4,
+      39.5
+    ],
+    [
+      "Melissa Gal",
+      4034,
+      "France",
+      0.0,
+      0.0,
+      0.0,
+      1.4,
+      35.6
+    ],
+    [
+      "Iselin Bjervig Drivenes",
+      10954,
+      "Norway",
+      0.0,
+      0.0,
+      0.0,
+      1.4,
+      28.0
+    ],
+    [
+      "Julie Pierrel",
+      7444,
+      "France",
+      0.0,
+      0.0,
+      0.0,
+      1.3,
+      27.5
+    ],
+    [
+      "Justine Gaillard",
+      11576,
+      "France",
+      0.0,
+      0.0,
+      0.0,
+      0.7,
+      25.2
+    ],
+    [
+      "Katherine Weaver",
+      4251,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.4,
+      25.6
+    ],
+    [
+      "Magdalena Scherz",
+      6707,
+      "Austria",
+      0.0,
+      0.0,
+      0.1,
+      0.5,
+      27.0
+    ],
+    [
+      "Helene Ekrheim Haugen",
+      10438,
+      "Norway",
+      0.0,
+      0.0,
+      0.1,
+      0.8,
+      22.5
+    ],
+    [
+      "Tiia Olkkonen",
+      3044,
+      "Finland",
+      0.0,
+      0.0,
+      0.0,
+      0.6,
+      23.0
+    ],
+    [
+      "Lena Quintin",
+      3252,
+      "France",
+      0.0,
+      0.0,
+      0.0,
+      0.9,
+      18.2
+    ],
+    [
+      "Alison Mackie",
+      10185,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.8,
+      18.8
+    ],
+    [
+      "Theresa Fürstenberg",
+      6801,
+      "Germany",
+      0.0,
+      0.0,
+      0.0,
+      0.6,
+      17.2
+    ],
+    [
+      "Barbora Antosova",
+      6633,
+      "Czechia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      16.4
+    ],
+    [
+      "Leonie Perry",
+      10413,
+      "France",
+      0.0,
+      0.0,
+      0.0,
+      0.3,
+      13.4
+    ],
+    [
+      "Fabienne Alder",
+      11191,
+      "Switzerland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      12.3
+    ],
+    [
+      "Lauren Jortberg",
+      3997,
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      13.9
+    ],
+    [
+      "Helen Hoffmann",
+      6691,
+      "Germany",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      12.0
+    ],
+    [
+      "Katerina Janatova",
+      3198,
+      "Czechia",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      12.2
+    ],
+    [
+      "Mariel Merlii Pulles",
+      1969,
+      "Estonia",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      10.8
+    ],
+    [
+      "Heidi Bucher",
+      10823,
+      "Austria",
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      11.1
+    ],
+    [
+      "Sammy Smith",
+      10228,
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      8.6
+    ],
+    [
+      "Olivia Bouffard-Nesbitt",
+      1685,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.4,
+      9.3
+    ],
+    [
+      "Anja Mandeljc",
+      1868,
+      "Slovenia",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      7.6
+    ],
+    [
+      "Anna Marie Jaklova",
+      10190,
+      "Czechia",
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      6.9
+    ],
+    [
+      "Lea Fischer",
+      2284,
+      "Switzerland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.9
+    ],
+    [
+      "Erin Bianco",
+      10281,
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      5.0
+    ],
+    [
+      "Sophia Tsu Velicer",
+      7036,
+      "Taiwan",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      3.6
+    ],
+    [
+      "Alina Meier",
+      1680,
+      "Switzerland",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      3.1
+    ]
+  ]
+}
