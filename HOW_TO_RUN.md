@@ -278,20 +278,24 @@ run_full_optimization()
 On macOS, laptop sleep will kill background processes. Use `caffeinate -s` to keep the system awake:
 
 ```bash
-# Run optimizer for one sport (~3 hours) - keeps Mac awake
-caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_sport("cross-country")'
+# Run optimizer for one sport, one gender (~3 hours)
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_sport("cross-country", gender = "men")'
 
-# Run in background with caffeinate (recommended for long runs)
-caffeinate -s nohup Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_sport("cross-country")' > ~/optimization_xc.log 2>&1 &
+# Run full optimization for one sport, both genders (~6 hours)
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("cross-country"))'
+
+# Run in background (recommended for long runs)
+caffeinate -s nohup Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("cross-country"))' > ~/optimization_xc.log 2>&1 &
 
 # Check progress
 tail -f ~/blog/daehl-e/content/post/optimization/logs/optimization_cross-country*.log
 
-# Run full optimization for one sport (saves results + generates sport_params.R)
-caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("cross-country"))'
-
-# Run full optimization (all 5 sports, ~30 hours)
+# Run full optimization (all 5 sports, both genders, ~60 hours)
 caffeinate -s nohup Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization()' > ~/optimization_full.log 2>&1 &
+
+# Run only men or only ladies
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("cross-country"), genders = c("men"))'
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("cross-country"), genders = c("ladies"))'
 ```
 
 ### How Results Get Applied

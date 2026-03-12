@@ -1121,6 +1121,77 @@ test_optimization <- function(sport = "cross-country", gender = "men") {
   return(results)
 }
 
+#' Quick test of sd_min/sd_max ranges with overlapping values
+#'
+#' Runs a small grid focusing on SD parameters to see if they differentiate
+#' Uses overlapping ranges to test if sd_min and sd_max converge or separate
+#' Should complete in ~5-10 minutes
+#'
+#' @param sport Sport to test
+#' @param gender Gender
+#' @return Results data frame with best sd_min/sd_max
+test_sd_ranges <- function(sport = "cross-country", gender = "men") {
+  cat("================================================================================\n")
+  cat("  TESTING SD PARAMETER RANGES (OVERLAPPING)\n")
+  cat("================================================================================\n")
+  cat(sprintf("  Sport: %s, Gender: %s\n", sport, gender))
+  cat("  Testing: sd_min = 12,16,20,24 | sd_max = 12,16,20,24\n")
+  cat("  Same values in both - allows sd_min == sd_max (fixed SD)\n")
+  cat("  Other params: fixed at reasonable defaults\n")
+  cat("  Expected time: ~5-10 minutes\n")
+  cat("================================================================================\n\n")
+
+  results <- run_grid_search(
+    sport = sport,
+    gender = gender,
+    param_grid = list(
+      decay_lambda = c(0.002),
+      sd_scale_factor = c(0.9),
+      sd_min = c(12, 16, 20, 24),
+      sd_max = c(12, 16, 20, 24),
+      n_history_required = c(12),
+      gam_fill_weight_factor = c(0.25)
+    ),
+    n_simulations = 100,
+    max_races = 40,
+    parallel = TRUE,
+    verbose = TRUE
+  )
+
+  cat("\n================================================================================\n")
+  cat("  RESULTS\n")
+  cat("================================================================================\n")
+
+  if (!is.null(results) && nrow(results) > 0) {
+    # Show top 5 by composite score
+    top5 <- head(results[order(results$composite_score), ], 5)
+    cat("\nTop 5 sd_min/sd_max combinations:\n")
+    print(top5[, c("sd_min", "sd_max", "composite_score", "brier_score")])
+
+    best_min <- top5$sd_min[1]
+    best_max <- top5$sd_max[1]
+    gap <- best_max - best_min
+
+    cat(sprintf("\nBest: sd_min = %d, sd_max = %d (gap = %d)\n", best_min, best_max, gap))
+
+    if (gap <= 4) {
+      cat("NOTE: Small gap suggests per-athlete SD differentiation may not help.\n")
+      cat("      Consider switching to fixed_sd approach.\n")
+    } else {
+      cat("NOTE: Meaningful gap - per-athlete SD differentiation may be valuable.\n")
+    }
+
+    if (best_min == 22) {
+      cat("WARNING: sd_min hit upper bound (22)\n")
+    }
+    if (best_max == 26) {
+      cat("WARNING: sd_max hit upper bound (26)\n")
+    }
+  }
+
+  return(results)
+}
+
 #' Quick test of parallel execution
 #'
 #' Runs a tiny grid search in parallel to verify worker setup
@@ -1230,7 +1301,7 @@ compare_to_default <- function(sport, gender, optimized_params, n_races = 50) {
 #' @return Named list of all results
 run_full_optimization <- function(sports = c("cross-country", "biathlon", "alpine",
                                               "skijump", "nordic-combined"),
-                                   genders = c("men"),
+                                   genders = c("men", "ladies"),
                                    verbose = TRUE) {
 
   all_results <- list()

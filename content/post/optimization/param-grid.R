@@ -10,8 +10,8 @@
 DEFAULT_PARAM_GRID <- list(
   decay_lambda = seq(0.0005, 0.005, by = 0.0005),    # 10 values
   sd_scale_factor = seq(0.50, 1.00, by = 0.05),      # 11 values
-  sd_min = seq(2, 8, by = 1),                         # 7 values
-  sd_max = seq(10, 25, by = 2.5),                     # 7 values
+  sd_min = seq(10, 24, by = 2),                        # 8 values
+  sd_max = seq(16, 30, by = 2),                        # 8 values
   n_history_required = seq(5, 20, by = 5),            # 4 values
   gam_fill_weight_factor = seq(0.10, 0.50, by = 0.10) # 5 values
 )
@@ -20,8 +20,8 @@ DEFAULT_PARAM_GRID <- list(
 COARSE_PARAM_GRID <- list(
   decay_lambda = c(0.001, 0.002, 0.003, 0.004),       # 4 values
   sd_scale_factor = c(0.60, 0.70, 0.80, 0.90),        # 4 values
-  sd_min = c(3, 5, 7),                                 # 3 values
-  sd_max = c(12, 16, 20),                              # 3 values
+  sd_min = c(12, 18, 24),                              # 3 values
+  sd_max = c(18, 24, 30),                              # 3 values
   n_history_required = c(8, 12, 16),                   # 3 values
   gam_fill_weight_factor = c(0.15, 0.25, 0.35)        # 3 values
 )
@@ -40,13 +40,13 @@ create_fine_grid <- function(best_params, margin = 0.2) {
       length.out = 5
     ),
     sd_min = seq(
-      max(2, best_params$sd_min - 1),
-      min(8, best_params$sd_min + 1),
+      max(10, best_params$sd_min - 2),
+      min(24, best_params$sd_min + 2),
       length.out = 3
     ),
     sd_max = seq(
-      max(10, best_params$sd_max - 3),
-      min(25, best_params$sd_max + 3),
+      max(16, best_params$sd_max - 2),
+      min(30, best_params$sd_max + 2),
       length.out = 3
     ),
     n_history_required = c(
@@ -75,9 +75,9 @@ TEAM_PARAM_GRID <- list(
 
 DEFAULT_PARAMS <- list(
   decay_lambda = 0.002,
-  sd_scale_factor = 0.77,
-  sd_min = 4,
-  sd_max = 16,
+  sd_scale_factor = 0.9,
+  sd_min = 16,
+  sd_max = 24,
   n_history_required = 10,
   gam_fill_weight_factor = 0.25
 )
@@ -328,8 +328,8 @@ validate_params <- function(params) {
   }
 
   # Check constraints
-  if (params$sd_min >= params$sd_max) {
-    return("sd_min must be less than sd_max")
+  if (params$sd_min > params$sd_max) {
+    return("sd_min must be less than or equal to sd_max")
   }
 
   if (params$decay_lambda <= 0) {
@@ -358,8 +358,11 @@ validate_params <- function(params) {
 expand_param_grid <- function(param_grid) {
   grid <- expand.grid(param_grid, stringsAsFactors = FALSE)
 
-  # Filter invalid combinations (sd_min >= sd_max)
-  grid <- grid[grid$sd_min < grid$sd_max, ]
+  # Filter invalid combinations (sd_min > sd_max)
+  # Note: sd_min == sd_max is allowed (equivalent to fixed_sd)
+  if ("sd_min" %in% names(grid) && "sd_max" %in% names(grid)) {
+    grid <- grid[grid$sd_min <= grid$sd_max, ]
+  }
 
   return(grid)
 }
@@ -380,9 +383,9 @@ sample_params <- function(param_grid, n) {
                                     max(param_grid$gam_fill_weight_factor))
   )
 
-  # Fix invalid combinations
-  invalid <- samples$sd_min >= samples$sd_max
-  samples$sd_max[invalid] <- samples$sd_min[invalid] + 5
+  # Fix invalid combinations (sd_min > sd_max)
+  invalid <- samples$sd_min > samples$sd_max
+  samples$sd_max[invalid] <- samples$sd_min[invalid]
 
   return(samples)
 }

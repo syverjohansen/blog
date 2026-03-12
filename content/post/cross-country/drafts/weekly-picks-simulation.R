@@ -51,17 +51,42 @@ load_env <- function(env_path = "~/ski/elo/.env") {
 load_env()
 TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 
-# Simulation parameters
-N_HISTORY_REQUIRED <- 10      # Target number of historical races per athlete
-N_GAM_SAMPLES <- 0            # Number of GAM samples (0 = history only)
-GAM_FILL_WEIGHT_FACTOR <- 0.25 # Weight multiplier for GAM-filled history slots
-N_SIMULATIONS <- 10000        # Number of Monte Carlo simulations per race
-DECAY_LAMBDA <- 0.002         # Exponential decay rate (0.002 = 50% weight after 1 year)
+# ===== LOAD SPORT-SPECIFIC PARAMETERS =====
+# Source optimized parameters from sport_params.R
+# These values are calibrated via param-optimizer.R using historical backtesting
+sport_params_path <- "~/blog/daehl-e/content/post/shared/sport_params.R"
+if (file.exists(path.expand(sport_params_path))) {
+  source(sport_params_path)
+  DEFAULT_PARAMS <- get_sport_params("cross-country")
+  cat("Loaded optimized parameters from sport_params.R\n")
+} else {
+  # Fallback to hardcoded defaults if sport_params.R not available
+  DEFAULT_PARAMS <- list(
+    decay_lambda = 0.002,
+    sd_scale_factor = 0.77,
+    sd_min = 4,
+    sd_max = 16,
+    n_history_required = 10,
+    gam_fill_weight_factor = 0.25
+  )
+  # Define fallback get_sport_params function
+  get_sport_params <- function(sport, race_type = NULL) {
+    return(DEFAULT_PARAMS)
+  }
+  cat("Using fallback default parameters (sport_params.R not found)\n")
+}
 
-# Variance control parameters (calibrated from champs-predictions-simulation.R)
-SD_SCALE_FACTOR <- 0.77       # Multiply all SDs by this (lower = more deterministic)
-SD_MIN <- 4                   # Minimum SD
-SD_MAX <- 16                  # Maximum SD
+# Simulation parameters (defaults, will be overridden per-race with optimized params)
+N_HISTORY_REQUIRED <- DEFAULT_PARAMS$n_history_required
+N_GAM_SAMPLES <- 0            # Number of GAM samples (0 = history only)
+GAM_FILL_WEIGHT_FACTOR <- DEFAULT_PARAMS$gam_fill_weight_factor
+N_SIMULATIONS <- 10000        # Number of Monte Carlo simulations per race
+DECAY_LAMBDA <- DEFAULT_PARAMS$decay_lambda
+
+# Variance control parameters (defaults, will be overridden per-race with optimized params)
+SD_SCALE_FACTOR <- DEFAULT_PARAMS$sd_scale_factor
+SD_MIN <- DEFAULT_PARAMS$sd_min
+SD_MAX <- DEFAULT_PARAMS$sd_max
 
 # Position thresholds to track
 POSITION_THRESHOLDS <- c(1, 3, 5, 10, 30)
@@ -735,6 +760,12 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
       next
     }
 
+    # Get race-type-specific optimized parameters
+    race_params <- get_sport_params("cross-country", race_type_key)
+    log_info(sprintf("Using optimized params for %s: decay=%.4f, sd_scale=%.2f, sd_min=%d, sd_max=%d",
+                     race_type_key, race_params$decay_lambda, race_params$sd_scale_factor,
+                     race_params$sd_min, race_params$sd_max))
+
     # Create today_race object for adjustments
     today_race <- list(
       Elevation = race$altitude,
@@ -805,13 +836,22 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
         gam_prediction = gam_pred,
         gam_residual_sd = gam_residual_sd,
         reference_date = reference_date,
-        today_race = today_race
+        today_race = today_race,
+        n_history = race_params$n_history_required,
+        gam_fill_weight_factor = race_params$gam_fill_weight_factor,
+        decay_lambda = race_params$decay_lambda
       )
     })
 
-    # Run simulation
+    # Run simulation with race-type-specific SD parameters
     log_info(paste("Running", N_SIMULATIONS, "Monte Carlo simulations"))
-    simulation_results <- simulate_race_positions(athlete_distributions, n_simulations = N_SIMULATIONS)
+    simulation_results <- simulate_race_positions(
+      athlete_distributions,
+      n_simulations = N_SIMULATIONS,
+      sd_scale_factor = race_params$sd_scale_factor,
+      sd_min = race_params$sd_min,
+      sd_max = race_params$sd_max
+    )
 
     # Add athlete info to results
     simulation_results <- simulation_results %>%

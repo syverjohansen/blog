@@ -1,6 +1,6 @@
 # sport_params.R
 # Optimized simulation parameters by sport and race type
-# Generated: 2026-03-10 23:37:08.028725
+# Generated: 2026-03-11 18:15:48.851367
 #
 # Usage:
 #   source('~/blog/daehl-e/content/post/shared/sport_params.R')
@@ -10,69 +10,69 @@ SPORT_PARAMS <- list(
 
   "cross-country" = list(
     default = list(
-      decay_lambda = 0.000778,
-      sd_scale_factor = 0.9998,
-      sd_min = 8,
-      sd_max = 20,
-      n_history_required = 18,
-      gam_fill_weight_factor = 0.3653
+      decay_lambda = 0.001000,
+      sd_scale_factor = 0.9000,
+      sd_min = 18,
+      sd_max = 24,
+      n_history_required = 16,
+      gam_fill_weight_factor = 0.1500
     ),
     race_types = list(
       "Sprint_C" = list(
-        decay_lambda = 0.002887,
-        sd_scale_factor = 0.9756,
-        sd_min = 8,
-        sd_max = 20,
-        n_history_required = 18,
-        gam_fill_weight_factor = 0.1281
+        decay_lambda = 0.002367,
+        sd_scale_factor = 0.7980,
+        sd_min = 16,
+        sd_max = 22,
+        n_history_required = 16,
+        gam_fill_weight_factor = 0.1492
       ),
       "Sprint_F" = list(
-        decay_lambda = 0.001228,
-        sd_scale_factor = 0.8882,
-        sd_min = 8,
-        sd_max = 23,
+        decay_lambda = 0.001532,
+        sd_scale_factor = 0.5638,
+        sd_min = 16,
+        sd_max = 16,
         n_history_required = 18,
-        gam_fill_weight_factor = 0.1234
+        gam_fill_weight_factor = 0.2280
       ),
       "Distance_C_Ind" = list(
-        decay_lambda = 0.002358,
-        sd_scale_factor = 0.9464,
-        sd_min = 8,
-        sd_max = 23,
-        n_history_required = 18,
-        gam_fill_weight_factor = 0.1124
+        decay_lambda = 0.003233,
+        sd_scale_factor = 0.9639,
+        sd_min = 18,
+        sd_max = 26,
+        n_history_required = 14,
+        gam_fill_weight_factor = 0.3664
       ),
       "Distance_C_Ms" = list(
-        decay_lambda = 0.002737,
-        sd_scale_factor = 0.9403,
-        sd_min = 8,
-        sd_max = 20,
+        decay_lambda = 0.002262,
+        sd_scale_factor = 0.6240,
+        sd_min = 18,
+        sd_max = 24,
         n_history_required = 18,
-        gam_fill_weight_factor = 0.2700
+        gam_fill_weight_factor = 0.3405
       ),
       "Distance_F_Ind" = list(
-        decay_lambda = 0.002316,
-        sd_scale_factor = 0.8665,
-        sd_min = 8,
-        sd_max = 23,
-        n_history_required = 18,
-        gam_fill_weight_factor = 0.3546
+        decay_lambda = 0.003069,
+        sd_scale_factor = 0.9736,
+        sd_min = 18,
+        sd_max = 22,
+        n_history_required = 16,
+        gam_fill_weight_factor = 0.1642
       ),
       "Distance_F_Ms" = list(
-        decay_lambda = 0.000907,
-        sd_scale_factor = 0.9062,
-        sd_min = 8,
-        sd_max = 23,
-        n_history_required = 18,
-        gam_fill_weight_factor = 0.2051
+        decay_lambda = 0.002455,
+        sd_scale_factor = 0.6486,
+        sd_min = 22,
+        sd_max = 24,
+        n_history_required = 14,
+        gam_fill_weight_factor = 0.2211
       ),
       "Distance_Ms" = list(
-        decay_lambda = 0.001019,
-        sd_scale_factor = 0.9518,
-        sd_min = 8,
-        sd_max = 23,
+        decay_lambda = 0.004035,
+        sd_scale_factor = 0.8924,
+        sd_min = 18,
+        sd_max = 24,
         n_history_required = 18,
-        gam_fill_weight_factor = 0.2128
+        gam_fill_weight_factor = 0.3243
       )
     )
   )

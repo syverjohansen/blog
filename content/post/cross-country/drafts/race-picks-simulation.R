@@ -65,8 +65,8 @@ sport_params_path <- "~/blog/daehl-e/content/post/shared/sport_params.R"
 if (file.exists(path.expand(sport_params_path))) {
   source(sport_params_path)
   DEFAULT_PARAMS <- get_sport_params("cross-country")
-  RELAY_PARAMS <- get_sport_params("cross-country", event_type = "Relay")
-  TEAM_SPRINT_PARAMS <- get_sport_params("cross-country", event_type = "Team_Sprint")
+  RELAY_PARAMS <- get_sport_params("cross-country", "Relay")
+  TEAM_SPRINT_PARAMS <- get_sport_params("cross-country", "Team_Sprint")
 } else {
   # Fallback to hardcoded defaults if sport_params.R not available
   DEFAULT_PARAMS <- list(
@@ -2007,6 +2007,12 @@ if(PROCESS_INDIVIDUAL) {
       next
     }
 
+    # Get race-type-specific optimized parameters
+    race_params <- get_sport_params("cross-country", race_type_key)
+    log_info(sprintf("Using optimized params for %s: decay=%.4f, sd_scale=%.2f, sd_min=%d, sd_max=%d",
+                     race_type_key, race_params$decay_lambda, race_params$sd_scale_factor,
+                     race_params$sd_min, race_params$sd_max))
+
     gender <- if(race$Sex == "M") "men" else "ladies"
 
     # Comprehensive race start logging
@@ -2129,6 +2135,7 @@ if(PROCESS_INDIVIDUAL) {
       }, error = function(e) NULL)
 
       # Build distribution with condition-specific adjustments calculated internally
+      # Uses race-type-specific optimized parameters
       dist <- build_athlete_distribution(
         athlete_id = athlete_id,
         race_type_key = race_type_key,
@@ -2136,7 +2143,10 @@ if(PROCESS_INDIVIDUAL) {
         gam_prediction = gam_prediction,
         gam_residual_sd = model_info$residual_sd,
         reference_date = current_date,
-        today_race = race
+        today_race = race,
+        n_history = race_params$n_history_required,
+        gam_fill_weight_factor = race_params$gam_fill_weight_factor,
+        decay_lambda = race_params$decay_lambda
       )
 
       # Tracer logging: distribution building (wrapped in tryCatch)
@@ -2185,8 +2195,12 @@ if(PROCESS_INDIVIDUAL) {
 
     log_info(paste("Running", N_SIMULATIONS, "Monte Carlo simulations (",
                    ifelse(is_sprint, "sprint", "distance"), "thresholds)"))
+    # Use race-type-specific optimized SD parameters
     race_results <- simulate_race_positions(athlete_distributions,
-                                            position_thresholds = race_thresholds)
+                                            position_thresholds = race_thresholds,
+                                            sd_scale_factor = race_params$sd_scale_factor,
+                                            sd_min = race_params$sd_min,
+                                            sd_max = race_params$sd_max)
 
     # Check if simulation returned valid results
     if (nrow(race_results) == 0 || !"athlete_id" %in% names(race_results)) {

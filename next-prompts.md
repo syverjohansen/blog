@@ -1,6 +1,6 @@
 # Winter Sports Prediction System
 
-## Current Status (2026-03-09)
+## Current Status (2026-03-11)
 
 **IMPORTANT**: Update this file (`next-prompts.md`) whenever changes are made to the codebase.
 
@@ -265,6 +265,42 @@ get_sport_params <- function(sport, race_type = NULL) {
 }
 ```
 
+### Task 2.7: Optimization Fixes & Data Filtering (COMPLETED 2026-03-11)
+
+**Issues Fixed:**
+
+1. **Offseason Row Filtering** - All race-picks-simulation.R scripts now filter out:
+   - `Place == 0` (offseason ELO reset rows)
+   - `Distance == "0"` (tour overall standings - cross-country only)
+   - Fixed Tour de Ski case mismatch bug (`"Tour De Ski"` vs `"Tour de Ski"`)
+
+2. **Race Type Filter for Skiathlons** - Added `Distance_Ms` race type:
+   - Skiathlons (`Technique == "P"`) were not covered by any race type
+   - Now included in `Distance_Ms`: `Distance != Sprint/Rel/Ts & MS == 1`
+   - Matches how simulation handles skiathlons
+
+3. **SD Parameter Range Testing** - Found optimal ranges through testing:
+   - sd_min and sd_max converge but maintain ~8 point gap (differentiation matters)
+   - Updated coarse grid: sd_min = 10-24, sd_max = 16-30
+   - Tested fixed_sd approach but found per-athlete differentiation still valuable
+
+4. **Optimizer Improvements:**
+   - Default now runs both genders: `genders = c("men", "ladies")`
+   - Added `test_sd_ranges()` for quick ~5-10 min parameter testing
+   - Added `caffeinate` instructions to HOW_TO_RUN.md (prevents Mac sleep)
+   - Allow `sd_min == sd_max` (equivalent to fixed_sd)
+
+**Files Modified:**
+- `cross-country/drafts/race-picks-simulation.R` - Fixed offseason/tour filtering
+- `alpine/drafts/race-picks-simulation.R` - Added offseason filtering
+- `biathlon/drafts/race-picks-simulation.R` - Added offseason filtering
+- `nordic-combined/drafts/race-picks-simulation.R` - Added offseason filtering
+- `skijump/drafts/race-picks-simulation.R` - Added offseason filtering
+- `optimization/param-grid.R` - Updated sd_min/sd_max ranges
+- `optimization/param-optimizer.R` - Added test_sd_ranges(), both genders default
+- `optimization/backtest-engine.R` - Fixed calibration race filtering
+- `HOW_TO_RUN.md` - Added caffeinate instructions, both genders examples
+
 ### Task 3: Update Race Picks Methodology Documentation (PENDING)
 
 Archive old methodology page and create new Monte Carlo documentation.
@@ -273,18 +309,18 @@ Archive old methodology page and create new Monte Carlo documentation.
 
 ## Technical Reference
 
-### Simulation Parameters (All Sports)
+### Simulation Parameters (Optimized Ranges)
 ```r
 # Individual races
 N_SIMULATIONS <- 10000
-DECAY_LAMBDA <- 0.002     # 50% weight after ~1 year
-SD_SCALE_FACTOR <- 0.77   # Lower = favorites win more
-SD_MIN <- 4
-SD_MAX <- 16
+DECAY_LAMBDA <- 0.001 - 0.004  # Optimized per race type (~0.002 typical)
+SD_SCALE_FACTOR <- 0.8 - 1.0   # Optimized per race type (~0.9 typical)
+SD_MIN <- 10 - 24              # Higher than original (was 4)
+SD_MAX <- 16 - 30              # Higher than original (was 16)
 
-# GAM fill for insufficient history (NEW)
-N_HISTORY_REQUIRED <- 10
-GAM_FILL_WEIGHT_FACTOR <- 0.25
+# GAM fill for insufficient history
+N_HISTORY_REQUIRED <- 10 - 18
+GAM_FILL_WEIGHT_FACTOR <- 0.1 - 0.4
 
 # Team events
 TEAM_SD_SCALE_FACTOR <- 0.8
@@ -294,6 +330,14 @@ TEAM_SD_MAX <- 12
 # Position thresholds
 POSITION_THRESHOLDS <- c(1, 3, 5, 10, 30)  # Win, Podium, Top-5, Top-10, Top-30
 ```
+
+### Parameter Interpretation
+| Parameter | Meaning |
+|-----------|---------|
+| decay_lambda | Higher = recent form matters more (sprints ~0.003, mass start ~0.001) |
+| sd_scale_factor | Multiplier on calculated SD (~1.0 means minimal scaling) |
+| sd_min/sd_max | Bounds on athlete uncertainty (higher = more upsets) |
+| gam_fill_weight_factor | Weight for GAM-predicted history (lower = less trust in GAM) |
 
 ### GAM Feature Sets by Sport
 
@@ -337,10 +381,21 @@ TEST_MODE=false  # Set to true for testing
 If starting a new session:
 1. Read this file to understand current status
 2. Check the ACTIVE TASKS section for current work
-3. **Current:** Task 2.6 - Parameter optimization framework (COMPLETED)
-4. **Next:** Task 3 - Update methodology documentation
-5. **Also available:** Run `run_full_optimization()` to generate optimized params
-6. Update this file with any changes made
+3. **Current:** Running parameter optimization for cross-country (men + ladies)
+4. **Next:** Run optimization for other sports, then Task 3 - Update methodology documentation
+5. Update this file with any changes made
+
+**To Run Optimization:**
+```bash
+# Single sport, both genders (~6 hours)
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("cross-country"))'
+
+# Quick parameter test (~5-10 min)
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); test_sd_ranges("cross-country", "men")'
+
+# Check progress
+tail -f ~/blog/daehl-e/content/post/optimization/logs/optimization_cross-country*.log
+```
 
 **Task 2.5 Progress (COMPLETED):**
 - [x] Create `shared/logging-utils.R` - Logging utilities (DONE)
@@ -360,6 +415,18 @@ If starting a new session:
 - [x] Create `param-optimizer.R` - Grid search, random search, parallel optimization
 - [x] Generate `sport_params.R` - Template with defaults and `get_sport_params()` helper
 - [x] Integrate with simulation scripts - All 5 sports now load params from sport_params.R
+
+**Task 2.7 Progress (COMPLETED 2026-03-11):**
+- [x] Fix offseason row filtering in all 5 race-picks-simulation.R scripts
+- [x] Fix Tour de Ski summary row filtering (case mismatch bug)
+- [x] Add Distance_Ms race type for skiathlons
+- [x] Update sd_min/sd_max ranges based on testing (10-24 / 16-30)
+- [x] Add test_sd_ranges() for quick parameter testing
+- [x] Update run_full_optimization() to include both genders by default
+- [x] Add caffeinate instructions to HOW_TO_RUN.md
+- [x] Allow sd_min == sd_max in validation (equivalent to fixed_sd)
+- [ ] Run full optimization for cross-country (in progress)
+- [ ] Run full optimization for other sports
 
 **Files Created:**
 ```
