@@ -1363,6 +1363,14 @@ if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }
 
+# Separate weekly-picks workbook output.
+# This stays in the weekly-picks folder as a data artifact only and is not part
+# of the published fantasy/race-picks post flow.
+weekly_output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", utc_date)
+if (!dir.exists(weekly_output_dir)) {
+  dir.create(weekly_output_dir, recursive = TRUE)
+}
+
 # Run knapsack optimization for fantasy team
 fantasy_team <- optimize_weekly_team_simulation(men_results, ladies_results)
 
@@ -1395,6 +1403,49 @@ if (nrow(combined_totals) > 0) {
   # log_info(paste("Fantasy position probabilities saved to:", fantasy_probs_file))
 }
 
+# Save top-30 predicted weekend points workbook in weekly-picks only.
+weekly_points_sheets <- list()
+
+if (!is.null(men_results) && nrow(men_results$athlete_totals) > 0) {
+  weekly_points_sheets[["Men Top 30"]] <- men_results$athlete_totals %>%
+    mutate(Sex = "M") %>%
+    arrange(desc(Total_Points)) %>%
+    slice_head(n = 30) %>%
+    transmute(
+      Skier,
+      Nation,
+      Sex,
+      Price,
+      `Predicted Weekend Points` = round(Total_Points, 2),
+      `Races Count` = Races_Count,
+      `Avg Win Probability` = round(Avg_Win_Prob * 100, 1),
+      `Avg Podium Probability` = round(Avg_Podium_Prob * 100, 1)
+    )
+}
+
+if (!is.null(ladies_results) && nrow(ladies_results$athlete_totals) > 0) {
+  weekly_points_sheets[["Ladies Top 30"]] <- ladies_results$athlete_totals %>%
+    mutate(Sex = "L") %>%
+    arrange(desc(Total_Points)) %>%
+    slice_head(n = 30) %>%
+    transmute(
+      Skier,
+      Nation,
+      Sex,
+      Price,
+      `Predicted Weekend Points` = round(Total_Points, 2),
+      `Races Count` = Races_Count,
+      `Avg Win Probability` = round(Avg_Win_Prob * 100, 1),
+      `Avg Podium Probability` = round(Avg_Podium_Prob * 100, 1)
+    )
+}
+
+if (length(weekly_points_sheets) > 0) {
+  weekly_points_file <- file.path(weekly_output_dir, "weekend_top_30_predicted_points.xlsx")
+  write.xlsx(weekly_points_sheets, weekly_points_file)
+  log_info(paste("Weekly points workbook saved to:", weekly_points_file))
+}
+
 # Print summary
 cat("\n========================================\n")
 cat("WEEKLY FANTASY PICKS (SIMULATION)\n")
@@ -1407,5 +1458,6 @@ cat(sprintf("Total Points: %.2f\n", sum(fantasy_team$Points)))
 cat("\n--- Optimized Team (16 athletes) ---\n")
 print(fantasy_team %>% select(Skier, Sex, Nation, Price, Points))
 cat("\n========================================\n")
+cat(paste("Weekly points workbook:", file.path(weekly_output_dir, "weekend_top_30_predicted_points.xlsx"), "\n"))
 
 log_info("Weekly picks simulation complete")
