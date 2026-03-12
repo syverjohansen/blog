@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Kristine Stavås Skistad",
+      3207,
+      "L",
+      "Norway",
+      3461,
+      100.0
+    ],
+    [
+      "Linn Svahn",
+      3190,
+      "L",
+      "Sweden",
+      6385,
+      91.4149180721612
+    ],
+    [
+      "Jonna Sundling",
+      1486,
+      "L",
+      "Sweden",
+      12184,
+      91.0648539015089
+    ],
+    [
+      "Maja Dahlqvist",
+      1673,
+      "L",
+      "Sweden",
+      11649,
+      80.99761278643
+    ],
+    [
+      "Johanna Hagström",
+      3212,
+      "L",
+      "Sweden",
+      3231,
+      77.8016497120929
+    ],
+    [
+      "Nadine Fähndrich",
+      1590,
+      "L",
+      "Switzerland",
+      5941,
+      72.8111158092825
+    ],
+    [
+      "Laura Gimmler",
+      1495,
+      "L",
+      "Germany",
+      1950,
+      71.3699365654898
+    ],
+    [
+      "Johanna Matintalo",
+      1761,
+      "L",
+      "Finland",
+      3919,
+      63.176750508896
+    ],
+    [
+      "Johannes Høsflot Klæbo",
+      5164,
+      "M",
+      "Norway",
+      20166,
+      99.1073757412785
+    ],
+    [
+      "Even Northug",
+      3590,
+      "M",
+      "Norway",
+      1779,
+      73.1070524799207
+    ],
+    [
+      "Ansgar Evensen",
+      8246,
+      "M",
+      "Norway",
+      1985,
+      69.7700800860832
+    ],
+    [
+      "Ben Ogden",
+      9179,
+      "M",
+      "USA",
+      4976,
+      64.049200193544
+    ],
+    [
+      "Lars Heggen",
+      19104,
+      "M",
+      "Norway",
+      7115,
+      64.0369740598681
+    ],
+    [
+      "Lauri Vuorinen",
+      2874,
+      "M",
+      "Finland",
+      2501,
+      63.210860249146
+    ],
+    [
+      "Ondrej Cerny",
+      8094,
+      "M",
+      "Czechia",
+      230,
+      62.7748206718693
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "M",
+      "Norway",
+      11504,
+      61.7798610372001
+    ]
+  ]
+}
