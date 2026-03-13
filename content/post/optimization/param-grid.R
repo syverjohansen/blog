@@ -8,22 +8,22 @@
 #' Default parameter grid for optimization
 #' Each parameter has a range of values to search
 DEFAULT_PARAM_GRID <- list(
-  decay_lambda = seq(0.0005, 0.005, by = 0.0005),    # 10 values
-  sd_scale_factor = seq(0.50, 1.00, by = 0.05),      # 11 values
-  sd_min = seq(10, 24, by = 2),                        # 8 values
-  sd_max = seq(16, 30, by = 2),                        # 8 values
-  n_history_required = seq(5, 20, by = 5),            # 4 values
-  gam_fill_weight_factor = seq(0.10, 0.50, by = 0.10) # 5 values
+  decay_lambda = seq(0.0005, 0.0055, by = 0.0010),    # 6 values
+  sd_scale_factor = seq(0.50, 1.10, by = 0.10),       # 7 values
+  sd_min = seq(8, 26, by = 3),                        # 7 values
+  sd_max = seq(16, 34, by = 3),                       # 7 values
+  n_history_required = seq(6, 22, by = 4),           # 5 values
+  gam_fill_weight_factor = seq(0.05, 0.45, by = 0.10) # 5 values
 )
 
 #' Coarse grid for initial search (fewer values for speed)
 COARSE_PARAM_GRID <- list(
-  decay_lambda = c(0.001, 0.002, 0.003, 0.004),       # 4 values
-  sd_scale_factor = c(0.60, 0.70, 0.80, 0.90),        # 4 values
-  sd_min = c(12, 18, 24),                              # 3 values
-  sd_max = c(18, 24, 30),                              # 3 values
-  n_history_required = c(8, 12, 16),                   # 3 values
-  gam_fill_weight_factor = c(0.15, 0.25, 0.35)        # 3 values
+  decay_lambda = c(0.0005, 0.0020, 0.0035, 0.0050),   # 4 values
+  sd_scale_factor = c(0.50, 0.70, 0.90, 1.10),        # 4 values
+  sd_min = c(8, 17, 26),                              # 3 values
+  sd_max = c(16, 25, 34),                             # 3 values
+  n_history_required = c(6, 14, 22),                  # 3 values
+  gam_fill_weight_factor = c(0.05, 0.25, 0.45)       # 3 values
 )
 
 #' Fine grid for refinement (narrow ranges around best)
@@ -36,27 +36,27 @@ create_fine_grid <- function(best_params, margin = 0.2) {
     ),
     sd_scale_factor = seq(
       max(0.5, best_params$sd_scale_factor - 0.1),
-      min(1.0, best_params$sd_scale_factor + 0.1),
+      min(1.1, best_params$sd_scale_factor + 0.1),
       length.out = 5
     ),
     sd_min = seq(
-      max(10, best_params$sd_min - 2),
-      min(24, best_params$sd_min + 2),
+      max(8, best_params$sd_min - 3),
+      min(26, best_params$sd_min + 3),
       length.out = 3
     ),
     sd_max = seq(
-      max(16, best_params$sd_max - 2),
-      min(30, best_params$sd_max + 2),
+      max(16, best_params$sd_max - 3),
+      min(34, best_params$sd_max + 3),
       length.out = 3
     ),
     n_history_required = c(
-      max(5, best_params$n_history_required - 2),
+      max(6, best_params$n_history_required - 2),
       best_params$n_history_required,
-      min(20, best_params$n_history_required + 2)
+      min(22, best_params$n_history_required + 2)
     ),
     gam_fill_weight_factor = seq(
-      max(0.1, best_params$gam_fill_weight_factor - 0.05),
-      min(0.5, best_params$gam_fill_weight_factor + 0.05),
+      max(0.05, best_params$gam_fill_weight_factor - 0.05),
+      min(0.45, best_params$gam_fill_weight_factor + 0.05),
       length.out = 3
     )
   )
@@ -250,17 +250,19 @@ SKI_JUMPING_RACE_TYPES <- list(
   # Team events
   Team_Large = list(
     name = "Team Large Hill",
-    filter = function(d) (d$Hill == "Large" | d$HillSize >= 120) & d$Event == "Team",
+    filter = function(d) (d$Hill == "Large" | d$HillSize >= 120) &
+                         (d$RaceType == "Team Large" | d$RaceType == "Team"),
     is_team = TRUE
   ),
   Team_Normal = list(
     name = "Team Normal Hill",
-    filter = function(d) (d$Hill == "Normal" | d$HillSize < 120) & d$Event == "Team",
+    filter = function(d) (d$Hill == "Normal" | d$HillSize < 120) &
+                         d$RaceType == "Team Normal",
     is_team = TRUE
   ),
   Mixed_Team = list(
     name = "Mixed Team",
-    filter = function(d) d$Event == "Mixed Team",
+    filter = function(d) d$RaceType %in% c("Mixed Team", "Team Large", "Team Normal", "Team Flying"),
     is_team = TRUE
   )
 )
@@ -307,6 +309,29 @@ get_team_race_types <- function(sport) {
     sapply(race_types, function(rt) isTRUE(rt$is_team))
   ]
   return(team_types)
+}
+
+#' Get optimizable race types for a gendered optimization run
+#'
+#' Mixed events use separate mixed chrono/startlist sources and do not map cleanly
+#' onto the current men/ladies optimizer loop.
+#'
+#' @param sport Sport name
+#' @param gender "men" or "ladies"
+#' @return Vector of race type keys
+get_optimizable_race_types <- function(sport, gender) {
+  race_types <- names(get_sport_race_types(sport))
+
+  if (sport == "skijump") {
+    race_types <- setdiff(race_types, "Team_Normal")
+  }
+
+  if (gender == "ladies") {
+    mixed_types <- c("Mixed_Relay", "Single_Mixed_Relay", "Mixed_Team", "Mixed_Team_Sprint")
+    race_types <- setdiff(race_types, mixed_types)
+  }
+
+  return(race_types)
 }
 
 # =============================================================================

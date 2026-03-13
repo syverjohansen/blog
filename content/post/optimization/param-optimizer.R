@@ -335,7 +335,7 @@ run_grid_search <- function(sport, gender, race_type = NULL,
   # Load data
   log_info("Loading chrono data...")
   chrono <- tryCatch({
-    load_chrono_data(sport, gender)
+    load_chrono_data(sport, gender, race_type = race_type)
   }, error = function(e) {
     log_optim_error("Data Loading", e$message)
     return(NULL)
@@ -439,7 +439,8 @@ run_grid_search <- function(sport, gender, race_type = NULL,
 
       tryCatch({
         params <- as.list(combinations[i, ])
-        metrics <- evaluate_params(params, races, chrono, n_simulations)
+        metrics <- evaluate_params(params, races, chrono, n_simulations,
+                                   sport = sport, gender = gender, race_type = race_type)
 
         data.frame(
           combo_id = i,
@@ -528,7 +529,8 @@ run_grid_search <- function(sport, gender, race_type = NULL,
     for (i in 1:n_combos) {
       params <- as.list(combinations[i, ])
       metrics <- tryCatch({
-        evaluate_params(params, races, chrono, n_simulations)
+        evaluate_params(params, races, chrono, n_simulations,
+                        sport = sport, gender = gender, race_type = race_type)
       }, error = function(e) {
         log_optim_error(sprintf("Combo %d", i), e$message)
         return(list(composite_score = Inf, brier_score = NA, log_loss = NA,
@@ -655,7 +657,7 @@ run_random_search <- function(sport, gender, race_type = NULL,
   }
 
   # Load data
-  chrono <- load_chrono_data(sport, gender)
+  chrono <- load_chrono_data(sport, gender, race_type = race_type)
   races <- get_calibration_races(sport, chrono, race_type = race_type)
 
   if (!is.null(max_races) && nrow(races) > max_races) {
@@ -676,8 +678,9 @@ run_random_search <- function(sport, gender, race_type = NULL,
 
   for (i in 1:n_samples) {
     params <- as.list(samples[i, ])
-    metrics <- tryCatch({
-      evaluate_params(params, races, chrono, n_simulations)
+      metrics <- tryCatch({
+        evaluate_params(params, races, chrono, n_simulations,
+                        sport = sport, gender = gender, race_type = race_type)
     }, error = function(e) {
       log_optim_error(sprintf("Sample %d", i), e$message)
       return(list(composite_score = Inf, brier_score = NA, log_loss = NA,
@@ -819,12 +822,14 @@ optimize_params <- function(sport, gender, race_type = NULL, verbose = TRUE) {
   log_info("Validating best parameters with high-fidelity simulation:")
   log_info(sprintf("  Simulations: %d", FINAL_N_SIMS))
 
-  chrono <- load_chrono_data(sport, gender)
+  chrono <- load_chrono_data(sport, gender, race_type = race_type)
   races <- get_calibration_races(sport, chrono, race_type = race_type)
 
   log_info(sprintf("  Races: %d", nrow(races)))
 
-  final_metrics <- evaluate_params(best_params, races, chrono, n_simulations = FINAL_N_SIMS)
+  final_metrics <- evaluate_params(best_params, races, chrono,
+                                   n_simulations = FINAL_N_SIMS,
+                                   sport = sport, gender = gender, race_type = race_type)
 
   optim_phase_end("Final Validation",
                   sprintf("Composite: %.4f, Brier: %.4f", final_metrics$composite_score, final_metrics$brier_score))
@@ -835,7 +840,9 @@ optimize_params <- function(sport, gender, race_type = NULL, verbose = TRUE) {
   # Compare to defaults
   log_info("")
   log_info("COMPARISON TO DEFAULTS:")
-  default_metrics <- evaluate_params(DEFAULT_PARAMS, races, chrono, n_simulations = 500)
+  default_metrics <- evaluate_params(DEFAULT_PARAMS, races, chrono,
+                                     n_simulations = 500,
+                                     sport = sport, gender = gender, race_type = race_type)
   log_comparison("Default", default_metrics, "Optimized", final_metrics)
 
   # Update global best score
@@ -862,7 +869,7 @@ optimize_params <- function(sport, gender, race_type = NULL, verbose = TRUE) {
 #' @return List of results per race type
 optimize_sport <- function(sport, gender = "men", verbose = TRUE) {
 
-  race_types <- get_individual_race_types(sport)
+  race_types <- get_optimizable_race_types(sport, gender)
 
   log_info("")
   log_info("################################################################################")
@@ -1280,10 +1287,12 @@ compare_to_default <- function(sport, gender, optimized_params, n_races = 50) {
   }
 
   cat("Evaluating default parameters...\n")
-  default_metrics <- evaluate_params(DEFAULT_PARAMS, races, chrono, n_simulations = 500)
+  default_metrics <- evaluate_params(DEFAULT_PARAMS, races, chrono, n_simulations = 500,
+                                     sport = sport, gender = gender, race_type = NULL)
 
   cat("Evaluating optimized parameters...\n")
-  optimized_metrics <- evaluate_params(optimized_params, races, chrono, n_simulations = 500)
+  optimized_metrics <- evaluate_params(optimized_params, races, chrono, n_simulations = 500,
+                                       sport = sport, gender = gender, race_type = NULL)
 
   comparison <- compare_metrics(default_metrics, optimized_metrics,
                                  name1 = "Default", name2 = "Optimized")

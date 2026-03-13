@@ -1,6 +1,6 @@
 # sport_params.R
 # Optimized simulation parameters by sport and race type
-# Generated: 2026-03-12 20:35:51.925268
+# Generated: 2026-03-13 13:06:13.604224
 #
 # Usage:
 #   source('~/blog/daehl-e/content/post/shared/sport_params.R')
@@ -77,6 +77,51 @@ SPORT_PARAMS <- list(
     )
   ),
 
+  "biathlon" = list(
+    default = list(
+      decay_lambda = 0.004000,
+      sd_scale_factor = 0.7000,
+      sd_min = 18,
+      sd_max = 18,
+      n_history_required = 16,
+      gam_fill_weight_factor = 0.1500
+    ),
+    race_types = list(
+      "Sprint" = list(
+        decay_lambda = 0.001079,
+        sd_scale_factor = 0.7877,
+        sd_min = 20,
+        sd_max = 20,
+        n_history_required = 10,
+        gam_fill_weight_factor = 0.1011
+      ),
+      "Individual" = list(
+        decay_lambda = 0.003213,
+        sd_scale_factor = 0.5159,
+        sd_min = 23,
+        sd_max = 24,
+        n_history_required = 18,
+        gam_fill_weight_factor = 0.3056
+      ),
+      "Pursuit" = list(
+        decay_lambda = 0.004730,
+        sd_scale_factor = 0.6136,
+        sd_min = 18,
+        sd_max = 18,
+        n_history_required = 18,
+        gam_fill_weight_factor = 0.1174
+      ),
+      "Mass_Start" = list(
+        decay_lambda = 0.004000,
+        sd_scale_factor = 0.6000,
+        sd_min = 18,
+        sd_max = 24,
+        n_history_required = 16,
+        gam_fill_weight_factor = 0.2500
+      )
+    )
+  ),
+
   "alpine" = list(
     default = list(
       decay_lambda = 0.002000,
@@ -125,6 +170,88 @@ SPORT_PARAMS <- list(
         sd_min = 18,
         sd_max = 24,
         n_history_required = 16,
+        gam_fill_weight_factor = 0.2500
+      )
+    )
+  ),
+
+  "skijump" = list(
+    default = list(
+      decay_lambda = 0.003692,
+      sd_scale_factor = 0.6460,
+      sd_min = 24,
+      sd_max = 28,
+      n_history_required = 10,
+      gam_fill_weight_factor = 0.1782
+    ),
+    race_types = list(
+      "Large_Hill" = list(
+        decay_lambda = 0.004000,
+        sd_scale_factor = 0.6000,
+        sd_min = 24,
+        sd_max = 24,
+        n_history_required = 12,
+        gam_fill_weight_factor = 0.2500
+      ),
+      "Normal_Hill" = list(
+        decay_lambda = 0.004000,
+        sd_scale_factor = 0.6000,
+        sd_min = 18,
+        sd_max = 24,
+        n_history_required = 16,
+        gam_fill_weight_factor = 0.1500
+      ),
+      "Flying_Hill" = list(
+        decay_lambda = 0.000753,
+        sd_scale_factor = 0.9058,
+        sd_min = 24,
+        sd_max = 24,
+        n_history_required = 8,
+        gam_fill_weight_factor = 0.2299
+      )
+    )
+  ),
+
+  "nordic-combined" = list(
+    default = list(
+      decay_lambda = 0.003000,
+      sd_scale_factor = 0.9000,
+      sd_min = 18,
+      sd_max = 24,
+      n_history_required = 12,
+      gam_fill_weight_factor = 0.1500
+    ),
+    race_types = list(
+      "Individual" = list(
+        decay_lambda = 0.004956,
+        sd_scale_factor = 0.9141,
+        sd_min = 16,
+        sd_max = 24,
+        n_history_required = 14,
+        gam_fill_weight_factor = 0.2554
+      ),
+      "Individual_Compact" = list(
+        decay_lambda = 0.002000,
+        sd_scale_factor = 0.9000,
+        sd_min = 16,
+        sd_max = 24,
+        n_history_required = 10,
+        gam_fill_weight_factor = 0.2500
+      ),
+      "Mass_Start" = list(
+        decay_lambda = 0.004577,
+        sd_scale_factor = 0.7203,
+        sd_min = 16,
+        sd_max = 20,
+        n_history_required = 18,
+        gam_fill_weight_factor = 0.3732
+      ),
+      "Sprint" = list(
+        decay_lambda = 0.002000,
+        sd_scale_factor = 0.9000,
+        sd_min = 16,
+        sd_max = 24,
+        n_history_required = 10,
         gam_fill_weight_factor = 0.2500
       )
     )
