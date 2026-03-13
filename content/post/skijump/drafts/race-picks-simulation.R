@@ -663,7 +663,7 @@ get_weighted_prev_points <- function(chrono_data, athlete_id, race_type, referen
       days_ago = as.numeric(reference_date - Date),
       weight = exp(-DECAY_LAMBDA * pmax(0, days_ago))
     ) %>%
-    filter(days_ago >= 0, !is.na(Points))
+    filter(Date < reference_date, !is.na(Points))
 
   if (nrow(races) == 0) {
     return(list(mean = NA, sd = NA, n = 0))
@@ -824,20 +824,77 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
 # TEAM HELPER FUNCTIONS
 # ============================================================================
 
-get_team_weighted_prev_points <- function(team_chrono, nation, reference_date) {
-  if (nrow(team_chrono) == 0) {
-    return(list(mean = NA, sd = NA, n = 0))
+ensure_team_pelo_columns <- function(df) {
+  if (nrow(df) == 0) {
+    return(df)
   }
 
-  races <- team_chrono %>%
-    filter(Nation == nation)
+  elo_to_pelo <- c(
+    "Avg_Elo" = "Avg_Pelo",
+    "Avg_Normal_Elo" = "Avg_Normal_Pelo",
+    "Avg_Large_Elo" = "Avg_Large_Pelo",
+    "Avg_Flying_Elo" = "Avg_Flying_Pelo"
+  )
+
+  for (src_col in names(elo_to_pelo)) {
+    dst_col <- elo_to_pelo[[src_col]]
+    if (src_col %in% names(df) && !dst_col %in% names(df)) {
+      df[[dst_col]] <- df[[src_col]]
+    }
+  }
+
+  df
+}
+
+calculate_team_percentage_columns <- function(team_chrono) {
+  team_chrono <- ensure_team_pelo_columns(team_chrono)
+  team_pelo_cols <- grep("^Avg_.*Pelo$", names(team_chrono), value = TRUE)
+
+  if (length(team_pelo_cols) == 0) {
+    return(team_chrono)
+  }
+
+  team_chrono %>%
+    group_by(Season, Race) %>%
+    mutate(across(all_of(team_pelo_cols), ~ {
+      col_max <- suppressWarnings(max(.x, na.rm = TRUE))
+      if (!is.finite(col_max) || is.na(col_max) || col_max <= 0) {
+        NA_real_
+      } else {
+        .x / col_max
+      }
+    }, .names = "{.col}_pct")) %>%
+    ungroup()
+}
+
+extract_member_ids_from_startlist <- function(startlist_row) {
+  id_cols <- grep("^Member_[0-9]+_ID$", names(startlist_row), value = TRUE)
+  member_ids <- suppressWarnings(as.numeric(unlist(startlist_row[id_cols])))
+  member_ids <- member_ids[!is.na(member_ids) & member_ids > 0]
+  unique(member_ids)
+}
+
+extract_member_ids_from_history <- function(history_row) {
+  if (!"MemberIDs" %in% names(history_row) || is.na(history_row$MemberIDs[[1]])) {
+    return(numeric(0))
+  }
+  raw_ids <- strsplit(as.character(history_row$MemberIDs[[1]]), ",", fixed = TRUE)[[1]]
+  member_ids <- suppressWarnings(as.numeric(trimws(raw_ids)))
+  member_ids <- member_ids[!is.na(member_ids) & member_ids > 0]
+  unique(member_ids)
+}
+
+get_weighted_prev_points_all <- function(chrono_data, athlete_id, reference_date) {
+  races <- chrono_data %>%
+    filter(ID == athlete_id) %>%
+    arrange(desc(Date))
 
   if (nrow(races) == 0) {
-    return(list(mean = NA, sd = NA, n = 0))
+    return(list(mean = NA_real_, n = 0L))
   }
 
-  if (!"Points" %in% names(races)) {
-    races$Points <- sapply(races$Place, function(p) get_points(p, "Team"))
+  if (!"Points" %in% names(races) && "Place" %in% names(races)) {
+    races$Points <- vapply(suppressWarnings(as.integer(races$Place)), get_points, numeric(1))
   }
 
   races <- races %>%
@@ -848,62 +905,178 @@ get_team_weighted_prev_points <- function(team_chrono, nation, reference_date) {
     filter(days_ago >= 0, !is.na(Points))
 
   if (nrow(races) == 0) {
-    return(list(mean = NA, sd = NA, n = 0))
+    return(list(mean = NA_real_, n = 0L))
   }
 
-  weighted_mean <- sum(races$Points * races$weight) / sum(races$weight)
-
-  if (nrow(races) >= 2) {
-    weighted_var <- sum(races$weight * (races$Points - weighted_mean)^2) / sum(races$weight)
-    weighted_sd <- sqrt(weighted_var)
-  } else {
-    weighted_sd <- TEAM_SD_MAX / 2
-  }
-
-  return(list(
-    mean = weighted_mean,
-    sd = weighted_sd,
+  list(
+    mean = sum(races$Points * races$weight) / sum(races$weight),
     n = nrow(races)
-  ))
+  )
 }
 
-build_team_distribution <- function(nation, team_chrono, startlist_row,
-                                    reference_date = NULL) {
+compute_team_member_weighted_points <- function(member_ids, chrono_data, reference_date) {
+  if (length(member_ids) == 0) {
+    return(list(
+      team_prev_points_weighted_avg = NA_real_,
+      team_prev_points_weighted_sum = NA_real_,
+      team_prev_points_weighted_count = 0L
+    ))
+  }
+
+  weighted_points <- vapply(member_ids, function(member_id) {
+    get_weighted_prev_points_all(chrono_data, member_id, reference_date)$mean
+  }, numeric(1))
+
+  valid_points <- weighted_points[is.finite(weighted_points) & !is.na(weighted_points)]
+  if (length(valid_points) == 0) {
+    return(list(
+      team_prev_points_weighted_avg = NA_real_,
+      team_prev_points_weighted_sum = NA_real_,
+      team_prev_points_weighted_count = 0L
+    ))
+  }
+
+  list(
+    team_prev_points_weighted_avg = mean(valid_points),
+    team_prev_points_weighted_sum = sum(valid_points),
+    team_prev_points_weighted_count = length(valid_points)
+  )
+}
+
+prepare_team_training_data <- function(team_chrono, individual_chrono) {
+  if (nrow(team_chrono) == 0) {
+    return(team_chrono)
+  }
+
+  team_chrono <- team_chrono %>%
+    mutate(Date = as.Date(Date))
+  team_chrono <- calculate_team_percentage_columns(team_chrono)
+
+  if (!"Points" %in% names(team_chrono) && "Place" %in% names(team_chrono)) {
+    team_chrono$Points <- vapply(suppressWarnings(as.integer(team_chrono$Place)), get_points, numeric(1))
+  }
+
+  team_features <- lapply(seq_len(nrow(team_chrono)), function(i) {
+    history_row <- team_chrono[i, , drop = FALSE]
+    member_ids <- extract_member_ids_from_history(history_row)
+    compute_team_member_weighted_points(member_ids, individual_chrono, history_row$Date[[1]])
+  })
+
+  bind_cols(team_chrono, bind_rows(team_features))
+}
+
+get_team_explanatory_vars <- function() {
+  c(
+    "team_prev_points_weighted_avg",
+    "team_prev_points_weighted_sum",
+    "Avg_Pelo_pct",
+    "Avg_Normal_Pelo_pct",
+    "Avg_Large_Pelo_pct",
+    "Avg_Flying_Pelo_pct"
+  )
+}
+
+train_team_points_gam <- function(team_chrono, individual_chrono, race_type, gender_label, sex_filter = NULL) {
+  filtered_data <- team_chrono %>% filter(RaceType == race_type)
+  if (!is.null(sex_filter) && "Sex" %in% names(filtered_data)) {
+    filtered_data <- filtered_data %>% filter(Sex == sex_filter)
+  }
+  if (nrow(filtered_data) == 0) {
+    return(NULL)
+  }
+
+  filtered_data <- prepare_team_training_data(filtered_data, individual_chrono)
+  filtered_data <- filtered_data %>% filter(!is.na(Points))
+
+  explanatory_vars <- intersect(get_team_explanatory_vars(), names(filtered_data))
+  if (length(explanatory_vars) == 0 || nrow(filtered_data) < 25) {
+    log_warn(paste("Insufficient team GAM data for", gender_label, race_type))
+    return(NULL)
+  }
+
+  for (col in explanatory_vars) {
+    filtered_data[[col]] <- replace_na_with_quartile(filtered_data[[col]])
+  }
+
+  tryCatch({
+    formula <- as.formula(paste("Points ~", paste(explanatory_vars, collapse = " + ")))
+    feature_selection <- regsubsets(formula, data = filtered_data, nbest = 1, method = "exhaustive")
+    feature_summary <- summary(feature_selection)
+    best_bic_vars <- names(coef(feature_selection, which.min(feature_summary$bic)))[-1]
+    positive_vars <- filter_positive_coefficients(filtered_data, "Points", best_bic_vars)
+    if (length(positive_vars) == 0) positive_vars <- explanatory_vars[1]
+
+    smooth_terms <- paste("s(", positive_vars, ")", collapse = " + ")
+    gam_formula <- as.formula(paste("Points ~", smooth_terms))
+    points_model <- gam(gam_formula, data = filtered_data, method = "REML")
+
+    residual_sd <- sqrt(points_model$sig2)
+    if (is.null(residual_sd) || is.na(residual_sd)) {
+      residual_sd <- sqrt(points_model$deviance / points_model$df.residual)
+    }
+    residual_sd <- max(residual_sd, TEAM_SD_MIN)
+
+    feature_defaults <- lapply(positive_vars, function(col) replace_na_with_quartile(filtered_data[[col]])[1])
+    names(feature_defaults) <- positive_vars
+
+    log_info(paste("Team GAM trained for", gender_label, race_type, "- Residual SD:", round(residual_sd, 2)))
+    list(
+      model = points_model,
+      residual_sd = residual_sd,
+      features = positive_vars,
+      feature_defaults = feature_defaults,
+      fallback_points = median(filtered_data$Points, na.rm = TRUE)
+    )
+  }, error = function(e) {
+    log_error(paste("Error training team GAM for", gender_label, race_type, ":", e$message))
+    NULL
+  })
+}
+
+build_team_distribution <- function(nation, startlist_row, individual_chrono,
+                                    model_info, reference_date = NULL) {
   if (is.null(reference_date)) {
     reference_date <- Sys.Date()
   }
 
-  hist_stats <- get_team_weighted_prev_points(team_chrono, nation, reference_date)
+  team_features <- startlist_row
+  member_ids <- extract_member_ids_from_startlist(startlist_row)
+  member_point_features <- compute_team_member_weighted_points(member_ids, individual_chrono, reference_date)
 
-  avg_pelo_pct <- NA
-  pelo_pct_cols <- grep("^Avg_.*Pelo_pct$", names(startlist_row), value = TRUE)
-  if (length(pelo_pct_cols) > 0) {
-    pelo_pct_values <- suppressWarnings(as.numeric(unlist(startlist_row[pelo_pct_cols])))
-    avg_pelo_pct <- mean(pelo_pct_values, na.rm = TRUE)
+  for (feature_name in names(member_point_features)) {
+    team_features[[feature_name]] <- member_point_features[[feature_name]]
   }
 
-  if (!is.na(avg_pelo_pct) && avg_pelo_pct > 0) {
-    mean_points <- avg_pelo_pct * 70
-    sd_points <- if (!is.na(hist_stats$sd)) hist_stats$sd else TEAM_SD_MAX / 2
-  } else if (!is.na(hist_stats$mean) && hist_stats$n >= 2) {
-    mean_points <- hist_stats$mean
-    sd_points <- hist_stats$sd
-  } else if (!is.na(hist_stats$mean)) {
-    mean_points <- hist_stats$mean
-    sd_points <- if (!is.na(hist_stats$sd)) hist_stats$sd else TEAM_SD_MAX / 2
-  } else {
-    mean_points <- 10
-    sd_points <- TEAM_SD_MAX
+  mean_points <- NA_real_
+  sd_points <- TEAM_SD_MAX
+
+  if (!is.null(model_info)) {
+    for (feature_name in model_info$features) {
+      if (!feature_name %in% names(team_features) || is.na(team_features[[feature_name]][1])) {
+        team_features[[feature_name]] <- model_info$feature_defaults[[feature_name]]
+      }
+    }
+
+    mean_points <- tryCatch({
+      as.numeric(predict(model_info$model, newdata = team_features, type = "response"))[1]
+    }, error = function(e) {
+      NA_real_
+    })
+    sd_points <- model_info$residual_sd
+  }
+
+  if (!is.finite(mean_points) || is.na(mean_points)) {
+    mean_points <- if (!is.null(model_info)) model_info$fallback_points else 10
   }
 
   sd_points <- pmax(TEAM_SD_MIN, pmin(TEAM_SD_MAX, sd_points))
 
-  return(list(
+  list(
     nation = nation,
     mean = mean_points,
     sd = sd_points,
-    n_actual_races = hist_stats$n
-  ))
+    n_actual_races = member_point_features$team_prev_points_weighted_count
+  )
 }
 
 simulate_team_positions <- function(team_distributions, n_simulations = N_SIMULATIONS,
@@ -1017,6 +1190,16 @@ for (race_type in all_race_types) {
 
 log_info(paste("Trained", sum(!sapply(men_gam_models, is.null)), "men's GAM models"))
 log_info(paste("Trained", sum(!sapply(ladies_gam_models, is.null)), "ladies' GAM models"))
+
+mixed_individual_chrono <- bind_rows(men_chrono, ladies_chrono)
+team_gam_models <- list(
+  men_team = if (nrow(men_team_chrono) > 0 && nrow(men_chrono) > 0)
+    train_team_points_gam(men_team_chrono, men_chrono, "Team Large", "men", "M") else NULL,
+  ladies_team = if (nrow(ladies_team_chrono) > 0 && nrow(ladies_chrono) > 0)
+    train_team_points_gam(ladies_team_chrono, ladies_chrono, "Team Large", "ladies", "L") else NULL,
+  mixed_team = if (nrow(mixed_team_chrono) > 0)
+    train_team_points_gam(mixed_team_chrono, mixed_individual_chrono, "Mixed Team", "mixed", "Mixed") else NULL
+)
 
 # ============================================================================
 # INDIVIDUAL RACE SIMULATION
@@ -1210,8 +1393,9 @@ if (nrow(men_teams) > 0 && nrow(men_team_startlist) > 0) {
 
     dist <- build_team_distribution(
       nation = nation,
-      team_chrono = men_team_chrono,
       startlist_row = men_team_startlist[i, ],
+      individual_chrono = men_chrono,
+      model_info = team_gam_models$men_team,
       reference_date = current_date
     )
 
@@ -1257,8 +1441,9 @@ if (nrow(ladies_teams) > 0 && nrow(ladies_team_startlist) > 0) {
 
     dist <- build_team_distribution(
       nation = nation,
-      team_chrono = ladies_team_chrono,
       startlist_row = ladies_team_startlist[i, ],
+      individual_chrono = ladies_chrono,
+      model_info = team_gam_models$ladies_team,
       reference_date = current_date
     )
 
@@ -1304,8 +1489,9 @@ if (nrow(mixed_teams) > 0 && nrow(mixed_team_startlist) > 0) {
 
     dist <- build_team_distribution(
       nation = nation,
-      team_chrono = mixed_team_chrono,
       startlist_row = mixed_team_startlist[i, ],
+      individual_chrono = mixed_individual_chrono,
+      model_info = team_gam_models$mixed_team,
       reference_date = current_date
     )
 

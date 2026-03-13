@@ -1,6 +1,6 @@
 # sport_params.R
 # Optimized simulation parameters by sport and race type
-# Generated: 2026-03-11 18:15:48.851367
+# Generated: 2026-03-12 20:35:51.925268
 #
 # Usage:
 #   source('~/blog/daehl-e/content/post/shared/sport_params.R')
@@ -79,66 +79,53 @@ SPORT_PARAMS <- list(
 
   "alpine" = list(
     default = list(
-      decay_lambda = 0.002,
-      sd_scale_factor = 0.77,
-      sd_min = 4,
-      sd_max = 16,
-      n_history_required = 10,
-      gam_fill_weight_factor = 0.25
-    ),
-    race_types = list()
-  ),
-
-  "biathlon" = list(
-    default = list(
-      decay_lambda = 0.002,
-      sd_scale_factor = 0.77,
-      sd_min = 4,
-      sd_max = 16,
-      n_history_required = 10,
-      gam_fill_weight_factor = 0.25
+      decay_lambda = 0.002000,
+      sd_scale_factor = 0.9000,
+      sd_min = 18,
+      sd_max = 24,
+      n_history_required = 16,
+      gam_fill_weight_factor = 0.2500
     ),
     race_types = list(
-      "Relay" = list(
-        sd_scale_factor = 0.8,
-        sd_min = 3,
-        sd_max = 12
-      )
-    )
-  ),
-
-  "nordic-combined" = list(
-    default = list(
-      decay_lambda = 0.002,
-      sd_scale_factor = 0.77,
-      sd_min = 4,
-      sd_max = 16,
-      n_history_required = 10,
-      gam_fill_weight_factor = 0.25
-    ),
-    race_types = list(
-      "Team" = list(
-        sd_scale_factor = 0.8,
-        sd_min = 3,
-        sd_max = 12
-      )
-    )
-  ),
-
-  "skijump" = list(
-    default = list(
-      decay_lambda = 0.002,
-      sd_scale_factor = 0.77,
-      sd_min = 4,
-      sd_max = 16,
-      n_history_required = 10,
-      gam_fill_weight_factor = 0.25
-    ),
-    race_types = list(
-      "Team_Large" = list(
-        sd_scale_factor = 0.8,
-        sd_min = 3,
-        sd_max = 12
+      "Downhill" = list(
+        decay_lambda = 0.001248,
+        sd_scale_factor = 0.7891,
+        sd_min = 18,
+        sd_max = 22,
+        n_history_required = 16,
+        gam_fill_weight_factor = 0.1336
+      ),
+      "Super_G" = list(
+        decay_lambda = 0.002544,
+        sd_scale_factor = 0.7384,
+        sd_min = 22,
+        sd_max = 24,
+        n_history_required = 12,
+        gam_fill_weight_factor = 0.1028
+      ),
+      "Giant_Slalom" = list(
+        decay_lambda = 0.004405,
+        sd_scale_factor = 0.6393,
+        sd_min = 22,
+        sd_max = 22,
+        n_history_required = 16,
+        gam_fill_weight_factor = 0.3716
+      ),
+      "Slalom" = list(
+        decay_lambda = 0.004000,
+        sd_scale_factor = 0.8000,
+        sd_min = 18,
+        sd_max = 24,
+        n_history_required = 16,
+        gam_fill_weight_factor = 0.3500
+      ),
+      "Combined" = list(
+        decay_lambda = 0.004000,
+        sd_scale_factor = 0.9000,
+        sd_min = 18,
+        sd_max = 24,
+        n_history_required = 16,
+        gam_fill_weight_factor = 0.2500
       )
     )
   )
@@ -155,7 +142,6 @@ get_sport_params <- function(sport, race_type = NULL, event_type = NULL) {
   if (is.null(race_type) && !is.null(event_type)) {
     race_type <- event_type
   }
-
   sport_config <- SPORT_PARAMS[[sport]]
   
   if (is.null(sport_config)) {

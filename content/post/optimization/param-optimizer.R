@@ -30,6 +30,7 @@ FINAL_N_SIMS <- 2000
 # Results directory
 RESULTS_DIR <- path.expand("~/blog/daehl-e/content/post/optimization/results")
 LOG_DIR <- path.expand("~/blog/daehl-e/content/post/optimization/logs")
+SUPPORTED_SPORTS <- c("cross-country", "biathlon", "alpine", "skijump", "nordic-combined")
 
 # =============================================================================
 # LOGGING INFRASTRUCTURE
@@ -973,6 +974,10 @@ load_results <- function(filepath) {
 #' @param output_path Output file path
 generate_sport_params_file <- function(all_sport_results,
                                         output_path = "~/blog/daehl-e/content/post/shared/sport_params.R") {
+  if (length(all_sport_results) == 0) {
+    stop("No valid optimization results available - refusing to overwrite sport_params.R")
+  }
+  output_path <- path.expand(output_path)
 
   # Build the params structure
   lines <- c(
@@ -993,6 +998,9 @@ generate_sport_params_file <- function(all_sport_results,
   for (s_idx in seq_along(sport_names)) {
     sport <- sport_names[s_idx]
     sport_results <- all_sport_results[[sport]]
+    if (is.null(sport_results$default) || is.null(sport_results$default$best_params)) {
+      stop(sprintf("Missing default best_params for sport '%s' - refusing to generate partial sport_params.R", sport))
+    }
 
     lines <- c(lines, sprintf('  "%s" = list(', sport))
 
@@ -1047,8 +1055,12 @@ generate_sport_params_file <- function(all_sport_results,
     "#'",
     "#' @param sport Sport name",
     "#' @param race_type Optional race type (uses default if NULL)",
+    "#' @param event_type Backward-compatible alias for race_type",
     "#' @return List of parameters",
-    "get_sport_params <- function(sport, race_type = NULL) {",
+    "get_sport_params <- function(sport, race_type = NULL, event_type = NULL) {",
+    "  if (is.null(race_type) && !is.null(event_type)) {",
+    "    race_type <- event_type",
+    "  }",
     "  sport_config <- SPORT_PARAMS[[sport]]",
     "  ",
     "  if (is.null(sport_config)) {",
@@ -1379,12 +1391,21 @@ run_full_optimization <- function(sports = c("cross-country", "biathlon", "alpin
   log_info("")
   log_info(">>> AGGREGATING RESULTS <<<")
   sport_results <- aggregate_gender_results(all_results, sports, genders)
+  merged_sport_results <- merge_with_saved_sport_results(
+    current_sport_results = sport_results,
+    sports = SUPPORTED_SPORTS,
+    preferred_genders = genders
+  )
 
-  # Generate updated sport_params.R
-  log_info("")
-  log_info(">>> GENERATING sport_params.R <<<")
-  output_path <- generate_sport_params_file(sport_results)
-  log_info(sprintf("Generated: %s", output_path))
+  output_path <- NULL
+  if (length(merged_sport_results) > 0) {
+    log_info("")
+    log_info(">>> GENERATING sport_params.R <<<")
+    output_path <- generate_sport_params_file(merged_sport_results)
+    log_info(sprintf("Generated: %s", output_path))
+  } else {
+    log_warn("No valid sport results were produced; sport_params.R was not regenerated")
+  }
 
   end_time <- Sys.time()
   duration <- as.numeric(difftime(end_time, start_time, units = "hours"))
@@ -1407,7 +1428,7 @@ run_full_optimization <- function(sports = c("cross-country", "biathlon", "alpin
   }
   log_info("##")
   log_info("##  Output Files:")
-  log_info(sprintf("##    Parameters: %s", output_path))
+  log_info(sprintf("##    Parameters: %s", ifelse(is.null(output_path), "NOT GENERATED", output_path)))
   log_info(sprintf("##    Master Log: %s", master_log_file))
   log_info("##")
   log_info("################################################################################")
@@ -1430,12 +1451,26 @@ aggregate_gender_results <- function(all_results, sports, genders) {
     # Could extend to average or weighted combination
     key <- paste(sport, genders[1], sep = "_")
 
-    if (!is.null(all_results[[key]]) && is.null(all_results[[key]]$error)) {
+    if (!is.null(all_results[[key]]) &&
+        is.null(all_results[[key]]$error) &&
+        !is.null(all_results[[key]]$default) &&
+        !is.null(all_results[[key]]$default$best_params)) {
       sport_results[[sport]] <- all_results[[key]]
     }
   }
 
   return(sport_results)
+}
+
+#' Check whether an optimization result contains usable best parameters
+#'
+#' @param result Optimization result object
+#' @return TRUE if valid
+is_valid_optimization_result <- function(result) {
+  !is.null(result) &&
+    is.null(result$error) &&
+    !is.null(result$default) &&
+    !is.null(result$default$best_params)
 }
 
 #' Load previously saved optimization results
@@ -1477,6 +1512,49 @@ load_optimization_results <- function(sport, gender, timestamp = NULL) {
   return(readRDS(latest_file))
 }
 
+#' Load the latest valid optimization result for a sport
+#'
+#' @param sport Sport name
+#' @param preferred_genders Ordered vector of genders to try
+#' @return Optimization result or NULL
+load_latest_valid_result_for_sport <- function(sport, preferred_genders = c("men", "ladies")) {
+  for (gender in preferred_genders) {
+    result <- tryCatch(load_optimization_results(sport, gender), error = function(e) NULL)
+    if (is_valid_optimization_result(result)) {
+      return(result)
+    }
+  }
+
+  return(NULL)
+}
+
+#' Merge current sport results with latest saved valid results on disk
+#'
+#' @param current_sport_results Named list of current in-memory sport results
+#' @param sports Sports to include
+#' @param preferred_genders Ordered vector of genders to try for saved results
+#' @return Named list of merged sport results
+merge_with_saved_sport_results <- function(current_sport_results,
+                                           sports = SUPPORTED_SPORTS,
+                                           preferred_genders = c("men", "ladies")) {
+  merged_results <- list()
+
+  for (sport in sports) {
+    if (!is.null(current_sport_results[[sport]]) &&
+        is_valid_optimization_result(current_sport_results[[sport]])) {
+      merged_results[[sport]] <- current_sport_results[[sport]]
+      next
+    }
+
+    saved_result <- load_latest_valid_result_for_sport(sport, preferred_genders)
+    if (!is.null(saved_result)) {
+      merged_results[[sport]] <- saved_result
+    }
+  }
+
+  merged_results
+}
+
 #' List all saved optimization results
 #'
 #' @return Data frame of available results
@@ -1512,21 +1590,15 @@ list_optimization_results <- function() {
 #' Loads the latest results for each sport and generates sport_params.R
 #'
 #' @param sports Sports to include
-#' @param gender Gender results to use
+#' @param preferred_genders Ordered vector of genders to try
 #' @return Path to generated file
-regenerate_sport_params <- function(sports = c("cross-country", "biathlon", "alpine",
-                                                "skijump", "nordic-combined"),
-                                     gender = "men") {
-  sport_results <- list()
-
-  for (sport in sports) {
-    results <- load_optimization_results(sport, gender)
-    if (!is.null(results)) {
-      sport_results[[sport]] <- results
-    } else {
-      cat(sprintf("Skipping %s (no results found)\n", sport))
-    }
-  }
+regenerate_sport_params <- function(sports = SUPPORTED_SPORTS,
+                                     preferred_genders = c("men", "ladies")) {
+  sport_results <- merge_with_saved_sport_results(
+    current_sport_results = list(),
+    sports = sports,
+    preferred_genders = preferred_genders
+  )
 
   if (length(sport_results) == 0) {
     stop("No results loaded - cannot generate sport_params.R")

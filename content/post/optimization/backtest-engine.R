@@ -158,22 +158,17 @@ simulate_race_backtest <- function(athlete_distributions, n_simulations = BACKTE
 #' @param chrono_data Full chrono data
 #' @return Data frame with athlete_id and Place columns
 get_race_results <- function(race_info, chrono_data) {
-  # Filter to this exact race
+  # Filter to this exact race using all shared grouping columns.
   results <- chrono_data %>%
-    filter(
-      Date == race_info$Date,
-      Sex == race_info$Sex
-    )
+    filter(Date == race_info$Date, Sex == race_info$Sex)
 
-  # Additional filters based on available columns
-  if ("Distance" %in% names(race_info) && !is.na(race_info$Distance)) {
-    results <- results %>% filter(Distance == race_info$Distance)
-  }
-  if ("Technique" %in% names(race_info) && !is.na(race_info$Technique)) {
-    results <- results %>% filter(Technique == race_info$Technique)
-  }
-  if ("City" %in% names(race_info) && !is.na(race_info$City)) {
-    results <- results %>% filter(City == race_info$City)
+  race_cols <- intersect(names(race_info), names(results))
+  skip_cols <- c("n_competitors", "Date", "Sex")
+
+  for (col in setdiff(race_cols, skip_cols)) {
+    value <- race_info[[col]]
+    if (length(value) == 0 || is.na(value)) next
+    results <- results %>% filter(.data[[col]] == value)
   }
 
   # Return athlete_id and Place
@@ -388,17 +383,30 @@ get_calibration_races <- function(sport, chrono_data,
                                    season_range = 2018:2025,
                                    race_type = NULL,
                                    min_field_size = 20) {
-
-  # Get unique races from chrono data
-  # Include MS (mass start) column if it exists
-  group_cols <- c("Date", "Sex", "Distance", "Technique", "City")
-  if ("MS" %in% names(chrono_data)) {
-    group_cols <- c(group_cols, "MS")
-  }
-
   # Filter out offseason/reset rows before grouping
   filtered_data <- chrono_data %>%
     filter(Season %in% season_range)
+
+  # Normalize schema differences across sports for grouping/filtering.
+  if (!"Distance" %in% names(filtered_data) && "HillSize" %in% names(filtered_data)) {
+    filtered_data$Distance <- as.character(filtered_data$HillSize)
+  } else if (!"Distance" %in% names(filtered_data)) {
+    filtered_data$Distance <- NA_character_
+  }
+  if (!"Technique" %in% names(filtered_data)) {
+    filtered_data$Technique <- NA_character_
+  }
+  if (!"Hill" %in% names(filtered_data) && "HillSize" %in% names(filtered_data)) {
+    filtered_data$Hill <- dplyr::case_when(
+      filtered_data$HillSize >= 185 ~ "Flying",
+      filtered_data$HillSize >= 120 ~ "Large",
+      filtered_data$HillSize >= 85 ~ "Normal",
+      TRUE ~ "Other"
+    )
+  }
+  if (!"MS" %in% names(filtered_data) && "MassStart" %in% names(filtered_data)) {
+    filtered_data$MS <- filtered_data$MassStart
+  }
 
   # Exclude offseason rows: Event = "Offseason", Distance = "0", Place = 0
   if ("Event" %in% names(filtered_data)) {
@@ -407,8 +415,22 @@ get_calibration_races <- function(sport, chrono_data,
   if ("Place" %in% names(filtered_data)) {
     filtered_data <- filtered_data %>% filter(Place > 0)
   }
-  # Exclude Distance = "0" (offseason reset rows)
-  filtered_data <- filtered_data %>% filter(Distance != "0")
+  # Exclude reset rows only if Distance exists for this sport.
+  if ("Distance" %in% names(filtered_data)) {
+    filtered_data <- filtered_data %>% filter(!is.na(Distance), Distance != "0")
+  }
+
+  # Sport-specific grouping columns.
+  group_cols <- switch(
+    sport,
+    "cross-country" = c("Date", "Sex", "Distance", "Technique", "City", "MS"),
+    "alpine" = c("Date", "Sex", "Distance", "City"),
+    "biathlon" = c("Date", "Sex", "RaceType", "Distance", "City", "MassStart"),
+    "nordic-combined" = c("Date", "Sex", "RaceType", "Distance", "City", "MassStart"),
+    "skijump" = c("Date", "Sex", "Hill", "HillSize", "RaceType", "City", "TeamEvent"),
+    c("Date", "Sex", "Distance", "Technique", "City")
+  )
+  group_cols <- intersect(group_cols, names(filtered_data))
 
   races <- filtered_data %>%
     group_by(across(all_of(group_cols))) %>%
@@ -427,17 +449,19 @@ get_calibration_races <- function(sport, chrono_data,
       filter_func <- race_types[[race_type]]$filter
       if (!is.null(filter_func)) {
         # Apply the filter function row by row
-        keep_rows <- sapply(1:nrow(races), function(i) {
+        keep_rows <- vapply(seq_len(nrow(races)), function(i) {
           tryCatch({
             result <- filter_func(races[i, ])
-            # Handle tibble/data.frame results
-            if (is.data.frame(result) || is.list(result)) {
-              as.logical(result[[1]])
-            } else {
-              as.logical(result)
+            if (is.data.frame(result)) {
+              result <- unlist(result, use.names = FALSE)
+            } else if (is.list(result)) {
+              result <- unlist(result, use.names = FALSE)
             }
+            result <- as.logical(result)
+            result <- result[!is.na(result)]
+            if (length(result) == 0) FALSE else result[1]
           }, error = function(e) FALSE)
-        })
+        }, logical(1))
         races <- races[keep_rows, ]
       }
     } else {

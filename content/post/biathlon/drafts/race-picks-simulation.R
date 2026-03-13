@@ -543,7 +543,7 @@ get_weighted_prev_points <- function(chrono_data, athlete_id, race_type, referen
       days_ago = as.numeric(reference_date - Date),
       weight = exp(-DECAY_LAMBDA * pmax(0, days_ago))
     ) %>%
-    filter(days_ago >= 0, !is.na(Points))
+    filter(Date < reference_date, !is.na(Points))
 
   if (nrow(races) == 0) {
     return(list(mean = NA, sd = NA, n = 0))
@@ -842,25 +842,81 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
 # RELAY HELPER FUNCTIONS
 # ============================================================================
 
-# Get weighted previous points for a relay team (nation-based)
-get_relay_weighted_prev_points <- function(relay_chrono, nation, reference_date) {
-  if (nrow(relay_chrono) == 0) {
-    return(list(mean = NA, sd = NA, n = 0))
+ensure_relay_pelo_columns <- function(df) {
+  if (nrow(df) == 0) {
+    return(df)
   }
 
-  races <- relay_chrono %>%
-    filter(Nation == nation)
+  elo_to_pelo <- c(
+    "Avg_Elo" = "Avg_Pelo",
+    "Avg_Individual_Elo" = "Avg_Individual_Pelo",
+    "Avg_Sprint_Elo" = "Avg_Sprint_Pelo",
+    "Avg_Pursuit_Elo" = "Avg_Pursuit_Pelo",
+    "Avg_MassStart_Elo" = "Avg_MassStart_Pelo"
+  )
+
+  for (src_col in names(elo_to_pelo)) {
+    dst_col <- elo_to_pelo[[src_col]]
+    if (src_col %in% names(df) && !dst_col %in% names(df)) {
+      df[[dst_col]] <- df[[src_col]]
+    }
+  }
+
+  df
+}
+
+calculate_relay_percentage_columns <- function(relay_chrono) {
+  relay_chrono <- ensure_relay_pelo_columns(relay_chrono)
+  relay_pelo_cols <- grep("^Avg_.*Pelo$", names(relay_chrono), value = TRUE)
+
+  if (length(relay_pelo_cols) == 0) {
+    return(relay_chrono)
+  }
+
+  relay_chrono %>%
+    group_by(Season, Race) %>%
+    mutate(across(all_of(relay_pelo_cols), ~ {
+      col_max <- suppressWarnings(max(.x, na.rm = TRUE))
+      if (!is.finite(col_max) || is.na(col_max) || col_max <= 0) {
+        NA_real_
+      } else {
+        .x / col_max
+      }
+    }, .names = "{.col}_pct")) %>%
+    ungroup()
+}
+
+extract_member_ids_from_startlist <- function(startlist_row) {
+  id_cols <- grep("^Member_[0-9]+_ID$", names(startlist_row), value = TRUE)
+  member_ids <- suppressWarnings(as.numeric(unlist(startlist_row[id_cols])))
+  member_ids <- member_ids[!is.na(member_ids) & member_ids > 0]
+  unique(member_ids)
+}
+
+extract_member_ids_from_history <- function(history_row) {
+  if (!"MemberIDs" %in% names(history_row) || is.na(history_row$MemberIDs[[1]])) {
+    return(numeric(0))
+  }
+  raw_ids <- strsplit(as.character(history_row$MemberIDs[[1]]), ",", fixed = TRUE)[[1]]
+  member_ids <- suppressWarnings(as.numeric(trimws(raw_ids)))
+  member_ids <- member_ids[!is.na(member_ids) & member_ids > 0]
+  unique(member_ids)
+}
+
+get_weighted_prev_points_all <- function(chrono_data, athlete_id, reference_date) {
+  races <- chrono_data %>%
+    filter(ID == athlete_id) %>%
+    arrange(desc(Date))
 
   if (nrow(races) == 0) {
-    return(list(mean = NA, sd = NA, n = 0))
+    return(list(mean = NA_real_, n = 0L))
   }
 
-  # Calculate points if not present
-  if (!"Points" %in% names(races)) {
-    races$Points <- mapply(function(p) get_points(p, "Relay"), races$Place)
+  if (!"Points" %in% names(races) &&
+      all(c("Place", "RaceType") %in% names(races))) {
+    races$Points <- mapply(get_points, races$Place, races$RaceType)
   }
 
-  # Calculate days ago and weights
   races <- races %>%
     mutate(
       days_ago = as.numeric(reference_date - Date),
@@ -869,72 +925,177 @@ get_relay_weighted_prev_points <- function(relay_chrono, nation, reference_date)
     filter(days_ago >= 0, !is.na(Points))
 
   if (nrow(races) == 0) {
-    return(list(mean = NA, sd = NA, n = 0))
+    return(list(mean = NA_real_, n = 0L))
   }
 
-  # Calculate weighted statistics
-  weighted_mean <- sum(races$Points * races$weight) / sum(races$weight)
-
-  if (nrow(races) >= 2) {
-    weighted_var <- sum(races$weight * (races$Points - weighted_mean)^2) / sum(races$weight)
-    weighted_sd <- sqrt(weighted_var)
-  } else {
-    weighted_sd <- RELAY_SD_MAX / 2
-  }
-
-  return(list(
-    mean = weighted_mean,
-    sd = weighted_sd,
+  list(
+    mean = sum(races$Points * races$weight) / sum(races$weight),
     n = nrow(races)
-  ))
+  )
 }
 
-# Build relay team distribution for simulation
-build_relay_team_distribution <- function(nation, relay_chrono, startlist_row,
-                                          reference_date = NULL) {
+compute_member_weighted_point_features <- function(member_ids, chrono_data, reference_date) {
+  if (length(member_ids) == 0) {
+    return(list(
+      team_prev_points_weighted_avg = NA_real_,
+      team_prev_points_weighted_sum = NA_real_,
+      team_prev_points_weighted_count = 0L
+    ))
+  }
+
+  weighted_points <- vapply(member_ids, function(member_id) {
+    get_weighted_prev_points_all(chrono_data, member_id, reference_date)$mean
+  }, numeric(1))
+
+  valid_points <- weighted_points[is.finite(weighted_points) & !is.na(weighted_points)]
+  if (length(valid_points) == 0) {
+    return(list(
+      team_prev_points_weighted_avg = NA_real_,
+      team_prev_points_weighted_sum = NA_real_,
+      team_prev_points_weighted_count = 0L
+    ))
+  }
+
+  list(
+    team_prev_points_weighted_avg = mean(valid_points),
+    team_prev_points_weighted_sum = sum(valid_points),
+    team_prev_points_weighted_count = length(valid_points)
+  )
+}
+
+prepare_relay_training_data <- function(relay_chrono, individual_chrono) {
+  if (nrow(relay_chrono) == 0) {
+    return(relay_chrono)
+  }
+
+  relay_chrono <- relay_chrono %>%
+    mutate(Date = as.Date(Date))
+  relay_chrono <- calculate_relay_percentage_columns(relay_chrono)
+
+  if (!"Points" %in% names(relay_chrono) && "Place" %in% names(relay_chrono)) {
+    relay_chrono$Points <- mapply(get_points, relay_chrono$Place, relay_chrono$RaceType)
+  }
+
+  team_features <- lapply(seq_len(nrow(relay_chrono)), function(i) {
+    history_row <- relay_chrono[i, , drop = FALSE]
+    member_ids <- extract_member_ids_from_history(history_row)
+    compute_member_weighted_point_features(member_ids, individual_chrono, history_row$Date[[1]])
+  })
+
+  team_feature_df <- bind_rows(team_features)
+  bind_cols(relay_chrono, team_feature_df)
+}
+
+get_relay_explanatory_vars <- function() {
+  c(
+    "team_prev_points_weighted_avg",
+    "team_prev_points_weighted_sum",
+    "Avg_Pelo_pct",
+    "Avg_Individual_Pelo_pct",
+    "Avg_Sprint_Pelo_pct",
+    "Avg_Pursuit_Pelo_pct",
+    "Avg_MassStart_Pelo_pct"
+  )
+}
+
+train_relay_points_gam <- function(relay_chrono, individual_chrono, race_type, gender_label) {
+  filtered_data <- relay_chrono %>% filter(RaceType == race_type)
+  if (nrow(filtered_data) == 0) {
+    return(NULL)
+  }
+
+  filtered_data <- prepare_relay_training_data(filtered_data, individual_chrono)
+  filtered_data <- filtered_data %>% filter(!is.na(Points))
+
+  explanatory_vars <- intersect(get_relay_explanatory_vars(), names(filtered_data))
+  if (length(explanatory_vars) == 0 || nrow(filtered_data) < 25) {
+    log_warn(paste("Insufficient relay GAM data for", gender_label, race_type))
+    return(NULL)
+  }
+
+  for (col in explanatory_vars) {
+    filtered_data[[col]] <- replace_na_with_quartile(filtered_data[[col]])
+  }
+
+  tryCatch({
+    formula <- as.formula(paste("Points ~", paste(explanatory_vars, collapse = " + ")))
+    feature_selection <- regsubsets(formula, data = filtered_data, nbest = 1, method = "exhaustive")
+    feature_summary <- summary(feature_selection)
+    best_bic_vars <- names(coef(feature_selection, which.min(feature_summary$bic)))[-1]
+    positive_vars <- filter_positive_coefficients(filtered_data, "Points", best_bic_vars)
+    if (length(positive_vars) == 0) positive_vars <- explanatory_vars[1]
+
+    smooth_terms <- paste("s(", positive_vars, ")", collapse = " + ")
+    gam_formula <- as.formula(paste("Points ~", smooth_terms))
+    points_model <- gam(gam_formula, data = filtered_data, method = "REML")
+
+    residual_sd <- sqrt(points_model$sig2)
+    if (is.null(residual_sd) || is.na(residual_sd)) {
+      residual_sd <- sqrt(points_model$deviance / points_model$df.residual)
+    }
+    residual_sd <- max(residual_sd, RELAY_SD_MIN)
+
+    feature_defaults <- lapply(positive_vars, function(col) replace_na_with_quartile(filtered_data[[col]])[1])
+    names(feature_defaults) <- positive_vars
+
+    log_info(paste("Relay GAM trained for", gender_label, race_type, "- Residual SD:", round(residual_sd, 2)))
+    list(
+      model = points_model,
+      residual_sd = residual_sd,
+      features = positive_vars,
+      feature_defaults = feature_defaults,
+      fallback_points = median(filtered_data$Points, na.rm = TRUE)
+    )
+  }, error = function(e) {
+    log_error(paste("Error training relay GAM for", gender_label, race_type, ":", e$message))
+    NULL
+  })
+}
+
+build_relay_team_distribution <- function(nation, startlist_row, individual_chrono,
+                                          model_info, reference_date = NULL) {
   if (is.null(reference_date)) {
     reference_date <- Sys.Date()
   }
 
-  # Get weighted historical team performance
-  hist_stats <- get_relay_weighted_prev_points(relay_chrono, nation, reference_date)
+  team_features <- startlist_row
+  member_ids <- extract_member_ids_from_startlist(startlist_row)
+  member_point_features <- compute_member_weighted_point_features(member_ids, individual_chrono, reference_date)
 
-  # Use average Pelo values from startlist if available
-  avg_pelo_pct <- NA
-  pelo_pct_cols <- grep("^Avg_.*Pelo_pct$", names(startlist_row), value = TRUE)
-  if (length(pelo_pct_cols) > 0) {
-    pelo_pct_values <- suppressWarnings(as.numeric(unlist(startlist_row[pelo_pct_cols])))
-    avg_pelo_pct <- mean(pelo_pct_values, na.rm = TRUE)
+  for (feature_name in names(member_point_features)) {
+    team_features[[feature_name]] <- member_point_features[[feature_name]]
   }
 
-  # Determine mean and sd
-  if (!is.na(avg_pelo_pct) && avg_pelo_pct > 0) {
-    # Nation-agnostic: use normalized current-lineup Avg_*Pelo percentages.
-    mean_points <- avg_pelo_pct * 60
-    sd_points <- if (!is.na(hist_stats$sd)) hist_stats$sd else RELAY_SD_MAX / 2
-  } else if (!is.na(hist_stats$mean) && hist_stats$n >= 2) {
-    # Fallback to historical team performance only when lineup strength is unavailable.
-    mean_points <- hist_stats$mean
-    sd_points <- hist_stats$sd
-  } else if (!is.na(hist_stats$mean)) {
-    # Some history but limited
-    mean_points <- hist_stats$mean
-    sd_points <- if (!is.na(hist_stats$sd)) hist_stats$sd else RELAY_SD_MAX / 2
-  } else {
-    # No history - use low default
-    mean_points <- 10
-    sd_points <- RELAY_SD_MAX
+  mean_points <- NA_real_
+  sd_points <- RELAY_SD_MAX
+
+  if (!is.null(model_info)) {
+    for (feature_name in model_info$features) {
+      if (!feature_name %in% names(team_features) || is.na(team_features[[feature_name]][1])) {
+        team_features[[feature_name]] <- model_info$feature_defaults[[feature_name]]
+      }
+    }
+
+    mean_points <- tryCatch({
+      as.numeric(predict(model_info$model, newdata = team_features, type = "response"))[1]
+    }, error = function(e) {
+      NA_real_
+    })
+    sd_points <- model_info$residual_sd
   }
 
-  # Bound sd
+  if (!is.finite(mean_points) || is.na(mean_points)) {
+    mean_points <- if (!is.null(model_info)) model_info$fallback_points else 10
+  }
+
   sd_points <- pmax(RELAY_SD_MIN, pmin(RELAY_SD_MAX, sd_points))
 
-  return(list(
+  list(
     nation = nation,
     mean = mean_points,
     sd = sd_points,
-    n_actual_races = hist_stats$n
-  ))
+    n_actual_races = member_point_features$team_prev_points_weighted_count
+  )
 }
 
 # Monte Carlo simulation for relay teams (vectorized)
@@ -1058,6 +1219,21 @@ for (race_type in all_race_types) {
 
 log_info(paste("Trained", sum(!sapply(men_gam_models, is.null)), "men's GAM models"))
 log_info(paste("Trained", sum(!sapply(ladies_gam_models, is.null)), "ladies' GAM models"))
+
+relay_gam_models <- list(
+  men_relay = if (nrow(men_relay_chrono) > 0 && nrow(men_chrono) > 0)
+    train_relay_points_gam(men_relay_chrono, men_chrono, "Relay", "men") else NULL,
+  ladies_relay = if (nrow(ladies_relay_chrono) > 0 && nrow(ladies_chrono) > 0)
+    train_relay_points_gam(ladies_relay_chrono, ladies_chrono, "Relay", "ladies") else NULL,
+  mixed_relay = if (nrow(mixed_relay_chrono) > 0) {
+    mixed_individual_chrono <- bind_rows(men_chrono, ladies_chrono)
+    train_relay_points_gam(mixed_relay_chrono, mixed_individual_chrono, "Mixed Relay", "mixed")
+  } else NULL,
+  single_mixed_relay = if (nrow(single_mixed_relay_chrono) > 0) {
+    mixed_individual_chrono <- bind_rows(men_chrono, ladies_chrono)
+    train_relay_points_gam(single_mixed_relay_chrono, mixed_individual_chrono, "Single Mixed Relay", "single mixed")
+  } else NULL
+)
 
 # ============================================================================
 # INDIVIDUAL RACE SIMULATION
@@ -1247,8 +1423,9 @@ if (nrow(men_relays) > 0 && nrow(men_relay_startlist) > 0) {
 
     dist <- build_relay_team_distribution(
       nation = nation,
-      relay_chrono = men_relay_chrono,
       startlist_row = men_relay_startlist[i, ],
+      individual_chrono = men_chrono,
+      model_info = relay_gam_models$men_relay,
       reference_date = current_date
     )
 
@@ -1295,8 +1472,9 @@ if (nrow(ladies_relays) > 0 && nrow(ladies_relay_startlist) > 0) {
 
     dist <- build_relay_team_distribution(
       nation = nation,
-      relay_chrono = ladies_relay_chrono,
       startlist_row = ladies_relay_startlist[i, ],
+      individual_chrono = ladies_chrono,
+      model_info = relay_gam_models$ladies_relay,
       reference_date = current_date
     )
 
@@ -1342,8 +1520,9 @@ if (nrow(mixed_relays) > 0 && nrow(mixed_relay_startlist) > 0) {
 
     dist <- build_relay_team_distribution(
       nation = nation,
-      relay_chrono = mixed_relay_chrono,
       startlist_row = mixed_relay_startlist[i, ],
+      individual_chrono = bind_rows(men_chrono, ladies_chrono),
+      model_info = relay_gam_models$mixed_relay,
       reference_date = current_date
     )
 
@@ -1389,8 +1568,9 @@ if (nrow(single_mixed_relays) > 0 && nrow(single_mixed_relay_startlist) > 0) {
 
     dist <- build_relay_team_distribution(
       nation = nation,
-      relay_chrono = single_mixed_relay_chrono,
       startlist_row = single_mixed_relay_startlist[i, ],
+      individual_chrono = bind_rows(men_chrono, ladies_chrono),
+      model_info = relay_gam_models$single_mixed_relay,
       reference_date = current_date
     )
 
