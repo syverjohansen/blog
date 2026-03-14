@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Heidi Weng",
+      60,
+      "L",
+      "Norway",
+      8941,
+      89.4132479268049
+    ],
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      15068,
+      86.7470188077902
+    ],
+    [
+      "Jonna Sundling",
+      1486,
+      "L",
+      "Sweden",
+      12184,
+      81.1888504500825
+    ],
+    [
+      "Frida Karlsson",
+      3998,
+      "L",
+      "Sweden",
+      8355,
+      79.2259919044307
+    ],
+    [
+      "Ebba Andersson",
+      1789,
+      "L",
+      "Sweden",
+      8733,
+      78.5779108300972
+    ],
+    [
+      "Nora Sanness",
+      6324,
+      "L",
+      "Norway",
+      890,
+      70.8586593889739
+    ],
+    [
+      "Astrid Øyre Slind",
+      115,
+      "L",
+      "Norway",
+      5462,
+      68.2817684062508
+    ],
+    [
+      "Karoline Simpson-Larsen",
+      2300,
+      "L",
+      "Norway",
+      3954,
+      68.2625384671182
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "M",
+      "Norway",
+      11504,
+      84.4341332655646
+    ],
+    [
+      "Simen Hegstad Krüger",
+      2355,
+      "M",
+      "Norway",
+      1531,
+      75.8569998231508
+    ],
+    [
+      "Martin Løwstrøm Nyenget",
+      2295,
+      "M",
+      "Norway",
+      8945,
+      75.7754033028292
+    ],
+    [
+      "Einar Hedegart",
+      20631,
+      "M",
+      "Norway",
+      1531,
+      68.9508914216686
+    ],
+    [
+      "Saveliy Korostelev",
+      13188,
+      "M",
+      "Russia",
+      4127,
+      68.7708697647784
+    ],
+    [
+      "Mattis Stenshagen",
+      5165,
+      "M",
+      "Norway",
+      4605,
+      66.7115360988015
+    ],
+    [
+      "Jules Lapierre",
+      3646,
+      "M",
+      "France",
+      625,
+      61.6878424983532
+    ],
+    [
+      "Mathis Desloges",
+      12767,
+      "M",
+      "France",
+      3465,
+      55.1662377700511
+    ]
+  ]
+}

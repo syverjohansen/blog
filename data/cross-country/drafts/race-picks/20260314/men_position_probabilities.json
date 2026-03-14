@@ -1,0 +1,755 @@
+{
+  "sheet_name": "Men Race 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Win",
+    "Podium",
+    "Top-5",
+    "Top-10",
+    "Top-30"
+  ],
+  "rows": [
+    [
+      "Martin Løwstrøm Nyenget",
+      2295,
+      "Norway",
+      25.8,
+      55.3,
+      71.6,
+      89.4,
+      99.1
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "Norway",
+      21.7,
+      49.1,
+      65.8,
+      86.8,
+      99.4
+    ],
+    [
+      "Simen Hegstad Krüger",
+      2355,
+      "Norway",
+      12.3,
+      35.9,
+      51.2,
+      76.1,
+      99.5
+    ],
+    [
+      "Einar Hedegart",
+      20631,
+      "Norway",
+      9.6,
+      28.6,
+      45.1,
+      73.1,
+      97.6
+    ],
+    [
+      "Mattis Stenshagen",
+      5165,
+      "Norway",
+      5.9,
+      21.2,
+      36.0,
+      62.5,
+      95.6
+    ],
+    [
+      "Saveliy Korostelev",
+      13188,
+      "Russia",
+      4.7,
+      18.9,
+      34.2,
+      59.1,
+      95.3
+    ],
+    [
+      "Jules Lapierre",
+      3646,
+      "France",
+      3.3,
+      13.9,
+      24.7,
+      50.6,
+      91.2
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "France",
+      2.5,
+      11.3,
+      22.8,
+      45.7,
+      89.9
+    ],
+    [
+      "Andreas Fjorden Ree",
+      8678,
+      "Norway",
+      2.0,
+      6.9,
+      14.9,
+      35.3,
+      83.9
+    ],
+    [
+      "Iver Tildheim Andersen",
+      8590,
+      "Norway",
+      1.8,
+      6.2,
+      12.2,
+      28.9,
+      81.9
+    ],
+    [
+      "Friedrich Moch",
+      9323,
+      "Germany",
+      1.5,
+      7.4,
+      14.9,
+      34.8,
+      85.1
+    ],
+    [
+      "Mathis Desloges",
+      12767,
+      "France",
+      1.4,
+      8.2,
+      14.8,
+      35.9,
+      84.6
+    ],
+    [
+      "Andrew Musgrave",
+      277,
+      "Great Britain",
+      1.2,
+      5.2,
+      11.7,
+      29.8,
+      81.2
+    ],
+    [
+      "Michal Novak",
+      3655,
+      "Czechia",
+      1.0,
+      3.5,
+      8.1,
+      23.4,
+      76.4
+    ],
+    [
+      "Elia Barp",
+      14042,
+      "Italy",
+      0.8,
+      2.0,
+      5.0,
+      14.8,
+      62.0
+    ],
+    [
+      "Davide Graz",
+      12165,
+      "Italy",
+      0.7,
+      2.1,
+      6.1,
+      19.3,
+      68.0
+    ],
+    [
+      "Håvard Moseby",
+      6103,
+      "Norway",
+      0.5,
+      3.1,
+      8.0,
+      24.7,
+      81.0
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "Italy",
+      0.5,
+      4.1,
+      8.4,
+      23.4,
+      75.7
+    ],
+    [
+      "Victor Lovera",
+      17106,
+      "France",
+      0.4,
+      2.7,
+      7.0,
+      20.9,
+      74.9
+    ],
+    [
+      "Jason Rüesch",
+      2732,
+      "Switzerland",
+      0.4,
+      1.4,
+      3.6,
+      11.9,
+      57.7
+    ],
+    [
+      "Clement Parisse",
+      2353,
+      "France",
+      0.3,
+      2.7,
+      5.9,
+      18.1,
+      71.1
+    ],
+    [
+      "Remi Lindholm",
+      5702,
+      "Finland",
+      0.3,
+      1.0,
+      3.2,
+      12.1,
+      56.9
+    ],
+    [
+      "Arsi Ruuskanen",
+      8120,
+      "Finland",
+      0.3,
+      1.5,
+      3.7,
+      12.0,
+      60.0
+    ],
+    [
+      "Martino Carollo",
+      19980,
+      "Italy",
+      0.2,
+      0.8,
+      2.5,
+      12.8,
+      62.5
+    ],
+    [
+      "Florian Notz",
+      1488,
+      "Germany",
+      0.1,
+      1.0,
+      3.0,
+      13.4,
+      60.9
+    ],
+    [
+      "Beda Klee",
+      3651,
+      "Switzerland",
+      0.1,
+      1.2,
+      2.4,
+      10.7,
+      58.1
+    ],
+    [
+      "Simone Dapra",
+      6019,
+      "Italy",
+      0.1,
+      0.5,
+      1.1,
+      6.4,
+      41.6
+    ],
+    [
+      "Petteri Koivisto",
+      8104,
+      "Finland",
+      0.1,
+      0.3,
+      0.7,
+      5.0,
+      42.8
+    ],
+    [
+      "Zak Ketterson",
+      5988,
+      "USA",
+      0.1,
+      0.3,
+      0.6,
+      3.6,
+      37.9
+    ],
+    [
+      "Remi Bourdin",
+      17445,
+      "France",
+      0.1,
+      0.4,
+      1.0,
+      4.9,
+      36.3
+    ],
+    [
+      "Niko Anttola",
+      17474,
+      "Finland",
+      0.1,
+      0.3,
+      0.4,
+      2.2,
+      29.4
+    ],
+    [
+      "Antonin Savary",
+      12775,
+      "Switzerland",
+      0.1,
+      0.1,
+      0.3,
+      1.9,
+      20.7
+    ],
+    [
+      "Leo Johansson",
+      8047,
+      "Sweden",
+      0.1,
+      0.1,
+      0.2,
+      2.4,
+      17.5
+    ],
+    [
+      "Johan Ekberg",
+      13290,
+      "Sweden",
+      0.0,
+      0.4,
+      1.1,
+      4.9,
+      38.5
+    ],
+    [
+      "Truls Gisselman",
+      12782,
+      "Sweden",
+      0.0,
+      0.3,
+      1.1,
+      3.5,
+      39.1
+    ],
+    [
+      "Markus Vuorela",
+      5635,
+      "Finland",
+      0.0,
+      0.3,
+      0.8,
+      2.6,
+      35.6
+    ],
+    [
+      "Alvar Johannes Alev",
+      1996,
+      "Estonia",
+      0.0,
+      0.1,
+      0.5,
+      3.3,
+      33.5
+    ],
+    [
+      "Eric Rosjö",
+      5940,
+      "Sweden",
+      0.0,
+      0.1,
+      0.2,
+      2.3,
+      27.3
+    ],
+    [
+      "Kevin Bolger",
+      9159,
+      "USA",
+      0.0,
+      0.3,
+      0.7,
+      2.2,
+      26.0
+    ],
+    [
+      "Thomas Hjalmar Westgård",
+      5553,
+      "Ireland",
+      0.0,
+      0.1,
+      0.2,
+      1.5,
+      25.2
+    ],
+    [
+      "Andrew Young",
+      1642,
+      "Great Britain",
+      0.0,
+      0.1,
+      0.4,
+      1.9,
+      25.6
+    ],
+    [
+      "Candide Pralong",
+      1538,
+      "Switzerland",
+      0.0,
+      0.2,
+      0.4,
+      1.6,
+      23.1
+    ],
+    [
+      "Thomas Stephen",
+      12678,
+      "Canada",
+      0.0,
+      0.1,
+      0.2,
+      1.6,
+      23.0
+    ],
+    [
+      "Kasper Andersson Herland",
+      12150,
+      "Norway",
+      0.0,
+      0.3,
+      0.5,
+      2.2,
+      25.7
+    ],
+    [
+      "Gustaf Berglund",
+      340,
+      "Sweden",
+      0.0,
+      0.1,
+      0.4,
+      2.0,
+      23.2
+    ],
+    [
+      "Lucas Bögl",
+      1540,
+      "Germany",
+      0.0,
+      0.0,
+      0.1,
+      0.8,
+      19.8
+    ],
+    [
+      "Tobias Ganner",
+      19084,
+      "Austria",
+      0.0,
+      0.1,
+      0.2,
+      1.1,
+      19.2
+    ],
+    [
+      "Jesper Persson",
+      14715,
+      "Sweden",
+      0.0,
+      0.0,
+      0.1,
+      0.8,
+      19.8
+    ],
+    [
+      "Simon Hjelmeset Kirkeeide",
+      8628,
+      "Norway",
+      0.0,
+      0.1,
+      0.4,
+      1.1,
+      19.0
+    ],
+    [
+      "Brian Bushey",
+      14044,
+      "USA",
+      0.0,
+      0.0,
+      0.1,
+      1.2,
+      16.4
+    ],
+    [
+      "Cyril Fähndrich",
+      9975,
+      "Switzerland",
+      0.0,
+      0.0,
+      0.1,
+      0.8,
+      18.8
+    ],
+    [
+      "Nicola Wigger",
+      12697,
+      "Switzerland",
+      0.0,
+      0.0,
+      0.1,
+      1.0,
+      18.2
+    ],
+    [
+      "Sebastian Santiago Kildebo",
+      19140,
+      "Norway",
+      0.0,
+      0.0,
+      0.1,
+      1.2,
+      17.7
+    ],
+    [
+      "Lars Michael Bjertnæs",
+      19128,
+      "Norway",
+      0.0,
+      0.0,
+      0.2,
+      0.5,
+      17.1
+    ],
+    [
+      "Hunter Wonders",
+      5946,
+      "USA",
+      0.0,
+      0.0,
+      0.2,
+      1.6,
+      15.3
+    ],
+    [
+      "Casper Kvam Grindhagen",
+      19105,
+      "Norway",
+      0.0,
+      0.0,
+      0.0,
+      0.6,
+      14.1
+    ],
+    [
+      "Imanol Rojo",
+      2225,
+      "Spain",
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      14.5
+    ],
+    [
+      "Jan Stölben",
+      14033,
+      "Germany",
+      0.0,
+      0.0,
+      0.1,
+      0.5,
+      14.6
+    ],
+    [
+      "Jakob Walther",
+      12156,
+      "Germany",
+      0.0,
+      0.0,
+      0.0,
+      0.4,
+      12.3
+    ],
+    [
+      "Michal Adamov",
+      18776,
+      "Slovakia",
+      0.0,
+      0.0,
+      0.2,
+      0.7,
+      13.3
+    ],
+    [
+      "Xavier McKeever",
+      12676,
+      "Canada",
+      0.0,
+      0.0,
+      0.1,
+      0.8,
+      11.5
+    ],
+    [
+      "Adam Fellner",
+      2162,
+      "Czechia",
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      10.8
+    ],
+    [
+      "Alexander Ståhlberg",
+      12449,
+      "Finland",
+      0.0,
+      0.1,
+      0.1,
+      0.4,
+      11.9
+    ],
+    [
+      "Micha Büchel",
+      12800,
+      "Liechtenstein",
+      0.0,
+      0.0,
+      0.1,
+      0.6,
+      11.2
+    ],
+    [
+      "Gabriel Gledhill",
+      14200,
+      "Great Britain",
+      0.0,
+      0.0,
+      0.0,
+      0.4,
+      8.4
+    ],
+    [
+      "Peter Hinds",
+      14864,
+      "Slovakia",
+      0.0,
+      0.0,
+      0.1,
+      0.3,
+      9.7
+    ],
+    [
+      "Christopher Kalev",
+      6469,
+      "Estonia",
+      0.0,
+      0.0,
+      0.0,
+      0.6,
+      8.9
+    ],
+    [
+      "Vili Crv",
+      5931,
+      "Slovenia",
+      0.0,
+      0.1,
+      0.1,
+      0.5,
+      9.4
+    ],
+    [
+      "Miha Simenc",
+      2808,
+      "Slovenia",
+      0.0,
+      0.0,
+      0.0,
+      0.6,
+      8.6
+    ],
+    [
+      "Dagur Benediktsson",
+      5956,
+      "Iceland",
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      8.8
+    ],
+    [
+      "Miha Licef",
+      5911,
+      "Slovenia",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      6.6
+    ],
+    [
+      "Franco Dal Farra",
+      8039,
+      "Argentina",
+      0.0,
+      0.0,
+      0.0,
+      0.6,
+      8.6
+    ],
+    [
+      "Henri Roos",
+      5317,
+      "Estonia",
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      7.4
+    ],
+    [
+      "Seve De Campo",
+      8036,
+      "Australia",
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      6.6
+    ]
+  ]
+}

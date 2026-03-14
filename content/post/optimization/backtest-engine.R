@@ -45,6 +45,9 @@ is_team_race_type <- function(sport, race_type = NULL) {
 }
 
 get_team_bucket_race_types <- function(sport, race_type) {
+  if (sport == "cross-country" && race_type == "Mixed_Relay") {
+    return("Relay")
+  }
   if (sport == "skijump" && race_type %in% c("Team_Large", "Team_Normal")) {
     return(c("Team Large", "Team Normal", "Team"))
   }
@@ -312,7 +315,11 @@ train_team_gam_backtest <- function(team_chrono, individual_chrono, sport, race_
   } else if (gender == "ladies" && "Sex" %in% names(filtered_data)) {
     filtered_data <- filtered_data %>% filter(Sex %in% c("L", "Ladies", "ladies", "F"))
   } else if (race_type %in% c("Mixed_Relay", "Single_Mixed_Relay", "Mixed_Team", "Mixed_Team_Sprint") && "Sex" %in% names(filtered_data)) {
-    filtered_data <- filtered_data %>% filter(Sex %in% c("Mixed", "X"))
+    if (sport == "cross-country" && race_type == "Mixed_Relay") {
+      filtered_data <- filtered_data %>% filter(Sex %in% c("M", "Men", "men", "L", "Ladies", "ladies", "F"))
+    } else {
+      filtered_data <- filtered_data %>% filter(Sex %in% c("Mixed", "X"))
+    }
   }
 
   if (nrow(filtered_data) < 10) {
@@ -788,7 +795,7 @@ load_chrono_data <- function(sport, gender, race_type = NULL) {
 
     team_file <- switch(
       sport,
-      "cross-country" = paste0(gender, "_relay_chrono.csv"),
+      "cross-country" = if (identical(race_type, "Mixed_Relay")) NULL else paste0(gender, "_relay_chrono.csv"),
       "biathlon" = switch(
         race_type,
         "Mixed_Relay" = "mixed_relay_chrono.csv",
@@ -809,6 +816,52 @@ load_chrono_data <- function(sport, gender, race_type = NULL) {
       ),
       NULL
     )
+
+    if (sport == "cross-country" && identical(race_type, "Mixed_Relay")) {
+      men_path <- path.expand(file.path(relay_base, "men_relay_chrono.csv"))
+      ladies_path <- path.expand(file.path(relay_base, "ladies_relay_chrono.csv"))
+      chrono_list <- list()
+
+      if (file.exists(men_path)) {
+        men_chrono <- read.csv(men_path, stringsAsFactors = FALSE)
+        men_chrono$Sex <- if ("Sex" %in% names(men_chrono)) men_chrono$Sex else "M"
+        chrono_list <- c(chrono_list, list(men_chrono))
+      }
+      if (file.exists(ladies_path)) {
+        ladies_chrono <- read.csv(ladies_path, stringsAsFactors = FALSE)
+        ladies_chrono$Sex <- if ("Sex" %in% names(ladies_chrono)) ladies_chrono$Sex else "L"
+        chrono_list <- c(chrono_list, list(ladies_chrono))
+      }
+
+      if (length(chrono_list) == 0) {
+        stop("Chrono files not found for cross-country Mixed_Relay")
+      }
+
+      chrono <- bind_rows(chrono_list)
+      if (!"RaceType" %in% names(chrono) && "Distance" %in% names(chrono)) {
+        chrono$RaceType <- dplyr::case_when(
+          chrono$Distance == "Rel" ~ "Relay",
+          chrono$Distance == "Ts" ~ "Team Sprint",
+          TRUE ~ as.character(chrono$Distance)
+        )
+      }
+      if (!"ID" %in% names(chrono) && "Nation" %in% names(chrono)) {
+        chrono$ID <- chrono$Nation
+      }
+      if ("Date" %in% names(chrono)) {
+        chrono$Date <- as.Date(chrono$Date)
+      }
+      if (!"points" %in% names(chrono)) {
+        wc_points <- c(100, 80, 60, 50, 45, 40, 36, 32, 29, 26,
+                       24, 22, 20, 18, 16, 15, 14, 13, 12, 11,
+                       10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+        chrono$points <- sapply(chrono$Place, function(p) {
+          if (is.na(p) || p < 1 || p > 30) return(0)
+          wc_points[p]
+        })
+      }
+      return(chrono)
+    }
 
     if (is.null(team_file)) {
       stop(paste("No team chrono mapping found for", sport, race_type))
@@ -832,6 +885,14 @@ load_chrono_data <- function(sport, gender, race_type = NULL) {
   }
 
   chrono <- read.csv(file_path, stringsAsFactors = FALSE)
+
+  if (!"RaceType" %in% names(chrono) && "Distance" %in% names(chrono)) {
+    chrono$RaceType <- dplyr::case_when(
+      chrono$Distance == "Rel" ~ "Relay",
+      chrono$Distance == "Ts" ~ "Team Sprint",
+      TRUE ~ as.character(chrono$Distance)
+    )
+  }
 
   if (!"ID" %in% names(chrono) && "Nation" %in% names(chrono)) {
     chrono$ID <- chrono$Nation

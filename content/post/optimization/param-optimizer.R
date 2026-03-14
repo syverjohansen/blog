@@ -1068,6 +1068,9 @@ generate_sport_params_file <- function(all_sport_results,
     "  if (is.null(race_type) && !is.null(event_type)) {",
     "    race_type <- event_type",
     "  }",
+    "  if (identical(sport, 'cross-country') && identical(race_type, 'Mixed_Relay')) {",
+    "    race_type <- 'Relay'",
+    "  }",
     "  sport_config <- SPORT_PARAMS[[sport]]",
     "  ",
     "  if (is.null(sport_config)) {",
@@ -1452,19 +1455,71 @@ run_full_optimization <- function(sports = c("cross-country", "biathlon", "alpin
 #' @param sports Vector of sport names
 #' @param genders Vector of gender names
 #' @return Aggregated results by sport
+average_optimization_entries <- function(entries) {
+  valid_entries <- Filter(function(entry) {
+    !is.null(entry) && !is.null(entry$best_params)
+  }, entries)
+
+  if (length(valid_entries) == 0) {
+    return(NULL)
+  }
+
+  param_names <- names(valid_entries[[1]]$best_params)
+  averaged_params <- list()
+
+  for (param_name in param_names) {
+    values <- vapply(valid_entries, function(entry) entry$best_params[[param_name]], numeric(1))
+    averaged_value <- mean(values, na.rm = TRUE)
+    if (param_name %in% c("sd_min", "sd_max", "n_history_required")) {
+      averaged_value <- as.integer(round(averaged_value))
+    }
+    averaged_params[[param_name]] <- averaged_value
+  }
+
+  list(best_params = averaged_params, final_metrics = NULL)
+}
+
+average_optimization_results <- function(results) {
+  valid_results <- Filter(is_valid_optimization_result, results)
+
+  if (length(valid_results) == 0) {
+    return(NULL)
+  }
+
+  result_names <- unique(unlist(lapply(valid_results, names)))
+  aggregated_result <- list()
+
+  for (result_name in result_names) {
+    averaged_entry <- average_optimization_entries(lapply(valid_results, function(result) result[[result_name]]))
+    if (!is.null(averaged_entry)) {
+      aggregated_result[[result_name]] <- averaged_entry
+    }
+  }
+
+  if (is.null(aggregated_result$default)) {
+    return(NULL)
+  }
+
+  aggregated_result
+}
+
 aggregate_gender_results <- function(all_results, sports, genders) {
   sport_results <- list()
 
   for (sport in sports) {
-    # For now, just use men's results (most data typically)
-    # Could extend to average or weighted combination
-    key <- paste(sport, genders[1], sep = "_")
+    gender_results <- lapply(genders, function(gender) {
+      key <- paste(sport, gender, sep = "_")
+      result <- all_results[[key]]
+      if (is_valid_optimization_result(result)) result else NULL
+    })
+    gender_results <- Filter(Negate(is.null), gender_results)
 
-    if (!is.null(all_results[[key]]) &&
-        is.null(all_results[[key]]$error) &&
-        !is.null(all_results[[key]]$default) &&
-        !is.null(all_results[[key]]$default$best_params)) {
-      sport_results[[sport]] <- all_results[[key]]
+    if (length(gender_results) == 0) {
+      next
+    }
+    aggregated_sport <- average_optimization_results(gender_results)
+    if (!is.null(aggregated_sport$default)) {
+      sport_results[[sport]] <- aggregated_sport
     }
   }
 
@@ -1527,14 +1582,10 @@ load_optimization_results <- function(sport, gender, timestamp = NULL) {
 #' @param preferred_genders Ordered vector of genders to try
 #' @return Optimization result or NULL
 load_latest_valid_result_for_sport <- function(sport, preferred_genders = c("men", "ladies")) {
-  for (gender in preferred_genders) {
-    result <- tryCatch(load_optimization_results(sport, gender), error = function(e) NULL)
-    if (is_valid_optimization_result(result)) {
-      return(result)
-    }
-  }
-
-  return(NULL)
+  gender_results <- lapply(preferred_genders, function(gender) {
+    tryCatch(load_optimization_results(sport, gender), error = function(e) NULL)
+  })
+  average_optimization_results(gender_results)
 }
 
 #' Merge current sport results with latest saved valid results on disk

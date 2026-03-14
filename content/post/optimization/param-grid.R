@@ -135,6 +135,11 @@ CROSS_COUNTRY_RACE_TYPES <- list(
     filter = function(d) d$Distance == "Rel",
     is_team = TRUE
   ),
+  Mixed_Relay = list(
+    name = "Mixed Relay",
+    filter = function(d) d$Distance == "Rel",
+    is_team = TRUE
+  ),
   Team_Sprint = list(
     name = "Team Sprint",
     filter = function(d) d$Distance == "Ts",

@@ -293,6 +293,12 @@ tail -f ~/blog/daehl-e/content/post/optimization/logs/optimization_cross-country
 # Run full optimization (all 5 sports, both genders, ~60 hours)
 caffeinate -s nohup Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization()' > ~/optimization_full.log 2>&1 &
 
+# Run all sports in the foreground with explicit sport list
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("cross-country", "alpine", "biathlon", "nordic-combined", "skijump"))'
+
+# Run only the sports with the newer team/mixed-event optimizer changes
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("biathlon", "nordic-combined", "skijump"))'
+
 # Run only men or only ladies
 caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("cross-country"), genders = c("men"))'
 caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("cross-country"), genders = c("ladies"))'
