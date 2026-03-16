@@ -1,0 +1,33 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Eric Perrot",
+      4591,
+      1,
+      1058,
+      271
+    ],
+    [
+      "Sebastian Samuelsson",
+      1345,
+      2,
+      814,
+      27
+    ],
+    [
+      "Tommaso Giacomel",
+      4387,
+      3,
+      797,
+      10
+    ]
+  ]
+}

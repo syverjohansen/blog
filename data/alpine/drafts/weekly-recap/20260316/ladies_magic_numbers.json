@@ -1,0 +1,33 @@
+{
+  "sheet_name": "Sheet1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Rank",
+    "Points",
+    "Magic #"
+  ],
+  "rows": [
+    [
+      "Mikaela Shiffrin",
+      72,
+      1,
+      1286,
+      401
+    ],
+    [
+      "Emma Aicher",
+      4194,
+      2,
+      1146,
+      261
+    ],
+    [
+      "Camille Rast",
+      3229,
+      3,
+      989,
+      104
+    ]
+  ]
+}
