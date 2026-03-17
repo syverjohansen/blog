@@ -1,8 +1,58 @@
 # Winter Sports Prediction System
 
-## Current Status (2026-03-11)
+## Current Status (2026-03-14)
 
 **IMPORTANT**: Update this file (`next-prompts.md`) whenever changes are made to the codebase.
+
+### Immediate Focus
+
+- Parameter optimization is now being rerun event by event instead of full-sport/full-day sweeps.
+- New helper added in `content/post/optimization/param-optimizer.R`:
+  - `optimize_event_and_update_sport_params(sport, gender, race_type = NULL)`
+- Intended workflow:
+  - run one sport/gender `default` first
+  - then run one race type at a time
+  - each event run merges into the latest saved sport result and regenerates `shared/sport_params.R`
+- Current cross-country men status:
+  - `default` optimized
+  - `Sprint_C` optimized
+  - `Sprint_F` optimized
+  - pending:
+    - `Distance_C_Ind`
+    - `Distance_C_Ms`
+    - `Distance_F_Ind`
+    - `Distance_F_Ms`
+    - `Distance_Ms`
+    - `Relay`
+    - `Mixed_Relay`
+    - `Team_Sprint`
+- Current cross-country women status:
+  - pending:
+    - `default`
+    - `Sprint_C`
+    - `Sprint_F`
+    - `Distance_C_Ind`
+    - `Distance_C_Ms`
+    - `Distance_F_Ind`
+    - `Distance_F_Ms`
+    - `Distance_Ms`
+    - `Relay`
+    - `Mixed_Relay`
+    - `Team_Sprint`
+- Current other-sport event-by-event status:
+  - Alpine:
+    - pending event-by-event fill
+  - Biathlon:
+    - pending event-by-event fill
+  - Nordic Combined:
+    - pending event-by-event fill
+  - Ski Jumping:
+    - pending event-by-event fill
+- Current optimization debugging status:
+  - fixed missing helper export in race-type optimization path
+  - fixed integer-format `%d` crash during fine/random search
+  - added sequential fallback if parallel worker setup is unavailable
+  - cross-country duplicate race-picks post sections fixed by removing the extra weekend-side `race-picks` registration in `predict_script.sh` and `predict_script_ubuntu.sh`
 
 ### Pipeline
 ```

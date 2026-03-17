@@ -304,6 +304,35 @@ caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param
 caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); run_full_optimization(sports = c("cross-country"), genders = c("ladies"))'
 ```
 
+### Event-By-Event Optimization
+
+Use this when you want to optimize one race type at a time and have it immediately slot into that sport's saved result and regenerate `sport_params.R`.
+
+Important:
+- Run the `default` block for a sport/gender first.
+- Then run race types one by one.
+- Each event run updates the latest saved `.rds` for that sport/gender and rewrites `shared/sport_params.R`.
+
+```bash
+# 1. First run the default block for a sport/gender
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "men")'
+
+# 2. Then run individual race types one at a time
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "men", "Sprint_C")'
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "men", "Sprint_F")'
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "men", "Distance_C_Ind")'
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "men", "Relay")'
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "men", "Mixed_Relay")'
+```
+
+You can use the same helper for any sport/event:
+
+```bash
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "men", "Relay")'
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies", "Giant_Slalom")'
+caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "ladies", "Team_Large")'
+```
+
 ### How Results Get Applied
 
 The optimization workflow has 3 steps:

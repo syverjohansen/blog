@@ -20,7 +20,11 @@ source("~/blog/daehl-e/content/post/optimization/param-grid.R")
 # =============================================================================
 
 # Number of parallel cores to use
-N_CORES <- max(1, detectCores() - 1)
+detected_cores <- suppressWarnings(parallel::detectCores())
+if (!is.finite(detected_cores) || is.na(detected_cores)) {
+  detected_cores <- 2
+}
+N_CORES <- max(1L, as.integer(detected_cores) - 1L)
 
 # Simulation counts for different phases
 COARSE_N_SIMS <- 200
@@ -200,7 +204,7 @@ log_evaluation_progress <- function(current, total, params, metrics, is_new_best
                        current, total, pct, score))
       log_info(sprintf("           Params: decay=%.4f, sd_scale=%.2f, sd_min=%d, sd_max=%d",
                        params$decay_lambda, params$sd_scale_factor,
-                       params$sd_min, params$sd_max))
+                       as.integer(round(params$sd_min)), as.integer(round(params$sd_max))))
     } else {
       log_info(sprintf("  [%d/%d] (%5.1f%%) Score: %s", current, total, pct, score))
     }
@@ -380,32 +384,42 @@ run_grid_search <- function(sport, gender, race_type = NULL,
   best_idx <- 1
 
   # Run evaluations
-  if (parallel && n_combos > 10) {
+  use_parallel <- isTRUE(parallel) && n_combos > 10 && N_CORES > 1
+
+  if (use_parallel) {
     log_info("")
     log_info(sprintf("PARALLEL EXECUTION: %d cores", N_CORES))
     log_info("(Progress logging limited in parallel mode)")
     log_info("")
 
-    cl <- makeCluster(N_CORES)
+    cl <- tryCatch(makeCluster(N_CORES), error = function(e) {
+      log_optim_warning("Parallel Setup", paste("Falling back to sequential:", e$message))
+      NULL
+    })
+
+    if (is.null(cl)) {
+      use_parallel <- FALSE
+    }
+  }
+
+  if (use_parallel) {
     registerDoParallel(cl)
 
-    # Export required objects to worker processes
-    # NOTE: Must include ALL functions called by exported functions
+    # Load the same source files on each worker so helper functions stay in sync.
+    clusterEvalQ(cl, {
+      suppressPackageStartupMessages({
+        library(dplyr)
+        library(lubridate)
+        library(mgcv)
+      })
+      source("~/blog/daehl-e/content/post/optimization/scoring-metrics.R")
+      source("~/blog/daehl-e/content/post/optimization/backtest-engine.R")
+      source("~/blog/daehl-e/content/post/optimization/param-grid.R")
+      NULL
+    })
+
     clusterExport(cl, c(
-      # Data
-      "chrono", "races", "n_simulations",
-      # Backtest functions
-      "evaluate_params", "backtest_races", "backtest_race",
-      "build_athlete_distribution_backtest", "simulate_race_backtest",
-      "get_race_startlist", "get_race_results", "calculate_decay_weights",
-      # Scoring functions (aggregate AND non-aggregate versions)
-      "calculate_all_metrics",
-      "calculate_brier_score", "calculate_brier_score_aggregate",
-      "calculate_log_loss", "calculate_log_loss_aggregate",
-      "calculate_calibration_ece", "calculate_calibration_ece_aggregate",
-      "calculate_race_metrics",
-      # Constants
-      "POSITION_THRESHOLDS", "BACKTEST_N_SIMULATIONS"
+      "chrono", "races", "n_simulations", "sport", "gender", "race_type"
     ), envir = environment())
 
     eval_start <- Sys.time()
@@ -417,8 +431,7 @@ run_grid_search <- function(sport, gender, race_type = NULL,
         params <- list(decay_lambda = 0.002, sd_scale_factor = 0.77,
                        sd_min = 4, sd_max = 16, n_history_required = 10,
                        gam_fill_weight_factor = 0.25)
-        # Just check if functions are accessible
-        exists("evaluate_params") && exists("calculate_all_metrics")
+        exists("evaluate_params") && exists("calculate_all_metrics") && exists("is_team_race_type")
       })
     }, error = function(e) {
       log_optim_error("Worker Test", e$message)
@@ -452,9 +465,9 @@ run_grid_search <- function(sport, gender, race_type = NULL,
           n_predictions = metrics$n_predictions,
           decay_lambda = params$decay_lambda,
           sd_scale_factor = params$sd_scale_factor,
-          sd_min = params$sd_min,
-          sd_max = params$sd_max,
-          n_history_required = params$n_history_required,
+          sd_min = as.integer(round(params$sd_min)),
+          sd_max = as.integer(round(params$sd_max)),
+          n_history_required = as.integer(round(params$n_history_required)),
           gam_fill_weight_factor = params$gam_fill_weight_factor,
           stringsAsFactors = FALSE
         )
@@ -556,9 +569,9 @@ run_grid_search <- function(sport, gender, race_type = NULL,
         n_predictions = metrics$n_predictions,
         decay_lambda = params$decay_lambda,
         sd_scale_factor = params$sd_scale_factor,
-        sd_min = params$sd_min,
-        sd_max = params$sd_max,
-        n_history_required = params$n_history_required,
+        sd_min = as.integer(round(params$sd_min)),
+        sd_max = as.integer(round(params$sd_max)),
+        n_history_required = as.integer(round(params$n_history_required)),
         gam_fill_weight_factor = params$gam_fill_weight_factor,
         stringsAsFactors = FALSE
       )
@@ -704,9 +717,9 @@ run_random_search <- function(sport, gender, race_type = NULL,
       n_predictions = metrics$n_predictions,
       decay_lambda = params$decay_lambda,
       sd_scale_factor = params$sd_scale_factor,
-      sd_min = params$sd_min,
-      sd_max = params$sd_max,
-      n_history_required = params$n_history_required,
+      sd_min = as.integer(round(params$sd_min)),
+      sd_max = as.integer(round(params$sd_max)),
+      n_history_required = as.integer(round(params$n_history_required)),
       gam_fill_weight_factor = params$gam_fill_weight_factor,
       stringsAsFactors = FALSE
     )
@@ -1574,6 +1587,66 @@ load_optimization_results <- function(sport, gender, timestamp = NULL) {
 
   cat(sprintf("Loading: %s\n", basename(latest_file)))
   return(readRDS(latest_file))
+}
+
+#' Load the latest valid optimization result for a specific sport/gender
+#'
+#' @param sport Sport name
+#' @param gender Gender
+#' @return Optimization result or NULL
+load_latest_valid_result_for_sport_gender <- function(sport, gender) {
+  result <- tryCatch(load_optimization_results(sport, gender), error = function(e) NULL)
+  if (is_valid_optimization_result(result)) {
+    return(result)
+  }
+  NULL
+}
+
+#' Merge a single event optimization result into a saved sport result
+#'
+#' @param sport Sport name
+#' @param gender Gender
+#' @param race_type Race type, or NULL for default
+#' @param event_result Result from optimize_params()
+#' @return Updated sport result object
+merge_event_into_sport_result <- function(sport, gender, race_type = NULL, event_result) {
+  existing_result <- load_latest_valid_result_for_sport_gender(sport, gender)
+
+  if (is.null(existing_result)) {
+    if (!is.null(race_type)) {
+      stop(sprintf("No existing saved result for %s %s. Run the default optimization first.", sport, gender))
+    }
+    existing_result <- list()
+  }
+
+  key <- if (is.null(race_type)) "default" else race_type
+  existing_result[[key]] <- event_result
+
+  if (is.null(existing_result$default) || is.null(existing_result$default$best_params)) {
+    stop(sprintf("Updated result for %s %s is missing a valid default block.", sport, gender))
+  }
+
+  existing_result
+}
+
+#' Optimize a single event and update saved sport params
+#'
+#' @param sport Sport name
+#' @param gender Gender
+#' @param race_type Race type, or NULL for default/all-race sport block
+#' @param verbose Print progress
+#' @return List with event result, saved result path, and sport_params path
+optimize_event_and_update_sport_params <- function(sport, gender, race_type = NULL, verbose = TRUE) {
+  event_result <- optimize_params(sport, gender, race_type = race_type, verbose = verbose)
+  updated_sport_result <- merge_event_into_sport_result(sport, gender, race_type, event_result)
+  saved_result_path <- save_results(updated_sport_result, sport, gender)
+  sport_params_path <- regenerate_sport_params()
+
+  list(
+    event_result = event_result,
+    saved_result_path = saved_result_path,
+    sport_params_path = sport_params_path
+  )
 }
 
 #' Load the latest valid optimization result for a sport

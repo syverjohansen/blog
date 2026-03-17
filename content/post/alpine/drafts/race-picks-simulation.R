@@ -229,7 +229,7 @@ if (nrow(ladies_chrono) > 0) {
   log_info(paste("Filtered ladies_chrono to actual races:", nrow(ladies_chrono), "rows"))
 }
 
-if (ENABLE_LOGGING) {
+if (ENHANCED_LOGGING) {
   phase_start("Load Startlists")
 
 # Load startlists with error handling
@@ -270,6 +270,7 @@ if (ENHANCED_LOGGING) {
     log_data_quality(ladies_startlist, "Ladies' Startlist", c("ID", "Skier", "Nation"))
   }
   phase_end("Load Startlists")
+}
 }
 
 # ============================================================================

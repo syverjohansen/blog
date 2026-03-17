@@ -362,12 +362,6 @@ process_sport_data() {
                             fi
                         done
 
-                        # Add race-picks to data generated for fantasy
-                        if [[ -n "$data_generated" ]]; then
-                            data_generated="$data_generated|$content_sport:race-picks:true"
-                        else
-                            data_generated="$content_sport:race-picks:true"
-                        fi
                     fi
                 fi
             fi
@@ -772,7 +766,7 @@ if [[ -n "$sports_with_predictions" ]]; then
     log_message "Starting Hugo post creation phase"
     log_message "======================================="
     log_message "Creating Hugo posts for predictions"
-    log_message "Raw sports_with_predictions: '$sports_with_predictions'"
+log_message "Raw sports_with_predictions: '$sports_with_predictions'"
 
     # Convert string back to array-like processing
     IFS='|' read -ra prediction_array <<< "$sports_with_predictions"

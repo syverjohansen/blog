@@ -39,21 +39,21 @@ create_fine_grid <- function(best_params, margin = 0.2) {
       min(1.1, best_params$sd_scale_factor + 0.1),
       length.out = 5
     ),
-    sd_min = seq(
+    sd_min = sort(unique(as.integer(round(seq(
       max(8, best_params$sd_min - 3),
       min(26, best_params$sd_min + 3),
       length.out = 3
-    ),
-    sd_max = seq(
+    ))))),
+    sd_max = sort(unique(as.integer(round(seq(
       max(16, best_params$sd_max - 3),
       min(34, best_params$sd_max + 3),
       length.out = 3
-    ),
-    n_history_required = c(
+    ))))),
+    n_history_required = sort(unique(as.integer(round(c(
       max(6, best_params$n_history_required - 2),
       best_params$n_history_required,
       min(22, best_params$n_history_required + 2)
-    ),
+    ))))),
     gam_fill_weight_factor = seq(
       max(0.05, best_params$gam_fill_weight_factor - 0.05),
       min(0.45, best_params$gam_fill_weight_factor + 0.05),
