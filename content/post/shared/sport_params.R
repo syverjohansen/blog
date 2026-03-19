@@ -1,6 +1,6 @@
 # sport_params.R
 # Optimized simulation parameters by sport and race type
-# Generated: 2026-03-19 07:28:40.414895
+# Generated: 2026-03-19 17:03:16.326854
 #
 # Usage:
 #   source('~/blog/daehl-e/content/post/shared/sport_params.R')
@@ -103,45 +103,45 @@ SPORT_PARAMS <- list(
 
   "biathlon" = list(
     default = list(
-      decay_lambda = 0.003878,
-      sd_scale_factor = 1.0975,
-      sd_min = 16,
-      sd_max = 24,
-      n_history_required = 19,
-      gam_fill_weight_factor = 0.0618
+      decay_lambda = 0.003658,
+      sd_scale_factor = 1.0547,
+      sd_min = 17,
+      sd_max = 22,
+      n_history_required = 18,
+      gam_fill_weight_factor = 0.2562
     ),
     race_types = list(
       "Sprint" = list(
-        decay_lambda = 0.003212,
-        sd_scale_factor = 0.9891,
-        sd_min = 16,
-        sd_max = 23,
-        n_history_required = 16,
-        gam_fill_weight_factor = 0.1572
+        decay_lambda = 0.004712,
+        sd_scale_factor = 1.0891,
+        sd_min = 17,
+        sd_max = 24,
+        n_history_required = 22,
+        gam_fill_weight_factor = 0.2572
       ),
       "Individual" = list(
-        decay_lambda = 0.002000,
-        sd_scale_factor = 0.9000,
-        sd_min = 16,
-        sd_max = 24,
-        n_history_required = 10,
-        gam_fill_weight_factor = 0.2500
+        decay_lambda = 0.004116,
+        sd_scale_factor = 0.6088,
+        sd_min = 25,
+        sd_max = 32,
+        n_history_required = 21,
+        gam_fill_weight_factor = 0.1939
       ),
       "Pursuit" = list(
-        decay_lambda = 0.002000,
-        sd_scale_factor = 0.9000,
+        decay_lambda = 0.004408,
+        sd_scale_factor = 1.0623,
         sd_min = 16,
         sd_max = 24,
-        n_history_required = 10,
-        gam_fill_weight_factor = 0.2500
+        n_history_required = 22,
+        gam_fill_weight_factor = 0.1530
       ),
       "Mass_Start" = list(
-        decay_lambda = 0.002000,
-        sd_scale_factor = 0.9000,
-        sd_min = 16,
-        sd_max = 24,
-        n_history_required = 10,
-        gam_fill_weight_factor = 0.2500
+        decay_lambda = 0.002706,
+        sd_scale_factor = 0.9452,
+        sd_min = 22,
+        sd_max = 28,
+        n_history_required = 21,
+        gam_fill_weight_factor = 0.2547
       ),
       "Relay" = list(
         decay_lambda = 0.002000,

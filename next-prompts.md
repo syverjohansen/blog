@@ -41,21 +41,16 @@
     - `Relay`
     - `Mixed_Relay`
     - `Team_Sprint`
-- Current planned batch command for cross-country women individual events:
+- Current planned cross-country pending team-events command:
   ```bash
-  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies")' && \
-  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Sprint_C")' && \
-  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Sprint_F")' && \
-  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Distance_C_Ind")' && \
-  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Distance_C_Ms")' && \
-  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Distance_F_Ind")' && \
-  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Distance_F_Ms")' && \
-  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Distance_Ms")'
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "men", "Relay")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "men", "Mixed_Relay")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "men", "Team_Sprint")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Relay")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Mixed_Relay")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Team_Sprint")'
   ```
-- Cross-country women relays/team events should be run after the individual batch:
-  - `Relay`
-  - `Mixed_Relay`
-  - `Team_Sprint`
+- Cross-country women relays/team events are the only cross-country work left.
 - Cross-country individual parameter status:
   - all men and ladies individual race types are now non-default in `shared/sport_params.R`
 - Cross-country edge hits to revisit later:
@@ -93,17 +88,7 @@
       - `Slalom` optimized
       - `Combined` optimized
       - complete
-    - Current planned Alpine batch command:
-      ```bash
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "men", "Slalom")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "men", "Combined")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies", "Downhill")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies", "Super_G")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies", "Giant_Slalom")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies", "Slalom")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies", "Combined")'
-      ```
+    - Alpine run commands removed from this section because Alpine is complete.
     - Alpine edge hits to revisit later:
       - men `default` hit:
         - `decay_lambda = 0.005000`
@@ -132,13 +117,23 @@
     - Biathlon men current status:
       - `default` optimized
       - `Sprint` optimized
+      - `Individual` optimized
       - pending:
-        - `Individual`
         - `Pursuit`
         - `Mass_Start`
         - `Relay`
         - `Mixed_Relay`
         - `Single_Mixed_Relay`
+    - Current planned Biathlon individual batch command:
+      ```bash
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "men", "Pursuit")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "men", "Mass_Start")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies", "Sprint")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies", "Individual")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies", "Pursuit")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies", "Mass_Start")'
+      ```
   - Nordic Combined:
     - pending individual event-by-event fill
     - leave `Team`, `Team_Sprint`, `Mixed_Team`, and `Mixed_Team_Sprint` for later
