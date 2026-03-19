@@ -1,6 +1,6 @@
 # Winter Sports Prediction System
 
-## Current Status (2026-03-14)
+## Current Status (2026-03-18)
 
 **IMPORTANT**: Update this file (`next-prompts.md`) whenever changes are made to the codebase.
 
@@ -13,41 +13,138 @@
   - run one sport/gender `default` first
   - then run one race type at a time
   - each event run merges into the latest saved sport result and regenerates `shared/sport_params.R`
+  - team events should be left for last across all sports
+  - per sport: do one gender event by event first, confirm all individual race types are non-default, then run the other gender in one chained individual batch
 - Current cross-country men status:
   - `default` optimized
   - `Sprint_C` optimized
   - `Sprint_F` optimized
-  - pending:
-    - `Distance_C_Ind`
-    - `Distance_C_Ms`
-    - `Distance_F_Ind`
-    - `Distance_F_Ms`
-    - `Distance_Ms`
+  - `Distance_C_Ind` optimized
+  - `Distance_C_Ms` optimized
+  - `Distance_F_Ind` optimized
+  - `Distance_F_Ms` optimized
+  - `Distance_Ms` optimized
+  - pending team events:
     - `Relay`
     - `Mixed_Relay`
     - `Team_Sprint`
 - Current cross-country women status:
-  - pending:
-    - `default`
-    - `Sprint_C`
-    - `Sprint_F`
-    - `Distance_C_Ind`
-    - `Distance_C_Ms`
-    - `Distance_F_Ind`
-    - `Distance_F_Ms`
-    - `Distance_Ms`
+  - `default` optimized
+  - `Sprint_C` optimized
+  - `Sprint_F` optimized
+  - `Distance_C_Ind` optimized
+  - `Distance_C_Ms` optimized
+  - `Distance_F_Ind` optimized
+  - `Distance_F_Ms` optimized
+  - `Distance_Ms` optimized
+  - pending team events:
     - `Relay`
     - `Mixed_Relay`
     - `Team_Sprint`
+- Current planned batch command for cross-country women individual events:
+  ```bash
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Sprint_C")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Sprint_F")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Distance_C_Ind")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Distance_C_Ms")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Distance_F_Ind")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Distance_F_Ms")' && \
+  caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("cross-country", "ladies", "Distance_Ms")'
+  ```
+- Cross-country women relays/team events should be run after the individual batch:
+  - `Relay`
+  - `Mixed_Relay`
+  - `Team_Sprint`
+- Cross-country individual parameter status:
+  - all men and ladies individual race types are now non-default in `shared/sport_params.R`
+- Cross-country edge hits to revisit later:
+  - ladies `Distance_F_Ms` hit multiple bounds:
+    - `decay_lambda = 0.000500`
+    - `sd_scale_factor = 1.1000`
+    - `gam_fill_weight_factor = 0.0500`
+  - ladies `Distance_C_Ind` hit `sd_min = 8`
+  - ladies `Distance_C_Ms` hit `sd_min = 8`
+  - men `Distance_C_Ms` finished with a somewhat coarse-looking interior result:
+    - `decay_lambda = 0.002000`
+    - `gam_fill_weight_factor = 0.2500`
+  - these are loaded and usable now, but they are candidates for future range expansion / retesting
 - Current other-sport event-by-event status:
   - Alpine:
-    - pending event-by-event fill
+    - next suggested sport
+    - no team events, so this sport can be completed fully before moving on
+    - recommended workflow:
+      - men event by event first
+      - verify all alpine race types are non-default
+      - then run ladies in one chained individual batch
+    - Alpine men current status:
+      - `default` optimized
+      - `Downhill` optimized
+      - `Super_G` optimized
+      - `Giant_Slalom` optimized
+      - `Slalom` optimized
+      - `Combined` optimized
+      - complete
+    - Alpine women current status:
+      - `default` optimized
+      - `Downhill` optimized
+      - `Super_G` optimized
+      - `Giant_Slalom` optimized
+      - `Slalom` optimized
+      - `Combined` optimized
+      - complete
+    - Current planned Alpine batch command:
+      ```bash
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "men", "Slalom")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "men", "Combined")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies", "Downhill")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies", "Super_G")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies", "Giant_Slalom")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies", "Slalom")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("alpine", "ladies", "Combined")'
+      ```
+    - Alpine edge hits to revisit later:
+      - men `default` hit:
+        - `decay_lambda = 0.005000`
+        - `gam_fill_weight_factor = 0.4500`
+      - men `Super_G` hit:
+        - `sd_max = 34`
+      - men `Combined` hit:
+        - `decay_lambda = 0.005466`
+        - `sd_max = 34`
+      - ladies `default` hit:
+        - `decay_lambda = 0.005249`
+      - ladies `Giant_Slalom` hit multiple bounds:
+        - `decay_lambda = 0.005000`
+        - `sd_scale_factor = 1.1000`
+        - `gam_fill_weight_factor = 0.4500`
+      - ladies `Slalom` hit:
+        - `gam_fill_weight_factor = 0.0500`
+      - ladies `Combined` hit:
+        - `decay_lambda = 0.000444`
+    - Alpine parameter status:
+      - all alpine race types are now non-default in `shared/sport_params.R`
+      - `Slalom` resolves to a baseline-looking average in shared params because the men and ladies fits diverged mainly on `gam_fill_weight_factor` (`0.4500` vs `0.0500`), which averages back to `0.2500`
   - Biathlon:
-    - pending event-by-event fill
+    - pending individual event-by-event fill
+    - leave `Relay`, `Mixed_Relay`, and `Single_Mixed_Relay` for later
+    - Biathlon men current status:
+      - `default` optimized
+      - `Sprint` optimized
+      - pending:
+        - `Individual`
+        - `Pursuit`
+        - `Mass_Start`
+        - `Relay`
+        - `Mixed_Relay`
+        - `Single_Mixed_Relay`
   - Nordic Combined:
-    - pending event-by-event fill
+    - pending individual event-by-event fill
+    - leave `Team`, `Team_Sprint`, `Mixed_Team`, and `Mixed_Team_Sprint` for later
   - Ski Jumping:
-    - pending event-by-event fill
+    - pending individual event-by-event fill
+    - leave `Team_Large`, `Team_Normal`/lumped team bucket, and `Mixed_Team` for later
 - Current optimization debugging status:
   - fixed missing helper export in race-type optimization path
   - fixed integer-format `%d` crash during fine/random search

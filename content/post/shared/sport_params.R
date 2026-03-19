@@ -1,6 +1,6 @@
 # sport_params.R
 # Optimized simulation parameters by sport and race type
-# Generated: 2026-03-16 19:21:54.388671
+# Generated: 2026-03-19 07:28:40.414895
 #
 # Usage:
 #   source('~/blog/daehl-e/content/post/shared/sport_params.R')
@@ -10,69 +10,69 @@ SPORT_PARAMS <- list(
 
   "cross-country" = list(
     default = list(
-      decay_lambda = 0.004036,
-      sd_scale_factor = 1.0714,
+      decay_lambda = 0.001837,
+      sd_scale_factor = 1.0424,
       sd_min = 16,
-      sd_max = 28,
+      sd_max = 24,
       n_history_required = 22,
-      gam_fill_weight_factor = 0.2674
+      gam_fill_weight_factor = 0.1839
     ),
     race_types = list(
       "Sprint_C" = list(
-        decay_lambda = 0.002903,
-        sd_scale_factor = 0.9741,
+        decay_lambda = 0.003022,
+        sd_scale_factor = 1.0037,
         sd_min = 16,
-        sd_max = 23,
-        n_history_required = 16,
-        gam_fill_weight_factor = 0.2377
+        sd_max = 28,
+        n_history_required = 22,
+        gam_fill_weight_factor = 0.1514
       ),
       "Sprint_F" = list(
-        decay_lambda = 0.001752,
-        sd_scale_factor = 0.9956,
-        sd_min = 16,
-        sd_max = 23,
-        n_history_required = 12,
-        gam_fill_weight_factor = 0.3296
+        decay_lambda = 0.002876,
+        sd_scale_factor = 1.0955,
+        sd_min = 17,
+        sd_max = 24,
+        n_history_required = 14,
+        gam_fill_weight_factor = 0.2343
       ),
       "Distance_C_Ind" = list(
-        decay_lambda = 0.002476,
-        sd_scale_factor = 0.9908,
-        sd_min = 16,
-        sd_max = 26,
-        n_history_required = 16,
-        gam_fill_weight_factor = 0.1541
+        decay_lambda = 0.003255,
+        sd_scale_factor = 1.0410,
+        sd_min = 12,
+        sd_max = 25,
+        n_history_required = 22,
+        gam_fill_weight_factor = 0.1404
       ),
       "Distance_C_Ms" = list(
-        decay_lambda = 0.002000,
-        sd_scale_factor = 0.8000,
-        sd_min = 16,
-        sd_max = 24,
-        n_history_required = 16,
-        gam_fill_weight_factor = 0.2500
+        decay_lambda = 0.001769,
+        sd_scale_factor = 0.8510,
+        sd_min = 12,
+        sd_max = 28,
+        n_history_required = 18,
+        gam_fill_weight_factor = 0.1674
       ),
       "Distance_F_Ind" = list(
-        decay_lambda = 0.002330,
-        sd_scale_factor = 0.9782,
+        decay_lambda = 0.003492,
+        sd_scale_factor = 0.7901,
         sd_min = 16,
-        sd_max = 26,
-        n_history_required = 15,
-        gam_fill_weight_factor = 0.3365
+        sd_max = 28,
+        n_history_required = 18,
+        gam_fill_weight_factor = 0.3606
       ),
       "Distance_F_Ms" = list(
-        decay_lambda = 0.001254,
-        sd_scale_factor = 0.8848,
+        decay_lambda = 0.000504,
+        sd_scale_factor = 0.9848,
         sd_min = 18,
         sd_max = 28,
-        n_history_required = 12,
-        gam_fill_weight_factor = 0.1671
+        n_history_required = 18,
+        gam_fill_weight_factor = 0.0671
       ),
       "Distance_Ms" = list(
-        decay_lambda = 0.001861,
-        sd_scale_factor = 0.8810,
+        decay_lambda = 0.002110,
+        sd_scale_factor = 0.8140,
         sd_min = 16,
-        sd_max = 23,
-        n_history_required = 16,
-        gam_fill_weight_factor = 0.1687
+        sd_max = 22,
+        n_history_required = 22,
+        gam_fill_weight_factor = 0.0885
       ),
       "Relay" = list(
         decay_lambda = 0.002000,
@@ -103,21 +103,21 @@ SPORT_PARAMS <- list(
 
   "biathlon" = list(
     default = list(
-      decay_lambda = 0.004552,
-      sd_scale_factor = 1.0928,
+      decay_lambda = 0.003878,
+      sd_scale_factor = 1.0975,
       sd_min = 16,
       sd_max = 24,
-      n_history_required = 21,
-      gam_fill_weight_factor = 0.0695
+      n_history_required = 19,
+      gam_fill_weight_factor = 0.0618
     ),
     race_types = list(
       "Sprint" = list(
-        decay_lambda = 0.002000,
-        sd_scale_factor = 0.9000,
+        decay_lambda = 0.003212,
+        sd_scale_factor = 0.9891,
         sd_min = 16,
-        sd_max = 24,
-        n_history_required = 10,
-        gam_fill_weight_factor = 0.2500
+        sd_max = 23,
+        n_history_required = 16,
+        gam_fill_weight_factor = 0.1572
       ),
       "Individual" = list(
         decay_lambda = 0.002000,
@@ -172,53 +172,53 @@ SPORT_PARAMS <- list(
 
   "alpine" = list(
     default = list(
-      decay_lambda = 0.003500,
-      sd_scale_factor = 0.8000,
-      sd_min = 17,
+      decay_lambda = 0.005125,
+      sd_scale_factor = 0.9165,
+      sd_min = 18,
       sd_max = 25,
       n_history_required = 22,
-      gam_fill_weight_factor = 0.2500
+      gam_fill_weight_factor = 0.2524
     ),
     race_types = list(
       "Downhill" = list(
-        decay_lambda = 0.002000,
-        sd_scale_factor = 0.9000,
-        sd_min = 16,
-        sd_max = 24,
-        n_history_required = 10,
-        gam_fill_weight_factor = 0.2500
+        decay_lambda = 0.004104,
+        sd_scale_factor = 0.7670,
+        sd_min = 24,
+        sd_max = 31,
+        n_history_required = 15,
+        gam_fill_weight_factor = 0.0654
       ),
       "Super_G" = list(
-        decay_lambda = 0.002000,
-        sd_scale_factor = 0.9000,
-        sd_min = 16,
-        sd_max = 24,
-        n_history_required = 10,
-        gam_fill_weight_factor = 0.2500
+        decay_lambda = 0.003058,
+        sd_scale_factor = 0.9951,
+        sd_min = 22,
+        sd_max = 30,
+        n_history_required = 17,
+        gam_fill_weight_factor = 0.2615
       ),
       "Giant_Slalom" = list(
-        decay_lambda = 0.002000,
-        sd_scale_factor = 0.9000,
-        sd_min = 16,
+        decay_lambda = 0.004392,
+        sd_scale_factor = 1.0729,
+        sd_min = 17,
         sd_max = 24,
-        n_history_required = 10,
-        gam_fill_weight_factor = 0.2500
+        n_history_required = 22,
+        gam_fill_weight_factor = 0.3427
       ),
       "Slalom" = list(
-        decay_lambda = 0.002000,
+        decay_lambda = 0.003500,
         sd_scale_factor = 0.9000,
-        sd_min = 16,
-        sd_max = 24,
-        n_history_required = 10,
+        sd_min = 17,
+        sd_max = 25,
+        n_history_required = 22,
         gam_fill_weight_factor = 0.2500
       ),
       "Combined" = list(
-        decay_lambda = 0.002000,
-        sd_scale_factor = 0.9000,
-        sd_min = 16,
-        sd_max = 24,
-        n_history_required = 10,
-        gam_fill_weight_factor = 0.2500
+        decay_lambda = 0.002955,
+        sd_scale_factor = 0.9590,
+        sd_min = 20,
+        sd_max = 28,
+        n_history_required = 19,
+        gam_fill_weight_factor = 0.1559
       )
     )
   ),
