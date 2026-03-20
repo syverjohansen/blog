@@ -1,0 +1,315 @@
+{
+  "sheet_name": "Men Top 30",
+  "headers": [
+    "Skier",
+    "Nation",
+    "Sex",
+    "Price",
+    "Predicted Weekend Points",
+    "Races Count",
+    "Avg Win Probability",
+    "Avg Podium Probability"
+  ],
+  "rows": [
+    [
+      "Johannes Høsflot Klæbo",
+      "Norway",
+      "M",
+      20225,
+      236.38,
+      3,
+      25.6,
+      57.4
+    ],
+    [
+      "Harald Østberg Amundsen",
+      "Norway",
+      "M",
+      10749,
+      190.67,
+      3,
+      7.4,
+      23.2
+    ],
+    [
+      "Federico Pellegrino",
+      "Italy",
+      "M",
+      8773,
+      149.25,
+      3,
+      4.4,
+      14.8
+    ],
+    [
+      "Lars Heggen",
+      "Norway",
+      "M",
+      7555,
+      145.6,
+      3,
+      4.7,
+      13.6
+    ],
+    [
+      "Martin Løwstrøm Nyenget",
+      "Norway",
+      "M",
+      8231,
+      143.27,
+      3,
+      11.2,
+      29.4
+    ],
+    [
+      "Gus Schumacher",
+      "USA",
+      "M",
+      7108,
+      143.24,
+      3,
+      0.7,
+      4.0
+    ],
+    [
+      "Benjamin Moser",
+      "Austria",
+      "M",
+      2543,
+      134.53,
+      3,
+      1.7,
+      7.2
+    ],
+    [
+      "Andreas Fjorden Ree",
+      "Norway",
+      "M",
+      3868,
+      124.82,
+      3,
+      1.5,
+      6.1
+    ],
+    [
+      "Hugo Lapalus",
+      "France",
+      "M",
+      3817,
+      123.37,
+      3,
+      0.5,
+      3.6
+    ],
+    [
+      "Mika Vermeulen",
+      "Austria",
+      "M",
+      2971,
+      117.82,
+      3,
+      2.6,
+      8.7
+    ],
+    [
+      "Davide Graz",
+      "Italy",
+      "M",
+      1833,
+      110.6,
+      3,
+      0.2,
+      1.0
+    ],
+    [
+      "Michal Novak",
+      "Czechia",
+      "M",
+      792,
+      104.82,
+      3,
+      0.3,
+      2.0
+    ],
+    [
+      "Elia Barp",
+      "Italy",
+      "M",
+      4317,
+      100.46,
+      3,
+      1.1,
+      4.1
+    ],
+    [
+      "Ben Ogden",
+      "USA",
+      "M",
+      5150,
+      97.55,
+      3,
+      0.7,
+      3.2
+    ],
+    [
+      "Mattis Stenshagen",
+      "Norway",
+      "M",
+      4271,
+      96.86,
+      3,
+      4.5,
+      14.4
+    ],
+    [
+      "Andrew Musgrave",
+      "Great Britain",
+      "M",
+      2304,
+      89.7,
+      3,
+      0.2,
+      1.1
+    ],
+    [
+      "Martino Carollo",
+      "Italy",
+      "M",
+      749,
+      86.48,
+      3,
+      0.3,
+      1.5
+    ],
+    [
+      "Friedrich Moch",
+      "Germany",
+      "M",
+      687,
+      82.68,
+      3,
+      1.4,
+      4.3
+    ],
+    [
+      "Valerio Grond",
+      "Switzerland",
+      "M",
+      1118,
+      81.5,
+      2,
+      4.8,
+      14.0
+    ],
+    [
+      "Saveliy Korostelev",
+      "Russia",
+      "M",
+      3866,
+      74.01,
+      2,
+      1.6,
+      6.3
+    ],
+    [
+      "Emil Iversen",
+      "Norway",
+      "M",
+      4671,
+      73.48,
+      1,
+      11.6,
+      32.4
+    ],
+    [
+      "Naoto Baba",
+      "Japan",
+      "M",
+      231,
+      66.93,
+      3,
+      0.0,
+      0.2
+    ],
+    [
+      "Simen Hegstad Krüger",
+      "Norway",
+      "M",
+      1978,
+      64.15,
+      2,
+      6.2,
+      17.6
+    ],
+    [
+      "Antoine Cyr",
+      "Canada",
+      "M",
+      924,
+      63.85,
+      3,
+      0.0,
+      0.2
+    ],
+    [
+      "Zanden McMullen",
+      "USA",
+      "M",
+      214,
+      63.5,
+      3,
+      0.0,
+      0.1
+    ],
+    [
+      "Jules Lapierre",
+      "France",
+      "M",
+      671,
+      63.3,
+      3,
+      1.5,
+      4.2
+    ],
+    [
+      "Janik Riebli",
+      "Switzerland",
+      "M",
+      946,
+      62.19,
+      2,
+      2.3,
+      8.1
+    ],
+    [
+      "Iver Tildheim Andersen",
+      "Norway",
+      "M",
+      863,
+      61.59,
+      2,
+      2.9,
+      8.1
+    ],
+    [
+      "Joe Davies",
+      "Great Britain",
+      "M",
+      288,
+      59.27,
+      3,
+      0.1,
+      0.7
+    ],
+    [
+      "Mathis Desloges",
+      "France",
+      "M",
+      3050,
+      57.71,
+      2,
+      0.7,
+      2.4
+    ]
+  ]
+}

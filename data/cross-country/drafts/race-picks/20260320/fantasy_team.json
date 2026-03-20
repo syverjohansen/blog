@@ -1,0 +1,141 @@
+{
+  "sheet_name": "Sheet 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Sex",
+    "Nation",
+    "Price",
+    "Predicted Points"
+  ],
+  "rows": [
+    [
+      "Jessie Diggins",
+      131,
+      "L",
+      "USA",
+      14748,
+      220.803759162639
+    ],
+    [
+      "Jonna Sundling",
+      1486,
+      "L",
+      "Sweden",
+      12922,
+      217.204063895462
+    ],
+    [
+      "Frida Karlsson",
+      3998,
+      "L",
+      "Sweden",
+      8770,
+      194.451810993948
+    ],
+    [
+      "Moa Ilar",
+      1866,
+      "L",
+      "Sweden",
+      11018,
+      188.391126476715
+    ],
+    [
+      "Linn Svahn",
+      3190,
+      "L",
+      "Sweden",
+      7705,
+      187.386918738652
+    ],
+    [
+      "Astrid Øyre Slind",
+      115,
+      "L",
+      "Norway",
+      4737,
+      149.698949377156
+    ],
+    [
+      "Coletta Rydzek",
+      3254,
+      "L",
+      "Germany",
+      3289,
+      133.989472947599
+    ],
+    [
+      "Rosie Brennan",
+      627,
+      "L",
+      "USA",
+      1176,
+      130.392806471188
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "M",
+      "Norway",
+      10749,
+      190.674251883247
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "M",
+      "Italy",
+      8773,
+      149.250255662248
+    ],
+    [
+      "Benjamin Moser",
+      5989,
+      "M",
+      "Austria",
+      2543,
+      134.529891313826
+    ],
+    [
+      "Andreas Fjorden Ree",
+      8678,
+      "M",
+      "Norway",
+      3868,
+      124.815811170774
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "M",
+      "France",
+      3817,
+      123.368242564497
+    ],
+    [
+      "Mika Vermeulen",
+      12673,
+      "M",
+      "Austria",
+      2971,
+      117.816888936895
+    ],
+    [
+      "Davide Graz",
+      12165,
+      "M",
+      "Italy",
+      1833,
+      110.604971252051
+    ],
+    [
+      "Michal Novak",
+      3655,
+      "M",
+      "Czechia",
+      792,
+      104.816567046388
+    ]
+  ]
+}

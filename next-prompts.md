@@ -124,6 +124,14 @@
         - `Relay`
         - `Mixed_Relay`
         - `Single_Mixed_Relay`
+    - Biathlon women current status:
+      - `default` optimized
+      - `Sprint` optimized
+      - `Individual` optimized
+      - `Pursuit` optimized
+      - `Mass_Start` optimized
+      - pending:
+        - `Relay`
     - Current planned Biathlon individual batch command:
       ```bash
       caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "men", "Pursuit")' && \
@@ -134,6 +142,16 @@
       caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies", "Pursuit")' && \
       caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies", "Mass_Start")'
       ```
+    - Biathlon edge hits to revisit later:
+      - ladies `Sprint` hit multiple bounds:
+        - `decay_lambda = 0.005000`
+        - `sd_scale_factor = 1.1000`
+        - `gam_fill_weight_factor = 0.4500`
+      - ladies `Pursuit` hit:
+        - `sd_scale_factor = 1.1000`
+        - `gam_fill_weight_factor = 0.0500`
+      - ladies `Mass_Start` hit:
+        - `decay_lambda = 0.000413`
   - Nordic Combined:
     - pending individual event-by-event fill
     - leave `Team`, `Team_Sprint`, `Mixed_Team`, and `Mixed_Team_Sprint` for later
