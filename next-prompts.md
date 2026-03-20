@@ -132,16 +132,7 @@
       - `Mass_Start` optimized
       - pending:
         - `Relay`
-    - Current planned Biathlon individual batch command:
-      ```bash
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "men", "Pursuit")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "men", "Mass_Start")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies", "Sprint")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies", "Individual")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies", "Pursuit")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "ladies", "Mass_Start")'
-      ```
+    - Biathlon remaining individual work is now included in the combined overnight biathlon + ski jumping batch below.
     - Biathlon edge hits to revisit later:
       - ladies `Sprint` hit multiple bounds:
         - `decay_lambda = 0.005000`
@@ -158,6 +149,22 @@
   - Ski Jumping:
     - pending individual event-by-event fill
     - leave `Team_Large`, `Team_Normal`/lumped team bucket, and `Mixed_Team` for later
+    - Current planned combined overnight Biathlon + Ski Jumping individual batch command:
+      ```bash
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "men", "Pursuit")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "men", "Mass_Start")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "men")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "men", "Large_Hill")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "men", "Normal_Hill")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "men", "Flying_Hill")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "ladies")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "ladies", "Large_Hill")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "ladies", "Normal_Hill")' && \
+      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "ladies", "Flying_Hill")'
+      ```
+    - Ski jumping team events should still be left for later:
+      - `Team_Large`
+      - `Mixed_Team`
 - Current optimization debugging status:
   - fixed missing helper export in race-type optimization path
   - fixed integer-format `%d` crash during fine/random search
