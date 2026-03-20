@@ -1,6 +1,6 @@
 # sport_params.R
 # Optimized simulation parameters by sport and race type
-# Generated: 2026-03-19 17:03:16.326854
+# Generated: 2026-03-20 00:32:08.813579
 #
 # Usage:
 #   source('~/blog/daehl-e/content/post/shared/sport_params.R')
@@ -128,20 +128,20 @@ SPORT_PARAMS <- list(
         gam_fill_weight_factor = 0.1939
       ),
       "Pursuit" = list(
-        decay_lambda = 0.004408,
-        sd_scale_factor = 1.0623,
+        decay_lambda = 0.003678,
+        sd_scale_factor = 1.0647,
         sd_min = 16,
         sd_max = 24,
-        n_history_required = 22,
-        gam_fill_weight_factor = 0.1530
+        n_history_required = 19,
+        gam_fill_weight_factor = 0.0574
       ),
       "Mass_Start" = list(
-        decay_lambda = 0.002706,
-        sd_scale_factor = 0.9452,
+        decay_lambda = 0.001206,
+        sd_scale_factor = 0.8452,
         sd_min = 22,
-        sd_max = 28,
+        sd_max = 33,
         n_history_required = 21,
-        gam_fill_weight_factor = 0.2547
+        gam_fill_weight_factor = 0.0547
       ),
       "Relay" = list(
         decay_lambda = 0.002000,
