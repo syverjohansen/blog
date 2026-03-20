@@ -118,9 +118,9 @@
       - `default` optimized
       - `Sprint` optimized
       - `Individual` optimized
-      - pending:
-        - `Pursuit`
-        - `Mass_Start`
+      - `Pursuit` optimized
+      - `Mass_Start` optimized
+      - pending team events:
         - `Relay`
         - `Mixed_Relay`
         - `Single_Mixed_Relay`
@@ -130,10 +130,13 @@
       - `Individual` optimized
       - `Pursuit` optimized
       - `Mass_Start` optimized
-      - pending:
+      - pending team events:
         - `Relay`
-    - Biathlon remaining individual work is now included in the combined overnight biathlon + ski jumping batch below.
+    - Biathlon individual work complete; only relay-type events remain.
     - Biathlon edge hits to revisit later:
+      - men `Mass_Start` hit:
+        - `sd_max = 34`
+        - `gam_fill_weight_factor = 0.0500`
       - ladies `Sprint` hit multiple bounds:
         - `decay_lambda = 0.005000`
         - `sd_scale_factor = 1.1000`
@@ -147,24 +150,43 @@
     - pending individual event-by-event fill
     - leave `Team`, `Team_Sprint`, `Mixed_Team`, and `Mixed_Team_Sprint` for later
   - Ski Jumping:
-    - pending individual event-by-event fill
-    - leave `Team_Large`, `Team_Normal`/lumped team bucket, and `Mixed_Team` for later
-    - Current planned combined overnight Biathlon + Ski Jumping individual batch command:
-      ```bash
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "men", "Pursuit")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("biathlon", "men", "Mass_Start")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "men")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "men", "Large_Hill")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "men", "Normal_Hill")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "men", "Flying_Hill")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "ladies")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "ladies", "Large_Hill")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "ladies", "Normal_Hill")' && \
-      caffeinate -s Rscript -e 'source("~/blog/daehl-e/content/post/optimization/param-optimizer.R"); optimize_event_and_update_sport_params("skijump", "ladies", "Flying_Hill")'
-      ```
+    - Ski jumping men current status:
+      - `default` optimized
+      - `Large_Hill` optimized
+      - `Normal_Hill` optimized
+      - `Flying_Hill` optimized
+    - Ski jumping women current status:
+      - `default` optimized
+      - `Large_Hill` optimized
+      - `Normal_Hill` optimized
+      - `Flying_Hill` optimized
     - Ski jumping team events should still be left for later:
       - `Team_Large`
       - `Mixed_Team`
+    - Ski jumping edge hits to revisit later:
+      - men `default` exceeded prior upper search edge:
+        - `decay_lambda = 0.005751`
+      - men `Large_Hill` hit multiple bounds:
+        - `decay_lambda = 0.005000`
+        - `sd_scale_factor = 1.1000`
+        - `gam_fill_weight_factor = 0.0500`
+      - men `Normal_Hill` exceeded prior upper search edge:
+        - `decay_lambda = 0.005817`
+      - men `Flying_Hill` hit multiple bounds:
+        - `sd_scale_factor = 0.5000`
+        - `sd_max = 34`
+        - `n_history_required = 6`
+        - `gam_fill_weight_factor = 0.4500`
+      - women `default` exceeded prior upper search edge:
+        - `decay_lambda = 0.006230`
+      - women `Large_Hill` hit multiple bounds:
+        - `decay_lambda = 0.005000`
+        - `sd_scale_factor = 1.1000`
+        - `gam_fill_weight_factor = 0.4500`
+      - women `Normal_Hill` hit:
+        - `decay_lambda = 0.005000`
+        - `sd_max = 34`
+        - `gam_fill_weight_factor = 0.4500`
 - Current optimization debugging status:
   - fixed missing helper export in race-type optimization path
   - fixed integer-format `%d` crash during fine/random search

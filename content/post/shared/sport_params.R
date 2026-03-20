@@ -1,6 +1,6 @@
 # sport_params.R
 # Optimized simulation parameters by sport and race type
-# Generated: 2026-03-20 00:32:08.813579
+# Generated: 2026-03-20 03:42:35.317659
 #
 # Usage:
 #   source('~/blog/daehl-e/content/post/shared/sport_params.R')
@@ -225,37 +225,37 @@ SPORT_PARAMS <- list(
 
   "skijump" = list(
     default = list(
-      decay_lambda = 0.004753,
-      sd_scale_factor = 0.8311,
+      decay_lambda = 0.005991,
+      sd_scale_factor = 0.9508,
       sd_min = 19,
-      sd_max = 26,
-      n_history_required = 16,
-      gam_fill_weight_factor = 0.2944
+      sd_max = 30,
+      n_history_required = 17,
+      gam_fill_weight_factor = 0.1742
     ),
     race_types = list(
       "Large_Hill" = list(
-        decay_lambda = 0.003000,
-        sd_scale_factor = 0.7500,
-        sd_min = 20,
-        sd_max = 24,
-        n_history_required = 11,
+        decay_lambda = 0.005000,
+        sd_scale_factor = 1.1000,
+        sd_min = 17,
+        sd_max = 25,
+        n_history_required = 22,
         gam_fill_weight_factor = 0.2500
       ),
       "Normal_Hill" = list(
-        decay_lambda = 0.003000,
-        sd_scale_factor = 0.7500,
+        decay_lambda = 0.005409,
+        sd_scale_factor = 0.9841,
         sd_min = 17,
-        sd_max = 24,
-        n_history_required = 13,
-        gam_fill_weight_factor = 0.2000
+        sd_max = 28,
+        n_history_required = 15,
+        gam_fill_weight_factor = 0.4346
       ),
       "Flying_Hill" = list(
-        decay_lambda = 0.001377,
-        sd_scale_factor = 0.9029,
-        sd_min = 20,
-        sd_max = 24,
-        n_history_required = 9,
-        gam_fill_weight_factor = 0.2399
+        decay_lambda = 0.002750,
+        sd_scale_factor = 0.6000,
+        sd_min = 22,
+        sd_max = 34,
+        n_history_required = 10,
+        gam_fill_weight_factor = 0.3500
       ),
       "Team_Large" = list(
         decay_lambda = 0.002000,
