@@ -1,0 +1,765 @@
+{
+  "sheet_name": "Men Race 1",
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Win",
+    "Podium",
+    "Final",
+    "Semifinal",
+    "Quarterfinal"
+  ],
+  "rows": [
+    [
+      "Lars Heggen",
+      19104,
+      "Norway",
+      21.6,
+      46.3,
+      66.3,
+      84.1,
+      98.1
+    ],
+    [
+      "Federico Pellegrino",
+      44,
+      "Italy",
+      14.1,
+      37.6,
+      61.8,
+      84.8,
+      99.2
+    ],
+    [
+      "Valerio Grond",
+      12164,
+      "Switzerland",
+      12.7,
+      32.7,
+      52.2,
+      76.7,
+      96.5
+    ],
+    [
+      "Lucas Chanavat",
+      3582,
+      "France",
+      12.1,
+      32.4,
+      53.4,
+      79.6,
+      97.4
+    ],
+    [
+      "Even Northug",
+      3590,
+      "Norway",
+      7.8,
+      21.6,
+      37.1,
+      63.4,
+      92.3
+    ],
+    [
+      "Benjamin Moser",
+      5989,
+      "Austria",
+      5.9,
+      15.7,
+      32.6,
+      57.3,
+      89.2
+    ],
+    [
+      "Janik Riebli",
+      7725,
+      "Switzerland",
+      5.6,
+      18.1,
+      38.5,
+      63.1,
+      91.4
+    ],
+    [
+      "Harald Østberg Amundsen",
+      5449,
+      "Norway",
+      4.7,
+      17.7,
+      41.1,
+      75.1,
+      97.8
+    ],
+    [
+      "Ben Ogden",
+      9179,
+      "USA",
+      3.3,
+      13.2,
+      29.1,
+      56.2,
+      91.9
+    ],
+    [
+      "Jules Chappaz",
+      12181,
+      "France",
+      3.1,
+      11.4,
+      27.1,
+      54.0,
+      87.2
+    ],
+    [
+      "Gus Schumacher",
+      9172,
+      "USA",
+      1.7,
+      8.1,
+      20.9,
+      49.0,
+      90.9
+    ],
+    [
+      "Lauri Vuorinen",
+      2874,
+      "Finland",
+      1.0,
+      5.2,
+      12.5,
+      31.2,
+      75.3
+    ],
+    [
+      "Jack Young",
+      14687,
+      "USA",
+      0.9,
+      5.4,
+      14.7,
+      40.5,
+      87.2
+    ],
+    [
+      "Noe Näff",
+      19984,
+      "Switzerland",
+      0.9,
+      4.2,
+      12.7,
+      31.3,
+      75.8
+    ],
+    [
+      "Ansgar Evensen",
+      8246,
+      "Norway",
+      0.7,
+      4.8,
+      13.3,
+      33.3,
+      73.5
+    ],
+    [
+      "George Ersson",
+      12790,
+      "Sweden",
+      0.6,
+      4.6,
+      13.9,
+      31.8,
+      78.2
+    ],
+    [
+      "Martino Carollo",
+      19980,
+      "Italy",
+      0.6,
+      3.2,
+      8.0,
+      22.6,
+      64.6
+    ],
+    [
+      "Emil Liekari",
+      12440,
+      "Finland",
+      0.4,
+      3.4,
+      9.5,
+      26.6,
+      65.6
+    ],
+    [
+      "Jaume Pueyo",
+      12682,
+      "Spain",
+      0.3,
+      1.5,
+      5.4,
+      22.5,
+      73.6
+    ],
+    [
+      "Roman Alder",
+      19983,
+      "Switzerland",
+      0.3,
+      1.4,
+      4.4,
+      19.1,
+      69.9
+    ],
+    [
+      "James Clinton Schoonmaker",
+      9201,
+      "USA",
+      0.3,
+      0.8,
+      2.1,
+      9.8,
+      56.1
+    ],
+    [
+      "Mathis Desloges",
+      12767,
+      "France",
+      0.3,
+      1.8,
+      6.4,
+      18.8,
+      55.2
+    ],
+    [
+      "Jan Stölben",
+      14033,
+      "Germany",
+      0.2,
+      1.4,
+      7.6,
+      26.3,
+      82.3
+    ],
+    [
+      "Jiri Tuz",
+      17348,
+      "Czechia",
+      0.2,
+      2.8,
+      7.3,
+      23.4,
+      71.1
+    ],
+    [
+      "Michal Novak",
+      3655,
+      "Czechia",
+      0.2,
+      0.5,
+      2.3,
+      8.1,
+      40.1
+    ],
+    [
+      "Davide Graz",
+      12165,
+      "Italy",
+      0.1,
+      1.3,
+      4.2,
+      21.2,
+      77.5
+    ],
+    [
+      "James Clugnet",
+      3615,
+      "Great Britain",
+      0.1,
+      0.8,
+      2.8,
+      12.5,
+      58.2
+    ],
+    [
+      "Andreas Fjorden Ree",
+      8678,
+      "Norway",
+      0.1,
+      0.9,
+      3.4,
+      11.0,
+      42.6
+    ],
+    [
+      "Erik Johansson",
+      4506,
+      "Sweden",
+      0.1,
+      0.1,
+      0.5,
+      3.5,
+      32.1
+    ],
+    [
+      "Even Solem Michelsen",
+      8605,
+      "Norway",
+      0.1,
+      0.4,
+      1.1,
+      5.1,
+      29.4
+    ],
+    [
+      "Simone Mocellini",
+      12168,
+      "Italy",
+      0.0,
+      0.2,
+      1.3,
+      10.9,
+      53.6
+    ],
+    [
+      "Zanden McMullen",
+      12698,
+      "USA",
+      0.0,
+      0.1,
+      1.6,
+      7.8,
+      45.1
+    ],
+    [
+      "Anton Grahn",
+      18667,
+      "Sweden",
+      0.0,
+      0.3,
+      2.3,
+      9.3,
+      39.9
+    ],
+    [
+      "Kevin Bolger",
+      9159,
+      "USA",
+      0.0,
+      0.0,
+      0.5,
+      4.0,
+      36.4
+    ],
+    [
+      "Sasha Masson",
+      14060,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      3.3,
+      28.9
+    ],
+    [
+      "Elias Keck",
+      14056,
+      "Germany",
+      0.0,
+      0.1,
+      0.2,
+      1.9,
+      24.2
+    ],
+    [
+      "Andrew Young",
+      1642,
+      "Great Britain",
+      0.0,
+      0.0,
+      0.8,
+      3.6,
+      28.9
+    ],
+    [
+      "Guillaume Pelchat",
+      16655,
+      "Canada",
+      0.0,
+      0.0,
+      0.1,
+      1.1,
+      22.5
+    ],
+    [
+      "Taschi Klaschka",
+      14754,
+      "Canada",
+      0.0,
+      0.0,
+      0.1,
+      0.7,
+      20.6
+    ],
+    [
+      "Luke Fricker",
+      14748,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      1.2,
+      21.8
+    ],
+    [
+      "Elia Barp",
+      14042,
+      "Italy",
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      20.7
+    ],
+    [
+      "Gustaf Berglund",
+      340,
+      "Sweden",
+      0.0,
+      0.0,
+      0.1,
+      0.6,
+      20.7
+    ],
+    [
+      "Davis Kalnins",
+      20932,
+      "Latvia",
+      0.0,
+      0.0,
+      0.1,
+      0.7,
+      18.2
+    ],
+    [
+      "Lars Young Vik",
+      12386,
+      "Australia",
+      0.0,
+      0.0,
+      0.0,
+      0.7,
+      21.4
+    ],
+    [
+      "Zak Ketterson",
+      5988,
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.4,
+      19.0
+    ],
+    [
+      "Johan Ekberg",
+      13290,
+      "Sweden",
+      0.0,
+      0.0,
+      0.2,
+      1.1,
+      20.6
+    ],
+    [
+      "Will Koch",
+      13964,
+      "USA",
+      0.0,
+      0.0,
+      0.1,
+      0.7,
+      19.2
+    ],
+    [
+      "Luke Allan",
+      16648,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      1.2,
+      17.9
+    ],
+    [
+      "Justin Boudreau",
+      19914,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.6,
+      16.4
+    ],
+    [
+      "Parker Courte-Rathwell",
+      14751,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.4,
+      14.6
+    ],
+    [
+      "Victor Lovera",
+      17106,
+      "France",
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      18.3
+    ],
+    [
+      "Pierre Grall-Johnson",
+      13894,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.4,
+      15.1
+    ],
+    [
+      "Niko Anttola",
+      17474,
+      "Finland",
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      13.8
+    ],
+    [
+      "Murphy Kimball",
+      18706,
+      "USA",
+      0.0,
+      0.0,
+      0.1,
+      0.8,
+      13.7
+    ],
+    [
+      "Alexandre Cormier",
+      18838,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      13.4
+    ],
+    [
+      "Xavier McKeever",
+      12676,
+      "Canada",
+      0.0,
+      0.0,
+      0.1,
+      0.7,
+      13.8
+    ],
+    [
+      "Owen Young",
+      18718,
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      11.2
+    ],
+    [
+      "Zachary Jayne",
+      18790,
+      "USA",
+      0.0,
+      0.0,
+      0.1,
+      0.3,
+      10.8
+    ],
+    [
+      "Julian Smith",
+      5178,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      10.6
+    ],
+    [
+      "Sho Kasahara",
+      13540,
+      "Japan",
+      0.0,
+      0.0,
+      0.1,
+      0.6,
+      10.7
+    ],
+    [
+      "Theo Schely",
+      12166,
+      "France",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      11.4
+    ],
+    [
+      "Joe Davies",
+      14110,
+      "Great Britain",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      9.5
+    ],
+    [
+      "Antoine Cyr",
+      9225,
+      "Canada",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      9.8
+    ],
+    [
+      "Jakob Elias Moch",
+      19936,
+      "Germany",
+      0.0,
+      0.0,
+      0.0,
+      0.3,
+      9.8
+    ],
+    [
+      "Gabriel Gledhill",
+      14200,
+      "Great Britain",
+      0.0,
+      0.0,
+      0.0,
+      0.4,
+      9.0
+    ],
+    [
+      "John Schwinghamer",
+      14876,
+      "USA",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      8.9
+    ],
+    [
+      "Truls Gisselman",
+      12782,
+      "Sweden",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      7.7
+    ],
+    [
+      "Hugo Lapalus",
+      6018,
+      "France",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      6.1
+    ],
+    [
+      "Andrew Musgrave",
+      277,
+      "Great Britain",
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      6.5
+    ],
+    [
+      "Hugo Hinckfuss",
+      12412,
+      "Australia",
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      7.9
+    ],
+    [
+      "Mattis Stenshagen",
+      5165,
+      "Norway",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      6.5
+    ],
+    [
+      "Niks Saulitis",
+      8270,
+      "Latvia",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      6.4
+    ],
+    [
+      "Mika Vermeulen",
+      12673,
+      "Austria",
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      6.2
+    ],
+    [
+      "Franco Dal Farra",
+      8039,
+      "Argentina",
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.9
+    ],
+    [
+      "Seve De Campo",
+      8036,
+      "Australia",
+      0.0,
+      0.0,
+      0.0,
+      0.4,
+      6.2
+    ]
+  ]
+}
