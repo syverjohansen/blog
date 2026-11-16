@@ -32,9 +32,16 @@ class AlpineShadowWorkflowTests(unittest.TestCase):
         self.assertNotIn("aws s3", self.source)
 
     def test_ski_checkout_is_bounded_to_alpine_inputs(self) -> None:
-        self.assertIn("sparse-checkout:", self.source)
-        self.assertIn("elo/python/alpine/polars/excel365", self.source)
-        self.assertIn("fetch-depth: 1", self.source)
+        self.assertIn("raw.githubusercontent.com/syverjohansen/ski", self.source)
+        self.assertIn("races.csv men_chrono.csv ladies_chrono.csv", self.source)
+        self.assertIn("--ski-input-root", self.source)
+        self.assertIn("--ski-commit-sha", self.source)
+
+    def test_blog_checkout_is_bounded_to_runtime_files(self) -> None:
+        self.assertIn("sparse-checkout-cone-mode: false", self.source)
+        self.assertIn("/pipelines/", self.source)
+        self.assertIn("/content/post/shared/", self.source)
+        self.assertIn("/themes/white/", self.source)
 
 
 if __name__ == "__main__":

@@ -5,9 +5,11 @@ from datetime import date
 from pathlib import Path
 
 from pipelines.test_pipeline import (
+    PipelineCheckError,
     build_plan,
     inject_failure,
     load_schedule,
+    resolve_ski_input,
     validate_fixture_contracts,
     validate_prediction_semantics,
     verify_scenarios,
@@ -56,6 +58,19 @@ class PipelineOrchestrationTests(unittest.TestCase):
             )
             self.assertEqual(1, result["rows"])
             self.assertEqual(64, len(result["sha256"]))
+
+    def test_pinned_hosted_inputs_require_full_commit_identity(self) -> None:
+        input_root = BLOG_ROOT / "tests/pipeline/fixtures"
+        source, state = resolve_ski_input(
+            BLOG_ROOT,
+            input_root,
+            "a" * 40,
+        )
+        self.assertEqual(input_root, source)
+        self.assertEqual("a" * 40, state["commit_sha"])
+        self.assertEqual("pinned-input-files", state["source"])
+        with self.assertRaisesRegex(PipelineCheckError, "40-character"):
+            resolve_ski_input(BLOG_ROOT, input_root, "main")
 
 
 if __name__ == "__main__":
