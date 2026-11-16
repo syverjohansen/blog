@@ -41,6 +41,9 @@ jobs:
           repository: syverjohansen/ski
           ref: ${{ inputs.ski_ref }}
           path: external/ski
+          fetch-depth: 1
+          sparse-checkout: |
+            elo/python/alpine/polars/excel365
 
       - name: Set up Python
         uses: actions/setup-python@v5

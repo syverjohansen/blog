@@ -31,6 +31,11 @@ class AlpineShadowWorkflowTests(unittest.TestCase):
         self.assertNotIn("git push", self.source)
         self.assertNotIn("aws s3", self.source)
 
+    def test_ski_checkout_is_bounded_to_alpine_inputs(self) -> None:
+        self.assertIn("sparse-checkout:", self.source)
+        self.assertIn("elo/python/alpine/polars/excel365", self.source)
+        self.assertIn("fetch-depth: 1", self.source)
+
 
 if __name__ == "__main__":
     unittest.main()
