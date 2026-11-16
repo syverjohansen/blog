@@ -1,0 +1,50 @@
+name: Nordic Numbers Test Pipeline
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  orchestration-and-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Install snapshot dependencies
+        run: python3 -m pip install -r pipelines/requirements-snapshot.txt
+
+      - name: Run orchestration and snapshot unit tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py'
+
+      - name: Run deterministic pipeline gates
+        run: >-
+          python3 pipelines/test_pipeline.py all
+          --report artifacts/test-pipeline-report.json
+
+      - name: Upload pipeline report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-pipeline-report
+          path: artifacts/test-pipeline-report.json
+          if-no-files-found: warn
+          retention-days: 30

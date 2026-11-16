@@ -1,0 +1,24 @@
+baseURL = "https://test.invalid/"
+title = "Nordic Numbers Pipeline Test"
+theme = "white"
+languageCode = "en-us"
+contentDir = "tests/pipeline/fixtures/content"
+dataDir = "tests/pipeline/fixtures/data"
+staticDir = "tests/pipeline/fixtures/static"
+disableKinds = ["home", "section", "taxonomy", "term", "RSS", "sitemap", "robotsTXT", "404"]
+
+[params]
+  header_image = ""
+  description = "Deterministic pipeline fixture"
+  slogan = "Pipeline test"
+  sidebar_about_description = "Pipeline test"
+  sidebar_avatar = ""
+  featured_tags = false
+  friends = false
+  bookmarks = false
+  about_me = false
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
