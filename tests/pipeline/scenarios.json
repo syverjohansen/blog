@@ -1,0 +1,124 @@
+[
+  {
+    "name": "alpine_race_day",
+    "logical_date": "2026-03-24",
+    "expected": {
+      "facts": {
+        "in_season": true,
+        "has_race_today": true,
+        "results_due": false,
+        "is_monday": false,
+        "is_season_rebuild_day": false
+      },
+      "tasks": {
+        "schedule_refresh": "planned",
+        "results_update": "planned",
+        "race_predictions": "planned",
+        "weekly_recap": "skipped",
+        "season_rebuild": "skipped",
+        "website_smoke": "planned"
+      }
+    }
+  },
+  {
+    "name": "monday_recap_after_races",
+    "logical_date": "2026-03-23",
+    "expected": {
+      "facts": {
+        "in_season": true,
+        "has_race_today": false,
+        "results_due": true,
+        "is_monday": true,
+        "is_season_rebuild_day": false
+      },
+      "tasks": {
+        "results_update": "planned",
+        "race_predictions": "skipped",
+        "weekly_recap": "planned",
+        "season_rebuild": "skipped",
+        "website_smoke": "planned"
+      }
+    }
+  },
+  {
+    "name": "day_after_last_race",
+    "logical_date": "2026-03-26",
+    "expected": {
+      "facts": {
+        "in_season": true,
+        "has_race_today": false,
+        "results_due": true,
+        "is_monday": false,
+        "is_season_rebuild_day": false
+      },
+      "tasks": {
+        "results_update": "planned",
+        "race_predictions": "skipped",
+        "weekly_recap": "skipped",
+        "season_rebuild": "skipped",
+        "website_smoke": "planned"
+      }
+    }
+  },
+  {
+    "name": "quiet_in_season_day",
+    "logical_date": "2026-02-24",
+    "expected": {
+      "facts": {
+        "in_season": true,
+        "has_race_today": false,
+        "results_due": false,
+        "is_monday": false,
+        "is_season_rebuild_day": false
+      },
+      "tasks": {
+        "results_update": "planned",
+        "race_predictions": "skipped",
+        "weekly_recap": "skipped",
+        "season_rebuild": "skipped",
+        "website_smoke": "skipped"
+      }
+    }
+  },
+  {
+    "name": "annual_rebuild_outside_race_season",
+    "logical_date": "2026-05-01",
+    "expected": {
+      "facts": {
+        "in_season": false,
+        "has_race_today": false,
+        "results_due": false,
+        "is_monday": false,
+        "is_season_rebuild_day": true
+      },
+      "tasks": {
+        "results_update": "skipped",
+        "race_predictions": "skipped",
+        "weekly_recap": "skipped",
+        "season_rebuild": "planned",
+        "website_smoke": "planned"
+      }
+    }
+  },
+  {
+    "name": "offseason_noop",
+    "logical_date": "2026-07-01",
+    "expected": {
+      "facts": {
+        "in_season": false,
+        "has_race_today": false,
+        "results_due": false,
+        "is_monday": false,
+        "is_season_rebuild_day": false
+      },
+      "tasks": {
+        "schedule_refresh": "planned",
+        "results_update": "skipped",
+        "race_predictions": "skipped",
+        "weekly_recap": "skipped",
+        "season_rebuild": "skipped",
+        "website_smoke": "skipped"
+      }
+    }
+  }
+]

@@ -8,3 +8,4 @@ venv/
 *.xlsx
 logs/*.log
 *.log
+artifacts/

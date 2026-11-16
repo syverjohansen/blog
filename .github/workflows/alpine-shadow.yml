@@ -1,0 +1,117 @@
+name: Alpine Shadow Parity
+
+on:
+  workflow_dispatch:
+    inputs:
+      logical_date:
+        description: Fixed date with accepted Alpine parity outputs
+        required: true
+        default: "2026-03-25"
+        type: string
+      n_simulations:
+        description: Deterministic Monte Carlo iteration count
+        required: true
+        default: 250
+        type: number
+      ski_ref:
+        description: Branch, tag, or commit from syverjohansen/ski
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpine-shadow-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out blog source
+        uses: actions/checkout@v4
+
+      - name: Check out ski source
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ inputs.ski_ref }}
+          path: external/ski
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipelines/requirements-integration.txt
+
+      - name: Install Python runtime
+        run: python3 -m pip install -r pipelines/requirements-integration.txt
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install R runtime
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::dplyr
+            any::tidyr
+            any::openxlsx
+            any::mgcv
+            any::leaps
+            any::logger
+            any::lubridate
+
+      - name: Set up Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Run publication-disabled Alpine parity gate
+        run: |
+          python3 pipelines/test_pipeline.py alpine-integration \
+            --logical-date "${{ inputs.logical_date }}" \
+            --n-simulations "${{ inputs.n_simulations }}" \
+            --ski-root "$GITHUB_WORKSPACE/external/ski" \
+            --report artifacts/alpine-shadow-report.json \
+            --manifest artifacts/alpine-shadow-manifest.json
+
+      - name: Enforce shadow-only result
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(
+              Path("artifacts/alpine-shadow-manifest.json").read_text(encoding="utf-8")
+          )
+          if manifest.get("status") != "passed":
+              raise SystemExit(f"shadow manifest did not pass: {manifest.get('status')}")
+          publication = manifest.get("publication", {})
+          if publication.get("status") != "disabled":
+              raise SystemExit(f"publication was not disabled: {publication}")
+          outcomes = manifest.get("task_outcomes", [])
+          failed = [item for item in outcomes if item.get("status") != "passed"]
+          if failed:
+              raise SystemExit(f"shadow tasks did not pass: {failed}")
+          print("Alpine shadow parity passed with publication disabled")
+          PY
+
+      - name: Upload parity evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alpine-shadow-${{ inputs.logical_date }}-${{ github.run_id }}
+          path: |
+            artifacts/alpine-shadow-report.json
+            artifacts/alpine-shadow-manifest.json
+          if-no-files-found: warn
+          retention-days: 30
