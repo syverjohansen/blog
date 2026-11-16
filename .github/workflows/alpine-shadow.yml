@@ -34,16 +34,36 @@ jobs:
     steps:
       - name: Check out blog source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /pipelines/
+            /content/post/alpine/drafts/race-picks-simulation.R
+            /content/post/shared/
+            /static/python/excel_to_hugo_multiple_sheets.py
+            /layouts/
+            /themes/white/
+            /data/alpine/drafts/race-picks/20260325/
+            /tests/pipeline/
 
       - name: Check out ski source
-        uses: actions/checkout@v4
-        with:
-          repository: syverjohansen/ski
-          ref: ${{ inputs.ski_ref }}
-          path: external/ski
-          fetch-depth: 1
-          sparse-checkout: |
-            elo/python/alpine/polars/excel365
+        env:
+          SKI_REF: ${{ inputs.ski_ref }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p external/ski-input
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if [[ ! "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          base="https://raw.githubusercontent.com/syverjohansen/ski/$ski_sha/elo/python/alpine/polars/excel365"
+          for file in races.csv men_chrono.csv ladies_chrono.csv startlist_races_men.csv startlist_races_ladies.csv; do
+            curl --fail --location --retry 3 --retry-all-errors \
+              --output "external/ski-input/$file" "$base/$file"
+          done
+          echo "SKI_SHA=$ski_sha" >> "$GITHUB_ENV"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -83,7 +103,8 @@ jobs:
           python3 pipelines/test_pipeline.py alpine-integration \
             --logical-date "${{ inputs.logical_date }}" \
             --n-simulations "${{ inputs.n_simulations }}" \
-            --ski-root "$GITHUB_WORKSPACE/external/ski" \
+            --ski-input-root "$GITHUB_WORKSPACE/external/ski-input" \
+            --ski-commit-sha "$SKI_SHA" \
             --report artifacts/alpine-shadow-report.json \
             --manifest artifacts/alpine-shadow-manifest.json
 

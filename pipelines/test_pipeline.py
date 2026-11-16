@@ -319,6 +319,30 @@ def git_state(root: Path) -> dict[str, Any]:
     }
 
 
+def resolve_ski_input(
+    ski_root: Path,
+    ski_input_root: Path | None,
+    ski_commit_sha: str | None,
+) -> tuple[Path, dict[str, Any]]:
+    if ski_input_root is None:
+        if ski_commit_sha:
+            raise PipelineCheckError(
+                "--ski-commit-sha requires --ski-input-root"
+            )
+        return ski_root / "elo/python/alpine/polars/excel365", git_state(ski_root)
+
+    commit_sha = (ski_commit_sha or "").strip().lower()
+    if not re.fullmatch(r"[0-9a-f]{40}", commit_sha):
+        raise PipelineCheckError(
+            "--ski-input-root requires a full 40-character --ski-commit-sha"
+        )
+    return ski_input_root, {
+        "commit_sha": commit_sha,
+        "working_tree_dirty": False,
+        "source": "pinned-input-files",
+    }
+
+
 def validate_fixture_contracts(blog_root: Path) -> list[dict[str, Any]]:
     data_root = blog_root / "tests/pipeline/fixtures/data/alpine/drafts/race-picks/20260324"
     return [
@@ -527,6 +551,9 @@ def run_alpine_integration(
     ski_root: Path,
     logical_date: date,
     n_simulations: int,
+    *,
+    ski_input_root: Path | None = None,
+    ski_commit_sha: str | None = None,
 ) -> dict[str, Any]:
     rscript = shutil.which("Rscript")
     if not rscript:
@@ -563,7 +590,11 @@ def run_alpine_integration(
         converter_prefix = [sys.executable]
         converter_runtime = sys.executable
 
-    input_source = ski_root / "elo/python/alpine/polars/excel365"
+    input_source, ski_code_state = resolve_ski_input(
+        ski_root,
+        ski_input_root,
+        ski_commit_sha,
+    )
     required_inputs = (
         "races.csv",
         "men_chrono.csv",
@@ -581,7 +612,7 @@ def run_alpine_integration(
     run_id = f"alpine-integration-{date_key}"
     started = time.monotonic()
     started_at = datetime.now(timezone.utc).isoformat()
-    code_state = {"blog": git_state(blog_root), "ski": git_state(ski_root)}
+    code_state = {"blog": git_state(blog_root), "ski": ski_code_state}
     with tempfile.TemporaryDirectory(prefix="nordic-numbers-alpine-integration-") as temp_dir:
         test_root = Path(temp_dir)
         input_root = test_root / "input"
@@ -811,6 +842,15 @@ def parse_args() -> argparse.Namespace:
         help="ski repository root for the real-data Alpine integration test",
     )
     parser.add_argument(
+        "--ski-input-root",
+        type=Path,
+        help="pre-fetched Alpine input directory for hosted parity runs",
+    )
+    parser.add_argument(
+        "--ski-commit-sha",
+        help="full ski commit SHA associated with --ski-input-root",
+    )
+    parser.add_argument(
         "--n-simulations",
         type=int,
         default=250,
@@ -860,6 +900,12 @@ def main() -> int:
                     args.ski_root.expanduser().resolve(),
                     logical_date,
                     args.n_simulations,
+                    ski_input_root=(
+                        args.ski_input_root.expanduser().resolve()
+                        if args.ski_input_root
+                        else None
+                    ),
+                    ski_commit_sha=args.ski_commit_sha,
                 ),
             }
             if args.manifest:
