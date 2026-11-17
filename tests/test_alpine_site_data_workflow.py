@@ -29,11 +29,31 @@ class AlpineSiteDataWorkflowTest(unittest.TestCase):
         self.assertNotIn("schedule:", prediction_trigger)
 
     def test_chains_results_site_data_and_predictions(self) -> None:
+        schedule = self.source.index("python scrape_schedule_shadow.py")
         results = self.source.index("python alpine_results_update.py")
         site_data = self.source.index("python3 -m pipelines.alpine_site_data")
         predictions = self.source.index("gh workflow run alpine-production-shadow.yml")
+        self.assertLess(schedule, results)
         self.assertLess(results, site_data)
         self.assertLess(site_data, predictions)
+
+    def test_schedule_changes_are_validated_and_committed_with_results(self) -> None:
+        self.assertIn('promotion" != "eligible"', self.source)
+        self.assertIn("candidate/races.csv", self.source)
+        self.assertIn("candidate/weekends.csv", self.source)
+        self.assertIn("excel365/races.csv", self.source)
+        self.assertIn("excel365/weekends.csv", self.source)
+        validation = self.source.index(
+            'python3 -m unittest discover -s "$root"'
+        )
+        ski_commit = self.source.index(
+            'git -C external/ski commit -m "Update Alpine schedule and results'
+        )
+        self.assertLess(validation, ski_commit)
+
+    def test_season_rollover_remains_human_approved(self) -> None:
+        self.assertIn("refusing automatic promotion", self.source)
+        self.assertIn("next-season rollover must be approved separately", self.source)
 
     def test_reads_and_publishes_ski_with_cross_repo_credential(self) -> None:
         self.assertIn("secrets.BLOG_AUTOMATION_TOKEN", self.source)
