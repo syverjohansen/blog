@@ -4,7 +4,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from pipelines.alpine_site_data import CURRENT_RATINGS, write_site_data
+from pipelines.alpine_site_data import (
+    CURRENT_RATINGS,
+    build_athlete_history_updates,
+    write_site_data,
+)
 
 
 FIELDS = [
@@ -34,6 +38,31 @@ def write_history(path: Path, rows: list[dict[str, object]]) -> None:
 
 
 class AlpineSiteDataTest(unittest.TestCase):
+    def test_athlete_updates_replace_rollover_and_append_new_season(self) -> None:
+        rows = [
+            row(sex="M", athlete_id=1, skier="Racer", season=2026, race=40,
+                event="World Cup", place=1, pelo=1400, elo=1420,
+                date="2026-03-25"),
+            row(sex="M", athlete_id=1, skier="Racer", season=2026, race=0,
+                event="Offseason", place=1, pelo=1420, elo=1402,
+                date="2026-05-01"),
+            row(sex="M", athlete_id=1, skier="Racer", season=2027, race=1,
+                event="World Cup", place=1, pelo=1402, elo=1412,
+                date="2026-10-25"),
+        ]
+
+        updates = build_athlete_history_updates(
+            [{key: str(value) for key, value in item.items()} for item in rows],
+            2027,
+        )["1"]
+
+        self.assertEqual(updates["Date"], ["2026-05-01", "2026-10-25"])
+        self.assertEqual(updates["Season"], [2026, 2027])
+        self.assertEqual(updates["Race"], [0, 1])
+        self.assertEqual(updates["Elo"], [1402.0, 1412.0])
+        self.assertEqual(updates["Pelo"], [1420.0, 1402.0])
+        self.assertEqual(updates["Elo_Pct"], [100.0, 100.0])
+
     def test_current_table_uses_roster_plus_new_racers_and_post_race_elo(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -94,6 +123,9 @@ class AlpineSiteDataTest(unittest.TestCase):
             rollover = json.loads((output / "L/2027/race_0.json").read_text())
             results = json.loads((output / "L/2027/race_1.json").read_text())
             seasons = json.loads((output / "L/seasons.json").read_text())
+            updates = json.loads(
+                (output / "L_athlete_history_updates.json").read_text()
+            )
             self.assertEqual(summary[0]["podium"][0]["name"], "L Winner")
             self.assertEqual(summary[0]["race_number"], 0)
             self.assertEqual(summary[0]["event"], "Offseason")
@@ -104,6 +136,8 @@ class AlpineSiteDataTest(unittest.TestCase):
             self.assertEqual(results[0]["new_elo"], 1395.0)
             self.assertEqual(results[0]["change"], 10.0)
             self.assertEqual(seasons[-1], {"season": 2027, "race_count": 1, "winner": None})
+            self.assertEqual(updates["2"]["Date"], ["2026-05-01", "2026-10-24"])
+            self.assertEqual(updates["2"]["Elo"], [1385.0, 1395.0])
 
 
 if __name__ == "__main__":

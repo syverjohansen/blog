@@ -30,6 +30,10 @@ CURRENT_RATINGS = {
     "Speed_Pelo": "Speed_Elo",
 }
 
+ELO_COLUMNS = list(CURRENT_RATINGS.values())
+INTEGER_COLUMNS = {"MS", "Place", "ID", "Season", "Race", "Exp"}
+FLOAT_COLUMNS = {"Age", *ELO_COLUMNS, *CURRENT_RATINGS.keys()}
+
 
 class SiteDataError(RuntimeError):
     """Raised when accepted history cannot produce safe site artifacts."""
@@ -66,6 +70,73 @@ def _read_history(path: Path, sex: str) -> list[dict[str, str]]:
 def _number(value: str) -> float | None:
     value = value.strip()
     return float(value) if value else None
+
+
+def _typed_value(column: str, value: str) -> Any:
+    value = value.strip()
+    if not value:
+        return None
+    if column in INTEGER_COLUMNS:
+        return int(float(value))
+    if column in FLOAT_COLUMNS:
+        return float(value)
+    return value
+
+
+def build_athlete_history_updates(
+    rows: list[dict[str, str]], season: int
+) -> dict[str, dict[str, list[Any]]]:
+    """Build the rollover + current-season overlay for athlete profile pages.
+
+    The large historical profile chunks are intentionally stable.  This small
+    overlay replaces the preceding offseason row (where the seasonal discount
+    is applied) and adds every row from the requested season.
+    """
+    prior_offseason = [
+        row for row in rows
+        if row["Event"] == "Offseason" and int(row["Season"]) < season
+    ]
+    if not prior_offseason:
+        raise SiteDataError(f"no offseason ratings exist before season {season}")
+    rollover_season = max(int(row["Season"]) for row in prior_offseason)
+    selected = [
+        row for row in rows
+        if (
+            row["Event"] == "Offseason"
+            and int(row["Season"]) == rollover_season
+        ) or int(row["Season"]) == season
+    ]
+
+    maxima: dict[tuple[int, int, str], float] = {}
+    for row in rows:
+        race_key = (int(row["Season"]), int(row["Race"]))
+        for column in ELO_COLUMNS:
+            value = _number(row[column])
+            if value is not None:
+                key = (*race_key, column)
+                maxima[key] = max(maxima.get(key, value), value)
+
+    by_athlete: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in selected:
+        record = {column: _typed_value(column, value) for column, value in row.items()}
+        race_key = (int(row["Season"]), int(row["Race"]))
+        for column in ELO_COLUMNS:
+            value = _number(row[column])
+            maximum = maxima.get((*race_key, column))
+            record[f"{column}_Pct"] = (
+                value / maximum * 100 if value is not None and maximum else 0
+            )
+        by_athlete[row["ID"]].append(record)
+
+    output: dict[str, dict[str, list[Any]]] = {}
+    for athlete_id, athlete_rows in by_athlete.items():
+        athlete_rows.sort(key=lambda row: (row["Date"], row["Season"], row["Race"]))
+        columns = list(athlete_rows[0])
+        output[athlete_id] = {
+            column: [row[column] for row in athlete_rows]
+            for column in columns
+        }
+    return output
 
 
 def _birthday(value: str) -> str | None:
@@ -228,6 +299,14 @@ def write_site_data(*, men_history: Path, ladies_history: Path, season: int, out
         _atomic_text(
             output_root / sex / "seasons.json",
             json.dumps(build_seasons_index(rows), ensure_ascii=True),
+        )
+        _atomic_text(
+            output_root / f"{sex}_athlete_history_updates.json",
+            json.dumps(
+                build_athlete_history_updates(rows, season),
+                ensure_ascii=True,
+                separators=(",", ":"),
+            ),
         )
 
 
