@@ -126,16 +126,34 @@ def build_season_archive(
     rows: list[dict[str, str]], season: int
 ) -> tuple[list[dict[str, Any]], dict[int, list[dict[str, Any]]]]:
     grouped: dict[int, list[dict[str, str]]] = defaultdict(list)
+    prior_offseason = [
+        row for row in rows
+        if row["Event"] == "Offseason" and int(row["Season"]) < season
+    ]
+    if not prior_offseason:
+        raise SiteDataError(f"no offseason ratings exist before season {season}")
+    rollover_season = max(int(row["Season"]) for row in prior_offseason)
+    grouped[0] = [
+        row.copy() for row in prior_offseason
+        if int(row["Season"]) == rollover_season
+    ]
     for row in rows:
         if int(row["Season"]) == season and row["Event"] != "Offseason":
             grouped[int(row["Race"])].append(row)
-    if not grouped:
+    if len(grouped) == 1:
         raise SiteDataError(f"season {season} contains no race results")
 
     summaries: list[dict[str, Any]] = []
     races: dict[int, list[dict[str, Any]]] = {}
     for race_number in sorted(grouped):
-        race_rows = sorted(grouped[race_number], key=lambda row: int(row["Place"]))
+        if race_number == 0:
+            race_rows = sorted(
+                grouped[race_number], key=lambda row: -float(row["Elo"])
+            )
+            for place, row in enumerate(race_rows, start=1):
+                row["Place"] = str(place)
+        else:
+            race_rows = sorted(grouped[race_number], key=lambda row: int(row["Place"]))
         first = race_rows[0]
         signatures = {
             (row["Date"], row["City"], row["Country"], row["Event"], row["Distance"])
