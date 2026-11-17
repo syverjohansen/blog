@@ -9,8 +9,8 @@ on:
         description: Results cutoff (YYYY-MM-DD); defaults to yesterday UTC
         required: false
         type: string
-      season:
-        description: Optional season ending year; defaults to latest accepted race season
+      schedule_season:
+        description: Optional schedule season; defaults to accepted season or next season from October 1
         required: false
         type: string
       ski_ref:
@@ -84,7 +84,7 @@ jobs:
         id: parameters
         env:
           REQUESTED_AS_OF: ${{ inputs.as_of || '' }}
-          REQUESTED_SEASON: ${{ inputs.season || '' }}
+          REQUESTED_SCHEDULE_SEASON: ${{ inputs.schedule_season || '' }}
         run: |
           printf '/external/\n' >> "$GITHUB_WORKSPACE/.git/info/exclude"
           as_of="${REQUESTED_AS_OF:-$(date -u -d 'yesterday' +%F)}"
@@ -92,28 +92,28 @@ jobs:
             echo "Invalid as_of date: $as_of" >&2
             exit 1
           fi
-          season="$REQUESTED_SEASON"
+          season="$REQUESTED_SCHEDULE_SEASON"
           if [[ -n "$season" ]] && ! [[ "$season" =~ ^[0-9]{4}$ ]]; then
             echo "Invalid season: $season" >&2
             exit 1
           fi
           echo "as_of=$as_of" >> "$GITHUB_OUTPUT"
-          echo "requested_season=$season" >> "$GITHUB_OUTPUT"
+          echo "run_date=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+          echo "requested_schedule_season=$season" >> "$GITHUB_OUTPUT"
           echo "schedule_root=$RUNNER_TEMP/alpine-schedule-update" >> "$GITHUB_OUTPUT"
           echo "results_root=$RUNNER_TEMP/alpine-results-update" >> "$GITHUB_OUTPUT"
           echo "season_close_root=$RUNNER_TEMP/alpine-season-close" >> "$GITHUB_OUTPUT"
 
       - uses: astral-sh/setup-uv@v6
 
-      - name: Resolve accepted schedule season
+      - name: Resolve schedule acquisition season
         id: schedule_season
         working-directory: external/ski/elo/python/alpine/polars
         env:
-          REQUESTED_SEASON: ${{ steps.parameters.outputs.requested_season }}
+          RUN_DATE: ${{ steps.parameters.outputs.run_date }}
+          REQUESTED_SEASON: ${{ steps.parameters.outputs.requested_schedule_season }}
         run: |
-          season="$REQUESTED_SEASON"
-          if [[ -z "$season" ]]; then
-            season=$(python3 - <<'PY'
+          accepted_season=$(python3 - <<'PY'
           from pathlib import Path
 
           from schedule_contract import RACES_COLUMNS, infer_fis_season, read_csv
@@ -121,9 +121,27 @@ jobs:
           races = read_csv(Path("excel365/races.csv"), RACES_COLUMNS)
           print(infer_fis_season(races))
           PY
-            )
+          )
+          rollover_date="$accepted_season-10-01"
+          season="$REQUESTED_SEASON"
+          if [[ -z "$season" ]]; then
+            season="$accepted_season"
+            if [[ "$RUN_DATE" > "$rollover_date" || "$RUN_DATE" == "$rollover_date" ]]; then
+              season=$((accepted_season + 1))
+            fi
           fi
+          rollover_allowed=false
+          if [[ "$season" == "$accepted_season" ]]; then
+            :
+          elif [[ "$season" == "$((accepted_season + 1))" && ( "$RUN_DATE" > "$rollover_date" || "$RUN_DATE" == "$rollover_date" ) ]]; then
+            rollover_allowed=true
+          else
+            echo "Unsupported schedule transition: accepted=$accepted_season requested=$season run_date=$RUN_DATE" >&2
+            exit 1
+          fi
+          echo "accepted_season=$accepted_season" >> "$GITHUB_OUTPUT"
           echo "season=$season" >> "$GITHUB_OUTPUT"
+          echo "rollover_allowed=$rollover_allowed" >> "$GITHUB_OUTPUT"
 
       - name: Build isolated schedule candidate
         working-directory: external/ski/elo/python/alpine/polars
@@ -135,8 +153,12 @@ jobs:
           --accepted-races excel365/races.csv
           --output-root "${{ steps.parameters.outputs.schedule_root }}"
 
-      - name: Stage validated same-season schedule
+      - name: Stage validated schedule
         id: schedule_candidate
+        env:
+          ACCEPTED_SEASON: ${{ steps.schedule_season.outputs.accepted_season }}
+          ACQUISITION_SEASON: ${{ steps.schedule_season.outputs.season }}
+          ROLLOVER_ALLOWED: ${{ steps.schedule_season.outputs.rollover_allowed }}
         run: |
           report="${{ steps.parameters.outputs.schedule_root }}/reports/acquisition.json"
           readarray -t schedule_status < <(python3 - "$report" <<'PY'
@@ -153,17 +175,34 @@ jobs:
           )
           promotion="${schedule_status[0]}"
           changed="${schedule_status[1]}"
-          if [[ "$promotion" != "eligible" ]]; then
-            echo "Schedule candidate is $promotion; refusing automatic promotion." >&2
-            echo "A valid next-season rollover must be approved separately." >&2
+          root="external/ski/elo/python/alpine/polars"
+          if [[ "$promotion" == "eligible" ]]; then
+            if [[ "$ACQUISITION_SEASON" != "$ACCEPTED_SEASON" ]]; then
+              echo "Next-season candidate unexpectedly bypassed rollover validation." >&2
+              exit 1
+            fi
+            if [[ "$changed" == "true" ]]; then
+              cp "${{ steps.parameters.outputs.schedule_root }}/candidate/races.csv" "$root/excel365/races.csv"
+              cp "${{ steps.parameters.outputs.schedule_root }}/candidate/weekends.csv" "$root/excel365/weekends.csv"
+            fi
+          elif [[ "$promotion" == "approval_required" && "$ROLLOVER_ALLOWED" == "true" ]]; then
+            shadow_report="${{ steps.parameters.outputs.schedule_root }}/reports/schedule-shadow.json"
+            report_sha=$(sha256sum "$shadow_report" | cut -d ' ' -f 1)
+            uv run --isolated --python 3.12 \
+              --with-requirements "$root/requirements-startlist-replay.txt" \
+              python3 "$root/promote_schedule.py" \
+              --shadow-report "$shadow_report" \
+              --expected-report-sha256 "$report_sha" \
+              --accepted-dir "$root/excel365" \
+              --approve-season "$ACQUISITION_SEASON" \
+              --receipt "${{ steps.parameters.outputs.schedule_root }}/reports/promotion.json"
+            changed=true
+          else
+            echo "Schedule candidate is $promotion; retaining the accepted schedule." >&2
             exit 1
           fi
-          if [[ "$changed" == "true" ]]; then
-            root="external/ski/elo/python/alpine/polars/excel365"
-            cp "${{ steps.parameters.outputs.schedule_root }}/candidate/races.csv" "$root/races.csv"
-            cp "${{ steps.parameters.outputs.schedule_root }}/candidate/weekends.csv" "$root/weekends.csv"
-          fi
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          echo "season=$ACQUISITION_SEASON" >> "$GITHUB_OUTPUT"
           cat "$report" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Build isolated results candidate
@@ -203,7 +242,7 @@ jobs:
         env:
           AS_OF: ${{ steps.parameters.outputs.as_of }}
           FORCE_CLOSE: ${{ inputs.run_season_close || false }}
-          SEASON: ${{ steps.schedule_season.outputs.season }}
+          SEASON: ${{ steps.schedule_candidate.outputs.season }}
         run: |
           close_date="$SEASON-05-01"
           if [[ "$AS_OF" < "$close_date" && "$FORCE_CLOSE" != "true" ]]; then
@@ -260,12 +299,8 @@ jobs:
 
       - name: Resolve latest raced season
         id: season
-        env:
-          REQUESTED_SEASON: ${{ steps.parameters.outputs.requested_season }}
         run: |
-          season="$REQUESTED_SEASON"
-          if [[ -z "$season" ]]; then
-            season=$(python3 - <<'PY'
+          season=$(python3 - <<'PY'
           import csv
           from pathlib import Path
 
@@ -282,8 +317,7 @@ jobs:
               raise SystemExit("accepted histories contain no races")
           print(max(seasons))
           PY
-            )
-          fi
+          )
           echo "season=$season" >> "$GITHUB_OUTPUT"
 
       - name: Generate all Alpine site artifacts
@@ -340,6 +374,7 @@ jobs:
           path: |
             ${{ steps.parameters.outputs.schedule_root }}/reports/acquisition.json
             ${{ steps.parameters.outputs.schedule_root }}/reports/schedule-shadow.json
+            ${{ steps.parameters.outputs.schedule_root }}/reports/promotion.json
             ${{ steps.parameters.outputs.schedule_root }}/candidate/races.csv
             ${{ steps.parameters.outputs.schedule_root }}/candidate/weekends.csv
             ${{ steps.parameters.outputs.results_root }}/report.json

@@ -60,7 +60,7 @@ class AlpineSiteDataWorkflowTest(unittest.TestCase):
         self.assertIn('SEASON_CLOSE_STATUS" == "candidate"', self.source)
 
     def test_schedule_changes_are_validated_and_committed_with_results(self) -> None:
-        self.assertIn('promotion" != "eligible"', self.source)
+        self.assertIn('promotion" == "eligible"', self.source)
         self.assertIn("candidate/races.csv", self.source)
         self.assertIn("candidate/weekends.csv", self.source)
         self.assertIn("excel365/races.csv", self.source)
@@ -73,9 +73,18 @@ class AlpineSiteDataWorkflowTest(unittest.TestCase):
         )
         self.assertLess(validation, ski_commit)
 
-    def test_season_rollover_remains_human_approved(self) -> None:
-        self.assertIn("refusing automatic promotion", self.source)
-        self.assertIn("next-season rollover must be approved separately", self.source)
+    def test_season_rollover_is_automatic_from_october_first(self) -> None:
+        self.assertIn('rollover_date="$accepted_season-10-01"', self.source)
+        self.assertIn("season=$((accepted_season + 1))", self.source)
+        self.assertIn("rollover_allowed=true", self.source)
+        self.assertIn('promotion" == "approval_required"', self.source)
+        self.assertIn("python3 \"$root/promote_schedule.py\"", self.source)
+        self.assertIn("--expected-report-sha256", self.source)
+        self.assertIn("--approve-season \"$ACQUISITION_SEASON\"", self.source)
+
+    def test_invalid_rollover_retains_the_accepted_schedule(self) -> None:
+        self.assertIn("Unsupported schedule transition", self.source)
+        self.assertIn("retaining the accepted schedule", self.source)
 
     def test_reads_and_publishes_ski_with_cross_repo_credential(self) -> None:
         self.assertIn("secrets.BLOG_AUTOMATION_TOKEN", self.source)
