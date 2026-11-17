@@ -33,6 +33,8 @@ class AlpineProductionWorkflowTests(unittest.TestCase):
     def test_workflow_pins_ski_and_retains_complete_evidence(self) -> None:
         self.assertIn('repos/syverjohansen/ski/commits/$SKI_REF', self.source)
         self.assertIn("ref: ${{ steps.ski.outputs.sha }}", self.source)
+        self.assertIn("printf '/external/", self.source)
+        self.assertIn('status --porcelain)', self.source)
         self.assertIn("actions/upload-artifact@v4", self.source)
         self.assertIn("alpine-production-shadow/runs/", self.source)
         self.assertIn("retention-days: 30", self.source)

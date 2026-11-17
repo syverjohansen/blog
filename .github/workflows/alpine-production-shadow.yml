@@ -82,6 +82,20 @@ jobs:
             /elo/python/alpine/polars/excel365/men_chrono.csv
             /elo/python/alpine/polars/excel365/ladies_chrono.csv
 
+      - name: Isolate the nested ski checkout from blog provenance
+        run: |
+          printf '/external/\n' >> "$GITHUB_WORKSPACE/.git/info/exclude"
+          if [[ -n "$(git -C "$GITHUB_WORKSPACE" status --porcelain)" ]]; then
+            echo "Blog checkout is unexpectedly dirty" >&2
+            git -C "$GITHUB_WORKSPACE" status --short >&2
+            exit 1
+          fi
+          if [[ -n "$(git -C "$GITHUB_WORKSPACE/external/ski" status --porcelain)" ]]; then
+            echo "Ski checkout is unexpectedly dirty" >&2
+            git -C "$GITHUB_WORKSPACE/external/ski" status --short >&2
+            exit 1
+          fi
+
       - name: Prepare immutable run parameters
         id: prepare
         env:
