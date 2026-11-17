@@ -94,9 +94,71 @@ jobs:
           fi
           echo "as_of=$as_of" >> "$GITHUB_OUTPUT"
           echo "requested_season=$season" >> "$GITHUB_OUTPUT"
+          echo "schedule_root=$RUNNER_TEMP/alpine-schedule-update" >> "$GITHUB_OUTPUT"
           echo "results_root=$RUNNER_TEMP/alpine-results-update" >> "$GITHUB_OUTPUT"
 
       - uses: astral-sh/setup-uv@v6
+
+      - name: Resolve accepted schedule season
+        id: schedule_season
+        working-directory: external/ski/elo/python/alpine/polars
+        env:
+          REQUESTED_SEASON: ${{ steps.parameters.outputs.requested_season }}
+        run: |
+          season="$REQUESTED_SEASON"
+          if [[ -z "$season" ]]; then
+            season=$(python3 - <<'PY'
+          from pathlib import Path
+
+          from schedule_contract import RACES_COLUMNS, infer_fis_season, read_csv
+
+          races = read_csv(Path("excel365/races.csv"), RACES_COLUMNS)
+          print(infer_fis_season(races))
+          PY
+            )
+          fi
+          echo "season=$season" >> "$GITHUB_OUTPUT"
+
+      - name: Build isolated schedule candidate
+        working-directory: external/ski/elo/python/alpine/polars
+        run: >-
+          uv run --isolated --python 3.12
+          --with-requirements requirements-startlist-replay.txt
+          python scrape_schedule_shadow.py
+          --season "${{ steps.schedule_season.outputs.season }}"
+          --accepted-races excel365/races.csv
+          --output-root "${{ steps.parameters.outputs.schedule_root }}"
+
+      - name: Stage validated same-season schedule
+        id: schedule_candidate
+        run: |
+          report="${{ steps.parameters.outputs.schedule_root }}/reports/acquisition.json"
+          readarray -t schedule_status < <(python3 - "$report" <<'PY'
+          import json
+          import sys
+
+          report = json.load(open(sys.argv[1], encoding="utf-8"))
+          promotion = report["promotion"]["status"]
+          comparison = report["comparison"]
+          changed = any(comparison[name] for name in ("added", "removed", "changed"))
+          print(promotion)
+          print(str(changed).lower())
+          PY
+          )
+          promotion="${schedule_status[0]}"
+          changed="${schedule_status[1]}"
+          if [[ "$promotion" != "eligible" ]]; then
+            echo "Schedule candidate is $promotion; refusing automatic promotion." >&2
+            echo "A valid next-season rollover must be approved separately." >&2
+            exit 1
+          fi
+          if [[ "$changed" == "true" ]]; then
+            root="external/ski/elo/python/alpine/polars/excel365"
+            cp "${{ steps.parameters.outputs.schedule_root }}/candidate/races.csv" "$root/races.csv"
+            cp "${{ steps.parameters.outputs.schedule_root }}/candidate/weekends.csv" "$root/weekends.csv"
+          fi
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Build isolated results candidate
         working-directory: external/ski/elo/python/alpine/polars
@@ -120,25 +182,30 @@ jobs:
           echo "status=$status" >> "$GITHUB_OUTPUT"
           cat "$report" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Validate and publish accepted ski histories
+      - name: Validate and publish accepted ski data
         id: publish_ski
         env:
           AS_OF: ${{ steps.parameters.outputs.as_of }}
-          STATUS: ${{ steps.candidate.outputs.status }}
+          RESULTS_STATUS: ${{ steps.candidate.outputs.status }}
+          SCHEDULE_CHANGED: ${{ steps.schedule_candidate.outputs.changed }}
         run: |
-          if [[ "$STATUS" == "candidate" ]]; then
-            root="external/ski/elo/python/alpine/polars"
+          root="external/ski/elo/python/alpine/polars"
+          if [[ "$RESULTS_STATUS" == "candidate" ]]; then
             cp "${{ steps.parameters.outputs.results_root }}/promotion/men_chrono.csv" "$root/excel365/men_chrono.csv"
             cp "${{ steps.parameters.outputs.results_root }}/promotion/ladies_chrono.csv" "$root/excel365/ladies_chrono.csv"
+          fi
+          if [[ "$SCHEDULE_CHANGED" == "true" || "$RESULTS_STATUS" == "candidate" ]]; then
             uv run --isolated --python 3.12 \
               --with-requirements "$root/requirements-startlist-replay.txt" \
               python3 -m unittest discover -s "$root" -p 'test_*.py'
             git -C external/ski config user.name "github-actions[bot]"
             git -C external/ski config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git -C external/ski add \
+              elo/python/alpine/polars/excel365/races.csv \
+              elo/python/alpine/polars/excel365/weekends.csv \
               elo/python/alpine/polars/excel365/men_chrono.csv \
               elo/python/alpine/polars/excel365/ladies_chrono.csv
-            git -C external/ski commit -m "Update Alpine results through $AS_OF"
+            git -C external/ski commit -m "Update Alpine schedule and results through $AS_OF"
             git -C external/ski push origin HEAD:main
           fi
           echo "sha=$(git -C external/ski rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -223,6 +290,10 @@ jobs:
         with:
           name: alpine-daily-pipeline-${{ steps.parameters.outputs.as_of }}-${{ github.run_id }}
           path: |
+            ${{ steps.parameters.outputs.schedule_root }}/reports/acquisition.json
+            ${{ steps.parameters.outputs.schedule_root }}/reports/schedule-shadow.json
+            ${{ steps.parameters.outputs.schedule_root }}/candidate/races.csv
+            ${{ steps.parameters.outputs.schedule_root }}/candidate/weekends.csv
             ${{ steps.parameters.outputs.results_root }}/report.json
             ${{ steps.parameters.outputs.results_root }}/gap-report.json
             ${{ steps.parameters.outputs.results_root }}/acquisition/report.json
