@@ -1,23 +1,13 @@
-name: Alpine Shadow Parity
+name: Alpine Historical Shadow Parity
 
 on:
   workflow_dispatch:
     inputs:
-      logical_date:
-        description: Fixed date with accepted Alpine parity outputs
-        required: true
-        default: "2026-03-25"
-        type: string
       n_simulations:
         description: Deterministic Monte Carlo iteration count
         required: true
         default: 250
         type: number
-      ski_ref:
-        description: Branch, tag, or commit from syverjohansen/ski
-        required: true
-        default: main
-        type: string
 
 permissions:
   contents: read
@@ -47,23 +37,23 @@ jobs:
             /data/alpine/drafts/race-picks/20260325/
             /tests/pipeline/
 
-      - name: Check out ski source
-        env:
-          SKI_REF: ${{ inputs.ski_ref }}
-          GH_TOKEN: ${{ github.token }}
+      - name: Fetch immutable Alpine parity inputs
         run: |
+          input_manifest="$GITHUB_WORKSPACE/tests/pipeline/alpine-parity-inputs.json"
+          ski_sha=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["ski_commit_sha"])' "$input_manifest")
+          logical_date=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["logical_date"])' "$input_manifest")
+          mapfile -t files < <(python3 -c 'import json,sys; print("\n".join(json.load(open(sys.argv[1]))["files"]))' "$input_manifest")
           mkdir -p external/ski-input
-          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
-          if [[ ! "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "Unable to resolve ski ref: $SKI_REF" >&2
-            exit 1
-          fi
           base="https://raw.githubusercontent.com/syverjohansen/ski/$ski_sha/elo/python/alpine/polars/excel365"
-          for file in races.csv men_chrono.csv ladies_chrono.csv startlist_races_men.csv startlist_races_ladies.csv; do
+          for file in "${files[@]}"; do
             curl --fail --location --retry 3 --retry-all-errors \
               --output "external/ski-input/$file" "$base/$file"
           done
+          python3 pipelines/verify_pinned_inputs.py \
+            --manifest "$input_manifest" \
+            --input-root external/ski-input
           echo "SKI_SHA=$ski_sha" >> "$GITHUB_ENV"
+          echo "ALPINE_PARITY_LOGICAL_DATE=$logical_date" >> "$GITHUB_ENV"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -101,7 +91,7 @@ jobs:
       - name: Run publication-disabled Alpine parity gate
         run: |
           python3 pipelines/test_pipeline.py alpine-integration \
-            --logical-date "${{ inputs.logical_date }}" \
+            --logical-date "$ALPINE_PARITY_LOGICAL_DATE" \
             --n-simulations "${{ inputs.n_simulations }}" \
             --ski-input-root "$GITHUB_WORKSPACE/external/ski-input" \
             --ski-commit-sha "$SKI_SHA" \
@@ -133,7 +123,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: alpine-shadow-${{ inputs.logical_date }}-${{ github.run_id }}
+          name: alpine-shadow-historical-${{ github.run_id }}
           path: |
             artifacts/alpine-shadow-report.json
             artifacts/alpine-shadow-manifest.json

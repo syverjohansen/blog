@@ -1,0 +1,12 @@
+{
+  "schema_version": "nordicnumbers.alpine-parity-inputs/v1",
+  "logical_date": "2026-03-25",
+  "ski_commit_sha": "b18161bd3d95ed7154541e4546da68071c4d760b",
+  "files": {
+    "races.csv": "d9e32453649d22291e06d22034388dbefbc0864d5f56709aab33aa5283e1b673",
+    "men_chrono.csv": "2173041188df95537d7e4a0887d931a0e06eaba7749996869c2c44cb01414df1",
+    "ladies_chrono.csv": "c7fd98ec2f067035691589a5ac00b5c339784d200537df977b3568b6c745c627",
+    "startlist_races_men.csv": "7f710bc2762b34167d22a023efcde0e1ec011961f3dfb439ba057412d22c307a",
+    "startlist_races_ladies.csv": "03239a7b2afc32754ff4c8e480a2fa641b96ff802b1a527c4babcf8ebd88d82c"
+  }
+}
