@@ -23,6 +23,11 @@ on:
         required: true
         default: main
         type: string
+      create_publication_pr:
+        description: Open a reviewable publication PR after every gate passes
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -35,6 +40,11 @@ jobs:
   shadow:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    outputs:
+      logical_date: ${{ steps.prepare.outputs.logical_date }}
+      run_id: ${{ steps.prepare.outputs.run_id }}
+      has_race: ${{ steps.prepare.outputs.has_race }}
+      artifact_name: ${{ steps.prepare.outputs.artifact_name }}
 
     steps:
       - name: Check out bounded blog runtime
@@ -118,6 +128,7 @@ jobs:
           run_id="github-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           output_root="$RUNNER_TEMP/alpine-production-shadow"
           manifest_path="$output_root/runs/$run_id/manifests/alpine-run-manifest-final.json"
+          artifact_name="alpine-production-shadow-${logical_date}-${GITHUB_RUN_ID}"
           mkdir -p "$output_root"
 
           {
@@ -128,6 +139,11 @@ jobs:
             echo "OUTPUT_ROOT=$output_root"
             echo "MANIFEST_PATH=$manifest_path"
           } >> "$GITHUB_ENV"
+          {
+            echo "logical_date=$logical_date"
+            echo "run_id=$run_id"
+            echo "artifact_name=$artifact_name"
+          } >> "$GITHUB_OUTPUT"
 
           export LOGICAL_DATE="$logical_date"
           python3 - <<'PY'
@@ -241,9 +257,106 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: alpine-production-shadow-${{ env.LOGICAL_DATE }}-${{ github.run_id }}
+          name: ${{ steps.prepare.outputs.artifact_name }}
           path: |
             ${{ runner.temp }}/alpine-production-shadow/runner.log
             ${{ runner.temp }}/alpine-production-shadow/runs/
+          if-no-files-found: warn
+          retention-days: 30
+
+  publication_candidate:
+    name: Open controlled publication PR
+    needs: shadow
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.create_publication_pr == true &&
+      needs.shadow.result == 'success' &&
+      needs.shadow.outputs.has_race == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Check out publication base
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download the exact passed shadow artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.shadow.outputs.artifact_name }}
+          path: ${{ runner.temp }}/shadow-artifact
+
+      - name: Materialize validated publication candidate
+        id: candidate
+        env:
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+          RUN_ID: ${{ needs.shadow.outputs.run_id }}
+        run: |
+          run_root="$RUNNER_TEMP/shadow-artifact/runs/$RUN_ID"
+          report="$RUNNER_TEMP/alpine-publication-candidate.json"
+          python3 -m pipelines.alpine_publication_candidate \
+            --manifest "$run_root/manifests/alpine-run-manifest-final.json" \
+            --replay-report "$run_root/acquisition/reports/replay.json" \
+            --actual-results "$run_root/acquisition/reports/actual-results.json" \
+            --site-data-root "$run_root/workspace/site-data" \
+            --repository-root "$GITHUB_WORKSPACE" \
+            --report "$report"
+
+          date_key="${LOGICAL_DATE//-/}"
+          if [[ -z "$(git status --porcelain -- \
+            "data/alpine/drafts/race-picks/$date_key" \
+            "content/post/race-picks/$date_key.md")" ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "date_key=$date_key" >> "$GITHUB_OUTPUT"
+          echo "report=$report" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Hugo for final repository render
+        if: steps.candidate.outputs.changed == 'true'
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Render the complete publication candidate
+        if: steps.candidate.outputs.changed == 'true'
+        run: hugo --minify --destination "$RUNNER_TEMP/alpine-publication-site"
+
+      - name: Open publication pull request
+        if: steps.candidate.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DATE_KEY: ${{ steps.candidate.outputs.date_key }}
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+          RUN_ID: ${{ needs.shadow.outputs.run_id }}
+        run: |
+          branch="automation/alpine-race-picks-${DATE_KEY}-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add \
+            "data/alpine/drafts/race-picks/$DATE_KEY" \
+            "content/post/race-picks/$DATE_KEY.md"
+          git commit -m "Add Alpine race picks for $LOGICAL_DATE"
+          git push origin "$branch"
+          pr_url=$(gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "Add Alpine race picks for $LOGICAL_DATE" \
+            --body "Generated from validated shadow run $RUN_ID in GitHub Actions run https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}. Publication still requires review and merge.")
+          echo "Publication candidate: $pr_url" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload publication candidate report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alpine-publication-candidate-${{ needs.shadow.outputs.logical_date }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/alpine-publication-candidate.json
           if-no-files-found: warn
           retention-days: 30
