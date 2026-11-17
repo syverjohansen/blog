@@ -1,0 +1,126 @@
+name: Alpine automatic site data update
+
+on:
+  schedule:
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+    inputs:
+      season:
+        description: Optional season ending year; defaults to latest accepted race season
+        required: false
+        type: string
+      ski_ref:
+        description: Ski ref to publish from
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: alpine-site-data-update
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out blog main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Resolve ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if ! [[ "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out accepted Alpine histories
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/alpine/polars/excel365/men_chrono.csv
+            /elo/python/alpine/polars/excel365/ladies_chrono.csv
+
+      - name: Isolate accepted source and resolve season
+        id: parameters
+        env:
+          REQUESTED_SEASON: ${{ inputs.season || '' }}
+        run: |
+          printf '/external/\n' >> "$GITHUB_WORKSPACE/.git/info/exclude"
+          season="$REQUESTED_SEASON"
+          if [[ -z "$season" ]]; then
+            season=$(python3 - <<'PY'
+          import csv
+          from pathlib import Path
+
+          root = Path("external/ski/elo/python/alpine/polars/excel365")
+          seasons = []
+          for filename in ("men_chrono.csv", "ladies_chrono.csv"):
+              with (root / filename).open(newline="", encoding="utf-8-sig") as handle:
+                  seasons.extend(
+                      int(row["Season"])
+                      for row in csv.DictReader(handle)
+                      if row["Event"] != "Offseason"
+                  )
+          if not seasons:
+              raise SystemExit("accepted histories contain no races")
+          print(max(seasons))
+          PY
+            )
+          fi
+          if ! [[ "$season" =~ ^[0-9]{4}$ ]]; then
+            echo "Invalid season: $season" >&2
+            exit 1
+          fi
+          echo "season=$season" >> "$GITHUB_OUTPUT"
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Generate all Alpine site artifacts
+        run: |
+          uv run --isolated --python 3.12 \
+            python3 -m pipelines.alpine_site_data \
+            --men-history external/ski/elo/python/alpine/polars/excel365/men_chrono.csv \
+            --ladies-history external/ski/elo/python/alpine/polars/excel365/ladies_chrono.csv \
+            --season "${{ steps.parameters.outputs.season }}" \
+            --output-root static/python/alpine/excel365
+
+      - name: Run complete automated test suite
+        run: |
+          uv run --isolated --python 3.12 \
+            --with-requirements pipelines/requirements-integration.txt \
+            python3 -m unittest discover -s tests -p 'test_*.py'
+
+      - name: Publish validated artifacts to main
+        env:
+          SEASON: ${{ steps.parameters.outputs.season }}
+          SKI_SHA: ${{ steps.ski.outputs.sha }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add static/python/alpine/excel365
+          if git diff --cached --quiet; then
+            echo "Accepted ski data produced no site changes" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git commit -m "Publish Alpine site data for season $SEASON"
+          git push origin HEAD:main
+          echo "Published season $SEASON from ski commit $SKI_SHA." >> "$GITHUB_STEP_SUMMARY"
