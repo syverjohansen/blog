@@ -31,39 +31,18 @@ The final manifest always records `publication.status` as `disabled`. A failed
 acquisition or prediction run retains its logs and a failure manifest. Existing
 run directories are never overwritten.
 
-## Ubuntu scheduling
+## GitHub-hosted scheduling
 
-`pipelines/run_alpine_shadow_ubuntu.sh` is the production-shaped scheduling
-entrypoint. It derives the logical date and FIS season in UTC, prevents
-overlapping runs with `flock`, and passes `--skip-no-race` so quiet days write a
-small publication-disabled skip manifest instead of failing.
+`.github/workflows/alpine-production-shadow.yml` is the only scheduled runtime.
+It runs daily at 00:15 UTC on a GitHub-hosted runner and can also be started
+manually with an optional logical date. The workflow resolves the ski source to
+an exact commit, uses `$RUNNER_TEMP` as the isolated output root, and uploads the
+complete retained run as a 30-day Actions artifact.
 
-The retired `master_automation_ubuntu.sh` delegates to this entrypoint for
-compatibility with an existing cron registration. Do not also enable the
-systemd timer until that cron entry has been removed, or the same day may run
-twice.
-
-User-level systemd templates are provided under `ops/systemd/user/`. To prepare
-them on the Ubuntu host without enabling the timer:
-
-```bash
-mkdir -p "$HOME/.config/systemd/user" "$HOME/.config/nordic-numbers"
-cp ops/systemd/user/nordic-alpine-shadow.* "$HOME/.config/systemd/user/"
-cp ops/systemd/alpine-shadow.env.example \
-  "$HOME/.config/nordic-numbers/alpine-shadow.env"
-systemctl --user daemon-reload
-systemctl --user start nordic-alpine-shadow.service
-```
-
-Inspect the retained run before scheduling it. After removing the legacy cron
-entry, enable the timer with:
-
-```bash
-systemctl --user enable --now nordic-alpine-shadow.timer
-```
-
-For a user timer that must run while the account is logged out, enable lingering
-once with `sudo loginctl enable-linger "$USER"`.
+Quiet days still invoke the runner, but `--skip-no-race` writes only a small
+publication-disabled skip manifest. R packages, model dependencies, and Hugo
+are installed only on scheduled race days. The workflow has read-only repository
+permissions and contains no Git mutation or publication step.
 
 The runner expects the existing Python environment to contain both repositories'
 integration dependencies, plus Rscript, the model's R packages, and Hugo
