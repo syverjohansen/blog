@@ -147,17 +147,12 @@ def _birthday(value: str) -> str | None:
 
 
 def build_current_table(rows: list[dict[str, str]], season: int) -> list[dict[str, Any]]:
-    prior_offseason = [
-        row for row in rows
-        if row["Event"] == "Offseason" and int(row["Season"]) < season
-    ]
-    if not prior_offseason:
-        raise SiteDataError(f"no offseason roster exists before season {season}")
-    roster_season = max(int(row["Season"]) for row in prior_offseason)
     active_ids = {
-        row["ID"] for row in prior_offseason if int(row["Season"]) == roster_season
+        row["ID"] for row in rows
+        if int(row["Season"]) == season and row["Event"] != "Offseason"
     }
-    active_ids.update(row["ID"] for row in rows if int(row["Season"]) == season)
+    if not active_ids:
+        raise SiteDataError(f"season {season} contains no active racers")
 
     latest: dict[str, dict[str, str]] = {}
     for row in rows:
@@ -204,10 +199,32 @@ def build_season_archive(
     if not prior_offseason:
         raise SiteDataError(f"no offseason ratings exist before season {season}")
     rollover_season = max(int(row["Season"]) for row in prior_offseason)
-    grouped[0] = [
+    active_ids = {
+        row["ID"] for row in rows
+        if int(row["Season"]) == season and row["Event"] != "Offseason"
+    }
+    rollover_rows = [
         row.copy() for row in prior_offseason
-        if int(row["Season"]) == rollover_season
+        if int(row["Season"]) == rollover_season and row["ID"] in active_ids
     ]
+    rollover_ids = {row["ID"] for row in rollover_rows}
+    rollover_template = next(
+        row for row in prior_offseason if int(row["Season"]) == rollover_season
+    )
+    for athlete_id in active_ids - rollover_ids:
+        first_start = next(
+            row for row in rows
+            if row["ID"] == athlete_id
+            and int(row["Season"]) == season
+            and row["Event"] != "Offseason"
+        )
+        starting_row = first_start.copy()
+        for column in ("Date", "City", "Country", "Event", "Distance"):
+            starting_row[column] = rollover_template[column]
+        starting_row["Pelo"] = first_start["Pelo"]
+        starting_row["Elo"] = first_start["Pelo"]
+        rollover_rows.append(starting_row)
+    grouped[0] = rollover_rows
     for row in rows:
         if int(row["Season"]) == season and row["Event"] != "Offseason":
             grouped[int(row["Race"])].append(row)

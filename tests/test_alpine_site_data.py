@@ -93,10 +93,9 @@ class AlpineSiteDataTest(unittest.TestCase):
             )
 
             current = json.loads((output / "M_chrono_current.json").read_text())
-            self.assertEqual([record["ID"] for record in current], [1, 2, 3])
+            self.assertEqual([record["ID"] for record in current], [1, 3])
             self.assertEqual(current[0]["Pelo"], 1400.0)
-            self.assertEqual(current[1]["Pelo"], 1342.5)
-            self.assertEqual(current[2]["Pelo"], 1310.0)
+            self.assertEqual(current[1]["Pelo"], 1310.0)
             self.assertEqual(current[0]["Birthday"], "2000-01-02")
 
     def test_writes_target_season_archive_and_index(self) -> None:
@@ -109,8 +108,14 @@ class AlpineSiteDataTest(unittest.TestCase):
                     row(sex=sex, athlete_id=athlete_id, skier=f"{sex} Winner", season=2026,
                         race=0, event="Offseason", place=1, pelo=1400, elo=1385,
                         date="2026-05-01"),
+                    row(sex=sex, athlete_id=99, skier=f"{sex} Inactive", season=2026,
+                        race=0, event="Offseason", place=2, pelo=1500, elo=1470,
+                        date="2026-05-01"),
                     row(sex=sex, athlete_id=athlete_id, skier=f"{sex} Winner", season=2027,
                         race=1, event="World Cup", place=1, pelo=1385, elo=1395,
+                        date="2026-10-24"),
+                    row(sex=sex, athlete_id=100, skier=f"{sex} Newcomer", season=2027,
+                        race=1, event="World Cup", place=2, pelo=1300, elo=1305,
                         date="2026-10-24"),
                 ])
             output = root / "output"
@@ -132,6 +137,9 @@ class AlpineSiteDataTest(unittest.TestCase):
             self.assertEqual(rollover[0]["previous_elo"], 1400.0)
             self.assertEqual(rollover[0]["new_elo"], 1385.0)
             self.assertEqual(rollover[0]["change"], -15.0)
+            self.assertEqual([record["id"] for record in rollover], [2, 100])
+            self.assertEqual(rollover[1]["previous_elo"], 1300.0)
+            self.assertEqual(rollover[1]["new_elo"], 1300.0)
             self.assertEqual(results[0]["previous_elo"], 1385.0)
             self.assertEqual(results[0]["new_elo"], 1395.0)
             self.assertEqual(results[0]["change"], 10.0)
