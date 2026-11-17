@@ -23,6 +23,11 @@ on:
         required: true
         default: true
         type: boolean
+      run_season_close:
+        description: Attempt the guarded season close (still rejects dates before May 1)
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   actions: write
@@ -96,6 +101,7 @@ jobs:
           echo "requested_season=$season" >> "$GITHUB_OUTPUT"
           echo "schedule_root=$RUNNER_TEMP/alpine-schedule-update" >> "$GITHUB_OUTPUT"
           echo "results_root=$RUNNER_TEMP/alpine-results-update" >> "$GITHUB_OUTPUT"
+          echo "season_close_root=$RUNNER_TEMP/alpine-season-close" >> "$GITHUB_OUTPUT"
 
       - uses: astral-sh/setup-uv@v6
 
@@ -182,19 +188,61 @@ jobs:
           echo "status=$status" >> "$GITHUB_OUTPUT"
           cat "$report" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Stage validated results candidate
+        env:
+          RESULTS_STATUS: ${{ steps.candidate.outputs.status }}
+        run: |
+          if [[ "$RESULTS_STATUS" == "candidate" ]]; then
+            root="external/ski/elo/python/alpine/polars/excel365"
+            cp "${{ steps.parameters.outputs.results_root }}/promotion/men_chrono.csv" "$root/men_chrono.csv"
+            cp "${{ steps.parameters.outputs.results_root }}/promotion/ladies_chrono.csv" "$root/ladies_chrono.csv"
+          fi
+
+      - name: Build and stage guarded season close
+        id: season_close
+        env:
+          AS_OF: ${{ steps.parameters.outputs.as_of }}
+          FORCE_CLOSE: ${{ inputs.run_season_close || false }}
+          SEASON: ${{ steps.schedule_season.outputs.season }}
+        run: |
+          close_date="$SEASON-05-01"
+          if [[ "$AS_OF" < "$close_date" && "$FORCE_CLOSE" != "true" ]]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "Season $SEASON does not close before $close_date." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          root="external/ski/elo/python/alpine/polars"
+          uv run --isolated --python 3.12 \
+            --with-requirements "$root/requirements-startlist-replay.txt" \
+            python3 "$root/alpine_season_close.py" \
+            --schedule "$root/excel365/races.csv" \
+            --men-chrono "$root/excel365/men_chrono.csv" \
+            --ladies-chrono "$root/excel365/ladies_chrono.csv" \
+            --season "$SEASON" \
+            --as-of "$AS_OF" \
+            --output-root "${{ steps.parameters.outputs.season_close_root }}"
+          report="${{ steps.parameters.outputs.season_close_root }}/report.json"
+          status=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$report")
+          if [[ "$status" == "candidate" ]]; then
+            cp "${{ steps.parameters.outputs.season_close_root }}/candidate/men_chrono.csv" "$root/excel365/men_chrono.csv"
+            cp "${{ steps.parameters.outputs.season_close_root }}/candidate/ladies_chrono.csv" "$root/excel365/ladies_chrono.csv"
+          elif [[ "$status" != "no_changes" ]]; then
+            echo "Unexpected season-close status: $status" >&2
+            exit 1
+          fi
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Validate and publish accepted ski data
         id: publish_ski
         env:
           AS_OF: ${{ steps.parameters.outputs.as_of }}
           RESULTS_STATUS: ${{ steps.candidate.outputs.status }}
           SCHEDULE_CHANGED: ${{ steps.schedule_candidate.outputs.changed }}
+          SEASON_CLOSE_STATUS: ${{ steps.season_close.outputs.status }}
         run: |
           root="external/ski/elo/python/alpine/polars"
-          if [[ "$RESULTS_STATUS" == "candidate" ]]; then
-            cp "${{ steps.parameters.outputs.results_root }}/promotion/men_chrono.csv" "$root/excel365/men_chrono.csv"
-            cp "${{ steps.parameters.outputs.results_root }}/promotion/ladies_chrono.csv" "$root/excel365/ladies_chrono.csv"
-          fi
-          if [[ "$SCHEDULE_CHANGED" == "true" || "$RESULTS_STATUS" == "candidate" ]]; then
+          if [[ "$SCHEDULE_CHANGED" == "true" || "$RESULTS_STATUS" == "candidate" || "$SEASON_CLOSE_STATUS" == "candidate" ]]; then
             uv run --isolated --python 3.12 \
               --with-requirements "$root/requirements-startlist-replay.txt" \
               python3 -m unittest discover -s "$root" -p 'test_*.py'
@@ -205,7 +253,7 @@ jobs:
               elo/python/alpine/polars/excel365/weekends.csv \
               elo/python/alpine/polars/excel365/men_chrono.csv \
               elo/python/alpine/polars/excel365/ladies_chrono.csv
-            git -C external/ski commit -m "Update Alpine schedule and results through $AS_OF"
+            git -C external/ski commit -m "Update Alpine data through $AS_OF"
             git -C external/ski push origin HEAD:main
           fi
           echo "sha=$(git -C external/ski rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -301,5 +349,8 @@ jobs:
             ${{ steps.parameters.outputs.results_root }}/identity/report.json
             ${{ steps.parameters.outputs.results_root }}/replay/report.json
             ${{ steps.parameters.outputs.results_root }}/promotion/report.json
+            ${{ steps.parameters.outputs.season_close_root }}/report.json
+            ${{ steps.parameters.outputs.season_close_root }}/candidate/men_chrono.csv
+            ${{ steps.parameters.outputs.season_close_root }}/candidate/ladies_chrono.csv
           if-no-files-found: warn
           retention-days: 30
