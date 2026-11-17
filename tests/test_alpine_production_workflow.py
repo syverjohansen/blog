@@ -15,9 +15,8 @@ class AlpineProductionWorkflowTests(unittest.TestCase):
             "\npermissions:", 1
         )[0]
 
-    def test_workflow_uses_github_hosted_daily_and_manual_triggers(self) -> None:
-        self.assertIn("schedule:", self.trigger)
-        self.assertIn('cron: "15 0 * * *"', self.trigger)
+    def test_workflow_is_dispatched_by_the_daily_orchestrator_or_manually(self) -> None:
+        self.assertNotIn("schedule:", self.trigger)
         self.assertIn("workflow_dispatch:", self.trigger)
         self.assertIn("runs-on: ubuntu-latest", self.source)
         self.assertNotIn("runs-on: self-hosted", self.source)

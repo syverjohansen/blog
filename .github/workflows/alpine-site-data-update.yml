@@ -1,0 +1,234 @@
+name: Alpine automatic daily pipeline
+
+on:
+  schedule:
+    - cron: "15 0 * * *"
+  workflow_dispatch:
+    inputs:
+      as_of:
+        description: Results cutoff (YYYY-MM-DD); defaults to yesterday UTC
+        required: false
+        type: string
+      season:
+        description: Optional season ending year; defaults to latest accepted race season
+        required: false
+        type: string
+      ski_ref:
+        description: Ski ref to start from
+        required: true
+        default: main
+        type: string
+      run_predictions:
+        description: Trigger today's prediction workflow after publication
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: alpine-automatic-daily-pipeline
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out blog main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Verify cross-repository automation credential
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+        run: gh api repos/syverjohansen/ski --silent
+
+      - name: Resolve ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if ! [[ "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out Alpine pipeline and accepted data
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          token: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          path: external/ski
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/alpine-results-update.yml
+            /elo/python/pipeline_config.py
+            /elo/python/alpine/polars/
+
+      - name: Isolate source and resolve run parameters
+        id: parameters
+        env:
+          REQUESTED_AS_OF: ${{ inputs.as_of || '' }}
+          REQUESTED_SEASON: ${{ inputs.season || '' }}
+        run: |
+          printf '/external/\n' >> "$GITHUB_WORKSPACE/.git/info/exclude"
+          as_of="${REQUESTED_AS_OF:-$(date -u -d 'yesterday' +%F)}"
+          if ! [[ "$as_of" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+            echo "Invalid as_of date: $as_of" >&2
+            exit 1
+          fi
+          season="$REQUESTED_SEASON"
+          if [[ -n "$season" ]] && ! [[ "$season" =~ ^[0-9]{4}$ ]]; then
+            echo "Invalid season: $season" >&2
+            exit 1
+          fi
+          echo "as_of=$as_of" >> "$GITHUB_OUTPUT"
+          echo "requested_season=$season" >> "$GITHUB_OUTPUT"
+          echo "results_root=$RUNNER_TEMP/alpine-results-update" >> "$GITHUB_OUTPUT"
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Build isolated results candidate
+        working-directory: external/ski/elo/python/alpine/polars
+        run: >-
+          uv run --isolated --python 3.12
+          --with-requirements requirements-startlist-replay.txt
+          python alpine_results_update.py
+          --schedule excel365/races.csv
+          --men-chrono excel365/men_chrono.csv
+          --ladies-chrono excel365/ladies_chrono.csv
+          --aliases excel365/fis_identity_aliases.csv
+          --as-of "${{ steps.parameters.outputs.as_of }}"
+          --output-root "${{ steps.parameters.outputs.results_root }}"
+          --allow-network
+
+      - name: Read results candidate status
+        id: candidate
+        run: |
+          report="${{ steps.parameters.outputs.results_root }}/report.json"
+          status=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$report")
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Validate and publish accepted ski histories
+        id: publish_ski
+        env:
+          AS_OF: ${{ steps.parameters.outputs.as_of }}
+          STATUS: ${{ steps.candidate.outputs.status }}
+        run: |
+          if [[ "$STATUS" == "candidate" ]]; then
+            root="external/ski/elo/python/alpine/polars"
+            cp "${{ steps.parameters.outputs.results_root }}/promotion/men_chrono.csv" "$root/excel365/men_chrono.csv"
+            cp "${{ steps.parameters.outputs.results_root }}/promotion/ladies_chrono.csv" "$root/excel365/ladies_chrono.csv"
+            uv run --isolated --python 3.12 \
+              --with-requirements "$root/requirements-startlist-replay.txt" \
+              python3 -m unittest discover -s "$root" -p 'test_*.py'
+            git -C external/ski config user.name "github-actions[bot]"
+            git -C external/ski config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git -C external/ski add \
+              elo/python/alpine/polars/excel365/men_chrono.csv \
+              elo/python/alpine/polars/excel365/ladies_chrono.csv
+            git -C external/ski commit -m "Update Alpine results through $AS_OF"
+            git -C external/ski push origin HEAD:main
+          fi
+          echo "sha=$(git -C external/ski rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve latest raced season
+        id: season
+        env:
+          REQUESTED_SEASON: ${{ steps.parameters.outputs.requested_season }}
+        run: |
+          season="$REQUESTED_SEASON"
+          if [[ -z "$season" ]]; then
+            season=$(python3 - <<'PY'
+          import csv
+          from pathlib import Path
+
+          root = Path("external/ski/elo/python/alpine/polars/excel365")
+          seasons = []
+          for filename in ("men_chrono.csv", "ladies_chrono.csv"):
+              with (root / filename).open(newline="", encoding="utf-8-sig") as handle:
+                  seasons.extend(
+                      int(row["Season"])
+                      for row in csv.DictReader(handle)
+                      if row["Event"] != "Offseason"
+                  )
+          if not seasons:
+              raise SystemExit("accepted histories contain no races")
+          print(max(seasons))
+          PY
+            )
+          fi
+          echo "season=$season" >> "$GITHUB_OUTPUT"
+
+      - name: Generate all Alpine site artifacts
+        run: |
+          uv run --isolated --python 3.12 \
+            python3 -m pipelines.alpine_site_data \
+            --men-history external/ski/elo/python/alpine/polars/excel365/men_chrono.csv \
+            --ladies-history external/ski/elo/python/alpine/polars/excel365/ladies_chrono.csv \
+            --season "${{ steps.season.outputs.season }}" \
+            --output-root static/python/alpine/excel365
+
+      - name: Run complete blog test suite
+        run: |
+          uv run --isolated --python 3.12 \
+            --with-requirements pipelines/requirements-integration.txt \
+            python3 -m unittest discover -s tests -p 'test_*.py'
+
+      - name: Publish validated site artifacts
+        env:
+          SEASON: ${{ steps.season.outputs.season }}
+          SKI_SHA: ${{ steps.publish_ski.outputs.sha }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add static/python/alpine/excel365
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Alpine site data for season $SEASON"
+            git push origin HEAD:main
+            echo "Published season $SEASON from ski commit $SKI_SHA." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Accepted ski data produced no site changes." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Trigger today's prediction workflow
+        if: github.event_name == 'schedule' || inputs.run_predictions == true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SEASON: ${{ steps.season.outputs.season }}
+          SKI_SHA: ${{ steps.publish_ski.outputs.sha }}
+        run: |
+          gh workflow run alpine-production-shadow.yml \
+            --ref main \
+            -f logical_date="$(date -u +%F)" \
+            -f expected_season="$SEASON" \
+            -f n_simulations=250 \
+            -f ski_ref="$SKI_SHA" \
+            -f create_publication_pr=true
+
+      - name: Upload result-update evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alpine-daily-pipeline-${{ steps.parameters.outputs.as_of }}-${{ github.run_id }}
+          path: |
+            ${{ steps.parameters.outputs.results_root }}/report.json
+            ${{ steps.parameters.outputs.results_root }}/gap-report.json
+            ${{ steps.parameters.outputs.results_root }}/acquisition/report.json
+            ${{ steps.parameters.outputs.results_root }}/acquisition/results.csv
+            ${{ steps.parameters.outputs.results_root }}/identity/report.json
+            ${{ steps.parameters.outputs.results_root }}/replay/report.json
+            ${{ steps.parameters.outputs.results_root }}/promotion/report.json
+          if-no-files-found: warn
+          retention-days: 30
