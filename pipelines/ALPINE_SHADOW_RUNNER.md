@@ -41,8 +41,24 @@ complete retained run as a 30-day Actions artifact.
 
 Quiet days still invoke the runner, but `--skip-no-race` writes only a small
 publication-disabled skip manifest. R packages, model dependencies, and Hugo
-are installed only on scheduled race days. The workflow has read-only repository
-permissions and contains no Git mutation or publication step.
+are installed only on scheduled race days. The scheduled shadow job has
+read-only repository permissions and contains no Git mutation or publication
+step.
+
+## Controlled publication candidates
+
+A manual workflow dispatch may set `create_publication_pr` after a startlist is
+available. The shadow job still runs first with read-only permissions. A
+separate write-scoped job runs only after every shadow gate passes and only for
+a scheduled race date.
+
+`pipelines/alpine_publication_candidate.py` then revalidates the retained
+manifest, clean commit provenance, output checksums, input readiness, prediction
+semantics, and Hugo render. It also refuses past logical dates, completed-result
+evidence, or conflicting existing content. The job copies only the validated
+position-probability JSON and a deterministic race-picks page into a new branch,
+renders the complete repository, and opens a pull request. It never merges that
+pull request; review and merge remain the publication approval.
 
 The runner expects the existing Python environment to contain both repositories'
 integration dependencies, plus Rscript, the model's R packages, and Hugo
