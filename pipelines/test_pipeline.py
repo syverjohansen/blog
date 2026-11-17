@@ -47,6 +47,17 @@ PREDICTION_HEADERS = (
     "Top-10",
     "Top-30",
 )
+ALPINE_RACE_HEADERS = (
+    "Date",
+    "Startlist",
+    "Sex",
+    "City",
+    "Country",
+    "Distance",
+    "Period",
+    "Championship",
+    "Race",
+)
 
 
 class PipelineCheckError(RuntimeError):
@@ -343,6 +354,125 @@ def resolve_ski_input(
     }
 
 
+def _parse_input_date(value: str, *, source: str) -> date:
+    for date_format in (DATE_FORMAT, "%Y-%m-%d"):
+        try:
+            return datetime.strptime(value, date_format).date()
+        except ValueError:
+            pass
+    raise PipelineCheckError(f"invalid date {value!r} in {source}")
+
+
+def validate_current_alpine_inputs(
+    input_root: Path,
+    logical_date: date,
+    expected_season: int,
+) -> dict[str, Any]:
+    """Fail closed when current schedule and startlists are not aligned."""
+    races_path = input_root / "races.csv"
+    try:
+        with races_path.open(newline="", encoding="utf-8") as handle:
+            reader = csv.DictReader(handle)
+            if tuple(reader.fieldnames or ()) != ALPINE_RACE_HEADERS:
+                raise PipelineCheckError(
+                    f"unexpected Alpine schedule columns: {reader.fieldnames}"
+                )
+            races = list(reader)
+    except OSError as exc:
+        raise PipelineCheckError(f"cannot read Alpine schedule: {exc}") from exc
+    if not races:
+        raise PipelineCheckError("Alpine schedule contains no races")
+
+    dated_races = [
+        (_parse_input_date(row["Date"], source="races.csv"), row)
+        for row in races
+    ]
+    season_start = date(expected_season - 1, 7, 1)
+    season_end = date(expected_season, 6, 30)
+    outside = [
+        race_date
+        for race_date, _ in dated_races
+        if not season_start <= race_date <= season_end
+    ]
+    if outside:
+        raise PipelineCheckError(
+            f"schedule dates fall outside FIS season {expected_season}: {outside[:3]}"
+        )
+    today = [row for race_date, row in dated_races if race_date == logical_date]
+    if not today:
+        raise PipelineCheckError(
+            f"schedule has no Alpine race on logical date {logical_date}"
+        )
+    invalid_sexes = sorted({row["Sex"] for row in today} - {"M", "L"})
+    if invalid_sexes:
+        raise PipelineCheckError(f"invalid schedule sexes: {invalid_sexes}")
+
+    gender_by_sex = {"M": "men", "L": "ladies"}
+    genders = tuple(
+        gender
+        for sex, gender in gender_by_sex.items()
+        if any(row["Sex"] == sex for row in today)
+    )
+    startlist_rows: dict[str, int] = {}
+    for gender in genders:
+        path = input_root / f"startlist_races_{gender}.csv"
+        try:
+            with path.open(newline="", encoding="utf-8") as handle:
+                reader = csv.DictReader(handle)
+                required = {"ID", "Skier", "Race_Date"}
+                if not required.issubset(reader.fieldnames or ()):
+                    raise PipelineCheckError(
+                        f"{path.name} is missing columns {sorted(required)}"
+                    )
+                rows = list(reader)
+        except OSError as exc:
+            raise PipelineCheckError(f"cannot read {path.name}: {exc}") from exc
+        if not rows:
+            raise PipelineCheckError(f"{path.name} contains no athletes")
+        dates = {
+            _parse_input_date(row["Race_Date"], source=path.name)
+            for row in rows
+            if (row.get("Race_Date") or "").strip()
+        }
+        if dates != {logical_date}:
+            raise PipelineCheckError(
+                f"{path.name} is stale or mixed for {logical_date}: "
+                f"observed {sorted(value.isoformat() for value in dates)}"
+            )
+        if any(not (row.get("ID") or "").strip() for row in rows):
+            raise PipelineCheckError(f"{path.name} contains blank athlete IDs")
+        startlist_rows[gender] = len(rows)
+
+    chrono_rows: dict[str, int] = {}
+    for gender in genders:
+        path = input_root / f"{gender}_chrono.csv"
+        try:
+            with path.open(newline="", encoding="utf-8") as handle:
+                reader = csv.DictReader(handle)
+                required = {"ID", "Date", "Elo"}
+                if not required.issubset(reader.fieldnames or ()):
+                    raise PipelineCheckError(
+                        f"{path.name} is missing columns {sorted(required)}"
+                    )
+                count = sum(1 for _ in reader)
+        except OSError as exc:
+            raise PipelineCheckError(f"cannot read {path.name}: {exc}") from exc
+        if count == 0:
+            raise PipelineCheckError(f"{path.name} contains no rating history")
+        chrono_rows[gender] = count
+
+    return {
+        "status": "passed",
+        "expected_season": expected_season,
+        "logical_date": logical_date.isoformat(),
+        "schedule_rows": len(races),
+        "races_on_logical_date": len(today),
+        "genders": list(genders),
+        "startlist_rows": startlist_rows,
+        "chrono_rows": chrono_rows,
+    }
+
+
 def validate_fixture_contracts(blog_root: Path) -> list[dict[str, Any]]:
     data_root = blog_root / "tests/pipeline/fixtures/data/alpine/drafts/race-picks/20260324"
     return [
@@ -458,6 +588,7 @@ def run_generated_site_smoke(
     data_root: Path,
     logical_date: date,
     destination: Path | None = None,
+    genders: tuple[str, ...] = ("men", "ladies"),
 ) -> dict[str, Any]:
     hugo = shutil.which("hugo")
     if not hugo:
@@ -472,6 +603,14 @@ def run_generated_site_smoke(
         page_source = content_root / "post/race-picks/alpine-integration.md"
         page_source.parent.mkdir(parents=True)
         static_root.mkdir()
+        if not genders or not set(genders).issubset({"men", "ladies"}):
+            raise PipelineCheckError(f"invalid genders for Hugo smoke: {genders}")
+        sections = "".join(
+            f"### {gender.title()}\n\n"
+            f'{{{{< alpine/datatable "alpine/drafts/race-picks/{date_key}/'
+            f'{gender}_position_probabilities" >}}}}\n\n'
+            for gender in genders
+        )
         page_source.write_text(
             "---\n"
             'title: "Race Picks Integration Fixture"\n'
@@ -479,10 +618,7 @@ def run_generated_site_smoke(
             "draft: false\n"
             "---\n\n"
             "## Alpine\n\n"
-            "### Men\n\n"
-            f'{{{{< alpine/datatable "alpine/drafts/race-picks/{date_key}/men_position_probabilities" >}}}}\n\n'
-            "### Ladies\n\n"
-            f'{{{{< alpine/datatable "alpine/drafts/race-picks/{date_key}/ladies_position_probabilities" >}}}}\n',
+            f"{sections}",
             encoding="utf-8",
         )
         config = test_root / "hugo.toml"
@@ -511,6 +647,7 @@ def run_generated_site_smoke(
                 str(site_destination),
                 "--cleanDestinationDir",
                 "--noBuildLock",
+                "--buildFuture",
                 "--panicOnWarning",
                 "--logLevel",
                 "warn",
@@ -529,10 +666,9 @@ def run_generated_site_smoke(
         if not page.is_file():
             raise PipelineCheckError(f"expected rendered page is missing: {page}")
         html = page.read_text(encoding="utf-8")
-        expected_markers = (
-            "Race Picks Integration Fixture",
-            f"table-alpinedraftsrace-picks{date_key}men_position_probabilities",
-            f"table-alpinedraftsrace-picks{date_key}ladies_position_probabilities",
+        expected_markers = ("Race Picks Integration Fixture",) + tuple(
+            f"table-alpinedraftsrace-picks{date_key}{gender}_position_probabilities"
+            for gender in genders
         )
         missing = [marker for marker in expected_markers if marker not in html]
         if missing:
@@ -554,6 +690,7 @@ def run_alpine_integration(
     *,
     ski_input_root: Path | None = None,
     ski_commit_sha: str | None = None,
+    current_season: int | None = None,
 ) -> dict[str, Any]:
     rscript = shutil.which("Rscript")
     if not rscript:
@@ -608,8 +745,20 @@ def run_alpine_integration(
             f"Alpine integration inputs are missing from {input_source}: {missing_inputs}"
         )
 
+    readiness = (
+        validate_current_alpine_inputs(input_source, logical_date, current_season)
+        if current_season is not None
+        else None
+    )
+    genders = (
+        tuple(readiness["genders"])
+        if readiness is not None
+        else ("men", "ladies")
+    )
+
     date_key = logical_date.strftime("%Y%m%d")
-    run_id = f"alpine-integration-{date_key}"
+    run_kind = "current-smoke" if current_season is not None else "integration"
+    run_id = f"alpine-{run_kind}-{date_key}"
     started = time.monotonic()
     started_at = datetime.now(timezone.utc).isoformat()
     code_state = {"blog": git_state(blog_root), "ski": ski_code_state}
@@ -709,7 +858,7 @@ def run_alpine_integration(
         excel_root = output_root / date_key
         json_root = data_root / "alpine/drafts/race-picks" / date_key
         converter = blog_root / "static/python/excel_to_hugo_multiple_sheets.py"
-        for gender in ("men", "ladies"):
+        for gender in genders:
             workbook = excel_root / f"{gender}_position_probabilities.xlsx"
             if not workbook.is_file():
                 raise PipelineCheckError(f"simulation did not create {workbook}")
@@ -729,21 +878,47 @@ def run_alpine_integration(
 
         contracts = []
         baseline_root = blog_root / "data/alpine/drafts/race-picks" / date_key
-        for gender in ("men", "ladies"):
+        for gender in genders:
             filename = f"{gender}_position_probabilities.json"
-            contracts.append(
-                compare_prediction_shape(json_root / filename, baseline_root / filename)
-            )
-        site_smoke = run_generated_site_smoke(blog_root, data_root, logical_date)
+            generated = json_root / filename
+            if current_season is not None:
+                semantic = validate_prediction_semantics(generated)
+                contracts.append(
+                    {
+                        "file": filename,
+                        "rows": semantic["rows"],
+                        "sha256": semantic["sha256"],
+                        "semantic_contract": "passed",
+                    }
+                )
+            else:
+                contracts.append(
+                    compare_prediction_shape(generated, baseline_root / filename)
+                )
+        site_smoke = run_generated_site_smoke(
+            blog_root,
+            data_root,
+            logical_date,
+            genders=genders,
+        )
         duration_seconds = round(time.monotonic() - started, 2)
         snapshot_manifest = {
             key: value
             for key, value in snapshot.items()
             if key not in {"manifest_path", "status"}
         }
-        task_outcomes = [
-            {"task_id": task_id, "status": "passed"}
-            for task_id in (
+        task_ids = (
+            [
+                "validate_current_input_readiness",
+                "snapshot_csv_inputs_to_parquet",
+                "verify_and_materialize_snapshot",
+                "simulate_predictions",
+                "convert_excel_to_json",
+                "validate_prediction_contracts",
+                "render_hugo_candidate",
+            ]
+            if current_season is not None
+            else [
                 "snapshot_csv_inputs_to_parquet",
                 "verify_and_materialize_snapshot",
                 "simulate_predictions",
@@ -751,39 +926,54 @@ def run_alpine_integration(
                 "validate_prediction_contracts",
                 "compare_with_accepted_output",
                 "render_hugo_candidate",
-            )
+            ]
+        )
+        task_outcomes = [
+            {"task_id": task_id, "status": "passed"}
+            for task_id in task_ids
         ]
+        parameters = {
+            "random_seed": date_key,
+            "n_simulations": n_simulations,
+            "converter_runtime": converter_runtime,
+        }
+        quality_results = {
+            "schema": "passed",
+            "probability_bounds": "passed",
+            "probability_monotonicity": "passed",
+            "accepted_athlete_set_and_row_count": "passed",
+            "hugo_render": site_smoke,
+        }
+        if current_season is not None:
+            parameters["expected_season"] = current_season
+            quality_results["accepted_athlete_set_and_row_count"] = "not_applicable"
+            quality_results["current_input_readiness"] = readiness
+
         run_manifest = {
             "schema_version": "nordicnumbers.pipeline-run/v1",
-            "pipeline_id": "alpine_race_prediction_shadow",
+            "pipeline_id": (
+                "alpine_current_season_smoke"
+                if current_season is not None
+                else "alpine_race_prediction_shadow"
+            ),
             "run_id": run_id,
             "logical_date": logical_date.isoformat(),
             "started_at": started_at,
             "completed_at": datetime.now(timezone.utc).isoformat(),
             "status": "passed",
             "code": code_state,
-            "parameters": {
-                "random_seed": date_key,
-                "n_simulations": n_simulations,
-                "converter_runtime": converter_runtime,
-            },
+            "parameters": parameters,
             "input_snapshot": snapshot_manifest,
             "task_outcomes": task_outcomes,
             "outputs": contracts,
-            "quality_results": {
-                "schema": "passed",
-                "probability_bounds": "passed",
-                "probability_monotonicity": "passed",
-                "accepted_athlete_set_and_row_count": "passed",
-                "hugo_render": site_smoke,
-            },
+            "quality_results": quality_results,
             "publication": {
                 "status": "disabled",
                 "reason": "shadow integration runs cannot publish or mutate Git",
             },
             "duration_seconds": duration_seconds,
         }
-        return {
+        result = {
             "status": "passed",
             "run_id": run_id,
             "logical_date": logical_date.isoformat(),
@@ -797,6 +987,9 @@ def run_alpine_integration(
             "isolation": "temporary workspace; no production writes",
             "run_manifest": run_manifest,
         }
+        if current_season is not None:
+            result["current_input_readiness"] = readiness
+        return result
 
 
 def write_report(report: dict[str, Any], path: Path | None) -> None:
@@ -813,7 +1006,14 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "command",
-        choices=("plan", "verify", "site-smoke", "alpine-integration", "all"),
+        choices=(
+            "plan",
+            "verify",
+            "site-smoke",
+            "alpine-integration",
+            "alpine-current-smoke",
+            "all",
+        ),
         help="pipeline check to run",
     )
     parser.add_argument(
@@ -857,6 +1057,11 @@ def parse_args() -> argparse.Namespace:
         help="Monte Carlo iterations for the Alpine integration test",
     )
     parser.add_argument(
+        "--expected-season",
+        type=int,
+        help="required FIS season for alpine-current-smoke",
+    )
+    parser.add_argument(
         "--report",
         type=Path,
         help="optional report path; stdout is used by default",
@@ -891,11 +1096,16 @@ def main() -> int:
             }
         elif args.command == "site-smoke":
             report = {"status": "passed", "site_smoke": run_site_smoke(blog_root)}
-        elif args.command == "alpine-integration":
+        elif args.command in {"alpine-integration", "alpine-current-smoke"}:
             logical_date = parse_iso_date(args.logical_date or "2026-03-25")
+            if args.command == "alpine-current-smoke" and args.expected_season is None:
+                raise PipelineCheckError(
+                    "--expected-season is required for alpine-current-smoke"
+                )
+            result_key = args.command.replace("-", "_")
             report = {
                 "status": "passed",
-                "alpine_integration": run_alpine_integration(
+                result_key: run_alpine_integration(
                     blog_root,
                     args.ski_root.expanduser().resolve(),
                     logical_date,
@@ -906,11 +1116,16 @@ def main() -> int:
                         else None
                     ),
                     ski_commit_sha=args.ski_commit_sha,
+                    current_season=(
+                        args.expected_season
+                        if args.command == "alpine-current-smoke"
+                        else None
+                    ),
                 ),
             }
             if args.manifest:
                 write_report(
-                    report["alpine_integration"]["run_manifest"],
+                    report[result_key]["run_manifest"],
                     args.manifest,
                 )
         else:

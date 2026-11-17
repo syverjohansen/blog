@@ -1,0 +1,147 @@
+name: Alpine Current-Season Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      logical_date:
+        description: Race date to validate and simulate (YYYY-MM-DD)
+        required: true
+        type: string
+      expected_season:
+        description: Expected FIS season ending year
+        required: true
+        default: 2027
+        type: number
+      n_simulations:
+        description: Deterministic Monte Carlo iteration count
+        required: true
+        default: 50
+        type: number
+      ski_ref:
+        description: Current ski branch, tag, or commit
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpine-current-smoke-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out bounded blog runtime
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /pipelines/
+            /content/post/alpine/drafts/race-picks-simulation.R
+            /content/post/shared/
+            /static/python/excel_to_hugo_multiple_sheets.py
+            /layouts/
+            /themes/white/
+
+      - name: Fetch current Alpine inputs at an exact commit
+        env:
+          SKI_REF: ${{ inputs.ski_ref }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p external/ski-input
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if [[ ! "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          base="https://raw.githubusercontent.com/syverjohansen/ski/$ski_sha/elo/python/alpine/polars/excel365"
+          for file in races.csv men_chrono.csv ladies_chrono.csv startlist_races_men.csv startlist_races_ladies.csv; do
+            curl --fail --location --retry 3 --retry-all-errors \
+              --output "external/ski-input/$file" "$base/$file"
+          done
+          echo "SKI_SHA=$ski_sha" >> "$GITHUB_ENV"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipelines/requirements-integration.txt
+
+      - name: Install Python runtime
+        run: python3 -m pip install -r pipelines/requirements-integration.txt
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install R runtime
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::dplyr
+            any::tidyr
+            any::openxlsx
+            any::mgcv
+            any::leaps
+            any::logger
+            any::lubridate
+
+      - name: Set up Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Run publication-disabled current-season smoke
+        run: |
+          python3 pipelines/test_pipeline.py alpine-current-smoke \
+            --logical-date "${{ inputs.logical_date }}" \
+            --expected-season "${{ inputs.expected_season }}" \
+            --n-simulations "${{ inputs.n_simulations }}" \
+            --ski-input-root "$GITHUB_WORKSPACE/external/ski-input" \
+            --ski-commit-sha "$SKI_SHA" \
+            --report artifacts/alpine-current-smoke-report.json \
+            --manifest artifacts/alpine-current-smoke-manifest.json
+
+      - name: Enforce smoke-only result
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(
+              Path("artifacts/alpine-current-smoke-manifest.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          if manifest.get("status") != "passed":
+              raise SystemExit(f"current smoke did not pass: {manifest.get('status')}")
+          publication = manifest.get("publication", {})
+          if publication.get("status") != "disabled":
+              raise SystemExit(f"publication was not disabled: {publication}")
+          readiness = manifest.get("quality_results", {}).get(
+              "current_input_readiness", {}
+          )
+          if readiness.get("status") != "passed":
+              raise SystemExit(f"current inputs were not ready: {readiness}")
+          print("Current-season smoke passed with publication disabled")
+          PY
+
+      - name: Upload smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alpine-current-smoke-${{ inputs.logical_date }}-${{ github.run_id }}
+          path: |
+            artifacts/alpine-current-smoke-report.json
+            artifacts/alpine-current-smoke-manifest.json
+          if-no-files-found: warn
+          retention-days: 30
