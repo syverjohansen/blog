@@ -43,11 +43,21 @@ class AlpineCurrentInputTests(unittest.TestCase):
             ) as handle:
                 writer = csv.DictWriter(
                     handle,
-                    fieldnames=("ID", "Skier", "Race_Date"),
+                    fieldnames=(
+                        "ID",
+                        "Skier",
+                        "Race_Date",
+                        "Startlist_Source",
+                    ),
                 )
                 writer.writeheader()
                 writer.writerow(
-                    {"ID": "1", "Skier": "Test Athlete", "Race_Date": "11/28/2026"}
+                    {
+                        "ID": "1",
+                        "Skier": "Test Athlete",
+                        "Race_Date": "11/28/2026",
+                        "Startlist_Source": "generated_pre_race_history",
+                    }
                 )
             with (root / f"{gender}_chrono.csv").open(
                 "w", newline="", encoding="utf-8"
@@ -72,7 +82,8 @@ class AlpineCurrentInputTests(unittest.TestCase):
             root = self.build_inputs(Path(text))
             path = root / "startlist_races_men.csv"
             path.write_text(
-                "ID,Skier,Race_Date\n1,Test Athlete,03/25/2026\n",
+                "ID,Skier,Race_Date,Startlist_Source\n"
+                "1,Test Athlete,03/25/2026,generated_pre_race_history\n",
                 encoding="utf-8",
             )
             with self.assertRaisesRegex(PipelineCheckError, "stale or mixed"):
@@ -89,6 +100,45 @@ class AlpineCurrentInputTests(unittest.TestCase):
             root = self.build_inputs(Path(text))
             with self.assertRaisesRegex(PipelineCheckError, "no Alpine race"):
                 validate_current_alpine_inputs(root, date(2026, 11, 29), 2027)
+
+    def test_single_gender_race_requires_only_its_startlist(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="alpine-current-one-gender-") as text:
+            root = self.build_inputs(Path(text))
+            with (root / "races.csv").open(newline="", encoding="utf-8") as handle:
+                races = list(csv.DictReader(handle))
+            with (root / "races.csv").open(
+                "w", newline="", encoding="utf-8"
+            ) as handle:
+                writer = csv.DictWriter(handle, fieldnames=ALPINE_RACE_HEADERS)
+                writer.writeheader()
+                writer.writerow(next(row for row in races if row["Sex"] == "L"))
+            (root / "startlist_races_men.csv").unlink()
+
+            result = validate_current_alpine_inputs(
+                root,
+                self.logical_date,
+                2027,
+            )
+
+            self.assertEqual(["ladies"], result["genders"])
+            self.assertEqual(
+                ["generated_pre_race_history"],
+                result["startlist_sources"]["ladies"],
+            )
+
+    def test_unlabelled_startlist_provenance_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="alpine-current-source-") as text:
+            root = self.build_inputs(Path(text))
+            path = root / "startlist_races_men.csv"
+            path.write_text(
+                "ID,Skier,Race_Date,Startlist_Source\n"
+                "1,Test Athlete,11/28/2026,unknown\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                PipelineCheckError, "invalid startlist provenance"
+            ):
+                validate_current_alpine_inputs(root, self.logical_date, 2027)
 
 
 if __name__ == "__main__":

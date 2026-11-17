@@ -414,12 +414,13 @@ def validate_current_alpine_inputs(
         if any(row["Sex"] == sex for row in today)
     )
     startlist_rows: dict[str, int] = {}
+    startlist_sources: dict[str, list[str]] = {}
     for gender in genders:
         path = input_root / f"startlist_races_{gender}.csv"
         try:
             with path.open(newline="", encoding="utf-8") as handle:
                 reader = csv.DictReader(handle)
-                required = {"ID", "Skier", "Race_Date"}
+                required = {"ID", "Skier", "Race_Date", "Startlist_Source"}
                 if not required.issubset(reader.fieldnames or ()):
                     raise PipelineCheckError(
                         f"{path.name} is missing columns {sorted(required)}"
@@ -441,7 +442,22 @@ def validate_current_alpine_inputs(
             )
         if any(not (row.get("ID") or "").strip() for row in rows):
             raise PipelineCheckError(f"{path.name} contains blank athlete IDs")
+        sources = sorted(
+            {
+                (row.get("Startlist_Source") or "").strip()
+                for row in rows
+            }
+        )
+        allowed_sources = {
+            "historical_result_proxy",
+            "generated_pre_race_history",
+        }
+        if not sources or not set(sources).issubset(allowed_sources):
+            raise PipelineCheckError(
+                f"{path.name} has invalid startlist provenance: {sources}"
+            )
         startlist_rows[gender] = len(rows)
+        startlist_sources[gender] = sources
 
     chrono_rows: dict[str, int] = {}
     for gender in genders:
@@ -469,6 +485,7 @@ def validate_current_alpine_inputs(
         "races_on_logical_date": len(today),
         "genders": list(genders),
         "startlist_rows": startlist_rows,
+        "startlist_sources": startlist_sources,
         "chrono_rows": chrono_rows,
     }
 
@@ -732,13 +749,7 @@ def run_alpine_integration(
         ski_input_root,
         ski_commit_sha,
     )
-    required_inputs = (
-        "races.csv",
-        "men_chrono.csv",
-        "ladies_chrono.csv",
-        "startlist_races_men.csv",
-        "startlist_races_ladies.csv",
-    )
+    required_inputs = ("races.csv", "men_chrono.csv", "ladies_chrono.csv")
     missing_inputs = [name for name in required_inputs if not (input_source / name).is_file()]
     if missing_inputs:
         raise PipelineCheckError(
@@ -750,6 +761,19 @@ def run_alpine_integration(
         if current_season is not None
         else None
     )
+    if current_season is None:
+        historical_startlists = (
+            "startlist_races_men.csv",
+            "startlist_races_ladies.csv",
+        )
+        missing_startlists = [
+            name for name in historical_startlists if not (input_source / name).is_file()
+        ]
+        if missing_startlists:
+            raise PipelineCheckError(
+                "Alpine integration inputs are missing from "
+                f"{input_source}: {missing_startlists}"
+            )
     genders = (
         tuple(readiness["genders"])
         if readiness is not None
@@ -770,9 +794,7 @@ def run_alpine_integration(
         snapshot_store = test_root / "object-store"
         snapshot_report_path = test_root / "snapshot-create.json"
         snapshot_script = blog_root / "pipelines/alpine_snapshot.py"
-        snapshot_create = subprocess.run(
-            converter_prefix
-            + [
+        snapshot_create_command = converter_prefix + [
                 str(snapshot_script),
                 "create",
                 "--input-root",
@@ -783,7 +805,11 @@ def run_alpine_integration(
                 logical_date.isoformat(),
                 "--report",
                 str(snapshot_report_path),
-            ],
+            ]
+        if current_season is not None:
+            snapshot_create_command.append("--allow-partial-startlists")
+        snapshot_create = subprocess.run(
+            snapshot_create_command,
             cwd=blog_root,
             text=True,
             stdout=subprocess.PIPE,
