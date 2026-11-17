@@ -117,6 +117,7 @@
                     const totalRaces = season.ladiesRaces + season.mensRaces;
                     const hasLadiesData = season.ladiesRaces > 0;
                     const hasMensData = season.mensRaces > 0;
+                    const isActiveSeason = season.season === seasons[0].season;
 
                     console.log(`Rendering season ${season.season}:`, {
                         ladiesRaces: season.ladiesRaces,
@@ -136,19 +137,23 @@
                             <div class="space-y-3">
                                 ${hasLadiesData ? `
                                 <div>
-                                    <h3 class="font-semibold text-gray-700">Ladies Winner (${season.ladiesRaces} races)</h3>
+                                    <h3 class="font-semibold text-gray-700">Ladies${season.ladiesWinner ? ' Winner' : ''} (${season.ladiesRaces} races)</h3>
                                     ${season.ladiesWinner ? 
                                         `<p>${season.ladiesWinner.name} (${ladiesWinCounts[`${season.ladiesWinner.name}_${season.season}`] || 1})<br><span class="text-gray-500">${season.ladiesWinner.nation}</span></p>` : 
-                                        '<p class="italic text-gray-400">No winner data available</p>'
+                                        isActiveSeason
+                                            ? '<p class="italic text-gray-500">Season in progress</p>'
+                                            : '<p class="italic text-gray-400">No winner data available</p>'
                                     }
                                 </div>
                                 ` : ''}
                                 ${hasMensData ? `
                                 <div>
-                                    <h3 class="font-semibold text-gray-700">Men's Winner (${season.mensRaces} races)</h3>
+                                    <h3 class="font-semibold text-gray-700">Men's${season.mensWinner ? ' Winner' : ''} (${season.mensRaces} races)</h3>
                                     ${season.mensWinner ? 
                                         `<p>${season.mensWinner.name} (${mensWinCounts[`${season.mensWinner.name}_${season.season}`] || 1})<br><span class="text-gray-500">${season.mensWinner.nation}</span></p>` : 
-                                        '<p class="italic text-gray-400">No winner data available</p>'
+                                        isActiveSeason
+                                            ? '<p class="italic text-gray-500">Season in progress</p>'
+                                            : '<p class="italic text-gray-400">No winner data available</p>'
                                     }
                                 </div>
                                 ` : ''}
