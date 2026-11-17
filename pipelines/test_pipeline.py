@@ -20,6 +20,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from contextlib import ExitStack
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -708,6 +709,8 @@ def run_alpine_integration(
     ski_input_root: Path | None = None,
     ski_commit_sha: str | None = None,
     current_season: int | None = None,
+    workspace_root: Path | None = None,
+    run_id: str | None = None,
 ) -> dict[str, Any]:
     rscript = shutil.which("Rscript")
     if not rscript:
@@ -782,12 +785,28 @@ def run_alpine_integration(
 
     date_key = logical_date.strftime("%Y%m%d")
     run_kind = "current-smoke" if current_season is not None else "integration"
-    run_id = f"alpine-{run_kind}-{date_key}"
+    run_id = run_id or f"alpine-{run_kind}-{date_key}"
     started = time.monotonic()
     started_at = datetime.now(timezone.utc).isoformat()
     code_state = {"blog": git_state(blog_root), "ski": ski_code_state}
-    with tempfile.TemporaryDirectory(prefix="nordic-numbers-alpine-integration-") as temp_dir:
-        test_root = Path(temp_dir)
+    with ExitStack() as stack:
+        if workspace_root is None:
+            test_root = Path(
+                stack.enter_context(
+                    tempfile.TemporaryDirectory(
+                        prefix="nordic-numbers-alpine-integration-"
+                    )
+                )
+            )
+            isolation = "temporary workspace; no production writes"
+        else:
+            test_root = workspace_root.expanduser().resolve()
+            if test_root.exists():
+                raise PipelineCheckError(
+                    f"persistent Alpine workspace already exists: {test_root}"
+                )
+            test_root.mkdir(parents=True)
+            isolation = f"persistent isolated workspace: {test_root}"
         input_root = test_root / "input"
         output_root = test_root / "products/race-picks"
         data_root = test_root / "site-data"
@@ -1010,7 +1029,7 @@ def run_alpine_integration(
             "contracts": contracts,
             "site_smoke": site_smoke,
             "duration_seconds": duration_seconds,
-            "isolation": "temporary workspace; no production writes",
+            "isolation": isolation,
             "run_manifest": run_manifest,
         }
         if current_season is not None:
@@ -1097,6 +1116,15 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="optional standalone run-manifest path for alpine-integration",
     )
+    parser.add_argument(
+        "--workspace-root",
+        type=Path,
+        help="optional persistent isolated workspace for Alpine artifacts",
+    )
+    parser.add_argument(
+        "--run-id",
+        help="optional explicit Alpine run ID",
+    )
     return parser.parse_args()
 
 
@@ -1147,6 +1175,12 @@ def main() -> int:
                         if args.command == "alpine-current-smoke"
                         else None
                     ),
+                    workspace_root=(
+                        args.workspace_root.expanduser().resolve()
+                        if args.workspace_root
+                        else None
+                    ),
+                    run_id=args.run_id,
                 ),
             }
             if args.manifest:
