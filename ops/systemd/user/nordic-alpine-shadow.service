@@ -1,0 +1,12 @@
+[Unit]
+Description=Nordic Numbers Alpine publication-disabled shadow pipeline
+ConditionPathExists=%h/blog/daehl-e/pipelines/run_alpine_shadow_ubuntu.sh
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/blog/daehl-e
+EnvironmentFile=-%h/.config/nordic-numbers/alpine-shadow.env
+ExecStart=%h/blog/daehl-e/pipelines/run_alpine_shadow_ubuntu.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import re
 import subprocess
@@ -39,6 +40,21 @@ def require_file(path: Path) -> Path:
 def default_run_id(logical_date: str) -> str:
     timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     return f"alpine-shadow-{logical_date.replace('-', '')}-{timestamp}"
+
+
+def schedule_has_race(races_path: Path, logical_date: str) -> bool:
+    target = parse_iso_date(logical_date).strftime("%m/%d/%Y")
+    with races_path.open(newline="", encoding="utf-8-sig") as handle:
+        rows = csv.DictReader(handle)
+        if not {"Date", "Sex"}.issubset(rows.fieldnames or ()):
+            raise ShadowRunnerError(
+                f"Alpine schedule is missing Date or Sex: {races_path}"
+            )
+        return any(
+            (row.get("Date") or "").strip() == target
+            and (row.get("Sex") or "").strip() in {"M", "L"}
+            for row in rows
+        )
 
 
 def run_logged(
@@ -96,6 +112,7 @@ def run_shadow(
     n_simulations: int,
     run_id: str,
     allow_network: bool,
+    skip_no_race: bool = False,
     command_runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
 ) -> Path:
     parse_iso_date(logical_date)
@@ -135,11 +152,38 @@ def run_shadow(
 
     code = {"blog": git_state(blog_root), "ski": git_state(ski_root)}
     tasks = [
+        "schedule_gate",
         "acquire_current_inputs",
         "run_current_season_smoke",
     ]
     task_outcomes: list[dict[str, str]] = []
     log_references: list[str] = []
+
+    if skip_no_race and not schedule_has_race(races, logical_date):
+        write_json_atomic(
+            manifest_path,
+            {
+                "schema_version": RUN_SCHEMA_VERSION,
+                "pipeline_id": "alpine_production_shadow",
+                "run_id": run_id,
+                "logical_date": logical_date,
+                "status": "skipped",
+                "code": code,
+                "task_outcomes": [
+                    {"task_id": tasks[0], "status": "skipped"},
+                    {"task_id": tasks[1], "status": "skipped"},
+                    {"task_id": tasks[2], "status": "skipped"},
+                ],
+                "skip_reason": "no Alpine race is scheduled for the logical date",
+                "publication": {
+                    "status": "disabled",
+                    "reason": "production-shaped shadow runs cannot publish or mutate Git",
+                },
+            },
+        )
+        return manifest_path
+
+    task_outcomes.append({"task_id": tasks[0], "status": "passed"})
 
     acquisition_command = [
         sys.executable,
@@ -168,8 +212,8 @@ def run_shadow(
     if acquired.returncode != 0:
         task_outcomes.extend(
             [
-                {"task_id": tasks[0], "status": "failed"},
-                {"task_id": tasks[1], "status": "skipped"},
+                {"task_id": tasks[1], "status": "failed"},
+                {"task_id": tasks[2], "status": "skipped"},
             ]
         )
         write_json_atomic(
@@ -184,7 +228,7 @@ def run_shadow(
             ),
         )
         raise ShadowRunnerError(f"Alpine input acquisition failed: {acquisition_log}")
-    task_outcomes.append({"task_id": tasks[0], "status": "passed"})
+    task_outcomes.append({"task_id": tasks[1], "status": "passed"})
 
     pipeline_command = [
         sys.executable,
@@ -221,7 +265,7 @@ def run_shadow(
     )
     log_references.append(str(pipeline_log.relative_to(run_root)))
     if executed.returncode != 0 or not manifest_path.is_file():
-        task_outcomes.append({"task_id": tasks[1], "status": "failed"})
+        task_outcomes.append({"task_id": tasks[2], "status": "failed"})
         write_json_atomic(
             manifest_path,
             failure_manifest(
@@ -240,7 +284,7 @@ def run_shadow(
         manifest.get("status") != "passed"
         or manifest.get("publication", {}).get("status") != "disabled"
     ):
-        task_outcomes.append({"task_id": tasks[1], "status": "failed"})
+        task_outcomes.append({"task_id": tasks[2], "status": "failed"})
         write_json_atomic(
             manifest_path,
             failure_manifest(
@@ -257,6 +301,7 @@ def run_shadow(
     manifest["pipeline_id"] = "alpine_production_shadow"
     manifest["task_outcomes"] = [
         {"task_id": tasks[0], "status": "passed"},
+        {"task_id": tasks[1], "status": "passed"},
         *manifest.get("task_outcomes", []),
     ]
     manifest["evidence"] = {"logs": log_references}
@@ -274,6 +319,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--n-simulations", type=int, default=50)
     parser.add_argument("--run-id")
     parser.add_argument("--allow-network", action="store_true")
+    parser.add_argument(
+        "--skip-no-race",
+        action="store_true",
+        help="write a successful skip manifest when no Alpine race is scheduled",
+    )
     return parser.parse_args()
 
 
@@ -290,6 +340,7 @@ def main() -> int:
             n_simulations=args.n_simulations,
             run_id=run_id,
             allow_network=args.allow_network,
+            skip_no_race=args.skip_no_race,
         )
     except (PipelineCheckError, ShadowRunnerError, ValueError) as exc:
         print(str(exc), file=sys.stderr)

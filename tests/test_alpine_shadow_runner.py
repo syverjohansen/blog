@@ -90,8 +90,12 @@ class AlpineShadowRunnerTests(unittest.TestCase):
             self.assertEqual("alpine_production_shadow", manifest["pipeline_id"])
             self.assertEqual("disabled", manifest["publication"]["status"])
             self.assertEqual(
-                "acquire_current_inputs",
+                "schedule_gate",
                 manifest["task_outcomes"][0]["task_id"],
+            )
+            self.assertEqual(
+                "acquire_current_inputs",
+                manifest["task_outcomes"][1]["task_id"],
             )
             self.assertTrue(
                 (output / "runs/test-run/workspace/candidate.json").is_file()
@@ -136,13 +140,48 @@ class AlpineShadowRunnerTests(unittest.TestCase):
             self.assertEqual("failed", manifest["status"])
             self.assertEqual("disabled", manifest["publication"]["status"])
             self.assertEqual(
-                "failed",
-                manifest["task_outcomes"][0]["status"],
+                ["passed", "failed", "skipped"],
+                [outcome["status"] for outcome in manifest["task_outcomes"]],
             )
             self.assertIn(
                 "no Alpine races found",
                 (run_root / "logs/acquire-current-inputs.log").read_text(),
             )
+
+    def test_scheduled_quiet_day_writes_skip_manifest_without_subprocesses(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="alpine-shadow-skip-") as text:
+            root = Path(text)
+            blog, ski = self.build_repositories(root)
+            races = ski / "elo/python/alpine/polars/excel365/races.csv"
+            races.write_text("Date,Sex\n11/28/2026,L\n", encoding="utf-8")
+            output = root / "output"
+
+            def unexpected_runner(
+                command: list[str], **kwargs: object
+            ) -> subprocess.CompletedProcess[str]:
+                self.fail(f"quiet-day schedule invoked subprocess: {command}")
+
+            with patch(
+                "pipelines.alpine_shadow_runner.git_state",
+                side_effect=self.git_state,
+            ):
+                manifest_path = run_shadow(
+                    blog_root=blog,
+                    ski_root=ski,
+                    output_root=output,
+                    logical_date="2026-11-23",
+                    expected_season=2027,
+                    n_simulations=10,
+                    run_id="quiet-run",
+                    allow_network=False,
+                    skip_no_race=True,
+                    command_runner=unexpected_runner,
+                )
+
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            self.assertEqual("skipped", manifest["status"])
+            self.assertEqual("disabled", manifest["publication"]["status"])
+            self.assertIn("no Alpine race", manifest["skip_reason"])
 
     def test_output_root_inside_source_repository_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory(prefix="alpine-shadow-isolation-") as text:
