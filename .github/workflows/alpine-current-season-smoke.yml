@@ -96,16 +96,20 @@ jobs:
             -r external/ski/elo/python/alpine/polars/requirements-startlist-replay.txt
 
       - name: Build isolated current Alpine inputs
+        id: build_inputs
         run: |
+          set -o pipefail
+          mkdir -p artifacts
           python3 external/ski/elo/python/alpine/polars/startlist-scrape-races.py shadow \
             --logical-date "${{ inputs.logical_date }}" \
             --races external/ski/elo/python/alpine/polars/excel365/races.csv \
             --men-history external/ski/elo/python/alpine/polars/excel365/men_chrono.csv \
             --ladies-history external/ski/elo/python/alpine/polars/excel365/ladies_chrono.csv \
             --output-dir "$GITHUB_WORKSPACE/external/ski-input" \
-            --allow-network
+            --allow-network 2>&1 | tee artifacts/alpine-input-build.log
 
       - name: Enforce scraper handoff contract
+        id: enforce_handoff
         run: |
           python3 - <<'PY'
           import json
@@ -155,6 +159,7 @@ jobs:
           extended: true
 
       - name: Run publication-disabled current-season smoke
+        id: current_smoke
         run: |
           python3 pipelines/test_pipeline.py alpine-current-smoke \
             --logical-date "${{ inputs.logical_date }}" \
@@ -166,6 +171,7 @@ jobs:
             --manifest artifacts/alpine-current-smoke-manifest.json
 
       - name: Enforce smoke-only result
+        id: enforce_smoke
         run: |
           python3 - <<'PY'
           import json
@@ -189,6 +195,26 @@ jobs:
           print("Current-season smoke passed with publication disabled")
           PY
 
+      - name: Write failure evidence when the smoke manifest is absent
+        if: always()
+        env:
+          BUILD_INPUTS_STATUS: ${{ steps.build_inputs.outcome }}
+          HANDOFF_STATUS: ${{ steps.enforce_handoff.outcome }}
+          CURRENT_SMOKE_STATUS: ${{ steps.current_smoke.outcome }}
+          ENFORCE_SMOKE_STATUS: ${{ steps.enforce_smoke.outcome }}
+        run: |
+          python3 pipelines/alpine_smoke_evidence.py \
+            --output artifacts/alpine-current-smoke-failure.json \
+            --successful-manifest artifacts/alpine-current-smoke-manifest.json \
+            --logical-date "${{ inputs.logical_date }}" \
+            --blog-sha "$GITHUB_SHA" \
+            --ski-sha "${SKI_SHA:-}" \
+            --scraper-log artifacts/alpine-input-build.log \
+            --build-inputs-status "$BUILD_INPUTS_STATUS" \
+            --handoff-status "$HANDOFF_STATUS" \
+            --smoke-status "$CURRENT_SMOKE_STATUS" \
+            --smoke-gate-status "$ENFORCE_SMOKE_STATUS"
+
       - name: Upload smoke evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -197,6 +223,8 @@ jobs:
           path: |
             artifacts/alpine-current-smoke-report.json
             artifacts/alpine-current-smoke-manifest.json
+            artifacts/alpine-current-smoke-failure.json
+            artifacts/alpine-input-build.log
             external/ski-input/reports/replay.json
             external/ski-input/reports/actual-results.json
           if-no-files-found: warn

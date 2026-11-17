@@ -34,6 +34,13 @@ class AlpineCurrentWorkflowTests(unittest.TestCase):
         self.assertIn("generated_pre_race_history", self.source)
         self.assertNotIn("raw.githubusercontent.com", self.source)
 
+    def test_failure_evidence_is_always_written_and_uploaded(self) -> None:
+        self.assertIn("if: always()", self.source)
+        self.assertIn("pipelines/alpine_smoke_evidence.py", self.source)
+        self.assertIn("alpine-current-smoke-failure.json", self.source)
+        self.assertIn("alpine-input-build.log", self.source)
+        self.assertIn("steps.build_inputs.outcome", self.source)
+
     def test_current_smoke_has_no_historical_baseline_comparison(self) -> None:
         self.assertIn("--expected-season", self.source)
         self.assertNotIn("compare_with_accepted_output", self.source)
