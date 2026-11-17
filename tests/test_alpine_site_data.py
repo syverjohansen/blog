@@ -1,0 +1,104 @@
+import csv
+import json
+import tempfile
+import unittest
+from pathlib import Path
+
+from pipelines.alpine_site_data import CURRENT_RATINGS, write_site_data
+
+
+FIELDS = [
+    "Date", "City", "Country", "Sex", "Distance", "Event", "Place", "Skier",
+    "Nation", "ID", "Season", "Race", "Birthday", "Pelo", "Elo",
+    *[column for column in CURRENT_RATINGS.values() if column != "Elo"],
+]
+
+
+def row(*, sex: str, athlete_id: int, skier: str, season: int, race: int,
+        event: str, place: int, pelo: float, elo: float, date: str) -> dict[str, object]:
+    result: dict[str, object] = {
+        "Date": date, "City": "Levi", "Country": "Finland", "Sex": sex,
+        "Distance": "Slalom", "Event": event, "Place": place, "Skier": skier,
+        "Nation": "Norway", "ID": athlete_id, "Season": season, "Race": race,
+        "Birthday": "2000-01-02T00:00:00", "Pelo": pelo, "Elo": elo,
+    }
+    result.update({column: elo for column in CURRENT_RATINGS.values() if column != "Elo"})
+    return result
+
+
+def write_history(path: Path, rows: list[dict[str, object]]) -> None:
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=FIELDS, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+class AlpineSiteDataTest(unittest.TestCase):
+    def test_current_table_uses_roster_plus_new_racers_and_post_race_elo(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            men = root / "men.csv"
+            ladies = root / "ladies.csv"
+            men_rows = [
+                row(sex="M", athlete_id=1, skier="Racer", season=2026, race=0,
+                    event="Offseason", place=1, pelo=1400, elo=1385, date="2026-05-01"),
+                row(sex="M", athlete_id=2, skier="Inactive", season=2026, race=0,
+                    event="Offseason", place=2, pelo=1350, elo=1342.5, date="2026-05-01"),
+                row(sex="M", athlete_id=1, skier="Racer", season=2027, race=1,
+                    event="World Cup", place=1, pelo=1385, elo=1400, date="2026-10-25"),
+                row(sex="M", athlete_id=3, skier="Returner", season=2027, race=1,
+                    event="World Cup", place=2, pelo=1300, elo=1310, date="2026-10-25"),
+            ]
+            ladies_rows = [
+                row(sex="L", athlete_id=4, skier="Lady", season=2026, race=0,
+                    event="Offseason", place=1, pelo=1400, elo=1385, date="2026-05-01"),
+                row(sex="L", athlete_id=4, skier="Lady", season=2027, race=1,
+                    event="World Cup", place=1, pelo=1385, elo=1395, date="2026-10-24"),
+            ]
+            write_history(men, men_rows)
+            write_history(ladies, ladies_rows)
+            output = root / "output"
+
+            write_site_data(
+                men_history=men, ladies_history=ladies, season=2027, output_root=output
+            )
+
+            current = json.loads((output / "M_chrono_current.json").read_text())
+            self.assertEqual([record["ID"] for record in current], [1, 2, 3])
+            self.assertEqual(current[0]["Pelo"], 1400.0)
+            self.assertEqual(current[1]["Pelo"], 1342.5)
+            self.assertEqual(current[2]["Pelo"], 1310.0)
+            self.assertEqual(current[0]["Birthday"], "2000-01-02")
+
+    def test_writes_target_season_archive_and_index(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            men = root / "men.csv"
+            ladies = root / "ladies.csv"
+            for path, sex, athlete_id in ((men, "M", 1), (ladies, "L", 2)):
+                write_history(path, [
+                    row(sex=sex, athlete_id=athlete_id, skier=f"{sex} Winner", season=2026,
+                        race=0, event="Offseason", place=1, pelo=1400, elo=1385,
+                        date="2026-05-01"),
+                    row(sex=sex, athlete_id=athlete_id, skier=f"{sex} Winner", season=2027,
+                        race=1, event="World Cup", place=1, pelo=1385, elo=1395,
+                        date="2026-10-24"),
+                ])
+            output = root / "output"
+
+            write_site_data(
+                men_history=men, ladies_history=ladies, season=2027, output_root=output
+            )
+
+            summary = json.loads((output / "L/2027/summary.json").read_text())
+            results = json.loads((output / "L/2027/race_1.json").read_text())
+            seasons = json.loads((output / "L/seasons.json").read_text())
+            self.assertEqual(summary[0]["podium"][0]["name"], "L Winner")
+            self.assertEqual(results[0]["previous_elo"], 1385.0)
+            self.assertEqual(results[0]["new_elo"], 1395.0)
+            self.assertEqual(results[0]["change"], 10.0)
+            self.assertEqual(seasons[-1], {"season": 2027, "race_count": 1, "winner": None})
+
+
+if __name__ == "__main__":
+    unittest.main()
