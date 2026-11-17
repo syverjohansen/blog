@@ -1,0 +1,235 @@
+name: Alpine Production Shadow
+
+on:
+  schedule:
+    - cron: "15 0 * * *"
+  workflow_dispatch:
+    inputs:
+      logical_date:
+        description: Optional race date (YYYY-MM-DD); defaults to today in UTC
+        required: false
+        type: string
+      expected_season:
+        description: Optional FIS season ending year; derived from the date when omitted
+        required: false
+        type: string
+      n_simulations:
+        description: Deterministic Monte Carlo iteration count
+        required: true
+        default: 250
+        type: number
+      ski_ref:
+        description: Ski branch, tag, or commit to resolve and record
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpine-production-shadow
+  cancel-in-progress: false
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out bounded blog runtime
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /pipelines/
+            /content/post/alpine/drafts/race-picks-simulation.R
+            /content/post/shared/
+            /static/python/excel_to_hugo_multiple_sheets.py
+            /layouts/
+            /themes/white/
+
+      - name: Resolve ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if [[ ! "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out bounded ski runtime
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/pipeline_config.py
+            /elo/python/alpine/polars/alpine_startlist_replay.py
+            /elo/python/alpine/polars/startlist-scrape-races.py
+            /elo/python/alpine/polars/startlist_common.py
+            /elo/python/alpine/polars/requirements-startlist-replay.txt
+            /elo/python/alpine/polars/excel365/races.csv
+            /elo/python/alpine/polars/excel365/men_chrono.csv
+            /elo/python/alpine/polars/excel365/ladies_chrono.csv
+
+      - name: Prepare immutable run parameters
+        id: prepare
+        env:
+          LOGICAL_DATE_INPUT: ${{ inputs.logical_date || '' }}
+          EXPECTED_SEASON_INPUT: ${{ inputs.expected_season || '' }}
+          N_SIMULATIONS_INPUT: ${{ inputs.n_simulations || 250 }}
+        run: |
+          logical_date="${LOGICAL_DATE_INPUT:-$(date -u '+%Y-%m-%d')}"
+          expected_season="$EXPECTED_SEASON_INPUT"
+          if [[ -z "$expected_season" ]]; then
+            year="${logical_date:0:4}"
+            month="${logical_date:5:2}"
+            if ((10#$month >= 7)); then
+              expected_season=$((10#$year + 1))
+            else
+              expected_season=$((10#$year))
+            fi
+          fi
+
+          run_id="github-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          output_root="$RUNNER_TEMP/alpine-production-shadow"
+          manifest_path="$output_root/runs/$run_id/manifests/alpine-run-manifest-final.json"
+          mkdir -p "$output_root"
+
+          {
+            echo "LOGICAL_DATE=$logical_date"
+            echo "EXPECTED_SEASON=$expected_season"
+            echo "N_SIMULATIONS=$N_SIMULATIONS_INPUT"
+            echo "RUN_ID=$run_id"
+            echo "OUTPUT_ROOT=$output_root"
+            echo "MANIFEST_PATH=$manifest_path"
+          } >> "$GITHUB_ENV"
+
+          export LOGICAL_DATE="$logical_date"
+          python3 - <<'PY'
+          import csv
+          import os
+          from datetime import date
+          from pathlib import Path
+
+          logical_date = date.fromisoformat(os.environ["LOGICAL_DATE"])
+          target = logical_date.strftime("%m/%d/%Y")
+          schedule = Path(
+              "external/ski/elo/python/alpine/polars/excel365/races.csv"
+          )
+          with schedule.open(newline="", encoding="utf-8-sig") as handle:
+              rows = csv.DictReader(handle)
+              has_race = any(
+                  (row.get("Date") or "").strip() == target
+                  and (row.get("Sex") or "").strip() in {"M", "L"}
+                  for row in rows
+              )
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as out:
+              out.write(f"has_race={str(has_race).lower()}\n")
+          print(f"logical_date={logical_date} has_race={has_race}")
+          PY
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            pipelines/requirements-integration.txt
+            external/ski/elo/python/alpine/polars/requirements-startlist-replay.txt
+
+      - name: Install race-day Python runtime
+        if: steps.prepare.outputs.has_race == 'true'
+        run: |
+          python3 -m pip install \
+            -r pipelines/requirements-integration.txt \
+            -r external/ski/elo/python/alpine/polars/requirements-startlist-replay.txt
+
+      - name: Set up race-day R runtime
+        if: steps.prepare.outputs.has_race == 'true'
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install race-day R packages
+        if: steps.prepare.outputs.has_race == 'true'
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::dplyr
+            any::tidyr
+            any::openxlsx
+            any::mgcv
+            any::leaps
+            any::logger
+            any::lubridate
+
+      - name: Set up race-day Hugo runtime
+        if: steps.prepare.outputs.has_race == 'true'
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Run publication-disabled production shadow
+        id: run_shadow
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python3 -m pipelines.alpine_shadow_runner \
+            --blog-root "$GITHUB_WORKSPACE" \
+            --ski-root "$GITHUB_WORKSPACE/external/ski" \
+            --output-root "$OUTPUT_ROOT" \
+            --logical-date "$LOGICAL_DATE" \
+            --expected-season "$EXPECTED_SEASON" \
+            --n-simulations "$N_SIMULATIONS" \
+            --run-id "$RUN_ID" \
+            --allow-network \
+            --skip-no-race \
+            2>&1 | tee "$OUTPUT_ROOT/runner.log"
+
+      - name: Enforce retained shadow result
+        if: always()
+        env:
+          RUNNER_OUTCOME: ${{ steps.run_shadow.outcome }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["MANIFEST_PATH"])
+          if not path.is_file():
+              raise SystemExit(f"shadow manifest is missing: {path}")
+          manifest = json.loads(path.read_text(encoding="utf-8"))
+          if manifest.get("publication", {}).get("status") != "disabled":
+              raise SystemExit("shadow run did not keep publication disabled")
+          status = manifest.get("status")
+          outcome = os.environ["RUNNER_OUTCOME"]
+          if outcome != "success" or status not in {"passed", "skipped"}:
+              raise SystemExit(
+                  f"shadow run failed: runner_outcome={outcome} status={status}"
+              )
+          print(f"shadow run retained with status={status}: {path}")
+          PY
+
+      - name: Upload complete shadow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alpine-production-shadow-${{ env.LOGICAL_DATE }}-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/alpine-production-shadow/runner.log
+            ${{ runner.temp }}/alpine-production-shadow/runs/
+          if-no-files-found: warn
+          retention-days: 30
