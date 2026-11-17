@@ -56,6 +56,35 @@ class AlpineSnapshotTests(unittest.TestCase):
         with self.assertRaisesRegex(SnapshotError, "digest verification"):
             create_snapshot(self.inputs, self.store, date(2026, 3, 25))
 
+    def test_current_snapshot_accepts_only_the_applicable_startlist(self) -> None:
+        (self.inputs / INPUTS["men_startlist"]).unlink()
+
+        snapshot = create_snapshot(
+            self.inputs,
+            self.store,
+            date(2026, 11, 14),
+            allow_partial_startlists=True,
+        )
+        manifest = json.loads(
+            Path(snapshot["manifest_path"]).read_text(encoding="utf-8")
+        )
+        dataset_ids = {dataset["dataset_id"] for dataset in manifest["datasets"]}
+
+        self.assertEqual("applicable_startlists", manifest["input_mode"])
+        self.assertNotIn("men_startlist", dataset_ids)
+        self.assertIn("ladies_startlist", dataset_ids)
+
+    def test_current_snapshot_still_requires_one_startlist(self) -> None:
+        for dataset_id in ("men_startlist", "ladies_startlist"):
+            (self.inputs / INPUTS[dataset_id]).unlink()
+        with self.assertRaisesRegex(SnapshotError, "no Alpine startlist"):
+            create_snapshot(
+                self.inputs,
+                self.store,
+                date(2026, 11, 14),
+                allow_partial_startlists=True,
+            )
+
     def test_materialize_rejects_unsafe_manifest_filename(self) -> None:
         snapshot = create_snapshot(self.inputs, self.store, date(2026, 3, 25))
         manifest_path = Path(snapshot["manifest_path"])

@@ -23,6 +23,12 @@ INPUTS = {
     "men_startlist": "startlist_races_men.csv",
     "ladies_startlist": "startlist_races_ladies.csv",
 }
+BASE_INPUT_IDS = (
+    "race_schedule",
+    "men_rating_history",
+    "ladies_rating_history",
+)
+STARTLIST_INPUT_IDS = ("men_startlist", "ladies_startlist")
 
 
 class SnapshotError(RuntimeError):
@@ -67,18 +73,43 @@ def read_source(path: Path) -> pl.DataFrame:
         raise SnapshotError(f"cannot parse {path}: {exc}") from exc
 
 
-def create_snapshot(input_root: Path, output_root: Path, logical_date: date) -> dict[str, Any]:
-    missing = [filename for filename in INPUTS.values() if not (input_root / filename).is_file()]
+def create_snapshot(
+    input_root: Path,
+    output_root: Path,
+    logical_date: date,
+    *,
+    allow_partial_startlists: bool = False,
+) -> dict[str, Any]:
+    required_ids = BASE_INPUT_IDS if allow_partial_startlists else tuple(INPUTS)
+    missing = [
+        INPUTS[dataset_id]
+        for dataset_id in required_ids
+        if not (input_root / INPUTS[dataset_id]).is_file()
+    ]
     if missing:
         raise SnapshotError(f"missing Alpine inputs in {input_root}: {missing}")
 
+    selected_inputs = {
+        dataset_id: filename
+        for dataset_id, filename in INPUTS.items()
+        if (input_root / filename).is_file()
+    }
+    selected_startlists = set(selected_inputs) & set(STARTLIST_INPUT_IDS)
+    if allow_partial_startlists and not selected_startlists:
+        raise SnapshotError(f"no Alpine startlist exists in {input_root}")
+
     source_digests = {
         dataset_id: sha256_file(input_root / filename)
-        for dataset_id, filename in INPUTS.items()
+        for dataset_id, filename in selected_inputs.items()
     }
     identity = {
         "schema_version": SNAPSHOT_SCHEMA_VERSION,
         "logical_date": logical_date.isoformat(),
+        "input_mode": (
+            "applicable_startlists"
+            if allow_partial_startlists
+            else "complete_five_file_set"
+        ),
         "source_sha256": source_digests,
     }
     snapshot_id = canonical_digest(identity)[:24]
@@ -105,7 +136,7 @@ def create_snapshot(input_root: Path, output_root: Path, logical_date: date) -> 
     with tempfile.TemporaryDirectory(prefix=f".{snapshot_id}-", dir=parent) as staging_text:
         staging = Path(staging_text)
         datasets: list[dict[str, Any]] = []
-        for dataset_id, filename in INPUTS.items():
+        for dataset_id, filename in selected_inputs.items():
             frame = read_source(input_root / filename)
             parquet_name = f"{dataset_id}.parquet"
             parquet_path = staging / parquet_name
@@ -137,6 +168,7 @@ def create_snapshot(input_root: Path, output_root: Path, logical_date: date) -> 
             "format": "parquet",
             "compression": "zstd",
             "immutability": "content-addressed",
+            "input_mode": identity["input_mode"],
             "datasets": datasets,
         }
         (staging / "_manifest.json").write_text(
@@ -207,6 +239,7 @@ def parse_args() -> argparse.Namespace:
     create.add_argument("--input-root", required=True, type=Path)
     create.add_argument("--output-root", required=True, type=Path)
     create.add_argument("--logical-date", required=True)
+    create.add_argument("--allow-partial-startlists", action="store_true")
     create.add_argument("--report", type=Path)
     materialize = subparsers.add_parser("materialize")
     materialize.add_argument("--snapshot-dir", required=True, type=Path)
@@ -223,6 +256,7 @@ def main() -> int:
                 args.input_root.expanduser().resolve(),
                 args.output_root.expanduser().resolve(),
                 parse_logical_date(args.logical_date),
+                allow_partial_startlists=args.allow_partial_startlists,
             )
         else:
             result = materialize_snapshot(

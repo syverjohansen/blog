@@ -23,8 +23,16 @@ class AlpineCurrentWorkflowTests(unittest.TestCase):
 
     def test_current_ref_is_resolved_to_an_exact_recorded_commit(self) -> None:
         self.assertIn('repos/syverjohansen/ski/commits/$SKI_REF', self.source)
+        self.assertIn("ref: ${{ steps.ski.outputs.sha }}", self.source)
         self.assertIn('--ski-commit-sha "$SKI_SHA"', self.source)
         self.assertIn("--ski-input-root", self.source)
+
+    def test_ski_shadow_scraper_builds_the_handoff(self) -> None:
+        self.assertIn("startlist-scrape-races.py shadow", self.source)
+        self.assertIn("--allow-network", self.source)
+        self.assertIn("external/ski-input/reports/replay.json", self.source)
+        self.assertIn("generated_pre_race_history", self.source)
+        self.assertNotIn("raw.githubusercontent.com", self.source)
 
     def test_current_smoke_has_no_historical_baseline_comparison(self) -> None:
         self.assertIn("--expected-season", self.source)
