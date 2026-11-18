@@ -27,19 +27,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      NORDIC_BLOG_ROOT: ${{ github.workspace }}
+      NORDIC_BLOG_ROOT: ${{ github.workspace }}/blog
       NORDIC_SKI_ELO_ROOT: ${{ github.workspace }}/external/ski/elo
       NORDIC_SKI_DATA_ROOT: ${{ github.workspace }}/external/ski/elo/python/ski/polars/excel365
       NORDIC_TEAM_DATA_ROOT: ${{ github.workspace }}/external/ski/elo/python/ski/polars/relay/excel365
       TEST_MODE: "false"
 
     steps:
-      - name: Check out blog main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-
       - name: Resolve ski source to an exact commit
         id: ski
         env:
@@ -51,7 +45,13 @@ jobs:
             echo "Unable to resolve ski ref: $SKI_REF" >&2
             exit 1
           fi
+          blog_sha=$(gh api "repos/syverjohansen/blog/commits/main" --jq .sha)
+          if ! [[ "$blog_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve blog main" >&2
+            exit 1
+          fi
           echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+          echo "blog_sha=$blog_sha" >> "$GITHUB_OUTPUT"
 
       - name: Check out packaged cross-country runtime
         uses: actions/checkout@v4
@@ -70,7 +70,6 @@ jobs:
       - name: Isolate nested checkout and resolve logical date
         id: parameters
         run: |
-          printf '/external/\n' >> "$GITHUB_WORKSPACE/.git/info/exclude"
           echo "NORDIC_PREDICTION_OUTPUT_ROOT=$RUNNER_TEMP/cross-country-team-predictions" >> "$GITHUB_ENV"
           echo "NORDIC_LOG_ROOT=$RUNNER_TEMP/cross-country-team-logs" >> "$GITHUB_ENV"
           echo "logical_date=$(date -u +%F)" >> "$GITHUB_OUTPUT"
@@ -78,14 +77,28 @@ jobs:
 
       - name: Detect today's team events
         id: detect
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
         run: |
-          python3 -m pipelines.cross_country_team_publication detect \
+          gh api \
+            -H "Accept: application/vnd.github.raw+json" \
+            "repos/syverjohansen/blog/contents/pipelines/cross_country_team_publication.py?ref=${{ steps.ski.outputs.blog_sha }}" \
+            > "$RUNNER_TEMP/cross_country_team_publication.py"
+          python3 "$RUNNER_TEMP/cross_country_team_publication.py" detect \
             --schedule "$NORDIC_SKI_DATA_ROOT/races.csv" \
             --logical-date "${{ steps.parameters.outputs.logical_date }}"
 
       - name: Explain no-op day
         if: steps.detect.outputs.has_team_event != 'true'
         run: echo "No supported cross-country relay or team sprint is scheduled today."
+
+      - name: Check out blog main
+        if: steps.detect.outputs.has_team_event == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.ski.outputs.blog_sha }}
+          path: blog
+          fetch-depth: 1
 
       - uses: astral-sh/setup-uv@v6
         if: steps.detect.outputs.has_team_event == 'true'
@@ -144,6 +157,7 @@ jobs:
 
       - name: Convert workbooks to Hugo JSON
         if: steps.detect.outputs.has_team_event == 'true'
+        working-directory: blog
         env:
           DATE_KEY: ${{ steps.parameters.outputs.date_key }}
         run: |
@@ -163,6 +177,7 @@ jobs:
 
       - name: Validate JSON and build publication post
         if: steps.detect.outputs.has_team_event == 'true'
+        working-directory: blog
         env:
           DATE_KEY: ${{ steps.parameters.outputs.date_key }}
         run: |
@@ -181,10 +196,12 @@ jobs:
 
       - name: Verify Hugo site
         if: steps.detect.outputs.has_team_event == 'true'
+        working-directory: blog
         run: hugo --minify --destination "$RUNNER_TEMP/team-site"
 
       - name: Publish validated team predictions
         if: steps.detect.outputs.has_team_event == 'true'
+        working-directory: blog
         env:
           DATE_KEY: ${{ steps.parameters.outputs.date_key }}
           SKI_SHA: ${{ steps.ski.outputs.sha }}
