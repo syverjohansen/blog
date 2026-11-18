@@ -1,0 +1,268 @@
+name: Nordic Numbers weekly recap
+
+on:
+  workflow_run:
+    workflows: ["Cross-country team predictions"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      ski_ref:
+        description: Ski branch, tag, or commit to use
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nordic-numbers-weekly-recap
+  cancel-in-progress: false
+
+jobs:
+  recap-and-publish:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      NORDIC_BLOG_ROOT: ${{ github.workspace }}/blog
+      NORDIC_SKI_ROOT: ${{ github.workspace }}/external/ski/elo/python
+
+    steps:
+      - name: Resolve exact source revisions
+        id: source
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          blog_sha=$(gh api "repos/syverjohansen/blog/commits/main" --jq .sha)
+          if ! [[ "$ski_sha" =~ ^[0-9a-f]{40}$ && "$blog_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve exact source revisions" >&2
+            exit 1
+          fi
+          echo "ski_sha=$ski_sha" >> "$GITHUB_OUTPUT"
+          echo "blog_sha=$blog_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out bounded recap inputs
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.source.outputs.ski_sha }}
+          token: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/standings_contract.py
+            /elo/python/alpine/polars/standings_scrape.py
+            /elo/python/alpine/polars/excel365/
+            /elo/python/ski/polars/standings_scrape.py
+            /elo/python/ski/polars/excel365/
+
+      - name: Resolve logical date
+        id: parameters
+        run: |
+          echo "logical_date=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+          echo "date_key=$(date -u +%Y%m%d)" >> "$GITHUB_OUTPUT"
+          echo "NORDIC_RECAP_XLSX_ROOT=$RUNNER_TEMP/weekly-recap-xlsx" >> "$GITHUB_ENV"
+          echo "NORDIC_RECAP_JSON_ROOT=$RUNNER_TEMP/weekly-recap-json" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/weekly-recap-xlsx" "$RUNNER_TEMP/weekly-recap-json"
+
+      - name: Detect Monday recap work
+        id: detect
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+        run: |
+          gh api \
+            -H "Accept: application/vnd.github.raw+json" \
+            "repos/syverjohansen/blog/contents/pipelines/weekly_recap_publication.py?ref=${{ steps.source.outputs.blog_sha }}" \
+            > "$RUNNER_TEMP/weekly_recap_publication.py"
+          python3 "$RUNNER_TEMP/weekly_recap_publication.py" detect \
+            --ski-root "$NORDIC_SKI_ROOT" \
+            --logical-date "${{ steps.parameters.outputs.logical_date }}"
+
+      - name: Explain no-op day
+        if: steps.detect.outputs.should_run != 'true'
+        run: echo "No supported sport had races in the previous Monday-Sunday window."
+
+      - name: Check out blog main
+        if: steps.detect.outputs.should_run == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.source.outputs.blog_sha }}
+          path: blog
+          fetch-depth: 1
+
+      - uses: astral-sh/setup-uv@v6
+        if: steps.detect.outputs.should_run == 'true'
+
+      - name: Install Python recap dependencies
+        if: steps.detect.outputs.should_run == 'true'
+        run: uv pip install --system beautifulsoup4 numpy openpyxl pandas requests
+
+      - uses: r-lib/actions/setup-r@v2
+        if: steps.detect.outputs.should_run == 'true'
+        with:
+          r-version: "4.5.1"
+
+      - name: Install R recap dependencies
+        if: steps.detect.outputs.should_run == 'true'
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::leaps
+            any::logger
+            any::lubridate
+            any::mgcv
+            any::openxlsx
+            any::readxl
+            any::tidyverse
+            any::writexl
+
+      - name: Prepare current cross-country recap history
+        if: >-
+          steps.detect.outputs.should_run == 'true' &&
+          contains(steps.detect.outputs.sports, 'cross-country')
+        working-directory: blog
+        run: |
+          python3 -m pipelines.weekly_recap_publication prepare-cross-country \
+            --data-root "$NORDIC_SKI_ROOT/ski/polars/excel365"
+
+      - name: Generate and validate per-sport recap artifacts
+        id: generate
+        if: steps.detect.outputs.should_run == 'true'
+        working-directory: blog
+        env:
+          LOGICAL_DATE: ${{ steps.parameters.outputs.logical_date }}
+          REQUESTED_SPORTS: ${{ steps.detect.outputs.sports }}
+        run: |
+          successful=()
+          IFS=',' read -ra sports <<< "$REQUESTED_SPORTS"
+          for sport in "${sports[@]}"; do
+            case "$sport" in
+              alpine)
+                ski_name=alpine
+                recap_script=content/post/alpine/drafts/race-recap2.R
+                ;;
+              cross-country)
+                ski_name=ski
+                recap_script=content/post/cross-country/drafts/race-recap2.R
+                ;;
+              *)
+                echo "Unsupported recap sport: $sport" >&2
+                continue
+                ;;
+            esac
+
+            data_root="$NORDIC_SKI_ROOT/$ski_name/polars/excel365"
+            if ! python3 "$NORDIC_SKI_ROOT/$ski_name/polars/standings_scrape.py"; then
+              echo "Standings refresh failed for $sport; excluding it from this recap." >&2
+              continue
+            fi
+
+            xlsx_root="$NORDIC_RECAP_XLSX_ROOT/$sport"
+            json_root="$NORDIC_RECAP_JSON_ROOT/$sport"
+            mkdir -p "$xlsx_root" "$json_root"
+            if ! NORDIC_LOGICAL_DATE="$LOGICAL_DATE" \
+              NORDIC_RECAP_DATA_ROOT="$data_root" \
+              NORDIC_RECAP_OUTPUT_ROOT="$xlsx_root" \
+              Rscript "$recap_script"; then
+              echo "Recap calculation failed for $sport; excluding it." >&2
+              continue
+            fi
+
+            complete=true
+            for gender in men ladies; do
+              for artifact_type in elo_change standings_predictions magic_numbers; do
+                workbook="$xlsx_root/${{ steps.parameters.outputs.date_key }}/${gender}_${artifact_type}.xlsx"
+                if [[ ! -s "$workbook" ]]; then
+                  echo "Missing recap workbook: $workbook" >&2
+                  complete=false
+                  continue
+                fi
+                python3 static/python/excel_to_hugo_multiple_sheets.py \
+                  "$workbook" "$json_root"
+              done
+            done
+            if [[ "$complete" == true ]] && python3 -c \
+              "from pathlib import Path; from pipelines.weekly_recap_publication import validate_sport_artifacts; validate_sport_artifacts(Path('$NORDIC_RECAP_JSON_ROOT'), '$sport')"; then
+              successful+=("$sport")
+            else
+              echo "Artifact validation failed for $sport; excluding it." >&2
+            fi
+          done
+
+          if [[ ${#successful[@]} -eq 0 ]]; then
+            echo "No sport produced a complete validated weekly recap" >&2
+            exit 1
+          fi
+          sports_csv=$(IFS=,; echo "${successful[*]}")
+          echo "sports=$sports_csv" >> "$GITHUB_OUTPUT"
+
+      - name: Build combined recap post
+        if: steps.detect.outputs.should_run == 'true'
+        working-directory: blog
+        run: |
+          python3 -m pipelines.weekly_recap_publication build \
+            --logical-date "${{ steps.parameters.outputs.logical_date }}" \
+            --sports "${{ steps.generate.outputs.sports }}" \
+            --data-root "$NORDIC_RECAP_JSON_ROOT" \
+            --output "content/post/weekly-recap/${{ steps.parameters.outputs.date_key }}.md"
+
+          IFS=',' read -ra sports <<< "${{ steps.generate.outputs.sports }}"
+          for sport in "${sports[@]}"; do
+            destination="data/$sport/drafts/weekly-recap/${{ steps.parameters.outputs.date_key }}"
+            mkdir -p "$destination"
+            cp "$NORDIC_RECAP_JSON_ROOT/$sport/"*.json "$destination/"
+          done
+
+      - name: Set up Hugo
+        if: steps.detect.outputs.should_run == 'true'
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Render site candidate
+        if: steps.detect.outputs.should_run == 'true'
+        working-directory: blog
+        run: hugo --minify --destination "$RUNNER_TEMP/weekly-recap-site"
+
+      - name: Publish validated weekly recap
+        if: steps.detect.outputs.should_run == 'true'
+        working-directory: blog
+        env:
+          DATE_KEY: ${{ steps.parameters.outputs.date_key }}
+          SKI_SHA: ${{ steps.source.outputs.ski_sha }}
+          SUCCESSFUL_SPORTS: ${{ steps.generate.outputs.sports }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          IFS=',' read -ra sports <<< "$SUCCESSFUL_SPORTS"
+          for sport in "${sports[@]}"; do
+            git add "data/$sport/drafts/weekly-recap/$DATE_KEY"
+          done
+          git add "content/post/weekly-recap/$DATE_KEY.md"
+          if git diff --cached --quiet; then
+            echo "Validated weekly recap artifacts are already current."
+            exit 0
+          fi
+          git commit -m "Publish Nordic Numbers weekly recap for $DATE_KEY" \
+            -m "Ski source: $SKI_SHA"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Retain weekly recap evidence
+        if: always() && steps.detect.outputs.should_run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-recap-${{ steps.parameters.outputs.date_key }}-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/weekly-recap-xlsx/
+            ${{ runner.temp }}/weekly-recap-json/

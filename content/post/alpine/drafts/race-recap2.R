@@ -11,21 +11,37 @@ library(mgcv)     # for GAM models
 library(leaps)    # for feature selection
 library(lubridate) # for date handling
 
+BLOG_ROOT <- path.expand(Sys.getenv("NORDIC_BLOG_ROOT", "~/blog/daehl-e"))
+DATA_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_RECAP_DATA_ROOT",
+  "~/ski/elo/python/alpine/polars/excel365"
+))
+RECAP_OUTPUT_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_RECAP_OUTPUT_ROOT",
+  file.path(BLOG_ROOT, "content/post/alpine/drafts/weekly-recap")
+))
+LOGICAL_DATE_VALUE <- Sys.getenv("NORDIC_LOGICAL_DATE", "")
+LOGICAL_DATE <- if (nzchar(LOGICAL_DATE_VALUE)) {
+  as.Date(LOGICAL_DATE_VALUE)
+} else {
+  Sys.Date()
+}
+
 # Define file paths (ALPINE PATHS)
-men_chrono_path <- "~/ski/elo/python/alpine/polars/excel365/men_chrono.csv"
-ladies_chrono_path <- "~/ski/elo/python/alpine/polars/excel365/ladies_chrono.csv"
-races_path <- "~/ski/elo/python/alpine/polars/excel365/races.csv"
-base_dir <- "~/blog/daehl-e"
+men_chrono_path <- file.path(DATA_ROOT, "men_chrono.csv")
+ladies_chrono_path <- file.path(DATA_ROOT, "ladies_chrono.csv")
+races_path <- file.path(DATA_ROOT, "races.csv")
+base_dir <- BLOG_ROOT
 
 # Function to get the current date in GMT formatted as YYYYMMDD
 get_gmt_date_formatted <- function() {
-  format(as.POSIXct(Sys.time(), tz = "GMT"), "%Y%m%d")
+  format(LOGICAL_DATE, "%Y%m%d")
 }
 
 # Define the base output directory function that uses the GMT date (ALPINE PATH)
 get_output_dir <- function() {
   date_str <- get_gmt_date_formatted()
-  file.path("~/blog/daehl-e/content/post/alpine/drafts/weekly-recap", date_str)
+  file.path(RECAP_OUTPUT_ROOT, date_str)
 }
 
 # Read the CSV files (Alpine data)
@@ -48,7 +64,7 @@ lapply(ski_data, dim)
 # Function to generate weekly Elo change report
 generate_weekly_elo_change <- function(chrono_data, gender, base_dir) {
   # Get current date
-  current_date <- Sys.Date()
+  current_date <- LOGICAL_DATE
   
   # Get date from one week ago
   one_week_ago <- current_date - 7
@@ -465,8 +481,6 @@ final_predictions <- bind_rows(all_predictions) %>%
 final_predictions
 all_predictions
 
-library(arrow)
-
 # Function to get race history with sophisticated error handling (CROSS-COUNTRY APPROACH)
 place_to_points <- Vectorize(function(place) {
     if (is.na(place)) return(0)
@@ -493,7 +507,7 @@ calculate_skier_race_probabilities <- function(chrono_data, skier_name) {
     pull(Date)
   
   # Calculate date from 5 years ago
-  five_years_ago <- Sys.Date() - (5 * 365)
+  five_years_ago <- LOGICAL_DATE - (5 * 365)
   
   # Use 5 years ago or skier's first race, whichever is later
   start_date <- if(length(skier_first_race) == 0) {
@@ -584,7 +598,7 @@ create_race_probability_table <- function(men_chrono, ladies_chrono, top_30_men,
       pull(Date)
     
     # Calculate date from 5 years ago
-    five_years_ago <- Sys.Date() - (5 * 365)
+    five_years_ago <- LOGICAL_DATE - (5 * 365)
     
     # Use 5 years ago or skier's first race, whichever is later
     start_date <- if(length(skier_first_race) == 0) {
@@ -759,8 +773,8 @@ get_race_history <- function(skier_id, race_type, predictions_list, n_required =
     return(all_results)
 }
 
-standings_df <- read_csv("~/ski/elo/python/alpine/polars/excel365/men_standings.csv")
-ladies_standings_df <- read_csv("~/ski/elo/python/alpine/polars/excel365/ladies_standings.csv")
+standings_df <- read_csv(file.path(DATA_ROOT, "men_standings.csv"))
+ladies_standings_df <- read_csv(file.path(DATA_ROOT, "ladies_standings.csv"))
 
 # Get top 30 skiers for Alpine
 top_30_men <- standings_df %>%
@@ -843,15 +857,14 @@ summary_df %>%
 # SOPHISTICATED CROSS-COUNTRY KDE IMPLEMENTATION
 library(logger)
 library(dplyr)
-library(arrow)
 library(writexl)
 
 # Load standings for both genders
-standings_df <- read_csv("~/ski/elo/python/alpine/polars/excel365/men_standings.csv")
-ladies_standings_df <- read_csv("~/ski/elo/python/alpine/polars/excel365/ladies_standings.csv")
+standings_df <- read_csv(file.path(DATA_ROOT, "men_standings.csv"))
+ladies_standings_df <- read_csv(file.path(DATA_ROOT, "ladies_standings.csv"))
 
 # Set up logging
-log_file <- "~/blog/daehl-e/content/post/alpine/drafts/weekly-recap/alpine_simulation_log.log"
+log_file <- file.path(get_output_dir(), "alpine_simulation_log.log")
 log_appender(appender_file(log_file))
 
 # SOPHISTICATED KDE IMPLEMENTATION (EXACTLY FROM CROSS-COUNTRY)
@@ -977,8 +990,8 @@ calculate_remaining_races <- function(races_file) {
   # Convert dates to Date objects (assuming MM/DD/YYYY format)
   races$Date <- as.Date(races$Date, format = "%m/%d/%Y")
   
-  # Get current date in UTC
-  today_utc <- as.Date(Sys.time(), tz = "UTC")
+  # Use the orchestrator's logical date so retries produce the same result.
+  today_utc <- LOGICAL_DATE
   
   # Filter for remaining races (today or after) and exclude Mixed sex races and Championships
   remaining <- races %>%
@@ -1031,7 +1044,7 @@ calculate_remaining_races <- function(races_file) {
 }
 
 # Calculate remaining races dynamically for Alpine
-races_path <- "~/ski/elo/python/alpine/polars/excel365/races.csv"
+races_path <- file.path(DATA_ROOT, "races.csv")
 remaining_races_by_gender <- calculate_remaining_races(races_path)
 print(remaining_races_by_gender)
 
