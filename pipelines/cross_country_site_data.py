@@ -12,6 +12,8 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+from pipelines.site_athletes import build_athlete_index, build_skier_info
+
 CURRENT_RATINGS = {
     "Pelo": "Elo",
     "Distance_Pelo": "Distance_Elo",
@@ -370,6 +372,22 @@ def write_site_data(
             output_root / f"{sex}_athlete_history_updates.json",
             json.dumps(
                 build_athlete_history_updates(rows, season),
+                ensure_ascii=True,
+                separators=(",", ":"),
+            ),
+        )
+        _atomic_text(
+            output_root / f"{sex}_all_ids.json",
+            json.dumps(
+                build_athlete_index(rows),
+                ensure_ascii=True,
+                separators=(",", ":"),
+            ),
+        )
+        _atomic_text(
+            output_root / sex / "skier_info.json",
+            json.dumps(
+                build_skier_info(rows, sex),
                 ensure_ascii=True,
                 separators=(",", ":"),
             ),

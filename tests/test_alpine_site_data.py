@@ -131,6 +131,8 @@ class AlpineSiteDataTest(unittest.TestCase):
             updates = json.loads(
                 (output / "L_athlete_history_updates.json").read_text()
             )
+            athlete_ids = json.loads((output / "L_all_ids.json").read_text())
+            skier_info = json.loads((output / "L/skier_info.json").read_text())
             self.assertEqual(summary[0]["podium"][0]["name"], "L Winner")
             self.assertEqual(summary[0]["race_number"], 0)
             self.assertEqual(summary[0]["event"], "Offseason")
@@ -146,6 +148,16 @@ class AlpineSiteDataTest(unittest.TestCase):
             self.assertEqual(seasons[-1], {"season": 2027, "race_count": 1, "winner": None})
             self.assertEqual(updates["2"]["Date"], ["2026-05-01", "2026-10-24"])
             self.assertEqual(updates["2"]["Elo"], [1385.0, 1395.0])
+            self.assertEqual(
+                athlete_ids,
+                {"2": "L Winner", "99": "L Inactive", "100": "L Newcomer"},
+            )
+            self.assertEqual(
+                [record["id"] for record in skier_info],
+                [2, 99, 100],
+            )
+            self.assertEqual(skier_info[0]["nation"], "nor")
+            self.assertEqual(skier_info[0]["image"], "/img/flags/nor.svg")
 
 
 if __name__ == "__main__":
