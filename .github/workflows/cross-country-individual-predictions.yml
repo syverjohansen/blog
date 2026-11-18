@@ -1,0 +1,224 @@
+name: Cross-country individual predictions
+
+on:
+  workflow_run:
+    workflows: ["Cross-country automatic daily pipeline"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      ski_ref:
+        description: Ski branch, tag, or commit to use
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cross-country-individual-predictions
+  cancel-in-progress: false
+
+jobs:
+  predict-and-publish:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      NORDIC_BLOG_ROOT: ${{ github.workspace }}/blog
+      NORDIC_SKI_ELO_ROOT: ${{ github.workspace }}/external/ski/elo
+      NORDIC_SKI_DATA_ROOT: ${{ github.workspace }}/external/ski/elo/python/ski/polars/excel365
+      NORDIC_TEAM_DATA_ROOT: ${{ github.workspace }}/external/ski/elo/python/ski/polars/relay/excel365
+      TEST_MODE: "false"
+
+    steps:
+      - name: Resolve exact source revisions
+        id: source
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          blog_sha=$(gh api "repos/syverjohansen/blog/commits/main" --jq .sha)
+          if ! [[ "$ski_sha" =~ ^[0-9a-f]{40}$ && "$blog_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve exact source revisions" >&2
+            exit 1
+          fi
+          echo "ski_sha=$ski_sha" >> "$GITHUB_OUTPUT"
+          echo "blog_sha=$blog_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out packaged cross-country runtime
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.source.outputs.ski_sha }}
+          token: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/pipeline_config.py
+            /elo/python/ski/polars/
+
+      - name: Resolve logical date
+        id: parameters
+        run: |
+          echo "NORDIC_PREDICTION_OUTPUT_ROOT=$RUNNER_TEMP/cross-country-individual-predictions" >> "$GITHUB_ENV"
+          echo "NORDIC_LOG_ROOT=$RUNNER_TEMP/cross-country-individual-logs" >> "$GITHUB_ENV"
+          echo "logical_date=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+          echo "date_key=$(date -u +%Y%m%d)" >> "$GITHUB_OUTPUT"
+          mkdir -p "$NORDIC_PREDICTION_OUTPUT_ROOT" "$NORDIC_LOG_ROOT"
+
+      - name: Detect today's individual events
+        id: detect
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+        run: |
+          gh api \
+            -H "Accept: application/vnd.github.raw+json" \
+            "repos/syverjohansen/blog/contents/pipelines/cross_country_individual_publication.py?ref=${{ steps.source.outputs.blog_sha }}" \
+            > "$RUNNER_TEMP/cross_country_individual_publication.py"
+          python3 "$RUNNER_TEMP/cross_country_individual_publication.py" detect \
+            --schedule "$NORDIC_SKI_DATA_ROOT/races.csv" \
+            --logical-date "${{ steps.parameters.outputs.logical_date }}"
+
+      - name: Explain no-op day
+        if: steps.detect.outputs.has_individual_event != 'true'
+        run: echo "No supported individual cross-country race is scheduled today."
+
+      - name: Check out blog main
+        if: steps.detect.outputs.has_individual_event == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.source.outputs.blog_sha }}
+          path: blog
+          fetch-depth: 1
+
+      - uses: astral-sh/setup-uv@v6
+        if: steps.detect.outputs.has_individual_event == 'true'
+
+      - name: Install Python runtime
+        if: steps.detect.outputs.has_individual_event == 'true'
+        run: |
+          uv pip install --system \
+            beautifulsoup4 openpyxl pandas polars requests thefuzz
+
+      - uses: r-lib/actions/setup-r@v2
+        if: steps.detect.outputs.has_individual_event == 'true'
+        with:
+          r-version: "4.5.1"
+
+      - name: Install R prediction dependencies
+        if: steps.detect.outputs.has_individual_event == 'true'
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::dplyr
+            any::leaps
+            any::logger
+            any::lubridate
+            any::mgcv
+            any::openxlsx
+            any::purrr
+            any::tidyr
+
+      - name: Prepare isolated prediction inputs
+        if: steps.detect.outputs.has_individual_event == 'true'
+        working-directory: blog
+        run: |
+          python3 -m pipelines.cross_country_individual_publication prepare \
+            --schedule "$NORDIC_SKI_DATA_ROOT/races.csv" \
+            --logical-date "${{ steps.parameters.outputs.logical_date }}" \
+            --data-root "$NORDIC_SKI_DATA_ROOT"
+
+      - name: Build individual startlists
+        if: steps.detect.outputs.has_individual_event == 'true'
+        working-directory: external/ski/elo/python/ski/polars
+        run: python3 startlist-scrape-races.py
+
+      - name: Simulate individual predictions
+        if: steps.detect.outputs.has_individual_event == 'true'
+        working-directory: blog
+        env:
+          NORDIC_LOGICAL_DATE: ${{ steps.parameters.outputs.logical_date }}
+        run: Rscript content/post/cross-country/drafts/race-picks-simulation.R
+
+      - name: Convert workbooks to Hugo JSON
+        if: steps.detect.outputs.has_individual_event == 'true'
+        working-directory: blog
+        env:
+          DATE_KEY: ${{ steps.parameters.outputs.date_key }}
+        run: |
+          prediction_dir="$NORDIC_PREDICTION_OUTPUT_ROOT/$DATE_KEY"
+          data_dir="$PWD/data/cross-country/drafts/race-picks/$DATE_KEY"
+          mkdir -p "$data_dir"
+          found=false
+          while IFS= read -r -d '' workbook; do
+            found=true
+            python3 static/python/excel_to_hugo_multiple_sheets.py \
+              "$workbook" "$data_dir"
+          done < <(find "$prediction_dir" -maxdepth 1 \
+            -name '*_position_probabilities.xlsx' -print0)
+          if [[ "$found" != true ]]; then
+            echo "No individual prediction workbooks were generated" >&2
+            exit 1
+          fi
+
+      - name: Validate JSON and build publication post
+        if: steps.detect.outputs.has_individual_event == 'true'
+        working-directory: blog
+        env:
+          DATE_KEY: ${{ steps.parameters.outputs.date_key }}
+        run: |
+          python3 -m pipelines.cross_country_individual_publication build \
+            --schedule "$NORDIC_SKI_DATA_ROOT/races.csv" \
+            --logical-date "${{ steps.parameters.outputs.logical_date }}" \
+            --data-root "data/cross-country/drafts/race-picks/$DATE_KEY" \
+            --output "content/post/race-picks/cross-country-individual-$DATE_KEY.md"
+
+      - name: Set up Hugo
+        if: steps.detect.outputs.has_individual_event == 'true'
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Render site candidate
+        if: steps.detect.outputs.has_individual_event == 'true'
+        working-directory: blog
+        run: hugo --minify --destination "$RUNNER_TEMP/individual-site"
+
+      - name: Publish validated individual predictions
+        if: steps.detect.outputs.has_individual_event == 'true'
+        working-directory: blog
+        env:
+          DATE_KEY: ${{ steps.parameters.outputs.date_key }}
+          SKI_SHA: ${{ steps.source.outputs.ski_sha }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            "data/cross-country/drafts/race-picks/$DATE_KEY" \
+            "content/post/race-picks/cross-country-individual-$DATE_KEY.md"
+          if git diff --cached --quiet; then
+            echo "Validated individual prediction artifacts are already current."
+            exit 0
+          fi
+          git commit -m "Publish cross-country individual predictions for $DATE_KEY" \
+            -m "Ski source: $SKI_SHA"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Retain individual prediction evidence
+        if: always() && steps.detect.outputs.has_individual_event == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-country-individual-predictions-${{ steps.parameters.outputs.date_key }}-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/cross-country-individual-predictions/
+            ${{ runner.temp }}/cross-country-individual-logs/

@@ -2,7 +2,7 @@ name: Cross-country team predictions
 
 on:
   workflow_run:
-    workflows: ["Cross-country automatic daily pipeline"]
+    workflows: ["Cross-country individual predictions"]
     types: [completed]
   workflow_dispatch:
     inputs:
