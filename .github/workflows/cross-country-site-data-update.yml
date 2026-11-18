@@ -19,6 +19,11 @@ on:
         required: true
         default: main
         type: string
+      run_season_close:
+        description: Attempt the guarded season close (still rejects dates before May 1)
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -88,6 +93,7 @@ jobs:
           echo "requested_schedule_season=$season" >> "$GITHUB_OUTPUT"
           echo "schedule_root=$RUNNER_TEMP/cross-country-schedule-update" >> "$GITHUB_OUTPUT"
           echo "results_root=$RUNNER_TEMP/cross-country-results-update" >> "$GITHUB_OUTPUT"
+          echo "season_close_root=$RUNNER_TEMP/cross-country-season-close" >> "$GITHUB_OUTPUT"
 
       - name: Resolve schedule acquisition season
         id: schedule_season
@@ -213,17 +219,58 @@ jobs:
           echo "status=$status" >> "$GITHUB_OUTPUT"
           cat "$report" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Build and stage guarded season close
+        id: season_close
+        env:
+          AS_OF: ${{ steps.parameters.outputs.as_of }}
+          FORCE_CLOSE: ${{ inputs.run_season_close || false }}
+          RUN_DATE: ${{ steps.parameters.outputs.run_date }}
+          SEASON: ${{ steps.schedule_season.outputs.season }}
+        run: |
+          close_date="$SEASON-05-01"
+          close_as_of="$AS_OF"
+          if [[ "$RUN_DATE" == "$close_date" ]]; then
+            close_as_of="$RUN_DATE"
+          fi
+          if [[ "$close_as_of" < "$close_date" && "$FORCE_CLOSE" != "true" ]]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "Season $SEASON does not close before $close_date." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          root="external/ski/elo/python/ski/polars"
+          python3 "$root/cross_country_season_close.py" \
+            --schedule "$root/excel365/races.csv" \
+            --men-chrono "$root/excel365/men_chrono.csv" \
+            --ladies-chrono "$root/excel365/ladies_chrono.csv" \
+            --season "$SEASON" \
+            --as-of "$close_as_of" \
+            --output-root "${{ steps.parameters.outputs.season_close_root }}"
+          report="${{ steps.parameters.outputs.season_close_root }}/report.json"
+          status=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$report")
+          if [[ "$status" == "candidate" ]]; then
+            cp "${{ steps.parameters.outputs.season_close_root }}/candidate/men_chrono.csv" "$root/excel365/men_chrono.csv"
+            cp "${{ steps.parameters.outputs.season_close_root }}/candidate/ladies_chrono.csv" "$root/excel365/ladies_chrono.csv"
+          elif [[ "$status" != "no_changes" ]]; then
+            echo "Unexpected season-close status: $status" >&2
+            exit 1
+          fi
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Validate and publish accepted ski data
         id: publish_ski
         env:
           AS_OF: ${{ steps.parameters.outputs.as_of }}
           RESULTS_STATUS: ${{ steps.results_candidate.outputs.status }}
+          RUN_DATE: ${{ steps.parameters.outputs.run_date }}
           SCHEDULE_CHANGED: ${{ steps.schedule_candidate.outputs.changed }}
+          SEASON_CLOSE_STATUS: ${{ steps.season_close.outputs.status }}
         run: |
           root="external/ski/elo/python/ski/polars"
-          if [[ "$SCHEDULE_CHANGED" == "true" || "$RESULTS_STATUS" == "candidate" ]]; then
+          if [[ "$SCHEDULE_CHANGED" == "true" || "$RESULTS_STATUS" == "candidate" || "$SEASON_CLOSE_STATUS" == "candidate" ]]; then
             python3 -m unittest discover -s "$root" -p 'test_cross_country_results_*.py'
             python3 -m unittest discover -s "$root" -p 'test_*schedule*.py'
+            python3 -m unittest discover -s "$root" -p 'test_cross_country_season_close.py'
             git -C external/ski config user.name "github-actions[bot]"
             git -C external/ski config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git -C external/ski add \
@@ -232,7 +279,11 @@ jobs:
               elo/python/ski/polars/excel365/men_chrono.csv \
               elo/python/ski/polars/excel365/ladies_chrono.csv
             if ! git -C external/ski diff --cached --quiet; then
-              git -C external/ski commit -m "Update cross-country data through $AS_OF"
+              through="$AS_OF"
+              if [[ "$SEASON_CLOSE_STATUS" == "candidate" ]]; then
+                through="$RUN_DATE"
+              fi
+              git -C external/ski commit -m "Update cross-country data through $through"
               git -C external/ski pull --rebase origin main
               git -C external/ski push origin HEAD:main
             fi
@@ -240,7 +291,9 @@ jobs:
           echo "sha=$(git -C external/ski rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Check out blog for site publication
-        if: steps.results_candidate.outputs.status == 'candidate'
+        if: >-
+          steps.results_candidate.outputs.status == 'candidate' ||
+          steps.season_close.outputs.status == 'candidate'
         uses: actions/checkout@v4
         with:
           ref: ${{ steps.source.outputs.blog_sha }}
@@ -248,7 +301,9 @@ jobs:
           fetch-depth: 1
 
       - name: Generate cross-country site artifacts
-        if: steps.results_candidate.outputs.status == 'candidate'
+        if: >-
+          steps.results_candidate.outputs.status == 'candidate' ||
+          steps.season_close.outputs.status == 'candidate'
         working-directory: blog
         env:
           SEASON: ${{ steps.schedule_season.outputs.season }}
@@ -260,34 +315,48 @@ jobs:
             --output-root static/python/cross-country/excel365
 
       - name: Run complete blog test suite
-        if: steps.results_candidate.outputs.status == 'candidate'
+        if: >-
+          steps.results_candidate.outputs.status == 'candidate' ||
+          steps.season_close.outputs.status == 'candidate'
         working-directory: blog
         run: uv run --with polars python -m unittest discover -s tests -p 'test_*.py'
 
       - name: Set up Hugo
-        if: steps.results_candidate.outputs.status == 'candidate'
+        if: >-
+          steps.results_candidate.outputs.status == 'candidate' ||
+          steps.season_close.outputs.status == 'candidate'
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: "0.134.1"
           extended: true
 
       - name: Render site candidate
-        if: steps.results_candidate.outputs.status == 'candidate'
+        if: >-
+          steps.results_candidate.outputs.status == 'candidate' ||
+          steps.season_close.outputs.status == 'candidate'
         working-directory: blog
         run: hugo --minify --destination "$RUNNER_TEMP/cross-country-site"
 
       - name: Publish validated site artifacts
-        if: steps.results_candidate.outputs.status == 'candidate'
+        if: >-
+          steps.results_candidate.outputs.status == 'candidate' ||
+          steps.season_close.outputs.status == 'candidate'
         working-directory: blog
         env:
           AS_OF: ${{ steps.parameters.outputs.as_of }}
+          RUN_DATE: ${{ steps.parameters.outputs.run_date }}
+          SEASON_CLOSE_STATUS: ${{ steps.season_close.outputs.status }}
           SKI_SHA: ${{ steps.publish_ski.outputs.sha }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add static/python/cross-country/excel365
           if ! git diff --cached --quiet; then
-            git commit -m "Publish cross-country site data through $AS_OF" \
+            through="$AS_OF"
+            if [[ "$SEASON_CLOSE_STATUS" == "candidate" ]]; then
+              through="$RUN_DATE"
+            fi
+            git commit -m "Publish cross-country site data through $through" \
               -m "Ski source: $SKI_SHA"
             git pull --rebase origin main
             git push origin HEAD:main
@@ -307,5 +376,8 @@ jobs:
             ${{ steps.parameters.outputs.results_root }}/identity/report.json
             ${{ steps.parameters.outputs.results_root }}/replay/report.json
             ${{ steps.parameters.outputs.results_root }}/promotion/report.json
+            ${{ steps.parameters.outputs.season_close_root }}/report.json
+            ${{ steps.parameters.outputs.season_close_root }}/candidate/men_chrono.csv
+            ${{ steps.parameters.outputs.season_close_root }}/candidate/ladies_chrono.csv
           if-no-files-found: warn
           retention-days: 30
