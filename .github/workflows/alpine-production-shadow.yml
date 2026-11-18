@@ -21,8 +21,8 @@ on:
         required: true
         default: main
         type: string
-      create_publication_pr:
-        description: Open a reviewable publication PR after every gate passes
+      publish_predictions:
+        description: Publish validated prediction content directly to main
         required: true
         default: false
         type: boolean
@@ -262,24 +262,24 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-  publication_candidate:
-    name: Open controlled publication PR
+  publish_prediction_post:
+    name: Publish validated prediction post
     needs: shadow
     if: >-
       github.event_name == 'workflow_dispatch' &&
-      inputs.create_publication_pr == true &&
+      inputs.publish_predictions == true &&
       needs.shadow.result == 'success' &&
       needs.shadow.outputs.has_race == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: write
-      pull-requests: write
 
     steps:
       - name: Check out publication base
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 1
 
       - name: Download the exact passed shadow artifact
@@ -326,35 +326,27 @@ jobs:
         if: steps.candidate.outputs.changed == 'true'
         run: hugo --minify --destination "$RUNNER_TEMP/alpine-publication-site"
 
-      - name: Open publication pull request
+      - name: Publish validated prediction post
         if: steps.candidate.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
           DATE_KEY: ${{ steps.candidate.outputs.date_key }}
           LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
           RUN_ID: ${{ needs.shadow.outputs.run_id }}
         run: |
-          branch="automation/alpine-race-picks-${DATE_KEY}-${GITHUB_RUN_ID}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$branch"
           git add \
             "data/alpine/drafts/race-picks/$DATE_KEY" \
             "content/post/race-picks/$DATE_KEY.md"
           git commit -m "Add Alpine race picks for $LOGICAL_DATE"
-          git push origin "$branch"
-          pr_url=$(gh pr create \
-            --base main \
-            --head "$branch" \
-            --title "Add Alpine race picks for $LOGICAL_DATE" \
-            --body "Generated from validated shadow run $RUN_ID in GitHub Actions run https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}. Publication still requires review and merge.")
-          echo "Publication candidate: $pr_url" >> "$GITHUB_STEP_SUMMARY"
+          git push origin HEAD:main
+          echo "Published validated race picks for $LOGICAL_DATE from shadow run $RUN_ID." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload publication candidate report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: alpine-publication-candidate-${{ needs.shadow.outputs.logical_date }}-${{ github.run_id }}
+          name: alpine-publication-report-${{ needs.shadow.outputs.logical_date }}-${{ github.run_id }}
           path: ${{ runner.temp }}/alpine-publication-candidate.json
           if-no-files-found: warn
           retention-days: 30
