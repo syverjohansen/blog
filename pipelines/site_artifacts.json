@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "description": "Ownership and modernization status for every Nordic Numbers JSON artifact family referenced by a live Hugo layout.",
+  "states": {
+    "modernized": "Generated and validated by an active hosted workflow.",
+    "legacy_gap": "A legacy artifact exists, but no active hosted workflow owns its regeneration."
+  },
+  "owners": {
+    "alpine_site_data": {
+      "state": "modernized",
+      "workflow": ".github/workflows/alpine-site-data-update.yml",
+      "generator": "pipelines/alpine_site_data.py",
+      "cadence": "daily after accepted Alpine data changes",
+      "source": "validated men_chrono.csv and ladies_chrono.csv from the pinned ski revision"
+    },
+    "cross_country_site_data": {
+      "state": "modernized",
+      "workflow": ".github/workflows/cross-country-site-data-update.yml",
+      "generator": "pipelines/cross_country_site_data.py",
+      "cadence": "daily after accepted cross-country data changes",
+      "source": "validated men_chrono.csv and ladies_chrono.csv from the pinned ski revision"
+    },
+    "retired_master_automation": {
+      "state": "legacy_gap",
+      "workflow": null,
+      "generator": null,
+      "cadence": "not running",
+      "source": "legacy mutable local ski checkout"
+    }
+  },
+  "families": {
+    "current_elo": {
+      "reference_glob": "*_chrono_current.json",
+      "format": "json",
+      "shape": "array<object>",
+      "legacy_generator": "static/python/{sport}/elo_tables.py"
+    },
+    "all_time_elo": {
+      "reference_glob": "*_chrono_all_time.json",
+      "format": "json",
+      "shape": "array<object>",
+      "legacy_generator": "static/python/{sport}/all_time_elo.py"
+    },
+    "athlete_ids": {
+      "reference_glob": "*_all_ids.json",
+      "format": "json",
+      "shape": "object<athlete_id,name>",
+      "legacy_generator": "static/python/{sport}/all_ids.py"
+    },
+    "skier_lookup": {
+      "reference_glob": "*_skiers_lookup.json",
+      "format": "json",
+      "shape": "array<object>",
+      "legacy_generator": "static/python/{sport}/skier_tables.py"
+    },
+    "skier_groups": {
+      "reference_glob": "*/skiers_*.json",
+      "format": "json",
+      "shape": "object<athlete_id,history>",
+      "legacy_generator": "static/python/{sport}/skier_tables.py"
+    },
+    "skier_info": {
+      "reference_glob": "*/skier_info.json",
+      "format": "json",
+      "shape": "array<object>",
+      "legacy_generator": "static/python/{sport}/skier_info.py"
+    },
+    "rankings": {
+      "reference_glob": "*/ranks.json",
+      "format": "json",
+      "shape": "array<object>",
+      "legacy_generator": "static/python/{sport}/ranks.py"
+    },
+    "season_index": {
+      "reference_glob": "*/seasons.json",
+      "format": "json",
+      "shape": "array<object>",
+      "legacy_generator": "static/python/{sport}/races.py"
+    },
+    "race_summary": {
+      "reference_glob": "*/*/summary.json",
+      "format": "json",
+      "shape": "array<object>",
+      "legacy_generator": "static/python/{sport}/races.py"
+    },
+    "race_results": {
+      "reference_glob": "*/*/race_*.json",
+      "format": "json",
+      "shape": "array<object>",
+      "legacy_generator": "static/python/{sport}/races.py"
+    },
+    "head_to_head": {
+      "reference_glob": "head2head/*_head2head_data.json",
+      "format": "json",
+      "shape": "object<athlete_id,matchups>",
+      "legacy_generator": "static/python/{sport}/head2head.py"
+    },
+    "athlete_history_updates": {
+      "reference_glob": "*_athlete_history_updates.json",
+      "format": "json",
+      "shape": "object<athlete_id,history_overlay>",
+      "legacy_generator": null
+    }
+  },
+  "sports": {
+    "alpine": {
+      "artifact_root": "static/python/alpine/excel365",
+      "coverage": {
+        "current_elo": {"owner": "alpine_site_data"},
+        "all_time_elo": {"owner": "retired_master_automation", "target_phase": 2},
+        "athlete_ids": {"owner": "retired_master_automation", "target_phase": 2},
+        "skier_lookup": {"owner": "retired_master_automation", "target_phase": 2},
+        "skier_groups": {"owner": "retired_master_automation", "target_phase": 2},
+        "skier_info": {"owner": "retired_master_automation", "target_phase": 2},
+        "rankings": {"owner": "retired_master_automation", "target_phase": 2},
+        "season_index": {"owner": "alpine_site_data"},
+        "race_summary": {"owner": "alpine_site_data"},
+        "race_results": {"owner": "alpine_site_data"},
+        "head_to_head": {"owner": "retired_master_automation", "target_phase": 2},
+        "athlete_history_updates": {"owner": "alpine_site_data"}
+      }
+    },
+    "cross-country": {
+      "artifact_root": "static/python/cross-country/excel365",
+      "coverage": {
+        "current_elo": {"owner": "cross_country_site_data"},
+        "all_time_elo": {"owner": "retired_master_automation", "target_phase": 2},
+        "athlete_ids": {"owner": "retired_master_automation", "target_phase": 2},
+        "skier_lookup": {"owner": "retired_master_automation", "target_phase": 2},
+        "skier_groups": {"owner": "retired_master_automation", "target_phase": 2},
+        "skier_info": {"owner": "retired_master_automation", "target_phase": 2},
+        "rankings": {"owner": "retired_master_automation", "target_phase": 2},
+        "season_index": {"owner": "cross_country_site_data"},
+        "race_summary": {"owner": "cross_country_site_data"},
+        "race_results": {"owner": "cross_country_site_data"},
+        "head_to_head": {"owner": "retired_master_automation", "target_phase": 2},
+        "athlete_history_updates": {
+          "owner": "cross_country_site_data",
+          "repository_materialization": "pending_first_accepted_change"
+        }
+      }
+    },
+    "skijump": {
+      "artifact_root": "static/python/skijump/excel365",
+      "coverage": {
+        "current_elo": {"owner": "retired_master_automation", "target_phase": 5},
+        "all_time_elo": {"owner": "retired_master_automation", "target_phase": 5},
+        "athlete_ids": {"owner": "retired_master_automation", "target_phase": 5},
+        "skier_lookup": {"owner": "retired_master_automation", "target_phase": 5},
+        "skier_groups": {"owner": "retired_master_automation", "target_phase": 5},
+        "skier_info": {"owner": "retired_master_automation", "target_phase": 5},
+        "rankings": {"owner": "retired_master_automation", "target_phase": 5},
+        "season_index": {"owner": "retired_master_automation", "target_phase": 5},
+        "race_summary": {"owner": "retired_master_automation", "target_phase": 5},
+        "race_results": {"owner": "retired_master_automation", "target_phase": 5},
+        "head_to_head": {"owner": "retired_master_automation", "target_phase": 5}
+      }
+    },
+    "nordic-combined": {
+      "artifact_root": "static/python/nordic-combined/excel365",
+      "coverage": {
+        "current_elo": {"owner": "retired_master_automation", "target_phase": 6},
+        "all_time_elo": {"owner": "retired_master_automation", "target_phase": 6},
+        "athlete_ids": {"owner": "retired_master_automation", "target_phase": 6},
+        "skier_lookup": {"owner": "retired_master_automation", "target_phase": 6},
+        "skier_groups": {"owner": "retired_master_automation", "target_phase": 6},
+        "skier_info": {"owner": "retired_master_automation", "target_phase": 6},
+        "rankings": {"owner": "retired_master_automation", "target_phase": 6},
+        "season_index": {"owner": "retired_master_automation", "target_phase": 6},
+        "race_summary": {"owner": "retired_master_automation", "target_phase": 6},
+        "race_results": {"owner": "retired_master_automation", "target_phase": 6},
+        "head_to_head": {"owner": "retired_master_automation", "target_phase": 6}
+      }
+    },
+    "biathlon": {
+      "artifact_root": "static/python/biathlon/excel365",
+      "coverage": {
+        "current_elo": {"owner": "retired_master_automation", "target_phase": 7},
+        "all_time_elo": {"owner": "retired_master_automation", "target_phase": 7},
+        "athlete_ids": {"owner": "retired_master_automation", "target_phase": 7},
+        "skier_lookup": {"owner": "retired_master_automation", "target_phase": 7},
+        "skier_groups": {"owner": "retired_master_automation", "target_phase": 7},
+        "skier_info": {"owner": "retired_master_automation", "target_phase": 7},
+        "rankings": {"owner": "retired_master_automation", "target_phase": 7},
+        "season_index": {"owner": "retired_master_automation", "target_phase": 7},
+        "race_summary": {"owner": "retired_master_automation", "target_phase": 7},
+        "race_results": {"owner": "retired_master_automation", "target_phase": 7},
+        "head_to_head": {"owner": "retired_master_automation", "target_phase": 7}
+      }
+    }
+  }
+}
