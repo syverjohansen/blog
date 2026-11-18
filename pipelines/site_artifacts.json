@@ -107,7 +107,7 @@
       "artifact_root": "static/python/alpine/excel365",
       "coverage": {
         "current_elo": {"owner": "alpine_site_data"},
-        "all_time_elo": {"owner": "retired_master_automation", "target_phase": 2},
+        "all_time_elo": {"owner": "alpine_site_data"},
         "athlete_ids": {"owner": "alpine_site_data"},
         "skier_lookup": {"owner": "alpine_site_data"},
         "skier_groups": {"owner": "alpine_site_data"},
@@ -124,7 +124,7 @@
       "artifact_root": "static/python/cross-country/excel365",
       "coverage": {
         "current_elo": {"owner": "cross_country_site_data"},
-        "all_time_elo": {"owner": "retired_master_automation", "target_phase": 2},
+        "all_time_elo": {"owner": "cross_country_site_data"},
         "athlete_ids": {"owner": "cross_country_site_data"},
         "skier_lookup": {"owner": "cross_country_site_data"},
         "skier_groups": {"owner": "cross_country_site_data"},

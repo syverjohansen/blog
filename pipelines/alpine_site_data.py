@@ -18,6 +18,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
+from pipelines.site_all_time import build_all_time_elo
 from pipelines.site_athletes import (
     build_athlete_index,
     build_grouped_athlete_histories,
@@ -35,6 +36,17 @@ CURRENT_RATINGS = {
     "Combined_Pelo": "Combined_Elo",
     "Tech_Pelo": "Tech_Elo",
     "Speed_Pelo": "Speed_Elo",
+}
+
+ALL_TIME_RATINGS = {
+    "Elo": "Overall",
+    "Downhill_Elo": "Downhill",
+    "Super G_Elo": "Super G",
+    "Giant Slalom_Elo": "Giant Slalom",
+    "Slalom_Elo": "Slalom",
+    "Combined_Elo": "Combined",
+    "Tech_Elo": "Tech",
+    "Speed_Elo": "Speed",
 }
 
 ELO_COLUMNS = list(CURRENT_RATINGS.values())
@@ -318,6 +330,15 @@ def write_site_data(*, men_history: Path, ladies_history: Path, season: int, out
         _atomic_text(
             output_root / f"{sex}_chrono_current.json",
             json.dumps(current, ensure_ascii=True, separators=(",", ":")),
+        )
+        _atomic_text(
+            output_root / f"{sex}_chrono_all_time.json",
+            json.dumps(
+                build_all_time_elo(rows, ALL_TIME_RATINGS),
+                ensure_ascii=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ),
         )
         season_root = output_root / sex / str(season)
         _atomic_text(season_root / "summary.json", json.dumps(summaries, ensure_ascii=True))

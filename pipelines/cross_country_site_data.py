@@ -12,6 +12,7 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+from pipelines.site_all_time import build_all_time_elo
 from pipelines.site_athletes import (
     build_athlete_index,
     build_grouped_athlete_histories,
@@ -29,6 +30,18 @@ CURRENT_RATINGS = {
     "Sprint_F_Pelo": "Sprint_F_Elo",
     "Classic_Pelo": "Classic_Elo",
     "Freestyle_Pelo": "Freestyle_Elo",
+}
+
+ALL_TIME_RATINGS = {
+    "Elo": "Overall",
+    "Distance_Elo": "Distance",
+    "Distance_C_Elo": "Distance C",
+    "Distance_F_Elo": "Distance F",
+    "Sprint_Elo": "Sprint",
+    "Sprint_C_Elo": "Sprint C",
+    "Sprint_F_Elo": "Sprint F",
+    "Classic_Elo": "Classic",
+    "Freestyle_Elo": "Freestyle",
 }
 
 ELO_COLUMNS = list(CURRENT_RATINGS.values())
@@ -364,6 +377,15 @@ def write_site_data(
         _atomic_text(
             output_root / f"{sex}_chrono_current.json",
             json.dumps(current, ensure_ascii=True, separators=(",", ":")),
+        )
+        _atomic_text(
+            output_root / f"{sex}_chrono_all_time.json",
+            json.dumps(
+                build_all_time_elo(rows, ALL_TIME_RATINGS),
+                ensure_ascii=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ),
         )
         season_root = output_root / sex / str(season)
         _atomic_text(
