@@ -5,6 +5,13 @@
     "modernized": "Generated and validated by an active hosted workflow.",
     "legacy_gap": "A legacy artifact exists, but no active hosted workflow owns its regeneration."
   },
+  "milestones": {
+    "phase_2_alpine_cross_country_site_parity": {
+      "status": "complete",
+      "sports": ["alpine", "cross-country"],
+      "requirement": "Every live artifact family is generated, tested, and published by its active daily workflow."
+    }
+  },
   "owners": {
     "alpine_site_data": {
       "state": "modernized",

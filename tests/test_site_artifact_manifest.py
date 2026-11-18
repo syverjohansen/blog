@@ -60,6 +60,48 @@ class SiteArtifactManifestTest(unittest.TestCase):
         self.assertEqual(set(self.manifest["sports"]), SPORTS)
         self.assertGreater(len(self.references), 0)
 
+    def test_phase_two_closure_has_no_alpine_or_cross_country_legacy_gap(self) -> None:
+        milestone = self.manifest["milestones"][
+            "phase_2_alpine_cross_country_site_parity"
+        ]
+        self.assertEqual(milestone["status"], "complete")
+        self.assertEqual(set(milestone["sports"]), {"alpine", "cross-country"})
+
+        expected_families = set(self.manifest["families"])
+        for sport in milestone["sports"]:
+            with self.subTest(sport=sport):
+                coverage = self.manifest["sports"][sport]["coverage"]
+                self.assertEqual(set(coverage), expected_families)
+                self.assertTrue(
+                    all(
+                        self.manifest["owners"][contract["owner"]]["state"]
+                        == "modernized"
+                        for contract in coverage.values()
+                    )
+                )
+
+    def test_phase_two_workflows_generate_test_and_publish_complete_roots(self) -> None:
+        milestone = self.manifest["milestones"][
+            "phase_2_alpine_cross_country_site_parity"
+        ]
+        for sport in milestone["sports"]:
+            owner_names = {
+                contract["owner"]
+                for contract in self.manifest["sports"][sport]["coverage"].values()
+            }
+            self.assertEqual(len(owner_names), 1, sport)
+            owner = self.manifest["owners"][owner_names.pop()]
+            workflow = (BLOG_ROOT / owner["workflow"]).read_text(encoding="utf-8")
+            module = owner["generator"].removesuffix(".py").replace("/", ".")
+            artifact_root = self.manifest["sports"][sport]["artifact_root"]
+
+            generation = workflow.index(f"python3 -m {module}")
+            test_suite = workflow.index("unittest discover", generation)
+            publication = workflow.index(f"git add {artifact_root}", test_suite)
+            self.assertLess(generation, test_suite)
+            self.assertLess(test_suite, publication)
+            self.assertIn(f"--output-root {artifact_root}", workflow[generation:test_suite])
+
     def test_every_live_layout_reference_has_exactly_one_artifact_family(self) -> None:
         families = self.manifest["families"]
         failures: list[str] = []
