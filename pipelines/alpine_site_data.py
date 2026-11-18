@@ -25,6 +25,7 @@ from pipelines.site_athletes import (
     build_skier_info,
     build_skier_lookup,
 )
+from pipelines.site_head_to_head import build_head_to_head
 
 
 CURRENT_RATINGS = {
@@ -48,6 +49,8 @@ ALL_TIME_RATINGS = {
     "Tech_Elo": "Tech",
     "Speed_Elo": "Speed",
 }
+
+HEAD_TO_HEAD_FIELDS = {"Distance": "event"}
 
 ELO_COLUMNS = list(CURRENT_RATINGS.values())
 INTEGER_COLUMNS = {"MS", "Place", "ID", "Season", "Race", "Exp"}
@@ -386,6 +389,25 @@ def write_site_data(*, men_history: Path, ladies_history: Path, season: int, out
                     allow_nan=False,
                 ),
             )
+        del history_groups
+        head_to_head, race_lookup = build_head_to_head(
+            rows, race_fields=HEAD_TO_HEAD_FIELDS
+        )
+        head_to_head_root = output_root / "head2head"
+        _atomic_text(
+            head_to_head_root / f"{sex}_head2head_data.json",
+            json.dumps(
+                head_to_head, ensure_ascii=True, separators=(",", ":"),
+                allow_nan=False,
+            ),
+        )
+        _atomic_text(
+            head_to_head_root / f"{sex}_race_lookup.json",
+            json.dumps(
+                race_lookup, ensure_ascii=True, separators=(",", ":"),
+                allow_nan=False,
+            ),
+        )
         _atomic_text(
             output_root / sex / "skier_info.json",
             json.dumps(

@@ -274,6 +274,12 @@ class CrossCountrySiteDataTests(unittest.TestCase):
             skier_group = json.loads(
                 (output / "L/skiers_0_to_499_0.json").read_text()
             )
+            head_to_head = json.loads(
+                (output / "head2head/L_head2head_data.json").read_text()
+            )
+            race_lookup = json.loads(
+                (output / "head2head/L_race_lookup.json").read_text()
+            )
             self.assertEqual(summary[0]["race_number"], 0)
             self.assertEqual(summary[0]["technique"], "C")
             self.assertEqual(rollover[0]["previous_elo"], 1420.0)
@@ -303,6 +309,12 @@ class CrossCountrySiteDataTests(unittest.TestCase):
             self.assertEqual(skier_group["2"]["Race"], [0, 1])
             self.assertEqual(skier_group["2"]["Elo"], [1420.0, 1412.0])
             self.assertEqual(skier_group["2"]["Elo_Pct"], [100.0, 100.0])
+            self.assertEqual(head_to_head["2"][0]["season"], "2027")
+            self.assertEqual(head_to_head["2"][0]["distance"], "10")
+            self.assertEqual(head_to_head["2"][0]["technique"], "C")
+            self.assertEqual(head_to_head["2"][0]["ms"], "0")
+            self.assertNotIn("ms", race_lookup["2027_1"])
+            self.assertEqual(race_lookup["2027_1"]["distance"], "10")
 
 
 if __name__ == "__main__":
