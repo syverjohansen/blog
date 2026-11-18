@@ -26,6 +26,28 @@ library(logger)
 library(purrr)
 library(lubridate)
 
+BLOG_ROOT <- path.expand(Sys.getenv("NORDIC_BLOG_ROOT", "~/blog/daehl-e"))
+SKI_DATA_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_SKI_DATA_ROOT",
+  "~/ski/elo/python/ski/polars/excel365"
+))
+TEAM_DATA_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_TEAM_DATA_ROOT",
+  "~/ski/elo/python/ski/polars/relay/excel365"
+))
+PREDICTION_OUTPUT_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_PREDICTION_OUTPUT_ROOT",
+  file.path(BLOG_ROOT, "content/post/cross-country/drafts/race-picks")
+))
+LOG_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_LOG_ROOT",
+  file.path(SKI_DATA_ROOT, "race-picks-simulation")
+))
+LOGICAL_DATE <- Sys.getenv("NORDIC_LOGICAL_DATE", "")
+
+ski_data_path <- function(filename) file.path(SKI_DATA_ROOT, filename)
+team_data_path <- function(filename) file.path(TEAM_DATA_ROOT, filename)
+
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
@@ -33,7 +55,7 @@ library(lubridate)
 # ===== TEST MODE (loaded from .env) =====
 # Reads TEST_MODE from ~/ski/elo/.env for centralized pipeline configuration
 # Set TEST_MODE=true in .env for EDA/sandbox testing, TEST_MODE=false for production
-load_env <- function(env_path = "~/ski/elo/.env") {
+load_env <- function(env_path = Sys.getenv("NORDIC_ENV_FILE", "~/ski/elo/.env")) {
   env_file <- path.expand(env_path)
   if (file.exists(env_file)) {
     lines <- readLines(env_file, warn = FALSE)
@@ -61,7 +83,7 @@ TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 # ===== LOAD SPORT-SPECIFIC PARAMETERS =====
 # Source optimized parameters from sport_params.R
 # These values are calibrated via param-optimizer.R using historical backtesting
-sport_params_path <- "~/blog/daehl-e/content/post/shared/sport_params.R"
+sport_params_path <- file.path(BLOG_ROOT, "content/post/shared/sport_params.R")
 if (file.exists(path.expand(sport_params_path))) {
   source(sport_params_path)
   DEFAULT_PARAMS <- get_sport_params("cross-country")
@@ -129,7 +151,7 @@ relay_points <- c(200, 160, 120, 100, 90, 80, 72, 64, 58, 52, 48, 44, 40, 36,
 
 # Try to load enhanced logging utilities (optional, falls back to basic if not available)
 ENHANCED_LOGGING <- FALSE
-logging_utils_path <- "~/blog/daehl-e/content/post/shared/logging-utils.R"
+logging_utils_path <- file.path(BLOG_ROOT, "content/post/shared/logging-utils.R")
 if (file.exists(path.expand(logging_utils_path))) {
   tryCatch({
     source(logging_utils_path)
@@ -152,7 +174,7 @@ if (file.exists(path.expand(logging_utils_path))) {
 
 # Fallback to basic logging if enhanced not available
 if (!ENHANCED_LOGGING) {
-  log_dir <- path.expand("~/ski/elo/python/ski/polars/excel365/race-picks-simulation")
+  log_dir <- LOG_ROOT
   if (!dir.exists(log_dir)) {
     dir.create(log_dir, recursive = TRUE)
   }
@@ -1551,9 +1573,9 @@ log_info("=== PART 1: LOADING RACE SCHEDULE ===")
 
 # Read race schedule
 races_file <- if(TEST_MODE) {
-  "~/ski/elo/python/ski/polars/excel365/test_races.csv"
+  ski_data_path("test_races.csv")
 } else {
-  "~/ski/elo/python/ski/polars/excel365/races.csv"
+  ski_data_path("races.csv")
 }
 log_info(paste("Reading races from:", races_file))
 
@@ -1561,7 +1583,11 @@ races <- read.csv(races_file, stringsAsFactors = FALSE) %>%
   mutate(Date = mdy(Date))
 
 # Find races happening TODAY
-current_date <- as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d")
+current_date <- if (nzchar(LOGICAL_DATE)) {
+  as.Date(LOGICAL_DATE)
+} else {
+  as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d")
+}
 log_info(paste("Current date (UTC):", current_date))
 
 # Filter races for today only
@@ -1624,11 +1650,11 @@ if (ENHANCED_LOGGING) {
 log_info("=== PART 2: LOADING CHRONOLOGICAL DATA ===")
 
 # Load individual chrono data
-men_chrono <- read.csv("~/ski/elo/python/ski/polars/excel365/men_chrono_elevation.csv",
+men_chrono <- read.csv(ski_data_path("men_chrono_elevation.csv"),
                        stringsAsFactors = FALSE) %>%
   mutate(Date = as.Date(Date))
 
-ladies_chrono <- read.csv("~/ski/elo/python/ski/polars/excel365/ladies_chrono_elevation.csv",
+ladies_chrono <- read.csv(ski_data_path("ladies_chrono_elevation.csv"),
                           stringsAsFactors = FALSE) %>%
   mutate(Date = as.Date(Date))
 
@@ -1726,7 +1752,7 @@ if(PROCESS_RELAY || PROCESS_TEAM_SPRINT || PROCESS_MIXED_RELAY) {
   log_info("Loading relay chronological data...")
 
   men_relay_chrono <- tryCatch({
-    read.csv("~/ski/elo/python/ski/polars/relay/excel365/men_chrono.csv",
+    read.csv(team_data_path("men_chrono.csv"),
              stringsAsFactors = FALSE) %>%
       mutate(Date = as.Date(Date))
   }, error = function(e) {
@@ -1735,7 +1761,7 @@ if(PROCESS_RELAY || PROCESS_TEAM_SPRINT || PROCESS_MIXED_RELAY) {
   })
 
   ladies_relay_chrono <- tryCatch({
-    read.csv("~/ski/elo/python/ski/polars/relay/excel365/ladies_chrono.csv",
+    read.csv(team_data_path("ladies_chrono.csv"),
              stringsAsFactors = FALSE) %>%
       mutate(Date = as.Date(Date))
   }, error = function(e) {
@@ -1800,15 +1826,15 @@ log_info("=== PART 3: LOADING STARTLISTS ===")
 
 # Individual startlists
 if(PROCESS_INDIVIDUAL) {
-  men_startlist <- if(file.exists("~/ski/elo/python/ski/polars/excel365/startlist_races_men.csv")) {
-    read.csv("~/ski/elo/python/ski/polars/excel365/startlist_races_men.csv",
+  men_startlist <- if(file.exists(ski_data_path("startlist_races_men.csv"))) {
+    read.csv(ski_data_path("startlist_races_men.csv"),
              stringsAsFactors = FALSE)
   } else {
     data.frame(Skier = character(0))
   }
 
-  ladies_startlist <- if(file.exists("~/ski/elo/python/ski/polars/excel365/startlist_races_ladies.csv")) {
-    read.csv("~/ski/elo/python/ski/polars/excel365/startlist_races_ladies.csv",
+  ladies_startlist <- if(file.exists(ski_data_path("startlist_races_ladies.csv"))) {
+    read.csv(ski_data_path("startlist_races_ladies.csv"),
              stringsAsFactors = FALSE)
   } else {
     data.frame(Skier = character(0))
@@ -1833,15 +1859,15 @@ if(PROCESS_INDIVIDUAL) {
 
 # Relay startlists
 if(PROCESS_RELAY) {
-  men_relay_startlist <- if(file.exists("~/ski/elo/python/ski/polars/relay/excel365/startlist_races_men.csv")) {
-    read.csv("~/ski/elo/python/ski/polars/relay/excel365/startlist_races_men.csv",
+  men_relay_startlist <- if(file.exists(team_data_path("startlist_races_men.csv"))) {
+    read.csv(team_data_path("startlist_races_men.csv"),
              stringsAsFactors = FALSE)
   } else {
     data.frame()
   }
 
-  ladies_relay_startlist <- if(file.exists("~/ski/elo/python/ski/polars/relay/excel365/startlist_races_ladies.csv")) {
-    read.csv("~/ski/elo/python/ski/polars/relay/excel365/startlist_races_ladies.csv",
+  ladies_relay_startlist <- if(file.exists(team_data_path("startlist_races_ladies.csv"))) {
+    read.csv(team_data_path("startlist_races_ladies.csv"),
              stringsAsFactors = FALSE)
   } else {
     data.frame()
@@ -1866,15 +1892,15 @@ if(PROCESS_RELAY) {
 
 # Team sprint startlists
 if(PROCESS_TEAM_SPRINT) {
-  men_ts_startlist <- if(file.exists("~/ski/elo/python/ski/polars/relay/excel365/startlist_ts_men.csv")) {
-    read.csv("~/ski/elo/python/ski/polars/relay/excel365/startlist_ts_men.csv",
+  men_ts_startlist <- if(file.exists(team_data_path("startlist_ts_men.csv"))) {
+    read.csv(team_data_path("startlist_ts_men.csv"),
              stringsAsFactors = FALSE)
   } else {
     data.frame()
   }
 
-  ladies_ts_startlist <- if(file.exists("~/ski/elo/python/ski/polars/relay/excel365/startlist_ts_ladies.csv")) {
-    read.csv("~/ski/elo/python/ski/polars/relay/excel365/startlist_ts_ladies.csv",
+  ladies_ts_startlist <- if(file.exists(team_data_path("startlist_ts_ladies.csv"))) {
+    read.csv(team_data_path("startlist_ts_ladies.csv"),
              stringsAsFactors = FALSE)
   } else {
     data.frame()
@@ -1901,8 +1927,8 @@ if(PROCESS_TEAM_SPRINT) {
 
 # Mixed relay startlists
 if(PROCESS_MIXED_RELAY) {
-  mixed_relay_startlist <- if(file.exists("~/ski/elo/python/ski/polars/relay/excel365/startlist_mixed_relay.csv")) {
-    read.csv("~/ski/elo/python/ski/polars/relay/excel365/startlist_mixed_relay.csv",
+  mixed_relay_startlist <- if(file.exists(team_data_path("startlist_mixed_relay.csv"))) {
+    read.csv(team_data_path("startlist_mixed_relay.csv"),
              stringsAsFactors = FALSE)
   } else {
     data.frame()
@@ -2056,11 +2082,17 @@ if(PROCESS_INDIVIDUAL) {
       next
     }
 
-    # Filter to athletes actually on the FIS startlist
+    # Prefer the published FIS startlist. Before FIS publishes it, the
+    # startlist builder supplies a deterministic current-season fallback;
+    # retain that fallback instead of producing an empty prediction field.
     if ("In_FIS_List" %in% names(startlist)) {
       startlist_filtered <- startlist %>% filter(In_FIS_List == TRUE | In_FIS_List == "True")
-      log_info(paste("Filtered startlist from", nrow(startlist), "to", nrow(startlist_filtered), "athletes (FIS list)"))
-      startlist <- startlist_filtered
+      if (nrow(startlist_filtered) > 0) {
+        log_info(paste("Filtered startlist from", nrow(startlist), "to", nrow(startlist_filtered), "athletes (FIS list)"))
+        startlist <- startlist_filtered
+      } else {
+        log_info(paste("No published FIS startlist for", gender, "- using", nrow(startlist), "fallback athletes"))
+      }
     }
 
     if (nrow(startlist) == 0) {
@@ -2967,8 +2999,12 @@ if (ENHANCED_LOGGING) phase_start("Output Generation")
 log_info("=== OUTPUT GENERATION ===")
 
 # Output directory with date folder
-utc_date <- format(Sys.time(), "%Y%m%d", tz = "UTC")
-output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", utc_date)
+utc_date <- if (nzchar(LOGICAL_DATE)) {
+  format(as.Date(LOGICAL_DATE), "%Y%m%d")
+} else {
+  format(Sys.time(), "%Y%m%d", tz = "UTC")
+}
+output_dir <- file.path(PREDICTION_OUTPUT_ROOT, utc_date)
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }

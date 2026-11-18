@@ -4,6 +4,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DAILY = ROOT / ".github/workflows/cross-country-site-data-update.yml"
 TEAM = ROOT / ".github/workflows/cross-country-team-predictions.yml"
+INDIVIDUAL = ROOT / ".github/workflows/cross-country-individual-predictions.yml"
 
 
 class CrossCountryDailyWorkflowTests(unittest.TestCase):
@@ -11,6 +12,7 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.daily = DAILY.read_text(encoding="utf-8")
         cls.team = TEAM.read_text(encoding="utf-8")
+        cls.individual = INDIVIDUAL.read_text(encoding="utf-8")
 
     def test_daily_pipeline_is_chained_and_manual_without_an_independent_cron(self) -> None:
         trigger = self.daily.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
@@ -59,10 +61,11 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         )
         self.assertEqual(self.daily.count("uses: astral-sh/setup-uv@v6"), 1)
 
-    def test_team_predictions_wait_for_daily_cross_country_data(self) -> None:
+    def test_prediction_workflows_form_one_ordered_chain(self) -> None:
         self.assertIn(
-            'workflows: ["Cross-country automatic daily pipeline"]', self.team
+            'workflows: ["Cross-country automatic daily pipeline"]', self.individual
         )
+        self.assertIn('workflows: ["Cross-country individual predictions"]', self.team)
         self.assertNotIn('workflows: ["Alpine Production Shadow"]', self.team)
         self.assertIn('data_dir="$PWD/data/cross-country', self.team)
         self.assertNotIn('data_dir="$GITHUB_WORKSPACE/data', self.team)
