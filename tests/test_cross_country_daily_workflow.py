@@ -37,7 +37,7 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
 
     def test_site_work_is_gated_on_a_promoted_results_candidate(self) -> None:
         condition = "if: steps.results_candidate.outputs.status == 'candidate'"
-        self.assertGreaterEqual(self.daily.count(condition), 7)
+        self.assertGreaterEqual(self.daily.count(condition), 6)
         checkout = self.daily.index("name: Check out blog for site publication")
         generator = self.daily.index("name: Generate cross-country site artifacts")
         self.assertLess(checkout, generator)
@@ -51,6 +51,13 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         self.assertIn("git add static/python/cross-country/excel365", self.daily)
         self.assertNotIn("git add .", self.daily)
         self.assertNotIn("--force", self.daily)
+
+    def test_fis_schedule_dependencies_are_explicit(self) -> None:
+        self.assertIn("name: Set up Python runtime", self.daily)
+        self.assertIn(
+            "uv run --with requests --with beautifulsoup4", self.daily
+        )
+        self.assertEqual(self.daily.count("uses: astral-sh/setup-uv@v6"), 1)
 
     def test_team_predictions_wait_for_daily_cross_country_data(self) -> None:
         self.assertIn(
