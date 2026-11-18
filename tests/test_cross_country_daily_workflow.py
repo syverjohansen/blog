@@ -42,16 +42,30 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         self.assertLess(tests, render)
         self.assertLess(render, publish_site)
 
-    def test_site_work_is_gated_on_results_or_season_close_candidate(self) -> None:
+    def test_site_work_is_gated_on_results_close_or_final_standings(self) -> None:
         results_condition = "steps.results_candidate.outputs.status == 'candidate' ||"
         close_condition = "steps.season_close.outputs.status == 'candidate'"
+        standings_condition = "steps.standings.outputs.changed == 'true'"
         self.assertGreaterEqual(self.daily.count(results_condition), 6)
         self.assertGreaterEqual(self.daily.count(close_condition), 6)
+        self.assertGreaterEqual(self.daily.count(standings_condition), 6)
         checkout = self.daily.index("name: Check out blog for site publication")
         generator = self.daily.index("name: Generate cross-country site artifacts")
         self.assertLess(checkout, generator)
         self.assertIn(results_condition, self.daily[checkout:generator])
         self.assertIn(close_condition, self.daily[checkout:generator])
+        self.assertIn(standings_condition, self.daily[checkout:generator])
+
+    def test_rankings_include_accepted_team_histories_and_final_standings(self) -> None:
+        self.assertIn("/elo/python/standings_contract.py", self.daily)
+        self.assertIn("/ranks/ski/excel365/men_scrape_update.csv", self.daily)
+        self.assertIn("--men-ranking-history", self.daily)
+        self.assertIn("--men-relay-history", self.daily)
+        self.assertIn("--ladies-relay-history", self.daily)
+        self.assertIn("--team-sprint-history", self.daily)
+        self.assertIn("--finalized-standings-root", self.daily)
+        self.assertIn("standings_scrape.py", self.daily)
+        self.assertIn('ranking_standings/$SEASON', self.daily)
 
     def test_season_close_is_guarded_idempotent_and_validated(self) -> None:
         self.assertIn("run_season_close:", self.daily)

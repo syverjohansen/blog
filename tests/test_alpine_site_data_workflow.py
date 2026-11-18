@@ -106,6 +106,19 @@ class AlpineSiteDataWorkflowTest(unittest.TestCase):
         self.assertIn("--output-root static/python/alpine/excel365", self.source)
         self.assertIn("git add static/python/alpine/excel365", self.source)
 
+    def test_rankings_use_history_and_immutable_final_standings(self) -> None:
+        self.assertIn("/elo/python/standings_contract.py", self.source)
+        self.assertIn("/ranks/alpine/excel365/men_scrape_update.csv", self.source)
+        self.assertIn("--men-ranking-history", self.source)
+        self.assertIn("--finalized-standings-root", self.source)
+        self.assertIn("standings_scrape.py", self.source)
+        self.assertIn('ranking_standings/$SEASON', self.source)
+        close = self.source.index("alpine_season_close.py")
+        standings = self.source.index("name: Snapshot finalized official Alpine standings")
+        generation = self.source.index("python3 -m pipelines.alpine_site_data")
+        self.assertLess(close, standings)
+        self.assertLess(standings, generation)
+
     def test_defaults_to_yesterday_and_retains_manual_override(self) -> None:
         self.assertIn("date -u -d 'yesterday' +%F", self.source)
         self.assertIn("REQUESTED_AS_OF", self.source)

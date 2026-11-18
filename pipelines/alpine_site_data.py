@@ -15,6 +15,7 @@ import csv
 import json
 import tempfile
 from collections import defaultdict
+from datetime import date
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -26,6 +27,12 @@ from pipelines.site_athletes import (
     build_skier_lookup,
 )
 from pipelines.site_head_to_head import build_head_to_head
+from pipelines.site_rankings import (
+    build_rankings,
+    read_csv,
+    read_finalized_standings,
+    write_rankings,
+)
 
 
 CURRENT_RATINGS = {
@@ -315,12 +322,26 @@ def build_seasons_index(rows: list[dict[str, str]]) -> list[dict[str, Any]]:
     } for season in seasons]
 
 
-def write_site_data(*, men_history: Path, ladies_history: Path, season: int, output_root: Path) -> None:
+def write_site_data(
+    *,
+    men_history: Path,
+    ladies_history: Path,
+    season: int,
+    output_root: Path,
+    as_of: date | None = None,
+    men_ranking_history: Path | None = None,
+    ladies_ranking_history: Path | None = None,
+    finalized_standings_root: Path | None = None,
+) -> None:
     histories = {
         "M": _read_history(men_history, "M"),
         "L": _read_history(ladies_history, "L"),
     }
     output_root = output_root.expanduser().resolve()
+    ranking_histories = {
+        "M": men_ranking_history,
+        "L": ladies_ranking_history,
+    }
     for sex, rows in histories.items():
         current = build_current_table(rows, season)
         summaries, races = build_season_archive(rows, season)
@@ -416,6 +437,26 @@ def write_site_data(*, men_history: Path, ladies_history: Path, season: int, out
                 separators=(",", ":"),
             ),
         )
+        if ranking_histories[sex] is not None:
+            historical = read_csv(
+                ranking_histories[sex],
+                {"Event", "Season", "Place", "ID", "Skier", "Nation", "Birthday"},
+            )
+            official = read_finalized_standings(
+                finalized_standings_root, "men" if sex == "M" else "ladies"
+            )
+            write_rankings(
+                output_root,
+                sex,
+                build_rankings(
+                    sport="alpine",
+                    history_rows=rows,
+                    historical_ranking_rows=historical,
+                    target_season=season,
+                    as_of=as_of or date.today(),
+                    current_standings_rows=official,
+                ),
+            )
 
 
 def parse_args() -> argparse.Namespace:
@@ -424,6 +465,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ladies-history", required=True, type=Path)
     parser.add_argument("--season", required=True, type=int)
     parser.add_argument("--output-root", required=True, type=Path)
+    parser.add_argument("--as-of", required=True, type=date.fromisoformat)
+    parser.add_argument("--men-ranking-history", required=True, type=Path)
+    parser.add_argument("--ladies-ranking-history", required=True, type=Path)
+    parser.add_argument("--finalized-standings-root", type=Path)
     return parser.parse_args()
 
 
@@ -434,6 +479,10 @@ def main() -> int:
         ladies_history=args.ladies_history,
         season=args.season,
         output_root=args.output_root,
+        as_of=args.as_of,
+        men_ranking_history=args.men_ranking_history,
+        ladies_ranking_history=args.ladies_ranking_history,
+        finalized_standings_root=args.finalized_standings_root,
     )
     return 0
 
