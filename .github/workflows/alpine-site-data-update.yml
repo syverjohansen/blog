@@ -364,7 +364,7 @@ jobs:
             -f expected_season="$SEASON" \
             -f n_simulations=250 \
             -f ski_ref="$SKI_SHA" \
-            -f create_publication_pr=true
+            -f publish_predictions=true
 
       - name: Upload result-update evidence
         if: always()

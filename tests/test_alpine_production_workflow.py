@@ -26,7 +26,7 @@ class AlpineProductionWorkflowTests(unittest.TestCase):
         self.assertIn("--skip-no-race", self.source)
         self.assertIn("--allow-network", self.source)
         self.assertIn('get("status") != "disabled"', self.source)
-        shadow = self.source.split("  publication_candidate:", 1)[0]
+        shadow = self.source.split("  publish_prediction_post:", 1)[0]
         self.assertNotIn("git push", shadow)
         self.assertNotIn("contents: write", shadow)
 
@@ -44,15 +44,27 @@ class AlpineProductionWorkflowTests(unittest.TestCase):
         self.assertGreaterEqual(self.source.count(condition), 4)
         self.assertIn("has_race={str(has_race).lower()}", self.source)
 
-    def test_publication_is_manual_pr_only_and_fail_closed(self) -> None:
-        candidate = self.source.split("  publication_candidate:", 1)[1]
-        self.assertIn("inputs.create_publication_pr == true", candidate)
+    def test_publication_is_opt_in_direct_and_fail_closed(self) -> None:
+        candidate = self.source.split("  publish_prediction_post:", 1)[1]
+        self.assertIn("inputs.publish_predictions == true", candidate)
         self.assertIn("needs.shadow.outputs.has_race == 'true'", candidate)
         self.assertIn("contents: write", candidate)
-        self.assertIn("pull-requests: write", candidate)
+        self.assertNotIn("pull-requests: write", candidate)
         self.assertIn("pipelines.alpine_publication_candidate", candidate)
-        self.assertIn("gh pr create", candidate)
+        self.assertIn("hugo --minify", candidate)
+        self.assertIn('"data/alpine/drafts/race-picks/$DATE_KEY"', candidate)
+        self.assertIn('"content/post/race-picks/$DATE_KEY.md"', candidate)
+        self.assertIn("git push origin HEAD:main", candidate)
+        self.assertNotIn("git add .", candidate)
+        self.assertNotIn("--force", candidate)
+        self.assertNotIn("gh pr create", candidate)
         self.assertNotIn("gh pr merge", candidate)
+
+        validation = candidate.index("pipelines.alpine_publication_candidate")
+        render = candidate.index("hugo --minify")
+        publication = candidate.index("git push origin HEAD:main")
+        self.assertLess(validation, render)
+        self.assertLess(render, publication)
 
     def test_obsolete_host_automation_is_removed(self) -> None:
         self.assertFalse((ROOT / "master_automation_ubuntu.sh").exists())

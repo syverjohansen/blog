@@ -1,4 +1,4 @@
-"""Materialize a reviewable Alpine publication candidate from a passed shadow run."""
+"""Materialize guarded Alpine publication files from a passed shadow run."""
 
 from __future__ import annotations
 
@@ -214,8 +214,8 @@ def prepare_candidate(
         "source_commits": manifest.get("code"),
         "files": files,
         "publication": {
-            "status": "candidate",
-            "reason": "repository changes still require pull-request review and merge",
+            "status": "ready",
+            "reason": "validated files are ready for guarded workflow publication",
         },
     }
     write_json_atomic(report_path, report)

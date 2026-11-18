@@ -110,7 +110,7 @@ class AlpinePublicationCandidateTests(unittest.TestCase):
             root = Path(text)
             report = self.prepare(root)
             self.assertEqual("prepared", report["status"])
-            self.assertEqual("candidate", report["publication"]["status"])
+            self.assertEqual("ready", report["publication"]["status"])
             data = (
                 root
                 / "repository/data/alpine/drafts/race-picks/20261121"
@@ -177,6 +177,29 @@ class AlpinePublicationCandidateTests(unittest.TestCase):
                     report_path=root / "candidate-report.json",
                     evaluation_date=date(2026, 11, 17),
                 )
+
+    def test_identical_retry_is_unchanged(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="alpine-publication-retry-") as text:
+            root = Path(text)
+            evidence = self.build_evidence(root)
+            arguments = {
+                "manifest_path": evidence["manifest"],
+                "replay_report_path": evidence["replay"],
+                "actual_results_path": evidence["actual"],
+                "site_data_root": evidence["site_data"],
+                "repository_root": root / "repository",
+                "report_path": root / "candidate-report.json",
+                "evaluation_date": date(2026, 11, 17),
+            }
+
+            first = prepare_candidate(**arguments)
+            second = prepare_candidate(**arguments)
+
+            self.assertEqual("prepared", first["status"])
+            self.assertEqual("unchanged", second["status"])
+            self.assertTrue(
+                all(item["status"] == "unchanged" for item in second["files"])
+            )
 
     def test_rejects_past_logical_date(self) -> None:
         with tempfile.TemporaryDirectory(prefix="alpine-publication-past-") as text:

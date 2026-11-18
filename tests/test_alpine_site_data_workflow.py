@@ -39,6 +39,7 @@ class AlpineSiteDataWorkflowTest(unittest.TestCase):
         self.assertLess(season_close, site_data)
         self.assertLess(results, site_data)
         self.assertLess(site_data, predictions)
+        self.assertIn("-f publish_predictions=true", self.source)
 
     def test_season_close_catches_up_after_may_first_and_is_manual(self) -> None:
         self.assertIn("run_season_close:", self.source)
