@@ -10,6 +10,9 @@ from pipelines.cross_country_site_data import (
     write_site_data,
 )
 
+ROOT = Path(__file__).resolve().parents[1]
+SKIER_TABLE = ROOT / "layouts/partials/cross-country/skier-table.html"
+
 FIELDS = [
     *CURRENT_RATINGS.values(),
     "Date",
@@ -78,6 +81,12 @@ def write_history(path: Path, rows: list[dict[str, object]]) -> None:
 
 
 class CrossCountrySiteDataTests(unittest.TestCase):
+    def test_athlete_page_merges_generated_history_overlay(self) -> None:
+        source = SKIER_TABLE.read_text(encoding="utf-8")
+        self.assertIn("function mergeHistoryUpdates", source)
+        self.assertIn("_athlete_history_updates.json", source)
+        self.assertIn("skierData = mergeHistoryUpdates", source)
+
     def test_athlete_updates_include_rollover_and_current_season(self) -> None:
         rows = [
             row(

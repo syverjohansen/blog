@@ -13,7 +13,7 @@ class CrossCountryTeamWorkflowTests(unittest.TestCase):
     def test_workflow_is_chained_manual_and_github_hosted(self) -> None:
         trigger = self.source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
         self.assertIn("workflow_run:", trigger)
-        self.assertIn('workflows: ["Alpine Production Shadow"]', trigger)
+        self.assertIn('workflows: ["Cross-country automatic daily pipeline"]', trigger)
         self.assertIn("types: [completed]", trigger)
         self.assertNotIn("schedule:", trigger)
         self.assertIn("workflow_dispatch:", trigger)

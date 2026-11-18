@@ -142,6 +142,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return dataArray;
     }
 
+    function rowIdentity(row) {
+        return `${row.Season}|${row.Race}|${row.Date}|${row.ID}`;
+    }
+
+    function mergeHistoryUpdates(baseData, updateData, id) {
+        const baseRows = formatSkierData(baseData, id);
+        const updateRows = formatSkierData(updateData, id);
+        if (updateRows.length === 0) return baseRows;
+
+        const updateKeys = new Set(updateRows.map(rowIdentity));
+        return baseRows.filter(row => !updateKeys.has(rowIdentity(row))).concat(updateRows);
+    }
+
     function renderTable(data, columnsToShow) {
         if (!data || data.length === 0) return;
 
@@ -257,10 +270,18 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!group) throw new Error('Could not determine skier group');
 
             const groupUrl = `/python/cross-country/excel365/${sex}/skiers_${group}.json`;
-            const response = await fetch(groupUrl);
-            const groupData = await response.json();
+            const [groupResponse, updatesResponse] = await Promise.all([
+                fetch(groupUrl),
+                fetch(
+                    `/python/cross-country/excel365/${sex}_athlete_history_updates.json`,
+                    { cache: 'no-cache' }
+                ).catch(() => null)
+            ]);
+            if (!groupResponse.ok) throw new Error('Could not load skier history');
+            const groupData = await groupResponse.json();
+            const updatesData = updatesResponse?.ok ? await updatesResponse.json() : {};
 
-            skierData = formatSkierData(groupData, id);
+            skierData = mergeHistoryUpdates(groupData, updatesData, id);
 
             document.getElementById('loading-indicator').style.display = 'none';
             wrapper.style.display = 'block';

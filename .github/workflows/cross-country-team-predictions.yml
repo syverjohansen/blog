@@ -2,7 +2,7 @@ name: Cross-country team predictions
 
 on:
   workflow_run:
-    workflows: ["Alpine Production Shadow"]
+    workflows: ["Cross-country automatic daily pipeline"]
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -162,7 +162,7 @@ jobs:
           DATE_KEY: ${{ steps.parameters.outputs.date_key }}
         run: |
           prediction_dir="$NORDIC_PREDICTION_OUTPUT_ROOT/$DATE_KEY"
-          data_dir="$GITHUB_WORKSPACE/data/cross-country/drafts/race-picks/$DATE_KEY"
+          data_dir="$PWD/data/cross-country/drafts/race-picks/$DATE_KEY"
           mkdir -p "$data_dir"
           found=false
           while IFS= read -r -d '' workbook; do
