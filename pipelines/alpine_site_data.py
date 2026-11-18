@@ -18,6 +18,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
+from pipelines.site_athletes import build_athlete_index, build_skier_info
+
 
 CURRENT_RATINGS = {
     "Pelo": "Elo",
@@ -321,6 +323,22 @@ def write_site_data(*, men_history: Path, ladies_history: Path, season: int, out
             output_root / f"{sex}_athlete_history_updates.json",
             json.dumps(
                 build_athlete_history_updates(rows, season),
+                ensure_ascii=True,
+                separators=(",", ":"),
+            ),
+        )
+        _atomic_text(
+            output_root / f"{sex}_all_ids.json",
+            json.dumps(
+                build_athlete_index(rows),
+                ensure_ascii=True,
+                separators=(",", ":"),
+            ),
+        )
+        _atomic_text(
+            output_root / sex / "skier_info.json",
+            json.dumps(
+                build_skier_info(rows, sex),
                 ensure_ascii=True,
                 separators=(",", ":"),
             ),

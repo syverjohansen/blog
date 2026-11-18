@@ -260,6 +260,8 @@ class CrossCountrySiteDataTests(unittest.TestCase):
             rollover = json.loads((output / "L/2027/race_0.json").read_text())
             results = json.loads((output / "L/2027/race_1.json").read_text())
             seasons = json.loads((output / "L/seasons.json").read_text())
+            athlete_ids = json.loads((output / "L_all_ids.json").read_text())
+            skier_info = json.loads((output / "L/skier_info.json").read_text())
             self.assertEqual(summary[0]["race_number"], 0)
             self.assertEqual(summary[0]["technique"], "C")
             self.assertEqual(rollover[0]["previous_elo"], 1420.0)
@@ -270,6 +272,19 @@ class CrossCountrySiteDataTests(unittest.TestCase):
             self.assertEqual(results[0]["change"], 10.0)
             self.assertEqual(
                 seasons[-1], {"season": 2027, "race_count": 1, "winner": None}
+            )
+            self.assertEqual(athlete_ids, {"2": "L Winner"})
+            self.assertEqual(
+                skier_info,
+                [
+                    {
+                        "id": 2,
+                        "skier": "L Winner",
+                        "sex": "L",
+                        "nation": "nor",
+                        "image": "/img/flags/nor.svg",
+                    }
+                ],
             )
 
 
