@@ -11,14 +11,14 @@
       "workflow": ".github/workflows/alpine-site-data-update.yml",
       "generator": "pipelines/alpine_site_data.py",
       "cadence": "daily after accepted Alpine data changes",
-      "source": "validated men_chrono.csv and ladies_chrono.csv from the pinned ski revision"
+      "source": "validated Alpine histories, completed-season standings, and accepted team/event inputs from the pinned ski revision"
     },
     "cross_country_site_data": {
       "state": "modernized",
       "workflow": ".github/workflows/cross-country-site-data-update.yml",
       "generator": "pipelines/cross_country_site_data.py",
       "cadence": "daily after accepted cross-country data changes",
-      "source": "validated men_chrono.csv and ladies_chrono.csv from the pinned ski revision"
+      "source": "validated cross-country histories, completed-season standings, and accepted relay/team-sprint inputs from the pinned ski revision"
     },
     "retired_master_automation": {
       "state": "legacy_gap",
@@ -112,7 +112,7 @@
         "skier_lookup": {"owner": "alpine_site_data"},
         "skier_groups": {"owner": "alpine_site_data"},
         "skier_info": {"owner": "alpine_site_data"},
-        "rankings": {"owner": "retired_master_automation", "target_phase": 2},
+        "rankings": {"owner": "alpine_site_data"},
         "season_index": {"owner": "alpine_site_data"},
         "race_summary": {"owner": "alpine_site_data"},
         "race_results": {"owner": "alpine_site_data"},
@@ -129,7 +129,7 @@
         "skier_lookup": {"owner": "cross_country_site_data"},
         "skier_groups": {"owner": "cross_country_site_data"},
         "skier_info": {"owner": "cross_country_site_data"},
-        "rankings": {"owner": "retired_master_automation", "target_phase": 2},
+        "rankings": {"owner": "cross_country_site_data"},
         "season_index": {"owner": "cross_country_site_data"},
         "race_summary": {"owner": "cross_country_site_data"},
         "race_results": {"owner": "cross_country_site_data"},

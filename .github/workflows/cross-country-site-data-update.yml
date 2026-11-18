@@ -67,7 +67,10 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /elo/python/pipeline_config.py
+            /elo/python/standings_contract.py
             /elo/python/ski/polars/
+            /ranks/ski/excel365/men_scrape_update.csv
+            /ranks/ski/excel365/ladies_scrape_update.csv
 
       - name: Set up Python runtime
         uses: astral-sh/setup-uv@v6
@@ -234,6 +237,7 @@ jobs:
           fi
           if [[ "$close_as_of" < "$close_date" && "$FORCE_CLOSE" != "true" ]]; then
             echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "finalized=false" >> "$GITHUB_OUTPUT"
             echo "Season $SEASON does not close before $close_date." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
@@ -255,7 +259,28 @@ jobs:
             exit 1
           fi
           echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "finalized=true" >> "$GITHUB_OUTPUT"
           cat "$report" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Snapshot finalized official cross-country standings
+        id: standings
+        if: steps.season_close.outputs.finalized == 'true'
+        env:
+          SEASON: ${{ steps.schedule_season.outputs.season }}
+        run: |
+          root="external/ski/elo/python/ski/polars"
+          destination="$root/excel365/ranking_standings/$SEASON"
+          uv run --isolated --python 3.12 \
+            --with requests --with beautifulsoup4 \
+            python3 "$root/standings_scrape.py" \
+            --season "$SEASON" \
+            --output-dir "$destination"
+          if git -C external/ski status --short -- \
+            "elo/python/ski/polars/excel365/ranking_standings/$SEASON" | grep -q .; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Validate and publish accepted ski data
         id: publish_ski
@@ -265,9 +290,10 @@ jobs:
           RUN_DATE: ${{ steps.parameters.outputs.run_date }}
           SCHEDULE_CHANGED: ${{ steps.schedule_candidate.outputs.changed }}
           SEASON_CLOSE_STATUS: ${{ steps.season_close.outputs.status }}
+          STANDINGS_CHANGED: ${{ steps.standings.outputs.changed || 'false' }}
         run: |
           root="external/ski/elo/python/ski/polars"
-          if [[ "$SCHEDULE_CHANGED" == "true" || "$RESULTS_STATUS" == "candidate" || "$SEASON_CLOSE_STATUS" == "candidate" ]]; then
+          if [[ "$SCHEDULE_CHANGED" == "true" || "$RESULTS_STATUS" == "candidate" || "$SEASON_CLOSE_STATUS" == "candidate" || "$STANDINGS_CHANGED" == "true" ]]; then
             python3 -m unittest discover -s "$root" -p 'test_cross_country_results_*.py'
             python3 -m unittest discover -s "$root" -p 'test_*schedule*.py'
             python3 -m unittest discover -s "$root" -p 'test_cross_country_season_close.py'
@@ -278,6 +304,9 @@ jobs:
               elo/python/ski/polars/excel365/weekends.csv \
               elo/python/ski/polars/excel365/men_chrono.csv \
               elo/python/ski/polars/excel365/ladies_chrono.csv
+            if [[ -d "$root/excel365/ranking_standings" ]]; then
+              git -C external/ski add elo/python/ski/polars/excel365/ranking_standings
+            fi
             if ! git -C external/ski diff --cached --quiet; then
               through="$AS_OF"
               if [[ "$SEASON_CLOSE_STATUS" == "candidate" ]]; then
@@ -293,7 +322,8 @@ jobs:
       - name: Check out blog for site publication
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
-          steps.season_close.outputs.status == 'candidate'
+          steps.season_close.outputs.status == 'candidate' ||
+          steps.standings.outputs.changed == 'true'
         uses: actions/checkout@v4
         with:
           ref: ${{ steps.source.outputs.blog_sha }}
@@ -303,7 +333,8 @@ jobs:
       - name: Generate cross-country site artifacts
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
-          steps.season_close.outputs.status == 'candidate'
+          steps.season_close.outputs.status == 'candidate' ||
+          steps.standings.outputs.changed == 'true'
         working-directory: blog
         env:
           SEASON: ${{ steps.schedule_season.outputs.season }}
@@ -311,20 +342,29 @@ jobs:
           python3 -m pipelines.cross_country_site_data \
             --men-history ../external/ski/elo/python/ski/polars/excel365/men_chrono.csv \
             --ladies-history ../external/ski/elo/python/ski/polars/excel365/ladies_chrono.csv \
+            --men-ranking-history ../external/ski/ranks/ski/excel365/men_scrape_update.csv \
+            --ladies-ranking-history ../external/ski/ranks/ski/excel365/ladies_scrape_update.csv \
+            --men-relay-history ../external/ski/elo/python/ski/polars/relay/excel365/men_relay_chrono.csv \
+            --ladies-relay-history ../external/ski/elo/python/ski/polars/relay/excel365/ladies_relay_chrono.csv \
+            --team-sprint-history ../external/ski/elo/python/ski/polars/relay/excel365/team_sprint_chrono.csv \
+            --finalized-standings-root ../external/ski/elo/python/ski/polars/excel365/ranking_standings \
             --season "$SEASON" \
+            --as-of "${{ steps.parameters.outputs.run_date }}" \
             --output-root static/python/cross-country/excel365
 
       - name: Run complete blog test suite
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
-          steps.season_close.outputs.status == 'candidate'
+          steps.season_close.outputs.status == 'candidate' ||
+          steps.standings.outputs.changed == 'true'
         working-directory: blog
         run: uv run --with polars python -m unittest discover -s tests -p 'test_*.py'
 
       - name: Set up Hugo
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
-          steps.season_close.outputs.status == 'candidate'
+          steps.season_close.outputs.status == 'candidate' ||
+          steps.standings.outputs.changed == 'true'
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: "0.134.1"
@@ -333,14 +373,16 @@ jobs:
       - name: Render site candidate
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
-          steps.season_close.outputs.status == 'candidate'
+          steps.season_close.outputs.status == 'candidate' ||
+          steps.standings.outputs.changed == 'true'
         working-directory: blog
         run: hugo --minify --destination "$RUNNER_TEMP/cross-country-site"
 
       - name: Publish validated site artifacts
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
-          steps.season_close.outputs.status == 'candidate'
+          steps.season_close.outputs.status == 'candidate' ||
+          steps.standings.outputs.changed == 'true'
         working-directory: blog
         env:
           AS_OF: ${{ steps.parameters.outputs.as_of }}

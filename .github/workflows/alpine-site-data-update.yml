@@ -78,7 +78,10 @@ jobs:
           sparse-checkout: |
             /.github/workflows/alpine-results-update.yml
             /elo/python/pipeline_config.py
+            /elo/python/standings_contract.py
             /elo/python/alpine/polars/
+            /ranks/alpine/excel365/men_scrape_update.csv
+            /ranks/alpine/excel365/ladies_scrape_update.csv
 
       - name: Isolate source and resolve run parameters
         id: parameters
@@ -247,6 +250,7 @@ jobs:
           close_date="$SEASON-05-01"
           if [[ "$AS_OF" < "$close_date" && "$FORCE_CLOSE" != "true" ]]; then
             echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "finalized=false" >> "$GITHUB_OUTPUT"
             echo "Season $SEASON does not close before $close_date." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
@@ -270,7 +274,28 @@ jobs:
             exit 1
           fi
           echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "finalized=true" >> "$GITHUB_OUTPUT"
           cat "$report" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Snapshot finalized official Alpine standings
+        id: standings
+        if: steps.season_close.outputs.finalized == 'true'
+        env:
+          SEASON: ${{ steps.schedule_candidate.outputs.season }}
+        run: |
+          root="external/ski/elo/python/alpine/polars"
+          destination="$root/excel365/ranking_standings/$SEASON"
+          uv run --isolated --python 3.12 \
+            --with requests --with beautifulsoup4 \
+            python3 "$root/standings_scrape.py" \
+            --season "$SEASON" \
+            --output-dir "$destination"
+          if git -C external/ski status --short -- \
+            "elo/python/alpine/polars/excel365/ranking_standings/$SEASON" | grep -q .; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Validate and publish accepted ski data
         id: publish_ski
@@ -279,9 +304,10 @@ jobs:
           RESULTS_STATUS: ${{ steps.candidate.outputs.status }}
           SCHEDULE_CHANGED: ${{ steps.schedule_candidate.outputs.changed }}
           SEASON_CLOSE_STATUS: ${{ steps.season_close.outputs.status }}
+          STANDINGS_CHANGED: ${{ steps.standings.outputs.changed || 'false' }}
         run: |
           root="external/ski/elo/python/alpine/polars"
-          if [[ "$SCHEDULE_CHANGED" == "true" || "$RESULTS_STATUS" == "candidate" || "$SEASON_CLOSE_STATUS" == "candidate" ]]; then
+          if [[ "$SCHEDULE_CHANGED" == "true" || "$RESULTS_STATUS" == "candidate" || "$SEASON_CLOSE_STATUS" == "candidate" || "$STANDINGS_CHANGED" == "true" ]]; then
             uv run --isolated --python 3.12 \
               --with-requirements "$root/requirements-startlist-replay.txt" \
               python3 -m unittest discover -s "$root" -p 'test_*.py'
@@ -292,6 +318,9 @@ jobs:
               elo/python/alpine/polars/excel365/weekends.csv \
               elo/python/alpine/polars/excel365/men_chrono.csv \
               elo/python/alpine/polars/excel365/ladies_chrono.csv
+            if [[ -d "$root/excel365/ranking_standings" ]]; then
+              git -C external/ski add elo/python/alpine/polars/excel365/ranking_standings
+            fi
             git -C external/ski commit -m "Update Alpine data through $AS_OF"
             git -C external/ski push origin HEAD:main
           fi
@@ -326,7 +355,11 @@ jobs:
             python3 -m pipelines.alpine_site_data \
             --men-history external/ski/elo/python/alpine/polars/excel365/men_chrono.csv \
             --ladies-history external/ski/elo/python/alpine/polars/excel365/ladies_chrono.csv \
+            --men-ranking-history external/ski/ranks/alpine/excel365/men_scrape_update.csv \
+            --ladies-ranking-history external/ski/ranks/alpine/excel365/ladies_scrape_update.csv \
+            --finalized-standings-root external/ski/elo/python/alpine/polars/excel365/ranking_standings \
             --season "${{ steps.season.outputs.season }}" \
+            --as-of "${{ steps.parameters.outputs.run_date }}" \
             --output-root static/python/alpine/excel365
 
       - name: Run complete blog test suite
