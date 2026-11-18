@@ -24,3 +24,17 @@ but automation must not rely on those defaults.
 The output contract requires non-empty, matching points and probability tables,
 unique team names, finite expected points, probabilities in `[0, 1]`, and the
 row-wise relationship `Win <= Podium <= Top 5 <= Top 10`.
+
+## Automatic publication
+
+`.github/workflows/cross-country-team-predictions.yml` is chained after the
+daily `Alpine Production Shadow` workflow instead of using an independent
+clock. It checks the accepted cross-country schedule before installing R. A
+day without a supported relay or team sprint exits successfully without doing
+expensive work.
+
+On a team-event day the workflow pins the ski repository to an exact commit,
+materializes one complete men-and-women input per event type, runs the packaged
+startlist builder and R model, validates the converted JSON, renders Hugo, and
+pushes only that day's cross-country data directory and team-picks post. Logs,
+event inputs, and workbooks are retained as workflow artifacts for 14 days.
