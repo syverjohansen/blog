@@ -143,6 +143,12 @@ class AlpineSiteDataTest(unittest.TestCase):
             skier_group = json.loads(
                 (output / "L/skiers_0_to_499_0.json").read_text()
             )
+            head_to_head = json.loads(
+                (output / "head2head/L_head2head_data.json").read_text()
+            )
+            race_lookup = json.loads(
+                (output / "head2head/L_race_lookup.json").read_text()
+            )
             self.assertEqual(summary[0]["podium"][0]["name"], "L Winner")
             self.assertEqual(summary[0]["race_number"], 0)
             self.assertEqual(summary[0]["event"], "Offseason")
@@ -176,6 +182,12 @@ class AlpineSiteDataTest(unittest.TestCase):
                 skier_group["2"]["Elo_Pct"][0], 1385 / 1470 * 100
             )
             self.assertEqual(skier_group["2"]["Elo_Pct"][1], 100.0)
+            self.assertEqual(head_to_head["2"][0]["season"], "2027")
+            self.assertEqual(head_to_head["2"][0]["race"], "1")
+            self.assertEqual(head_to_head["2"][0]["event"], "Slalom")
+            self.assertNotIn("99", head_to_head)
+            self.assertEqual(race_lookup["2027_1"]["season"], 2027)
+            self.assertEqual(race_lookup["2027_1"]["event"], "Slalom")
 
 
 if __name__ == "__main__":

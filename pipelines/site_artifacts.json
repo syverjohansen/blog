@@ -90,9 +90,9 @@
       "legacy_generator": "static/python/{sport}/races.py"
     },
     "head_to_head": {
-      "reference_glob": "head2head/*_head2head_data.json",
+      "reference_glob": "head2head/*_*.json",
       "format": "json",
-      "shape": "object<athlete_id,matchups>",
+      "shape": "object keyed by athlete_id or season_race",
       "legacy_generator": "static/python/{sport}/head2head.py"
     },
     "athlete_history_updates": {
@@ -116,7 +116,7 @@
         "season_index": {"owner": "alpine_site_data"},
         "race_summary": {"owner": "alpine_site_data"},
         "race_results": {"owner": "alpine_site_data"},
-        "head_to_head": {"owner": "retired_master_automation", "target_phase": 2},
+        "head_to_head": {"owner": "alpine_site_data"},
         "athlete_history_updates": {"owner": "alpine_site_data"}
       }
     },
@@ -133,7 +133,7 @@
         "season_index": {"owner": "cross_country_site_data"},
         "race_summary": {"owner": "cross_country_site_data"},
         "race_results": {"owner": "cross_country_site_data"},
-        "head_to_head": {"owner": "retired_master_automation", "target_phase": 2},
+        "head_to_head": {"owner": "cross_country_site_data"},
         "athlete_history_updates": {
           "owner": "cross_country_site_data",
           "repository_materialization": "pending_first_accepted_change"
