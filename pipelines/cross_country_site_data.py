@@ -12,7 +12,12 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
-from pipelines.site_athletes import build_athlete_index, build_skier_info
+from pipelines.site_athletes import (
+    build_athlete_index,
+    build_grouped_athlete_histories,
+    build_skier_info,
+    build_skier_lookup,
+)
 
 CURRENT_RATINGS = {
     "Pelo": "Elo",
@@ -350,6 +355,12 @@ def write_site_data(
     for sex, rows in histories.items():
         current = build_current_table(rows, season)
         summaries, races = build_season_archive(rows, season)
+        history_groups = build_grouped_athlete_histories(
+            rows,
+            elo_columns=ELO_COLUMNS,
+            integer_columns=INTEGER_COLUMNS,
+            float_columns=FLOAT_COLUMNS,
+        )
         _atomic_text(
             output_root / f"{sex}_chrono_current.json",
             json.dumps(current, ensure_ascii=True, separators=(",", ":")),
@@ -384,6 +395,25 @@ def write_site_data(
                 separators=(",", ":"),
             ),
         )
+        _atomic_text(
+            output_root / f"{sex}_skiers_lookup.json",
+            json.dumps(
+                build_skier_lookup(rows),
+                ensure_ascii=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ),
+        )
+        for group, histories_by_id in history_groups.items():
+            _atomic_text(
+                output_root / sex / f"skiers_{group}.json",
+                json.dumps(
+                    histories_by_id,
+                    ensure_ascii=True,
+                    separators=(",", ":"),
+                    allow_nan=False,
+                ),
+            )
         _atomic_text(
             output_root / sex / "skier_info.json",
             json.dumps(
