@@ -64,6 +64,9 @@ jobs:
             /elo/python/pipeline_config.py
             /elo/python/ski/polars/
 
+      - name: Set up Python runtime
+        uses: astral-sh/setup-uv@v6
+
       - name: Resolve run parameters
         id: parameters
         env:
@@ -126,7 +129,8 @@ jobs:
       - name: Build isolated schedule candidate
         working-directory: external/ski/elo/python/ski/polars
         run: >-
-          python3 scrape_schedule_shadow.py
+          uv run --with requests --with beautifulsoup4
+          python scrape_schedule_shadow.py
           --season "${{ steps.schedule_season.outputs.season }}"
           --accepted-races excel365/races.csv
           --elevation-file excel365/elevation.csv
@@ -242,9 +246,6 @@ jobs:
           ref: ${{ steps.source.outputs.blog_sha }}
           path: blog
           fetch-depth: 1
-
-      - uses: astral-sh/setup-uv@v6
-        if: steps.results_candidate.outputs.status == 'candidate'
 
       - name: Generate cross-country site artifacts
         if: steps.results_candidate.outputs.status == 'candidate'
