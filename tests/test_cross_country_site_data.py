@@ -207,10 +207,18 @@ class CrossCountrySiteDataTests(unittest.TestCase):
             )
 
             current = json.loads((output / "M_chrono_current.json").read_text())
+            all_time = json.loads((output / "M_chrono_all_time.json").read_text())
             self.assertEqual([record["ID"] for record in current], [1])
             self.assertEqual(current[0]["Pelo"], 1412.0)
             self.assertEqual(current[0]["Distance_Pelo"], 1412.0)
             self.assertEqual(current[0]["Birthday"], "2000-01-02")
+            self.assertEqual([record["ID"] for record in all_time], [2, 1])
+            self.assertEqual(all_time[0]["Overall"], 1500.0)
+            self.assertEqual(all_time[0]["Overall_Date"], "2026-05-01 00:00:00")
+            self.assertEqual(all_time[1]["Distance"], 1420.0)
+            self.assertEqual(
+                all_time[1]["Distance_Date"], "2026-05-01 00:00:00"
+            )
 
     def test_writes_undiscounted_race_zero_and_race_archive(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

@@ -93,10 +93,16 @@ class AlpineSiteDataTest(unittest.TestCase):
             )
 
             current = json.loads((output / "M_chrono_current.json").read_text())
+            all_time = json.loads((output / "M_chrono_all_time.json").read_text())
             self.assertEqual([record["ID"] for record in current], [1, 3])
             self.assertEqual(current[0]["Pelo"], 1400.0)
             self.assertEqual(current[1]["Pelo"], 1310.0)
             self.assertEqual(current[0]["Birthday"], "2000-01-02")
+            self.assertEqual([record["ID"] for record in all_time], [1, 2, 3])
+            self.assertEqual(all_time[0]["Overall"], 1400.0)
+            self.assertEqual(all_time[0]["Overall_Date"], "2026-10-25")
+            self.assertEqual(all_time[0]["Slalom"], 1400.0)
+            self.assertEqual(all_time[0]["Slalom_Date"], "2026-10-25")
 
     def test_writes_target_season_archive_and_index(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
