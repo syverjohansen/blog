@@ -24,9 +24,13 @@ class CrossCountryTeamWorkflowTests(unittest.TestCase):
     def test_quiet_days_skip_expensive_runtime(self) -> None:
         condition = "if: steps.detect.outputs.has_team_event == 'true'"
         self.assertGreaterEqual(self.source.count(condition), 10)
-        detection = self.source.index("cross_country_team_publication detect")
+        detection = self.source.index("name: Detect today's team events")
+        blog_checkout = self.source.index("name: Check out blog main")
         setup_r = self.source.index("r-lib/actions/setup-r@v2")
+        self.assertLess(detection, blog_checkout)
         self.assertLess(detection, setup_r)
+        checkout_block = self.source[blog_checkout:setup_r]
+        self.assertIn(condition, checkout_block)
 
     def test_complete_gender_inputs_precede_prediction(self) -> None:
         prepare = self.source.index("cross_country_team_publication prepare")
@@ -56,6 +60,10 @@ class CrossCountryTeamWorkflowTests(unittest.TestCase):
         self.assertIn("Ski source: $SKI_SHA", self.source)
         self.assertIn("actions/upload-artifact@v4", self.source)
         self.assertIn("retention-days: 14", self.source)
+
+    def test_checkouts_are_shallow_and_bounded(self) -> None:
+        self.assertEqual(self.source.count("fetch-depth: 1"), 2)
+        self.assertNotIn("fetch-depth: 0", self.source)
 
 
 if __name__ == "__main__":
