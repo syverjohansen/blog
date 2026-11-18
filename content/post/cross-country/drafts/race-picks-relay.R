@@ -10,20 +10,9 @@ library(ompr)
 library(ompr.roi)
 library(caret)
 
-# Set up logging
-log_dir <- "~/ski/elo/python/ski/polars/excel365/race-predictions"
-if (!dir.exists(log_dir)) {
-  dir.create(log_dir, recursive = TRUE)
-}
-
-log_file <- file.path(log_dir, paste0("relay_predictions_", format(Sys.Date(), "%Y%m%d"), ".log"))
-log_appender(appender_file(log_file))
-log_threshold(INFO)
-log_info("Starting relay race day predictions process")
-
 # ===== TEST MODE (loaded from .env) =====
-# Reads TEST_MODE from ~/ski/elo/.env for centralized pipeline configuration
-load_env <- function(env_path = "~/ski/elo/.env") {
+# NORDIC_ENV_FILE can override the legacy local .env location.
+load_env <- function(env_path = Sys.getenv("NORDIC_ENV_FILE", "~/ski/elo/.env")) {
   env_file <- path.expand(env_path)
   if (file.exists(env_file)) {
     lines <- readLines(env_file, warn = FALSE)
@@ -41,6 +30,44 @@ load_env <- function(env_path = "~/ski/elo/.env") {
 }
 load_env()
 TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
+
+configured_path <- function(name, default) {
+  value <- Sys.getenv(name, "")
+  path.expand(if (nzchar(value)) value else default)
+}
+
+ski_data_root <- configured_path(
+  "NORDIC_SKI_DATA_ROOT",
+  "~/ski/elo/python/ski/polars/excel365"
+)
+team_data_root <- configured_path(
+  "NORDIC_TEAM_DATA_ROOT",
+  "~/ski/elo/python/ski/polars/relay/excel365"
+)
+blog_root <- configured_path("NORDIC_BLOG_ROOT", "~/blog/daehl-e")
+prediction_output_root <- configured_path(
+  "NORDIC_PREDICTION_OUTPUT_ROOT",
+  file.path(blog_root, "content", "post", "cross-country", "drafts", "race-picks")
+)
+contract_path <- file.path(blog_root, "pipelines", "cross_country_team_prediction_contract.R")
+if (!file.exists(contract_path)) {
+  stop(paste("Team prediction contract is missing:", contract_path))
+}
+source(contract_path)
+
+# Set up logging after loading the environment contract.
+log_dir <- configured_path(
+  "NORDIC_LOG_ROOT",
+  file.path(ski_data_root, "race-predictions")
+)
+if (!dir.exists(log_dir)) {
+  dir.create(log_dir, recursive = TRUE)
+}
+
+log_file <- file.path(log_dir, paste0("relay_predictions_", format(Sys.Date(), "%Y%m%d"), ".log"))
+log_appender(appender_file(log_file))
+log_threshold(INFO)
+log_info("Starting relay race day predictions process")
 
 # Define points system
 relay_points <- c(200, 160, 120, 100, 90, 80, 72, 64, 58, 52, 48, 44, 40, 36,
@@ -67,9 +94,9 @@ load_today_relay_races <- function() {
 
   # Read in the race schedule
   races_path <- if(TEST_MODE) {
-    "~/ski/elo/python/ski/polars/excel365/test_races.csv"
+    file.path(ski_data_root, "test_races.csv")
   } else {
-    "~/ski/elo/python/ski/polars/excel365/races.csv"
+    file.path(ski_data_root, "races.csv")
   }
   log_info(paste("Reading races from:", races_path))
   races <- read.csv(races_path, stringsAsFactors = FALSE) %>%
@@ -114,8 +141,8 @@ load_chrono_data <- function() {
   log_info("Loading chrono data")
   
   # Define file paths
-  men_chrono_path <- "~/ski/elo/python/ski/polars/relay/excel365/men_chrono.csv"
-  ladies_chrono_path <- "~/ski/elo/python/ski/polars/relay/excel365/ladies_chrono.csv"
+  men_chrono_path <- file.path(team_data_root, "men_chrono.csv")
+  ladies_chrono_path <- file.path(team_data_root, "ladies_chrono.csv")
   
   # Load data
   men_chrono <- read.csv(men_chrono_path, stringsAsFactors = FALSE) %>%
@@ -580,8 +607,8 @@ load_relay_startlists <- function(gender) {
   gender_prefix <- ifelse(gender == "men", "men", "ladies")
   
   # Define file paths
-  teams_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_relay_races_teams_%s.csv", gender_prefix)
-  individuals_path <- sprintf("~/ski/elo/python/ski/polars/relay/excel365/startlist_relay_races_individuals_%s.csv", gender_prefix)
+  teams_path <- file.path(team_data_root, sprintf("startlist_relay_races_teams_%s.csv", gender_prefix))
+  individuals_path <- file.path(team_data_root, sprintf("startlist_relay_races_individuals_%s.csv", gender_prefix))
 
   # Load data
   teams <- read.csv(teams_path, stringsAsFactors = FALSE)
@@ -1209,7 +1236,7 @@ save_prediction_results <- function(team_predictions, race_date, gender, output_
   
   # Set default output directory if not provided
   if(is.null(output_dir)) {
-    output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", date_str)
+    output_dir <- file.path(prediction_output_root, date_str)
   }
   
   # Create directory if it doesn't exist
@@ -1271,6 +1298,8 @@ save_prediction_results <- function(team_predictions, race_date, gender, output_
       prob_df <- prob_df %>% rename(!!new_name := !!old_name)
     }
   }
+
+  validate_team_prediction_tables(points_df, prob_df, member_count = 4)
   
   # Save points results
   points_file <- file.path(output_dir, paste0(ifelse(gender == "men", "men", "ladies"), "_relay.xlsx"))
