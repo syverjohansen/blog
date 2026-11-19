@@ -286,6 +286,9 @@ jobs:
             --schedule "$root/excel365/races.csv" \
             --men-chrono "$root/excel365/men_chrono.csv" \
             --ladies-chrono "$root/excel365/ladies_chrono.csv" \
+            --men-relay-chrono "$root/relay/excel365/men_relay_chrono.csv" \
+            --ladies-relay-chrono "$root/relay/excel365/ladies_relay_chrono.csv" \
+            --team-sprint-chrono "$root/relay/excel365/team_sprint_chrono.csv" \
             --season "$SEASON" \
             --as-of "$close_as_of" \
             --output-root "${{ steps.parameters.outputs.season_close_root }}"
