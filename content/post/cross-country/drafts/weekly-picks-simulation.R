@@ -1,7 +1,7 @@
-# Weekly Fantasy Predictions: Monte Carlo Simulation Approach
+# Weekly Cross-Country Predictions: Monte Carlo Simulation Approach
 #
-# This script predicts fantasy points for the upcoming weekend's races using
-# Monte Carlo simulation instead of GAM-based predictions.
+# This script predicts aggregate points for a logical weekend using an isolated
+# runtime produced by pipelines.cross_country_weekend_consumer.
 #
 # Key differences from weekly-picks2.R:
 # - Uses Monte Carlo simulation (N_SIMULATIONS iterations)
@@ -9,52 +9,45 @@
 # - No normalization needed - simulation gives correct probabilities
 # - Condition-specific adjustments (altitude/period/MS) integrated into distributions
 #
-# Output: Optimized fantasy team using knapsack/MIP optimization (budget + gender constraints)
+# Fantasy optimization is a separate product and is not executed here.
 
 library(dplyr)
 library(tidyr)
 library(openxlsx)
-library(arrow)
 library(mgcv)
 library(leaps)
 library(logger)
 library(purrr)
 library(lubridate)
-library(ompr)          # For optimization model
-library(ompr.roi)      # For optimization solver interface
-library(ROI.plugin.glpk) # For GLPK solver
+
+required_env <- function(name) {
+  value <- Sys.getenv(name, "")
+  if (!nzchar(value)) stop(paste(name, "is required"))
+  path.expand(value)
+}
+
+BLOG_ROOT <- required_env("NORDIC_BLOG_ROOT")
+WEEKEND_RUNTIME_ROOT <- required_env("NORDIC_WEEKEND_RUNTIME_ROOT")
+SKI_DATA_ROOT <- required_env("NORDIC_SKI_DATA_ROOT")
+PREDICTION_OUTPUT_ROOT <- required_env("NORDIC_PREDICTION_OUTPUT_ROOT")
+LOG_ROOT <- required_env("NORDIC_LOG_ROOT")
+LOGICAL_DATE_TEXT <- Sys.getenv("NORDIC_LOGICAL_DATE", "")
+if (!grepl("^\\d{4}-\\d{2}-\\d{2}$", LOGICAL_DATE_TEXT)) {
+  stop("NORDIC_LOGICAL_DATE must be an ISO date")
+}
+LOGICAL_DATE <- as.Date(LOGICAL_DATE_TEXT)
+
+runtime_path <- function(filename) file.path(WEEKEND_RUNTIME_ROOT, filename)
+ski_data_path <- function(filename) file.path(SKI_DATA_ROOT, filename)
 
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
 
-# ===== TEST MODE (loaded from .env) =====
-load_env <- function(env_path = "~/ski/elo/.env") {
-  env_file <- path.expand(env_path)
-  if (file.exists(env_file)) {
-    lines <- readLines(env_file, warn = FALSE)
-    for (line in lines) {
-      line <- trimws(line)
-      if (nchar(line) > 0 && !startsWith(line, "#") && grepl("=", line)) {
-        parts <- strsplit(line, "=", fixed = TRUE)[[1]]
-        key <- trimws(parts[1])
-        value <- trimws(paste(parts[-1], collapse = "="))
-        value <- gsub("^[\"']|[\"']$", "", value)
-        do.call(Sys.setenv, setNames(list(value), key))
-      }
-    }
-    return(TRUE)
-  }
-  return(FALSE)
-}
-
-load_env()
-TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
-
 # ===== LOAD SPORT-SPECIFIC PARAMETERS =====
 # Source optimized parameters from sport_params.R
 # These values are calibrated via param-optimizer.R using historical backtesting
-sport_params_path <- "~/blog/daehl-e/content/post/shared/sport_params.R"
+sport_params_path <- file.path(BLOG_ROOT, "content/post/shared/sport_params.R")
 if (file.exists(path.expand(sport_params_path))) {
   source(sport_params_path)
   DEFAULT_PARAMS <- get_sport_params("cross-country")
@@ -80,7 +73,15 @@ if (file.exists(path.expand(sport_params_path))) {
 N_HISTORY_REQUIRED <- DEFAULT_PARAMS$n_history_required
 N_GAM_SAMPLES <- 0            # Number of GAM samples (0 = history only)
 GAM_FILL_WEIGHT_FACTOR <- DEFAULT_PARAMS$gam_fill_weight_factor
-N_SIMULATIONS <- 10000        # Number of Monte Carlo simulations per race
+N_SIMULATIONS <- as.integer(Sys.getenv("NORDIC_N_SIMULATIONS", ""))
+RANDOM_SEED <- as.integer(Sys.getenv("NORDIC_RANDOM_SEED", ""))
+if (is.na(N_SIMULATIONS) || N_SIMULATIONS < 1) {
+  stop("NORDIC_N_SIMULATIONS must be a positive integer")
+}
+if (is.na(RANDOM_SEED)) {
+  stop("NORDIC_RANDOM_SEED must be an integer")
+}
+set.seed(RANDOM_SEED)
 DECAY_LAMBDA <- DEFAULT_PARAMS$decay_lambda
 
 # Variance control parameters (defaults, will be overridden per-race with optimized params)
@@ -102,17 +103,18 @@ stage_points <- c(50,47,44,41,38,35,32,30,28,26,24,22,20,18,16,15,14,13,12,11,
 # LOGGING SETUP
 # ============================================================================
 
-log_dir <- "~/ski/elo/python/ski/polars/excel365/weekly-picks-simulation"
+log_dir <- LOG_ROOT
 if (!dir.exists(log_dir)) {
   dir.create(log_dir, recursive = TRUE)
 }
 
 log_threshold(DEBUG)
 log_appender(appender_file(file.path(log_dir, "weekly_picks_simulation.log")))
-log_info("Starting Weekly Fantasy Predictions (SIMULATION approach)")
+log_info("Starting Weekly Cross-Country Predictions (shadow simulation)")
 log_info(paste("Config: N_HISTORY =", N_HISTORY_REQUIRED,
                ", N_SIMULATIONS =", N_SIMULATIONS,
-               ", TEST_MODE =", TEST_MODE))
+               ", RANDOM_SEED =", RANDOM_SEED,
+               ", LOGICAL_DATE =", LOGICAL_DATE))
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -348,10 +350,7 @@ process_gender_probabilities <- function(startlist, chronos, races) {
     startlist$Quota[startlist$Nation %in% c("Sweden", "Finland", "Germany", "Switzerland", "Italy", "France")] <- 6
   }
 
-  # Convert character columns to logical (handles "True"/"False" strings from Python)
-  if("In_FIS_List" %in% names(startlist) && is.character(startlist$In_FIS_List)) {
-    startlist$In_FIS_List <- tolower(startlist$In_FIS_List) == "true"
-  }
+  # Convert optional legacy configuration columns to logical.
   if("In_Config" %in% names(startlist) && is.character(startlist$In_Config)) {
     startlist$In_Config <- tolower(startlist$In_Config) == "true"
   }
@@ -359,33 +358,9 @@ process_gender_probabilities <- function(startlist, chronos, races) {
     startlist$Config_Nation <- tolower(startlist$Config_Nation) == "true"
   }
 
-  # Check if we have FIS startlist
-  has_fis_startlist <- FALSE
-  if("In_FIS_List" %in% names(startlist)) {
-    has_fis_startlist <- any(startlist$In_FIS_List, na.rm = TRUE)
-  }
-
-  # Handle Race1_Prob based on FIS startlist existence
-  if(has_fis_startlist) {
-    log_info("FIS startlist exists - using for Race1_Prob")
-    if(!"Race1_Prob" %in% names(startlist)) {
-      startlist$Race1_Prob <- NA_real_
-    }
-    startlist$Race1_Prob <- ifelse(startlist$In_FIS_List, 1, 0)
-  } else {
-    log_info("No FIS startlist - using In_Config for Race1_Prob")
-    if(!"Race1_Prob" %in% names(startlist)) {
-      startlist$Race1_Prob <- NA_real_
-    }
-    if("In_Config" %in% names(startlist)) {
-      startlist$Race1_Prob <- ifelse(startlist$In_Config, 1, startlist$Race1_Prob)
-    }
-  }
-
   # Handle Config_Nation athletes not in config
   if("Config_Nation" %in% names(startlist) && "In_Config" %in% names(startlist)) {
-    in_fis_list <- if("In_FIS_List" %in% names(startlist)) startlist$In_FIS_List else FALSE
-    config_non_included <- which(startlist$Config_Nation & !startlist$In_Config & !in_fis_list)
+    config_non_included <- which(startlist$Config_Nation & !startlist$In_Config)
 
     if(length(config_non_included) > 0) {
       for(i in 1:nrow(races)) {
@@ -405,10 +380,28 @@ process_gender_probabilities <- function(startlist, chronos, races) {
   # Process each race
   for(i in 1:nrow(races)) {
     race_prob_col <- paste0("Race", i, "_Prob")
+    race_official_col <- paste0("Race", i, "_Official")
 
-    # Skip Race1_Prob if we have a FIS startlist and it's already set
-    if(race_prob_col == "Race1_Prob" && has_fis_startlist && race_prob_col %in% names(startlist)) {
-      log_info("Using existing Race1_Prob from FIS startlist")
+    if(!(race_official_col %in% names(startlist))) {
+      stop(paste("Missing runtime provenance column", race_official_col))
+    }
+    official_values <- startlist[[race_official_col]]
+    if(is.character(official_values)) {
+      official_values <- tolower(official_values) == "true"
+    }
+    if(any(is.na(official_values)) || length(unique(official_values)) != 1) {
+      stop(paste("Inconsistent runtime provenance in", race_official_col))
+    }
+    race_is_official <- isTRUE(official_values[1])
+
+    # Official event participation is authoritative for this exact race.
+    if(race_is_official) {
+      if(!(race_prob_col %in% names(startlist)) ||
+         any(is.na(startlist[[race_prob_col]])) ||
+         any(!startlist[[race_prob_col]] %in% c(0, 1))) {
+        stop(paste("Invalid official participation values in", race_prob_col))
+      }
+      log_info(paste("Using official participation values from", race_prob_col))
       next
     }
 
@@ -417,8 +410,9 @@ process_gender_probabilities <- function(startlist, chronos, races) {
       startlist[[race_prob_col]] <- NA_real_
     }
 
-    # When no FIS startlist, set In_Config athletes to probability = 1
-    if(!has_fis_startlist && "In_Config" %in% names(startlist)) {
+    # A reviewed legacy configuration may still explicitly confirm athletes
+    # when the event uses the generated fallback candidate pool.
+    if("In_Config" %in% names(startlist)) {
       config_athletes <- which(startlist$In_Config == TRUE &
                                (is.na(startlist[[race_prob_col]]) | startlist[[race_prob_col]] != 1))
       if(length(config_athletes) > 0) {
@@ -985,7 +979,7 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
   chrono_data <- calculate_weighted_prev_points(chrono_data)
   chrono_data <- calculate_percentage_columns(chrono_data)
 
-  reference_date <- as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d")
+  reference_date <- LOGICAL_DATE
 
   race_results <- list()
 
@@ -1096,7 +1090,7 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
     # Add athlete info to results
     simulation_results <- simulation_results %>%
       left_join(
-        race_startlist %>% select(ID, Skier, Nation, Price),
+        race_startlist %>% select(ID, Skier, Nation),
         by = c("athlete_id" = "ID")
       ) %>%
       mutate(Race = i)
@@ -1133,7 +1127,7 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
 
   # Calculate total expected points per athlete
   athlete_totals <- all_results %>%
-    group_by(athlete_id, Skier, Nation, Price) %>%
+    group_by(athlete_id, Skier, Nation) %>%
     summarise(
       Total_Points = sum(Expected_Points, na.rm = TRUE),
       Races_Count = n(),
@@ -1153,136 +1147,25 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
 }
 
 # ============================================================================
-# FANTASY TEAM OPTIMIZATION (Knapsack/MIP)
-# ============================================================================
-
-optimize_weekly_team_simulation <- function(men_results, ladies_results) {
-  log_info("Running MIP optimization for fantasy team...")
-
-  # Prepare men's data
-  men_df <- if (!is.null(men_results) && nrow(men_results$athlete_totals) > 0) {
-    men_results$athlete_totals %>%
-      mutate(
-        Sex = "M",
-        Points = Total_Points,
-        Price = as.numeric(Price)
-      ) %>%
-      select(Skier, ID = athlete_id, Sex, Nation, Price, Points)
-  } else {
-    data.frame()
-  }
-
-  # Prepare ladies' data
-  ladies_df <- if (!is.null(ladies_results) && nrow(ladies_results$athlete_totals) > 0) {
-    ladies_results$athlete_totals %>%
-      mutate(
-        Sex = "L",
-        Points = Total_Points,
-        Price = as.numeric(Price)
-      ) %>%
-      select(Skier, ID = athlete_id, Sex, Nation, Price, Points)
-  } else {
-    data.frame()
-  }
-
-  # Combine datasets
-  fantasy_df <- bind_rows(men_df, ladies_df) %>%
-    mutate(row_id = row_number()) %>%
-    filter(!is.na(Points), !is.na(Price), Price > 0)
-
-  if (nrow(fantasy_df) < 16) {
-    log_warn(paste("Not enough athletes for optimization:", nrow(fantasy_df), "- returning top athletes"))
-    return(fantasy_df %>%
-             arrange(desc(Points)) %>%
-             head(16) %>%
-             select(Skier, ID, Sex, Nation, Price, Points))
-  }
-
-  # Get indices for men and women
-  n <- nrow(fantasy_df)
-  men_indices <- which(fantasy_df$Sex == "M")
-  women_indices <- which(fantasy_df$Sex == "L")
-
-  # Create optimization model
-  model <- MIPModel() %>%
-    # Binary decision variables for each skier
-    add_variable(x[i], i = 1:n, type = "binary") %>%
-
-    # Objective: maximize predicted points
-    set_objective(sum_expr(fantasy_df$Points[i] * x[i], i = 1:n), "max") %>%
-
-    # Budget constraint (100,000 budget)
-    add_constraint(sum_expr(fantasy_df$Price[i] * x[i], i = 1:n) <= 100000) %>%
-
-    # Team size constraint (16 skiers total)
-    add_constraint(sum_expr(x[i], i = 1:n) == 16) %>%
-
-    # Gender constraints (max 8 of each gender)
-    add_constraint(sum_expr(x[i], i = men_indices) <= 8) %>%
-    add_constraint(sum_expr(x[i], i = women_indices) <= 8)
-
-  # Solve the model
-  result <- tryCatch({
-    solve_model(model, with_ROI(solver = "glpk"))
-  }, error = function(e) {
-    log_error(paste("Optimization failed:", e$message))
-    return(NULL)
-  })
-
-  if (is.null(result)) {
-    log_warn("Optimization failed - returning top 16 athletes by points")
-    return(fantasy_df %>%
-             arrange(desc(Points)) %>%
-             head(16) %>%
-             select(Skier, ID, Sex, Nation, Price, Points))
-  }
-
-  # Extract results
-  selected <- get_solution(result, x[i]) %>%
-    filter(value > 0) %>%
-    pull(i)
-
-  # Create results dataframe
-  selected_team <- fantasy_df[selected, ] %>%
-    arrange(Sex, desc(Points))
-
-  # Print results summary
-  log_info(sprintf("Optimized Fantasy Team - Total Points: %.2f", sum(selected_team$Points)))
-  log_info(sprintf("Total Cost: $%d / $100,000", sum(selected_team$Price)))
-  log_info(paste("Men:", sum(selected_team$Sex == "M"), "| Ladies:", sum(selected_team$Sex == "L")))
-
-  return(selected_team %>%
-         select(Skier, ID, Sex, Nation, Price, Points) %>%
-         arrange(Sex, desc(Points)))
-}
-
-# ============================================================================
 # MAIN EXECUTION
 # ============================================================================
 
 log_info("Reading weekend schedule")
 
-weekends_file <- if(TEST_MODE) {
-  "~/ski/elo/python/ski/polars/excel365/test_weekends.csv"
-} else {
-  "~/ski/elo/python/ski/polars/excel365/weekends.csv"
-}
+weekends_file <- runtime_path("weekends.csv")
 
 weekends <- read.csv(weekends_file, stringsAsFactors = FALSE) %>%
   mutate(Date = mdy(Date))
 
-current_date <- as.Date(format(Sys.time(), tz = "UTC"), "%Y-%m-%d")
-log_info(paste("Current date:", current_date))
+next_weekend_date <- LOGICAL_DATE
+log_info(paste("Logical weekend date:", next_weekend_date))
 
-next_races <- weekends %>%
-  filter(Date >= current_date) %>%
-  arrange(Date)
-
-next_weekend_date <- min(next_races$Date, na.rm = TRUE)
-log_info(paste("Next weekend date:", next_weekend_date))
-
-next_weekend_races <- next_races %>%
+next_weekend_races <- weekends %>%
   filter(Date == next_weekend_date)
+
+if (nrow(next_weekend_races) == 0) {
+  stop(paste("Runtime has no races for logical date", next_weekend_date))
+}
 
 print(next_weekend_races)
 
@@ -1310,17 +1193,17 @@ if (nrow(men_races) == 0 && nrow(ladies_races) == 0) {
 
 # Read startlists
 log_info("Reading startlists")
-men_startlist <- read.csv("~/ski/elo/python/ski/polars/excel365/startlist_weekend_men.csv",
+men_startlist <- read.csv(runtime_path("startlist_weekend_men.csv"),
                           stringsAsFactors = FALSE)
-ladies_startlist <- read.csv("~/ski/elo/python/ski/polars/excel365/startlist_weekend_ladies.csv",
+ladies_startlist <- read.csv(runtime_path("startlist_weekend_ladies.csv"),
                              stringsAsFactors = FALSE)
 
 # Read chrono data
 log_info("Reading chronological data")
-men_chrono <- read.csv("~/ski/elo/python/ski/polars/excel365/men_chrono_elevation.csv",
+men_chrono <- read.csv(ski_data_path("men_chrono_elevation.csv"),
                        stringsAsFactors = FALSE) %>%
   mutate(Date = as.Date(Date))
-ladies_chrono <- read.csv("~/ski/elo/python/ski/polars/excel365/ladies_chrono_elevation.csv",
+ladies_chrono <- read.csv(ski_data_path("ladies_chrono_elevation.csv"),
                           stringsAsFactors = FALSE) %>%
   mutate(Date = as.Date(Date))
 
@@ -1351,59 +1234,17 @@ if (nrow(ladies_races) > 0) {
 }
 
 # ============================================================================
-# FANTASY OUTPUT
+# SHADOW WEEKEND OUTPUT
 # ============================================================================
 
-log_info("Generating fantasy team output")
-
-# Create output directory - fantasy picks go to race-picks directory
-utc_date <- format(Sys.time(), "%Y%m%d", tz = "UTC")
-output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/race-picks/", utc_date)
-if (!dir.exists(output_dir)) {
-  dir.create(output_dir, recursive = TRUE)
-}
-
-# Separate weekly-picks workbook output.
-# This stays in the weekly-picks folder as a data artifact only and is not part
-# of the published fantasy/race-picks post flow.
-weekly_output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/weekly-picks/", utc_date)
+date_key <- format(LOGICAL_DATE, "%Y%m%d")
+weekly_output_dir <- file.path(PREDICTION_OUTPUT_ROOT, date_key)
 if (!dir.exists(weekly_output_dir)) {
   dir.create(weekly_output_dir, recursive = TRUE)
 }
 
-# Run knapsack optimization for fantasy team
-fantasy_team <- optimize_weekly_team_simulation(men_results, ladies_results)
-
-# Rename for output
-fantasy_team_output <- fantasy_team %>%
-  rename(`Predicted Points` = Points)
-
-log_info(sprintf("Fantasy team: %d men, %d ladies",
-                 sum(fantasy_team$Sex == "M"),
-                 sum(fantasy_team$Sex == "L")))
-log_info(sprintf("Total predicted points: %.2f", sum(fantasy_team$Points)))
-log_info(sprintf("Total cost: $%d", sum(fantasy_team$Price)))
-
-# Save fantasy team - production naming convention
-fantasy_file <- file.path(output_dir, "fantasy_team.xlsx")
-write.xlsx(fantasy_team_output, fantasy_file)
-log_info(paste("Fantasy team saved to:", fantasy_file))
-
-# Save combined position probabilities for fantasy (men + ladies)
-combined_totals <- bind_rows(
-  if (!is.null(men_results)) men_results$athlete_totals %>% mutate(Sex = "M") else NULL,
-  if (!is.null(ladies_results)) ladies_results$athlete_totals %>% mutate(Sex = "L") else NULL
-) %>%
-  arrange(desc(Total_Points))
-
-if (nrow(combined_totals) > 0) {
-  # Disabled: do not write the intermediate fantasy position probabilities workbook.
-  # fantasy_probs_file <- file.path(output_dir, "fantasy_position_probabilities.xlsx")
-  # write.xlsx(combined_totals, fantasy_probs_file)
-  # log_info(paste("Fantasy position probabilities saved to:", fantasy_probs_file))
-}
-
-# Save top-30 predicted weekend points workbook in weekly-picks only.
+# Save only the normal-weekend product. Fantasy optimization is deliberately
+# excluded and will be modernized under its own contract.
 weekly_points_sheets <- list()
 
 if (!is.null(men_results) && nrow(men_results$athlete_totals) > 0) {
@@ -1415,7 +1256,6 @@ if (!is.null(men_results) && nrow(men_results$athlete_totals) > 0) {
       Skier,
       Nation,
       Sex,
-      Price,
       `Predicted Weekend Points` = round(Total_Points, 2),
       `Races Count` = Races_Count,
       `Avg Win Probability` = round(Avg_Win_Prob * 100, 1),
@@ -1432,7 +1272,6 @@ if (!is.null(ladies_results) && nrow(ladies_results$athlete_totals) > 0) {
       Skier,
       Nation,
       Sex,
-      Price,
       `Predicted Weekend Points` = round(Total_Points, 2),
       `Races Count` = Races_Count,
       `Avg Win Probability` = round(Avg_Win_Prob * 100, 1),
@@ -1440,24 +1279,36 @@ if (!is.null(ladies_results) && nrow(ladies_results$athlete_totals) > 0) {
     )
 }
 
-if (length(weekly_points_sheets) > 0) {
-  weekly_points_file <- file.path(weekly_output_dir, "weekend_top_30_predicted_points.xlsx")
-  write.xlsx(weekly_points_sheets, weekly_points_file)
-  log_info(paste("Weekly points workbook saved to:", weekly_points_file))
+if (length(weekly_points_sheets) == 0) {
+  stop("Simulation produced no weekly prediction sheets")
 }
+
+weekly_points_file <- file.path(weekly_output_dir, "weekend_top_30_predicted_points.xlsx")
+write.xlsx(weekly_points_sheets, weekly_points_file)
+log_info(paste("Weekly points workbook saved to:", weekly_points_file))
+
+manifest_file <- file.path(weekly_output_dir, "shadow_manifest.json")
+manifest <- c(
+  "{",
+  paste0('  "logical_date": "', LOGICAL_DATE, '",'),
+  paste0('  "n_simulations": ', N_SIMULATIONS, ','),
+  '  "publication": {"status": "disabled"},',
+  paste0('  "random_seed": ', RANDOM_SEED, ','),
+  '  "schema_version": "nordicnumbers.cross-country-weekend-shadow/v1",',
+  '  "status": "candidate"',
+  "}"
+)
+writeLines(manifest, manifest_file, useBytes = TRUE)
 
 # Print summary
 cat("\n========================================\n")
-cat("WEEKLY FANTASY PICKS (SIMULATION)\n")
+cat("WEEKLY CROSS-COUNTRY PICKS (SHADOW SIMULATION)\n")
 cat("========================================\n")
 cat(paste("Weekend:", next_weekend_date, "\n"))
 cat(paste("Races: Men -", nrow(men_races), ", Ladies -", nrow(ladies_races), "\n"))
 cat(paste("Simulations:", N_SIMULATIONS, "\n"))
-cat(sprintf("Budget: $%d / $100,000\n", sum(fantasy_team$Price)))
-cat(sprintf("Total Points: %.2f\n", sum(fantasy_team$Points)))
-cat("\n--- Optimized Team (16 athletes) ---\n")
-print(fantasy_team %>% select(Skier, Sex, Nation, Price, Points))
 cat("\n========================================\n")
-cat(paste("Weekly points workbook:", file.path(weekly_output_dir, "weekend_top_30_predicted_points.xlsx"), "\n"))
+cat(paste("Weekly points workbook:", weekly_points_file, "\n"))
+cat(paste("Publication: disabled\n"))
 
 log_info("Weekly picks simulation complete")

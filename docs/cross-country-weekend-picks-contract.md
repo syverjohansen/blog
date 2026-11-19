@@ -106,11 +106,17 @@ logical date, event identity, canonical athlete identity, and official versus
 fallback label. It then writes `weekends.csv` plus gender-specific startlist
 matrices to an isolated runtime directory. Confirmed official events contain
 deterministic `0`/`1` participation values; fallback events remain unset for
-the prediction model to estimate. The consumer neither runs R nor publishes.
+the prediction model to estimate.
+
+`weekly-picks-simulation.R` consumes only that runtime plus explicit accepted
+history, output, log, logical-date, seed, and simulation-count parameters. It
+uses event-specific official participation flags, writes only a shadow
+workbook and disabled-publication manifest, and does not execute the legacy
+fantasy optimizer.
 
 ## Next implementation slice
 
-Make `weekly-picks-simulation.R` consume this isolated runtime through explicit
-environment paths, disable its fantasy branch, and retain its candidate output
-for shadow validation. Fantasy, Tour overall, and Final Climb remain separate
-PRs.
+Add the manual GitHub-hosted shadow workflow that builds the `ski` bundle,
+materializes this runtime, executes the model, validates its workbook, and
+retains evidence without publishing. Fantasy, Tour overall, and Final Climb
+remain separate PRs.
