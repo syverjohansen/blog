@@ -1,6 +1,6 @@
 # Cross-country weekend-picks contract audit
 
-**Status:** Proposed contract only; no production workflow invokes it
+**Status:** Acquisition boundary implemented; publication remains disabled
 
 **Contract:** `nordicnumbers.cross-country-weekend-plan/v1`
 
@@ -49,8 +49,10 @@ workbook exists. Those behaviors are not part of the accepted contract.
 - exact FIS startlist responses when published; and
 - a validated generated fallback with explicit provenance when they are not.
 
-`ski` should eventually produce an isolated, checksummed weekend input bundle.
-No accepted history or schedule is mutated by candidate generation.
+`ski` produces an isolated, checksummed weekend input bundle. No accepted
+history or schedule is mutated by candidate generation. The blog consumer
+validates that bundle and materializes an isolated per-race participation
+matrix before the model is allowed to run.
 
 ### Outputs owned by `blog`
 
@@ -97,9 +99,18 @@ silently redefining those products.
 only to make these decisions executable and reviewable. It performs no network
 requests, simulation, repository writes, or publication.
 
+## Consumer boundary
+
+`pipelines.cross_country_weekend_consumer` verifies every bundle checksum,
+logical date, event identity, canonical athlete identity, and official versus
+fallback label. It then writes `weekends.csv` plus gender-specific startlist
+matrices to an isolated runtime directory. Confirmed official events contain
+deterministic `0`/`1` participation values; fallback events remain unset for
+the prediction model to estimate. The consumer neither runs R nor publishes.
+
 ## Next implementation slice
 
-Build the `ski` acquisition bundle for normal individual weekends using these
-fixtures and the current accepted schedule/identity contracts. The matching
-`blog` consumer should be added only after the bundle is validated. Fantasy,
-Tour overall, and Final Climb remain separate PRs.
+Make `weekly-picks-simulation.R` consume this isolated runtime through explicit
+environment paths, disable its fantasy branch, and retain its candidate output
+for shadow validation. Fantasy, Tour overall, and Final Climb remain separate
+PRs.
