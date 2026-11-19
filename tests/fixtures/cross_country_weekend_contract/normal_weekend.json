@@ -1,0 +1,11 @@
+{
+  "logical_date": "2026-11-27",
+  "available_startlist_race_ids": ["52084", "52085", "52086", "52087"],
+  "schedule": [
+    {"Date": "11/27/2026", "Race_Date": "11/27/2026", "Startlist": "https://www.fis-ski.com/DB/general/results.html?sectorcode=CC&raceid=52085", "Sex": "M", "City": "Ruka", "Country": "Finland", "Distance": "10", "Technique": "C", "Period": "1"},
+    {"Date": "11/27/2026", "Race_Date": "11/27/2026", "Startlist": "https://www.fis-ski.com/DB/general/results.html?sectorcode=CC&raceid=52084", "Sex": "L", "City": "Ruka", "Country": "Finland", "Distance": "10", "Technique": "C", "Period": "1"},
+    {"Date": "11/27/2026", "Race_Date": "11/28/2026", "Startlist": "https://www.fis-ski.com/DB/general/results.html?sectorcode=CC&raceid=52087", "Sex": "M", "City": "Ruka", "Country": "Finland", "Distance": "Sprint", "Technique": "C", "Period": "1"},
+    {"Date": "11/27/2026", "Race_Date": "11/28/2026", "Startlist": "https://www.fis-ski.com/DB/general/results.html?sectorcode=CC&raceid=52086", "Sex": "L", "City": "Ruka", "Country": "Finland", "Distance": "Sprint", "Technique": "C", "Period": "1"}
+  ],
+  "expected": {"status": "candidate", "product": "weekly_picks", "event_count": 4, "individual_event_count": 4, "team_event_count": 0, "startlist_mode": "official", "missing_startlist_race_ids": [], "candidate_data_root": "data/cross-country/weekly-picks/20261127", "candidate_post_path": "content/post/weekly-picks/20261127.md"}
+}

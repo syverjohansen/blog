@@ -1,0 +1,9 @@
+{
+  "logical_date": "2026-12-04",
+  "available_startlist_race_ids": [],
+  "schedule": [
+    {"Date": "12/04/2026", "Race_Date": "12/04/2026", "Startlist": "https://www.fis-ski.com/DB/general/results.html?sectorcode=CC&raceid=52093", "Sex": "M", "City": "Trondheim", "Country": "Norway", "Distance": "10", "Technique": "C", "Period": "1"},
+    {"Date": "12/04/2026", "Race_Date": "12/04/2026", "Startlist": "https://www.fis-ski.com/DB/general/results.html?sectorcode=CC&raceid=52092", "Sex": "L", "City": "Trondheim", "Country": "Norway", "Distance": "10", "Technique": "C", "Period": "1"}
+  ],
+  "expected": {"status": "candidate", "product": "weekly_picks", "event_count": 2, "individual_event_count": 2, "team_event_count": 0, "startlist_mode": "generated_fallback", "missing_startlist_race_ids": ["52092", "52093"], "candidate_data_root": "data/cross-country/weekly-picks/20261204", "candidate_post_path": "content/post/weekly-picks/20261204.md"}
+}
