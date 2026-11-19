@@ -1,6 +1,6 @@
 # Cross-country weekend-picks contract audit
 
-**Status:** Acquisition boundary implemented; publication remains disabled
+**Status:** Hosted shadow implemented; publication remains disabled
 
 **Contract:** `nordicnumbers.cross-country-weekend-plan/v1`
 
@@ -114,9 +114,18 @@ uses event-specific official participation flags, writes only a shadow
 workbook and disabled-publication manifest, and does not execute the legacy
 fantasy optimizer.
 
+## Hosted shadow
+
+The manual `Cross-country weekend shadow` workflow resolves the `ski` source
+to an exact commit, builds the checksummed input bundle, materializes the blog
+runtime, executes the deterministic model, validates the workbook and shadow
+manifest, and retains all evidence for 30 days. A no-race date exits before
+installing R. The workflow has read-only repository permissions and contains
+no Hugo, Git publication, or site mutation step.
+
 ## Next implementation slice
 
-Add the manual GitHub-hosted shadow workflow that builds the `ski` bundle,
-materializes this runtime, executes the model, validates its workbook, and
-retains evidence without publishing. Fantasy, Tour overall, and Final Climb
-remain separate PRs.
+Exercise the hosted shadow on a historical normal weekend and review the
+retained workbook and validation report before defining the candidate JSON and
+post-publication contract. Fantasy, Tour overall, and Final Climb remain
+separate PRs.
