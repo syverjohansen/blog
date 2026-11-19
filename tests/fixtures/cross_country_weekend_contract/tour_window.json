@@ -1,0 +1,10 @@
+{
+  "logical_date": "2026-12-31",
+  "available_startlist_race_ids": ["53001", "53002"],
+  "schedule": [
+    {"Date": "12/31/2026", "Race_Date": "12/31/2026", "Startlist": "https://www.fis-ski.com/DB/general/results.html?sectorcode=CC&raceid=53001", "Sex": "M", "City": "Tour Start", "Country": "Switzerland", "Distance": "Sprint", "Technique": "F", "Period": "2"},
+    {"Date": "12/31/2026", "Race_Date": "12/31/2026", "Startlist": "https://www.fis-ski.com/DB/general/results.html?sectorcode=CC&raceid=53002", "Sex": "L", "City": "Tour Start", "Country": "Switzerland", "Distance": "Sprint", "Technique": "F", "Period": "2"},
+    {"Date": "01/01/2027", "Race_Date": "01/01/2027", "Startlist": "https://www.fis-ski.com/DB/general/results.html?sectorcode=CC&raceid=53003", "Sex": "M", "City": "Tour Stage", "Country": "Switzerland", "Distance": "10", "Technique": "C", "Period": "2"}
+  ],
+  "expected": {"status": "deferred_specialized", "product": "tour_de_ski_overall", "event_count": 2, "individual_event_count": 2, "team_event_count": 0, "startlist_mode": "specialized_contract_required", "missing_startlist_race_ids": [], "candidate_data_root": null, "candidate_post_path": null}
+}
