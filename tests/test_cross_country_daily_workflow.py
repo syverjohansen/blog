@@ -27,6 +27,7 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
     def test_schedule_results_and_site_publication_are_ordered(self) -> None:
         schedule = self.daily.index("name: Build isolated schedule candidate")
         results = self.daily.index("name: Build isolated results candidate")
+        team_results = self.daily.index("name: Build isolated team-results candidate")
         season_close = self.daily.index("name: Build and stage guarded season close")
         publish_ski = self.daily.index("name: Validate and publish accepted ski data")
         site = self.daily.index("name: Generate cross-country site artifacts")
@@ -34,7 +35,8 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         render = self.daily.index("name: Render site candidate")
         publish_site = self.daily.index("name: Publish validated site artifacts")
         self.assertLess(schedule, results)
-        self.assertLess(results, season_close)
+        self.assertLess(results, team_results)
+        self.assertLess(team_results, season_close)
         self.assertLess(season_close, publish_ski)
         self.assertLess(results, publish_ski)
         self.assertLess(publish_ski, site)
@@ -44,15 +46,20 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
 
     def test_site_work_is_gated_on_results_close_or_final_standings(self) -> None:
         results_condition = "steps.results_candidate.outputs.status == 'candidate' ||"
+        team_results_condition = (
+            "steps.team_results_candidate.outputs.status == 'candidate' ||"
+        )
         close_condition = "steps.season_close.outputs.status == 'candidate'"
         standings_condition = "steps.standings.outputs.changed == 'true'"
         self.assertGreaterEqual(self.daily.count(results_condition), 6)
+        self.assertGreaterEqual(self.daily.count(team_results_condition), 6)
         self.assertGreaterEqual(self.daily.count(close_condition), 6)
         self.assertGreaterEqual(self.daily.count(standings_condition), 6)
         checkout = self.daily.index("name: Check out blog for site publication")
         generator = self.daily.index("name: Generate cross-country site artifacts")
         self.assertLess(checkout, generator)
         self.assertIn(results_condition, self.daily[checkout:generator])
+        self.assertIn(team_results_condition, self.daily[checkout:generator])
         self.assertIn(close_condition, self.daily[checkout:generator])
         self.assertIn(standings_condition, self.daily[checkout:generator])
 
@@ -87,10 +94,24 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         self.assertIn("ref: ${{ steps.source.outputs.ski_sha }}", self.daily)
         self.assertIn("ref: ${{ steps.source.outputs.blog_sha }}", self.daily)
         self.assertIn("cross_country_results_update.py", self.daily)
+        self.assertIn("cross_country_team_results_update.py", self.daily)
+        self.assertIn("relay/excel365/men_relay_chrono.csv", self.daily)
+        self.assertIn("relay/excel365/ladies_relay_chrono.csv", self.daily)
+        self.assertIn("relay/excel365/team_sprint_chrono.csv", self.daily)
         self.assertIn("pipelines.cross_country_site_data", self.daily)
         self.assertIn("git add static/python/cross-country/excel365", self.daily)
         self.assertNotIn("git add .", self.daily)
         self.assertNotIn("--force", self.daily)
+
+    def test_team_results_are_validated_and_retained_as_daily_evidence(self) -> None:
+        team_results = self.daily.index("cross_country_team_results_update.py")
+        team_tests = self.daily.index("-p 'test_cross_country_team_*.py'")
+        publication = self.daily.index("git -C external/ski push origin HEAD:main")
+        self.assertLess(team_results, team_tests)
+        self.assertLess(team_tests, publication)
+        self.assertIn("team_results_root", self.daily)
+        self.assertIn("team_results_root }}/acquisition/report.json", self.daily)
+        self.assertIn("team_results_root }}/promotion/report.json", self.daily)
 
     def test_fis_schedule_dependencies_are_explicit(self) -> None:
         self.assertIn("name: Set up Python runtime", self.daily)

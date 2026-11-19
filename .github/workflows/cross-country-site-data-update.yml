@@ -96,6 +96,7 @@ jobs:
           echo "requested_schedule_season=$season" >> "$GITHUB_OUTPUT"
           echo "schedule_root=$RUNNER_TEMP/cross-country-schedule-update" >> "$GITHUB_OUTPUT"
           echo "results_root=$RUNNER_TEMP/cross-country-results-update" >> "$GITHUB_OUTPUT"
+          echo "team_results_root=$RUNNER_TEMP/cross-country-team-results-update" >> "$GITHUB_OUTPUT"
           echo "season_close_root=$RUNNER_TEMP/cross-country-season-close" >> "$GITHUB_OUTPUT"
 
       - name: Resolve schedule acquisition season
@@ -222,6 +223,45 @@ jobs:
           echo "status=$status" >> "$GITHUB_OUTPUT"
           cat "$report" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Build isolated team-results candidate
+        working-directory: external/ski/elo/python/ski/polars
+        run: |
+          python3 cross_country_team_results_update.py \
+            --schedule excel365/races.csv \
+            --men-chrono excel365/men_chrono.csv \
+            --ladies-chrono excel365/ladies_chrono.csv \
+            --men-relay-chrono relay/excel365/men_relay_chrono.csv \
+            --ladies-relay-chrono relay/excel365/ladies_relay_chrono.csv \
+            --team-sprint-chrono relay/excel365/team_sprint_chrono.csv \
+            --aliases excel365/fis_identity_aliases.csv \
+            --as-of "${{ steps.parameters.outputs.as_of }}" \
+            --output-root "${{ steps.parameters.outputs.team_results_root }}" \
+            --allow-network
+
+      - name: Read and stage team-results candidate
+        id: team_results_candidate
+        run: |
+          report="${{ steps.parameters.outputs.team_results_root }}/report.json"
+          status=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$report")
+          if [[ "$status" == "candidate" ]]; then
+            root="external/ski/elo/python/ski/polars"
+            cp "${{ steps.parameters.outputs.team_results_root }}/promotion/men_chrono.csv" \
+              "$root/excel365/men_chrono.csv"
+            cp "${{ steps.parameters.outputs.team_results_root }}/promotion/ladies_chrono.csv" \
+              "$root/excel365/ladies_chrono.csv"
+            cp "${{ steps.parameters.outputs.team_results_root }}/promotion/men_relay_chrono.csv" \
+              "$root/relay/excel365/men_relay_chrono.csv"
+            cp "${{ steps.parameters.outputs.team_results_root }}/promotion/ladies_relay_chrono.csv" \
+              "$root/relay/excel365/ladies_relay_chrono.csv"
+            cp "${{ steps.parameters.outputs.team_results_root }}/promotion/team_sprint_chrono.csv" \
+              "$root/relay/excel365/team_sprint_chrono.csv"
+          elif [[ "$status" != "no_changes" ]]; then
+            echo "Unexpected team-results status: $status" >&2
+            exit 1
+          fi
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Build and stage guarded season close
         id: season_close
         env:
@@ -287,14 +327,16 @@ jobs:
         env:
           AS_OF: ${{ steps.parameters.outputs.as_of }}
           RESULTS_STATUS: ${{ steps.results_candidate.outputs.status }}
+          TEAM_RESULTS_STATUS: ${{ steps.team_results_candidate.outputs.status }}
           RUN_DATE: ${{ steps.parameters.outputs.run_date }}
           SCHEDULE_CHANGED: ${{ steps.schedule_candidate.outputs.changed }}
           SEASON_CLOSE_STATUS: ${{ steps.season_close.outputs.status }}
           STANDINGS_CHANGED: ${{ steps.standings.outputs.changed || 'false' }}
         run: |
           root="external/ski/elo/python/ski/polars"
-          if [[ "$SCHEDULE_CHANGED" == "true" || "$RESULTS_STATUS" == "candidate" || "$SEASON_CLOSE_STATUS" == "candidate" || "$STANDINGS_CHANGED" == "true" ]]; then
+          if [[ "$SCHEDULE_CHANGED" == "true" || "$RESULTS_STATUS" == "candidate" || "$TEAM_RESULTS_STATUS" == "candidate" || "$SEASON_CLOSE_STATUS" == "candidate" || "$STANDINGS_CHANGED" == "true" ]]; then
             python3 -m unittest discover -s "$root" -p 'test_cross_country_results_*.py'
+            python3 -m unittest discover -s "$root" -p 'test_cross_country_team_*.py'
             python3 -m unittest discover -s "$root" -p 'test_*schedule*.py'
             python3 -m unittest discover -s "$root" -p 'test_cross_country_season_close.py'
             git -C external/ski config user.name "github-actions[bot]"
@@ -303,7 +345,10 @@ jobs:
               elo/python/ski/polars/excel365/races.csv \
               elo/python/ski/polars/excel365/weekends.csv \
               elo/python/ski/polars/excel365/men_chrono.csv \
-              elo/python/ski/polars/excel365/ladies_chrono.csv
+              elo/python/ski/polars/excel365/ladies_chrono.csv \
+              elo/python/ski/polars/relay/excel365/men_relay_chrono.csv \
+              elo/python/ski/polars/relay/excel365/ladies_relay_chrono.csv \
+              elo/python/ski/polars/relay/excel365/team_sprint_chrono.csv
             if [[ -d "$root/excel365/ranking_standings" ]]; then
               git -C external/ski add elo/python/ski/polars/excel365/ranking_standings
             fi
@@ -322,6 +367,7 @@ jobs:
       - name: Check out blog for site publication
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
+          steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||
           steps.standings.outputs.changed == 'true'
         uses: actions/checkout@v4
@@ -333,6 +379,7 @@ jobs:
       - name: Generate cross-country site artifacts
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
+          steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||
           steps.standings.outputs.changed == 'true'
         working-directory: blog
@@ -355,6 +402,7 @@ jobs:
       - name: Run complete blog test suite
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
+          steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||
           steps.standings.outputs.changed == 'true'
         working-directory: blog
@@ -363,6 +411,7 @@ jobs:
       - name: Set up Hugo
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
+          steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||
           steps.standings.outputs.changed == 'true'
         uses: peaceiris/actions-hugo@v3
@@ -373,6 +422,7 @@ jobs:
       - name: Render site candidate
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
+          steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||
           steps.standings.outputs.changed == 'true'
         working-directory: blog
@@ -381,6 +431,7 @@ jobs:
       - name: Publish validated site artifacts
         if: >-
           steps.results_candidate.outputs.status == 'candidate' ||
+          steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||
           steps.standings.outputs.changed == 'true'
         working-directory: blog
@@ -418,6 +469,12 @@ jobs:
             ${{ steps.parameters.outputs.results_root }}/identity/report.json
             ${{ steps.parameters.outputs.results_root }}/replay/report.json
             ${{ steps.parameters.outputs.results_root }}/promotion/report.json
+            ${{ steps.parameters.outputs.team_results_root }}/report.json
+            ${{ steps.parameters.outputs.team_results_root }}/gap-report.json
+            ${{ steps.parameters.outputs.team_results_root }}/acquisition/report.json
+            ${{ steps.parameters.outputs.team_results_root }}/identity/report.json
+            ${{ steps.parameters.outputs.team_results_root }}/replay/report.json
+            ${{ steps.parameters.outputs.team_results_root }}/promotion/report.json
             ${{ steps.parameters.outputs.season_close_root }}/report.json
             ${{ steps.parameters.outputs.season_close_root }}/candidate/men_chrono.csv
             ${{ steps.parameters.outputs.season_close_root }}/candidate/ladies_chrono.csv
