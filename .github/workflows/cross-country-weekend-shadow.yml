@@ -1,0 +1,243 @@
+name: Cross-country weekend shadow
+
+on:
+  workflow_dispatch:
+    inputs:
+      logical_date:
+        description: Weekend group date (YYYY-MM-DD); defaults to today in UTC
+        required: false
+        type: string
+      n_simulations:
+        description: Deterministic Monte Carlo iteration count
+        required: true
+        default: 250
+        type: number
+      random_seed:
+        description: Deterministic simulation seed
+        required: true
+        default: 20261127
+        type: number
+      ski_ref:
+        description: Ski branch, tag, or commit to resolve and record
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cross-country-weekend-shadow
+  cancel-in-progress: false
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out bounded blog runtime
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /pipelines/cross_country_weekend_consumer.py
+            /pipelines/cross_country_weekend_shadow.py
+            /pipelines/requirements-integration.txt
+            /pipelines/requirements-snapshot.txt
+            /content/post/cross-country/drafts/weekly-picks-simulation.R
+            /content/post/shared/sport_params.R
+
+      - name: Resolve ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if [[ ! "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out bounded ski runtime
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/ski/polars/cross_country_weekend_inputs.py
+            /elo/python/ski/polars/cross_country_results_identity.py
+            /elo/python/ski/polars/schedule_contract.py
+            /elo/python/ski/polars/excel365/weekends.csv
+            /elo/python/ski/polars/excel365/men_chrono_elevation.csv
+            /elo/python/ski/polars/excel365/ladies_chrono_elevation.csv
+            /elo/python/ski/polars/excel365/fis_identity_aliases.csv
+
+      - name: Prepare immutable shadow parameters
+        id: prepare
+        env:
+          LOGICAL_DATE_INPUT: ${{ inputs.logical_date || '' }}
+          N_SIMULATIONS_INPUT: ${{ inputs.n_simulations || 250 }}
+          RANDOM_SEED_INPUT: ${{ inputs.random_seed || 20261127 }}
+          SKI_SHA: ${{ steps.ski.outputs.sha }}
+        run: |
+          logical_date="${LOGICAL_DATE_INPUT:-$(date -u +%F)}"
+          python3 - "$logical_date" "$N_SIMULATIONS_INPUT" "$RANDOM_SEED_INPUT" <<'PY'
+          from datetime import date
+          import sys
+
+          date.fromisoformat(sys.argv[1])
+          if int(sys.argv[2]) < 1:
+              raise SystemExit("n_simulations must be positive")
+          int(sys.argv[3])
+          PY
+          root="$RUNNER_TEMP/cross-country-weekend-shadow"
+          mkdir -p "$root"
+          {
+            echo "LOGICAL_DATE=$logical_date"
+            echo "N_SIMULATIONS=$N_SIMULATIONS_INPUT"
+            echo "RANDOM_SEED=$RANDOM_SEED_INPUT"
+            echo "SHADOW_ROOT=$root"
+            echo "BUNDLE_ROOT=$root/bundle"
+            echo "RUNTIME_ROOT=$root/runtime"
+            echo "PREDICTION_ROOT=$root/predictions"
+            echo "LOG_ROOT=$root/logs"
+            echo "VALIDATION_REPORT=$root/reports/validation_report.json"
+          } >> "$GITHUB_ENV"
+          python3 - "$root/run_metadata.json" "$logical_date" <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          document = {
+              "schema_version": "nordicnumbers.cross-country-weekend-run/v1",
+              "logical_date": sys.argv[2],
+              "blog_commit": os.environ["GITHUB_SHA"],
+              "ski_commit": os.environ["SKI_SHA"],
+              "n_simulations": int(os.environ["N_SIMULATIONS_INPUT"]),
+              "random_seed": int(os.environ["RANDOM_SEED_INPUT"]),
+              "publication": {"status": "disabled"},
+          }
+          Path(sys.argv[1]).write_text(
+              json.dumps(document, indent=2, sort_keys=True) + "\n"
+          )
+          PY
+
+      - name: Build isolated weekend input bundle
+        working-directory: external/ski/elo/python/ski/polars
+        run: |
+          python3 cross_country_weekend_inputs.py \
+            --schedule excel365/weekends.csv \
+            --men-chrono excel365/men_chrono_elevation.csv \
+            --ladies-chrono excel365/ladies_chrono_elevation.csv \
+            --aliases excel365/fis_identity_aliases.csv \
+            --group-date "$LOGICAL_DATE" \
+            --output-dir "$BUNDLE_ROOT"
+
+      - name: Inspect bundle decision
+        id: bundle
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report = json.loads(
+              (Path(os.environ["BUNDLE_ROOT"]) / "report.json").read_text()
+          )
+          status = report.get("status")
+          if status not in {"candidate", "no_work"}:
+              raise SystemExit(f"unexpected bundle status: {status!r}")
+          if report.get("publication") != {"status": "disabled"}:
+              raise SystemExit("bundle publication must remain disabled")
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a") as output:
+              output.write(f"has_work={str(status == 'candidate').lower()}\n")
+          print(f"bundle status={status}")
+          PY
+
+      - name: Explain no-work date
+        if: steps.bundle.outputs.has_work != 'true'
+        run: echo "No normal individual cross-country weekend is grouped on $LOGICAL_DATE."
+
+      - name: Set up Python validation runtime
+        if: steps.bundle.outputs.has_work == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            pipelines/requirements-integration.txt
+            pipelines/requirements-snapshot.txt
+
+      - name: Install Python validation dependencies
+        if: steps.bundle.outputs.has_work == 'true'
+        run: python3 -m pip install -r pipelines/requirements-integration.txt
+
+      - name: Materialize validated model runtime
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          python3 -m pipelines.cross_country_weekend_consumer \
+            --bundle-dir "$BUNDLE_ROOT" \
+            --logical-date "$LOGICAL_DATE" \
+            --output-dir "$RUNTIME_ROOT"
+
+      - name: Set up R
+        if: steps.bundle.outputs.has_work == 'true'
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install R simulation dependencies
+        if: steps.bundle.outputs.has_work == 'true'
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::dplyr
+            any::leaps
+            any::logger
+            any::lubridate
+            any::mgcv
+            any::openxlsx
+            any::purrr
+            any::tidyr
+
+      - name: Run publication-disabled weekend simulation
+        if: steps.bundle.outputs.has_work == 'true'
+        env:
+          NORDIC_BLOG_ROOT: ${{ github.workspace }}
+          NORDIC_WEEKEND_RUNTIME_ROOT: ${{ env.RUNTIME_ROOT }}
+          NORDIC_SKI_DATA_ROOT: ${{ github.workspace }}/external/ski/elo/python/ski/polars/excel365
+          NORDIC_PREDICTION_OUTPUT_ROOT: ${{ env.PREDICTION_ROOT }}
+          NORDIC_LOG_ROOT: ${{ env.LOG_ROOT }}
+          NORDIC_LOGICAL_DATE: ${{ env.LOGICAL_DATE }}
+          NORDIC_N_SIMULATIONS: ${{ env.N_SIMULATIONS }}
+          NORDIC_RANDOM_SEED: ${{ env.RANDOM_SEED }}
+        run: Rscript content/post/cross-country/drafts/weekly-picks-simulation.R
+
+      - name: Validate shadow workbook and manifest
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          python3 -m pipelines.cross_country_weekend_shadow \
+            --runtime-dir "$RUNTIME_ROOT" \
+            --prediction-root "$PREDICTION_ROOT" \
+            --logical-date "$LOGICAL_DATE" \
+            --n-simulations "$N_SIMULATIONS" \
+            --random-seed "$RANDOM_SEED" \
+            --report "$VALIDATION_REPORT"
+
+      - name: Retain complete shadow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-country-weekend-shadow-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 30
+          path: ${{ runner.temp }}/cross-country-weekend-shadow/
