@@ -84,6 +84,22 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         self.assertIn("candidate/men_chrono.csv", self.daily)
         self.assertIn("candidate/ladies_chrono.csv", self.daily)
         close = self.daily.index("cross_country_season_close.py")
+        close_report = self.daily.index(
+            'report="${{ steps.parameters.outputs.season_close_root }}/report.json"'
+        )
+        close_command = self.daily[close:close_report]
+        self.assertIn(
+            '--men-relay-chrono "$root/relay/excel365/men_relay_chrono.csv"',
+            close_command,
+        )
+        self.assertIn(
+            '--ladies-relay-chrono "$root/relay/excel365/ladies_relay_chrono.csv"',
+            close_command,
+        )
+        self.assertIn(
+            '--team-sprint-chrono "$root/relay/excel365/team_sprint_chrono.csv"',
+            close_command,
+        )
         validation = self.daily.index("-p 'test_cross_country_season_close.py'")
         publication = self.daily.index("git -C external/ski push origin HEAD:main")
         self.assertLess(close, validation)
