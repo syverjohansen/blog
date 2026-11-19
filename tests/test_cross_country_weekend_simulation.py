@@ -50,6 +50,12 @@ class CrossCountryWeekendSimulationTests(unittest.TestCase):
         self.assertNotIn("library(ROI.plugin.glpk)", self.source)
         self.assertIn("Fantasy optimization is a separate product", self.source)
 
+    def test_writes_complete_multisheet_workbook_with_writexl(self) -> None:
+        self.assertIn("library(writexl)", self.source)
+        self.assertIn("write_xlsx(weekly_points_sheets, weekly_points_file)", self.source)
+        self.assertNotIn("library(openxlsx)", self.source)
+        self.assertNotIn("write.xlsx(weekly_points_sheets", self.source)
+
     @unittest.skipUnless(shutil.which("Rscript"), "Rscript is not installed")
     def test_r_source_parses(self) -> None:
         result = subprocess.run(

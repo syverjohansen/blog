@@ -13,7 +13,7 @@
 
 library(dplyr)
 library(tidyr)
-library(openxlsx)
+library(writexl)
 library(mgcv)
 library(leaps)
 library(logger)
@@ -1284,7 +1284,7 @@ if (length(weekly_points_sheets) == 0) {
 }
 
 weekly_points_file <- file.path(weekly_output_dir, "weekend_top_30_predicted_points.xlsx")
-write.xlsx(weekly_points_sheets, weekly_points_file)
+write_xlsx(weekly_points_sheets, weekly_points_file)
 log_info(paste("Weekly points workbook saved to:", weekly_points_file))
 
 manifest_file <- file.path(weekly_output_dir, "shadow_manifest.json")

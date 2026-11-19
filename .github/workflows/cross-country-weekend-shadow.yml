@@ -205,9 +205,9 @@ jobs:
             any::logger
             any::lubridate
             any::mgcv
-            any::openxlsx
             any::purrr
             any::tidyr
+            any::writexl
 
       - name: Run publication-disabled weekend simulation
         if: steps.bundle.outputs.has_work == 'true'
