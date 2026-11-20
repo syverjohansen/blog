@@ -1,6 +1,6 @@
 # Cross-country weekend-picks contract audit
 
-**Status:** Hosted shadow implemented; publication remains disabled
+**Status:** Publication candidate contract implemented; publication remains disabled
 
 **Contract:** `nordicnumbers.cross-country-weekend-plan/v1`
 
@@ -125,7 +125,7 @@ no Hugo, Git publication, or site mutation step.
 
 ## Next implementation slice
 
-Exercise the hosted shadow on a historical normal weekend and review the
-retained workbook and validation report before defining the candidate JSON and
-post-publication contract. Fantasy, Tour overall, and Final Climb remain
-separate PRs.
+Wire the candidate builder into the hosted shadow, render the complete Hugo
+candidate, and retain the generated JSON, post, and render evidence. Automatic
+publication remains a separate, final gate. Fantasy, Tour overall, and Final
+Climb remain separate PRs.

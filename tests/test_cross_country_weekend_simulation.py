@@ -52,9 +52,12 @@ class CrossCountryWeekendSimulationTests(unittest.TestCase):
 
     def test_writes_complete_multisheet_workbook_with_writexl(self) -> None:
         self.assertIn("library(writexl)", self.source)
-        self.assertIn("write_xlsx(weekly_points_sheets, weekly_points_file)", self.source)
+        self.assertIn(
+            "write_xlsx(weekly_points_sheets, weekly_points_file)", self.source
+        )
         self.assertNotIn("library(openxlsx)", self.source)
         self.assertNotIn("write.xlsx(weekly_points_sheets", self.source)
+        self.assertEqual(self.source.count("ID = athlete_id"), 2)
 
     @unittest.skipUnless(shutil.which("Rscript"), "Rscript is not installed")
     def test_r_source_parses(self) -> None:

@@ -1254,6 +1254,7 @@ if (!is.null(men_results) && nrow(men_results$athlete_totals) > 0) {
     slice_head(n = 30) %>%
     transmute(
       Skier,
+      ID = athlete_id,
       Nation,
       Sex,
       `Predicted Weekend Points` = round(Total_Points, 2),
@@ -1270,6 +1271,7 @@ if (!is.null(ladies_results) && nrow(ladies_results$athlete_totals) > 0) {
     slice_head(n = 30) %>%
     transmute(
       Skier,
+      ID = athlete_id,
       Nation,
       Sex,
       `Predicted Weekend Points` = round(Total_Points, 2),
