@@ -1,0 +1,160 @@
+import hashlib
+import json
+import tempfile
+import unittest
+from datetime import date
+from pathlib import Path
+
+try:
+    from openpyxl import Workbook
+except ModuleNotFoundError:
+    Workbook = None
+
+from pipelines.cross_country_weekend_publication import (
+    CANDIDATE_SCHEMA,
+    WeekendPublicationError,
+    build_weekend_candidate,
+)
+from pipelines.cross_country_weekend_shadow import (
+    EXPECTED_HEADERS,
+    VALIDATION_SCHEMA,
+)
+
+
+def write_evidence(root: Path, *, fallback: bool = True) -> tuple[Path, Path, Path]:
+    workbook_path = root / "weekend.xlsx"
+    workbook = Workbook()
+    men = workbook.active
+    men.title = "Men Top 30"
+    men.append(EXPECTED_HEADERS)
+    men.append(("First Man", 101, "Norway", "M", 150.5, 3, 20.0, 50.0))
+    ladies = workbook.create_sheet("Ladies Top 30")
+    ladies.append(EXPECTED_HEADERS)
+    ladies.append(("First Woman", 201, "Sweden", "L", 160.5, 3, 25.0, 55.0))
+    workbook.save(workbook_path)
+    workbook_sha = hashlib.sha256(workbook_path.read_bytes()).hexdigest()
+
+    runtime_path = root / "runtime_report.json"
+    runtime_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "nordicnumbers.cross-country-weekend-runtime/v1",
+                "logical_date": "2026-11-27",
+                "publication": {"status": "disabled"},
+                "event_modes": {
+                    "M/101": "latest_season_fallback"
+                    if fallback
+                    else "official_fis_startlist",
+                    "L/102": "official_fis_startlist",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    validation_path = root / "validation_report.json"
+    validation_path.write_text(
+        json.dumps(
+            {
+                "schema_version": VALIDATION_SCHEMA,
+                "status": "passed",
+                "logical_date": "2026-11-27",
+                "publication": {"status": "disabled"},
+                "sheets": {
+                    "Men Top 30": {"rows": 1, "sex": "M"},
+                    "Ladies Top 30": {"rows": 1, "sex": "L"},
+                },
+                "outputs": {
+                    "weekend_top_30_predicted_points.xlsx": {"sha256": workbook_sha}
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    return workbook_path, runtime_path, validation_path
+
+
+@unittest.skipUnless(Workbook is not None, "openpyxl is not installed")
+class CrossCountryWeekendPublicationTests(unittest.TestCase):
+    def test_builds_stable_json_and_candidate_post(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root)
+            output = root / "candidate"
+            report = build_weekend_candidate(
+                workbook_path=workbook,
+                runtime_report_path=runtime,
+                validation_report_path=validation,
+                logical_date=date(2026, 11, 27),
+                output_root=output,
+            )
+            self.assertEqual(report["schema_version"], CANDIDATE_SCHEMA)
+            self.assertEqual(report["status"], "candidate")
+            self.assertEqual(report["source_state"], "provisional")
+            self.assertEqual(report["publication"], {"status": "disabled"})
+            self.assertEqual(report["row_count"], 2)
+
+            men = json.loads(
+                (
+                    output / "data/cross-country/weekly-picks/20261127/men.json"
+                ).read_text()
+            )
+            self.assertEqual(men["headers"], list(EXPECTED_HEADERS))
+            self.assertEqual(men["rows"][0][1], 101)
+            post = (output / "content/post/weekly-picks/20261127.md").read_text()
+            self.assertIn("validated latest-season fallback pools", post)
+            self.assertIn(
+                'cross-country/datatable "cross-country/weekly-picks/20261127/men"',
+                post,
+            )
+            self.assertNotIn("Fantasy", post)
+
+    def test_official_candidate_discloses_official_startlists(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root, fallback=False)
+            report = build_weekend_candidate(
+                workbook_path=workbook,
+                runtime_report_path=runtime,
+                validation_report_path=validation,
+                logical_date=date(2026, 11, 27),
+                output_root=root / "candidate",
+            )
+            self.assertEqual(report["source_state"], "official")
+            post = (
+                root / "candidate/content/post/weekly-picks/20261127.md"
+            ).read_text()
+            self.assertIn("official FIS startlists", post)
+
+    def test_rejects_workbook_changed_after_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root)
+            workbook.write_bytes(workbook.read_bytes() + b"tampered")
+            with self.assertRaisesRegex(WeekendPublicationError, "checksum"):
+                build_weekend_candidate(
+                    workbook_path=workbook,
+                    runtime_report_path=runtime,
+                    validation_report_path=validation,
+                    logical_date=date(2026, 11, 27),
+                    output_root=root / "candidate",
+                )
+
+    def test_refuses_unrecognized_nonempty_output_root(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root)
+            output = root / "candidate"
+            output.mkdir()
+            (output / "unrelated.txt").write_text("keep", encoding="utf-8")
+            with self.assertRaisesRegex(WeekendPublicationError, "existing"):
+                build_weekend_candidate(
+                    workbook_path=workbook,
+                    runtime_report_path=runtime,
+                    validation_report_path=validation,
+                    logical_date=date(2026, 11, 27),
+                    output_root=output,
+                )
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -15,6 +15,7 @@ SHADOW_SCHEMA = "nordicnumbers.cross-country-weekend-shadow/v1"
 VALIDATION_SCHEMA = "nordicnumbers.cross-country-weekend-validation/v1"
 EXPECTED_HEADERS = (
     "Skier",
+    "ID",
     "Nation",
     "Sex",
     "Predicted Weekend Points",
@@ -130,8 +131,13 @@ def validate_weekend_shadow(
         expected_sex = SHEET_SEX[sheet_name]
         athletes: set[str] = set()
         for row in data:
-            skier, nation, sex, points, races, win, podium = row
-            if not skier or not nation or sex != expected_sex:
+            skier, athlete_id, nation, sex, points, races, win, podium = row
+            if (
+                not skier
+                or athlete_id in {None, ""}
+                or not nation
+                or sex != expected_sex
+            ):
                 raise WeekendShadowError(f"invalid identity in {sheet_name}")
             if skier in athletes:
                 raise WeekendShadowError(f"duplicate athlete in {sheet_name}: {skier}")

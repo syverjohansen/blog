@@ -50,7 +50,7 @@ def write_shadow(root: Path, *, publication: str = "disabled") -> tuple[Path, Pa
     sheet = workbook.active
     sheet.title = "Men Top 30"
     sheet.append(EXPECTED_HEADERS)
-    sheet.append(("Athlete", "Norway", "M", 100.5, 2, 25.0, 50.0))
+    sheet.append(("Athlete", 123, "Norway", "M", 100.5, 2, 25.0, 50.0))
     workbook.save(output / "weekend_top_30_predicted_points.xlsx")
     return runtime, predictions
 
