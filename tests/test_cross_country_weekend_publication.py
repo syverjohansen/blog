@@ -17,7 +17,9 @@ from pipelines.cross_country_weekend_publication import (
     RENDER_SCHEMA,
     WeekendPublicationError,
     build_weekend_candidate,
+    install_weekend_candidate,
     render_weekend_candidate,
+    resolve_active_weekend_group_date,
 )
 from pipelines.cross_country_weekend_shadow import (
     EXPECTED_HEADERS,
@@ -77,8 +79,37 @@ def write_evidence(root: Path, *, fallback: bool = True) -> tuple[Path, Path, Pa
     return workbook_path, runtime_path, validation_path
 
 
+def write_schedule(root: Path) -> Path:
+    schedule = root / "weekends.csv"
+    schedule.write_text(
+        "Date,Race_Date,Distance,Stage\n"
+        "11/27/2026,11/27/2026,Sprint,0\n"
+        "11/27/2026,11/28/2026,10,0\n"
+        "11/27/2026,11/29/2026,Rel,0\n"
+        "12/29/2026,01/01/2027,10,1\n",
+        encoding="utf-8",
+    )
+    return schedule
+
+
 @unittest.skipUnless(Workbook is not None, "openpyxl is not installed")
 class CrossCountryWeekendPublicationTests(unittest.TestCase):
+    def test_resolves_active_weekend_to_stable_group_date(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            schedule = write_schedule(Path(directory))
+            self.assertEqual(
+                resolve_active_weekend_group_date(
+                    schedule_path=schedule, as_of=date(2026, 11, 28)
+                ),
+                date(2026, 11, 27),
+            )
+            self.assertEqual(
+                resolve_active_weekend_group_date(
+                    schedule_path=schedule, as_of=date(2026, 11, 30)
+                ),
+                date(2026, 11, 30),
+            )
+
     def test_builds_stable_json_and_candidate_post(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -106,6 +137,7 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             self.assertEqual(men["rows"][0][1], 101)
             post = (output / "content/post/weekly-picks/20261127.md").read_text()
             self.assertIn("validated latest-season fallback pools", post)
+            self.assertIn('weekend_source_state: "provisional"', post)
             self.assertIn(
                 'cross-country/datatable "cross-country/weekly-picks/20261127/men"',
                 post,
@@ -188,6 +220,32 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             self.assertIn("First Woman", html)
             self.assertIn("table-cross-countryweekly-picks20261127men", html)
             self.assertTrue(report_path.is_file())
+            repository = root / "repository"
+            repository.mkdir()
+            (repository / ".git").write_text("gitdir: test\n", encoding="utf-8")
+            installed = install_weekend_candidate(
+                candidate_root=candidate,
+                render_report_path=report_path,
+                rendered_site_root=root / "site",
+                logical_date=date(2026, 11, 27),
+                repository_root=repository,
+            )
+            self.assertEqual(len(installed), 3)
+            self.assertEqual(
+                (repository / "content/post/weekly-picks/20261127.md").read_bytes(),
+                (candidate / "content/post/weekly-picks/20261127.md").read_bytes(),
+            )
+            (repository / "content/post/weekly-picks/20261127.md").write_text(
+                'weekend_source_state: "official"\n', encoding="utf-8"
+            )
+            with self.assertRaisesRegex(WeekendPublicationError, "official"):
+                install_weekend_candidate(
+                    candidate_root=candidate,
+                    render_report_path=report_path,
+                    rendered_site_root=root / "site",
+                    logical_date=date(2026, 11, 27),
+                    repository_root=repository,
+                )
 
     def test_render_rejects_candidate_changed_after_build(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

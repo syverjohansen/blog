@@ -1,10 +1,13 @@
-name: Cross-country weekend shadow
+name: Cross-country weekend predictions
 
 on:
+  workflow_run:
+    workflows: ["Cross-country team predictions"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       logical_date:
-        description: Weekend group date (YYYY-MM-DD); defaults to today in UTC
+        description: Run date (YYYY-MM-DD); active weekends resolve to their stable group date
         required: false
         type: string
       n_simulations:
@@ -24,7 +27,7 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: cross-country-weekend-shadow
@@ -32,6 +35,9 @@ concurrency:
 
 jobs:
   shadow:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -39,6 +45,8 @@ jobs:
       - name: Check out bounded blog runtime
         uses: actions/checkout@v4
         with:
+          ref: main
+          token: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
           fetch-depth: 1
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -49,6 +57,8 @@ jobs:
             /pipelines/requirements-snapshot.txt
             /content/post/cross-country/drafts/weekly-picks-simulation.R
             /content/post/shared/sport_params.R
+            /content/post/weekly-picks/
+            /data/cross-country/weekly-picks/
             /layouts/
             /themes/white/
 
@@ -91,8 +101,8 @@ jobs:
           RANDOM_SEED_INPUT: ${{ inputs.random_seed || 20261127 }}
           SKI_SHA: ${{ steps.ski.outputs.sha }}
         run: |
-          logical_date="${LOGICAL_DATE_INPUT:-$(date -u +%F)}"
-          python3 - "$logical_date" "$N_SIMULATIONS_INPUT" "$RANDOM_SEED_INPUT" <<'PY'
+          as_of="${LOGICAL_DATE_INPUT:-$(date -u +%F)}"
+          python3 - "$as_of" "$N_SIMULATIONS_INPUT" "$RANDOM_SEED_INPUT" <<'PY'
           from datetime import date
           import sys
 
@@ -101,6 +111,14 @@ jobs:
               raise SystemExit("n_simulations must be positive")
           int(sys.argv[3])
           PY
+          logical_date=$(python3 -m pipelines.cross_country_weekend_publication resolve-date \
+            --schedule external/ski/elo/python/ski/polars/excel365/weekends.csv \
+            --as-of "$as_of")
+          blog_sha=$(git rev-parse HEAD)
+          if ! [[ "$blog_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve checked-out blog revision" >&2
+            exit 1
+          fi
           root="$RUNNER_TEMP/cross-country-weekend-shadow"
           mkdir -p "$root"
           {
@@ -117,7 +135,7 @@ jobs:
             echo "VALIDATION_REPORT=$root/reports/validation_report.json"
             echo "RENDER_REPORT=$root/reports/render_report.json"
           } >> "$GITHUB_ENV"
-          python3 - "$root/run_metadata.json" "$logical_date" <<'PY'
+          python3 - "$root/run_metadata.json" "$logical_date" "$as_of" "$blog_sha" <<'PY'
           import json
           import os
           import sys
@@ -126,7 +144,8 @@ jobs:
           document = {
               "schema_version": "nordicnumbers.cross-country-weekend-run/v1",
               "logical_date": sys.argv[2],
-              "blog_commit": os.environ["GITHUB_SHA"],
+              "as_of_date": sys.argv[3],
+              "blog_commit": sys.argv[4],
               "ski_commit": os.environ["SKI_SHA"],
               "n_simulations": int(os.environ["N_SIMULATIONS_INPUT"]),
               "random_seed": int(os.environ["RANDOM_SEED_INPUT"]),
@@ -266,6 +285,59 @@ jobs:
             --logical-date "$LOGICAL_DATE" \
             --destination "$SITE_ROOT" \
             --report "$RENDER_REPORT"
+
+      - name: Install validated weekend candidate
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          python3 -m pipelines.cross_country_weekend_publication install \
+            --candidate-root "$CANDIDATE_ROOT" \
+            --render-report "$RENDER_REPORT" \
+            --rendered-site-root "$SITE_ROOT" \
+            --logical-date "$LOGICAL_DATE" \
+            --repository-root "$GITHUB_WORKSPACE"
+
+      - name: Publish validated weekend predictions
+        if: steps.bundle.outputs.has_work == 'true'
+        env:
+          SKI_SHA: ${{ steps.ski.outputs.sha }}
+        run: |
+          date_key="${LOGICAL_DATE//-/}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            "data/cross-country/weekly-picks/$date_key" \
+            "content/post/weekly-picks/$date_key.md"
+          status=unchanged
+          if git diff --cached --quiet; then
+            echo "Validated weekend prediction artifacts are already current."
+          else
+            git commit -m "Publish cross-country weekend predictions for $date_key" \
+              -m "Ski source: $SKI_SHA"
+            git pull --rebase origin main
+            git push origin HEAD:main
+            status=published
+          fi
+          python3 - "$SHADOW_ROOT/publication_report.json" "$status" \
+            "$LOGICAL_DATE" "$(git rev-parse HEAD)" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          report = {
+              "schema_version": "nordicnumbers.cross-country-weekend-publication/v1",
+              "status": sys.argv[2],
+              "logical_date": sys.argv[3],
+              "commit": sys.argv[4],
+              "files": [
+                  f"content/post/weekly-picks/{sys.argv[3].replace('-', '')}.md",
+                  f"data/cross-country/weekly-picks/{sys.argv[3].replace('-', '')}/men.json",
+                  f"data/cross-country/weekly-picks/{sys.argv[3].replace('-', '')}/ladies.json",
+              ],
+          }
+          Path(sys.argv[1]).write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n"
+          )
+          PY
 
       - name: Retain complete shadow evidence
         if: always()

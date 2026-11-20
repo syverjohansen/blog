@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DAILY = ROOT / ".github/workflows/cross-country-site-data-update.yml"
 TEAM = ROOT / ".github/workflows/cross-country-team-predictions.yml"
 INDIVIDUAL = ROOT / ".github/workflows/cross-country-individual-predictions.yml"
+WEEKEND = ROOT / ".github/workflows/cross-country-weekend-shadow.yml"
 
 
 class CrossCountryDailyWorkflowTests(unittest.TestCase):
@@ -13,6 +14,7 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         cls.daily = DAILY.read_text(encoding="utf-8")
         cls.team = TEAM.read_text(encoding="utf-8")
         cls.individual = INDIVIDUAL.read_text(encoding="utf-8")
+        cls.weekend = WEEKEND.read_text(encoding="utf-8")
 
     def test_daily_pipeline_is_chained_and_manual_without_an_independent_cron(
         self,
@@ -72,7 +74,7 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         self.assertIn("--team-sprint-history", self.daily)
         self.assertIn("--finalized-standings-root", self.daily)
         self.assertIn("standings_scrape.py", self.daily)
-        self.assertIn('ranking_standings/$SEASON', self.daily)
+        self.assertIn("ranking_standings/$SEASON", self.daily)
 
     def test_season_close_is_guarded_idempotent_and_validated(self) -> None:
         self.assertIn("run_season_close:", self.daily)
@@ -139,6 +141,7 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
             'workflows: ["Cross-country automatic daily pipeline"]', self.individual
         )
         self.assertIn('workflows: ["Cross-country individual predictions"]', self.team)
+        self.assertIn('workflows: ["Cross-country team predictions"]', self.weekend)
         self.assertNotIn('workflows: ["Alpine Production Shadow"]', self.team)
         self.assertIn('data_dir="$PWD/data/cross-country', self.team)
         self.assertNotIn('data_dir="$GITHUB_WORKSPACE/data', self.team)

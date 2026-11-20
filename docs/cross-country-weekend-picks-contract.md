@@ -1,6 +1,6 @@
 # Cross-country weekend-picks contract audit
 
-**Status:** Hosted candidate build and Hugo render implemented; publication remains disabled
+**Status:** Guarded automatic publication implemented
 
 **Contract:** `nordicnumbers.cross-country-weekend-plan/v1`
 
@@ -74,9 +74,9 @@ published, the planner selects `generated_fallback`; it does not silently
 remove those races. A later runtime slice must validate fallback athlete IDs,
 sex, nation quotas, source history revision, and provenance before prediction.
 
-The planner itself never enables publication. Publication remains disabled
-until acquisition, simulation, output schema, parity, and Hugo gates are wired
-in a later PR.
+The planner itself never publishes. Its candidate remains publication-disabled
+until acquisition, simulation, output-schema, checksum, and Hugo gates pass;
+only the workflow's final narrow Git step may install the validated files.
 
 ## Specialized boundaries
 
@@ -114,19 +114,25 @@ uses event-specific official participation flags, writes only a shadow
 workbook and disabled-publication manifest, and does not execute the legacy
 fantasy optimizer.
 
-## Hosted shadow
+## Hosted publication
 
-The manual `Cross-country weekend shadow` workflow resolves the `ski` source
-to an exact commit, builds the checksummed input bundle, materializes the blog
-runtime, executes the deterministic model, validates the workbook and shadow
-manifest, builds the stable candidate JSON and post, renders that candidate
-with Hugo, and retains all evidence for 30 days. The render verifies both
-prediction tables and representative athlete rows before passing. A no-race
-date exits before installing R. The workflow has read-only repository
-permissions and contains no Git publication or site mutation step.
+The `Cross-country weekend predictions` workflow runs after the daily
+individual/team prediction chain and remains manually runnable. It resolves
+the `ski` source to an exact commit, builds the checksummed input bundle,
+materializes the blog runtime, executes the deterministic model, validates the
+workbook and shadow manifest, builds the stable candidate JSON and post, and
+renders that candidate with Hugo. The render verifies both prediction tables
+and representative athlete rows before a narrow Git commit may publish only
+the date-keyed weekend JSON and post. A no-race date exits before installing R.
+
+On each day from the weekend group date through its last normal individual
+race, the workflow resolves back to the same stable group date. This allows a
+provisional fallback post to be replaced automatically as official FIS
+startlists become available. The post always discloses whether its
+participation source is provisional or official, an official post can never
+be downgraded to provisional inputs, and identical reruns are a no-op.
 
 ## Next implementation slice
 
-Add a narrow, guarded publication step after the same validation and Hugo
-render gates, with an explicit scheduled rerun policy for provisional
-startlists. Fantasy, Tour overall, and Final Climb remain separate PRs.
+Run the first automatic in-season publication and inspect its retained
+evidence. Fantasy, Tour overall, and Final Climb remain separate PRs.

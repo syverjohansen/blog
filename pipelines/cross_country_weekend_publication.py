@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import os
 import shutil
 import subprocess
 import tempfile
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -70,6 +71,82 @@ def _provenance_note(event_modes: dict[str, str]) -> tuple[str, str]:
             ),
         )
     return "official", "Participation is based on official FIS startlists."
+
+
+def _schedule_date(value: str) -> date:
+    try:
+        return datetime.strptime(value, "%m/%d/%Y").date()
+    except ValueError as exc:
+        raise WeekendPublicationError(
+            f"invalid weekend schedule date: {value!r}"
+        ) from exc
+
+
+def resolve_active_weekend_group_date(*, schedule_path: Path, as_of: date) -> date:
+    """Return the stable group date while any normal race in that group is active."""
+    try:
+        with schedule_path.open(newline="", encoding="utf-8-sig") as handle:
+            reader = csv.DictReader(handle)
+            fields = set(reader.fieldnames or ())
+            required = {"Date", "Race_Date", "Distance", "Stage"}
+            if missing := sorted(required - fields):
+                raise WeekendPublicationError(
+                    f"weekend schedule is missing columns: {missing}"
+                )
+            groups: dict[date, list[date]] = {}
+            for row in reader:
+                if row["Distance"] in {"Rel", "Ts"} or row["Stage"] == "1":
+                    continue
+                group_date = _schedule_date(row["Date"])
+                groups.setdefault(group_date, []).append(
+                    _schedule_date(row["Race_Date"])
+                )
+    except OSError as exc:
+        raise WeekendPublicationError(f"cannot read weekend schedule: {exc}") from exc
+    active = sorted(
+        group_date
+        for group_date, race_dates in groups.items()
+        if group_date <= as_of <= max(race_dates)
+    )
+    if len(active) > 1:
+        raise WeekendPublicationError(
+            f"multiple active weekend groups for {as_of.isoformat()}: {active}"
+        )
+    return active[0] if active else as_of
+
+
+def _validated_candidate_outputs(
+    candidate_root: Path, logical_date: date
+) -> tuple[dict[str, Any], dict[Path, bytes]]:
+    candidate_report = _read_json(
+        candidate_root / "publication_candidate_report.json", "candidate report"
+    )
+    if candidate_report.get("schema_version") != CANDIDATE_SCHEMA:
+        raise WeekendPublicationError("unsupported candidate report schema")
+    if candidate_report.get("status") != "candidate":
+        raise WeekendPublicationError("publication candidate is not ready")
+    if candidate_report.get("logical_date") != logical_date.isoformat():
+        raise WeekendPublicationError("candidate logical date does not match")
+    if candidate_report.get("publication") != {"status": "disabled"}:
+        raise WeekendPublicationError("candidate publication must remain disabled")
+    outputs = candidate_report.get("outputs")
+    if not isinstance(outputs, dict) or not outputs:
+        raise WeekendPublicationError("candidate report has no outputs")
+    documents: dict[Path, bytes] = {}
+    for relative, metadata in outputs.items():
+        path = Path(relative)
+        if path.is_absolute() or ".." in path.parts:
+            raise WeekendPublicationError(f"unsafe candidate output path: {relative}")
+        try:
+            content = (candidate_root / path).read_bytes()
+        except OSError as exc:
+            raise WeekendPublicationError(
+                f"cannot read candidate output: {path}"
+            ) from exc
+        if not isinstance(metadata, dict) or metadata.get("sha256") != _sha256(content):
+            raise WeekendPublicationError(f"candidate checksum mismatch: {relative}")
+        documents[path] = content
+    return candidate_report, documents
 
 
 def build_weekend_candidate(
@@ -163,6 +240,7 @@ def build_weekend_candidate(
             f'title: "Cross-Country Weekend Picks for {display_date}"',
             f"date: {logical_date_text}T00:00:00+00:00",
             "draft: false",
+            f'weekend_source_state: "{source_state}"',
             'tags: ["predictions", "cross-country", "weekend-picks"]',
             "---",
             "",
@@ -222,30 +300,7 @@ def render_weekend_candidate(
         raise WeekendPublicationError("hugo is required to render the candidate")
     blog_root = blog_root.expanduser().resolve()
     candidate_root = candidate_root.expanduser().resolve()
-    candidate_report = _read_json(
-        candidate_root / "publication_candidate_report.json", "candidate report"
-    )
-    if candidate_report.get("schema_version") != CANDIDATE_SCHEMA:
-        raise WeekendPublicationError("unsupported candidate report schema")
-    if candidate_report.get("status") != "candidate":
-        raise WeekendPublicationError("publication candidate is not ready")
-    if candidate_report.get("logical_date") != logical_date.isoformat():
-        raise WeekendPublicationError("candidate logical date does not match")
-    if candidate_report.get("publication") != {"status": "disabled"}:
-        raise WeekendPublicationError("candidate publication must remain disabled")
-    outputs = candidate_report.get("outputs")
-    if not isinstance(outputs, dict) or not outputs:
-        raise WeekendPublicationError("candidate report has no outputs")
-    for relative, metadata in outputs.items():
-        path = candidate_root / relative
-        try:
-            content = path.read_bytes()
-        except OSError as exc:
-            raise WeekendPublicationError(
-                f"cannot read candidate output: {path}"
-            ) from exc
-        if not isinstance(metadata, dict) or metadata.get("sha256") != _sha256(content):
-            raise WeekendPublicationError(f"candidate checksum mismatch: {relative}")
+    _validated_candidate_outputs(candidate_root, logical_date)
 
     destination = destination.expanduser().resolve()
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -333,6 +388,72 @@ def render_weekend_candidate(
     return report
 
 
+def install_weekend_candidate(
+    *,
+    candidate_root: Path,
+    render_report_path: Path,
+    rendered_site_root: Path,
+    logical_date: date,
+    repository_root: Path,
+) -> list[Path]:
+    candidate_root = candidate_root.expanduser().resolve()
+    candidate_report, documents = _validated_candidate_outputs(
+        candidate_root, logical_date
+    )
+    date_key = logical_date.strftime("%Y%m%d")
+    expected = {
+        Path("content/post/weekly-picks") / f"{date_key}.md",
+        Path("data/cross-country/weekly-picks") / date_key / "men.json",
+        Path("data/cross-country/weekly-picks") / date_key / "ladies.json",
+    }
+    if set(documents) != expected:
+        raise WeekendPublicationError(
+            f"candidate output set does not match publication contract: {sorted(documents)}"
+        )
+    render = _read_json(render_report_path, "render report")
+    page_relative = Path("post/weekly-picks") / date_key / "index.html"
+    if (
+        render.get("schema_version") != RENDER_SCHEMA
+        or render.get("status") != "passed"
+        or render.get("logical_date") != logical_date.isoformat()
+        or render.get("publication") != {"status": "disabled"}
+        or render.get("page") != str(page_relative)
+    ):
+        raise WeekendPublicationError("render report is not eligible for publication")
+    page = rendered_site_root.expanduser().resolve() / page_relative
+    try:
+        page_content = page.read_bytes()
+    except OSError as exc:
+        raise WeekendPublicationError(
+            f"cannot read rendered candidate: {page}"
+        ) from exc
+    if render.get("sha256") != _sha256(page_content):
+        raise WeekendPublicationError(
+            "rendered candidate checksum does not match report"
+        )
+
+    repository_root = repository_root.expanduser().resolve()
+    if not (repository_root / ".git").exists():
+        raise WeekendPublicationError("publication target is not a Git checkout")
+    post_relative = Path("content/post/weekly-picks") / f"{date_key}.md"
+    existing_post = repository_root / post_relative
+    if (
+        candidate_report.get("source_state") == "provisional"
+        and existing_post.is_file()
+        and 'weekend_source_state: "official"'
+        in existing_post.read_text(encoding="utf-8")
+    ):
+        raise WeekendPublicationError(
+            "refusing to replace an official weekend post with provisional inputs"
+        )
+    installed: list[Path] = []
+    for relative, content in sorted(documents.items(), key=lambda item: str(item[0])):
+        destination = repository_root / relative
+        _atomic_write(destination, content)
+        installed.append(relative)
+    return installed
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -348,6 +469,15 @@ def main() -> int:
     render.add_argument("--logical-date", required=True, type=date.fromisoformat)
     render.add_argument("--destination", required=True, type=Path)
     render.add_argument("--report", required=True, type=Path)
+    resolve_date = subparsers.add_parser("resolve-date")
+    resolve_date.add_argument("--schedule", required=True, type=Path)
+    resolve_date.add_argument("--as-of", required=True, type=date.fromisoformat)
+    install = subparsers.add_parser("install")
+    install.add_argument("--candidate-root", required=True, type=Path)
+    install.add_argument("--render-report", required=True, type=Path)
+    install.add_argument("--rendered-site-root", required=True, type=Path)
+    install.add_argument("--logical-date", required=True, type=date.fromisoformat)
+    install.add_argument("--repository-root", required=True, type=Path)
     args = parser.parse_args()
     if args.command == "build":
         report = build_weekend_candidate(
@@ -357,7 +487,7 @@ def main() -> int:
             logical_date=args.logical_date,
             output_root=args.output_root,
         )
-    else:
+    elif args.command == "render":
         report = render_weekend_candidate(
             blog_root=args.blog_root,
             candidate_root=args.candidate_root,
@@ -365,6 +495,22 @@ def main() -> int:
             destination=args.destination,
             report_path=args.report,
         )
+    elif args.command == "resolve-date":
+        print(
+            resolve_active_weekend_group_date(
+                schedule_path=args.schedule, as_of=args.as_of
+            ).isoformat()
+        )
+        return 0
+    else:
+        installed = install_weekend_candidate(
+            candidate_root=args.candidate_root,
+            render_report_path=args.render_report,
+            rendered_site_root=args.rendered_site_root,
+            logical_date=args.logical_date,
+            repository_root=args.repository_root,
+        )
+        report = {"installed": [str(path) for path in installed]}
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0
 
