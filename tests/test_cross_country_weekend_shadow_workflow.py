@@ -36,11 +36,15 @@ class CrossCountryWeekendShadowWorkflowTests(unittest.TestCase):
             "name: Run publication-disabled weekend simulation"
         )
         validate = self.source.index("name: Validate shadow workbook and manifest")
+        candidate = self.source.index("name: Build publication-disabled Hugo candidate")
+        render = self.source.index("name: Render publication-disabled Hugo candidate")
         upload = self.source.index("name: Retain complete shadow evidence")
         self.assertLess(build, materialize)
         self.assertLess(materialize, simulate)
         self.assertLess(simulate, validate)
-        self.assertLess(validate, upload)
+        self.assertLess(validate, candidate)
+        self.assertLess(candidate, render)
+        self.assertLess(render, upload)
         self.assertIn("retention-days: 30", self.source)
         self.assertIn("if: always()", self.source)
         self.assertIn("run_metadata.json", self.source)
@@ -48,7 +52,7 @@ class CrossCountryWeekendShadowWorkflowTests(unittest.TestCase):
 
     def test_no_work_date_avoids_expensive_r_runtime(self) -> None:
         condition = "if: steps.bundle.outputs.has_work == 'true'"
-        self.assertGreaterEqual(self.source.count(condition), 6)
+        self.assertGreaterEqual(self.source.count(condition), 9)
         inspect = self.source.index("name: Inspect bundle decision")
         setup_r = self.source.index("r-lib/actions/setup-r@v2")
         self.assertLess(inspect, setup_r)
@@ -57,7 +61,9 @@ class CrossCountryWeekendShadowWorkflowTests(unittest.TestCase):
         self.assertIn('publication") != {"status": "disabled"}', self.source)
         self.assertIn("publication-disabled weekend simulation", self.source)
         self.assertIn("Validate shadow workbook and manifest", self.source)
-        self.assertNotIn("hugo", self.source.lower())
+        self.assertIn('hugo-version: "0.134.1"', self.source)
+        self.assertIn("cross_country_weekend_publication render", self.source)
+        self.assertIn('--candidate-root "$CANDIDATE_ROOT"', self.source)
 
 
 if __name__ == "__main__":

@@ -6,6 +6,8 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
+import subprocess
 import tempfile
 from datetime import date
 from pathlib import Path
@@ -16,6 +18,7 @@ from pipelines.cross_country_weekend_shadow import EXPECTED_HEADERS
 CANDIDATE_SCHEMA = "nordicnumbers.cross-country-weekend-candidate/v1"
 RUNTIME_SCHEMA = "nordicnumbers.cross-country-weekend-runtime/v1"
 VALIDATION_SCHEMA = "nordicnumbers.cross-country-weekend-validation/v1"
+RENDER_SCHEMA = "nordicnumbers.cross-country-weekend-render/v1"
 SHEET_OUTPUTS = {"Men Top 30": ("men.json", "M"), "Ladies Top 30": ("ladies.json", "L")}
 
 
@@ -206,21 +209,162 @@ def build_weekend_candidate(
     return report
 
 
+def render_weekend_candidate(
+    *,
+    blog_root: Path,
+    candidate_root: Path,
+    logical_date: date,
+    destination: Path,
+    report_path: Path,
+) -> dict[str, Any]:
+    hugo = shutil.which("hugo")
+    if not hugo:
+        raise WeekendPublicationError("hugo is required to render the candidate")
+    blog_root = blog_root.expanduser().resolve()
+    candidate_root = candidate_root.expanduser().resolve()
+    candidate_report = _read_json(
+        candidate_root / "publication_candidate_report.json", "candidate report"
+    )
+    if candidate_report.get("schema_version") != CANDIDATE_SCHEMA:
+        raise WeekendPublicationError("unsupported candidate report schema")
+    if candidate_report.get("status") != "candidate":
+        raise WeekendPublicationError("publication candidate is not ready")
+    if candidate_report.get("logical_date") != logical_date.isoformat():
+        raise WeekendPublicationError("candidate logical date does not match")
+    if candidate_report.get("publication") != {"status": "disabled"}:
+        raise WeekendPublicationError("candidate publication must remain disabled")
+    outputs = candidate_report.get("outputs")
+    if not isinstance(outputs, dict) or not outputs:
+        raise WeekendPublicationError("candidate report has no outputs")
+    for relative, metadata in outputs.items():
+        path = candidate_root / relative
+        try:
+            content = path.read_bytes()
+        except OSError as exc:
+            raise WeekendPublicationError(
+                f"cannot read candidate output: {path}"
+            ) from exc
+        if not isinstance(metadata, dict) or metadata.get("sha256") != _sha256(content):
+            raise WeekendPublicationError(f"candidate checksum mismatch: {relative}")
+
+    destination = destination.expanduser().resolve()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    date_key = logical_date.strftime("%Y%m%d")
+    with tempfile.TemporaryDirectory(prefix="xc-weekend-hugo-") as directory:
+        temporary = Path(directory)
+        static_root = temporary / "static"
+        static_root.mkdir()
+        config = temporary / "hugo.toml"
+        config.write_text(
+            'baseURL = "https://test.invalid/"\n'
+            'title = "Nordic Numbers Cross-Country Weekend Shadow"\n'
+            'theme = "white"\n'
+            'languageCode = "en-us"\n'
+            f'contentDir = "{(candidate_root / "content").as_posix()}"\n'
+            f'dataDir = "{(candidate_root / "data").as_posix()}"\n'
+            f'staticDir = "{static_root.as_posix()}"\n'
+            'disableKinds = ["home", "section", "taxonomy", "term", "RSS", '
+            '"sitemap", "robotsTXT", "404"]\n\n'
+            "[params]\n"
+            '  header_image = ""\n'
+            '  description = "Deterministic cross-country weekend shadow"\n',
+            encoding="utf-8",
+        )
+        completed = subprocess.run(
+            (
+                hugo,
+                "--source",
+                str(blog_root),
+                "--config",
+                str(config),
+                "--destination",
+                str(destination),
+                "--cleanDestinationDir",
+                "--noBuildLock",
+                "--buildFuture",
+                "--panicOnWarning",
+                "--logLevel",
+                "warn",
+            ),
+            cwd=blog_root,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+        )
+    if completed.returncode != 0:
+        raise WeekendPublicationError(
+            "cross-country weekend Hugo render failed:\n" + completed.stdout.strip()
+        )
+    page_relative = Path("post/weekly-picks") / date_key / "index.html"
+    page = destination / page_relative
+    if not page.is_file():
+        raise WeekendPublicationError(f"expected rendered page is missing: {page}")
+    html = page.read_text(encoding="utf-8")
+    json_roots = candidate_root / "data/cross-country/weekly-picks" / date_key
+    expected_markers = [
+        f"Cross-Country Weekend Picks for {logical_date.strftime('%m/%d/%Y')}",
+        "table-cross-countryweekly-picks" + date_key + "men",
+        "table-cross-countryweekly-picks" + date_key + "ladies",
+    ]
+    for filename in ("men.json", "ladies.json"):
+        document = _read_json(json_roots / filename, filename)
+        try:
+            expected_markers.append(str(document["rows"][0][0]))
+        except (KeyError, IndexError, TypeError) as exc:
+            raise WeekendPublicationError(
+                f"candidate data is empty: {filename}"
+            ) from exc
+    missing = [marker for marker in expected_markers if marker not in html]
+    if missing:
+        raise WeekendPublicationError(
+            f"rendered candidate is missing expected markers: {missing}"
+        )
+    report = {
+        "schema_version": RENDER_SCHEMA,
+        "status": "passed",
+        "logical_date": logical_date.isoformat(),
+        "publication": {"status": "disabled"},
+        "page": str(page_relative),
+        "bytes": page.stat().st_size,
+        "sha256": _sha256(page.read_bytes()),
+    }
+    _atomic_write(report_path.expanduser().resolve(), _json_bytes(report))
+    return report
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--workbook", required=True, type=Path)
-    parser.add_argument("--runtime-report", required=True, type=Path)
-    parser.add_argument("--validation-report", required=True, type=Path)
-    parser.add_argument("--logical-date", required=True, type=date.fromisoformat)
-    parser.add_argument("--output-root", required=True, type=Path)
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    build = subparsers.add_parser("build")
+    build.add_argument("--workbook", required=True, type=Path)
+    build.add_argument("--runtime-report", required=True, type=Path)
+    build.add_argument("--validation-report", required=True, type=Path)
+    build.add_argument("--logical-date", required=True, type=date.fromisoformat)
+    build.add_argument("--output-root", required=True, type=Path)
+    render = subparsers.add_parser("render")
+    render.add_argument("--blog-root", required=True, type=Path)
+    render.add_argument("--candidate-root", required=True, type=Path)
+    render.add_argument("--logical-date", required=True, type=date.fromisoformat)
+    render.add_argument("--destination", required=True, type=Path)
+    render.add_argument("--report", required=True, type=Path)
     args = parser.parse_args()
-    report = build_weekend_candidate(
-        workbook_path=args.workbook,
-        runtime_report_path=args.runtime_report,
-        validation_report_path=args.validation_report,
-        logical_date=args.logical_date,
-        output_root=args.output_root,
-    )
+    if args.command == "build":
+        report = build_weekend_candidate(
+            workbook_path=args.workbook,
+            runtime_report_path=args.runtime_report,
+            validation_report_path=args.validation_report,
+            logical_date=args.logical_date,
+            output_root=args.output_root,
+        )
+    else:
+        report = render_weekend_candidate(
+            blog_root=args.blog_root,
+            candidate_root=args.candidate_root,
+            logical_date=args.logical_date,
+            destination=args.destination,
+            report_path=args.report,
+        )
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0
 

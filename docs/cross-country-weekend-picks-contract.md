@@ -1,6 +1,6 @@
 # Cross-country weekend-picks contract audit
 
-**Status:** Publication candidate contract implemented; publication remains disabled
+**Status:** Hosted candidate build and Hugo render implemented; publication remains disabled
 
 **Contract:** `nordicnumbers.cross-country-weekend-plan/v1`
 
@@ -119,13 +119,14 @@ fantasy optimizer.
 The manual `Cross-country weekend shadow` workflow resolves the `ski` source
 to an exact commit, builds the checksummed input bundle, materializes the blog
 runtime, executes the deterministic model, validates the workbook and shadow
-manifest, and retains all evidence for 30 days. A no-race date exits before
-installing R. The workflow has read-only repository permissions and contains
-no Hugo, Git publication, or site mutation step.
+manifest, builds the stable candidate JSON and post, renders that candidate
+with Hugo, and retains all evidence for 30 days. The render verifies both
+prediction tables and representative athlete rows before passing. A no-race
+date exits before installing R. The workflow has read-only repository
+permissions and contains no Git publication or site mutation step.
 
 ## Next implementation slice
 
-Wire the candidate builder into the hosted shadow, render the complete Hugo
-candidate, and retain the generated JSON, post, and render evidence. Automatic
-publication remains a separate, final gate. Fantasy, Tour overall, and Final
-Climb remain separate PRs.
+Add a narrow, guarded publication step after the same validation and Hugo
+render gates, with an explicit scheduled rerun policy for provisional
+startlists. Fantasy, Tour overall, and Final Climb remain separate PRs.
