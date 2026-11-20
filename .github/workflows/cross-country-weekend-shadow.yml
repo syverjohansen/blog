@@ -43,11 +43,14 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /pipelines/cross_country_weekend_consumer.py
+            /pipelines/cross_country_weekend_publication.py
             /pipelines/cross_country_weekend_shadow.py
             /pipelines/requirements-integration.txt
             /pipelines/requirements-snapshot.txt
             /content/post/cross-country/drafts/weekly-picks-simulation.R
             /content/post/shared/sport_params.R
+            /layouts/
+            /themes/white/
 
       - name: Resolve ski source to an exact commit
         id: ski
@@ -108,8 +111,11 @@ jobs:
             echo "BUNDLE_ROOT=$root/bundle"
             echo "RUNTIME_ROOT=$root/runtime"
             echo "PREDICTION_ROOT=$root/predictions"
+            echo "CANDIDATE_ROOT=$root/candidate"
+            echo "SITE_ROOT=$root/site"
             echo "LOG_ROOT=$root/logs"
             echo "VALIDATION_REPORT=$root/reports/validation_report.json"
+            echo "RENDER_REPORT=$root/reports/render_report.json"
           } >> "$GITHUB_ENV"
           python3 - "$root/run_metadata.json" "$logical_date" <<'PY'
           import json
@@ -232,6 +238,34 @@ jobs:
             --n-simulations "$N_SIMULATIONS" \
             --random-seed "$RANDOM_SEED" \
             --report "$VALIDATION_REPORT"
+
+      - name: Build publication-disabled Hugo candidate
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          date_key="${LOGICAL_DATE//-/}"
+          python3 -m pipelines.cross_country_weekend_publication build \
+            --workbook "$PREDICTION_ROOT/$date_key/weekend_top_30_predicted_points.xlsx" \
+            --runtime-report "$RUNTIME_ROOT/runtime_report.json" \
+            --validation-report "$VALIDATION_REPORT" \
+            --logical-date "$LOGICAL_DATE" \
+            --output-root "$CANDIDATE_ROOT"
+
+      - name: Set up Hugo
+        if: steps.bundle.outputs.has_work == 'true'
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Render publication-disabled Hugo candidate
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          python3 -m pipelines.cross_country_weekend_publication render \
+            --blog-root "$GITHUB_WORKSPACE" \
+            --candidate-root "$CANDIDATE_ROOT" \
+            --logical-date "$LOGICAL_DATE" \
+            --destination "$SITE_ROOT" \
+            --report "$RENDER_REPORT"
 
       - name: Retain complete shadow evidence
         if: always()

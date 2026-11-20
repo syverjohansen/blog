@@ -1,9 +1,11 @@
 import hashlib
 import json
+import shutil
 import tempfile
 import unittest
 from datetime import date
 from pathlib import Path
+from unittest import mock
 
 try:
     from openpyxl import Workbook
@@ -12,8 +14,10 @@ except ModuleNotFoundError:
 
 from pipelines.cross_country_weekend_publication import (
     CANDIDATE_SCHEMA,
+    RENDER_SCHEMA,
     WeekendPublicationError,
     build_weekend_candidate,
+    render_weekend_candidate,
 )
 from pipelines.cross_country_weekend_shadow import (
     EXPECTED_HEADERS,
@@ -153,6 +157,65 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
                     validation_report_path=validation,
                     logical_date=date(2026, 11, 27),
                     output_root=output,
+                )
+
+    @unittest.skipUnless(shutil.which("hugo"), "hugo is not installed")
+    def test_renders_candidate_with_expected_tables_and_athletes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root)
+            candidate = root / "candidate"
+            build_weekend_candidate(
+                workbook_path=workbook,
+                runtime_report_path=runtime,
+                validation_report_path=validation,
+                logical_date=date(2026, 11, 27),
+                output_root=candidate,
+            )
+            report_path = root / "reports/render_report.json"
+            report = render_weekend_candidate(
+                blog_root=Path(__file__).resolve().parents[1],
+                candidate_root=candidate,
+                logical_date=date(2026, 11, 27),
+                destination=root / "site",
+                report_path=report_path,
+            )
+            self.assertEqual(report["schema_version"], RENDER_SCHEMA)
+            self.assertEqual(report["status"], "passed")
+            self.assertEqual(report["publication"], {"status": "disabled"})
+            html = (root / "site/post/weekly-picks/20261127/index.html").read_text()
+            self.assertIn("First Man", html)
+            self.assertIn("First Woman", html)
+            self.assertIn("table-cross-countryweekly-picks20261127men", html)
+            self.assertTrue(report_path.is_file())
+
+    def test_render_rejects_candidate_changed_after_build(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root)
+            candidate = root / "candidate"
+            build_weekend_candidate(
+                workbook_path=workbook,
+                runtime_report_path=runtime,
+                validation_report_path=validation,
+                logical_date=date(2026, 11, 27),
+                output_root=candidate,
+            )
+            men = candidate / "data/cross-country/weekly-picks/20261127/men.json"
+            men.write_text(men.read_text() + " ", encoding="utf-8")
+            with (
+                mock.patch(
+                    "pipelines.cross_country_weekend_publication.shutil.which",
+                    return_value="/usr/bin/hugo",
+                ),
+                self.assertRaisesRegex(WeekendPublicationError, "checksum"),
+            ):
+                render_weekend_candidate(
+                    blog_root=Path(__file__).resolve().parents[1],
+                    candidate_root=candidate,
+                    logical_date=date(2026, 11, 27),
+                    destination=root / "site",
+                    report_path=root / "render.json",
                 )
 
 
