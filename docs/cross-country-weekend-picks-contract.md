@@ -134,5 +134,7 @@ be downgraded to provisional inputs, and identical reruns are a no-op.
 
 ## Next implementation slice
 
-Run the first automatic in-season publication and inspect its retained
-evidence. Fantasy, Tour overall, and Final Climb remain separate PRs.
+Normal weekend publication is complete. Fantasy now has a separate executable
+boundary in `cross-country-fantasy-contract.md`; its next slice is the
+full-pool Normal/Safe/Upside model artifact. Tour overall and Final Climb
+remain separate PRs.
