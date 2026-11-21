@@ -1,6 +1,6 @@
 # Cross-country fantasy contract audit
 
-**Status:** Full-pool model artifact implemented; optimizer not yet ported
+**Status:** Price capture and exact enrichment implemented; optimizer not yet ported
 
 **Contract:** `nordicnumbers.cross-country-fantasy-plan/v1`
 
@@ -43,9 +43,16 @@ non-team athletes are eligible. Duplicate IDs, invalid prices, sex conflicts,
 or an unmatched predicted athlete block the fantasy candidate and require
 visible evidence; they never silently remove an athlete from optimization.
 
-Network access is deliberately absent from
-`pipelines.cross_country_fantasy_contract`. The future acquisition step owns
-timeouts/retries and passes a captured payload into this validator.
+Network access remains absent from
+`pipelines.cross_country_fantasy_contract`. The hosted acquisition step uses
+three bounded transient retries, retains the exact response and its SHA-256,
+and passes that capture into the validator. No prior capture is reused when
+the endpoint is unavailable.
+
+On a complete exact join it writes `fantasy_priced_inputs.json` with the model
+scores, captured price, both source checksums, and run provenance. An
+unavailable endpoint or blocked join is retained as a report and exits without
+stopping the normal weekend publication.
 
 ## Full-pool model artifact
 
@@ -90,5 +97,6 @@ with distinct scoring and roster semantics.
 
 ## Next implementation slice
 
-Add checksummed Fantasy XC price acquisition, exact FIS-code enrichment, and
-the solver behind this contract.
+Add a deterministic solver for the Normal, Safe, and Upside teams, validate
+all three rosters, and render the accepted fantasy section into the weekend
+post.

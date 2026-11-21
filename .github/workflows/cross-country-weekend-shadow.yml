@@ -51,6 +51,8 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /pipelines/cross_country_weekend_consumer.py
+            /pipelines/cross_country_fantasy_contract.py
+            /pipelines/cross_country_fantasy_prices.py
             /pipelines/cross_country_weekend_publication.py
             /pipelines/cross_country_weekend_shadow.py
             /pipelines/requirements-integration.txt
@@ -133,6 +135,8 @@ jobs:
             echo "SITE_ROOT=$root/site"
             echo "LOG_ROOT=$root/logs"
             echo "VALIDATION_REPORT=$root/reports/validation_report.json"
+            echo "FANTASY_ROOT=$root/fantasy"
+            echo "FANTASY_REPORT=$root/reports/fantasy_price_report.json"
             echo "RENDER_REPORT=$root/reports/render_report.json"
           } >> "$GITHUB_ENV"
           python3 - "$root/run_metadata.json" "$logical_date" "$as_of" "$blog_sha" <<'PY'
@@ -257,6 +261,18 @@ jobs:
             --n-simulations "$N_SIMULATIONS" \
             --random-seed "$RANDOM_SEED" \
             --report "$VALIDATION_REPORT"
+
+      - name: Capture optional Fantasy XC prices
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          date_key="${LOGICAL_DATE//-/}"
+          python3 -m pipelines.cross_country_fantasy_prices \
+            --workbook "$PREDICTION_ROOT/$date_key/weekend_fantasy_inputs.xlsx" \
+            --logical-date "$LOGICAL_DATE" \
+            --random-seed "$RANDOM_SEED" \
+            --n-simulations "$N_SIMULATIONS" \
+            --output-dir "$FANTASY_ROOT" \
+            --report "$FANTASY_REPORT"
 
       - name: Build publication-disabled Hugo candidate
         if: steps.bundle.outputs.has_work == 'true'
