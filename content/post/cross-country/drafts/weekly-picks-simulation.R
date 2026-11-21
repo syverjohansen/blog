@@ -938,10 +938,14 @@ simulate_race_positions <- function(athlete_distributions, n_simulations = N_SIM
   }
 
   position_probs <- position_counts / n_simulations
+  safe_points <- apply(all_sims, 1, quantile, probs = 0.1, names = FALSE)
+  upside_points <- apply(all_sims, 1, quantile, probs = 0.9, names = FALSE)
 
   results <- data.frame(
     athlete_id = athlete_ids,
     mean_points = means,
+    safe_points = safe_points,
+    upside_points = upside_points,
     sd_points = sds,
     n_actual_races = sapply(valid_distributions, function(x) x$n_actual_races),
     adjustment = sapply(valid_distributions, function(x) {
@@ -1090,7 +1094,7 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
     # Add athlete info to results
     simulation_results <- simulation_results %>%
       left_join(
-        race_startlist %>% select(ID, Skier, Nation),
+        race_startlist %>% select(ID, FIS_Code, Skier, Nation),
         by = c("athlete_id" = "ID")
       ) %>%
       mutate(Race = i)
@@ -1109,7 +1113,11 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
 
     # Calculate expected points (mean_points * race_prob)
     simulation_results <- simulation_results %>%
-      mutate(Expected_Points = mean_points * Race_Prob)
+      mutate(
+        Expected_Points = mean_points * Race_Prob,
+        Expected_Safe = safe_points * Race_Prob,
+        Expected_Upside = upside_points * Race_Prob
+      )
 
     # Log top 3
     log_info(paste("Top 3 for", gender, "Race", i, ":"))
@@ -1127,9 +1135,11 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
 
   # Calculate total expected points per athlete
   athlete_totals <- all_results %>%
-    group_by(athlete_id, Skier, Nation) %>%
+    group_by(athlete_id, FIS_Code, Skier, Nation) %>%
     summarise(
       Total_Points = sum(Expected_Points, na.rm = TRUE),
+      Total_Safe = sum(Expected_Safe, na.rm = TRUE),
+      Total_Upside = sum(Expected_Upside, na.rm = TRUE),
       Races_Count = n(),
       Avg_Win_Prob = mean(prob_top_1, na.rm = TRUE),
       Avg_Podium_Prob = mean(prob_top_3, na.rm = TRUE),
@@ -1288,6 +1298,54 @@ if (length(weekly_points_sheets) == 0) {
 weekly_points_file <- file.path(weekly_output_dir, "weekend_top_30_predicted_points.xlsx")
 write_xlsx(weekly_points_sheets, weekly_points_file)
 log_info(paste("Weekly points workbook saved to:", weekly_points_file))
+
+# Preserve the complete optimizer input separately from the top-30 website
+# workbook. Fantasy price acquisition and team selection remain separate steps.
+fantasy_input_sheets <- list()
+
+if (!is.null(men_results) && nrow(men_results$athlete_totals) > 0) {
+  fantasy_input_sheets[["Men Full Pool"]] <- men_results$athlete_totals %>%
+    mutate(Sex = "M") %>%
+    arrange(desc(Total_Points)) %>%
+    transmute(
+      `Canonical Athlete ID` = as.character(athlete_id),
+      `FIS Code` = as.character(FIS_Code),
+      Skier,
+      Nation,
+      Sex,
+      `Total Points` = round(Total_Points, 2),
+      `Total Safe` = round(Total_Safe, 2),
+      `Total Upside` = round(Total_Upside, 2),
+      `Races Count` = Races_Count,
+      `Logical Date` = LOGICAL_DATE_TEXT,
+      `Random Seed` = RANDOM_SEED,
+      `Simulation Count` = N_SIMULATIONS
+    )
+}
+
+if (!is.null(ladies_results) && nrow(ladies_results$athlete_totals) > 0) {
+  fantasy_input_sheets[["Ladies Full Pool"]] <- ladies_results$athlete_totals %>%
+    mutate(Sex = "L") %>%
+    arrange(desc(Total_Points)) %>%
+    transmute(
+      `Canonical Athlete ID` = as.character(athlete_id),
+      `FIS Code` = as.character(FIS_Code),
+      Skier,
+      Nation,
+      Sex,
+      `Total Points` = round(Total_Points, 2),
+      `Total Safe` = round(Total_Safe, 2),
+      `Total Upside` = round(Total_Upside, 2),
+      `Races Count` = Races_Count,
+      `Logical Date` = LOGICAL_DATE_TEXT,
+      `Random Seed` = RANDOM_SEED,
+      `Simulation Count` = N_SIMULATIONS
+    )
+}
+
+fantasy_input_file <- file.path(weekly_output_dir, "weekend_fantasy_inputs.xlsx")
+write_xlsx(fantasy_input_sheets, fantasy_input_file)
+log_info(paste("Fantasy input workbook saved to:", fantasy_input_file))
 
 manifest_file <- file.path(weekly_output_dir, "shadow_manifest.json")
 manifest <- c(

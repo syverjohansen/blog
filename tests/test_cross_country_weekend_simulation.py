@@ -59,6 +59,23 @@ class CrossCountryWeekendSimulationTests(unittest.TestCase):
         self.assertNotIn("write.xlsx(weekly_points_sheets", self.source)
         self.assertEqual(self.source.count("ID = athlete_id"), 2)
 
+    def test_writes_full_pool_three_objective_fantasy_input(self) -> None:
+        self.assertIn(
+            "safe_points <- apply(all_sims, 1, quantile, probs = 0.1", self.source
+        )
+        self.assertIn(
+            "upside_points <- apply(all_sims, 1, quantile, probs = 0.9",
+            self.source,
+        )
+        self.assertIn("Expected_Safe = safe_points * Race_Prob", self.source)
+        self.assertIn("Expected_Upside = upside_points * Race_Prob", self.source)
+        self.assertIn('fantasy_input_sheets[["Men Full Pool"]]', self.source)
+        self.assertIn('fantasy_input_sheets[["Ladies Full Pool"]]', self.source)
+        self.assertIn('"weekend_fantasy_inputs.xlsx"', self.source)
+        self.assertIn("`Logical Date` = LOGICAL_DATE_TEXT", self.source)
+        self.assertIn("`Random Seed` = RANDOM_SEED", self.source)
+        self.assertIn("`Simulation Count` = N_SIMULATIONS", self.source)
+
     @unittest.skipUnless(shutil.which("Rscript"), "Rscript is not installed")
     def test_r_source_parses(self) -> None:
         result = subprocess.run(

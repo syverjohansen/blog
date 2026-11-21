@@ -11,6 +11,7 @@ except ModuleNotFoundError:
 
 from pipelines.cross_country_weekend_shadow import (
     EXPECTED_HEADERS,
+    FANTASY_EXPECTED_HEADERS,
     SHADOW_SCHEMA,
     WeekendShadowError,
     validate_weekend_shadow,
@@ -52,6 +53,28 @@ def write_shadow(root: Path, *, publication: str = "disabled") -> tuple[Path, Pa
     sheet.append(EXPECTED_HEADERS)
     sheet.append(("Athlete", 123, "Norway", "M", 100.5, 2, 25.0, 50.0))
     workbook.save(output / "weekend_top_30_predicted_points.xlsx")
+    fantasy = Workbook()
+    fantasy_sheet = fantasy.active
+    fantasy_sheet.title = "Men Full Pool"
+    fantasy_sheet.append(FANTASY_EXPECTED_HEADERS)
+    for index in range(8):
+        fantasy_sheet.append(
+            (
+                str(123 + index),
+                str(3_420_001 + index),
+                f"Athlete {index}",
+                "Norway",
+                "M",
+                100.5 - index,
+                80.0 - index,
+                120.0 - index,
+                2,
+                "2026-11-27",
+                42,
+                250,
+            )
+        )
+    fantasy.save(output / "weekend_fantasy_inputs.xlsx")
     return runtime, predictions
 
 
@@ -72,6 +95,12 @@ class CrossCountryWeekendShadowTests(unittest.TestCase):
             self.assertEqual(report["status"], "passed")
             self.assertEqual(report["publication"], {"status": "disabled"})
             self.assertEqual(report["sheets"]["Men Top 30"]["rows"], 1)
+            self.assertEqual(
+                report["fantasy_inputs"]["status"], "ready_for_price_enrichment"
+            )
+            self.assertEqual(
+                report["fantasy_inputs"]["sheets"]["Men Full Pool"]["rows"], 8
+            )
             self.assertEqual(
                 len(
                     report["outputs"]["weekend_top_30_predicted_points.xlsx"]["sha256"]
@@ -113,6 +142,80 @@ class CrossCountryWeekendShadowTests(unittest.TestCase):
                     random_seed=42,
                     report_path=root / "report.json",
                 )
+
+    def test_missing_fis_code_is_reported_without_blocking_weekend(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            runtime, predictions = write_shadow(root)
+            fantasy_path = predictions / "20261127/weekend_fantasy_inputs.xlsx"
+            fantasy = Workbook()
+            sheet = fantasy.active
+            sheet.title = "Men Full Pool"
+            sheet.append(FANTASY_EXPECTED_HEADERS)
+            sheet.append(
+                (
+                    "123",
+                    None,
+                    "Athlete",
+                    "Norway",
+                    "M",
+                    100,
+                    80,
+                    120,
+                    2,
+                    "2026-11-27",
+                    42,
+                    250,
+                )
+            )
+            fantasy.save(fantasy_path)
+            report = validate_weekend_shadow(
+                runtime_dir=runtime,
+                prediction_root=predictions,
+                logical_date=date(2026, 11, 27),
+                n_simulations=250,
+                random_seed=42,
+                report_path=root / "reports/report.json",
+            )
+            self.assertEqual("passed", report["status"])
+            self.assertEqual("identity_incomplete", report["fantasy_inputs"]["status"])
+
+    def test_small_complete_pool_is_not_optimizer_ready(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            runtime, predictions = write_shadow(root)
+            fantasy_path = predictions / "20261127/weekend_fantasy_inputs.xlsx"
+            fantasy = Workbook()
+            sheet = fantasy.active
+            sheet.title = "Men Full Pool"
+            sheet.append(FANTASY_EXPECTED_HEADERS)
+            sheet.append(
+                (
+                    "123",
+                    "3420001",
+                    "Athlete",
+                    "Norway",
+                    "M",
+                    100,
+                    80,
+                    120,
+                    2,
+                    "2026-11-27",
+                    42,
+                    250,
+                )
+            )
+            fantasy.save(fantasy_path)
+            report = validate_weekend_shadow(
+                runtime_dir=runtime,
+                prediction_root=predictions,
+                logical_date=date(2026, 11, 27),
+                n_simulations=250,
+                random_seed=42,
+                report_path=root / "reports/report.json",
+            )
+            self.assertEqual("passed", report["status"])
+            self.assertEqual("insufficient_pool", report["fantasy_inputs"]["status"])
 
 
 if __name__ == "__main__":

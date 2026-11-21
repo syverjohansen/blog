@@ -23,7 +23,22 @@ EXPECTED_HEADERS = (
     "Avg Win Probability",
     "Avg Podium Probability",
 )
+FANTASY_EXPECTED_HEADERS = (
+    "Canonical Athlete ID",
+    "FIS Code",
+    "Skier",
+    "Nation",
+    "Sex",
+    "Total Points",
+    "Total Safe",
+    "Total Upside",
+    "Races Count",
+    "Logical Date",
+    "Random Seed",
+    "Simulation Count",
+)
 SHEET_SEX = {"Men Top 30": "M", "Ladies Top 30": "L"}
+FANTASY_SHEET_SEX = {"Men Full Pool": "M", "Ladies Full Pool": "L"}
 
 
 class WeekendShadowError(RuntimeError):
@@ -71,6 +86,7 @@ def validate_weekend_shadow(
     output_dir = prediction_root.expanduser().resolve() / date_key
     manifest_path = output_dir / "shadow_manifest.json"
     workbook_path = output_dir / "weekend_top_30_predicted_points.xlsx"
+    fantasy_workbook_path = output_dir / "weekend_fantasy_inputs.xlsx"
     runtime_report_path = runtime_dir.expanduser().resolve() / "runtime_report.json"
 
     try:
@@ -154,6 +170,83 @@ def validate_weekend_shadow(
         sheet_results[sheet_name] = {"rows": len(data), "sex": expected_sex}
     workbook.close()
 
+    try:
+        fantasy_workbook = load_workbook(
+            fantasy_workbook_path, read_only=True, data_only=True
+        )
+    except (OSError, ValueError) as exc:
+        raise WeekendShadowError(f"cannot read fantasy input workbook: {exc}") from exc
+    required_fantasy_sheets = {
+        name for name, sex in FANTASY_SHEET_SEX.items() if sex in expected_sheets
+    }
+    if set(fantasy_workbook.sheetnames) != required_fantasy_sheets:
+        raise WeekendShadowError(
+            f"unexpected fantasy workbook sheets: {sorted(fantasy_workbook.sheetnames)}"
+        )
+    fantasy_results: dict[str, dict[str, Any]] = {}
+    for sheet_name in sorted(required_fantasy_sheets):
+        rows = fantasy_workbook[sheet_name].iter_rows(values_only=True)
+        headers = tuple(next(rows, ()))
+        if headers != FANTASY_EXPECTED_HEADERS:
+            raise WeekendShadowError(
+                f"unexpected fantasy headers in {sheet_name}: {headers}"
+            )
+        data = list(rows)
+        if not data:
+            raise WeekendShadowError(f"empty fantasy pool in {sheet_name}")
+        expected_sex = FANTASY_SHEET_SEX[sheet_name]
+        athletes: set[str] = set()
+        missing_fis_codes = 0
+        for row in data:
+            (
+                athlete_id,
+                fis_code,
+                skier,
+                nation,
+                sex,
+                normal,
+                safe,
+                upside,
+                races,
+                row_logical_date,
+                row_random_seed,
+                row_simulations,
+            ) = row
+            athlete_id = str(athlete_id or "")
+            if not athlete_id or athlete_id in athletes or not skier or not nation:
+                raise WeekendShadowError(f"invalid fantasy identity in {sheet_name}")
+            athletes.add(athlete_id)
+            if sex != expected_sex:
+                raise WeekendShadowError(f"invalid fantasy sex in {sheet_name}")
+            if fis_code in {None, "", "NA"}:
+                missing_fis_codes += 1
+            elif not str(fis_code).removesuffix(".0").isdigit():
+                raise WeekendShadowError(f"invalid FIS code in {sheet_name}")
+            if any(
+                not isinstance(value, (int, float)) or value < 0
+                for value in (normal, safe, upside)
+            ):
+                raise WeekendShadowError(f"invalid fantasy scores in {sheet_name}")
+            if safe > normal or normal > upside:
+                raise WeekendShadowError(f"unordered fantasy scores in {sheet_name}")
+            if not isinstance(races, (int, float)) or races < 1:
+                raise WeekendShadowError(f"invalid fantasy race count in {sheet_name}")
+            if (
+                row_logical_date != logical_date.isoformat()
+                or row_random_seed != random_seed
+                or row_simulations != n_simulations
+            ):
+                raise WeekendShadowError(
+                    f"fantasy provenance does not match invocation in {sheet_name}"
+                )
+        fantasy_results[sheet_name] = {
+            "rows": len(data),
+            "sex": expected_sex,
+            "missing_fis_codes": missing_fis_codes,
+            "identity_complete": missing_fis_codes == 0,
+        }
+    fantasy_workbook.close()
+
     report = {
         "schema_version": VALIDATION_SCHEMA,
         "status": "passed",
@@ -162,9 +255,24 @@ def validate_weekend_shadow(
         "n_simulations": n_simulations,
         "random_seed": random_seed,
         "sheets": sheet_results,
+        "fantasy_inputs": {
+            "status": (
+                "identity_incomplete"
+                if not all(
+                    result["identity_complete"] for result in fantasy_results.values()
+                )
+                else (
+                    "insufficient_pool"
+                    if any(result["rows"] < 8 for result in fantasy_results.values())
+                    else "ready_for_price_enrichment"
+                )
+            ),
+            "sheets": fantasy_results,
+        },
         "outputs": {
             "shadow_manifest.json": {"sha256": _sha256(manifest_path)},
             "weekend_top_30_predicted_points.xlsx": {"sha256": _sha256(workbook_path)},
+            "weekend_fantasy_inputs.xlsx": {"sha256": _sha256(fantasy_workbook_path)},
         },
     }
     _atomic_json(report_path.expanduser().resolve(), report)
