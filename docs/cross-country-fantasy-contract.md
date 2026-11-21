@@ -1,6 +1,6 @@
 # Cross-country fantasy contract audit
 
-**Status:** Price capture and exact enrichment implemented; optimizer not yet ported
+**Status:** Three-objective optimizer implemented; rendering not yet enabled
 
 **Contract:** `nordicnumbers.cross-country-fantasy-plan/v1`
 
@@ -54,6 +54,21 @@ scores, captured price, both source checksums, and run provenance. An
 unavailable endpoint or blocked join is retained as a report and exits without
 stopping the normal weekend publication.
 
+## Deterministic optimization
+
+The hosted optimizer performs an exact dynamic-programming search for each
+objective. It does not use the legacy greedy fallback. Every candidate is
+checked again for exactly eight men, eight ladies, 16 unique FIS codes, and a
+maximum cost of 100,000. Ties prefer the cheaper roster, then the
+lexicographically smaller FIS-code set, so identical inputs always produce
+identical teams.
+
+Normal maximizes `total_points`, Safe maximizes `total_safe`, and Upside
+maximizes `total_upside`. The output and optimizer report are checksummed and
+remain publication-disabled. An unavailable price capture skips optimization;
+an impossible or invalid input records `blocked`. Neither state blocks the
+normal weekend post.
+
 ## Full-pool model artifact
 
 The top-30 presentation workbook remains unchanged. The model also emits
@@ -97,6 +112,5 @@ with distinct scoring and roster semantics.
 
 ## Next implementation slice
 
-Add a deterministic solver for the Normal, Safe, and Upside teams, validate
-all three rosters, and render the accepted fantasy section into the weekend
-post.
+Render the three validated rosters as a fantasy section and include it in the
+weekend post only when the optimizer report and Hugo gate both pass.

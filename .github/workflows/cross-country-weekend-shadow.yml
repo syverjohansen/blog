@@ -52,6 +52,7 @@ jobs:
           sparse-checkout: |
             /pipelines/cross_country_weekend_consumer.py
             /pipelines/cross_country_fantasy_contract.py
+            /pipelines/cross_country_fantasy_optimizer.py
             /pipelines/cross_country_fantasy_prices.py
             /pipelines/cross_country_weekend_publication.py
             /pipelines/cross_country_weekend_shadow.py
@@ -137,6 +138,7 @@ jobs:
             echo "VALIDATION_REPORT=$root/reports/validation_report.json"
             echo "FANTASY_ROOT=$root/fantasy"
             echo "FANTASY_REPORT=$root/reports/fantasy_price_report.json"
+            echo "FANTASY_OPTIMIZER_REPORT=$root/reports/fantasy_optimizer_report.json"
             echo "RENDER_REPORT=$root/reports/render_report.json"
           } >> "$GITHUB_ENV"
           python3 - "$root/run_metadata.json" "$logical_date" "$as_of" "$blog_sha" <<'PY'
@@ -273,6 +275,16 @@ jobs:
             --n-simulations "$N_SIMULATIONS" \
             --output-dir "$FANTASY_ROOT" \
             --report "$FANTASY_REPORT"
+
+      - name: Optimize optional fantasy teams
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          python3 -m pipelines.cross_country_fantasy_optimizer \
+            --price-report "$FANTASY_REPORT" \
+            --priced-input "$FANTASY_ROOT/fantasy_priced_inputs.json" \
+            --logical-date "$LOGICAL_DATE" \
+            --output "$FANTASY_ROOT/fantasy_teams.json" \
+            --report "$FANTASY_OPTIMIZER_REPORT"
 
       - name: Build publication-disabled Hugo candidate
         if: steps.bundle.outputs.has_work == 'true'
