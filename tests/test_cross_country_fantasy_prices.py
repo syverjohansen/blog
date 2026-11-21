@@ -6,7 +6,10 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 from urllib.error import URLError
 
-from openpyxl import Workbook
+try:
+    from openpyxl import Workbook
+except ModuleNotFoundError:
+    Workbook = None
 
 from pipelines.cross_country_fantasy_prices import (
     FANTASY_EXPECTED_HEADERS,
@@ -72,6 +75,7 @@ def write_workbook(path: Path, *, missing_fis: bool = False) -> list[dict[str, o
     return prices
 
 
+@unittest.skipUnless(Workbook is not None, "openpyxl is not installed")
 class CrossCountryFantasyPriceTests(unittest.TestCase):
     def run_capture(
         self,
