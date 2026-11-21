@@ -13,6 +13,8 @@ from typing import Any
 from pipelines.alpine_smoke_evidence import write_json_atomic
 from pipelines.test_pipeline import PipelineCheckError, validate_prediction_semantics
 
+RESULT_EVIDENCE_FIELDS = ("Time", "Run1", "Run2", "Points")
+
 
 def load_json(path: Path) -> Any:
     if not path.is_file():
@@ -121,6 +123,31 @@ def require_passed_shadow(manifest: dict[str, Any]) -> tuple[date, list[str]]:
     return logical_date, genders
 
 
+def require_safe_actual_results(
+    actual_results: Any, races: list[dict[str, Any]]
+) -> None:
+    """Reject completed or ambiguous result pages while allowing validated proxies."""
+    if not isinstance(actual_results, list):
+        raise PipelineCheckError("actual results evidence must be a JSON array")
+    if not actual_results:
+        return
+
+    for index, row in enumerate(actual_results):
+        if not isinstance(row, dict):
+            raise PipelineCheckError(
+                f"actual results row {index} must be a JSON object"
+            )
+        if any(str(row.get(field) or "").strip() for field in RESULT_EVIDENCE_FIELDS):
+            raise PipelineCheckError(
+                "publication candidates cannot use a page containing completed results"
+            )
+
+    if any(race.get("source") != "historical_result_proxy" for race in races):
+        raise PipelineCheckError(
+            "nonempty result evidence is not a validated historical result proxy"
+        )
+
+
 def prepare_candidate(
     *,
     manifest_path: Path,
@@ -152,10 +179,7 @@ def prepare_candidate(
         race.get("result_fields_in_prediction_input") is not False for race in races
     ):
         raise PipelineCheckError("startlist evidence does not prove result isolation")
-    if actual_results != []:
-        raise PipelineCheckError(
-            "publication candidates cannot use a page containing completed results"
-        )
+    require_safe_actual_results(actual_results, races)
 
     date_key = logical_date.strftime("%Y%m%d")
     source_root = site_data_root / "alpine/drafts/race-picks" / date_key
@@ -176,7 +200,9 @@ def prepare_candidate(
             or declared.get("sha256") != semantic["sha256"]
             or declared.get("semantic_contract") != "passed"
         ):
-            raise PipelineCheckError(f"generated output does not match manifest: {filename}")
+            raise PipelineCheckError(
+                f"generated output does not match manifest: {filename}"
+            )
         planned.append((target_root / filename, source.read_bytes(), semantic))
 
     content_path = repository_root / "content/post/race-picks" / f"{date_key}.md"
@@ -208,7 +234,9 @@ def prepare_candidate(
 
     report = {
         "schema_version": "nordicnumbers.alpine-publication-candidate/v1",
-        "status": "prepared" if any(item["status"] == "created" for item in files) else "unchanged",
+        "status": "prepared"
+        if any(item["status"] == "created" for item in files)
+        else "unchanged",
         "logical_date": logical_date.isoformat(),
         "source_run_id": manifest.get("run_id"),
         "source_commits": manifest.get("code"),
