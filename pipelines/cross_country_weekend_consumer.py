@@ -235,18 +235,32 @@ def _runtime_rows(
         athlete_id = row["canonical_athlete_id"]
         identity = {
             "ID": athlete_id,
+            "FIS_Code": row["fis_code"],
             "Skier": row["canonical_name"],
             "Nation": row["canonical_nation"],
         }
         previous = athletes.get(athlete_id)
-        if previous and previous != identity:
-            raise WeekendConsumerError(
-                f"canonical identity changes inside bundle: {sex}/{athlete_id}"
-            )
+        if previous:
+            if any(
+                previous[field] != identity[field]
+                for field in ("ID", "Skier", "Nation")
+            ):
+                raise WeekendConsumerError(
+                    f"canonical identity changes inside bundle: {sex}/{athlete_id}"
+                )
+            if (
+                previous["FIS_Code"]
+                and identity["FIS_Code"]
+                and previous["FIS_Code"] != identity["FIS_Code"]
+            ):
+                raise WeekendConsumerError(
+                    f"FIS code changes inside bundle: {sex}/{athlete_id}"
+                )
+            identity["FIS_Code"] = previous["FIS_Code"] or identity["FIS_Code"]
         athletes[athlete_id] = identity
         present.add((row["race_id"], athlete_id))
 
-    fields = ["ID", "Skier", "Nation"]
+    fields = ["ID", "FIS_Code", "Skier", "Nation"]
     for index in range(1, len(race_ids) + 1):
         fields.extend((f"Race{index}_Prob", f"Race{index}_Official"))
     rows: list[dict[str, str]] = []

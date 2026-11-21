@@ -143,6 +143,7 @@ class CrossCountryWeekendConsumerTests(unittest.TestCase):
                 [("1", "1", "0"), ("2", "1", "1")],
             )
             self.assertEqual(rows[0]["Race1_Official"], "true")
+            self.assertEqual(rows[0]["FIS_Code"], "31")
             self.assertTrue((root / "runtime/runtime_report.json").is_file())
 
     def test_fallback_probabilities_remain_unset_for_model(self) -> None:
@@ -167,6 +168,30 @@ class CrossCountryWeekendConsumerTests(unittest.TestCase):
                 row = next(csv.DictReader(handle))
             self.assertEqual(row["Race1_Prob"], "")
             self.assertEqual(row["Race1_Official"], "false")
+            self.assertEqual(row["FIS_Code"], "")
+
+    def test_preserves_known_fis_code_across_fallback_and_official_rows(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            bundle = write_bundle(
+                root,
+                schedule=[schedule_row("M", "101"), schedule_row("M", "102")],
+                men=[
+                    startlist_row("M", "101", "1", "Athlete", official=False),
+                    startlist_row("M", "102", "1", "Athlete", official=True),
+                ],
+                ladies=[],
+            )
+            materialize_weekend_runtime(
+                bundle_dir=bundle,
+                logical_date=date(2026, 11, 27),
+                output_dir=root / "runtime",
+            )
+            with (root / "runtime/startlist_weekend_men.csv").open(
+                newline="", encoding="utf-8"
+            ) as handle:
+                row = next(csv.DictReader(handle))
+            self.assertEqual("31", row["FIS_Code"])
 
     def test_rejects_tampered_bundle_output(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

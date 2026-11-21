@@ -1,6 +1,6 @@
 # Cross-country fantasy contract audit
 
-**Status:** Executable boundary defined; optimizer not yet ported
+**Status:** Full-pool model artifact implemented; optimizer not yet ported
 
 **Contract:** `nordicnumbers.cross-country-fantasy-plan/v1`
 
@@ -47,21 +47,26 @@ Network access is deliberately absent from
 `pipelines.cross_country_fantasy_contract`. The future acquisition step owns
 timeouts/retries and passes a captured payload into this validator.
 
-## Prediction prerequisite discovered by the audit
+## Full-pool model artifact
 
-The current modern weekend workbook publishes the top 30 per sex and exposes
-only normal expected points. That is sufficient for the existing weekend
-post, but not for the preserved fantasy product. Before the optimizer is
-ported, the model must emit a separate full-pool fantasy input containing:
+The top-30 presentation workbook remains unchanged. The model also emits
+`weekend_fantasy_inputs.xlsx`, with a full-pool sheet per available sex and:
 
 - canonical athlete ID and FIS code;
 - canonical name, nation, and sex;
 - `total_points`, `total_safe`, and `total_upside`; and
-- provenance linking the row to the validated weekend run.
+- logical date, random seed, and simulation count linking every row to the
+  validated weekend run.
 
-The top-30 presentation workbook must not become the optimizer input. Safe
-and Upside must be calculated by an explicit model definition; they cannot be
-invented by renaming the normal score.
+Normal is the model mean. Safe and Upside are respectively the 10th and 90th
+percentiles of the seeded Monte Carlo point distribution. Participation is
+applied once to each race score before weekend aggregation. This replaces the
+legacy implementation, which overwrote its first risk adjustment and then
+applied participation a second time.
+
+The validator checks the artifact and records incomplete FIS identities
+without blocking the normal weekend post. Incomplete identity keeps the
+fantasy candidate unavailable until an official exact identifier is present.
 
 ## Failure and publication behavior
 
@@ -85,6 +90,5 @@ with distinct scoring and roster semantics.
 
 ## Next implementation slice
 
-Extend the weekend model with the full-pool three-objective artifact and its
-deterministic tests. After that artifact exists, add captured price
-acquisition and the solver behind this contract.
+Add checksummed Fantasy XC price acquisition, exact FIS-code enrichment, and
+the solver behind this contract.
