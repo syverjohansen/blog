@@ -58,7 +58,8 @@ class AlpineProductionWorkflowTests(unittest.TestCase):
         self.assertIn("contents: write", candidate)
         self.assertNotIn("pull-requests: write", candidate)
         self.assertIn("pipelines.alpine_publication_candidate", candidate)
-        self.assertIn("hugo --minify", candidate)
+        self.assertIn("run_generated_site_smoke", candidate)
+        self.assertNotIn("hugo --minify", candidate)
         self.assertIn('"data/alpine/drafts/race-picks/$DATE_KEY"', candidate)
         self.assertIn('"content/post/race-picks/$DATE_KEY.md"', candidate)
         self.assertIn("git push origin HEAD:main", candidate)
@@ -68,7 +69,7 @@ class AlpineProductionWorkflowTests(unittest.TestCase):
         self.assertNotIn("gh pr merge", candidate)
 
         validation = candidate.index("pipelines.alpine_publication_candidate")
-        render = candidate.index("hugo --minify")
+        render = candidate.index("run_generated_site_smoke")
         publication = candidate.index("git push origin HEAD:main")
         self.assertLess(validation, render)
         self.assertLess(render, publication)

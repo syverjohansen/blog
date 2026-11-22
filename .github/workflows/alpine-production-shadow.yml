@@ -324,9 +324,45 @@ jobs:
           hugo-version: "0.134.1"
           extended: true
 
-      - name: Render the complete publication candidate
+      - name: Render the exact prediction page candidate
         if: steps.candidate.outputs.changed == 'true'
-        run: hugo --minify --destination "$RUNNER_TEMP/alpine-publication-site"
+        env:
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from datetime import date
+          from pathlib import Path
+
+          from pipelines.test_pipeline import run_generated_site_smoke
+
+          root = Path.cwd()
+          logical_date = date.fromisoformat(os.environ["LOGICAL_DATE"])
+          date_key = logical_date.strftime("%Y%m%d")
+          data_root = root / "data"
+          genders = tuple(
+              gender
+              for gender in ("men", "ladies")
+              if (
+                  data_root
+                  / "alpine/drafts/race-picks"
+                  / date_key
+                  / f"{gender}_position_probabilities.json"
+              ).is_file()
+          )
+          if not genders:
+              raise SystemExit("publication candidate has no prediction data")
+          report = run_generated_site_smoke(
+              root,
+              data_root,
+              logical_date,
+              destination=Path(os.environ["RUNNER_TEMP"])
+              / "alpine-publication-site",
+              genders=genders,
+          )
+          print(json.dumps(report, sort_keys=True))
+          PY
 
       - name: Publish validated prediction post
         if: steps.candidate.outputs.changed == 'true'
