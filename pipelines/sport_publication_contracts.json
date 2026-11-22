@@ -1,0 +1,22 @@
+{
+  "alpine": {
+    "display_name": "Alpine",
+    "automation_status": "active"
+  },
+  "cross-country": {
+    "display_name": "Cross Country",
+    "automation_status": "active"
+  },
+  "biathlon": {
+    "display_name": "Biathlon",
+    "automation_status": "legacy-publication-only"
+  },
+  "skijump": {
+    "display_name": "Ski Jumping",
+    "automation_status": "legacy-publication-only"
+  },
+  "nordic-combined": {
+    "display_name": "Nordic Combined",
+    "automation_status": "legacy-publication-only"
+  }
+}
