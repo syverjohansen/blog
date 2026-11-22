@@ -134,6 +134,9 @@ def run_shadow(
     races = require_file(ski_runtime / "excel365/races.csv")
     men_history = require_file(ski_runtime / "excel365/men_chrono.csv")
     ladies_history = require_file(ski_runtime / "excel365/ladies_chrono.csv")
+    identity_aliases = require_file(
+        ski_runtime / "excel365/fis_identity_aliases.csv"
+    )
     pipeline = require_file(blog_root / "pipelines/test_pipeline.py")
 
     run_root = output_root / "runs" / run_id
@@ -197,6 +200,8 @@ def run_shadow(
         str(men_history),
         "--ladies-history",
         str(ladies_history),
+        "--identity-aliases",
+        str(identity_aliases),
         "--output-dir",
         str(acquisition_root),
     ]

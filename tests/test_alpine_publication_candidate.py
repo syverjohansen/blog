@@ -22,9 +22,7 @@ class AlpinePublicationCandidateTests(unittest.TestCase):
         document = {
             "sheet_name": "Ladies Race 1",
             "headers": list(PREDICTION_HEADERS),
-            "rows": [
-                ["Skier One", 1, "NOR", "L", 100, 10, 20, 30, 40, 50]
-            ],
+            "rows": [["Skier One", 1, "NOR", "L", 100, 10, 20, 30, 40, 50]],
         }
         generated.write_text(json.dumps(document), encoding="utf-8")
         digest = hashlib.sha256(generated.read_bytes()).hexdigest()
@@ -125,8 +123,101 @@ class AlpinePublicationCandidateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="alpine-publication-results-") as text:
             root = Path(text)
             evidence = self.build_evidence(root)
-            evidence["actual"].write_text('[{"place": 1}]', encoding="utf-8")
+            evidence["actual"].write_text(
+                json.dumps(
+                    [
+                        {
+                            "Rank": "1",
+                            "Time": "1:42.33",
+                            "Run1": "51.00",
+                            "Run2": "51.33",
+                            "Points": "0.00",
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
             with self.assertRaisesRegex(PipelineCheckError, "completed results"):
+                prepare_candidate(
+                    manifest_path=evidence["manifest"],
+                    replay_report_path=evidence["replay"],
+                    actual_results_path=evidence["actual"],
+                    site_data_root=evidence["site_data"],
+                    repository_root=root / "repository",
+                    report_path=root / "candidate-report.json",
+                    evaluation_date=date(2026, 11, 17),
+                )
+            self.assertFalse((root / "repository").exists())
+
+    def test_accepts_blank_rows_from_validated_historical_proxy(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="alpine-publication-proxy-") as text:
+            root = Path(text)
+            evidence = self.build_evidence(root)
+            replay = json.loads(evidence["replay"].read_text())
+            replay["races"][0]["source"] = "historical_result_proxy"
+            evidence["replay"].write_text(json.dumps(replay), encoding="utf-8")
+            evidence["actual"].write_text(
+                json.dumps(
+                    [
+                        {
+                            "Rank": "1",
+                            "Name": "Skier One",
+                            "ID": "100",
+                            "Time": "",
+                            "Run1": "",
+                            "Run2": "",
+                            "Points": "",
+                        },
+                        {
+                            "Rank": "2",
+                            "Name": "Skier Two",
+                            "ID": "200",
+                            "Time": None,
+                            "Run1": " ",
+                            "Run2": "",
+                            "Points": "",
+                        },
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            report = prepare_candidate(
+                manifest_path=evidence["manifest"],
+                replay_report_path=evidence["replay"],
+                actual_results_path=evidence["actual"],
+                site_data_root=evidence["site_data"],
+                repository_root=root / "repository",
+                report_path=root / "candidate-report.json",
+                evaluation_date=date(2026, 11, 17),
+            )
+
+            self.assertEqual("prepared", report["status"])
+
+    def test_rejects_blank_rows_without_validated_proxy_source(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix="alpine-publication-ambiguous-"
+        ) as text:
+            root = Path(text)
+            evidence = self.build_evidence(root)
+            evidence["actual"].write_text(
+                json.dumps(
+                    [
+                        {
+                            "Rank": "1",
+                            "Time": "",
+                            "Run1": "",
+                            "Run2": "",
+                            "Points": "",
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(
+                PipelineCheckError, "not a validated historical result proxy"
+            ):
                 prepare_candidate(
                     manifest_path=evidence["manifest"],
                     replay_report_path=evidence["replay"],

@@ -59,6 +59,7 @@ ALPINE_RACE_HEADERS = (
     "Championship",
     "Race",
 )
+MIN_ALPINE_STARTLIST_HISTORY_MATCH_RATE = 0.8
 
 
 class PipelineCheckError(RuntimeError):
@@ -416,6 +417,7 @@ def validate_current_alpine_inputs(
     )
     startlist_rows: dict[str, int] = {}
     startlist_sources: dict[str, list[str]] = {}
+    startlist_ids: dict[str, set[str]] = {}
     for gender in genders:
         path = input_root / f"startlist_races_{gender}.csv"
         try:
@@ -443,6 +445,11 @@ def validate_current_alpine_inputs(
             )
         if any(not (row.get("ID") or "").strip() for row in rows):
             raise PipelineCheckError(f"{path.name} contains blank athlete IDs")
+        ids = {
+            (row.get("ID") or "").strip().removesuffix(".0") for row in rows
+        }
+        if len(ids) != len(rows):
+            raise PipelineCheckError(f"{path.name} contains duplicate athlete IDs")
         sources = sorted(
             {
                 (row.get("Startlist_Source") or "").strip()
@@ -459,8 +466,11 @@ def validate_current_alpine_inputs(
             )
         startlist_rows[gender] = len(rows)
         startlist_sources[gender] = sources
+        startlist_ids[gender] = ids
 
     chrono_rows: dict[str, int] = {}
+    history_matches: dict[str, int] = {}
+    history_match_rates: dict[str, float] = {}
     for gender in genders:
         path = input_root / f"{gender}_chrono.csv"
         try:
@@ -471,12 +481,26 @@ def validate_current_alpine_inputs(
                     raise PipelineCheckError(
                         f"{path.name} is missing columns {sorted(required)}"
                     )
-                count = sum(1 for _ in reader)
+                rows = list(reader)
         except OSError as exc:
             raise PipelineCheckError(f"cannot read {path.name}: {exc}") from exc
-        if count == 0:
+        if not rows:
             raise PipelineCheckError(f"{path.name} contains no rating history")
-        chrono_rows[gender] = count
+        history_ids = {
+            (row.get("ID") or "").strip().removesuffix(".0")
+            for row in rows
+            if (row.get("ID") or "").strip()
+        }
+        matches = len(startlist_ids[gender] & history_ids)
+        match_rate = matches / len(startlist_ids[gender])
+        if match_rate < MIN_ALPINE_STARTLIST_HISTORY_MATCH_RATE:
+            raise PipelineCheckError(
+                f"{gender} startlist/history ID match rate {match_rate:.1%} "
+                f"is below required {MIN_ALPINE_STARTLIST_HISTORY_MATCH_RATE:.1%}"
+            )
+        chrono_rows[gender] = len(rows)
+        history_matches[gender] = matches
+        history_match_rates[gender] = match_rate
 
     return {
         "status": "passed",
@@ -488,6 +512,8 @@ def validate_current_alpine_inputs(
         "startlist_rows": startlist_rows,
         "startlist_sources": startlist_sources,
         "chrono_rows": chrono_rows,
+        "history_matches": history_matches,
+        "history_match_rates": history_match_rates,
     }
 
 

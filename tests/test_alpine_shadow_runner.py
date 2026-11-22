@@ -19,7 +19,12 @@ class AlpineShadowRunnerTests(unittest.TestCase):
         runtime = ski / "elo/python/alpine/polars"
         (runtime / "excel365").mkdir(parents=True)
         (runtime / "startlist-scrape-races.py").write_text("# fixture\n")
-        for filename in ("races.csv", "men_chrono.csv", "ladies_chrono.csv"):
+        for filename in (
+            "races.csv",
+            "men_chrono.csv",
+            "ladies_chrono.csv",
+            "fis_identity_aliases.csv",
+        ):
             (runtime / "excel365" / filename).write_text("fixture\n")
         return blog, ski
 

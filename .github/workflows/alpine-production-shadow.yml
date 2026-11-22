@@ -14,7 +14,7 @@ on:
       n_simulations:
         description: Deterministic Monte Carlo iteration count
         required: true
-        default: 250
+        default: 10000
         type: number
       ski_ref:
         description: Ski branch, tag, or commit to resolve and record
@@ -83,12 +83,14 @@ jobs:
           sparse-checkout: |
             /elo/python/pipeline_config.py
             /elo/python/alpine/polars/alpine_startlist_replay.py
+            /elo/python/alpine/polars/alpine_results_identity.py
             /elo/python/alpine/polars/startlist-scrape-races.py
             /elo/python/alpine/polars/startlist_common.py
             /elo/python/alpine/polars/requirements-startlist-replay.txt
             /elo/python/alpine/polars/excel365/races.csv
             /elo/python/alpine/polars/excel365/men_chrono.csv
             /elo/python/alpine/polars/excel365/ladies_chrono.csv
+            /elo/python/alpine/polars/excel365/fis_identity_aliases.csv
 
       - name: Isolate the nested ski checkout from blog provenance
         run: |
@@ -109,7 +111,7 @@ jobs:
         env:
           LOGICAL_DATE_INPUT: ${{ inputs.logical_date || '' }}
           EXPECTED_SEASON_INPUT: ${{ inputs.expected_season || '' }}
-          N_SIMULATIONS_INPUT: ${{ inputs.n_simulations || 250 }}
+          N_SIMULATIONS_INPUT: ${{ inputs.n_simulations || 10000 }}
         run: |
           logical_date="${LOGICAL_DATE_INPUT:-$(date -u '+%Y-%m-%d')}"
           expected_season="$EXPECTED_SEASON_INPUT"

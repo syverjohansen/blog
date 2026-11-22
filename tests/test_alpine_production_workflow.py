@@ -38,6 +38,12 @@ class AlpineProductionWorkflowTests(unittest.TestCase):
         self.assertIn("actions/upload-artifact@v4", self.source)
         self.assertIn("alpine-production-shadow/runs/", self.source)
         self.assertIn("retention-days: 30", self.source)
+        self.assertIn("alpine_results_identity.py", self.source)
+        self.assertIn("fis_identity_aliases.csv", self.source)
+
+    def test_production_predictions_use_stable_simulation_count(self) -> None:
+        self.assertIn("default: 10000", self.source)
+        self.assertIn("inputs.n_simulations || 10000", self.source)
 
     def test_quiet_days_avoid_expensive_r_and_hugo_setup(self) -> None:
         condition = "if: steps.prepare.outputs.has_race == 'true'"
