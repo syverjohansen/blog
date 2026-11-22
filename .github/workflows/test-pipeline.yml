@@ -48,3 +48,48 @@ jobs:
           path: artifacts/test-pipeline-report.json
           if-no-files-found: warn
           retention-days: 30
+
+  sport-publication-contracts:
+    name: Publish smoke (${{ matrix.sport }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        sport:
+          - alpine
+          - cross-country
+          - biathlon
+          - skijump
+          - nordic-combined
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Validate data and target-render publication surfaces
+        run: >-
+          python3 pipelines/sport_publication_smoke.py
+          --sport "${{ matrix.sport }}"
+          --destination "artifacts/sport-publication/${{ matrix.sport }}/site"
+          --report "artifacts/sport-publication/${{ matrix.sport }}/report.json"
+
+      - name: Upload publication evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sport-publication-${{ matrix.sport }}
+          path: artifacts/sport-publication/${{ matrix.sport }}
+          if-no-files-found: warn
+          retention-days: 30
