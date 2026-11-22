@@ -54,6 +54,7 @@ class AlpineProductionWorkflowTests(unittest.TestCase):
         candidate = self.source.split("  publish_prediction_post:", 1)[1]
         self.assertIn("inputs.publish_predictions == true", candidate)
         self.assertIn("needs.shadow.outputs.has_race == 'true'", candidate)
+        self.assertIn("timeout-minutes: 30", candidate)
         self.assertIn("contents: write", candidate)
         self.assertNotIn("pull-requests: write", candidate)
         self.assertIn("pipelines.alpine_publication_candidate", candidate)
