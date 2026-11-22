@@ -116,8 +116,14 @@ class AlpinePublicationCandidateTests(unittest.TestCase):
             )
             content = root / "repository/content/post/race-picks/20261121.md"
             self.assertTrue(data.is_file())
-            self.assertIn("Race Picks for 11/21/2026", content.read_text())
-            self.assertIn("ladies_position_probabilities", content.read_text())
+            rendered = content.read_text()
+            self.assertIn("Race Picks for 11/21/2026", rendered)
+            self.assertIn(
+                '{{< alpine/datatable "alpine/drafts/race-picks/20261121/'
+                'ladies_position_probabilities" >}}',
+                rendered,
+            )
+            self.assertNotIn('ladies_position_probabilities" >}\n', rendered)
 
     def test_rejects_completed_results_before_writing_repository(self) -> None:
         with tempfile.TemporaryDirectory(prefix="alpine-publication-results-") as text:
