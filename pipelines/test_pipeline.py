@@ -26,6 +26,8 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
+from pipelines.alpine_publication_markdown import publication_markdown
+
 
 DATE_FORMAT = "%m/%d/%Y"
 TASK_ORDER = (
@@ -649,22 +651,7 @@ def run_generated_site_smoke(
         static_root.mkdir()
         if not genders or not set(genders).issubset({"men", "ladies"}):
             raise PipelineCheckError(f"invalid genders for Hugo smoke: {genders}")
-        sections = "".join(
-            f"### {gender.title()}\n\n"
-            f'{{{{< alpine/datatable "alpine/drafts/race-picks/{date_key}/'
-            f'{gender}_position_probabilities" >}}}}\n\n'
-            for gender in genders
-        )
-        page_source.write_text(
-            "---\n"
-            'title: "Race Picks Integration Fixture"\n'
-            f"date: {logical_date.isoformat()}T00:00:00Z\n"
-            "draft: false\n"
-            "---\n\n"
-            "## Alpine\n\n"
-            f"{sections}",
-            encoding="utf-8",
-        )
+        page_source.write_bytes(publication_markdown(logical_date, list(genders)))
         config = test_root / "hugo.toml"
         config.write_text(
             'baseURL = "https://test.invalid/"\n'
@@ -710,7 +697,9 @@ def run_generated_site_smoke(
         if not page.is_file():
             raise PipelineCheckError(f"expected rendered page is missing: {page}")
         html = page.read_text(encoding="utf-8")
-        expected_markers = ("Race Picks Integration Fixture",) + tuple(
+        expected_markers = (
+            f"Race Picks for {logical_date.strftime('%m/%d/%Y')}",
+        ) + tuple(
             f"table-alpinedraftsrace-picks{date_key}{gender}_position_probabilities"
             for gender in genders
         )

@@ -10,6 +10,7 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
+from pipelines.alpine_publication_markdown import publication_markdown
 from pipelines.alpine_smoke_evidence import write_json_atomic
 from pipelines.test_pipeline import PipelineCheckError, validate_prediction_semantics
 
@@ -49,42 +50,6 @@ def place_candidate_file(path: Path, payload: bytes) -> str:
         return "unchanged"
     write_bytes_atomic(path, payload)
     return "created"
-
-
-def publication_markdown(logical_date: date, genders: list[str]) -> bytes:
-    labels = {"men": "Men", "ladies": "Ladies"}
-    date_key = logical_date.strftime("%Y%m%d")
-    lines = [
-        "---",
-        f'title: "Race Picks for {logical_date.strftime("%m/%d/%Y")}"',
-        f"date: {logical_date.isoformat()}T00:00:00+00:00",
-        "draft: false",
-        'tags: ["predictions", "skiing", "race-picks"]',
-        "---",
-        "",
-        (
-            "*See [Race Picks Methodology](/post/alpine/methods/race-picks/) for "
-            "details on how these predictions are generated.*"
-        ),
-        "",
-        "## Alpine",
-    ]
-    for gender in genders:
-        lines.extend(
-            [
-                "",
-                f"### {labels[gender]}",
-                "",
-                "#### Position Probabilities",
-                "",
-                (
-                    "{{< alpine/datatable "
-                    f'"alpine/drafts/race-picks/{date_key}/'
-                    f'{gender}_position_probabilities" >}}'
-                ),
-            ]
-        )
-    return ("\n".join(lines) + "\n").encode()
 
 
 def require_passed_shadow(manifest: dict[str, Any]) -> tuple[date, list[str]]:
