@@ -140,6 +140,21 @@ class AlpineCurrentInputTests(unittest.TestCase):
             ):
                 validate_current_alpine_inputs(root, self.logical_date, 2027)
 
+    def test_disconnected_startlist_ids_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="alpine-current-identity-") as text:
+            root = self.build_inputs(Path(text))
+            for gender in ("men", "ladies"):
+                path = root / f"{gender}_chrono.csv"
+                path.write_text(
+                    "ID,Date,Elo\n999,11/01/2026,1500\n",
+                    encoding="utf-8",
+                )
+
+            with self.assertRaisesRegex(
+                PipelineCheckError, "startlist/history ID match rate 0.0%"
+            ):
+                validate_current_alpine_inputs(root, self.logical_date, 2027)
+
 
 if __name__ == "__main__":
     unittest.main()

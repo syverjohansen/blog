@@ -395,7 +395,7 @@ jobs:
             --ref main \
             -f logical_date="$(date -u +%F)" \
             -f expected_season="$SEASON" \
-            -f n_simulations=250 \
+            -f n_simulations=10000 \
             -f ski_ref="$SKI_SHA" \
             -f publish_predictions=true
 
