@@ -26,7 +26,11 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-from pipelines.alpine_publication_markdown import publication_markdown
+if __package__:
+    from pipelines.alpine_publication_markdown import publication_markdown
+else:
+    # GitHub's deterministic gate also executes this file directly.
+    from alpine_publication_markdown import publication_markdown
 
 
 DATE_FORMAT = "%m/%d/%Y"
