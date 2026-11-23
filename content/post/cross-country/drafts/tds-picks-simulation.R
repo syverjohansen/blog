@@ -10,7 +10,7 @@
 
 library(dplyr)
 library(tidyr)
-library(openxlsx)
+library(writexl)
 library(mgcv)
 library(leaps)
 library(logger)
@@ -21,31 +21,35 @@ library(lubridate)
 # CONFIGURATION
 # ============================================================================
 
-# Load environment variables
-load_env <- function(env_path = "~/ski/elo/.env") {
-  env_file <- path.expand(env_path)
-  if (file.exists(env_file)) {
-    lines <- readLines(env_file, warn = FALSE)
-    for (line in lines) {
-      line <- trimws(line)
-      if (nchar(line) > 0 && !startsWith(line, "#") && grepl("=", line)) {
-        parts <- strsplit(line, "=", fixed = TRUE)[[1]]
-        key <- trimws(parts[1])
-        value <- trimws(paste(parts[-1], collapse = "="))
-        value <- gsub("^[\"']|[\"']$", "", value)
-        do.call(Sys.setenv, setNames(list(value), key))
-      }
-    }
-    return(TRUE)
-  }
-  return(FALSE)
+required_env <- function(name) {
+  value <- Sys.getenv(name, "")
+  if (!nzchar(value)) stop(paste(name, "is required"))
+  path.expand(value)
 }
 
-load_env()
-TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
+TOUR_RUNTIME_ROOT <- required_env("NORDIC_TOUR_RUNTIME_ROOT")
+SKI_DATA_ROOT <- required_env("NORDIC_SKI_DATA_ROOT")
+PREDICTION_OUTPUT_ROOT <- required_env("NORDIC_PREDICTION_OUTPUT_ROOT")
+LOG_ROOT <- required_env("NORDIC_LOG_ROOT")
+LOGICAL_DATE_TEXT <- Sys.getenv("NORDIC_LOGICAL_DATE", "")
+if (!grepl("^\\d{4}-\\d{2}-\\d{2}$", LOGICAL_DATE_TEXT)) {
+  stop("NORDIC_LOGICAL_DATE must be an ISO date")
+}
+LOGICAL_DATE <- as.Date(LOGICAL_DATE_TEXT)
+
+runtime_path <- function(filename) file.path(TOUR_RUNTIME_ROOT, filename)
+ski_data_path <- function(filename) file.path(SKI_DATA_ROOT, filename)
 
 # Simulation parameters
-N_SIMULATIONS <- 10000        # Monte Carlo iterations
+N_SIMULATIONS <- as.integer(Sys.getenv("NORDIC_N_SIMULATIONS", ""))
+RANDOM_SEED <- as.integer(Sys.getenv("NORDIC_RANDOM_SEED", ""))
+if (is.na(N_SIMULATIONS) || N_SIMULATIONS < 1) {
+  stop("NORDIC_N_SIMULATIONS must be a positive integer")
+}
+if (is.na(RANDOM_SEED)) {
+  stop("NORDIC_RANDOM_SEED must be an integer")
+}
+set.seed(RANDOM_SEED)
 DECAY_LAMBDA <- 0.002         # Exponential decay rate
 MIN_TDS_HISTORY <- 3          # Minimum TdS races for historical distribution
 SD_SCALE_FACTOR <- 0.8        # Scale factor for SD (lower = more deterministic)
@@ -68,7 +72,7 @@ tds_points <- c(300,285,270,255,240,216,207,198,189,180,174,168,162,156,150,
 # LOGGING SETUP
 # ============================================================================
 
-log_dir <- "~/ski/elo/python/ski/polars/excel365/tds-simulation"
+log_dir <- LOG_ROOT
 if (!dir.exists(log_dir)) {
   dir.create(log_dir, recursive = TRUE)
 }
@@ -76,7 +80,9 @@ if (!dir.exists(log_dir)) {
 log_threshold(DEBUG)
 log_appender(appender_file(file.path(log_dir, "tds_simulation.log")))
 log_info("Starting Tour de Ski Simulation")
-log_info(paste("Config: N_SIMULATIONS =", N_SIMULATIONS, ", TEST_MODE =", TEST_MODE))
+log_info(paste("Config: N_SIMULATIONS =", N_SIMULATIONS,
+               ", RANDOM_SEED =", RANDOM_SEED,
+               ", LOGICAL_DATE =", LOGICAL_DATE))
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -103,12 +109,12 @@ log_info("=== LOADING DATA ===")
 
 # Read chronological data
 log_info("Reading chronological data...")
-men_chrono <- read.csv("~/ski/elo/python/ski/polars/excel365/men_chrono_elevation.csv",
+men_chrono <- read.csv(ski_data_path("men_chrono_elevation.csv"),
                        stringsAsFactors = FALSE) %>%
   mutate(Date = as.Date(Date)) %>%
   filter(Distance != "Ts", Distance != "Rel", Event != "Offseason")
 
-ladies_chrono <- read.csv("~/ski/elo/python/ski/polars/excel365/ladies_chrono_elevation.csv",
+ladies_chrono <- read.csv(ski_data_path("ladies_chrono_elevation.csv"),
                           stringsAsFactors = FALSE) %>%
   mutate(Date = as.Date(Date)) %>%
   filter(Distance != "Ts", Distance != "Rel", Event != "Offseason")
@@ -117,11 +123,11 @@ log_info(paste("Loaded", nrow(men_chrono), "men's and", nrow(ladies_chrono), "la
 
 # Read TdS startlists
 log_info("Reading Tour de Ski startlists...")
-men_startlist <- read.csv("~/ski/elo/python/ski/polars/excel365/startlist_tds_men.csv",
+men_startlist <- read.csv(runtime_path("startlist_tds_men.csv"),
                           stringsAsFactors = FALSE) %>%
   mutate(Sex = "M")
 
-ladies_startlist <- read.csv("~/ski/elo/python/ski/polars/excel365/startlist_tds_ladies.csv",
+ladies_startlist <- read.csv(runtime_path("startlist_tds_ladies.csv"),
                              stringsAsFactors = FALSE) %>%
   mutate(Sex = "L")
 
@@ -222,7 +228,7 @@ build_tds_distribution <- function(athlete_id, tds_history, general_history,
                                     min_tds_history = MIN_TDS_HISTORY,
                                     decay_lambda = DECAY_LAMBDA) {
 
-  reference_date <- Sys.Date()
+  reference_date <- LOGICAL_DATE
 
   # Get athlete's TdS history
   athlete_tds <- tds_history %>%
@@ -505,9 +511,9 @@ for (i in 1:min(5, nrow(ladies_final_results))) {
 
 log_info("=== SAVING RESULTS ===")
 
-# Create output directory
-today_date <- format(Sys.time(), tz = "UTC", "%Y%m%d")
-output_dir <- paste0("~/blog/daehl-e/content/post/cross-country/drafts/tds-picks/", today_date)
+# Create an isolated, publication-disabled output directory.
+today_date <- format(LOGICAL_DATE, "%Y%m%d")
+output_dir <- file.path(PREDICTION_OUTPUT_ROOT, today_date)
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }
@@ -540,20 +546,29 @@ prepare_probabilities_output <- function(results, gender) {
 men_probs_output <- prepare_probabilities_output(men_final_results, "men")
 ladies_probs_output <- prepare_probabilities_output(ladies_final_results, "ladies")
 
-# Save Excel files (matching tds-picks.R output format)
-write.xlsx(men_points_output, file.path(output_dir, "men.xlsx"))
-write.xlsx(ladies_points_output, file.path(output_dir, "ladies.xlsx"))
+# Save Excel files using the established publication-compatible names.
+write_xlsx(men_points_output, file.path(output_dir, "men.xlsx"))
+write_xlsx(ladies_points_output, file.path(output_dir, "ladies.xlsx"))
+write_xlsx(
+  list("Men Tour de Ski" = men_probs_output),
+  file.path(output_dir, "men_position_probabilities.xlsx")
+)
+write_xlsx(
+  list("Ladies Tour de Ski" = ladies_probs_output),
+  file.path(output_dir, "ladies_position_probabilities.xlsx")
+)
 
-# Save position probabilities with custom sheet names (matching tds-picks.R)
-men_probs_wb <- createWorkbook()
-addWorksheet(men_probs_wb, "Men Tour de Ski")
-writeData(men_probs_wb, "Men Tour de Ski", men_probs_output)
-saveWorkbook(men_probs_wb, file.path(output_dir, "men_position_probabilities.xlsx"), overwrite = TRUE)
-
-ladies_probs_wb <- createWorkbook()
-addWorksheet(ladies_probs_wb, "Ladies Tour de Ski")
-writeData(ladies_probs_wb, "Ladies Tour de Ski", ladies_probs_output)
-saveWorkbook(ladies_probs_wb, file.path(output_dir, "ladies_position_probabilities.xlsx"), overwrite = TRUE)
+manifest <- c(
+  "{",
+  '  "schema_version": "nordicnumbers.cross-country-tour-shadow/v1",',
+  '  "status": "candidate",',
+  paste0('  "logical_date": "', LOGICAL_DATE_TEXT, '",'),
+  paste0('  "n_simulations": ', N_SIMULATIONS, ','),
+  paste0('  "random_seed": ', RANDOM_SEED, ','),
+  '  "publication": {"status": "disabled"}',
+  "}"
+)
+writeLines(manifest, file.path(output_dir, "shadow_manifest.json"), useBytes = TRUE)
 
 log_info("Saved points and probability files")
 
