@@ -53,6 +53,7 @@ jobs:
             /pipelines/__init__.py
             /pipelines/cross_country_tour_shadow.py
             /pipelines/cross_country_final_climb_shadow.py
+            /pipelines/cross_country_final_climb_publication.py
             /pipelines/requirements-integration.txt
             /pipelines/requirements-snapshot.txt
             /content/post/cross-country/drafts/final_climb-simulation.R
@@ -149,6 +150,7 @@ jobs:
             echo "PREDICTION_ROOT=$root/predictions"
             echo "LOG_ROOT=$root/logs"
             echo "VALIDATION_REPORT=$root/reports/validation_report.json"
+            echo "CANDIDATE_ROOT=$root/candidate"
           } >> "$GITHUB_ENV"
           python3 - "$root/run_metadata.json" "$logical_date" <<'PY'
           import json
@@ -291,6 +293,15 @@ jobs:
               raise SystemExit("Final Climb publication lock was not retained")
           print("Final Climb shadow passed with publication disabled")
           PY
+
+      - name: Build publication-disabled Final Climb candidate
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          python3 -m pipelines.cross_country_final_climb_publication \
+            --prediction-root "$PREDICTION_ROOT" \
+            --validation-report "$VALIDATION_REPORT" \
+            --logical-date "$LOGICAL_DATE" \
+            --output-root "$CANDIDATE_ROOT"
 
       - name: Retain complete Final Climb shadow evidence
         if: always()
