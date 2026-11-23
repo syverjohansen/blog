@@ -17,6 +17,7 @@ from pipelines.cross_country_tour_publication import (
     RENDER_SCHEMA,
     TourPublicationError,
     build_tour_candidate,
+    install_tour_candidate,
     render_tour_candidate,
 )
 from pipelines.cross_country_tour_shadow import (
@@ -214,6 +215,68 @@ class CrossCountryTourPublicationTests(unittest.TestCase):
             self.assertIn("Men One", html)
             self.assertIn("Women One", html)
             self.assertEqual(4, html.count('class="bbref-table"'))
+
+            repository = root / "repository"
+            repository.mkdir()
+            (repository / ".git").write_text("gitdir: test\n", encoding="utf-8")
+            installed = install_tour_candidate(
+                candidate_root=candidate,
+                render_report_path=root / "render.json",
+                rendered_site_root=root / "site",
+                logical_date=date(2027, 1, 1),
+                as_of=date(2027, 1, 1),
+                repository_root=repository,
+            )
+            self.assertEqual(5, len(installed))
+            self.assertEqual(
+                (candidate / "content/post/tds-picks/20270101.md").read_bytes(),
+                (repository / "content/post/tds-picks/20270101.md").read_bytes(),
+            )
+
+    @unittest.skipUnless(shutil.which("hugo"), "hugo is not installed")
+    def test_install_rejects_changed_render_and_past_prediction(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            predictions, validation = write_validated_outputs(root)
+            candidate = root / "candidate"
+            build_tour_candidate(
+                prediction_root=predictions,
+                validation_report_path=validation,
+                logical_date=date(2027, 1, 1),
+                output_root=candidate,
+            )
+            render_tour_candidate(
+                blog_root=Path(__file__).resolve().parents[1],
+                candidate_root=candidate,
+                logical_date=date(2027, 1, 1),
+                destination=root / "site",
+                report_path=root / "render.json",
+            )
+            repository = root / "repository"
+            repository.mkdir()
+            (repository / ".git").write_text("gitdir: test\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(TourPublicationError, "past"):
+                install_tour_candidate(
+                    candidate_root=candidate,
+                    render_report_path=root / "render.json",
+                    rendered_site_root=root / "site",
+                    logical_date=date(2027, 1, 1),
+                    as_of=date(2027, 1, 2),
+                    repository_root=repository,
+                )
+
+            page = root / "site/post/tds-picks/20270101/index.html"
+            page.write_text(page.read_text() + "tampered", encoding="utf-8")
+            with self.assertRaisesRegex(TourPublicationError, "checksum"):
+                install_tour_candidate(
+                    candidate_root=candidate,
+                    render_report_path=root / "render.json",
+                    rendered_site_root=root / "site",
+                    logical_date=date(2027, 1, 1),
+                    as_of=date(2027, 1, 1),
+                    repository_root=repository,
+                )
 
 
 if __name__ == "__main__":
