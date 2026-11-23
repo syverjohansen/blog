@@ -12,6 +12,11 @@ try:
 except ModuleNotFoundError:
     Workbook = None
 
+from pipelines.cross_country_fantasy_contract import OBJECTIVES, validate_team
+from pipelines.cross_country_fantasy_optimizer import (
+    REPORT_SCHEMA as FANTASY_REPORT_SCHEMA,
+)
+from pipelines.cross_country_fantasy_optimizer import TEAM_SCHEMA as FANTASY_TEAM_SCHEMA
 from pipelines.cross_country_weekend_publication import (
     CANDIDATE_SCHEMA,
     RENDER_SCHEMA,
@@ -92,6 +97,81 @@ def write_schedule(root: Path) -> Path:
     return schedule
 
 
+def write_fantasy_evidence(
+    root: Path, *, status: str = "candidate"
+) -> tuple[Path, Path]:
+    teams_path = root / "fantasy_teams.json"
+    report_path = root / "fantasy_optimizer_report.json"
+    if status != "candidate":
+        report_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": FANTASY_REPORT_SCHEMA,
+                    "logical_date": "2026-11-27",
+                    "status": status,
+                    "reason": "Fantasy XC prices unavailable",
+                    "publication": {"status": "disabled"},
+                    "weekend_publication_blocked": False,
+                    "outputs": {},
+                }
+            ),
+            encoding="utf-8",
+        )
+        return report_path, teams_path
+
+    teams = {}
+    for objective in OBJECTIVES:
+        rows = []
+        for index in range(16):
+            rows.append(
+                {
+                    "canonical_athlete_id": str(1000 + index),
+                    "fis_code": str(3_420_001 + index),
+                    "skier": f"Fantasy {objective.title()} {index}",
+                    "nation": "Norway",
+                    "sex": "M" if index < 8 else "L",
+                    "price": 5_000,
+                    "objective_points": float(100 - index),
+                }
+            )
+        teams[objective] = {
+            "objective": objective,
+            "objective_points": sum(row["objective_points"] for row in rows),
+            "total_price": sum(row["price"] for row in rows),
+            "validation": validate_team(objective=objective, team_rows=rows),
+            "rows": rows,
+        }
+    document = {
+        "schema_version": FANTASY_TEAM_SCHEMA,
+        "logical_date": "2026-11-27",
+        "publication": {"status": "disabled"},
+        "teams": teams,
+    }
+    teams_path.write_text(
+        json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    report_path.write_text(
+        json.dumps(
+            {
+                "schema_version": FANTASY_REPORT_SCHEMA,
+                "logical_date": "2026-11-27",
+                "status": "candidate",
+                "publication": {"status": "disabled"},
+                "weekend_publication_blocked": False,
+                "outputs": {
+                    teams_path.name: {
+                        "schema_version": FANTASY_TEAM_SCHEMA,
+                        "sha256": hashlib.sha256(teams_path.read_bytes()).hexdigest(),
+                        "teams": len(OBJECTIVES),
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    return report_path, teams_path
+
+
 @unittest.skipUnless(Workbook is not None, "openpyxl is not installed")
 class CrossCountryWeekendPublicationTests(unittest.TestCase):
     def test_resolves_active_weekend_to_stable_group_date(self) -> None:
@@ -161,6 +241,87 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             ).read_text()
             self.assertIn("official FIS startlists", post)
 
+    def test_builds_validated_optional_fantasy_sections(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root)
+            fantasy_report, fantasy_teams = write_fantasy_evidence(root)
+            output = root / "candidate"
+            report = build_weekend_candidate(
+                workbook_path=workbook,
+                runtime_report_path=runtime,
+                validation_report_path=validation,
+                logical_date=date(2026, 11, 27),
+                output_root=output,
+                fantasy_report_path=fantasy_report,
+                fantasy_teams_path=fantasy_teams,
+            )
+            self.assertEqual(
+                {
+                    "status": "candidate",
+                    "included": True,
+                    "team_count": 3,
+                    "row_count": 48,
+                },
+                report["fantasy"],
+            )
+            post = (output / "content/post/weekly-picks/20261127.md").read_text()
+            self.assertIn("## Fantasy XC Teams", post)
+            self.assertIn("### Expected Points", post)
+            self.assertIn("### Safer Team", post)
+            self.assertIn("### Upside Team", post)
+            for objective in OBJECTIVES:
+                document = json.loads(
+                    (
+                        output
+                        / f"data/cross-country/weekly-picks/20261127/fantasy-{objective}.json"
+                    ).read_text()
+                )
+                self.assertEqual(16, len(document["rows"]))
+
+    def test_unavailable_fantasy_does_not_block_weekend_candidate(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root)
+            fantasy_report, fantasy_teams = write_fantasy_evidence(
+                root, status="skipped"
+            )
+            output = root / "candidate"
+            report = build_weekend_candidate(
+                workbook_path=workbook,
+                runtime_report_path=runtime,
+                validation_report_path=validation,
+                logical_date=date(2026, 11, 27),
+                output_root=output,
+                fantasy_report_path=fantasy_report,
+                fantasy_teams_path=fantasy_teams,
+            )
+            self.assertEqual("skipped", report["fantasy"]["status"])
+            self.assertFalse(report["fantasy"]["included"])
+            self.assertNotIn(
+                "Fantasy XC Teams",
+                (output / "content/post/weekly-picks/20261127.md").read_text(),
+            )
+
+    def test_rejects_fantasy_teams_changed_after_optimization(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root)
+            fantasy_report, fantasy_teams = write_fantasy_evidence(root)
+            fantasy_teams.write_text(
+                fantasy_teams.read_text(encoding="utf-8") + " ", encoding="utf-8"
+            )
+            with self.assertRaisesRegex(WeekendPublicationError, "fantasy.*checksum"):
+                build_weekend_candidate(
+                    workbook_path=workbook,
+                    runtime_report_path=runtime,
+                    validation_report_path=validation,
+                    logical_date=date(2026, 11, 27),
+                    output_root=root / "candidate",
+                    fantasy_report_path=fantasy_report,
+                    fantasy_teams_path=fantasy_teams,
+                )
+
     def test_rejects_workbook_changed_after_validation(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -223,6 +384,12 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             repository = root / "repository"
             repository.mkdir()
             (repository / ".git").write_text("gitdir: test\n", encoding="utf-8")
+            stale = (
+                repository
+                / "data/cross-country/weekly-picks/20261127/fantasy-normal.json"
+            )
+            stale.parent.mkdir(parents=True)
+            stale.write_text("stale", encoding="utf-8")
             installed = install_weekend_candidate(
                 candidate_root=candidate,
                 render_report_path=report_path,
@@ -231,6 +398,7 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
                 repository_root=repository,
             )
             self.assertEqual(len(installed), 3)
+            self.assertFalse(stale.exists())
             self.assertEqual(
                 (repository / "content/post/weekly-picks/20261127.md").read_bytes(),
                 (candidate / "content/post/weekly-picks/20261127.md").read_bytes(),
@@ -246,6 +414,48 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
                     logical_date=date(2026, 11, 27),
                     repository_root=repository,
                 )
+
+    @unittest.skipUnless(shutil.which("hugo"), "hugo is not installed")
+    def test_renders_and_installs_validated_fantasy_tables(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root)
+            fantasy_report, fantasy_teams = write_fantasy_evidence(root)
+            candidate = root / "candidate"
+            build_weekend_candidate(
+                workbook_path=workbook,
+                runtime_report_path=runtime,
+                validation_report_path=validation,
+                logical_date=date(2026, 11, 27),
+                output_root=candidate,
+                fantasy_report_path=fantasy_report,
+                fantasy_teams_path=fantasy_teams,
+            )
+            render_report = root / "reports/render_report.json"
+            render_weekend_candidate(
+                blog_root=Path(__file__).resolve().parents[1],
+                candidate_root=candidate,
+                logical_date=date(2026, 11, 27),
+                destination=root / "site",
+                report_path=render_report,
+            )
+            html = (root / "site/post/weekly-picks/20261127/index.html").read_text()
+            for objective in OBJECTIVES:
+                self.assertIn(
+                    f"table-cross-countryweekly-picks20261127fantasy-{objective}",
+                    html,
+                )
+            repository = root / "repository"
+            repository.mkdir()
+            (repository / ".git").write_text("gitdir: test\n", encoding="utf-8")
+            installed = install_weekend_candidate(
+                candidate_root=candidate,
+                render_report_path=render_report,
+                rendered_site_root=root / "site",
+                logical_date=date(2026, 11, 27),
+                repository_root=repository,
+            )
+            self.assertEqual(6, len(installed))
 
     def test_render_rejects_candidate_changed_after_build(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

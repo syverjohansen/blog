@@ -14,6 +14,11 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
+from pipelines.cross_country_fantasy_contract import OBJECTIVES, validate_team
+from pipelines.cross_country_fantasy_optimizer import (
+    REPORT_SCHEMA as FANTASY_REPORT_SCHEMA,
+)
+from pipelines.cross_country_fantasy_optimizer import TEAM_SCHEMA as FANTASY_TEAM_SCHEMA
 from pipelines.cross_country_weekend_shadow import EXPECTED_HEADERS
 
 CANDIDATE_SCHEMA = "nordicnumbers.cross-country-weekend-candidate/v1"
@@ -21,6 +26,12 @@ RUNTIME_SCHEMA = "nordicnumbers.cross-country-weekend-runtime/v1"
 VALIDATION_SCHEMA = "nordicnumbers.cross-country-weekend-validation/v1"
 RENDER_SCHEMA = "nordicnumbers.cross-country-weekend-render/v1"
 SHEET_OUTPUTS = {"Men Top 30": ("men.json", "M"), "Ladies Top 30": ("ladies.json", "L")}
+FANTASY_LABELS = {
+    "normal": "Expected Points",
+    "safe": "Safer Team",
+    "upside": "Upside Team",
+}
+FANTASY_HEADERS = ("Skier", "Nation", "Sex", "Price", "Projected Points")
 
 
 class WeekendPublicationError(RuntimeError):
@@ -149,6 +160,155 @@ def _validated_candidate_outputs(
     return candidate_report, documents
 
 
+def _fantasy_candidate_documents(
+    *,
+    report_path: Path | None,
+    teams_path: Path | None,
+    logical_date: date,
+    date_key: str,
+) -> tuple[dict[str, Any], dict[Path, bytes], list[str], int]:
+    if report_path is None and teams_path is None:
+        return {"status": "not_requested", "included": False}, {}, [], 0
+    if report_path is None or teams_path is None:
+        raise WeekendPublicationError(
+            "fantasy report and teams paths must be supplied together"
+        )
+
+    report = _read_json(report_path, "fantasy optimizer report")
+    logical_date_text = logical_date.isoformat()
+    if report.get("schema_version") != FANTASY_REPORT_SCHEMA:
+        raise WeekendPublicationError("unsupported fantasy optimizer report schema")
+    if report.get("logical_date") != logical_date_text:
+        raise WeekendPublicationError("fantasy optimizer logical date does not match")
+    if report.get("publication") != {"status": "disabled"}:
+        raise WeekendPublicationError(
+            "fantasy optimizer publication must remain disabled"
+        )
+    if report.get("weekend_publication_blocked") is not False:
+        raise WeekendPublicationError(
+            "fantasy report may not block weekend publication"
+        )
+
+    status = report.get("status")
+    if status in {"skipped", "blocked"}:
+        return (
+            {
+                "status": status,
+                "included": False,
+                "reason": str(report.get("reason", "fantasy candidate unavailable")),
+            },
+            {},
+            [],
+            0,
+        )
+    if status != "candidate":
+        raise WeekendPublicationError(
+            f"unsupported fantasy optimizer status: {status!r}"
+        )
+
+    try:
+        teams_bytes = teams_path.read_bytes()
+    except OSError as exc:
+        raise WeekendPublicationError(f"cannot read fantasy teams: {exc}") from exc
+    output = report.get("outputs", {}).get(teams_path.name, {})
+    if output.get("sha256") != _sha256(teams_bytes):
+        raise WeekendPublicationError("fantasy teams checksum does not match report")
+    if output.get("schema_version") != FANTASY_TEAM_SCHEMA or output.get(
+        "teams"
+    ) != len(OBJECTIVES):
+        raise WeekendPublicationError("fantasy teams report metadata is invalid")
+    teams = _read_json(teams_path, "fantasy teams")
+    if teams.get("schema_version") != FANTASY_TEAM_SCHEMA:
+        raise WeekendPublicationError("unsupported fantasy teams schema")
+    if teams.get("logical_date") != logical_date_text:
+        raise WeekendPublicationError("fantasy teams logical date does not match")
+    if teams.get("publication") != {"status": "disabled"}:
+        raise WeekendPublicationError("fantasy teams publication must remain disabled")
+    team_documents = teams.get("teams")
+    if not isinstance(team_documents, dict) or set(team_documents) != set(OBJECTIVES):
+        raise WeekendPublicationError("fantasy teams must contain all three objectives")
+
+    documents: dict[Path, bytes] = {}
+    sections = ["## Fantasy XC Teams", ""]
+    total_rows = 0
+    for objective in OBJECTIVES:
+        team = team_documents[objective]
+        if not isinstance(team, dict) or not isinstance(team.get("rows"), list):
+            raise WeekendPublicationError(f"invalid {objective} fantasy team")
+        required_row_fields = {
+            "fis_code",
+            "skier",
+            "nation",
+            "sex",
+            "price",
+            "objective_points",
+        }
+        if any(
+            not isinstance(row, dict) or not required_row_fields <= row.keys()
+            for row in team["rows"]
+        ):
+            raise WeekendPublicationError(
+                f"invalid {objective} fantasy team display fields"
+            )
+        try:
+            validation = validate_team(objective=objective, team_rows=team["rows"])
+        except (TypeError, ValueError) as exc:
+            raise WeekendPublicationError(
+                f"invalid {objective} fantasy team: {exc}"
+            ) from exc
+        if validation.get("status") != "valid":
+            raise WeekendPublicationError(f"invalid {objective} fantasy team")
+        if (
+            team.get("objective") != objective
+            or team.get("total_price") != validation["total_price"]
+            or team.get("validation") != validation
+        ):
+            raise WeekendPublicationError(
+                f"{objective} fantasy team metadata does not match its rows"
+            )
+        rows = [
+            [
+                row["skier"],
+                row["nation"],
+                row["sex"],
+                row["price"],
+                row["objective_points"],
+            ]
+            for row in team["rows"]
+        ]
+        total_rows += len(rows)
+        filename = f"fantasy-{objective}.json"
+        stem = filename.removesuffix(".json")
+        sections.extend(
+            (
+                f"### {FANTASY_LABELS[objective]}",
+                "",
+                f"**Budget used:** {validation['total_price']:,} / {validation['budget']:,}",
+                "",
+                f'{{{{< cross-country/datatable "cross-country/weekly-picks/{date_key}/{stem}" >}}}}',
+                "",
+            )
+        )
+        document = {
+            "objective": objective,
+            "headers": list(FANTASY_HEADERS),
+            "rows": rows,
+        }
+        relative = Path("data/cross-country/weekly-picks") / date_key / filename
+        documents[relative] = _json_bytes(document)
+    return (
+        {
+            "status": "candidate",
+            "included": True,
+            "team_count": len(OBJECTIVES),
+            "row_count": total_rows,
+        },
+        documents,
+        sections,
+        total_rows,
+    )
+
+
 def build_weekend_candidate(
     *,
     workbook_path: Path,
@@ -156,6 +316,8 @@ def build_weekend_candidate(
     validation_report_path: Path,
     logical_date: date,
     output_root: Path,
+    fantasy_report_path: Path | None = None,
+    fantasy_teams_path: Path | None = None,
 ) -> dict[str, Any]:
     try:
         from openpyxl import load_workbook
@@ -232,6 +394,17 @@ def build_weekend_candidate(
         )
     workbook.close()
 
+    fantasy, fantasy_documents, fantasy_sections, fantasy_rows = (
+        _fantasy_candidate_documents(
+            report_path=fantasy_report_path,
+            teams_path=fantasy_teams_path,
+            logical_date=logical_date,
+            date_key=date_key,
+        )
+    )
+    documents.update(fantasy_documents)
+    sections.extend(fantasy_sections)
+
     source_state, note = _provenance_note(runtime.get("event_modes", {}))
     display_date = logical_date.strftime("%m/%d/%Y")
     post = "\n".join(
@@ -261,6 +434,14 @@ def build_weekend_candidate(
             raise WeekendPublicationError(
                 f"refusing to write into unrecognized output root: {output_root}"
             )
+    for objective in OBJECTIVES:
+        optional = (
+            Path("data/cross-country/weekly-picks")
+            / date_key
+            / f"fantasy-{objective}.json"
+        )
+        if optional not in documents:
+            (output_root / optional).unlink(missing_ok=True)
     output_metadata = {
         str(path): {
             "sha256": _sha256(content),
@@ -277,8 +458,9 @@ def build_weekend_candidate(
         "status": "candidate",
         "logical_date": logical_date_text,
         "source_state": source_state,
+        "fantasy": fantasy,
         "publication": {"status": "disabled"},
-        "row_count": total_rows,
+        "row_count": total_rows + fantasy_rows,
         "outputs": output_metadata,
     }
     for path, content in documents.items():
@@ -370,6 +552,21 @@ def render_weekend_candidate(
             raise WeekendPublicationError(
                 f"candidate data is empty: {filename}"
             ) from exc
+    candidate_report = _read_json(
+        candidate_root / "publication_candidate_report.json", "candidate report"
+    )
+    if candidate_report.get("fantasy", {}).get("included") is True:
+        for objective in OBJECTIVES:
+            filename = f"fantasy-{objective}.json"
+            document = _read_json(json_roots / filename, filename)
+            expected_markers.extend(
+                (
+                    "table-cross-countryweekly-picks"
+                    + date_key
+                    + f"fantasy-{objective}",
+                    str(document["rows"][0][0]),
+                )
+            )
     missing = [marker for marker in expected_markers if marker not in html]
     if missing:
         raise WeekendPublicationError(
@@ -406,6 +603,16 @@ def install_weekend_candidate(
         Path("data/cross-country/weekly-picks") / date_key / "men.json",
         Path("data/cross-country/weekly-picks") / date_key / "ladies.json",
     }
+    fantasy = candidate_report.get("fantasy", {})
+    if fantasy.get("included") is True:
+        expected.update(
+            Path("data/cross-country/weekly-picks")
+            / date_key
+            / f"fantasy-{objective}.json"
+            for objective in OBJECTIVES
+        )
+    elif fantasy.get("status") not in {"not_requested", "skipped", "blocked"}:
+        raise WeekendPublicationError("candidate fantasy state is invalid")
     if set(documents) != expected:
         raise WeekendPublicationError(
             f"candidate output set does not match publication contract: {sorted(documents)}"
@@ -447,6 +654,14 @@ def install_weekend_candidate(
             "refusing to replace an official weekend post with provisional inputs"
         )
     installed: list[Path] = []
+    for objective in OBJECTIVES:
+        optional = (
+            Path("data/cross-country/weekly-picks")
+            / date_key
+            / f"fantasy-{objective}.json"
+        )
+        if optional not in expected:
+            (repository_root / optional).unlink(missing_ok=True)
     for relative, content in sorted(documents.items(), key=lambda item: str(item[0])):
         destination = repository_root / relative
         _atomic_write(destination, content)
@@ -463,6 +678,8 @@ def main() -> int:
     build.add_argument("--validation-report", required=True, type=Path)
     build.add_argument("--logical-date", required=True, type=date.fromisoformat)
     build.add_argument("--output-root", required=True, type=Path)
+    build.add_argument("--fantasy-report", type=Path)
+    build.add_argument("--fantasy-teams", type=Path)
     render = subparsers.add_parser("render")
     render.add_argument("--blog-root", required=True, type=Path)
     render.add_argument("--candidate-root", required=True, type=Path)
@@ -486,6 +703,8 @@ def main() -> int:
             validation_report_path=args.validation_report,
             logical_date=args.logical_date,
             output_root=args.output_root,
+            fantasy_report_path=args.fantasy_report,
+            fantasy_teams_path=args.fantasy_teams,
         )
     elif args.command == "render":
         report = render_weekend_candidate(

@@ -295,6 +295,8 @@ jobs:
             --runtime-report "$RUNTIME_ROOT/runtime_report.json" \
             --validation-report "$VALIDATION_REPORT" \
             --logical-date "$LOGICAL_DATE" \
+            --fantasy-report "$FANTASY_OPTIMIZER_REPORT" \
+            --fantasy-teams "$FANTASY_ROOT/fantasy_teams.json" \
             --output-root "$CANDIDATE_ROOT"
 
       - name: Set up Hugo
@@ -351,16 +353,24 @@ jobs:
           import sys
           from pathlib import Path
 
+          date_key = sys.argv[3].replace('-', '')
+          data_root = Path("data/cross-country/weekly-picks") / date_key
+          files = [
+              f"content/post/weekly-picks/{date_key}.md",
+              str(data_root / "men.json"),
+              str(data_root / "ladies.json"),
+          ]
+          files.extend(
+              str(data_root / f"fantasy-{objective}.json")
+              for objective in ("normal", "safe", "upside")
+              if (data_root / f"fantasy-{objective}.json").is_file()
+          )
           report = {
               "schema_version": "nordicnumbers.cross-country-weekend-publication/v1",
               "status": sys.argv[2],
               "logical_date": sys.argv[3],
               "commit": sys.argv[4],
-              "files": [
-                  f"content/post/weekly-picks/{sys.argv[3].replace('-', '')}.md",
-                  f"data/cross-country/weekly-picks/{sys.argv[3].replace('-', '')}/men.json",
-                  f"data/cross-country/weekly-picks/{sys.argv[3].replace('-', '')}/ladies.json",
-              ],
+              "files": files,
           }
           Path(sys.argv[1]).write_text(
               json.dumps(report, indent=2, sort_keys=True) + "\n"
