@@ -47,10 +47,13 @@ jobs:
           sparse-checkout: |
             /.github/workflows/cross-country-tour-shadow.yml
             /pipelines/__init__.py
+            /pipelines/cross_country_tour_publication.py
             /pipelines/cross_country_tour_shadow.py
             /pipelines/requirements-integration.txt
             /pipelines/requirements-snapshot.txt
             /content/post/cross-country/drafts/tds-picks-simulation.R
+            /layouts/
+            /themes/white/
 
       - name: Resolve ski source to an exact commit
         id: ski
@@ -117,6 +120,9 @@ jobs:
             echo "PREDICTION_ROOT=$root/predictions"
             echo "LOG_ROOT=$root/logs"
             echo "VALIDATION_REPORT=$root/reports/validation_report.json"
+            echo "CANDIDATE_ROOT=$root/candidate"
+            echo "SITE_ROOT=$root/site"
+            echo "RENDER_REPORT=$root/reports/render_report.json"
           } >> "$GITHUB_ENV"
           python3 - "$root/run_metadata.json" "$blog_sha" <<'PY'
           import json
@@ -249,6 +255,32 @@ jobs:
               raise SystemExit("Tour shadow publication lock was not retained")
           print("Tour shadow passed with publication disabled")
           PY
+
+      - name: Build publication-disabled Tour candidate
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          python3 -m pipelines.cross_country_tour_publication build \
+            --prediction-root "$PREDICTION_ROOT" \
+            --validation-report "$VALIDATION_REPORT" \
+            --logical-date "$LOGICAL_DATE" \
+            --output-root "$CANDIDATE_ROOT"
+
+      - name: Set up Hugo
+        if: steps.bundle.outputs.has_work == 'true'
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Render publication-disabled Tour candidate
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          python3 -m pipelines.cross_country_tour_publication render \
+            --blog-root "$GITHUB_WORKSPACE" \
+            --candidate-root "$CANDIDATE_ROOT" \
+            --logical-date "$LOGICAL_DATE" \
+            --destination "$SITE_ROOT" \
+            --report "$RENDER_REPORT"
 
       - name: Retain complete Tour shadow evidence
         if: always()

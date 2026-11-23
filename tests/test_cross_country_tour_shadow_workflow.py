@@ -31,8 +31,11 @@ class CrossCountryTourShadowWorkflowTests(unittest.TestCase):
             "/cross_country_weekend_inputs.py",
             "/cross_country_results_identity.py",
             "/schedule_contract.py",
+            "/cross_country_tour_publication.py",
             "/cross_country_tour_shadow.py",
             "/tds-picks-simulation.R",
+            "/layouts/",
+            "/themes/white/",
         ):
             self.assertIn(path, self.source)
         self.assertNotIn("fetch-depth: 0", self.source)
@@ -45,20 +48,30 @@ class CrossCountryTourShadowWorkflowTests(unittest.TestCase):
             "name: Validate Tour shadow workbooks and manifest"
         )
         lock = self.source.index("name: Enforce publication lock")
+        build_candidate = self.source.index(
+            "name: Build publication-disabled Tour candidate"
+        )
+        render_candidate = self.source.index(
+            "name: Render publication-disabled Tour candidate"
+        )
         retain = self.source.index("name: Retain complete Tour shadow evidence")
         self.assertLess(build, inspect)
         self.assertLess(inspect, simulate)
         self.assertLess(simulate, validate)
         self.assertLess(validate, lock)
-        self.assertLess(lock, retain)
+        self.assertLess(lock, build_candidate)
+        self.assertLess(build_candidate, render_candidate)
+        self.assertLess(render_candidate, retain)
         self.assertIn("if: always()", self.source)
         self.assertIn("retention-days: 30", self.source)
         self.assertIn("run_metadata.json", self.source)
         self.assertIn('"ski_commit": os.environ["SKI_SHA"]', self.source)
+        self.assertIn('hugo-version: "0.134.1"', self.source)
+        self.assertIn("RENDER_REPORT=$root/reports/render_report.json", self.source)
 
     def test_waiting_or_no_work_skips_expensive_runtime(self) -> None:
         condition = "if: steps.bundle.outputs.has_work == 'true'"
-        self.assertGreaterEqual(self.source.count(condition), 6)
+        self.assertGreaterEqual(self.source.count(condition), 9)
         self.assertIn('"waiting_for_startlists", "no_work"', self.source)
         self.assertIn("No simulation or publication was attempted", self.source)
         self.assertLess(
@@ -75,9 +88,25 @@ class CrossCountryTourShadowWorkflowTests(unittest.TestCase):
             "git push",
             "contents: write",
             "cross_country_weekend_publication",
-            "actions-hugo",
+            "pipelines.cross_country_tour_publication install",
+            "Install validated Tour candidate",
+            "Publish validated Tour",
         ):
             self.assertNotIn(forbidden, self.source)
+
+    def test_candidate_is_rendered_but_cannot_be_installed_or_published(self) -> None:
+        self.assertIn(
+            "python3 -m pipelines.cross_country_tour_publication build",
+            self.source,
+        )
+        self.assertIn(
+            "python3 -m pipelines.cross_country_tour_publication render",
+            self.source,
+        )
+        self.assertIn('--output-root "$CANDIDATE_ROOT"', self.source)
+        self.assertIn('--destination "$SITE_ROOT"', self.source)
+        self.assertIn("$RUNNER_TEMP/cross-country-tour-shadow", self.source)
+        self.assertIn("if: always()", self.source)
 
 
 if __name__ == "__main__":
