@@ -116,11 +116,13 @@ log_info("Reading chronological data...")
 men_chrono <- read.csv(ski_data_path("men_chrono_elevation.csv"),
                        stringsAsFactors = FALSE) %>%
   mutate(Date = as.Date(Date)) %>%
+  filter(Date < LOGICAL_DATE) %>%
   filter(Distance != "Ts", Distance != "Rel", Event != "Offseason")
 
 ladies_chrono <- read.csv(ski_data_path("ladies_chrono_elevation.csv"),
                           stringsAsFactors = FALSE) %>%
   mutate(Date = as.Date(Date)) %>%
+  filter(Date < LOGICAL_DATE) %>%
   filter(Distance != "Ts", Distance != "Rel", Event != "Offseason")
 
 log_info(paste("Loaded", nrow(men_chrono), "men's and", nrow(ladies_chrono), "ladies' race records"))

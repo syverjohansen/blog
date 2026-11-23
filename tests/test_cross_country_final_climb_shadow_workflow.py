@@ -35,6 +35,7 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
             "/cross_country_weekend_inputs.py",
             "/cross_country_results_identity.py",
             "/schedule_contract.py",
+            "/test_weekends.csv",
             "/cross_country_final_climb_shadow.py",
             "/cross_country_tour_shadow.py",
             "/final_climb-simulation.R",
@@ -68,6 +69,18 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
         self.assertIn('"publication": {"status": "disabled"}', self.source)
         self.assertIn('--logical-date "$AS_OF_DATE"', self.source)
         self.assertIn("NORDIC_LOGICAL_DATE: ${{ env.LOGICAL_DATE }}", self.source)
+
+    def test_completed_results_replay_is_explicit_and_provenance_checked(self) -> None:
+        self.assertIn("historical_results_replay:", self.trigger)
+        self.assertIn("type: boolean", self.trigger)
+        self.assertIn("HISTORICAL_REPLAY_INPUT", self.source)
+        self.assertIn("--historical-results-replay", self.source)
+        self.assertIn(
+            'participant_source_mode="historical_results_replay"', self.source
+        )
+        self.assertIn(
+            'report.get("participant_source_mode") != expected_mode', self.source
+        )
 
     def test_waiting_or_no_work_skips_expensive_runtime(self) -> None:
         condition = "if: steps.bundle.outputs.has_work == 'true'"
