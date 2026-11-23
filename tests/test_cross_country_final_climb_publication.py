@@ -1,16 +1,20 @@
 import hashlib
 import json
+import shutil
 import tempfile
 import unittest
 from datetime import date
 from pathlib import Path
+from unittest import mock
 
 from openpyxl import Workbook
 
 from pipelines.cross_country_final_climb_publication import (
     CANDIDATE_SCHEMA,
+    RENDER_SCHEMA,
     FinalClimbPublicationError,
     build_final_climb_candidate,
+    render_final_climb_candidate,
 )
 from pipelines.cross_country_final_climb_shadow import (
     POINT_HEADERS,
@@ -175,6 +179,67 @@ class CrossCountryFinalClimbPublicationTests(unittest.TestCase):
                     logical_date=date(2027, 1, 10),
                     output_root=candidate,
                 )
+
+    def test_render_rejects_candidate_changed_after_build(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            predictions, validation = write_validated_outputs(root)
+            candidate = root / "candidate"
+            build_final_climb_candidate(
+                prediction_root=predictions,
+                validation_report_path=validation,
+                logical_date=date(2027, 1, 10),
+                output_root=candidate,
+            )
+            men = (
+                candidate
+                / "data/cross-country/drafts/final-climb-picks/20270110/men.json"
+            )
+            men.write_text(men.read_text() + " ", encoding="utf-8")
+            with (
+                mock.patch(
+                    "pipelines.cross_country_final_climb_publication.shutil.which",
+                    return_value="/usr/bin/hugo",
+                ),
+                self.assertRaisesRegex(FinalClimbPublicationError, "checksum"),
+            ):
+                render_final_climb_candidate(
+                    blog_root=Path(__file__).resolve().parents[1],
+                    candidate_root=candidate,
+                    logical_date=date(2027, 1, 10),
+                    destination=root / "site",
+                    report_path=root / "render.json",
+                )
+
+    @unittest.skipUnless(shutil.which("hugo"), "hugo is not installed")
+    def test_renders_candidate_with_all_four_tables(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            predictions, validation = write_validated_outputs(root)
+            candidate = root / "candidate"
+            build_final_climb_candidate(
+                prediction_root=predictions,
+                validation_report_path=validation,
+                logical_date=date(2027, 1, 10),
+                output_root=candidate,
+            )
+            report = render_final_climb_candidate(
+                blog_root=Path(__file__).resolve().parents[1],
+                candidate_root=candidate,
+                logical_date=date(2027, 1, 10),
+                destination=root / "site",
+                report_path=root / "render.json",
+            )
+            self.assertEqual(RENDER_SCHEMA, report["schema_version"])
+            self.assertEqual("passed", report["status"])
+            self.assertEqual({"status": "disabled"}, report["publication"])
+            self.assertEqual("official_startlist", report["participant_source_mode"])
+            html = (
+                root / "site/post/final-climb-picks/20270110/index.html"
+            ).read_text()
+            self.assertIn("Men One", html)
+            self.assertIn("Women One", html)
+            self.assertEqual(4, html.count('class="bbref-table"'))
 
 
 if __name__ == "__main__":

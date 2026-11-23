@@ -57,6 +57,8 @@ jobs:
             /pipelines/requirements-integration.txt
             /pipelines/requirements-snapshot.txt
             /content/post/cross-country/drafts/final_climb-simulation.R
+            /layouts/
+            /themes/white/
 
       - name: Resolve ski source to an exact commit
         id: ski
@@ -151,6 +153,8 @@ jobs:
             echo "LOG_ROOT=$root/logs"
             echo "VALIDATION_REPORT=$root/reports/validation_report.json"
             echo "CANDIDATE_ROOT=$root/candidate"
+            echo "SITE_ROOT=$root/site"
+            echo "RENDER_REPORT=$root/reports/render_report.json"
           } >> "$GITHUB_ENV"
           python3 - "$root/run_metadata.json" "$logical_date" <<'PY'
           import json
@@ -297,11 +301,28 @@ jobs:
       - name: Build publication-disabled Final Climb candidate
         if: steps.bundle.outputs.has_work == 'true'
         run: |
-          python3 -m pipelines.cross_country_final_climb_publication \
+          python3 -m pipelines.cross_country_final_climb_publication build \
             --prediction-root "$PREDICTION_ROOT" \
             --validation-report "$VALIDATION_REPORT" \
             --logical-date "$LOGICAL_DATE" \
             --output-root "$CANDIDATE_ROOT"
+
+      - name: Set up Hugo
+        if: steps.bundle.outputs.has_work == 'true'
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Render publication-disabled Final Climb candidate
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          python3 -m pipelines.cross_country_final_climb_publication render \
+            --blog-root "$GITHUB_WORKSPACE" \
+            --candidate-root "$CANDIDATE_ROOT" \
+            --logical-date "$LOGICAL_DATE" \
+            --destination "$SITE_ROOT" \
+            --report "$RENDER_REPORT"
 
       - name: Retain complete Final Climb shadow evidence
         if: always()
