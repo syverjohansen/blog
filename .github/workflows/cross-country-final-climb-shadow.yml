@@ -54,6 +54,7 @@ jobs:
             /pipelines/cross_country_tour_shadow.py
             /pipelines/cross_country_final_climb_shadow.py
             /pipelines/requirements-integration.txt
+            /pipelines/requirements-snapshot.txt
             /content/post/cross-country/drafts/final_climb-simulation.R
 
       - name: Resolve ski source to an exact commit
