@@ -1,4 +1,4 @@
-"""Build and render a publication-disabled Tour de Ski Hugo candidate."""
+"""Build, render, and narrowly install a validated Tour de Ski candidate."""
 
 from __future__ import annotations
 
@@ -358,6 +358,59 @@ def render_tour_candidate(
     return report
 
 
+def install_tour_candidate(
+    *,
+    candidate_root: Path,
+    render_report_path: Path,
+    rendered_site_root: Path,
+    logical_date: date,
+    as_of: date,
+    repository_root: Path,
+) -> list[Path]:
+    """Install only the exact candidate files proven by a successful render."""
+    if as_of > logical_date:
+        raise TourPublicationError("refusing to install a past Tour prediction")
+    candidate_root = candidate_root.expanduser().resolve()
+    documents = _validated_candidate_outputs(candidate_root, logical_date)
+    date_key = logical_date.strftime("%Y%m%d")
+    data_root = Path("data/cross-country/drafts/tds-picks") / date_key
+    expected = {
+        Path("content/post/tds-picks") / f"{date_key}.md",
+        *(data_root / output[0] for output in WORKBOOKS.values()),
+    }
+    if set(documents) != expected:
+        raise TourPublicationError(
+            "candidate output set does not match publication contract"
+        )
+
+    render = _read_json(render_report_path, "render report")
+    page_relative = Path("post/tds-picks") / date_key / "index.html"
+    if (
+        render.get("schema_version") != RENDER_SCHEMA
+        or render.get("status") != "passed"
+        or render.get("logical_date") != logical_date.isoformat()
+        or render.get("publication") != {"status": "disabled"}
+        or render.get("page") != str(page_relative)
+    ):
+        raise TourPublicationError("render report is not eligible for installation")
+    page = rendered_site_root.expanduser().resolve() / page_relative
+    try:
+        page_content = page.read_bytes()
+    except OSError as exc:
+        raise TourPublicationError(f"cannot read rendered candidate: {page}") from exc
+    if render.get("sha256") != _sha256(page_content):
+        raise TourPublicationError("rendered candidate checksum does not match report")
+
+    repository_root = repository_root.expanduser().resolve()
+    if not (repository_root / ".git").exists():
+        raise TourPublicationError("installation target is not a Git checkout")
+    installed: list[Path] = []
+    for relative, content in sorted(documents.items(), key=lambda item: str(item[0])):
+        _atomic_write(repository_root / relative, content)
+        installed.append(relative)
+    return installed
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -372,6 +425,13 @@ def main() -> int:
     render.add_argument("--logical-date", required=True, type=date.fromisoformat)
     render.add_argument("--destination", required=True, type=Path)
     render.add_argument("--report", required=True, type=Path)
+    install = subparsers.add_parser("install")
+    install.add_argument("--candidate-root", required=True, type=Path)
+    install.add_argument("--render-report", required=True, type=Path)
+    install.add_argument("--rendered-site-root", required=True, type=Path)
+    install.add_argument("--logical-date", required=True, type=date.fromisoformat)
+    install.add_argument("--as-of", required=True, type=date.fromisoformat)
+    install.add_argument("--repository-root", required=True, type=Path)
     args = parser.parse_args()
     if args.command == "build":
         report = build_tour_candidate(
@@ -380,7 +440,7 @@ def main() -> int:
             logical_date=args.logical_date,
             output_root=args.output_root,
         )
-    else:
+    elif args.command == "render":
         report = render_tour_candidate(
             blog_root=args.blog_root,
             candidate_root=args.candidate_root,
@@ -388,6 +448,16 @@ def main() -> int:
             destination=args.destination,
             report_path=args.report,
         )
+    else:
+        installed = install_tour_candidate(
+            candidate_root=args.candidate_root,
+            render_report_path=args.render_report,
+            rendered_site_root=args.rendered_site_root,
+            logical_date=args.logical_date,
+            as_of=args.as_of,
+            repository_root=args.repository_root,
+        )
+        report = {"installed": [str(path) for path in installed]}
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0
 
