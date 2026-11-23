@@ -393,6 +393,74 @@ def render_final_climb_candidate(
     return report
 
 
+def install_final_climb_candidate(
+    *,
+    candidate_root: Path,
+    render_report_path: Path,
+    rendered_site_root: Path,
+    logical_date: date,
+    as_of: date,
+    repository_root: Path,
+) -> list[Path]:
+    """Install only a current official candidate proven by a successful render."""
+    candidate_root = candidate_root.expanduser().resolve()
+    documents, participant_source_mode = _validated_candidate_outputs(
+        candidate_root, logical_date
+    )
+    if participant_source_mode != "official_startlist":
+        raise FinalClimbPublicationError(
+            "historical Final Climb replay candidates cannot be installed"
+        )
+    if as_of > logical_date:
+        raise FinalClimbPublicationError(
+            "refusing to install a past Final Climb prediction"
+        )
+    date_key = logical_date.strftime("%Y%m%d")
+    data_root = Path("data/cross-country/drafts/final-climb-picks") / date_key
+    expected = {
+        Path("content/post/final-climb-picks") / f"{date_key}.md",
+        *(data_root / output[0] for output in WORKBOOKS.values()),
+    }
+    if set(documents) != expected:
+        raise FinalClimbPublicationError(
+            "candidate output set does not match publication contract"
+        )
+
+    render = _read_json(render_report_path, "render report")
+    page_relative = Path("post/final-climb-picks") / date_key / "index.html"
+    if (
+        render.get("schema_version") != RENDER_SCHEMA
+        or render.get("status") != "passed"
+        or render.get("logical_date") != logical_date.isoformat()
+        or render.get("participant_source_mode") != participant_source_mode
+        or render.get("publication") != {"status": "disabled"}
+        or render.get("page") != str(page_relative)
+    ):
+        raise FinalClimbPublicationError(
+            "render report is not eligible for installation"
+        )
+    page = rendered_site_root.expanduser().resolve() / page_relative
+    try:
+        page_content = page.read_bytes()
+    except OSError as exc:
+        raise FinalClimbPublicationError(
+            f"cannot read rendered candidate: {page}"
+        ) from exc
+    if render.get("sha256") != _sha256(page_content):
+        raise FinalClimbPublicationError(
+            "rendered candidate checksum does not match report"
+        )
+
+    repository_root = repository_root.expanduser().resolve()
+    if not (repository_root / ".git").exists():
+        raise FinalClimbPublicationError("installation target is not a Git checkout")
+    installed: list[Path] = []
+    for relative, content in sorted(documents.items(), key=lambda item: str(item[0])):
+        _atomic_write(repository_root / relative, content)
+        installed.append(relative)
+    return installed
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -407,6 +475,13 @@ def main() -> int:
     render.add_argument("--logical-date", required=True, type=date.fromisoformat)
     render.add_argument("--destination", required=True, type=Path)
     render.add_argument("--report", required=True, type=Path)
+    install = commands.add_parser("install")
+    install.add_argument("--candidate-root", required=True, type=Path)
+    install.add_argument("--render-report", required=True, type=Path)
+    install.add_argument("--rendered-site-root", required=True, type=Path)
+    install.add_argument("--logical-date", required=True, type=date.fromisoformat)
+    install.add_argument("--as-of", required=True, type=date.fromisoformat)
+    install.add_argument("--repository-root", required=True, type=Path)
     args = parser.parse_args()
     if args.command == "build":
         report = build_final_climb_candidate(
@@ -415,7 +490,7 @@ def main() -> int:
             logical_date=args.logical_date,
             output_root=args.output_root,
         )
-    else:
+    elif args.command == "render":
         report = render_final_climb_candidate(
             blog_root=args.blog_root,
             candidate_root=args.candidate_root,
@@ -423,6 +498,20 @@ def main() -> int:
             destination=args.destination,
             report_path=args.report,
         )
+    else:
+        report = {
+            "installed": [
+                str(path)
+                for path in install_final_climb_candidate(
+                    candidate_root=args.candidate_root,
+                    render_report_path=args.render_report,
+                    rendered_site_root=args.rendered_site_root,
+                    logical_date=args.logical_date,
+                    as_of=args.as_of,
+                    repository_root=args.repository_root,
+                )
+            ]
+        }
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0
 

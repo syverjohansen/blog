@@ -41,6 +41,8 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
             "/cross_country_tour_shadow.py",
             "/requirements-snapshot.txt",
             "/final_climb-simulation.R",
+            "/content/post/final-climb-picks/",
+            "/data/cross-country/drafts/final-climb-picks/",
             "/layouts/",
             "/themes/white/",
         ):
@@ -63,6 +65,7 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
         render = self.source.index(
             "name: Render publication-disabled Final Climb candidate"
         )
+        install = self.source.index("name: Install validated Final Climb candidate")
         retain = self.source.index("name: Retain complete Final Climb shadow evidence")
         self.assertLess(build, inspect)
         self.assertLess(inspect, simulate)
@@ -70,11 +73,22 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
         self.assertLess(validate, lock)
         self.assertLess(lock, candidate)
         self.assertLess(candidate, render)
-        self.assertLess(render, retain)
+        self.assertLess(render, install)
+        self.assertLess(install, retain)
         self.assertIn("if: always()", self.source)
         self.assertIn("retention-days: 30", self.source)
         self.assertIn('hugo-version: "0.134.1"', self.source)
         self.assertIn("RENDER_REPORT=$root/reports/render_report.json", self.source)
+
+    def test_install_is_official_only_and_does_not_publish(self) -> None:
+        install = self.source.split(
+            "- name: Install validated Final Climb candidate", 1
+        )[1].split("- name: Retain complete Final Climb shadow evidence", 1)[0]
+        self.assertIn("env.PARTICIPANT_SOURCE_MODE == 'official_startlist'", install)
+        self.assertIn("cross_country_final_climb_publication install", install)
+        self.assertNotIn("git commit", self.source)
+        self.assertNotIn("git push", self.source)
+        self.assertIn("permissions:\n  contents: read", self.source)
 
     def test_uses_as_of_window_but_stable_final_climb_target_date(self) -> None:
         self.assertIn("AS_OF_DATE=$AS_OF_DATE_INPUT", self.source)
