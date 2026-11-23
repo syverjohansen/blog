@@ -38,6 +38,7 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
             "/test_weekends.csv",
             "/cross_country_final_climb_shadow.py",
             "/cross_country_tour_shadow.py",
+            "/requirements-snapshot.txt",
             "/final_climb-simulation.R",
         ):
             self.assertIn(path, self.source)
