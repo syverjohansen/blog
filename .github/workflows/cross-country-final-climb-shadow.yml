@@ -30,7 +30,7 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: cross-country-final-climb-shadow
@@ -46,6 +46,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
+          token: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
           fetch-depth: 1
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -338,6 +339,58 @@ jobs:
             --logical-date "$LOGICAL_DATE" \
             --as-of "$AS_OF_DATE" \
             --repository-root "$GITHUB_WORKSPACE"
+
+      - name: Publish validated Final Climb predictions
+        if: >-
+          steps.bundle.outputs.has_work == 'true' &&
+          env.PARTICIPANT_SOURCE_MODE == 'official_startlist'
+        env:
+          SKI_SHA: ${{ steps.ski.outputs.sha }}
+        run: |
+          date_key="${LOGICAL_DATE//-/}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            "content/post/final-climb-picks/$date_key.md" \
+            "data/cross-country/drafts/final-climb-picks/$date_key/men.json" \
+            "data/cross-country/drafts/final-climb-picks/$date_key/ladies.json" \
+            "data/cross-country/drafts/final-climb-picks/$date_key/men_position_probabilities.json" \
+            "data/cross-country/drafts/final-climb-picks/$date_key/ladies_position_probabilities.json"
+          status=unchanged
+          if git diff --cached --quiet; then
+            echo "Validated Final Climb prediction artifacts are already current."
+          else
+            git commit -m "Publish Final Climb predictions for $date_key" \
+              -m "Ski source: $SKI_SHA"
+            git pull --rebase origin main
+            git push origin HEAD:main
+            status=published
+          fi
+          python3 - "$SHADOW_ROOT/publication_report.json" "$status" \
+            "$LOGICAL_DATE" "$(git rev-parse HEAD)" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          date_key = sys.argv[3].replace("-", "")
+          report = {
+              "schema_version": "nordicnumbers.cross-country-final-climb-publication/v1",
+              "status": sys.argv[2],
+              "logical_date": sys.argv[3],
+              "participant_source_mode": "official_startlist",
+              "commit": sys.argv[4],
+              "files": [
+                  f"content/post/final-climb-picks/{date_key}.md",
+                  f"data/cross-country/drafts/final-climb-picks/{date_key}/men.json",
+                  f"data/cross-country/drafts/final-climb-picks/{date_key}/ladies.json",
+                  f"data/cross-country/drafts/final-climb-picks/{date_key}/men_position_probabilities.json",
+                  f"data/cross-country/drafts/final-climb-picks/{date_key}/ladies_position_probabilities.json",
+              ],
+          }
+          Path(sys.argv[1]).write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n"
+          )
+          PY
 
       - name: Retain complete Final Climb shadow evidence
         if: always()
