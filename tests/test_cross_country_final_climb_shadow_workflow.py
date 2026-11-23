@@ -11,13 +11,17 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
         cls.source = WORKFLOW.read_text(encoding="utf-8")
         cls.trigger = cls.source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
 
-    def test_is_manual_guarded_and_github_hosted(self) -> None:
+    def test_is_daily_chained_manual_guarded_and_github_hosted(self) -> None:
         self.assertTrue(
-            self.source.startswith("name: Cross-country Final Climb shadow\n")
+            self.source.startswith("name: Cross-country Final Climb predictions\n")
         )
         self.assertIn("workflow_dispatch:", self.trigger)
-        self.assertNotIn("workflow_run:", self.trigger)
+        self.assertIn("workflow_run:", self.trigger)
+        self.assertIn(
+            'workflows: ["Cross-country Tour de Ski predictions"]', self.trigger
+        )
         self.assertNotIn("schedule:", self.trigger)
+        self.assertIn("github.event.workflow_run.conclusion == 'success'", self.source)
         self.assertIn("permissions:\n  contents: write", self.source)
         self.assertIn("runs-on: ubuntu-latest", self.source)
         self.assertNotIn("self-hosted", self.source)
@@ -116,12 +120,28 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
             self.assertNotIn(forbidden, self.source)
 
     def test_uses_as_of_window_but_stable_final_climb_target_date(self) -> None:
-        self.assertIn("AS_OF_DATE=$AS_OF_DATE_INPUT", self.source)
+        self.assertIn('as_of="${AS_OF_DATE_INPUT:-$(date -u +%F)}"', self.source)
+        self.assertIn("AS_OF_DATE=$as_of", self.source)
         self.assertIn('plan.get("final_climb_date")', self.source)
-        self.assertIn('"as_of_date": os.environ["AS_OF_DATE_INPUT"]', self.source)
+        self.assertIn('"as_of_date": sys.argv[3]', self.source)
         self.assertIn('"publication": {"status": "disabled"}', self.source)
         self.assertIn('--logical-date "$AS_OF_DATE"', self.source)
         self.assertIn("NORDIC_LOGICAL_DATE: ${{ env.LOGICAL_DATE }}", self.source)
+
+    def test_automatic_runs_use_defaults_and_cannot_enable_historical_replay(
+        self,
+    ) -> None:
+        self.assertIn("SKI_REF: ${{ inputs.ski_ref || 'main' }}", self.source)
+        self.assertIn(
+            "N_SIMULATIONS_INPUT: ${{ inputs.n_simulations || 250 }}", self.source
+        )
+        self.assertIn(
+            "RANDOM_SEED_INPUT: ${{ inputs.random_seed || 20270110 }}", self.source
+        )
+        self.assertIn(
+            "inputs.historical_results_replay && 'true' || 'false'", self.source
+        )
+        self.assertNotIn('default: "2027-01-09"', self.trigger)
 
     def test_completed_results_replay_is_explicit_and_provenance_checked(self) -> None:
         self.assertIn("historical_results_replay:", self.trigger)
@@ -151,7 +171,7 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
             self.source,
         )
         self.assertIn('"ski_commit": os.environ["SKI_SHA"]', self.source)
-        self.assertIn('"blog_commit": os.environ["GITHUB_SHA"]', self.source)
+        self.assertIn('"blog_commit": os.environ["BLOG_SHA"]', self.source)
         self.assertIn(
             "python3 -m pipelines.cross_country_final_climb_shadow", self.source
         )
