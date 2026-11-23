@@ -57,6 +57,8 @@ jobs:
             /pipelines/requirements-integration.txt
             /pipelines/requirements-snapshot.txt
             /content/post/cross-country/drafts/final_climb-simulation.R
+            /content/post/final-climb-picks/
+            /data/cross-country/drafts/final-climb-picks/
             /layouts/
             /themes/white/
 
@@ -323,6 +325,19 @@ jobs:
             --logical-date "$LOGICAL_DATE" \
             --destination "$SITE_ROOT" \
             --report "$RENDER_REPORT"
+
+      - name: Install validated Final Climb candidate
+        if: >-
+          steps.bundle.outputs.has_work == 'true' &&
+          env.PARTICIPANT_SOURCE_MODE == 'official_startlist'
+        run: |
+          python3 -m pipelines.cross_country_final_climb_publication install \
+            --candidate-root "$CANDIDATE_ROOT" \
+            --render-report "$RENDER_REPORT" \
+            --rendered-site-root "$SITE_ROOT" \
+            --logical-date "$LOGICAL_DATE" \
+            --as-of "$AS_OF_DATE" \
+            --repository-root "$GITHUB_WORKSPACE"
 
       - name: Retain complete Final Climb shadow evidence
         if: always()

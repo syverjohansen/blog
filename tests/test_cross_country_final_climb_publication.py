@@ -14,6 +14,7 @@ from pipelines.cross_country_final_climb_publication import (
     RENDER_SCHEMA,
     FinalClimbPublicationError,
     build_final_climb_candidate,
+    install_final_climb_candidate,
     render_final_climb_candidate,
 )
 from pipelines.cross_country_final_climb_shadow import (
@@ -240,6 +241,123 @@ class CrossCountryFinalClimbPublicationTests(unittest.TestCase):
             self.assertIn("Men One", html)
             self.assertIn("Women One", html)
             self.assertEqual(4, html.count('class="bbref-table"'))
+
+            repository = root / "repository"
+            repository.mkdir()
+            (repository / ".git").write_text("gitdir: test\n", encoding="utf-8")
+            installed = install_final_climb_candidate(
+                candidate_root=candidate,
+                render_report_path=root / "render.json",
+                rendered_site_root=root / "site",
+                logical_date=date(2027, 1, 10),
+                as_of=date(2027, 1, 10),
+                repository_root=repository,
+            )
+            self.assertEqual(5, len(installed))
+            self.assertEqual(
+                (candidate / "content/post/final-climb-picks/20270110.md").read_bytes(),
+                (
+                    repository / "content/post/final-climb-picks/20270110.md"
+                ).read_bytes(),
+            )
+
+            render_report = root / "render.json"
+            render_document = json.loads(render_report.read_text())
+            render_document["participant_source_mode"] = "historical_results_replay"
+            render_report.write_text(json.dumps(render_document), encoding="utf-8")
+            with self.assertRaisesRegex(FinalClimbPublicationError, "not eligible"):
+                install_final_climb_candidate(
+                    candidate_root=candidate,
+                    render_report_path=render_report,
+                    rendered_site_root=root / "site",
+                    logical_date=date(2027, 1, 10),
+                    as_of=date(2027, 1, 10),
+                    repository_root=repository,
+                )
+
+            render_document["participant_source_mode"] = "official_startlist"
+            render_report.write_text(json.dumps(render_document), encoding="utf-8")
+            page = root / "site/post/final-climb-picks/20270110/index.html"
+            page.write_text(page.read_text() + "tampered", encoding="utf-8")
+            with self.assertRaisesRegex(FinalClimbPublicationError, "checksum"):
+                install_final_climb_candidate(
+                    candidate_root=candidate,
+                    render_report_path=render_report,
+                    rendered_site_root=root / "site",
+                    logical_date=date(2027, 1, 10),
+                    as_of=date(2027, 1, 10),
+                    repository_root=repository,
+                )
+
+    def test_install_rejects_historical_replay_and_extra_output(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            predictions, validation = write_validated_outputs(
+                root, source_mode="historical_results_replay"
+            )
+            candidate = root / "candidate"
+            build_final_climb_candidate(
+                prediction_root=predictions,
+                validation_report_path=validation,
+                logical_date=date(2027, 1, 10),
+                output_root=candidate,
+            )
+            with self.assertRaisesRegex(FinalClimbPublicationError, "historical"):
+                install_final_climb_candidate(
+                    candidate_root=candidate,
+                    render_report_path=root / "missing-render.json",
+                    rendered_site_root=root / "missing-site",
+                    logical_date=date(2027, 1, 10),
+                    as_of=date(2027, 1, 10),
+                    repository_root=root / "repository",
+                )
+
+            predictions, validation = write_validated_outputs(root / "official")
+            candidate = root / "official-candidate"
+            build_final_climb_candidate(
+                prediction_root=predictions,
+                validation_report_path=validation,
+                logical_date=date(2027, 1, 10),
+                output_root=candidate,
+            )
+            extra = candidate / "unexpected.txt"
+            extra.write_text("unexpected", encoding="utf-8")
+            report_path = candidate / "publication_candidate_report.json"
+            report = json.loads(report_path.read_text())
+            report["outputs"]["unexpected.txt"] = {
+                "sha256": hashlib.sha256(extra.read_bytes()).hexdigest()
+            }
+            report_path.write_text(json.dumps(report), encoding="utf-8")
+            with self.assertRaisesRegex(FinalClimbPublicationError, "output set"):
+                install_final_climb_candidate(
+                    candidate_root=candidate,
+                    render_report_path=root / "missing-render.json",
+                    rendered_site_root=root / "missing-site",
+                    logical_date=date(2027, 1, 10),
+                    as_of=date(2027, 1, 10),
+                    repository_root=root / "repository",
+                )
+
+    def test_install_rejects_past_prediction_before_writing(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            predictions, validation = write_validated_outputs(root)
+            candidate = root / "candidate"
+            build_final_climb_candidate(
+                prediction_root=predictions,
+                validation_report_path=validation,
+                logical_date=date(2027, 1, 10),
+                output_root=candidate,
+            )
+            with self.assertRaisesRegex(FinalClimbPublicationError, "past"):
+                install_final_climb_candidate(
+                    candidate_root=candidate,
+                    render_report_path=root / "missing-render.json",
+                    rendered_site_root=root / "missing-site",
+                    logical_date=date(2027, 1, 10),
+                    as_of=date(2027, 1, 11),
+                    repository_root=root / "repository",
+                )
 
 
 if __name__ == "__main__":
