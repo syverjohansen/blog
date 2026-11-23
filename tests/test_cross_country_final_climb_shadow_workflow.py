@@ -11,17 +11,17 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
         cls.source = WORKFLOW.read_text(encoding="utf-8")
         cls.trigger = cls.source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
 
-    def test_is_manual_publication_disabled_and_github_hosted(self) -> None:
+    def test_is_manual_guarded_and_github_hosted(self) -> None:
         self.assertTrue(
             self.source.startswith("name: Cross-country Final Climb shadow\n")
         )
         self.assertIn("workflow_dispatch:", self.trigger)
         self.assertNotIn("workflow_run:", self.trigger)
         self.assertNotIn("schedule:", self.trigger)
-        self.assertIn("permissions:\n  contents: read", self.source)
+        self.assertIn("permissions:\n  contents: write", self.source)
         self.assertIn("runs-on: ubuntu-latest", self.source)
         self.assertNotIn("self-hosted", self.source)
-        self.assertNotIn("git push", self.source)
+        self.assertIn("token: ${{ secrets.BLOG_AUTOMATION_TOKEN }}", self.source)
 
     def test_pins_complete_bounded_blog_and_ski_runtimes(self) -> None:
         self.assertIn("repos/syverjohansen/ski/commits/$SKI_REF", self.source)
@@ -66,6 +66,7 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
             "name: Render publication-disabled Final Climb candidate"
         )
         install = self.source.index("name: Install validated Final Climb candidate")
+        publish = self.source.index("name: Publish validated Final Climb predictions")
         retain = self.source.index("name: Retain complete Final Climb shadow evidence")
         self.assertLess(build, inspect)
         self.assertLess(inspect, simulate)
@@ -74,21 +75,45 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
         self.assertLess(lock, candidate)
         self.assertLess(candidate, render)
         self.assertLess(render, install)
-        self.assertLess(install, retain)
+        self.assertLess(install, publish)
+        self.assertLess(publish, retain)
         self.assertIn("if: always()", self.source)
         self.assertIn("retention-days: 30", self.source)
         self.assertIn('hugo-version: "0.134.1"', self.source)
         self.assertIn("RENDER_REPORT=$root/reports/render_report.json", self.source)
 
-    def test_install_is_official_only_and_does_not_publish(self) -> None:
+    def test_install_and_publication_are_official_only(self) -> None:
         install = self.source.split(
             "- name: Install validated Final Climb candidate", 1
+        )[1].split("- name: Publish validated Final Climb predictions", 1)[0]
+        publish = self.source.split(
+            "- name: Publish validated Final Climb predictions", 1
         )[1].split("- name: Retain complete Final Climb shadow evidence", 1)[0]
         self.assertIn("env.PARTICIPANT_SOURCE_MODE == 'official_startlist'", install)
+        self.assertIn("env.PARTICIPANT_SOURCE_MODE == 'official_startlist'", publish)
         self.assertIn("cross_country_final_climb_publication install", install)
-        self.assertNotIn("git commit", self.source)
-        self.assertNotIn("git push", self.source)
-        self.assertIn("permissions:\n  contents: read", self.source)
+
+    def test_publication_is_narrow_and_records_provenance(self) -> None:
+        publish = self.source.split(
+            "- name: Publish validated Final Climb predictions", 1
+        )[1].split("- name: Retain complete Final Climb shadow evidence", 1)[0]
+        for path in (
+            '"content/post/final-climb-picks/$date_key.md"',
+            '"data/cross-country/drafts/final-climb-picks/$date_key/men.json"',
+            '"data/cross-country/drafts/final-climb-picks/$date_key/ladies.json"',
+            '"data/cross-country/drafts/final-climb-picks/$date_key/men_position_probabilities.json"',
+            '"data/cross-country/drafts/final-climb-picks/$date_key/ladies_position_probabilities.json"',
+        ):
+            self.assertIn(path, publish)
+        self.assertIn("git pull --rebase origin main", publish)
+        self.assertIn("git push origin HEAD:main", publish)
+        self.assertIn(
+            '"schema_version": "nordicnumbers.cross-country-final-climb-publication/v1"',
+            publish,
+        )
+        self.assertIn('"participant_source_mode": "official_startlist"', publish)
+        for forbidden in ("git add .", "git add -A", "git push --force"):
+            self.assertNotIn(forbidden, self.source)
 
     def test_uses_as_of_window_but_stable_final_climb_target_date(self) -> None:
         self.assertIn("AS_OF_DATE=$AS_OF_DATE_INPUT", self.source)
