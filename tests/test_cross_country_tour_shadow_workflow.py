@@ -11,15 +11,18 @@ class CrossCountryTourShadowWorkflowTests(unittest.TestCase):
         cls.source = WORKFLOW.read_text(encoding="utf-8")
         cls.trigger = cls.source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
 
-    def test_is_manual_only_read_only_and_github_hosted(self) -> None:
+    def test_is_manual_only_guarded_and_github_hosted(self) -> None:
+        self.assertTrue(
+            self.source.startswith("name: Cross-country Tour de Ski predictions\n")
+        )
         self.assertIn("workflow_dispatch:", self.trigger)
         self.assertNotIn("workflow_run:", self.trigger)
         self.assertNotIn("schedule:", self.trigger)
-        self.assertIn("permissions:\n  contents: read", self.source)
+        self.assertIn("permissions:\n  contents: write", self.source)
         self.assertIn("runs-on: ubuntu-latest", self.source)
         self.assertNotIn("self-hosted", self.source)
-        self.assertNotIn("BLOG_AUTOMATION_TOKEN", self.source)
-        self.assertEqual(2, self.source.count("persist-credentials: false"))
+        self.assertIn("token: ${{ secrets.BLOG_AUTOMATION_TOKEN }}", self.source)
+        self.assertEqual(1, self.source.count("persist-credentials: false"))
 
     def test_pins_bounded_blog_and_ski_runtimes(self) -> None:
         self.assertIn("repos/syverjohansen/ski/commits/$SKI_REF", self.source)
@@ -34,6 +37,8 @@ class CrossCountryTourShadowWorkflowTests(unittest.TestCase):
             "/cross_country_tour_publication.py",
             "/cross_country_tour_shadow.py",
             "/tds-picks-simulation.R",
+            "/content/post/tds-picks/",
+            "/data/cross-country/drafts/tds-picks/",
             "/layouts/",
             "/themes/white/",
         ):
@@ -79,22 +84,32 @@ class CrossCountryTourShadowWorkflowTests(unittest.TestCase):
             self.source.index("r-lib/actions/setup-r@v2"),
         )
 
-    def test_has_no_publication_or_repository_mutation_path(self) -> None:
+    def test_publication_is_narrow_and_follows_all_validation(self) -> None:
         self.assertIn('publication") != {"status": "disabled"}', self.source)
         self.assertIn("Tour shadow passed with publication disabled", self.source)
+        render = self.source.index("name: Render publication-disabled Tour candidate")
+        install = self.source.index("name: Install validated Tour candidate")
+        publish = self.source.index("name: Publish validated Tour predictions")
+        retain = self.source.index("name: Retain complete Tour shadow evidence")
+        self.assertLess(render, install)
+        self.assertLess(install, publish)
+        self.assertLess(publish, retain)
+        self.assertIn('--as-of "$(date -u +%F)"', self.source)
+        self.assertIn("git pull --rebase origin main", self.source)
+        self.assertIn("git push origin HEAD:main", self.source)
+        self.assertIn(
+            '"schema_version": "nordicnumbers.cross-country-tour-publication/v1"',
+            self.source,
+        )
         for forbidden in (
-            "git add",
-            "git commit",
-            "git push",
-            "contents: write",
             "cross_country_weekend_publication",
-            "pipelines.cross_country_tour_publication install",
-            "Install validated Tour candidate",
-            "Publish validated Tour",
+            "git add .",
+            "git add -A",
+            "git push --force",
         ):
             self.assertNotIn(forbidden, self.source)
 
-    def test_candidate_is_rendered_but_cannot_be_installed_or_published(self) -> None:
+    def test_candidate_is_rendered_installed_and_published_as_exact_files(self) -> None:
         self.assertIn(
             "python3 -m pipelines.cross_country_tour_publication build",
             self.source,
@@ -105,6 +120,18 @@ class CrossCountryTourShadowWorkflowTests(unittest.TestCase):
         )
         self.assertIn('--output-root "$CANDIDATE_ROOT"', self.source)
         self.assertIn('--destination "$SITE_ROOT"', self.source)
+        self.assertIn(
+            "python3 -m pipelines.cross_country_tour_publication install",
+            self.source,
+        )
+        for path in (
+            '"content/post/tds-picks/$date_key.md"',
+            '"data/cross-country/drafts/tds-picks/$date_key/men.json"',
+            '"data/cross-country/drafts/tds-picks/$date_key/ladies.json"',
+            '"data/cross-country/drafts/tds-picks/$date_key/men_position_probabilities.json"',
+            '"data/cross-country/drafts/tds-picks/$date_key/ladies_position_probabilities.json"',
+        ):
+            self.assertIn(path, self.source)
         self.assertIn("$RUNNER_TEMP/cross-country-tour-shadow", self.source)
         self.assertIn("if: always()", self.source)
 
