@@ -19,6 +19,7 @@ from pipelines.cross_country_tour_publication import (
     build_tour_candidate,
     install_tour_candidate,
     render_tour_candidate,
+    resolve_tour_logical_date,
 )
 from pipelines.cross_country_tour_shadow import (
     POINT_HEADERS,
@@ -75,6 +76,43 @@ def write_validated_outputs(root: Path) -> tuple[Path, Path]:
 
 @unittest.skipUnless(Workbook is not None, "openpyxl is not installed")
 class CrossCountryTourPublicationTests(unittest.TestCase):
+    def test_resolves_day_before_and_opening_to_stable_tour_date(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            report = Path(directory) / "tour-plan.json"
+            report.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "nordicnumbers.cross-country-tour-contract/v1",
+                        "tour_start_date": "2027-01-01",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                date(2027, 1, 1),
+                resolve_tour_logical_date(
+                    plan_report_path=report, as_of=date(2026, 12, 31)
+                ),
+            )
+            self.assertEqual(
+                date(2027, 1, 1),
+                resolve_tour_logical_date(
+                    plan_report_path=report, as_of=date(2027, 1, 1)
+                ),
+            )
+            self.assertEqual(
+                date(2026, 12, 30),
+                resolve_tour_logical_date(
+                    plan_report_path=report, as_of=date(2026, 12, 30)
+                ),
+            )
+            self.assertEqual(
+                date(2027, 1, 2),
+                resolve_tour_logical_date(
+                    plan_report_path=report, as_of=date(2027, 1, 2)
+                ),
+            )
+
     def test_builds_exact_publication_disabled_candidate(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -9,7 +9,7 @@ import os
 import shutil
 import subprocess
 import tempfile
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +21,7 @@ from pipelines.cross_country_tour_shadow import (
 
 CANDIDATE_SCHEMA = "nordicnumbers.cross-country-tour-candidate/v1"
 RENDER_SCHEMA = "nordicnumbers.cross-country-tour-render/v1"
+TOUR_CONTRACT_SCHEMA = "nordicnumbers.cross-country-tour-contract/v1"
 WORKBOOKS = {
     "men.xlsx": ("men.json", None, POINT_HEADERS),
     "ladies.xlsx": ("ladies.json", None, POINT_HEADERS),
@@ -101,6 +102,21 @@ def _validated_candidate_outputs(
             raise TourPublicationError(f"candidate checksum mismatch: {relative}")
         documents[path] = content
     return documents
+
+
+def resolve_tour_logical_date(*, plan_report_path: Path, as_of: date) -> date:
+    """Use the opening date during the day-before/opening publication window."""
+    plan = _read_json(plan_report_path, "Tour plan report")
+    if plan.get("schema_version") != TOUR_CONTRACT_SCHEMA:
+        raise TourPublicationError("unsupported Tour plan report schema")
+    start_text = plan.get("tour_start_date")
+    if start_text is None:
+        return as_of
+    try:
+        start = date.fromisoformat(start_text)
+    except (TypeError, ValueError) as exc:
+        raise TourPublicationError("invalid Tour start date in plan report") from exc
+    return start if as_of in {start - timedelta(days=1), start} else as_of
 
 
 def build_tour_candidate(
@@ -425,6 +441,9 @@ def main() -> int:
     render.add_argument("--logical-date", required=True, type=date.fromisoformat)
     render.add_argument("--destination", required=True, type=Path)
     render.add_argument("--report", required=True, type=Path)
+    resolve_date = subparsers.add_parser("resolve-date")
+    resolve_date.add_argument("--plan-report", required=True, type=Path)
+    resolve_date.add_argument("--as-of", required=True, type=date.fromisoformat)
     install = subparsers.add_parser("install")
     install.add_argument("--candidate-root", required=True, type=Path)
     install.add_argument("--render-report", required=True, type=Path)
@@ -448,7 +467,7 @@ def main() -> int:
             destination=args.destination,
             report_path=args.report,
         )
-    else:
+    elif args.command == "install":
         installed = install_tour_candidate(
             candidate_root=args.candidate_root,
             render_report_path=args.render_report,
@@ -458,6 +477,13 @@ def main() -> int:
             repository_root=args.repository_root,
         )
         report = {"installed": [str(path) for path in installed]}
+    else:
+        print(
+            resolve_tour_logical_date(
+                plan_report_path=args.plan_report, as_of=args.as_of
+            ).isoformat()
+        )
+        return 0
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0
 

@@ -15,9 +15,9 @@ from pipelines.test_pipeline import (
     verify_scenarios,
 )
 
-
 BLOG_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_SCHEDULE = BLOG_ROOT / "tests/pipeline/fixtures/races.csv"
+TEST_WORKFLOW = BLOG_ROOT / ".github/workflows/test-pipeline.yml"
 
 
 class PipelineOrchestrationTests(unittest.TestCase):
@@ -49,8 +49,7 @@ class PipelineOrchestrationTests(unittest.TestCase):
 
     def test_prediction_probability_semantics(self) -> None:
         fixture_root = (
-            BLOG_ROOT
-            / "tests/pipeline/fixtures/data/alpine/drafts/race-picks/20260324"
+            BLOG_ROOT / "tests/pipeline/fixtures/data/alpine/drafts/race-picks/20260324"
         )
         for gender in ("men", "ladies"):
             result = validate_prediction_semantics(
@@ -71,6 +70,13 @@ class PipelineOrchestrationTests(unittest.TestCase):
         self.assertEqual("pinned-input-files", state["source"])
         with self.assertRaisesRegex(PipelineCheckError, "40-character"):
             resolve_ski_input(BLOG_ROOT, input_root, "main")
+
+    def test_hosted_suite_installs_complete_integration_dependencies(self) -> None:
+        workflow = TEST_WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn(
+            "python3 -m pip install -r pipelines/requirements-integration.txt",
+            workflow,
+        )
 
 
 if __name__ == "__main__":

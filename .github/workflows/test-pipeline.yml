@@ -29,8 +29,8 @@ jobs:
           hugo-version: "0.134.1"
           extended: true
 
-      - name: Install snapshot dependencies
-        run: python3 -m pip install -r pipelines/requirements-snapshot.txt
+      - name: Install integration-test dependencies
+        run: python3 -m pip install -r pipelines/requirements-integration.txt
 
       - name: Run orchestration and snapshot unit tests
         run: python3 -m unittest discover -s tests -p 'test_*.py'
