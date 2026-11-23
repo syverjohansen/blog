@@ -1,0 +1,260 @@
+name: Cross-country Tour de Ski shadow
+
+on:
+  workflow_dispatch:
+    inputs:
+      logical_date:
+        description: Tour opening date (YYYY-MM-DD)
+        required: true
+        default: "2027-01-01"
+        type: string
+      n_simulations:
+        description: Deterministic Monte Carlo iteration count
+        required: true
+        default: 250
+        type: number
+      random_seed:
+        description: Deterministic simulation seed
+        required: true
+        default: 20270101
+        type: number
+      ski_ref:
+        description: Ski branch, tag, or commit to resolve and record
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cross-country-tour-shadow
+  cancel-in-progress: false
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out bounded blog runtime
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/cross-country-tour-shadow.yml
+            /pipelines/__init__.py
+            /pipelines/cross_country_tour_shadow.py
+            /pipelines/requirements-integration.txt
+            /pipelines/requirements-snapshot.txt
+            /content/post/cross-country/drafts/tds-picks-simulation.R
+
+      - name: Resolve ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SKI_REF: ${{ inputs.ski_ref }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if [[ ! "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out bounded ski runtime
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/ski/polars/cross_country_tour_inputs.py
+            /elo/python/ski/polars/cross_country_tour_contract.py
+            /elo/python/ski/polars/cross_country_weekend_inputs.py
+            /elo/python/ski/polars/cross_country_results_identity.py
+            /elo/python/ski/polars/schedule_contract.py
+            /elo/python/ski/polars/excel365/weekends.csv
+            /elo/python/ski/polars/excel365/men_chrono_elevation.csv
+            /elo/python/ski/polars/excel365/ladies_chrono_elevation.csv
+            /elo/python/ski/polars/excel365/fis_identity_aliases.csv
+
+      - name: Prepare immutable shadow parameters
+        env:
+          LOGICAL_DATE_INPUT: ${{ inputs.logical_date }}
+          N_SIMULATIONS_INPUT: ${{ inputs.n_simulations }}
+          RANDOM_SEED_INPUT: ${{ inputs.random_seed }}
+          SKI_SHA: ${{ steps.ski.outputs.sha }}
+        run: |
+          python3 - "$LOGICAL_DATE_INPUT" "$N_SIMULATIONS_INPUT" "$RANDOM_SEED_INPUT" <<'PY'
+          from datetime import date
+          import sys
+
+          date.fromisoformat(sys.argv[1])
+          if int(sys.argv[2]) < 1:
+              raise SystemExit("n_simulations must be positive")
+          int(sys.argv[3])
+          PY
+          blog_sha=$(git rev-parse HEAD)
+          if ! [[ "$blog_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve checked-out blog revision" >&2
+            exit 1
+          fi
+          root="$RUNNER_TEMP/cross-country-tour-shadow"
+          mkdir -p "$root/reports"
+          {
+            echo "LOGICAL_DATE=$LOGICAL_DATE_INPUT"
+            echo "N_SIMULATIONS=$N_SIMULATIONS_INPUT"
+            echo "RANDOM_SEED=$RANDOM_SEED_INPUT"
+            echo "SHADOW_ROOT=$root"
+            echo "BUNDLE_ROOT=$root/bundle"
+            echo "PREDICTION_ROOT=$root/predictions"
+            echo "LOG_ROOT=$root/logs"
+            echo "VALIDATION_REPORT=$root/reports/validation_report.json"
+          } >> "$GITHUB_ENV"
+          python3 - "$root/run_metadata.json" "$blog_sha" <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          document = {
+              "schema_version": "nordicnumbers.cross-country-tour-run/v1",
+              "logical_date": os.environ["LOGICAL_DATE_INPUT"],
+              "blog_commit": sys.argv[2],
+              "ski_commit": os.environ["SKI_SHA"],
+              "n_simulations": int(os.environ["N_SIMULATIONS_INPUT"]),
+              "random_seed": int(os.environ["RANDOM_SEED_INPUT"]),
+              "publication": {"status": "disabled"},
+          }
+          Path(sys.argv[1]).write_text(
+              json.dumps(document, indent=2, sort_keys=True) + "\n"
+          )
+          PY
+
+      - name: Build isolated Tour opening bundle
+        working-directory: external/ski/elo/python/ski/polars
+        run: |
+          python3 cross_country_tour_inputs.py \
+            --schedule excel365/weekends.csv \
+            --men-chrono excel365/men_chrono_elevation.csv \
+            --ladies-chrono excel365/ladies_chrono_elevation.csv \
+            --aliases excel365/fis_identity_aliases.csv \
+            --logical-date "$LOGICAL_DATE" \
+            --output-dir "$BUNDLE_ROOT"
+
+      - name: Inspect Tour bundle decision
+        id: bundle
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report = json.loads(
+              (Path(os.environ["BUNDLE_ROOT"]) / "report.json").read_text()
+          )
+          status = report.get("status")
+          if status not in {"candidate", "waiting_for_startlists", "no_work"}:
+              raise SystemExit(f"unexpected Tour bundle status: {status!r}")
+          if report.get("publication") != {"status": "disabled"}:
+              raise SystemExit("Tour bundle publication must remain disabled")
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a") as output:
+              output.write(f"has_work={str(status == 'candidate').lower()}\n")
+              output.write(f"status={status}\n")
+          print(f"Tour bundle status={status}")
+          PY
+
+      - name: Explain deferred Tour run
+        if: steps.bundle.outputs.has_work != 'true'
+        run: |
+          echo "Tour shadow stopped safely with status=${{ steps.bundle.outputs.status }}."
+          echo "No simulation or publication was attempted."
+
+      - name: Set up Python validation runtime
+        if: steps.bundle.outputs.has_work == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            pipelines/requirements-integration.txt
+            pipelines/requirements-snapshot.txt
+
+      - name: Install Python validation dependencies
+        if: steps.bundle.outputs.has_work == 'true'
+        run: python3 -m pip install -r pipelines/requirements-integration.txt
+
+      - name: Set up R
+        if: steps.bundle.outputs.has_work == 'true'
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install R simulation dependencies
+        if: steps.bundle.outputs.has_work == 'true'
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::dplyr
+            any::leaps
+            any::logger
+            any::lubridate
+            any::mgcv
+            any::purrr
+            any::tidyr
+            any::writexl
+
+      - name: Run publication-disabled Tour simulation
+        if: steps.bundle.outputs.has_work == 'true'
+        env:
+          NORDIC_TOUR_RUNTIME_ROOT: ${{ env.BUNDLE_ROOT }}
+          NORDIC_SKI_DATA_ROOT: ${{ github.workspace }}/external/ski/elo/python/ski/polars/excel365
+          NORDIC_PREDICTION_OUTPUT_ROOT: ${{ env.PREDICTION_ROOT }}
+          NORDIC_LOG_ROOT: ${{ env.LOG_ROOT }}
+          NORDIC_LOGICAL_DATE: ${{ env.LOGICAL_DATE }}
+          NORDIC_N_SIMULATIONS: ${{ env.N_SIMULATIONS }}
+          NORDIC_RANDOM_SEED: ${{ env.RANDOM_SEED }}
+        run: Rscript content/post/cross-country/drafts/tds-picks-simulation.R
+
+      - name: Validate Tour shadow workbooks and manifest
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          python3 -m pipelines.cross_country_tour_shadow \
+            --runtime-dir "$BUNDLE_ROOT" \
+            --prediction-root "$PREDICTION_ROOT" \
+            --logical-date "$LOGICAL_DATE" \
+            --n-simulations "$N_SIMULATIONS" \
+            --random-seed "$RANDOM_SEED" \
+            --report "$VALIDATION_REPORT"
+
+      - name: Enforce publication lock
+        if: steps.bundle.outputs.has_work == 'true'
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          validation = json.loads(Path(os.environ["VALIDATION_REPORT"]).read_text())
+          if validation.get("status") != "passed":
+              raise SystemExit("Tour shadow validation did not pass")
+          if validation.get("publication") != {"status": "disabled"}:
+              raise SystemExit("Tour shadow publication lock was not retained")
+          print("Tour shadow passed with publication disabled")
+          PY
+
+      - name: Retain complete Tour shadow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-country-tour-shadow-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 30
+          path: ${{ runner.temp }}/cross-country-tour-shadow/
