@@ -1,12 +1,14 @@
 name: Cross-country Tour de Ski predictions
 
 on:
+  workflow_run:
+    workflows: ["Cross-country team predictions"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       logical_date:
-        description: Tour opening date (YYYY-MM-DD)
-        required: true
-        default: "2027-01-01"
+        description: Run date (YYYY-MM-DD); only the accepted Tour opening date produces work
+        required: false
         type: string
       n_simulations:
         description: Deterministic Monte Carlo iteration count
@@ -33,6 +35,9 @@ concurrency:
 
 jobs:
   shadow:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -61,7 +66,7 @@ jobs:
         id: ski
         env:
           GH_TOKEN: ${{ github.token }}
-          SKI_REF: ${{ inputs.ski_ref }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
         run: |
           ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
           if [[ ! "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
@@ -92,12 +97,13 @@ jobs:
 
       - name: Prepare immutable shadow parameters
         env:
-          LOGICAL_DATE_INPUT: ${{ inputs.logical_date }}
-          N_SIMULATIONS_INPUT: ${{ inputs.n_simulations }}
-          RANDOM_SEED_INPUT: ${{ inputs.random_seed }}
+          LOGICAL_DATE_INPUT: ${{ inputs.logical_date || '' }}
+          N_SIMULATIONS_INPUT: ${{ inputs.n_simulations || 250 }}
+          RANDOM_SEED_INPUT: ${{ inputs.random_seed || 20270101 }}
           SKI_SHA: ${{ steps.ski.outputs.sha }}
         run: |
-          python3 - "$LOGICAL_DATE_INPUT" "$N_SIMULATIONS_INPUT" "$RANDOM_SEED_INPUT" <<'PY'
+          logical_date="${LOGICAL_DATE_INPUT:-$(date -u +%F)}"
+          python3 - "$logical_date" "$N_SIMULATIONS_INPUT" "$RANDOM_SEED_INPUT" <<'PY'
           from datetime import date
           import sys
 
@@ -114,7 +120,7 @@ jobs:
           root="$RUNNER_TEMP/cross-country-tour-shadow"
           mkdir -p "$root/reports"
           {
-            echo "LOGICAL_DATE=$LOGICAL_DATE_INPUT"
+            echo "LOGICAL_DATE=$logical_date"
             echo "N_SIMULATIONS=$N_SIMULATIONS_INPUT"
             echo "RANDOM_SEED=$RANDOM_SEED_INPUT"
             echo "SHADOW_ROOT=$root"
@@ -126,7 +132,7 @@ jobs:
             echo "SITE_ROOT=$root/site"
             echo "RENDER_REPORT=$root/reports/render_report.json"
           } >> "$GITHUB_ENV"
-          python3 - "$root/run_metadata.json" "$blog_sha" <<'PY'
+          python3 - "$root/run_metadata.json" "$logical_date" "$blog_sha" <<'PY'
           import json
           import os
           import sys
@@ -134,8 +140,8 @@ jobs:
 
           document = {
               "schema_version": "nordicnumbers.cross-country-tour-run/v1",
-              "logical_date": os.environ["LOGICAL_DATE_INPUT"],
-              "blog_commit": sys.argv[2],
+              "logical_date": sys.argv[2],
+              "blog_commit": sys.argv[3],
               "ski_commit": os.environ["SKI_SHA"],
               "n_simulations": int(os.environ["N_SIMULATIONS_INPUT"]),
               "random_seed": int(os.environ["RANDOM_SEED_INPUT"]),

@@ -11,13 +11,15 @@ class CrossCountryTourShadowWorkflowTests(unittest.TestCase):
         cls.source = WORKFLOW.read_text(encoding="utf-8")
         cls.trigger = cls.source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
 
-    def test_is_manual_only_guarded_and_github_hosted(self) -> None:
+    def test_is_daily_chained_manual_guarded_and_github_hosted(self) -> None:
         self.assertTrue(
             self.source.startswith("name: Cross-country Tour de Ski predictions\n")
         )
         self.assertIn("workflow_dispatch:", self.trigger)
-        self.assertNotIn("workflow_run:", self.trigger)
+        self.assertIn("workflow_run:", self.trigger)
+        self.assertIn('workflows: ["Cross-country team predictions"]', self.trigger)
         self.assertNotIn("schedule:", self.trigger)
+        self.assertIn("github.event.workflow_run.conclusion == 'success'", self.source)
         self.assertIn("permissions:\n  contents: write", self.source)
         self.assertIn("runs-on: ubuntu-latest", self.source)
         self.assertNotIn("self-hosted", self.source)
@@ -83,6 +85,24 @@ class CrossCountryTourShadowWorkflowTests(unittest.TestCase):
             self.source.index("name: Inspect Tour bundle decision"),
             self.source.index("r-lib/actions/setup-r@v2"),
         )
+
+    def test_automatic_runs_use_current_utc_date_and_default_pinned_sources(
+        self,
+    ) -> None:
+        self.assertIn(
+            "LOGICAL_DATE_INPUT: ${{ inputs.logical_date || '' }}", self.source
+        )
+        self.assertIn(
+            'logical_date="${LOGICAL_DATE_INPUT:-$(date -u +%F)}"', self.source
+        )
+        self.assertIn("SKI_REF: ${{ inputs.ski_ref || 'main' }}", self.source)
+        self.assertIn(
+            "N_SIMULATIONS_INPUT: ${{ inputs.n_simulations || 250 }}", self.source
+        )
+        self.assertIn(
+            "RANDOM_SEED_INPUT: ${{ inputs.random_seed || 20270101 }}", self.source
+        )
+        self.assertNotIn('default: "2027-01-01"', self.trigger)
 
     def test_publication_is_narrow_and_follows_all_validation(self) -> None:
         self.assertIn('publication") != {"status": "disabled"}', self.source)
