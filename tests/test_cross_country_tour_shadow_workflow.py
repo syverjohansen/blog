@@ -92,9 +92,13 @@ class CrossCountryTourShadowWorkflowTests(unittest.TestCase):
         self.assertIn(
             "LOGICAL_DATE_INPUT: ${{ inputs.logical_date || '' }}", self.source
         )
+        self.assertIn('as_of="${LOGICAL_DATE_INPUT:-$(date -u +%F)}"', self.source)
+        self.assertIn("cross_country_tour_contract.py", self.source)
         self.assertIn(
-            'logical_date="${LOGICAL_DATE_INPUT:-$(date -u +%F)}"', self.source
+            "pipelines.cross_country_tour_publication resolve-date", self.source
         )
+        self.assertIn('--report "$root/reports/tour_date_plan.json"', self.source)
+        self.assertIn('"as_of_date": sys.argv[3]', self.source)
         self.assertIn("SKI_REF: ${{ inputs.ski_ref || 'main' }}", self.source)
         self.assertIn(
             "N_SIMULATIONS_INPUT: ${{ inputs.n_simulations || 250 }}", self.source
