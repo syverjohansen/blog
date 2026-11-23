@@ -37,6 +37,8 @@ class CrossCountryWeekendShadowWorkflowTests(unittest.TestCase):
             "name: Run publication-disabled weekend simulation"
         )
         validate = self.source.index("name: Validate shadow workbook and manifest")
+        prices = self.source.index("name: Capture optional Fantasy XC prices")
+        optimize = self.source.index("name: Optimize optional fantasy teams")
         candidate = self.source.index("name: Build publication-disabled Hugo candidate")
         render = self.source.index("name: Render publication-disabled Hugo candidate")
         install = self.source.index("name: Install validated weekend candidate")
@@ -45,6 +47,9 @@ class CrossCountryWeekendShadowWorkflowTests(unittest.TestCase):
         self.assertLess(build, materialize)
         self.assertLess(materialize, simulate)
         self.assertLess(simulate, validate)
+        self.assertLess(validate, prices)
+        self.assertLess(prices, optimize)
+        self.assertLess(optimize, candidate)
         self.assertLess(validate, candidate)
         self.assertLess(candidate, render)
         self.assertLess(render, install)
@@ -54,6 +59,8 @@ class CrossCountryWeekendShadowWorkflowTests(unittest.TestCase):
         self.assertIn("if: always()", self.source)
         self.assertIn("run_metadata.json", self.source)
         self.assertIn('"ski_commit": os.environ["SKI_SHA"]', self.source)
+        self.assertIn('--fantasy-report "$FANTASY_OPTIMIZER_REPORT"', self.source)
+        self.assertIn('--fantasy-teams "$FANTASY_ROOT/fantasy_teams.json"', self.source)
 
     def test_no_work_date_avoids_expensive_r_runtime(self) -> None:
         condition = "if: steps.bundle.outputs.has_work == 'true'"
