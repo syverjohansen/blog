@@ -62,6 +62,25 @@ STARTLIST_FIELDS = (
     "source_url",
     "source_sha256",
 )
+ELO_STREAMS = (
+    "Elo",
+    "Distance_Elo",
+    "Distance_C_Elo",
+    "Distance_F_Elo",
+    "Sprint_Elo",
+    "Sprint_C_Elo",
+    "Sprint_F_Elo",
+    "Classic_Elo",
+    "Freestyle_Elo",
+)
+SHADOW_RATING_FIELDS = (
+    *STARTLIST_FIELDS,
+    "rating_source",
+    "rating_as_of_date",
+    "rating_k_factor",
+    *ELO_STREAMS,
+)
+SHADOW_RATING_SCHEMA = "nordicnumbers.cross-country-prediction-elo-shadow/v1"
 
 
 class WeekendConsumerError(RuntimeError):
@@ -216,11 +235,106 @@ def _validate_startlists(
     return by_sex, {key: next(iter(modes)) for key, modes in event_modes.items()}
 
 
+def _load_shadow_ratings(
+    root: Path,
+    by_sex: dict[str, list[dict[str, str]]],
+) -> dict[tuple[str, str, str], dict[str, str]]:
+    ratings: dict[tuple[str, str, str], dict[str, str]] = {}
+    for sex, gender in (("M", "men"), ("L", "ladies")):
+        source_rows = by_sex[sex]
+        if not source_rows:
+            continue
+        directory = root / gender
+        report_path = directory / "report.json"
+        csv_path = directory / "startlist_prediction_elo_shadow.csv"
+        try:
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            payload = csv_path.read_bytes()
+        except (OSError, json.JSONDecodeError) as exc:
+            raise WeekendConsumerError(
+                f"cannot read {gender} shadow rating overlay: {exc}"
+            ) from exc
+        if report.get("schema_version") != SHADOW_RATING_SCHEMA:
+            raise WeekendConsumerError("unsupported shadow rating schema")
+        if report.get("publication") != {"status": "disabled"}:
+            raise WeekendConsumerError("shadow ratings must keep publication disabled")
+        if report.get("selected_k_factor") != 4.0:
+            raise WeekendConsumerError("shadow ratings must use calibrated K=4")
+        if report.get("output_sha256") != _sha256(payload):
+            raise WeekendConsumerError("shadow rating checksum mismatch")
+        fields, overlay_rows = _read_csv(csv_path)
+        if fields != SHADOW_RATING_FIELDS:
+            raise WeekendConsumerError("unexpected shadow rating fields")
+
+        expected = {
+            (row["race_id"], row["canonical_athlete_id"]): row for row in source_rows
+        }
+        observed: set[tuple[str, str]] = set()
+        for line, row in enumerate(overlay_rows, start=2):
+            key = (row["race_id"], row["canonical_athlete_id"])
+            if key in observed or key not in expected:
+                raise WeekendConsumerError(
+                    f"{csv_path}:{line}: unexpected or duplicate shadow athlete"
+                )
+            observed.add(key)
+            if any(row[field] != expected[key][field] for field in STARTLIST_FIELDS):
+                raise WeekendConsumerError(
+                    f"{csv_path}:{line}: shadow identity differs from bundle"
+                )
+            athlete_id = row["canonical_athlete_id"]
+            source = row["rating_source"]
+            allowed = (
+                {"fixed_anchor_prediction_elo", "newcomer_prior"}
+                if athlete_id.startswith("fis:")
+                else {"accepted_official_elo"}
+            )
+            if source not in allowed:
+                raise WeekendConsumerError(
+                    f"{csv_path}:{line}: rating source is incompatible with identity"
+                )
+            if source == "accepted_official_elo":
+                if row["rating_k_factor"]:
+                    raise WeekendConsumerError(
+                        f"{csv_path}:{line}: official Elo cannot have a K factor"
+                    )
+            elif row["rating_k_factor"] != "4.0":
+                raise WeekendConsumerError(
+                    f"{csv_path}:{line}: private Elo must use K=4"
+                )
+            as_of = row["rating_as_of_date"]
+            if as_of:
+                try:
+                    observed_date = date.fromisoformat(as_of)
+                    race_date = date.fromisoformat(row["race_date"])
+                except ValueError as exc:
+                    raise WeekendConsumerError(
+                        f"{csv_path}:{line}: invalid shadow rating date"
+                    ) from exc
+                if observed_date >= race_date:
+                    raise WeekendConsumerError(
+                        f"{csv_path}:{line}: shadow rating is not strictly pre-race"
+                    )
+            try:
+                for stream in ELO_STREAMS:
+                    float(row[stream])
+            except ValueError as exc:
+                raise WeekendConsumerError(
+                    f"{csv_path}:{line}: invalid shadow rating"
+                ) from exc
+            ratings[(sex, *key)] = row
+        if observed != set(expected):
+            raise WeekendConsumerError(
+                f"{gender} shadow rating overlay does not cover the bundle"
+            )
+    return ratings
+
+
 def _runtime_rows(
     sex: str,
     source_rows: list[dict[str, str]],
     event_order: dict[tuple[str, str], int],
     event_modes: dict[tuple[str, str], str],
+    shadow_ratings: dict[tuple[str, str, str], dict[str, str]] | None = None,
 ) -> tuple[list[str], list[dict[str, str]]]:
     race_ids = [
         race_id
@@ -239,11 +353,35 @@ def _runtime_rows(
             "Skier": row["canonical_name"],
             "Nation": row["canonical_nation"],
         }
+        if shadow_ratings is not None:
+            rating = shadow_ratings[(sex, row["race_id"], athlete_id)]
+            identity.update(
+                {
+                    "Shadow_Rating_Source": rating["rating_source"],
+                    "Shadow_Rating_As_Of_Date": rating["rating_as_of_date"],
+                    "Shadow_Rating_K_Factor": rating["rating_k_factor"],
+                    **{stream: rating[stream] for stream in ELO_STREAMS},
+                }
+            )
         previous = athletes.get(athlete_id)
         if previous:
             if any(
                 previous[field] != identity[field]
-                for field in ("ID", "Skier", "Nation")
+                for field in (
+                    "ID",
+                    "Skier",
+                    "Nation",
+                    *(
+                        (
+                            "Shadow_Rating_Source",
+                            "Shadow_Rating_As_Of_Date",
+                            "Shadow_Rating_K_Factor",
+                            *ELO_STREAMS,
+                        )
+                        if shadow_ratings is not None
+                        else ()
+                    ),
+                )
             ):
                 raise WeekendConsumerError(
                     f"canonical identity changes inside bundle: {sex}/{athlete_id}"
@@ -261,6 +399,15 @@ def _runtime_rows(
         present.add((row["race_id"], athlete_id))
 
     fields = ["ID", "FIS_Code", "Skier", "Nation"]
+    if shadow_ratings is not None:
+        fields.extend(
+            (
+                "Shadow_Rating_Source",
+                "Shadow_Rating_As_Of_Date",
+                "Shadow_Rating_K_Factor",
+                *ELO_STREAMS,
+            )
+        )
     for index in range(1, len(race_ids) + 1):
         fields.extend((f"Race{index}_Prob", f"Race{index}_Official"))
     rows: list[dict[str, str]] = []
@@ -287,7 +434,11 @@ def _csv_bytes(
 
 
 def materialize_weekend_runtime(
-    *, bundle_dir: Path, logical_date: date, output_dir: Path
+    *,
+    bundle_dir: Path,
+    logical_date: date,
+    output_dir: Path,
+    prediction_elo_root: Path | None = None,
 ) -> dict[str, Any]:
     bundle_dir = bundle_dir.expanduser().resolve()
     output_dir = output_dir.expanduser().resolve()
@@ -301,13 +452,26 @@ def materialize_weekend_runtime(
     _verify_outputs(bundle_dir, report)
     schedule_rows, event_order = _validate_schedule(bundle_dir, logical_date)
     by_sex, event_modes = _validate_startlists(bundle_dir, logical_date, event_order)
+    shadow_ratings = None
+    if prediction_elo_root is not None:
+        prediction_elo_root = prediction_elo_root.expanduser().resolve()
+        if (
+            prediction_elo_root == bundle_dir
+            or bundle_dir in prediction_elo_root.parents
+        ):
+            raise WeekendConsumerError(
+                "shadow rating input cannot be inside the bundle"
+            )
+        shadow_ratings = _load_shadow_ratings(prediction_elo_root, by_sex)
 
     documents: dict[str, bytes] = {
         "weekends.csv": _csv_bytes(SCHEDULE_FIELDS, schedule_rows),
     }
     row_counts: dict[str, int] = {"weekends.csv": len(schedule_rows)}
     for sex, gender in (("M", "men"), ("L", "ladies")):
-        fields, rows = _runtime_rows(sex, by_sex[sex], event_order, event_modes)
+        fields, rows = _runtime_rows(
+            sex, by_sex[sex], event_order, event_modes, shadow_ratings
+        )
         name = f"startlist_weekend_{gender}.csv"
         documents[name] = _csv_bytes(fields, rows)
         row_counts[name] = len(rows)
@@ -318,6 +482,10 @@ def materialize_weekend_runtime(
         "logical_date": logical_date.isoformat(),
         "source_bundle_schema": BUNDLE_SCHEMA,
         "source_report_sha256": _sha256((bundle_dir / "report.json").read_bytes()),
+        "prediction_elo_shadow": {
+            "enabled": shadow_ratings is not None,
+            "selected_k_factor": 4.0 if shadow_ratings is not None else None,
+        },
         "event_modes": {
             f"{sex}/{race_id}": event_modes[(sex, race_id)]
             for sex, race_id in sorted(event_modes)
@@ -364,11 +532,13 @@ def main() -> int:
     parser.add_argument("--bundle-dir", required=True, type=Path)
     parser.add_argument("--logical-date", required=True, type=date.fromisoformat)
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--prediction-elo-root", type=Path)
     args = parser.parse_args()
     report = materialize_weekend_runtime(
         bundle_dir=args.bundle_dir,
         logical_date=args.logical_date,
         output_dir=args.output_dir,
+        prediction_elo_root=args.prediction_elo_root,
     )
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0

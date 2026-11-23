@@ -35,6 +35,15 @@ class CrossCountryWeekendSimulationTests(unittest.TestCase):
         self.assertIn('"publication": {"status": "disabled"}', self.source)
         self.assertIn("nordicnumbers.cross-country-weekend-shadow/v1", self.source)
 
+    def test_history_free_athletes_can_use_validated_shadow_elo_features(self) -> None:
+        self.assertIn("build_shadow_elo_newdata", self.source)
+        self.assertIn("fixed_anchor_prediction_elo", self.source)
+        self.assertIn("newcomer_prior", self.source)
+        self.assertIn("features <- list(prev_points_weighted = 0)", self.source)
+        self.assertIn("athlete_rating / field_max", self.source)
+        self.assertIn("Using", self.source)
+        self.assertIn("features for history-free athlete", self.source)
+
     def test_official_participation_is_applied_per_event(self) -> None:
         self.assertIn(
             'race_official_col <- paste0("Race", i, "_Official")', self.source
@@ -80,6 +89,43 @@ class CrossCountryWeekendSimulationTests(unittest.TestCase):
     def test_r_source_parses(self) -> None:
         result = subprocess.run(
             ["Rscript", "-e", f"parse(file={str(SIMULATION)!r})"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    @unittest.skipUnless(shutil.which("Rscript"), "Rscript is not installed")
+    def test_shadow_elo_feature_builder_executes_in_r(self) -> None:
+        expression = f"""
+        expressions <- parse(file={str(SIMULATION)!r})
+        matches <- Filter(function(expr) {{
+          is.call(expr) && as.character(expr[[1]]) == '<-' &&
+            as.character(expr[[2]]) == 'build_shadow_elo_newdata'
+        }}, expressions)
+        stopifnot(length(matches) == 1)
+        eval(matches[[1]], envir=.GlobalEnv)
+        rating_names <- c(
+          'Elo', 'Distance_Elo', 'Distance_C_Elo', 'Distance_F_Elo',
+          'Sprint_Elo', 'Sprint_C_Elo', 'Sprint_F_Elo',
+          'Classic_Elo', 'Freestyle_Elo'
+        )
+        athlete <- data.frame(Shadow_Rating_Source='fixed_anchor_prediction_elo')
+        field <- data.frame(Shadow_Rating_Source=c(
+          'accepted_official_elo', 'fixed_anchor_prediction_elo'
+        ))
+        for (name in rating_names) {{
+          athlete[[name]] <- 1400
+          field[[name]] <- c(1600, 1400)
+        }}
+        result <- build_shadow_elo_newdata(athlete, field)
+        stopifnot(result$prev_points_weighted == 0)
+        stopifnot(abs(result$Pelo_pct - 0.875) < 1e-12)
+        athlete$Shadow_Rating_Source <- 'accepted_official_elo'
+        stopifnot(is.null(build_shadow_elo_newdata(athlete, field)))
+        """
+        result = subprocess.run(
+            ["Rscript", "-e", expression],
             capture_output=True,
             text=True,
             check=False,

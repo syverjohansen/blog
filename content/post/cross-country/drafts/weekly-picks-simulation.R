@@ -626,6 +626,43 @@ calculate_percentage_columns <- function(chrono_data) {
     ungroup()
 }
 
+# Build the same pre-race Elo percentage features used by the accepted-history
+# GAM for an official starter who has no A-tier history. These columns exist
+# only in an explicitly validated shadow runtime; the normal runtime continues
+# to use the historical fallback unchanged.
+build_shadow_elo_newdata <- function(athlete, race_startlist) {
+  if (!("Shadow_Rating_Source" %in% names(athlete))) return(NULL)
+  source <- as.character(athlete$Shadow_Rating_Source[[1]])
+  if (!(source %in% c("fixed_anchor_prediction_elo", "newcomer_prior"))) {
+    return(NULL)
+  }
+
+  rating_to_feature <- c(
+    Elo = "Pelo_pct",
+    Distance_Elo = "Distance_Pelo_pct",
+    Distance_C_Elo = "Distance_C_Pelo_pct",
+    Distance_F_Elo = "Distance_F_Pelo_pct",
+    Sprint_Elo = "Sprint_Pelo_pct",
+    Sprint_C_Elo = "Sprint_C_Pelo_pct",
+    Sprint_F_Elo = "Sprint_F_Pelo_pct",
+    Classic_Elo = "Classic_Pelo_pct",
+    Freestyle_Elo = "Freestyle_Pelo_pct"
+  )
+  if (!all(names(rating_to_feature) %in% names(race_startlist))) return(NULL)
+
+  features <- list(prev_points_weighted = 0)
+  for (rating in names(rating_to_feature)) {
+    athlete_rating <- suppressWarnings(as.numeric(athlete[[rating]][[1]]))
+    field_ratings <- suppressWarnings(as.numeric(race_startlist[[rating]]))
+    field_max <- max(field_ratings, na.rm = TRUE)
+    if (!is.finite(athlete_rating) || !is.finite(field_max) || field_max <= 0) {
+      return(NULL)
+    }
+    features[[rating_to_feature[[rating]]]] <- athlete_rating / field_max
+  }
+  as.data.frame(features, stringsAsFactors = FALSE)
+}
+
 # ============================================================================
 # GAM MODEL TRAINING (for distribution building)
 # ============================================================================
@@ -1061,7 +1098,20 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
             predict(gam_result$model, newdata = athlete_data, type = "response")
           }, error = function(e) 25)
         } else {
-          gam_pred <- 25
+          shadow_data <- build_shadow_elo_newdata(athlete, race_startlist)
+          if (!is.null(shadow_data)) {
+            gam_pred <- tryCatch({
+              as.numeric(predict(
+                gam_result$model, newdata = shadow_data, type = "response"
+              ))
+            }, error = function(e) 25)
+            log_info(paste(
+              "Using", athlete$Shadow_Rating_Source,
+              "features for history-free athlete", athlete$ID
+            ))
+          } else {
+            gam_pred <- 25
+          }
         }
       } else {
         gam_pred <- 25
