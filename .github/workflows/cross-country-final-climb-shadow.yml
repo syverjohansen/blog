@@ -18,6 +18,11 @@ on:
         required: true
         default: 20270110
         type: number
+      historical_results_replay:
+        description: Replay a completed Final Climb from classified FIS results
+        required: true
+        default: false
+        type: boolean
       ski_ref:
         description: Ski branch, tag, or commit to resolve and record
         required: true
@@ -82,6 +87,7 @@ jobs:
             /elo/python/ski/polars/cross_country_results_identity.py
             /elo/python/ski/polars/schedule_contract.py
             /elo/python/ski/polars/excel365/weekends.csv
+            /elo/python/ski/polars/excel365/test_weekends.csv
             /elo/python/ski/polars/excel365/men_chrono_elevation.csv
             /elo/python/ski/polars/excel365/ladies_chrono_elevation.csv
             /elo/python/ski/polars/excel365/fis_identity_aliases.csv
@@ -91,6 +97,7 @@ jobs:
           AS_OF_DATE_INPUT: ${{ inputs.as_of_date }}
           N_SIMULATIONS_INPUT: ${{ inputs.n_simulations }}
           RANDOM_SEED_INPUT: ${{ inputs.random_seed }}
+          HISTORICAL_REPLAY_INPUT: ${{ inputs.historical_results_replay }}
           SKI_SHA: ${{ steps.ski.outputs.sha }}
         run: |
           python3 - "$AS_OF_DATE_INPUT" "$N_SIMULATIONS_INPUT" "$RANDOM_SEED_INPUT" <<'PY'
@@ -104,8 +111,16 @@ jobs:
           PY
           root="$RUNNER_TEMP/cross-country-final-climb-shadow"
           mkdir -p "$root/reports"
+          if [[ "$HISTORICAL_REPLAY_INPUT" == "true" ]]; then
+            schedule_path="external/ski/elo/python/ski/polars/excel365/test_weekends.csv"
+            participant_source_mode="historical_results_replay"
+          else
+            schedule_path="external/ski/elo/python/ski/polars/excel365/weekends.csv"
+            participant_source_mode="official_startlist"
+          fi
+          export PARTICIPANT_SOURCE_MODE="$participant_source_mode"
           python3 external/ski/elo/python/ski/polars/cross_country_final_climb_contract.py \
-            --schedule external/ski/elo/python/ski/polars/excel365/weekends.csv \
+            --schedule "$schedule_path" \
             --logical-date "$AS_OF_DATE_INPUT" \
             --report "$root/reports/plan.json"
           logical_date=$(python3 - "$root/reports/plan.json" <<'PY'
@@ -125,6 +140,9 @@ jobs:
             echo "LOGICAL_DATE=$logical_date"
             echo "N_SIMULATIONS=$N_SIMULATIONS_INPUT"
             echo "RANDOM_SEED=$RANDOM_SEED_INPUT"
+            echo "HISTORICAL_RESULTS_REPLAY=$HISTORICAL_REPLAY_INPUT"
+            echo "PARTICIPANT_SOURCE_MODE=$participant_source_mode"
+            echo "SCHEDULE_PATH=$schedule_path"
             echo "SHADOW_ROOT=$root"
             echo "BUNDLE_ROOT=$root/bundle"
             echo "PREDICTION_ROOT=$root/predictions"
@@ -145,6 +163,7 @@ jobs:
               "ski_commit": os.environ["SKI_SHA"],
               "n_simulations": int(os.environ["N_SIMULATIONS_INPUT"]),
               "random_seed": int(os.environ["RANDOM_SEED_INPUT"]),
+              "participant_source_mode": os.environ["PARTICIPANT_SOURCE_MODE"],
               "publication": {"status": "disabled"},
           }
           Path(sys.argv[1]).write_text(
@@ -155,13 +174,18 @@ jobs:
       - name: Build isolated Final Climb bundle
         working-directory: external/ski/elo/python/ski/polars
         run: |
+          replay_args=()
+          if [[ "$HISTORICAL_RESULTS_REPLAY" == "true" ]]; then
+            replay_args+=(--historical-results-replay)
+          fi
           python3 cross_country_final_climb_inputs.py \
-            --schedule excel365/weekends.csv \
+            --schedule "$GITHUB_WORKSPACE/$SCHEDULE_PATH" \
             --men-chrono excel365/men_chrono_elevation.csv \
             --ladies-chrono excel365/ladies_chrono_elevation.csv \
             --aliases excel365/fis_identity_aliases.csv \
             --logical-date "$AS_OF_DATE" \
-            --output-dir "$BUNDLE_ROOT"
+            --output-dir "$BUNDLE_ROOT" \
+            "${replay_args[@]}"
 
       - name: Inspect Final Climb bundle decision
         id: bundle
@@ -179,6 +203,11 @@ jobs:
               raise SystemExit(f"unexpected Final Climb status: {status!r}")
           if report.get("publication") != {"status": "disabled"}:
               raise SystemExit("Final Climb bundle publication must remain disabled")
+          expected_mode = os.environ["PARTICIPANT_SOURCE_MODE"]
+          if report.get("participant_source_mode") != expected_mode:
+              raise SystemExit(
+                  "Final Climb participant source does not match invocation"
+              )
           with Path(os.environ["GITHUB_OUTPUT"]).open("a") as output:
               output.write(f"has_work={str(status == 'candidate').lower()}\n")
               output.write(f"status={status}\n")

@@ -95,6 +95,14 @@ def validate_final_climb_shadow(
         raise FinalClimbShadowError(
             "Final Climb runtime publication must remain disabled"
         )
+    participant_source_mode = runtime_report.get("participant_source_mode")
+    if participant_source_mode not in {
+        "official_startlist",
+        "historical_results_replay",
+    }:
+        raise FinalClimbShadowError(
+            "Final Climb runtime participant source mode is invalid"
+        )
     if (
         runtime_report.get("plan", {}).get("final_climb_date")
         != logical_date.isoformat()
@@ -162,6 +170,7 @@ def validate_final_climb_shadow(
         "n_simulations": n_simulations,
         "random_seed": random_seed,
         "publication": {"status": "disabled"},
+        "participant_source_mode": participant_source_mode,
         "sexes": results,
         "outputs": outputs,
     }

@@ -47,6 +47,7 @@ def write_runtime(root: Path) -> Path:
                 "schema_version": "nordicnumbers.cross-country-final-climb-inputs/v1",
                 "status": "candidate",
                 "logical_date": "2027-01-09",
+                "participant_source_mode": "official_startlist",
                 "plan": {"final_climb_date": "2027-01-10"},
                 "publication": {"status": "disabled"},
             }
@@ -120,6 +121,7 @@ class CrossCountryFinalClimbShadowTests(unittest.TestCase):
         self.assertIn("set.seed(RANDOM_SEED)", self.source)
         self.assertIn('runtime_path("startlist_final_climb_men.csv")', self.source)
         self.assertIn('ski_data_path("men_chrono_elevation.csv")', self.source)
+        self.assertEqual(2, self.source.count("filter(Date < LOGICAL_DATE)"))
         self.assertIn('"publication": {"status": "disabled"}', self.source)
 
     def test_validates_complete_publication_disabled_output(self) -> None:
@@ -136,6 +138,7 @@ class CrossCountryFinalClimbShadowTests(unittest.TestCase):
             self.assertEqual("passed", report["status"])
             self.assertEqual({"rows": 2}, report["sexes"]["M"])
             self.assertEqual({"status": "disabled"}, report["publication"])
+            self.assertEqual("official_startlist", report["participant_source_mode"])
 
     def test_rejects_enabled_publication(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -166,6 +169,24 @@ class CrossCountryFinalClimbShadowTests(unittest.TestCase):
                 validate_final_climb_shadow(
                     runtime_dir=runtime,
                     prediction_root=predictions,
+                    logical_date=date(2027, 1, 10),
+                    n_simulations=100,
+                    random_seed=42,
+                    report_path=root / "validation.json",
+                )
+
+    def test_rejects_unlabelled_participant_source(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            runtime = write_runtime(root)
+            report_path = runtime / "report.json"
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            report.pop("participant_source_mode")
+            report_path.write_text(json.dumps(report), encoding="utf-8")
+            with self.assertRaisesRegex(FinalClimbShadowError, "source mode"):
+                validate_final_climb_shadow(
+                    runtime_dir=runtime,
+                    prediction_root=write_outputs(root),
                     logical_date=date(2027, 1, 10),
                     n_simulations=100,
                     random_seed=42,
