@@ -1,12 +1,14 @@
-name: Cross-country Final Climb shadow
+name: Cross-country Final Climb predictions
 
 on:
+  workflow_run:
+    workflows: ["Cross-country Tour de Ski predictions"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       as_of_date:
-        description: Day before or race date (YYYY-MM-DD)
-        required: true
-        default: "2027-01-09"
+        description: Day before or race date (YYYY-MM-DD); defaults to current UTC date
+        required: false
         type: string
       n_simulations:
         description: Deterministic Monte Carlo iteration count
@@ -38,6 +40,9 @@ concurrency:
 
 jobs:
   shadow:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -67,7 +72,7 @@ jobs:
         id: ski
         env:
           GH_TOKEN: ${{ github.token }}
-          SKI_REF: ${{ inputs.ski_ref }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
         run: |
           ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
           if [[ ! "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
@@ -101,13 +106,14 @@ jobs:
 
       - name: Prepare immutable shadow parameters
         env:
-          AS_OF_DATE_INPUT: ${{ inputs.as_of_date }}
-          N_SIMULATIONS_INPUT: ${{ inputs.n_simulations }}
-          RANDOM_SEED_INPUT: ${{ inputs.random_seed }}
-          HISTORICAL_REPLAY_INPUT: ${{ inputs.historical_results_replay }}
+          AS_OF_DATE_INPUT: ${{ inputs.as_of_date || '' }}
+          N_SIMULATIONS_INPUT: ${{ inputs.n_simulations || 250 }}
+          RANDOM_SEED_INPUT: ${{ inputs.random_seed || 20270110 }}
+          HISTORICAL_REPLAY_INPUT: ${{ inputs.historical_results_replay && 'true' || 'false' }}
           SKI_SHA: ${{ steps.ski.outputs.sha }}
         run: |
-          python3 - "$AS_OF_DATE_INPUT" "$N_SIMULATIONS_INPUT" "$RANDOM_SEED_INPUT" <<'PY'
+          as_of="${AS_OF_DATE_INPUT:-$(date -u +%F)}"
+          python3 - "$as_of" "$N_SIMULATIONS_INPUT" "$RANDOM_SEED_INPUT" <<'PY'
           from datetime import date
           import sys
 
@@ -126,9 +132,15 @@ jobs:
             participant_source_mode="official_startlist"
           fi
           export PARTICIPANT_SOURCE_MODE="$participant_source_mode"
+          blog_sha=$(git rev-parse HEAD)
+          if ! [[ "$blog_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve checked-out blog revision" >&2
+            exit 1
+          fi
+          export BLOG_SHA="$blog_sha"
           python3 external/ski/elo/python/ski/polars/cross_country_final_climb_contract.py \
             --schedule "$schedule_path" \
-            --logical-date "$AS_OF_DATE_INPUT" \
+            --logical-date "$as_of" \
             --report "$root/reports/plan.json"
           logical_date=$(python3 - "$root/reports/plan.json" <<'PY'
           import json
@@ -143,7 +155,7 @@ jobs:
           PY
           )
           {
-            echo "AS_OF_DATE=$AS_OF_DATE_INPUT"
+            echo "AS_OF_DATE=$as_of"
             echo "LOGICAL_DATE=$logical_date"
             echo "N_SIMULATIONS=$N_SIMULATIONS_INPUT"
             echo "RANDOM_SEED=$RANDOM_SEED_INPUT"
@@ -159,7 +171,7 @@ jobs:
             echo "SITE_ROOT=$root/site"
             echo "RENDER_REPORT=$root/reports/render_report.json"
           } >> "$GITHUB_ENV"
-          python3 - "$root/run_metadata.json" "$logical_date" <<'PY'
+          python3 - "$root/run_metadata.json" "$logical_date" "$as_of" <<'PY'
           import json
           import os
           import sys
@@ -168,8 +180,8 @@ jobs:
           document = {
               "schema_version": "nordicnumbers.cross-country-final-climb-run/v1",
               "logical_date": sys.argv[2],
-              "as_of_date": os.environ["AS_OF_DATE_INPUT"],
-              "blog_commit": os.environ["GITHUB_SHA"],
+              "as_of_date": sys.argv[3],
+              "blog_commit": os.environ["BLOG_SHA"],
               "ski_commit": os.environ["SKI_SHA"],
               "n_simulations": int(os.environ["N_SIMULATIONS_INPUT"]),
               "random_seed": int(os.environ["RANDOM_SEED_INPUT"]),

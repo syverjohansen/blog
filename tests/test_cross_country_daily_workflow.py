@@ -7,6 +7,7 @@ TEAM = ROOT / ".github/workflows/cross-country-team-predictions.yml"
 INDIVIDUAL = ROOT / ".github/workflows/cross-country-individual-predictions.yml"
 WEEKEND = ROOT / ".github/workflows/cross-country-weekend-shadow.yml"
 TOUR = ROOT / ".github/workflows/cross-country-tour-shadow.yml"
+FINAL_CLIMB = ROOT / ".github/workflows/cross-country-final-climb-shadow.yml"
 
 
 class CrossCountryDailyWorkflowTests(unittest.TestCase):
@@ -17,6 +18,7 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         cls.individual = INDIVIDUAL.read_text(encoding="utf-8")
         cls.weekend = WEEKEND.read_text(encoding="utf-8")
         cls.tour = TOUR.read_text(encoding="utf-8")
+        cls.final_climb = FINAL_CLIMB.read_text(encoding="utf-8")
 
     def test_daily_pipeline_is_chained_and_manual_without_an_independent_cron(
         self,
@@ -145,9 +147,20 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         self.assertIn('workflows: ["Cross-country individual predictions"]', self.team)
         self.assertIn('workflows: ["Cross-country team predictions"]', self.weekend)
         self.assertIn('workflows: ["Cross-country team predictions"]', self.tour)
+        self.assertIn(
+            'workflows: ["Cross-country Tour de Ski predictions"]',
+            self.final_climb,
+        )
         self.assertIn("github.event.workflow_run.conclusion == 'success'", self.tour)
+        self.assertIn(
+            "github.event.workflow_run.conclusion == 'success'", self.final_climb
+        )
         self.assertNotIn(
             "schedule:", self.tour.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
+        )
+        self.assertNotIn(
+            "schedule:",
+            self.final_climb.split("on:\n", 1)[1].split("\npermissions:", 1)[0],
         )
         self.assertNotIn('workflows: ["Alpine Production Shadow"]', self.team)
         self.assertIn('data_dir="$PWD/data/cross-country', self.team)
