@@ -41,6 +41,8 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
             "/cross_country_tour_shadow.py",
             "/requirements-snapshot.txt",
             "/final_climb-simulation.R",
+            "/layouts/",
+            "/themes/white/",
         ):
             self.assertIn(path, self.source)
         self.assertNotIn("fetch-depth: 0", self.source)
@@ -58,15 +60,21 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
         candidate = self.source.index(
             "name: Build publication-disabled Final Climb candidate"
         )
+        render = self.source.index(
+            "name: Render publication-disabled Final Climb candidate"
+        )
         retain = self.source.index("name: Retain complete Final Climb shadow evidence")
         self.assertLess(build, inspect)
         self.assertLess(inspect, simulate)
         self.assertLess(simulate, validate)
         self.assertLess(validate, lock)
         self.assertLess(lock, candidate)
-        self.assertLess(candidate, retain)
+        self.assertLess(candidate, render)
+        self.assertLess(render, retain)
         self.assertIn("if: always()", self.source)
         self.assertIn("retention-days: 30", self.source)
+        self.assertIn('hugo-version: "0.134.1"', self.source)
+        self.assertIn("RENDER_REPORT=$root/reports/render_report.json", self.source)
 
     def test_uses_as_of_window_but_stable_final_climb_target_date(self) -> None:
         self.assertIn("AS_OF_DATE=$AS_OF_DATE_INPUT", self.source)
