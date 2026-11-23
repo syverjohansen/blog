@@ -37,6 +37,7 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
             "/schedule_contract.py",
             "/test_weekends.csv",
             "/cross_country_final_climb_shadow.py",
+            "/cross_country_final_climb_publication.py",
             "/cross_country_tour_shadow.py",
             "/requirements-snapshot.txt",
             "/final_climb-simulation.R",
@@ -54,12 +55,16 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
             "name: Validate Final Climb shadow workbooks and manifest"
         )
         lock = self.source.index("name: Enforce publication lock")
+        candidate = self.source.index(
+            "name: Build publication-disabled Final Climb candidate"
+        )
         retain = self.source.index("name: Retain complete Final Climb shadow evidence")
         self.assertLess(build, inspect)
         self.assertLess(inspect, simulate)
         self.assertLess(simulate, validate)
         self.assertLess(validate, lock)
-        self.assertLess(lock, retain)
+        self.assertLess(lock, candidate)
+        self.assertLess(candidate, retain)
         self.assertIn("if: always()", self.source)
         self.assertIn("retention-days: 30", self.source)
 
