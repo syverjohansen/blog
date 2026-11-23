@@ -8,7 +8,10 @@ from pathlib import Path
 
 from pipelines.cross_country_weekend_consumer import (
     BUNDLE_SCHEMA,
+    ELO_STREAMS,
     SCHEDULE_FIELDS,
+    SHADOW_RATING_FIELDS,
+    SHADOW_RATING_SCHEMA,
     STARTLIST_FIELDS,
     WeekendConsumerError,
     materialize_weekend_runtime,
@@ -68,13 +71,13 @@ def startlist_row(
         "canonical_nation": "Norway",
         "fis_competitor_id": f"9{athlete_id}" if official else "",
         "fis_code": f"3{athlete_id}" if official else "",
-        "identity_match_method": "unique_normalized_name"
-        if official
-        else "accepted_history_id",
+        "identity_match_method": (
+            "unique_normalized_name" if official else "accepted_history_id"
+        ),
         "selection_status": "confirmed" if official else "candidate_pool",
-        "source_mode": "official_fis_startlist"
-        if official
-        else "latest_season_fallback",
+        "source_mode": (
+            "official_fis_startlist" if official else "latest_season_fallback"
+        ),
         "source_url": f"https://www.fis-ski.com/DB/general/results.html?sectorcode=CC&raceid={race_id}",
         "source_sha256": "a" * 64,
     }
@@ -113,7 +116,107 @@ def write_bundle(
     return bundle
 
 
+def write_shadow_ratings(
+    root: Path,
+    *,
+    gender: str,
+    rows: list[dict[str, str]],
+) -> None:
+    directory = root / gender
+    directory.mkdir(parents=True)
+    payload = csv_bytes(SHADOW_RATING_FIELDS, rows)
+    (directory / "startlist_prediction_elo_shadow.csv").write_bytes(payload)
+    report = {
+        "schema_version": SHADOW_RATING_SCHEMA,
+        "status": "shadow_candidate",
+        "publication": {"status": "disabled"},
+        "selected_k_factor": 4.0,
+        "rows": len(rows),
+        "output_sha256": hashlib.sha256(payload).hexdigest(),
+    }
+    (directory / "report.json").write_text(json.dumps(report), encoding="utf-8")
+
+
+def rated_row(row: dict[str, str], source: str, value: str) -> dict[str, str]:
+    return {
+        **row,
+        "rating_source": source,
+        "rating_as_of_date": "2026-11-01" if source != "newcomer_prior" else "",
+        "rating_k_factor": "" if source == "accepted_official_elo" else "4.0",
+        **{stream: value for stream in ELO_STREAMS},
+    }
+
+
 class CrossCountryWeekendConsumerTests(unittest.TestCase):
+    def test_materializes_validated_private_ratings_for_shadow_model(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            known = startlist_row("M", "101", "1", "Known Athlete", official=True)
+            unknown = startlist_row(
+                "M", "101", "fis:999", "Unknown Athlete", official=True
+            )
+            bundle = write_bundle(
+                root,
+                schedule=[schedule_row("M", "101")],
+                men=[known, unknown],
+                ladies=[],
+            )
+            ratings = root / "ratings"
+            write_shadow_ratings(
+                ratings,
+                gender="men",
+                rows=[
+                    rated_row(known, "accepted_official_elo", "1650"),
+                    rated_row(unknown, "fixed_anchor_prediction_elo", "1425"),
+                ],
+            )
+            report = materialize_weekend_runtime(
+                bundle_dir=bundle,
+                logical_date=date(2026, 11, 27),
+                output_dir=root / "runtime",
+                prediction_elo_root=ratings,
+            )
+            with (root / "runtime/startlist_weekend_men.csv").open(
+                newline="", encoding="utf-8"
+            ) as handle:
+                rows = {row["ID"]: row for row in csv.DictReader(handle)}
+            self.assertEqual(rows["1"]["Shadow_Rating_Source"], "accepted_official_elo")
+            self.assertEqual(
+                rows["fis:999"]["Shadow_Rating_Source"],
+                "fixed_anchor_prediction_elo",
+            )
+            self.assertEqual(rows["fis:999"]["Elo"], "1425")
+            self.assertEqual(rows["fis:999"]["Shadow_Rating_K_Factor"], "4.0")
+            self.assertEqual(
+                report["prediction_elo_shadow"],
+                {"enabled": True, "selected_k_factor": 4.0},
+            )
+            self.assertEqual(report["publication"], {"status": "disabled"})
+
+    def test_rejects_shadow_rating_identity_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            unknown = startlist_row(
+                "M", "101", "fis:999", "Unknown Athlete", official=True
+            )
+            bundle = write_bundle(
+                root,
+                schedule=[schedule_row("M", "101")],
+                men=[unknown],
+                ladies=[],
+            )
+            drifted = rated_row(unknown, "fixed_anchor_prediction_elo", "1425")
+            drifted["fis_code"] = "changed"
+            ratings = root / "ratings"
+            write_shadow_ratings(ratings, gender="men", rows=[drifted])
+            with self.assertRaisesRegex(WeekendConsumerError, "identity differs"):
+                materialize_weekend_runtime(
+                    bundle_dir=bundle,
+                    logical_date=date(2026, 11, 27),
+                    output_dir=root / "runtime",
+                    prediction_elo_root=ratings,
+                )
+
     def test_materializes_official_participation_matrix(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
