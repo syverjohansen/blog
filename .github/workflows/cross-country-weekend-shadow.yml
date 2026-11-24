@@ -26,7 +26,7 @@ on:
         default: main
         type: string
       official_quota_shadow:
-        description: Use audited FIS quotas and retain evidence without publishing
+        description: Retain the audited-quota candidate without publishing
         required: true
         default: false
         type: boolean
@@ -172,8 +172,6 @@ jobs:
 
       - name: Build isolated weekend input bundle
         working-directory: external/ski/elo/python/ski/polars
-        env:
-          OFFICIAL_QUOTA_SHADOW: ${{ inputs.official_quota_shadow || false }}
         run: |
           args=(
             --schedule excel365/weekends.csv
@@ -182,10 +180,8 @@ jobs:
             --aliases excel365/fis_identity_aliases.csv
             --group-date "$LOGICAL_DATE"
             --output-dir "$BUNDLE_ROOT"
+            --quota-contract cross_country_world_cup_quotas_2027.json
           )
-          if [[ "$OFFICIAL_QUOTA_SHADOW" == "true" ]]; then
-            args+=(--quota-contract cross_country_world_cup_quotas_2027.json)
-          fi
           python3 cross_country_weekend_inputs.py "${args[@]}"
 
       - name: Inspect bundle decision
