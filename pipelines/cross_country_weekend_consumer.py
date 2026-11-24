@@ -308,10 +308,17 @@ def _validate_startlists(
                     "announced_weekend_pool": "candidate_pool",
                     "announced_roster_evidence": "announced",
                 }
+                competitor_id = row["fis_competitor_id"].strip()
+                fis_code = row["fis_code"].strip()
+                invalid_prediction_identity = bool(competitor_id) != bool(fis_code)
+                if competitor_id and not competitor_id.isdigit():
+                    invalid_prediction_identity = True
+                if mode == "latest_season_fallback" and competitor_id:
+                    invalid_prediction_identity = True
                 if (
                     mode not in allowed
                     or status != allowed[mode]
-                    or row["fis_competitor_id"].strip()
+                    or invalid_prediction_identity
                 ):
                     raise WeekendConsumerError(
                         "announced roster overlay row is mislabelled"
@@ -410,11 +417,12 @@ def _load_shadow_ratings(
                 )
             athlete_id = row["canonical_athlete_id"]
             source = row["rating_source"]
-            allowed = (
-                {"fixed_anchor_prediction_elo", "newcomer_prior"}
-                if athlete_id.startswith("fis:")
-                else {"accepted_official_elo"}
+            has_explicit_fis_identity = bool(
+                row["fis_competitor_id"].strip() and row["fis_code"].strip()
             )
+            allowed = {"accepted_official_elo"}
+            if athlete_id.startswith("fis:") or has_explicit_fis_identity:
+                allowed.update({"fixed_anchor_prediction_elo", "newcomer_prior"})
             if source not in allowed:
                 raise WeekendConsumerError(
                     f"{csv_path}:{line}: rating source is incompatible with identity"

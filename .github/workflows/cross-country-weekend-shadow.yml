@@ -94,6 +94,9 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /elo/python/ski/polars/cross_country_announced_rosters.py
+            /elo/python/ski/polars/cross_country_prediction_elo_policy.json
+            /elo/python/ski/polars/cross_country_prediction_elo_shadow.py
+            /elo/python/ski/polars/cross_country_results_elo_replay.py
             /elo/python/ski/polars/cross_country_weekend_inputs.py
             /elo/python/ski/polars/cross_country_results_identity.py
             /elo/python/ski/polars/cross_country_world_cup_quotas.py
@@ -102,6 +105,8 @@ jobs:
             /elo/python/ski/polars/excel365/weekends.csv
             /elo/python/ski/polars/excel365/men_chrono_elevation.csv
             /elo/python/ski/polars/excel365/ladies_chrono_elevation.csv
+            /elo/python/ski/polars/excel365/all_men_scrape.csv
+            /elo/python/ski/polars/excel365/all_ladies_scrape.csv
             /elo/python/ski/polars/excel365/fis_identity_aliases.csv
 
       - name: Prepare immutable shadow parameters
@@ -139,6 +144,7 @@ jobs:
             echo "SHADOW_ROOT=$root"
             echo "BUNDLE_ROOT=$root/bundle"
             echo "RUNTIME_ROOT=$root/runtime"
+            echo "RATING_ROOT=$root/ratings"
             echo "PREDICTION_ROOT=$root/predictions"
             echo "CANDIDATE_ROOT=$root/candidate"
             echo "SITE_ROOT=$root/site"
@@ -173,10 +179,10 @@ jobs:
       - name: Restore latest automatic FantasyXC roster
         uses: actions/cache/restore@v4
         with:
-          path: .fantasyxc-handoff/automated-announced-rosters.json
-          key: fantasyxc-roster-v1-${{ env.LOGICAL_DATE }}-${{ github.run_id }}
+          path: .fantasyxc-handoff/
+          key: fantasyxc-roster-v2-${{ env.LOGICAL_DATE }}-${{ github.run_id }}
           restore-keys: |
-            fantasyxc-roster-v1-${{ env.LOGICAL_DATE }}-
+            fantasyxc-roster-v2-${{ env.LOGICAL_DATE }}-
 
       - name: Build isolated weekend input bundle
         working-directory: external/ski/elo/python/ski/polars
@@ -189,6 +195,9 @@ jobs:
             --group-date "$LOGICAL_DATE"
             --output-dir "$BUNDLE_ROOT"
             --quota-contract cross_country_world_cup_quotas_2027.json
+            --men-identity-history excel365/all_men_scrape.csv
+            --ladies-identity-history excel365/all_ladies_scrape.csv
+            --prediction-shadow
           )
           roster="$GITHUB_WORKSPACE/.fantasyxc-handoff/automated-announced-rosters.json"
           if [[ -s "$roster" ]]; then
@@ -238,10 +247,29 @@ jobs:
       - name: Materialize validated model runtime
         if: steps.bundle.outputs.has_work == 'true'
         run: |
-          python3 -m pipelines.cross_country_weekend_consumer \
-            --bundle-dir "$BUNDLE_ROOT" \
-            --logical-date "$LOGICAL_DATE" \
+          ledger="$GITHUB_WORKSPACE/.fantasyxc-handoff/fis-prediction-ledger.csv"
+          args=(
+            --bundle-dir "$BUNDLE_ROOT"
+            --logical-date "$LOGICAL_DATE"
             --output-dir "$RUNTIME_ROOT"
+          )
+          if [[ -s "$ledger" ]]; then
+            for gender in men ladies; do
+              startlist="$BUNDLE_ROOT/${gender}_startlist.csv"
+              if [[ $(wc -l < "$startlist") -le 1 ]]; then
+                continue
+              fi
+              python3 external/ski/elo/python/ski/polars/cross_country_prediction_elo_shadow.py \
+                --startlist "$startlist" \
+                --men-chrono external/ski/elo/python/ski/polars/excel365/men_chrono_elevation.csv \
+                --ladies-chrono external/ski/elo/python/ski/polars/excel365/ladies_chrono_elevation.csv \
+                --prediction-ledger "$ledger" \
+                --policy external/ski/elo/python/ski/polars/cross_country_prediction_elo_policy.json \
+                --output-dir "$RATING_ROOT/$gender"
+            done
+            args+=(--prediction-elo-root "$RATING_ROOT")
+          fi
+          python3 -m pipelines.cross_country_weekend_consumer "${args[@]}"
 
       - name: Set up R
         if: steps.bundle.outputs.has_work == 'true'

@@ -341,6 +341,41 @@ class CrossCountryWeekendConsumerTests(unittest.TestCase):
                     prediction_elo_root=ratings,
                 )
 
+    def test_local_identity_accepts_private_rating_with_explicit_fis_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            athlete = startlist_row(
+                "L", "201", "6320", "Ida Lien", official=True
+            )
+            athlete["selection_status"] = "announced"
+            athlete["source_mode"] = "announced_roster_evidence"
+            bundle = write_bundle(
+                root,
+                schedule=[schedule_row("L", "201")],
+                men=[],
+                ladies=[athlete],
+                event_modes={("L", "201"): "announced_roster_overlay"},
+            )
+            ratings = root / "ratings"
+            write_shadow_ratings(
+                ratings,
+                gender="ladies",
+                rows=[rated_row(athlete, "fixed_anchor_prediction_elo", "1425")],
+            )
+            materialize_weekend_runtime(
+                bundle_dir=bundle,
+                logical_date=date(2026, 11, 27),
+                output_dir=root / "runtime",
+                prediction_elo_root=ratings,
+            )
+            with (root / "runtime/startlist_weekend_ladies.csv").open(
+                newline="", encoding="utf-8"
+            ) as handle:
+                selected = next(csv.DictReader(handle))
+            self.assertEqual("6320", selected["ID"])
+            self.assertEqual("fixed_anchor_prediction_elo", selected["Shadow_Rating_Source"])
+            self.assertEqual("1425", selected["Elo"])
+
     def test_materializes_official_participation_matrix(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

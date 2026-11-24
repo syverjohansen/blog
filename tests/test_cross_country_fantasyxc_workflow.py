@@ -31,13 +31,22 @@ class CrossCountryFantasyXCWorkflowTests(unittest.TestCase):
             self.source,
         )
 
-    def test_identity_histories_only_feed_the_roster_resolver(self) -> None:
+    def test_identity_histories_feed_resolver_and_guarded_promotion(self) -> None:
         resolver = self.source.index("python3 cross_country_fantasyxc_resolve.py")
         review = self.source.index("python3 cross_country_fantasyxc_review.py")
         resolver_block = self.source[resolver:review]
         self.assertEqual(resolver_block.count("--men-identity-history"), 1)
         self.assertEqual(resolver_block.count("--ladies-identity-history"), 1)
-        self.assertNotIn("prediction", resolver_block.lower())
+        self.assertNotIn("prediction-ledger", resolver_block.lower())
+
+    def test_private_prediction_ledger_is_built_before_automatic_promotion(self) -> None:
+        ledger = self.source.index("python3 cross_country_prediction_elo_pipeline.py")
+        promote = self.source.index("python3 cross_country_fantasyxc_review.py auto-promote")
+        self.assertLess(ledger, promote)
+        self.assertIn('args+=(--prediction-ledger "$ledger")', self.source)
+        self.assertIn("--allow-network", self.source[ledger:promote])
+        ledger_step = self.source.index("name: Build private prediction Elo ledger")
+        self.assertIn("continue-on-error: true", self.source[ledger_step:promote])
 
     def test_hosted_evidence_remains_shadow_only(self) -> None:
         self.assertIn('"publication": {"status": "disabled"}', self.source)
@@ -52,7 +61,8 @@ class CrossCountryFantasyXCWorkflowTests(unittest.TestCase):
         handoff = self.source[stage:save]
         self.assertIn("automated-announced-rosters.json", handoff)
         self.assertIn(".fantasyxc-handoff", handoff)
-        self.assertIn("fantasyxc-roster-v1-", self.source[save:])
+        self.assertIn("fis-prediction-ledger.csv", handoff)
+        self.assertIn("fantasyxc-roster-v2-", self.source[save:])
 
     def test_successful_evidence_dispatches_prediction_chain(self) -> None:
         dispatch = self.source.index("name: Continue automatic prediction chain")
