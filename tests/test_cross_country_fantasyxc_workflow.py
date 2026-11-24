@@ -86,6 +86,13 @@ class CrossCountryFantasyXCWorkflowTests(unittest.TestCase):
             "steps.roster_email.outcome == 'success'", self.source[save:stage]
         )
 
+    def test_run_metadata_step_has_one_environment_mapping(self) -> None:
+        metadata = self.source.split(
+            "name: Record immutable run metadata", 1
+        )[1].split("- name: Retain roster evidence", 1)[0]
+        self.assertEqual(1, metadata.count("\n        env:\n"))
+        self.assertIn("LEDGER_STATUS:", metadata)
+
 
 if __name__ == "__main__":
     unittest.main()
