@@ -68,6 +68,8 @@ jobs:
             /elo/python/ski/polars/excel365/weekends.csv
             /elo/python/ski/polars/excel365/men_chrono.csv
             /elo/python/ski/polars/excel365/ladies_chrono.csv
+            /elo/python/ski/polars/excel365/all_men_scrape.csv
+            /elo/python/ski/polars/excel365/all_ladies_scrape.csv
 
       - name: Resolve bounded evidence window
         id: parameters
@@ -148,6 +150,8 @@ jobs:
             --feed-items "$EVIDENCE_ROOT/feed/fantasyxc-feed-items.json" \
             --men-chrono excel365/men_chrono.csv \
             --ladies-chrono excel365/ladies_chrono.csv \
+            --men-identity-history excel365/all_men_scrape.csv \
+            --ladies-identity-history excel365/all_ladies_scrape.csv \
             --schedule excel365/weekends.csv \
             --logical-date "${{ steps.parameters.outputs.logical_date }}" \
             --output "$EVIDENCE_ROOT/roster-candidates.json" \
