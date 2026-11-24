@@ -29,7 +29,11 @@ def write_candidate(root: Path) -> tuple[Path, Path]:
                     "total_points": 100 - local_index,
                     "total_safe": 80 + local_index,
                     "total_upside": 100 + local_index,
+                    "sprint_points": 60 - local_index,
+                    "distance_points": 40 + local_index,
                     "races_count": 2,
+                    "sprint_races_count": 1,
+                    "distance_races_count": 1,
                     "fantasy_xc_name": f"API {index}",
                     "fantasy_xc_country": "NOR",
                 }
@@ -66,7 +70,7 @@ def write_candidate(root: Path) -> tuple[Path, Path]:
 
 
 class CrossCountryFantasyOptimizerTests(unittest.TestCase):
-    def test_builds_three_valid_deterministic_teams(self) -> None:
+    def test_builds_five_valid_deterministic_teams_for_mixed_weekend(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             price_report, priced = write_candidate(root)
@@ -79,7 +83,10 @@ class CrossCountryFantasyOptimizerTests(unittest.TestCase):
             )
             self.assertEqual("candidate", report["status"])
             document = json.loads((root / "fantasy_teams.json").read_text())
-            self.assertEqual({"normal", "safe", "upside"}, set(document["teams"]))
+            self.assertEqual(
+                {"normal", "safe", "upside", "sprint", "distance"},
+                set(document["teams"]),
+            )
             for team in document["teams"].values():
                 self.assertEqual(16, len(team["rows"]))
                 self.assertEqual(8, sum(row["sex"] == "M" for row in team["rows"]))
@@ -91,6 +98,68 @@ class CrossCountryFantasyOptimizerTests(unittest.TestCase):
             }
             safe_codes = {row["fis_code"] for row in document["teams"]["safe"]["rows"]}
             self.assertNotEqual(normal_codes, safe_codes)
+
+    def test_sprint_only_weekend_marks_distance_not_applicable(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            price_report, priced = write_candidate(root)
+            document = json.loads(priced.read_text())
+            for row in document["rows"]:
+                row["distance_points"] = 0
+                row["distance_races_count"] = 0
+            priced.write_text(
+                json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
+            report_document = json.loads(price_report.read_text())
+            report_document["outputs"][priced.name]["sha256"] = hashlib.sha256(
+                priced.read_bytes()
+            ).hexdigest()
+            price_report.write_text(json.dumps(report_document), encoding="utf-8")
+            optimize_fantasy_teams(
+                price_report_path=price_report,
+                priced_input_path=priced,
+                logical_date=date(2026, 11, 27),
+                output_path=root / "teams.json",
+                report_path=root / "report.json",
+            )
+            result = json.loads((root / "teams.json").read_text())
+            self.assertIn("sprint", result["teams"])
+            self.assertNotIn("distance", result["teams"])
+            self.assertEqual(
+                "not_applicable",
+                result["objective_statuses"]["distance"]["status"],
+            )
+
+    def test_distance_only_weekend_marks_sprint_not_applicable(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            price_report, priced = write_candidate(root)
+            document = json.loads(priced.read_text())
+            for row in document["rows"]:
+                row["sprint_points"] = 0
+                row["sprint_races_count"] = 0
+            priced.write_text(
+                json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
+            report_document = json.loads(price_report.read_text())
+            report_document["outputs"][priced.name]["sha256"] = hashlib.sha256(
+                priced.read_bytes()
+            ).hexdigest()
+            price_report.write_text(json.dumps(report_document), encoding="utf-8")
+            optimize_fantasy_teams(
+                price_report_path=price_report,
+                priced_input_path=priced,
+                logical_date=date(2026, 11, 27),
+                output_path=root / "teams.json",
+                report_path=root / "report.json",
+            )
+            result = json.loads((root / "teams.json").read_text())
+            self.assertIn("distance", result["teams"])
+            self.assertNotIn("sprint", result["teams"])
+            self.assertEqual(
+                "not_applicable",
+                result["objective_statuses"]["sprint"]["status"],
+            )
 
     def test_matches_brute_force_optimum_with_variable_prices(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

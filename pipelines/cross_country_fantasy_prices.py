@@ -23,7 +23,7 @@ from pipelines.cross_country_fantasy_contract import (
 from pipelines.cross_country_weekend_shadow import FANTASY_EXPECTED_HEADERS
 
 CAPTURE_SCHEMA = "nordicnumbers.cross-country-fantasy-price-capture/v1"
-PRICED_INPUT_SCHEMA = "nordicnumbers.cross-country-fantasy-priced-input/v1"
+PRICED_INPUT_SCHEMA = "nordicnumbers.cross-country-fantasy-priced-input/v2"
 REPORT_SCHEMA = "nordicnumbers.cross-country-fantasy-price-report/v1"
 SHEET_SEX = {"Men Full Pool": "M", "Ladies Full Pool": "L"}
 
@@ -132,7 +132,11 @@ def _prediction_rows(
                 normal,
                 safe,
                 upside,
+                sprint,
+                distance,
                 races,
+                sprint_races,
+                distance_races,
                 row_date,
                 row_seed,
                 row_simulations,
@@ -156,7 +160,11 @@ def _prediction_rows(
                     "total_points": normal,
                     "total_safe": safe,
                     "total_upside": upside,
+                    "sprint_points": sprint,
+                    "distance_points": distance,
                     "races_count": races,
+                    "sprint_races_count": sprint_races,
+                    "distance_races_count": distance_races,
                 }
             )
     workbook.close()

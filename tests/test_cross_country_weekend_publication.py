@@ -98,7 +98,10 @@ def write_schedule(root: Path) -> Path:
 
 
 def write_fantasy_evidence(
-    root: Path, *, status: str = "candidate"
+    root: Path,
+    *,
+    status: str = "candidate",
+    candidate_objectives: tuple[str, ...] = OBJECTIVES,
 ) -> tuple[Path, Path]:
     teams_path = root / "fantasy_teams.json"
     report_path = root / "fantasy_optimizer_report.json"
@@ -120,7 +123,7 @@ def write_fantasy_evidence(
         return report_path, teams_path
 
     teams = {}
-    for objective in OBJECTIVES:
+    for objective in candidate_objectives:
         rows = []
         for index in range(16):
             rows.append(
@@ -145,6 +148,17 @@ def write_fantasy_evidence(
         "schema_version": FANTASY_TEAM_SCHEMA,
         "logical_date": "2026-11-27",
         "publication": {"status": "disabled"},
+        "objective_statuses": {
+            objective: (
+                {"status": "candidate"}
+                if objective in candidate_objectives
+                else {
+                    "status": "not_applicable",
+                    "reason": f"weekend contains no {objective} races",
+                }
+            )
+            for objective in OBJECTIVES
+        },
         "teams": teams,
     }
     teams_path.write_text(
@@ -162,7 +176,7 @@ def write_fantasy_evidence(
                     teams_path.name: {
                         "schema_version": FANTASY_TEAM_SCHEMA,
                         "sha256": hashlib.sha256(teams_path.read_bytes()).hexdigest(),
-                        "teams": len(OBJECTIVES),
+                        "teams": len(candidate_objectives),
                     }
                 },
             }
@@ -260,8 +274,13 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
                 {
                     "status": "candidate",
                     "included": True,
-                    "team_count": 3,
-                    "row_count": 48,
+                    "team_count": 5,
+                    "objectives": list(OBJECTIVES),
+                    "objective_statuses": {
+                        objective: {"status": "candidate"}
+                        for objective in OBJECTIVES
+                    },
+                    "row_count": 80,
                 },
                 report["fantasy"],
             )
@@ -270,6 +289,8 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             self.assertIn("### Expected Points", post)
             self.assertIn("### Safer Team", post)
             self.assertIn("### Upside Team", post)
+            self.assertIn("### Sprint Team", post)
+            self.assertIn("### Distance Team", post)
             for objective in OBJECTIVES:
                 document = json.loads(
                     (
@@ -300,6 +321,42 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             self.assertFalse(report["fantasy"]["included"])
             self.assertNotIn(
                 "Fantasy XC Teams",
+                (output / "content/post/weekly-picks/20261127.md").read_text(),
+            )
+
+    def test_omits_not_applicable_specialist_team(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root)
+            candidates = tuple(
+                objective for objective in OBJECTIVES if objective != "distance"
+            )
+            fantasy_report, fantasy_teams = write_fantasy_evidence(
+                root, candidate_objectives=candidates
+            )
+            output = root / "candidate"
+            report = build_weekend_candidate(
+                workbook_path=workbook,
+                runtime_report_path=runtime,
+                validation_report_path=validation,
+                logical_date=date(2026, 11, 27),
+                output_root=output,
+                fantasy_report_path=fantasy_report,
+                fantasy_teams_path=fantasy_teams,
+            )
+            self.assertEqual(list(candidates), report["fantasy"]["objectives"])
+            self.assertEqual(
+                "not_applicable",
+                report["fantasy"]["objective_statuses"]["distance"]["status"],
+            )
+            self.assertFalse(
+                (
+                    output
+                    / "data/cross-country/weekly-picks/20261127/fantasy-distance.json"
+                ).exists()
+            )
+            self.assertNotIn(
+                "### Distance Team",
                 (output / "content/post/weekly-picks/20261127.md").read_text(),
             )
 
@@ -455,7 +512,7 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
                 logical_date=date(2026, 11, 27),
                 repository_root=repository,
             )
-            self.assertEqual(6, len(installed))
+            self.assertEqual(8, len(installed))
 
     def test_render_rejects_candidate_changed_after_build(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

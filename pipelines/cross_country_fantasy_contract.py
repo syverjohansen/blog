@@ -12,16 +12,24 @@ from collections.abc import Iterable, Mapping
 from dataclasses import asdict, dataclass
 from decimal import Decimal, InvalidOperation
 
-SCHEMA_VERSION = "nordicnumbers.cross-country-fantasy-plan/v1"
+SCHEMA_VERSION = "nordicnumbers.cross-country-fantasy-plan/v2"
 PRICE_SOURCE = "https://www.fantasyxc.se/api/athletes"
 TEAM_SIZE = 16
 ATHLETES_PER_SEX = 8
 BUDGET = 100_000
-OBJECTIVES = ("normal", "safe", "upside")
+CORE_OBJECTIVES = ("normal", "safe", "upside")
+SPECIALIST_OBJECTIVES = ("sprint", "distance")
+OBJECTIVES = (*CORE_OBJECTIVES, *SPECIALIST_OBJECTIVES)
 SCORE_FIELDS = {
     "normal": "total_points",
     "safe": "total_safe",
     "upside": "total_upside",
+    "sprint": "sprint_points",
+    "distance": "distance_points",
+}
+OBJECTIVE_RACE_FIELDS = {
+    "sprint": "sprint_races_count",
+    "distance": "distance_races_count",
 }
 PREDICTION_FIELDS = frozenset(
     {
@@ -31,6 +39,7 @@ PREDICTION_FIELDS = frozenset(
         "canonical_nation",
         "sex",
         *SCORE_FIELDS.values(),
+        *OBJECTIVE_RACE_FIELDS.values(),
     }
 )
 PRICE_FIELDS = frozenset(
@@ -105,6 +114,22 @@ def _price(value: object, *, label: str) -> int:
     return result
 
 
+def _count(value: object, *, label: str) -> int:
+    if isinstance(value, bool):
+        raise FantasyContractError(f"{label} must be a non-negative integer")
+    try:
+        result = int(value)
+    except (TypeError, ValueError) as exc:
+        raise FantasyContractError(f"{label} must be a non-negative integer") from exc
+    try:
+        exact = Decimal(str(value))
+    except InvalidOperation as exc:
+        raise FantasyContractError(f"{label} must be a non-negative integer") from exc
+    if result < 0 or exact != result:
+        raise FantasyContractError(f"{label} must be a non-negative integer")
+    return result
+
+
 def build_fantasy_plan(
     *,
     prediction_rows: Iterable[Mapping[str, object]],
@@ -134,6 +159,8 @@ def build_fantasy_plan(
             raise FantasyContractError(f"duplicate prediction FIS code: {fis_code}")
         for objective, field in SCORE_FIELDS.items():
             _score(row[field], label=f"prediction row {index} {objective} score")
+        for objective, field in OBJECTIVE_RACE_FIELDS.items():
+            _count(row[field], label=f"prediction row {index} {objective} race count")
         predictions[fis_code] = (canonical_id, sex)
 
     common = {
@@ -200,7 +227,7 @@ def build_fantasy_plan(
         reason = "priced prediction pool cannot satisfy the 8 men / 8 ladies roster"
     else:
         status = "candidate"
-        reason = "captured prices and all three objective inputs are complete"
+        reason = "captured prices and all objective inputs are complete"
     return FantasyPlan(
         **common,
         status=status,

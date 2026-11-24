@@ -30,6 +30,8 @@ FANTASY_LABELS = {
     "normal": "Expected Points",
     "safe": "Safer Team",
     "upside": "Upside Team",
+    "sprint": "Sprint Team",
+    "distance": "Distance Team",
 }
 FANTASY_HEADERS = ("Skier", "Nation", "Sex", "Price", "Projected Points")
 
@@ -213,9 +215,7 @@ def _fantasy_candidate_documents(
     output = report.get("outputs", {}).get(teams_path.name, {})
     if output.get("sha256") != _sha256(teams_bytes):
         raise WeekendPublicationError("fantasy teams checksum does not match report")
-    if output.get("schema_version") != FANTASY_TEAM_SCHEMA or output.get(
-        "teams"
-    ) != len(OBJECTIVES):
+    if output.get("schema_version") != FANTASY_TEAM_SCHEMA:
         raise WeekendPublicationError("fantasy teams report metadata is invalid")
     teams = _read_json(teams_path, "fantasy teams")
     if teams.get("schema_version") != FANTASY_TEAM_SCHEMA:
@@ -224,14 +224,41 @@ def _fantasy_candidate_documents(
         raise WeekendPublicationError("fantasy teams logical date does not match")
     if teams.get("publication") != {"status": "disabled"}:
         raise WeekendPublicationError("fantasy teams publication must remain disabled")
+    objective_statuses = teams.get("objective_statuses")
+    if not isinstance(objective_statuses, dict) or set(objective_statuses) != set(
+        OBJECTIVES
+    ):
+        raise WeekendPublicationError("fantasy objective statuses are invalid")
+    candidate_objectives = []
+    for objective in OBJECTIVES:
+        objective_status = objective_statuses[objective]
+        if not isinstance(objective_status, dict) or objective_status.get("status") not in {
+            "candidate",
+            "not_applicable",
+        }:
+            raise WeekendPublicationError(
+                f"invalid {objective} fantasy objective status"
+            )
+        if objective_status["status"] == "candidate":
+            candidate_objectives.append(objective)
+        elif not str(objective_status.get("reason", "")).strip():
+            raise WeekendPublicationError(
+                f"not-applicable {objective} objective requires a reason"
+            )
+    if not {"normal", "safe", "upside"} <= set(candidate_objectives):
+        raise WeekendPublicationError("all core fantasy objectives must be candidates")
     team_documents = teams.get("teams")
-    if not isinstance(team_documents, dict) or set(team_documents) != set(OBJECTIVES):
-        raise WeekendPublicationError("fantasy teams must contain all three objectives")
+    if not isinstance(team_documents, dict) or set(team_documents) != set(
+        candidate_objectives
+    ):
+        raise WeekendPublicationError("fantasy teams do not match objective statuses")
+    if output.get("teams") != len(candidate_objectives):
+        raise WeekendPublicationError("fantasy teams report metadata is invalid")
 
     documents: dict[Path, bytes] = {}
     sections = ["## Fantasy XC Teams", ""]
     total_rows = 0
-    for objective in OBJECTIVES:
+    for objective in candidate_objectives:
         team = team_documents[objective]
         if not isinstance(team, dict) or not isinstance(team.get("rows"), list):
             raise WeekendPublicationError(f"invalid {objective} fantasy team")
@@ -300,7 +327,9 @@ def _fantasy_candidate_documents(
         {
             "status": "candidate",
             "included": True,
-            "team_count": len(OBJECTIVES),
+            "team_count": len(candidate_objectives),
+            "objectives": candidate_objectives,
+            "objective_statuses": objective_statuses,
             "row_count": total_rows,
         },
         documents,
@@ -556,7 +585,7 @@ def render_weekend_candidate(
         candidate_root / "publication_candidate_report.json", "candidate report"
     )
     if candidate_report.get("fantasy", {}).get("included") is True:
-        for objective in OBJECTIVES:
+        for objective in candidate_report["fantasy"].get("objectives", []):
             filename = f"fantasy-{objective}.json"
             document = _read_json(json_roots / filename, filename)
             expected_markers.extend(
@@ -605,11 +634,19 @@ def install_weekend_candidate(
     }
     fantasy = candidate_report.get("fantasy", {})
     if fantasy.get("included") is True:
+        fantasy_objectives = fantasy.get("objectives")
+        if (
+            not isinstance(fantasy_objectives, list)
+            or not fantasy_objectives
+            or any(objective not in OBJECTIVES for objective in fantasy_objectives)
+            or len(fantasy_objectives) != len(set(fantasy_objectives))
+        ):
+            raise WeekendPublicationError("candidate fantasy objectives are invalid")
         expected.update(
             Path("data/cross-country/weekly-picks")
             / date_key
             / f"fantasy-{objective}.json"
-            for objective in OBJECTIVES
+            for objective in fantasy_objectives
         )
     elif fantasy.get("status") not in {"not_requested", "skipped", "blocked"}:
         raise WeekendPublicationError("candidate fantasy state is invalid")
