@@ -312,6 +312,7 @@ jobs:
         env:
           AS_OF: ${{ steps.parameters.outputs.as_of }}
           LOGICAL_DATE: ${{ steps.parameters.outputs.logical_date }}
+          LEDGER_STATUS: ${{ steps.prediction_ledger.outcome }}
         run: |
           python3 - <<'PY'
           import json
@@ -352,9 +353,6 @@ jobs:
               handle.write("- Email: sent only when the roster digest changes\n")
               handle.write("- Publication: **disabled**\n")
           PY
-        env:
-          LEDGER_STATUS: ${{ steps.prediction_ledger.outcome }}
-
       - name: Retain roster evidence and review checklist
         if: always() && steps.parameters.outputs.has_work == 'true'
         uses: actions/upload-artifact@v4
