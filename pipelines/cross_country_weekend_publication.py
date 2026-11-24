@@ -72,9 +72,22 @@ def _atomic_write(path: Path, content: bytes) -> None:
 
 def _provenance_note(event_modes: dict[str, str]) -> tuple[str, str]:
     modes = set(event_modes.values())
-    supported = {"official_fis_startlist", "latest_season_fallback"}
+    supported = {
+        "official_fis_startlist",
+        "latest_season_fallback",
+        "announced_roster_overlay",
+    }
     if not modes or not modes <= supported:
         raise WeekendPublicationError(f"unsupported event provenance: {sorted(modes)}")
+    if "announced_roster_overlay" in modes:
+        return (
+            "provisional",
+            (
+                "Official startlists were not available for every race. Participation "
+                "uses verified roster announcements with historical/quota fallback for "
+                "unmentioned athletes and may change before race day."
+            ),
+        )
     if "latest_season_fallback" in modes:
         return (
             "provisional",
