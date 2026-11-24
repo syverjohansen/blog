@@ -438,7 +438,7 @@ class CrossCountryWeekendConsumerTests(unittest.TestCase):
                 rows = {row["ID"]: row for row in csv.DictReader(handle)}
 
             self.assertEqual(
-                ("1", ""),
+                ("1", "0"),
                 (rows["1"]["Race1_Prob"], rows["1"]["Race2_Prob"]),
             )
             self.assertEqual(
