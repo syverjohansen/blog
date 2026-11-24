@@ -26,6 +26,7 @@ class CrossCountryPredictionEloWorkflowTests(unittest.TestCase):
         self.assertIn("ref: ${{ steps.ski.outputs.sha }}", self.source)
         self.assertIn("persist-credentials: false", self.source)
         for required in (
+            "cross_country_announced_rosters.py",
             "cross_country_prediction_elo_pipeline.py",
             "cross_country_prediction_elo_shadow.py",
             "cross_country_weekend_inputs.py",

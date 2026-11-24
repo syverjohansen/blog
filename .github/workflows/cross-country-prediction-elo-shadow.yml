@@ -74,6 +74,7 @@ jobs:
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
+            /elo/python/ski/polars/cross_country_announced_rosters.py
             /elo/python/ski/polars/cross_country_fis_prediction_acquire.py
             /elo/python/ski/polars/cross_country_fis_prediction_identity.py
             /elo/python/ski/polars/cross_country_fis_prediction_replay.py

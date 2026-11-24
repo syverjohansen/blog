@@ -155,6 +155,7 @@ class CrossCountryOfficialQuotaShadowWorkflowTests(unittest.TestCase):
     def test_manual_quota_mode_fetches_and_supplies_audited_contract(self) -> None:
         self.assertIn("official_quota_shadow:", self.source)
         self.assertIn("default: false", self.source)
+        self.assertIn("cross_country_announced_rosters.py", self.source)
         self.assertIn("cross_country_world_cup_quotas.py", self.source)
         self.assertIn("cross_country_world_cup_quotas_2027.json", self.source)
         self.assertIn(
