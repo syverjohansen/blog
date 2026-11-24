@@ -1,0 +1,208 @@
+name: Cross-country FantasyXC roster evidence
+
+on:
+  workflow_run:
+    workflows: ["Cross-country automatic daily pipeline"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      logical_date:
+        description: Optional weekend group date (YYYY-MM-DD)
+        required: false
+        type: string
+      as_of:
+        description: Evidence cutoff (YYYY-MM-DD); defaults to today UTC
+        required: false
+        type: string
+      ski_ref:
+        description: Ski branch, tag, or commit to resolve and record
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cross-country-fantasyxc-roster-evidence
+  cancel-in-progress: false
+
+jobs:
+  evidence:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Resolve ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if [[ ! "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out bounded ski evidence runtime
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/ski/polars/cross_country_announced_rosters.py
+            /elo/python/ski/polars/cross_country_fantasyxc_feed.py
+            /elo/python/ski/polars/cross_country_fantasyxc_resolve.py
+            /elo/python/ski/polars/cross_country_fantasyxc_review.py
+            /elo/python/ski/polars/cross_country_results_identity.py
+            /elo/python/ski/polars/cross_country_weekend_inputs.py
+            /elo/python/ski/polars/schedule_contract.py
+            /elo/python/ski/polars/excel365/weekends.csv
+            /elo/python/ski/polars/excel365/men_chrono.csv
+            /elo/python/ski/polars/excel365/ladies_chrono.csv
+
+      - name: Resolve bounded evidence window
+        id: parameters
+        working-directory: external/ski/elo/python/ski/polars
+        env:
+          AS_OF_INPUT: ${{ inputs.as_of || '' }}
+          LOGICAL_DATE_INPUT: ${{ inputs.logical_date || '' }}
+          SKI_SHA: ${{ steps.ski.outputs.sha }}
+        run: |
+          as_of="${AS_OF_INPUT:-$(date -u +%F)}"
+          root="$RUNNER_TEMP/cross-country-fantasyxc-evidence"
+          mkdir -p "$root"
+          python3 - "$as_of" "$LOGICAL_DATE_INPUT" "$GITHUB_OUTPUT" <<'PY'
+          import csv
+          import sys
+          from collections import defaultdict
+          from datetime import date, datetime, timedelta
+          from pathlib import Path
+
+          as_of = date.fromisoformat(sys.argv[1])
+          requested = date.fromisoformat(sys.argv[2]) if sys.argv[2] else None
+          groups = defaultdict(list)
+          with Path("excel365/weekends.csv").open(newline="", encoding="utf-8-sig") as handle:
+              for row in csv.DictReader(handle):
+                  if row["Distance"] in {"Rel", "Ts"} or row["Stage"] == "1":
+                      continue
+                  group_date = datetime.strptime(row["Date"], "%m/%d/%Y").date()
+                  race_date = datetime.strptime(row["Race_Date"], "%m/%d/%Y").date()
+                  groups[group_date].append(race_date)
+          if requested is not None:
+              if requested not in groups:
+                  raise SystemExit(f"No normal individual weekend for {requested}")
+              logical_date = requested
+          else:
+              eligible = [
+                  group_date
+                  for group_date, race_dates in groups.items()
+                  if group_date >= as_of - timedelta(days=3)
+                  and group_date <= as_of + timedelta(days=7)
+                  and max(race_dates) >= as_of
+              ]
+              if not eligible:
+                  with Path(sys.argv[3]).open("a") as output:
+                      output.write("has_work=false\n")
+                  raise SystemExit(0)
+              logical_date = min(eligible)
+          with Path(sys.argv[3]).open("a") as output:
+              output.write("has_work=true\n")
+              output.write(f"logical_date={logical_date.isoformat()}\n")
+              output.write(f"as_of={as_of.isoformat()}\n")
+          PY
+          {
+            echo "EVIDENCE_ROOT=$root"
+            echo "SKI_SHA=$SKI_SHA"
+          } >> "$GITHUB_ENV"
+
+      - name: Explain no-work date
+        if: steps.parameters.outputs.has_work != 'true'
+        run: echo "No normal individual cross-country weekend is inside the evidence window."
+
+      - name: Acquire bounded FantasyXC evidence
+        if: steps.parameters.outputs.has_work == 'true'
+        working-directory: external/ski/elo/python/ski/polars
+        run: |
+          python3 cross_country_fantasyxc_feed.py \
+            --logical-date "${{ steps.parameters.outputs.logical_date }}" \
+            --as-of "${{ steps.parameters.outputs.as_of }}" \
+            --lookback-days 14 \
+            --output-dir "$EVIDENCE_ROOT/feed" \
+            --report "$EVIDENCE_ROOT/feed-report.json" \
+            --allow-network
+
+      - name: Resolve exact roster candidates
+        if: steps.parameters.outputs.has_work == 'true'
+        working-directory: external/ski/elo/python/ski/polars
+        run: |
+          python3 cross_country_fantasyxc_resolve.py \
+            --feed-items "$EVIDENCE_ROOT/feed/fantasyxc-feed-items.json" \
+            --men-chrono excel365/men_chrono.csv \
+            --ladies-chrono excel365/ladies_chrono.csv \
+            --schedule excel365/weekends.csv \
+            --logical-date "${{ steps.parameters.outputs.logical_date }}" \
+            --output "$EVIDENCE_ROOT/roster-candidates.json" \
+            --report "$EVIDENCE_ROOT/resolution-report.json"
+
+      - name: Generate checksum-bound review checklist
+        if: steps.parameters.outputs.has_work == 'true'
+        working-directory: external/ski/elo/python/ski/polars
+        run: |
+          python3 cross_country_fantasyxc_review.py template \
+            --candidates "$EVIDENCE_ROOT/roster-candidates.json" \
+            --logical-date "${{ steps.parameters.outputs.logical_date }}" \
+            --output "$EVIDENCE_ROOT/roster-review.json"
+
+      - name: Record immutable run metadata
+        if: steps.parameters.outputs.has_work == 'true'
+        env:
+          AS_OF: ${{ steps.parameters.outputs.as_of }}
+          LOGICAL_DATE: ${{ steps.parameters.outputs.logical_date }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path(os.environ["EVIDENCE_ROOT"])
+          document = {
+              "schema_version": "nordicnumbers.cross-country-fantasyxc-hosted-evidence/v1",
+              "logical_date": os.environ["LOGICAL_DATE"],
+              "as_of": os.environ["AS_OF"],
+              "blog_commit": os.environ["GITHUB_SHA"],
+              "ski_commit": os.environ["SKI_SHA"],
+              "github_run_id": os.environ["GITHUB_RUN_ID"],
+              "publication": {"status": "disabled"},
+          }
+          (root / "run-metadata.json").write_text(
+              json.dumps(document, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          candidates = json.loads((root / "roster-candidates.json").read_text())
+          summary = os.environ["GITHUB_STEP_SUMMARY"]
+          with Path(summary).open("a", encoding="utf-8") as handle:
+              handle.write("## FantasyXC roster evidence\n\n")
+              handle.write(f"- Weekend: `{document['logical_date']}`\n")
+              handle.write(f"- Evidence cutoff: `{document['as_of']}`\n")
+              handle.write(f"- Candidates: {len(candidates['candidates'])}\n")
+              handle.write(f"- Review exceptions: {len(candidates['review_exceptions'])}\n")
+              handle.write("- Publication: **disabled**\n")
+          PY
+
+      - name: Retain roster evidence and review checklist
+        if: always() && steps.parameters.outputs.has_work == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-country-fantasyxc-${{ steps.parameters.outputs.logical_date }}-${{ steps.parameters.outputs.as_of }}
+          path: ${{ env.EVIDENCE_ROOT }}/
+          if-no-files-found: error
+          retention-days: 90
