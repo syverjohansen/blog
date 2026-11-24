@@ -62,6 +62,26 @@ STARTLIST_FIELDS = (
     "source_url",
     "source_sha256",
 )
+QUOTA_SOURCE_FIELDS = (
+    "quota_contract_version",
+    "base_nation_quota",
+    "shared_event_quota",
+    "personal_quota",
+    "personal_start_right",
+    "is_host_nation",
+    "team_event_weekend_exception",
+    "max_nation_starters",
+)
+QUOTA_RUNTIME_FIELDS = (
+    "Quota_Contract_Version",
+    "Base_Nation_Quota",
+    "Shared_Event_Quota",
+    "Personal_Quota",
+    "Personal_Start_Right",
+    "Is_Host_Nation",
+    "Team_Event_Weekend_Exception",
+    "Max_Nation_Starters",
+)
 ELO_STREAMS = (
     "Elo",
     "Distance_Elo",
@@ -180,14 +200,23 @@ def _validate_startlists(
     bundle_dir: Path,
     logical_date: date,
     event_order: dict[tuple[str, str], int],
-) -> tuple[dict[str, list[dict[str, str]]], dict[tuple[str, str], str]]:
+) -> tuple[
+    dict[str, list[dict[str, str]]], dict[tuple[str, str], str], bool
+]:
     by_sex: dict[str, list[dict[str, str]]] = {}
     event_modes: dict[tuple[str, str], set[str]] = defaultdict(set)
     seen: set[tuple[str, str, str]] = set()
+    quota_groups: dict[tuple[str, str, str], tuple[str, ...]] = {}
+    quota_contract_enabled: bool | None = None
     for sex, filename in (("M", "men_startlist.csv"), ("L", "ladies_startlist.csv")):
         fields, rows = _read_csv(bundle_dir / filename)
-        if fields != STARTLIST_FIELDS:
+        has_quota_contract = fields == (*STARTLIST_FIELDS, *QUOTA_SOURCE_FIELDS)
+        if fields != STARTLIST_FIELDS and not has_quota_contract:
             raise WeekendConsumerError(f"unexpected startlist fields: {filename}")
+        if quota_contract_enabled is None:
+            quota_contract_enabled = has_quota_contract
+        elif quota_contract_enabled != has_quota_contract:
+            raise WeekendConsumerError("quota contract is missing from one startlist")
         by_sex[sex] = rows
         for row in rows:
             race_id = row["race_id"]
@@ -209,6 +238,51 @@ def _validate_startlists(
             if identity in seen:
                 raise WeekendConsumerError(f"duplicate startlist athlete: {identity}")
             seen.add(identity)
+            if has_quota_contract:
+                try:
+                    base = int(row["base_nation_quota"])
+                    shared = int(row["shared_event_quota"])
+                    personal = int(row["personal_quota"])
+                    host = int(row["is_host_nation"])
+                    team = int(row["team_event_weekend_exception"])
+                    maximum = int(row["max_nation_starters"])
+                except ValueError as exc:
+                    raise WeekendConsumerError(
+                        f"invalid quota assignment: {sex}/{race_id}/{athlete_id}"
+                    ) from exc
+                if (
+                    not row["quota_contract_version"].strip()
+                    or base not in {2, 3, 4, 5, 6}
+                    or shared < base
+                    or shared > maximum
+                    or personal not in {0, 1}
+                    or host not in {0, 1}
+                    or team not in {0, 1}
+                    or maximum != 10
+                    or bool(row["personal_start_right"].strip()) != bool(personal)
+                ):
+                    raise WeekendConsumerError(
+                        f"invalid quota assignment: {sex}/{race_id}/{athlete_id}"
+                    )
+                quota_group = (sex, race_id, row["canonical_nation"])
+                shared_assignment = tuple(
+                    row[field]
+                    for field in (
+                        "quota_contract_version",
+                        "base_nation_quota",
+                        "shared_event_quota",
+                        "is_host_nation",
+                        "team_event_weekend_exception",
+                        "max_nation_starters",
+                    )
+                )
+                previous_assignment = quota_groups.setdefault(
+                    quota_group, shared_assignment
+                )
+                if previous_assignment != shared_assignment:
+                    raise WeekendConsumerError(
+                        f"inconsistent nation quota assignment: {quota_group}"
+                    )
             mode = row["source_mode"]
             status = row["selection_status"]
             if mode == "official_fis_startlist":
@@ -232,7 +306,11 @@ def _validate_startlists(
     mixed = sorted(key for key, modes in event_modes.items() if len(modes) != 1)
     if mixed:
         raise WeekendConsumerError(f"event mixes startlist source modes: {mixed}")
-    return by_sex, {key: next(iter(modes)) for key, modes in event_modes.items()}
+    return (
+        by_sex,
+        {key: next(iter(modes)) for key, modes in event_modes.items()},
+        bool(quota_contract_enabled),
+    )
 
 
 def _load_shadow_ratings(
@@ -335,6 +413,7 @@ def _runtime_rows(
     event_order: dict[tuple[str, str], int],
     event_modes: dict[tuple[str, str], str],
     shadow_ratings: dict[tuple[str, str, str], dict[str, str]] | None = None,
+    quota_contract_enabled: bool = False,
 ) -> tuple[list[str], list[dict[str, str]]]:
     race_ids = [
         race_id
@@ -353,6 +432,16 @@ def _runtime_rows(
             "Skier": row["canonical_name"],
             "Nation": row["canonical_nation"],
         }
+        if quota_contract_enabled:
+            identity.update(
+                dict(
+                    zip(
+                        QUOTA_RUNTIME_FIELDS,
+                        (row[field] for field in QUOTA_SOURCE_FIELDS),
+                        strict=True,
+                    )
+                )
+            )
         if shadow_ratings is not None:
             rating = shadow_ratings[(sex, row["race_id"], athlete_id)]
             identity.update(
@@ -381,6 +470,7 @@ def _runtime_rows(
                         if shadow_ratings is not None
                         else ()
                     ),
+                    *(QUOTA_RUNTIME_FIELDS if quota_contract_enabled else ()),
                 )
             ):
                 raise WeekendConsumerError(
@@ -399,6 +489,8 @@ def _runtime_rows(
         present.add((row["race_id"], athlete_id))
 
     fields = ["ID", "FIS_Code", "Skier", "Nation"]
+    if quota_contract_enabled:
+        fields.extend(QUOTA_RUNTIME_FIELDS)
     if shadow_ratings is not None:
         fields.extend(
             (
@@ -451,7 +543,26 @@ def materialize_weekend_runtime(
         )
     _verify_outputs(bundle_dir, report)
     schedule_rows, event_order = _validate_schedule(bundle_dir, logical_date)
-    by_sex, event_modes = _validate_startlists(bundle_dir, logical_date, event_order)
+    by_sex, event_modes, quota_contract_enabled = _validate_startlists(
+        bundle_dir, logical_date, event_order
+    )
+    quota_version = None
+    if quota_contract_enabled:
+        quota_versions = {
+            row["quota_contract_version"]
+            for rows in by_sex.values()
+            for row in rows
+        }
+        if len(quota_versions) != 1:
+            raise WeekendConsumerError("bundle contains multiple quota contracts")
+        quota_version = next(iter(quota_versions))
+        quota_report = report.get("quota_contract")
+        if (
+            not isinstance(quota_report, dict)
+            or quota_report.get("version") != quota_version
+            or not quota_report.get("sha256")
+        ):
+            raise WeekendConsumerError("bundle quota metadata does not match rows")
     shadow_ratings = None
     if prediction_elo_root is not None:
         prediction_elo_root = prediction_elo_root.expanduser().resolve()
@@ -470,7 +581,12 @@ def materialize_weekend_runtime(
     row_counts: dict[str, int] = {"weekends.csv": len(schedule_rows)}
     for sex, gender in (("M", "men"), ("L", "ladies")):
         fields, rows = _runtime_rows(
-            sex, by_sex[sex], event_order, event_modes, shadow_ratings
+            sex,
+            by_sex[sex],
+            event_order,
+            event_modes,
+            shadow_ratings,
+            quota_contract_enabled,
         )
         name = f"startlist_weekend_{gender}.csv"
         documents[name] = _csv_bytes(fields, rows)
@@ -485,6 +601,10 @@ def materialize_weekend_runtime(
         "prediction_elo_shadow": {
             "enabled": shadow_ratings is not None,
             "selected_k_factor": 4.0 if shadow_ratings is not None else None,
+        },
+        "quota_contract": {
+            "enabled": quota_contract_enabled,
+            "version": quota_version,
         },
         "event_modes": {
             f"{sex}/{race_id}": event_modes[(sex, race_id)]

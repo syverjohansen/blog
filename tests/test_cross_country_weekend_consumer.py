@@ -9,6 +9,8 @@ from pathlib import Path
 from pipelines.cross_country_weekend_consumer import (
     BUNDLE_SCHEMA,
     ELO_STREAMS,
+    QUOTA_RUNTIME_FIELDS,
+    QUOTA_SOURCE_FIELDS,
     SCHEDULE_FIELDS,
     SHADOW_RATING_FIELDS,
     SHADOW_RATING_SCHEMA,
@@ -83,19 +85,52 @@ def startlist_row(
     }
 
 
+def with_quota(
+    row: dict[str, str],
+    *,
+    base: int,
+    shared: int,
+    personal_right: str = "",
+    host: bool = False,
+    team_event: bool = False,
+) -> dict[str, str]:
+    return {
+        **row,
+        "quota_contract_version": "fis-cc-world-cup-2026-27-period-1-v1",
+        "base_nation_quota": str(base),
+        "shared_event_quota": str(shared),
+        "personal_quota": "1" if personal_right else "0",
+        "personal_start_right": personal_right,
+        "is_host_nation": "1" if host else "0",
+        "team_event_weekend_exception": "1" if team_event else "0",
+        "max_nation_starters": "10",
+    }
+
+
 def write_bundle(
     root: Path,
     *,
     schedule: list[dict[str, str]],
     men: list[dict[str, str]],
     ladies: list[dict[str, str]],
+    quota_contract: bool = False,
 ) -> Path:
     bundle = root / "bundle"
     bundle.mkdir()
     contents = {
         "schedule.csv": csv_bytes(SCHEDULE_FIELDS, schedule),
-        "men_startlist.csv": csv_bytes(STARTLIST_FIELDS, men),
-        "ladies_startlist.csv": csv_bytes(STARTLIST_FIELDS, ladies),
+        "men_startlist.csv": csv_bytes(
+            (*STARTLIST_FIELDS, *QUOTA_SOURCE_FIELDS)
+            if quota_contract
+            else STARTLIST_FIELDS,
+            men,
+        ),
+        "ladies_startlist.csv": csv_bytes(
+            (*STARTLIST_FIELDS, *QUOTA_SOURCE_FIELDS)
+            if quota_contract
+            else STARTLIST_FIELDS,
+            ladies,
+        ),
     }
     for name, content in contents.items():
         (bundle / name).write_bytes(content)
@@ -112,6 +147,12 @@ def write_bundle(
             for name, content in contents.items()
         },
     }
+    if quota_contract:
+        report["quota_contract"] = {
+            "version": "fis-cc-world-cup-2026-27-period-1-v1",
+            "season": 2027,
+            "sha256": "b" * 64,
+        }
     (bundle / "report.json").write_text(json.dumps(report), encoding="utf-8")
     return bundle
 
@@ -148,6 +189,71 @@ def rated_row(row: dict[str, str], source: str, value: str) -> dict[str, str]:
 
 
 class CrossCountryWeekendConsumerTests(unittest.TestCase):
+    def test_materializes_audited_quota_contract_for_r_model(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            ordinary = with_quota(
+                startlist_row("M", "101", "1", "Ordinary", official=False),
+                base=6,
+                shared=6,
+            )
+            personal = with_quota(
+                startlist_row("M", "101", "2", "Personal", official=False),
+                base=6,
+                shared=6,
+                personal_right="continental_cup",
+            )
+            bundle = write_bundle(
+                root,
+                schedule=[schedule_row("M", "101")],
+                men=[ordinary, personal],
+                ladies=[],
+                quota_contract=True,
+            )
+            report = materialize_weekend_runtime(
+                bundle_dir=bundle,
+                logical_date=date(2026, 11, 27),
+                output_dir=root / "runtime",
+            )
+            with (root / "runtime/startlist_weekend_men.csv").open(
+                newline="", encoding="utf-8"
+            ) as handle:
+                rows = list(csv.DictReader(handle))
+            self.assertTrue(set(QUOTA_RUNTIME_FIELDS) <= set(rows[0]))
+            self.assertEqual(rows[0]["Shared_Event_Quota"], "6")
+            self.assertEqual(rows[1]["Personal_Quota"], "1")
+            self.assertEqual(rows[1]["Personal_Start_Right"], "continental_cup")
+            self.assertEqual(
+                report["quota_contract"],
+                {
+                    "enabled": True,
+                    "version": "fis-cc-world-cup-2026-27-period-1-v1",
+                },
+            )
+
+    def test_rejects_transferable_or_malformed_personal_quota(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            malformed = with_quota(
+                startlist_row("L", "201", "3", "Athlete", official=False),
+                base=5,
+                shared=5,
+            )
+            malformed["personal_quota"] = "1"
+            bundle = write_bundle(
+                root,
+                schedule=[schedule_row("L", "201")],
+                men=[],
+                ladies=[malformed],
+                quota_contract=True,
+            )
+            with self.assertRaisesRegex(WeekendConsumerError, "quota assignment"):
+                materialize_weekend_runtime(
+                    bundle_dir=bundle,
+                    logical_date=date(2026, 11, 27),
+                    output_dir=root / "runtime",
+                )
+
     def test_materializes_validated_private_ratings_for_shadow_model(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
