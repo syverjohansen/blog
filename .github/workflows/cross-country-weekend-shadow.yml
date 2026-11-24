@@ -25,6 +25,11 @@ on:
         required: true
         default: main
         type: string
+      official_quota_shadow:
+        description: Use audited FIS quotas and retain evidence without publishing
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -90,6 +95,8 @@ jobs:
           sparse-checkout: |
             /elo/python/ski/polars/cross_country_weekend_inputs.py
             /elo/python/ski/polars/cross_country_results_identity.py
+            /elo/python/ski/polars/cross_country_world_cup_quotas.py
+            /elo/python/ski/polars/cross_country_world_cup_quotas_2027.json
             /elo/python/ski/polars/schedule_contract.py
             /elo/python/ski/polars/excel365/weekends.csv
             /elo/python/ski/polars/excel365/men_chrono_elevation.csv
@@ -164,14 +171,21 @@ jobs:
 
       - name: Build isolated weekend input bundle
         working-directory: external/ski/elo/python/ski/polars
+        env:
+          OFFICIAL_QUOTA_SHADOW: ${{ inputs.official_quota_shadow || false }}
         run: |
-          python3 cross_country_weekend_inputs.py \
-            --schedule excel365/weekends.csv \
-            --men-chrono excel365/men_chrono_elevation.csv \
-            --ladies-chrono excel365/ladies_chrono_elevation.csv \
-            --aliases excel365/fis_identity_aliases.csv \
-            --group-date "$LOGICAL_DATE" \
+          args=(
+            --schedule excel365/weekends.csv
+            --men-chrono excel365/men_chrono_elevation.csv
+            --ladies-chrono excel365/ladies_chrono_elevation.csv
+            --aliases excel365/fis_identity_aliases.csv
+            --group-date "$LOGICAL_DATE"
             --output-dir "$BUNDLE_ROOT"
+          )
+          if [[ "$OFFICIAL_QUOTA_SHADOW" == "true" ]]; then
+            args+=(--quota-contract cross_country_world_cup_quotas_2027.json)
+          fi
+          python3 cross_country_weekend_inputs.py "${args[@]}"
 
       - name: Inspect bundle decision
         id: bundle
@@ -317,7 +331,9 @@ jobs:
             --report "$RENDER_REPORT"
 
       - name: Install validated weekend candidate
-        if: steps.bundle.outputs.has_work == 'true'
+        if: >-
+          steps.bundle.outputs.has_work == 'true' &&
+          inputs.official_quota_shadow != true
         run: |
           python3 -m pipelines.cross_country_weekend_publication install \
             --candidate-root "$CANDIDATE_ROOT" \
@@ -327,7 +343,9 @@ jobs:
             --repository-root "$GITHUB_WORKSPACE"
 
       - name: Publish validated weekend predictions
-        if: steps.bundle.outputs.has_work == 'true'
+        if: >-
+          steps.bundle.outputs.has_work == 'true' &&
+          inputs.official_quota_shadow != true
         env:
           SKI_SHA: ${{ steps.ski.outputs.sha }}
         run: |

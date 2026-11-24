@@ -5,6 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SIMULATION = ROOT / "content/post/cross-country/drafts/weekly-picks-simulation.R"
+WORKFLOW = ROOT / ".github/workflows/cross-country-weekend-shadow.yml"
 
 
 class CrossCountryWeekendSimulationTests(unittest.TestCase):
@@ -51,6 +52,16 @@ class CrossCountryWeekendSimulationTests(unittest.TestCase):
         self.assertIn("Using official participation values from", self.source)
         self.assertIn("Invalid official participation values", self.source)
         self.assertNotIn("has_fis_startlist", self.source)
+
+    def test_audited_quota_contract_precedes_legacy_fallback(self) -> None:
+        contract = self.source.index("normalize_contract_quota_vector <- function")
+        legacy = self.source.index('startlist$Quota <- 4')
+        self.assertLess(contract, legacy)
+        self.assertIn("Shared_Event_Quota", self.source)
+        self.assertIn("Personal_Quota", self.source)
+        self.assertIn("Max_Nation_Starters", self.source)
+        self.assertIn("Partial FIS quota contract", self.source)
+        self.assertIn("Legacy runtimes retain their historical fallback", self.source)
 
     def test_normal_weekend_does_not_execute_fantasy_optimization(self) -> None:
         self.assertNotIn("fantasy_team <- optimize_weekly_team_simulation", self.source)
@@ -126,6 +137,84 @@ class CrossCountryWeekendSimulationTests(unittest.TestCase):
         stopifnot(abs(result$Pelo_pct - 0.875) < 1e-12)
         athlete$Shadow_Rating_Source <- 'accepted_official_elo'
         stopifnot(is.null(build_shadow_elo_newdata(athlete, field)))
+        """
+        result = subprocess.run(
+            ["Rscript", "-e", expression],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+
+class CrossCountryOfficialQuotaShadowWorkflowTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.source = WORKFLOW.read_text(encoding="utf-8")
+
+    def test_manual_quota_mode_fetches_and_supplies_audited_contract(self) -> None:
+        self.assertIn("official_quota_shadow:", self.source)
+        self.assertIn("default: false", self.source)
+        self.assertIn("cross_country_world_cup_quotas.py", self.source)
+        self.assertIn("cross_country_world_cup_quotas_2027.json", self.source)
+        self.assertIn(
+            "--quota-contract cross_country_world_cup_quotas_2027.json",
+            self.source,
+        )
+
+    def test_quota_shadow_cannot_install_or_publish(self) -> None:
+        install = self.source.split("name: Install validated weekend candidate", 1)[1]
+        install = install.split("- name: Publish validated weekend predictions", 1)[0]
+        publish = self.source.split("name: Publish validated weekend predictions", 1)[1]
+        publish = publish.split("- name: Retain complete shadow evidence", 1)[0]
+        self.assertIn("inputs.official_quota_shadow != true", install)
+        self.assertIn("inputs.official_quota_shadow != true", publish)
+        self.assertIn("if: always()", self.source)
+
+    @unittest.skipUnless(shutil.which("Rscript"), "Rscript is not installed")
+    def test_official_quota_math_executes_in_r(self) -> None:
+        expression = f"""
+        expressions <- parse(file={str(SIMULATION)!r})
+        matches <- Filter(function(expr) {{
+          is.call(expr) && as.character(expr[[1]]) == '<-' &&
+            as.character(expr[[2]]) == 'normalize_contract_quota_vector'
+        }}, expressions)
+        stopifnot(length(matches) == 1)
+        eval(matches[[1]], envir=.GlobalEnv)
+
+        norway <- normalize_contract_quota_vector(
+          c(rep(0.5, 6), 1, 1), 6, c(rep(0, 6), 1, 1), 10
+        )
+        stopifnot(abs(sum(norway[1:6]) - 6) < 1e-12)
+        stopifnot(abs(sum(norway) - 8) < 1e-12)
+
+        non_transferable <- normalize_contract_quota_vector(
+          c(rep(0.5, 6), 1, 0), 6, c(rep(0, 6), 1, 1), 10
+        )
+        stopifnot(abs(sum(non_transferable[1:6]) - 6) < 1e-12)
+        stopifnot(abs(sum(non_transferable) - 7) < 1e-12)
+
+        finland_host <- normalize_contract_quota_vector(
+          c(rep(0.5, 10), 1), 10, c(rep(0, 10), 1), 10
+        )
+        stopifnot(abs(sum(finland_host[1:10]) - 9) < 1e-12)
+        stopifnot(abs(sum(finland_host) - 10) < 1e-12)
+
+        france_women <- normalize_contract_quota_vector(
+          rep(0.5, 5), 5, rep(0, 5), 10
+        )
+        stopifnot(abs(sum(france_women) - 5) < 1e-12)
+
+        team_weekend <- normalize_contract_quota_vector(
+          rep(0.5, 4), 4, rep(0, 4), 10
+        )
+        stopifnot(abs(sum(team_weekend) - 4) < 1e-12)
+
+        skewed <- normalize_contract_quota_vector(
+          c(0.95, rep(0.05, 5)), 5, rep(0, 6), 10
+        )
+        stopifnot(all(skewed <= 1))
+        stopifnot(abs(sum(skewed) - 5) < 1e-12)
         """
         result = subprocess.run(
             ["Rscript", "-e", expression],

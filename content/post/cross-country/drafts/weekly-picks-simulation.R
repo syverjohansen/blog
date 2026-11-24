@@ -291,9 +291,94 @@ get_additional_nation_skiers <- function(chronos, startlist, nation) {
   return(missing_skiers)
 }
 
-# Normalize probabilities to respect nation quotas
+# Normalize one nation/event vector using the audited FIS contract. Nominative
+# rights stay with the named athlete and never become another shared place.
+normalize_contract_quota_vector <- function(vec, shared_quota, personal_quota,
+                                            max_nation_starters) {
+  vec <- as.numeric(vec)
+  vec[is.na(vec)] <- 0
+  personal_quota <- as.numeric(personal_quota)
+  if(length(vec) != length(personal_quota) ||
+     any(!(personal_quota %in% c(0, 1)))) {
+    stop("Invalid personal quota vector")
+  }
+  shared_quota <- unique(as.numeric(shared_quota))
+  max_nation_starters <- unique(as.numeric(max_nation_starters))
+  if(length(shared_quota) != 1 || !is.finite(shared_quota) ||
+     length(max_nation_starters) != 1 || !is.finite(max_nation_starters) ||
+     shared_quota < 0 || shared_quota > max_nation_starters) {
+    stop("Inconsistent FIS quota contract within nation")
+  }
+
+  personal <- personal_quota == 1
+  ordinary <- !personal
+  result <- vec
+  personal_expected <- sum(vec[personal])
+  ordinary_target <- min(shared_quota, max_nation_starters - personal_expected)
+  ordinary_target <- max(0, ordinary_target)
+  fixed_ones <- ordinary & vec == 1
+  adjustable <- ordinary & !fixed_ones & vec > 0
+  n_fixed <- sum(fixed_ones)
+
+  result[ordinary] <- 0
+  result[fixed_ones] <- 1
+  if(n_fixed < ordinary_target && any(adjustable)) {
+    remaining <- ordinary_target - n_fixed
+    active <- which(adjustable)
+    while(length(active) > 0 && remaining > 0) {
+      adjustable_sum <- sum(vec[active])
+      if(adjustable_sum <= 0) break
+      scaled <- vec[active] * remaining / adjustable_sum
+      capped <- scaled >= 1
+      if(!any(capped)) {
+        result[active] <- scaled
+        break
+      }
+      result[active[capped]] <- 1
+      remaining <- remaining - sum(capped)
+      active <- active[!capped]
+    }
+  }
+  result
+}
+
+quota_contract_enabled <- function(startlist) {
+  required <- c(
+    "Quota_Contract_Version", "Base_Nation_Quota", "Shared_Event_Quota",
+    "Personal_Quota", "Personal_Start_Right", "Is_Host_Nation",
+    "Team_Event_Weekend_Exception", "Max_Nation_Starters"
+  )
+  present <- required %in% names(startlist)
+  if(any(present) && !all(present)) {
+    stop("Partial FIS quota contract in weekend runtime")
+  }
+  all(present)
+}
+
+# Normalize probabilities to respect nation quotas.
 normalize_to_quota <- function(startlist) {
   log_info("Normalizing probabilities to nation quotas")
+
+  if(quota_contract_enabled(startlist)) {
+    if(any(is.na(startlist$Quota_Contract_Version)) ||
+       any(startlist$Quota_Contract_Version == "") ||
+       any((startlist$Personal_Quota == 1) !=
+           (!is.na(startlist$Personal_Start_Right) &
+            startlist$Personal_Start_Right != ""))) {
+      stop("Invalid FIS quota contract in weekend runtime")
+    }
+    return(startlist %>%
+      group_by(Nation) %>%
+      mutate(
+        across(
+          starts_with("Race") & ends_with("_Prob"),
+          ~normalize_contract_quota_vector(
+            ., Shared_Event_Quota, Personal_Quota, Max_Nation_Starters
+          )
+        )
+      ) %>%
+      ungroup())
+  }
 
   startlist %>%
     group_by(Nation) %>%
@@ -343,8 +428,9 @@ process_gender_probabilities <- function(startlist, chronos, races) {
     startlist$Config_Nation <- startlist$Nation %in% config_nations
   }
 
-  # Add Quota if not present
-  if(!"Quota" %in% names(startlist)) {
+  # Legacy runtimes retain their historical fallback. Contract-enabled shadow
+  # runtimes must use the audited FIS values carried through the bundle.
+  if(!quota_contract_enabled(startlist) && !"Quota" %in% names(startlist)) {
     startlist$Quota <- 4
     startlist$Quota[startlist$Nation %in% c("Norway", "Russia")] <- 8
     startlist$Quota[startlist$Nation %in% c("Sweden", "Finland", "Germany", "Switzerland", "Italy", "France")] <- 6
@@ -426,7 +512,11 @@ process_gender_probabilities <- function(startlist, chronos, races) {
     for(nation in nations) {
       nation_skiers <- startlist %>% filter(Nation == nation)
       is_config_nation <- nation_skiers$Config_Nation[1]
-      quota <- nation_skiers$Quota[1]
+      quota <- if(quota_contract_enabled(startlist)) {
+        nation_skiers$Shared_Event_Quota[1]
+      } else {
+        nation_skiers$Quota[1]
+      }
 
       # Calculate probabilities for skiers without preset values
       for(j in 1:nrow(nation_skiers)) {
@@ -464,6 +554,17 @@ process_gender_probabilities <- function(startlist, chronos, races) {
             Quota = quota,
             stringsAsFactors = FALSE
           )
+
+          if(quota_contract_enabled(startlist)) {
+            additional_rows$Quota_Contract_Version <- nation_skiers$Quota_Contract_Version[1]
+            additional_rows$Base_Nation_Quota <- nation_skiers$Base_Nation_Quota[1]
+            additional_rows$Shared_Event_Quota <- nation_skiers$Shared_Event_Quota[1]
+            additional_rows$Personal_Quota <- 0
+            additional_rows$Personal_Start_Right <- ""
+            additional_rows$Is_Host_Nation <- nation_skiers$Is_Host_Nation[1]
+            additional_rows$Team_Event_Weekend_Exception <- nation_skiers$Team_Event_Weekend_Exception[1]
+            additional_rows$Max_Nation_Starters <- nation_skiers$Max_Nation_Starters[1]
+          }
 
           additional_rows$Race1_Prob <- 0
           additional_rows[[race_prob_col]] <- sapply(additional_skiers, function(skier) {
