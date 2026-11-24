@@ -556,6 +556,11 @@ def _runtime_rows(
     rows: list[dict[str, str]] = []
     for athlete_id in sorted(athletes, key=lambda value: (not value.isdigit(), value)):
         row = dict(athletes[athlete_id])
+        has_explicit_announcement = any(
+            candidate_athlete_id == athlete_id
+            and selection["source_mode"] == "announced_roster_evidence"
+            for (_, candidate_athlete_id), selection in selections.items()
+        )
         for index, race_id in enumerate(race_ids, start=1):
             event_mode = event_modes[(sex, race_id)]
             official = event_mode == "official_fis_startlist"
@@ -567,7 +572,11 @@ def _runtime_rows(
                     "1"
                     if selection
                     and selection["source_mode"] == "announced_roster_evidence"
-                    else ("" if selection else "0")
+                    else (
+                        "0"
+                        if has_explicit_announcement
+                        else ("" if selection else "0")
+                    )
                 )
             else:
                 probability = ""

@@ -410,13 +410,16 @@ class CrossCountryWeekendConsumerTests(unittest.TestCase):
             )
             weekend.update(source_mode="announced_weekend_pool")
             weekend_second = {**weekend, "race_id": "102"}
+            fallback_second = startlist_row(
+                "M", "102", "1", "Exact Athlete", official=False
+            )
             excluded_elsewhere = startlist_row(
                 "M", "102", "2", "Excluded Athlete", official=False
             )
             bundle = write_bundle(
                 root,
                 schedule=[schedule_row("M", "101"), schedule_row("M", "102")],
-                men=[exact, weekend, excluded_elsewhere, weekend_second],
+                men=[exact, weekend, fallback_second, excluded_elsewhere, weekend_second],
                 ladies=[],
                 event_modes={
                     ("M", "101"): "announced_roster_overlay",
