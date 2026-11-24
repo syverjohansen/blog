@@ -32,7 +32,11 @@ FANTASY_EXPECTED_HEADERS = (
     "Total Points",
     "Total Safe",
     "Total Upside",
+    "Sprint Points",
+    "Distance Points",
     "Races Count",
+    "Sprint Races Count",
+    "Distance Races Count",
     "Logical Date",
     "Random Seed",
     "Simulation Count",
@@ -207,7 +211,11 @@ def validate_weekend_shadow(
                 normal,
                 safe,
                 upside,
+                sprint,
+                distance,
                 races,
+                sprint_races,
+                distance_races,
                 row_logical_date,
                 row_random_seed,
                 row_simulations,
@@ -224,13 +232,23 @@ def validate_weekend_shadow(
                 raise WeekendShadowError(f"invalid FIS code in {sheet_name}")
             if any(
                 not isinstance(value, (int, float)) or value < 0
-                for value in (normal, safe, upside)
+                for value in (normal, safe, upside, sprint, distance)
             ):
                 raise WeekendShadowError(f"invalid fantasy scores in {sheet_name}")
             if safe > normal or normal > upside:
                 raise WeekendShadowError(f"unordered fantasy scores in {sheet_name}")
             if not isinstance(races, (int, float)) or races < 1:
                 raise WeekendShadowError(f"invalid fantasy race count in {sheet_name}")
+            if any(
+                not isinstance(value, (int, float))
+                or value < 0
+                or value > races
+                or int(value) != value
+                for value in (sprint_races, distance_races)
+            ) or sprint_races + distance_races != races:
+                raise WeekendShadowError(
+                    f"invalid fantasy discipline race counts in {sheet_name}"
+                )
             if (
                 row_logical_date != logical_date.isoformat()
                 or row_random_seed != random_seed

@@ -68,7 +68,7 @@ class CrossCountryWeekendSimulationTests(unittest.TestCase):
         self.assertNotIn("write.xlsx(weekly_points_sheets", self.source)
         self.assertEqual(self.source.count("ID = athlete_id"), 2)
 
-    def test_writes_full_pool_three_objective_fantasy_input(self) -> None:
+    def test_writes_full_pool_specialist_fantasy_input(self) -> None:
         self.assertIn(
             "safe_points <- apply(all_sims, 1, quantile, probs = 0.1", self.source
         )
@@ -78,6 +78,9 @@ class CrossCountryWeekendSimulationTests(unittest.TestCase):
         )
         self.assertIn("Expected_Safe = safe_points * Race_Prob", self.source)
         self.assertIn("Expected_Upside = upside_points * Race_Prob", self.source)
+        self.assertIn('Race_Discipline = if_else(race$distance == "Sprint"', self.source)
+        self.assertIn("`Sprint Points` = round(Sprint_Points, 2)", self.source)
+        self.assertIn("`Distance Points` = round(Distance_Points, 2)", self.source)
         self.assertIn('fantasy_input_sheets[["Men Full Pool"]]', self.source)
         self.assertIn('fantasy_input_sheets[["Ladies Full Pool"]]', self.source)
         self.assertIn('"weekend_fantasy_inputs.xlsx"', self.source)

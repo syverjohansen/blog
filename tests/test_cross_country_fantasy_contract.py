@@ -20,6 +20,10 @@ def prediction(index: int, sex: str) -> dict[str, object]:
         "total_points": 100 - index,
         "total_safe": 90 - index,
         "total_upside": 110 - index,
+        "sprint_points": 40 - index,
+        "distance_points": 60 - index,
+        "sprint_races_count": 1,
+        "distance_races_count": 1,
     }
 
 
@@ -83,7 +87,7 @@ class CrossCountryFantasyContractTests(unittest.TestCase):
                 price_source="https://example.test/athletes",
             )
 
-    def test_all_three_scores_are_required(self) -> None:
+    def test_all_scores_are_required(self) -> None:
         del self.predictions[0]["total_safe"]
         with self.assertRaisesRegex(FantasyContractError, "total_safe"):
             build_fantasy_plan(prediction_rows=self.predictions, price_rows=self.prices)

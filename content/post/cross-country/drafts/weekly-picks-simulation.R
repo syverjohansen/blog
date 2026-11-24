@@ -1166,7 +1166,8 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
       mutate(
         Expected_Points = mean_points * Race_Prob,
         Expected_Safe = safe_points * Race_Prob,
-        Expected_Upside = upside_points * Race_Prob
+        Expected_Upside = upside_points * Race_Prob,
+        Race_Discipline = if_else(race$distance == "Sprint", "sprint", "distance")
       )
 
     # Log top 3
@@ -1190,7 +1191,11 @@ predict_races_simulation <- function(gender, races, startlist, chrono_data, week
       Total_Points = sum(Expected_Points, na.rm = TRUE),
       Total_Safe = sum(Expected_Safe, na.rm = TRUE),
       Total_Upside = sum(Expected_Upside, na.rm = TRUE),
+      Sprint_Points = sum(if_else(Race_Discipline == "sprint", Expected_Points, 0), na.rm = TRUE),
+      Distance_Points = sum(if_else(Race_Discipline == "distance", Expected_Points, 0), na.rm = TRUE),
       Races_Count = n(),
+      Sprint_Races_Count = sum(Race_Discipline == "sprint"),
+      Distance_Races_Count = sum(Race_Discipline == "distance"),
       Avg_Win_Prob = mean(prob_top_1, na.rm = TRUE),
       Avg_Podium_Prob = mean(prob_top_3, na.rm = TRUE),
       .groups = "drop"
@@ -1366,7 +1371,11 @@ if (!is.null(men_results) && nrow(men_results$athlete_totals) > 0) {
       `Total Points` = round(Total_Points, 2),
       `Total Safe` = round(Total_Safe, 2),
       `Total Upside` = round(Total_Upside, 2),
+      `Sprint Points` = round(Sprint_Points, 2),
+      `Distance Points` = round(Distance_Points, 2),
       `Races Count` = Races_Count,
+      `Sprint Races Count` = Sprint_Races_Count,
+      `Distance Races Count` = Distance_Races_Count,
       `Logical Date` = LOGICAL_DATE_TEXT,
       `Random Seed` = RANDOM_SEED,
       `Simulation Count` = N_SIMULATIONS
@@ -1386,7 +1395,11 @@ if (!is.null(ladies_results) && nrow(ladies_results$athlete_totals) > 0) {
       `Total Points` = round(Total_Points, 2),
       `Total Safe` = round(Total_Safe, 2),
       `Total Upside` = round(Total_Upside, 2),
+      `Sprint Points` = round(Sprint_Points, 2),
+      `Distance Points` = round(Distance_Points, 2),
       `Races Count` = Races_Count,
+      `Sprint Races Count` = Sprint_Races_Count,
+      `Distance Races Count` = Distance_Races_Count,
       `Logical Date` = LOGICAL_DATE_TEXT,
       `Random Seed` = RANDOM_SEED,
       `Simulation Count` = N_SIMULATIONS

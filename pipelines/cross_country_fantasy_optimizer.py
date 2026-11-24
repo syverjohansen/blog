@@ -17,6 +17,8 @@ from typing import Any
 from pipelines.cross_country_fantasy_contract import (
     ATHLETES_PER_SEX,
     BUDGET,
+    CORE_OBJECTIVES,
+    OBJECTIVE_RACE_FIELDS,
     OBJECTIVES,
     SCORE_FIELDS,
     FantasyContractError,
@@ -29,8 +31,8 @@ from pipelines.cross_country_fantasy_prices import (
     REPORT_SCHEMA as PRICE_REPORT_SCHEMA,
 )
 
-TEAM_SCHEMA = "nordicnumbers.cross-country-fantasy-teams/v1"
-REPORT_SCHEMA = "nordicnumbers.cross-country-fantasy-optimizer-report/v1"
+TEAM_SCHEMA = "nordicnumbers.cross-country-fantasy-teams/v2"
+REPORT_SCHEMA = "nordicnumbers.cross-country-fantasy-optimizer-report/v2"
 
 
 class FantasyOptimizerError(RuntimeError):
@@ -108,6 +110,7 @@ def _normalized_rows(document: dict[str, Any]) -> list[dict[str, Any]]:
         "sex",
         "price",
         *SCORE_FIELDS.values(),
+        *OBJECTIVE_RACE_FIELDS.values(),
     }
     normalized: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -141,6 +144,29 @@ def _normalized_rows(document: dict[str, Any]) -> list[dict[str, Any]]:
             row[field] = _decimal(
                 raw[field], label=f"priced row {index} {objective} score"
             )
+        for objective, field in OBJECTIVE_RACE_FIELDS.items():
+            value = raw[field]
+            if isinstance(value, bool):
+                raise FantasyOptimizerError(
+                    f"priced row {index} {objective} race count must be a non-negative integer"
+                )
+            try:
+                count = int(value)
+            except (TypeError, ValueError) as exc:
+                raise FantasyOptimizerError(
+                    f"priced row {index} {objective} race count must be a non-negative integer"
+                ) from exc
+            try:
+                exact = Decimal(str(value))
+            except InvalidOperation as exc:
+                raise FantasyOptimizerError(
+                    f"priced row {index} {objective} race count must be a non-negative integer"
+                ) from exc
+            if count < 0 or exact != count:
+                raise FantasyOptimizerError(
+                    f"priced row {index} {objective} race count must be a non-negative integer"
+                )
+            row[field] = count
         seen.add(fis_code)
         normalized.append(row)
     return sorted(normalized, key=lambda row: row["fis_code"])
@@ -270,7 +296,7 @@ def optimize_fantasy_teams(
     output_path: Path,
     report_path: Path,
 ) -> dict[str, Any]:
-    """Produce three validated teams or retain a non-blocking skip/block report."""
+    """Produce all applicable validated teams or a non-blocking skip/block report."""
 
     price_report, _ = _read_json(price_report_path, "price report")
     base: dict[str, Any] = {
@@ -314,7 +340,15 @@ def optimize_fantasy_teams(
             raise FantasyOptimizerError("priced input publication must remain disabled")
         rows = _normalized_rows(priced_document)
         teams: dict[str, Any] = {}
+        objective_statuses: dict[str, dict[str, str]] = {}
         for objective in OBJECTIVES:
+            race_field = OBJECTIVE_RACE_FIELDS.get(objective)
+            if race_field is not None and not any(row[race_field] > 0 for row in rows):
+                objective_statuses[objective] = {
+                    "status": "not_applicable",
+                    "reason": f"weekend contains no {objective} races",
+                }
+                continue
             team_rows, objective_points, total_price = _optimize_objective(
                 rows, objective=objective
             )
@@ -326,6 +360,9 @@ def optimize_fantasy_teams(
                 "validation": validation,
                 "rows": team_rows,
             }
+            objective_statuses[objective] = {"status": "candidate"}
+        if not set(CORE_OBJECTIVES) <= set(teams):
+            raise FantasyOptimizerError("one or more core fantasy teams are missing")
     except (FantasyOptimizerError, FantasyContractError) as exc:
         base.update(status="blocked", reason=str(exc))
         _atomic_write(report_path.expanduser().resolve(), _json_bytes(base))
@@ -339,12 +376,13 @@ def optimize_fantasy_teams(
             "file": priced_input_path.name,
             "sha256": _sha256(priced_bytes),
         },
+        "objective_statuses": objective_statuses,
         "teams": teams,
     }
     output_bytes = _json_bytes(document)
     output_path = output_path.expanduser().resolve()
     _atomic_write(output_path, output_bytes)
-    base.update(status="candidate", reason="all three optimized teams are valid")
+    base.update(status="candidate", reason="all applicable optimized teams are valid")
     base["outputs"][output_path.name] = {
         "schema_version": TEAM_SCHEMA,
         "sha256": _sha256(output_bytes),

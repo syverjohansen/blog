@@ -362,7 +362,7 @@ jobs:
           ]
           files.extend(
               str(data_root / f"fantasy-{objective}.json")
-              for objective in ("normal", "safe", "upside")
+              for objective in ("normal", "safe", "upside", "sprint", "distance")
               if (data_root / f"fantasy-{objective}.json").is_file()
           )
           report = {
