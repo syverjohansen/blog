@@ -255,6 +255,30 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             ).read_text()
             self.assertIn("official FIS startlists", post)
 
+    def test_announced_roster_candidate_discloses_provisional_overlay(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook, runtime, validation = write_evidence(root, fallback=False)
+            runtime_document = json.loads(runtime.read_text(encoding="utf-8"))
+            runtime_document["event_modes"]["M/101"] = "announced_roster_overlay"
+            runtime.write_text(json.dumps(runtime_document), encoding="utf-8")
+
+            report = build_weekend_candidate(
+                workbook_path=workbook,
+                runtime_report_path=runtime,
+                validation_report_path=validation,
+                logical_date=date(2026, 11, 27),
+                output_root=root / "candidate",
+            )
+
+            self.assertEqual(report["source_state"], "provisional")
+            post = (
+                root / "candidate/content/post/weekly-picks/20261127.md"
+            ).read_text()
+            self.assertIn("verified roster announcements", post)
+            self.assertIn("historical/quota fallback", post)
+            self.assertIn('weekend_source_state: "provisional"', post)
+
     def test_builds_validated_optional_fantasy_sections(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
