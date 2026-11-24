@@ -48,6 +48,13 @@ class CrossCountryFantasyXCWorkflowTests(unittest.TestCase):
         ledger_step = self.source.index("name: Build private prediction Elo ledger")
         self.assertIn("continue-on-error: true", self.source[ledger_step:promote])
 
+    def test_private_prediction_ledger_installs_its_html_parser(self) -> None:
+        ledger_step = self.source.index("name: Build private prediction Elo ledger")
+        promote = self.source.index("name: Apply guarded automatic roster policy")
+        ledger_block = self.source[ledger_step:promote]
+        self.assertIn("uv run --with beautifulsoup4", ledger_block)
+        self.assertIn("python3 cross_country_prediction_elo_pipeline.py", ledger_block)
+
     def test_hosted_evidence_remains_shadow_only(self) -> None:
         self.assertIn('"publication": {"status": "disabled"}', self.source)
         self.assertNotIn("git push", self.source)

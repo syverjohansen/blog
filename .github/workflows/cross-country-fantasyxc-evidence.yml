@@ -202,7 +202,8 @@ jobs:
         continue-on-error: true
         working-directory: external/ski/elo/python/ski/polars
         run: |
-          python3 cross_country_prediction_elo_pipeline.py \
+          uv run --with beautifulsoup4 \
+            python3 cross_country_prediction_elo_pipeline.py \
             --season "${{ steps.parameters.outputs.fis_season }}" \
             --as-of "${{ steps.parameters.outputs.as_of }}" \
             --accepted-schedule excel365/races.csv \
