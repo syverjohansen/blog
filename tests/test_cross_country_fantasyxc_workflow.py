@@ -25,6 +25,12 @@ class CrossCountryFantasyXCWorkflowTests(unittest.TestCase):
             "--ladies-identity-history excel365/all_ladies_scrape.csv", self.source
         )
 
+    def test_bounded_runtime_includes_transitive_quota_dependency(self) -> None:
+        self.assertIn(
+            "/elo/python/ski/polars/cross_country_world_cup_quotas.py",
+            self.source,
+        )
+
     def test_identity_histories_only_feed_the_roster_resolver(self) -> None:
         resolver = self.source.index("python3 cross_country_fantasyxc_resolve.py")
         review = self.source.index("python3 cross_country_fantasyxc_review.py")
