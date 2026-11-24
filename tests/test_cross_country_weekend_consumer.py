@@ -114,6 +114,7 @@ def write_bundle(
     men: list[dict[str, str]],
     ladies: list[dict[str, str]],
     quota_contract: bool = False,
+    event_modes: dict[tuple[str, str], str] | None = None,
 ) -> Path:
     bundle = root / "bundle"
     bundle.mkdir()
@@ -146,6 +147,23 @@ def write_bundle(
             }
             for name, content in contents.items()
         },
+        "events": [
+            {
+                "sex": row["Sex"],
+                "race_id": row["Startlist"].rsplit("=", 1)[-1],
+                "source_mode": (event_modes or {}).get(
+                    (row["Sex"], row["Startlist"].rsplit("=", 1)[-1]),
+                    "official_fis_startlist"
+                    if any(
+                        item["race_id"] == row["Startlist"].rsplit("=", 1)[-1]
+                        and item["source_mode"] == "official_fis_startlist"
+                        for item in (*men, *ladies)
+                    )
+                    else "latest_season_fallback",
+                ),
+            }
+            for row in schedule
+        ],
     }
     if quota_contract:
         report["quota_contract"] = {
@@ -378,6 +396,66 @@ class CrossCountryWeekendConsumerTests(unittest.TestCase):
             self.assertEqual(row["Race1_Prob"], "")
             self.assertEqual(row["Race1_Official"], "false")
             self.assertEqual(row["FIS_Code"], "")
+
+    def test_announced_overlay_preserves_exact_and_historical_race_semantics(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            exact = startlist_row("M", "101", "1", "Exact Athlete", official=False)
+            exact.update(
+                selection_status="announced",
+                source_mode="announced_roster_evidence",
+            )
+            weekend = startlist_row(
+                "M", "101", "3", "Weekend Athlete", official=False
+            )
+            weekend.update(source_mode="announced_weekend_pool")
+            weekend_second = {**weekend, "race_id": "102"}
+            fallback_second = startlist_row(
+                "M", "102", "1", "Exact Athlete", official=False
+            )
+            excluded_elsewhere = startlist_row(
+                "M", "102", "2", "Excluded Athlete", official=False
+            )
+            bundle = write_bundle(
+                root,
+                schedule=[schedule_row("M", "101"), schedule_row("M", "102")],
+                men=[exact, weekend, fallback_second, excluded_elsewhere, weekend_second],
+                ladies=[],
+                event_modes={
+                    ("M", "101"): "announced_roster_overlay",
+                    ("M", "102"): "announced_roster_overlay",
+                },
+            )
+
+            materialize_weekend_runtime(
+                bundle_dir=bundle,
+                logical_date=date(2026, 11, 27),
+                output_dir=root / "runtime",
+            )
+            with (root / "runtime/startlist_weekend_men.csv").open(
+                newline="", encoding="utf-8"
+            ) as handle:
+                rows = {row["ID"]: row for row in csv.DictReader(handle)}
+
+            self.assertEqual(
+                ("1", ""),
+                (rows["1"]["Race1_Prob"], rows["1"]["Race2_Prob"]),
+            )
+            self.assertEqual(
+                ("0", ""),
+                (rows["2"]["Race1_Prob"], rows["2"]["Race2_Prob"]),
+            )
+            self.assertEqual(
+                ("", ""),
+                (rows["3"]["Race1_Prob"], rows["3"]["Race2_Prob"]),
+            )
+            runtime_report = json.loads(
+                (root / "runtime/runtime_report.json").read_text()
+            )
+            self.assertEqual(
+                "announced_roster_overlay",
+                runtime_report["event_modes"]["M/101"],
+            )
 
     def test_preserves_known_fis_code_across_fallback_and_official_rows(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

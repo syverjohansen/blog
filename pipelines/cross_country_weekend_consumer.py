@@ -200,11 +200,11 @@ def _validate_startlists(
     bundle_dir: Path,
     logical_date: date,
     event_order: dict[tuple[str, str], int],
+    expected_modes: dict[tuple[str, str], str],
 ) -> tuple[
     dict[str, list[dict[str, str]]], dict[tuple[str, str], str], bool
 ]:
     by_sex: dict[str, list[dict[str, str]]] = {}
-    event_modes: dict[tuple[str, str], set[str]] = defaultdict(set)
     seen: set[tuple[str, str, str]] = set()
     quota_groups: dict[tuple[str, str, str], tuple[str, ...]] = {}
     quota_contract_enabled: bool | None = None
@@ -285,32 +285,81 @@ def _validate_startlists(
                     )
             mode = row["source_mode"]
             status = row["selection_status"]
-            if mode == "official_fis_startlist":
+            expected_mode = expected_modes[key]
+            if expected_mode == "official_fis_startlist":
+                if mode != expected_mode:
+                    raise WeekendConsumerError(
+                        f"event mixes source modes: {sex}/{race_id} contains {mode!r}"
+                    )
                 if status != "confirmed" or not row["fis_competitor_id"].strip():
                     raise WeekendConsumerError(
                         "official startlist row is not confirmed"
                     )
-            elif mode == "latest_season_fallback":
-                if status != "candidate_pool" or row["fis_competitor_id"].strip():
+            elif expected_mode == "latest_season_fallback":
+                if (
+                    mode != expected_mode
+                    or status != "candidate_pool"
+                    or row["fis_competitor_id"].strip()
+                ):
                     raise WeekendConsumerError("fallback startlist row is mislabelled")
+            elif expected_mode == "announced_roster_overlay":
+                allowed = {
+                    "latest_season_fallback": "candidate_pool",
+                    "announced_weekend_pool": "candidate_pool",
+                    "announced_roster_evidence": "announced",
+                }
+                if (
+                    mode not in allowed
+                    or status != allowed[mode]
+                    or row["fis_competitor_id"].strip()
+                ):
+                    raise WeekendConsumerError(
+                        "announced roster overlay row is mislabelled"
+                    )
             else:
                 raise WeekendConsumerError(
-                    f"unsupported startlist source mode: {mode!r}"
+                    f"unsupported event source mode: {expected_mode!r}"
                 )
-            event_modes[key].add(mode)
-    missing_events = sorted(set(event_order) - set(event_modes))
+    observed_events = {
+        (row["sex"], row["race_id"])
+        for rows in by_sex.values()
+        for row in rows
+    }
+    missing_events = sorted(set(event_order) - observed_events)
     if missing_events:
         raise WeekendConsumerError(
             f"startlist rows missing for events: {missing_events}"
         )
-    mixed = sorted(key for key, modes in event_modes.items() if len(modes) != 1)
-    if mixed:
-        raise WeekendConsumerError(f"event mixes startlist source modes: {mixed}")
     return (
         by_sex,
-        {key: next(iter(modes)) for key, modes in event_modes.items()},
+        expected_modes,
         bool(quota_contract_enabled),
     )
+
+
+def _event_modes(
+    report: dict[str, Any], event_order: dict[tuple[str, str], int]
+) -> dict[tuple[str, str], str]:
+    events = report.get("events")
+    if not isinstance(events, list):
+        raise WeekendConsumerError("bundle report is missing event decisions")
+    modes: dict[tuple[str, str], str] = {}
+    allowed = {
+        "official_fis_startlist",
+        "latest_season_fallback",
+        "announced_roster_overlay",
+    }
+    for index, event in enumerate(events, start=1):
+        if not isinstance(event, dict):
+            raise WeekendConsumerError(f"bundle event {index} must be an object")
+        key = (str(event.get("sex", "")), str(event.get("race_id", "")))
+        mode = str(event.get("source_mode", ""))
+        if key not in event_order or key in modes or mode not in allowed:
+            raise WeekendConsumerError(f"invalid bundle event decision: {key}/{mode}")
+        modes[key] = mode
+    if set(modes) != set(event_order):
+        raise WeekendConsumerError("bundle event decisions do not cover the schedule")
+    return modes
 
 
 def _load_shadow_ratings(
@@ -424,6 +473,7 @@ def _runtime_rows(
     ]
     athletes: dict[str, dict[str, str]] = {}
     present: set[tuple[str, str]] = set()
+    selections: dict[tuple[str, str], dict[str, str]] = {}
     for row in source_rows:
         athlete_id = row["canonical_athlete_id"]
         identity = {
@@ -487,6 +537,7 @@ def _runtime_rows(
             identity["FIS_Code"] = previous["FIS_Code"] or identity["FIS_Code"]
         athletes[athlete_id] = identity
         present.add((row["race_id"], athlete_id))
+        selections[(row["race_id"], athlete_id)] = row
 
     fields = ["ID", "FIS_Code", "Skier", "Nation"]
     if quota_contract_enabled:
@@ -506,10 +557,21 @@ def _runtime_rows(
     for athlete_id in sorted(athletes, key=lambda value: (not value.isdigit(), value)):
         row = dict(athletes[athlete_id])
         for index, race_id in enumerate(race_ids, start=1):
-            official = event_modes[(sex, race_id)] == "official_fis_startlist"
-            row[f"Race{index}_Prob"] = (
-                ("1" if (race_id, athlete_id) in present else "0") if official else ""
-            )
+            event_mode = event_modes[(sex, race_id)]
+            official = event_mode == "official_fis_startlist"
+            selection = selections.get((race_id, athlete_id))
+            if official:
+                probability = "1" if selection else "0"
+            elif event_mode == "announced_roster_overlay":
+                probability = (
+                    "1"
+                    if selection
+                    and selection["source_mode"] == "announced_roster_evidence"
+                    else ("" if selection else "0")
+                )
+            else:
+                probability = ""
+            row[f"Race{index}_Prob"] = probability
             row[f"Race{index}_Official"] = "true" if official else "false"
         rows.append(row)
     return fields, rows
@@ -543,8 +605,9 @@ def materialize_weekend_runtime(
         )
     _verify_outputs(bundle_dir, report)
     schedule_rows, event_order = _validate_schedule(bundle_dir, logical_date)
+    expected_modes = _event_modes(report, event_order)
     by_sex, event_modes, quota_contract_enabled = _validate_startlists(
-        bundle_dir, logical_date, event_order
+        bundle_dir, logical_date, event_order, expected_modes
     )
     quota_version = None
     if quota_contract_enabled:
