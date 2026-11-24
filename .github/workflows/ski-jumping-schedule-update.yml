@@ -1,0 +1,200 @@
+name: Ski-jumping automatic schedule pipeline
+
+on:
+  workflow_run:
+    workflows: ["Nordic Numbers weekly recap"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      schedule_season:
+        description: Optional season; defaults to accepted season or next season from October 1
+        required: false
+        type: string
+      ski_ref:
+        description: Ski branch, tag, or commit to start from
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ski-jumping-automatic-schedule-pipeline
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Resolve ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if ! [[ "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out ski-jumping schedule runtime and accepted data
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          token: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: true
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/skijump/polars/
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Resolve run parameters
+        id: parameters
+        env:
+          REQUESTED_SCHEDULE_SEASON: ${{ inputs.schedule_season || '' }}
+        run: |
+          season="$REQUESTED_SCHEDULE_SEASON"
+          if [[ -n "$season" ]] && ! [[ "$season" =~ ^[0-9]{4}$ ]]; then
+            echo "Invalid season: $season" >&2
+            exit 1
+          fi
+          echo "run_date=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+          echo "requested_schedule_season=$season" >> "$GITHUB_OUTPUT"
+          echo "schedule_root=$RUNNER_TEMP/ski-jumping-schedule-update" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve schedule acquisition season
+        id: schedule_season
+        working-directory: external/ski/elo/python/skijump/polars
+        env:
+          RUN_DATE: ${{ steps.parameters.outputs.run_date }}
+          REQUESTED_SEASON: ${{ steps.parameters.outputs.requested_schedule_season }}
+        run: |
+          accepted_season=$(python3 - <<'PY'
+          from pathlib import Path
+
+          from schedule_contract import RACES_COLUMNS, infer_fis_season, read_csv
+
+          races = read_csv(Path("excel365/races.csv"), RACES_COLUMNS)
+          print(infer_fis_season(races))
+          PY
+          )
+          rollover_date="$accepted_season-10-01"
+          season="$REQUESTED_SEASON"
+          if [[ -z "$season" ]]; then
+            season="$accepted_season"
+            if [[ "$RUN_DATE" > "$rollover_date" || "$RUN_DATE" == "$rollover_date" ]]; then
+              season=$((accepted_season + 1))
+            fi
+          fi
+          rollover_allowed=false
+          if [[ "$season" == "$accepted_season" ]]; then
+            :
+          elif [[ "$season" == "$((accepted_season + 1))" && ( "$RUN_DATE" > "$rollover_date" || "$RUN_DATE" == "$rollover_date" ) ]]; then
+            rollover_allowed=true
+          else
+            echo "Unsupported schedule transition: accepted=$accepted_season requested=$season run_date=$RUN_DATE" >&2
+            exit 1
+          fi
+          echo "accepted_season=$accepted_season" >> "$GITHUB_OUTPUT"
+          echo "season=$season" >> "$GITHUB_OUTPUT"
+          echo "rollover_allowed=$rollover_allowed" >> "$GITHUB_OUTPUT"
+
+      - name: Build isolated schedule candidate
+        working-directory: external/ski/elo/python/skijump/polars
+        run: >-
+          uv run --isolated --python 3.12
+          --with requests --with beautifulsoup4 --with pandas --with fuzzywuzzy
+          python scrape_schedule_shadow.py
+          --season "${{ steps.schedule_season.outputs.season }}"
+          --accepted-races excel365/races.csv
+          --output-root "${{ steps.parameters.outputs.schedule_root }}"
+
+      - name: Stage validated schedule
+        id: schedule_candidate
+        env:
+          ACCEPTED_SEASON: ${{ steps.schedule_season.outputs.accepted_season }}
+          ACQUISITION_SEASON: ${{ steps.schedule_season.outputs.season }}
+          ROLLOVER_ALLOWED: ${{ steps.schedule_season.outputs.rollover_allowed }}
+        run: |
+          report="${{ steps.parameters.outputs.schedule_root }}/reports/acquisition.json"
+          readarray -t schedule_status < <(python3 - "$report" <<'PY'
+          import json
+          import sys
+
+          report = json.load(open(sys.argv[1], encoding="utf-8"))
+          comparison = report["comparison"]
+          print(report["promotion"]["status"])
+          print(str(any(comparison[name] for name in ("added", "removed", "changed"))).lower())
+          PY
+          )
+          promotion="${schedule_status[0]}"
+          changed="${schedule_status[1]}"
+          root="external/ski/elo/python/skijump/polars"
+          if [[ "$promotion" == "eligible" ]]; then
+            if [[ "$ACQUISITION_SEASON" != "$ACCEPTED_SEASON" ]]; then
+              echo "Next-season candidate bypassed rollover validation." >&2
+              exit 1
+            fi
+            if [[ "$changed" == "true" ]]; then
+              cp "${{ steps.parameters.outputs.schedule_root }}/candidate/races.csv" \
+                "$root/excel365/races.csv"
+              cp "${{ steps.parameters.outputs.schedule_root }}/candidate/weekends.csv" \
+                "$root/excel365/weekends.csv"
+            fi
+          elif [[ "$promotion" == "approval_required" && "$ROLLOVER_ALLOWED" == "true" ]]; then
+            shadow_report="${{ steps.parameters.outputs.schedule_root }}/reports/schedule-shadow.json"
+            report_sha=$(sha256sum "$shadow_report" | cut -d ' ' -f 1)
+            python3 "$root/promote_schedule.py" \
+              --shadow-report "$shadow_report" \
+              --expected-report-sha256 "$report_sha" \
+              --accepted-dir "$root/excel365" \
+              --approve-season "$ACQUISITION_SEASON" \
+              --receipt "${{ steps.parameters.outputs.schedule_root }}/reports/promotion.json"
+            changed=true
+          else
+            echo "Schedule candidate is $promotion; retaining the accepted schedule." >&2
+            exit 1
+          fi
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Validate and publish accepted ski schedule
+        if: steps.schedule_candidate.outputs.changed == 'true'
+        env:
+          SEASON: ${{ steps.schedule_season.outputs.season }}
+        run: |
+          root="external/ski/elo/python/skijump/polars"
+          python3 -m unittest discover -s "$root" -p 'test_*schedule*.py'
+          git -C external/ski config user.name "github-actions[bot]"
+          git -C external/ski config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C external/ski add \
+            elo/python/skijump/polars/excel365/races.csv \
+            elo/python/skijump/polars/excel365/weekends.csv
+          if ! git -C external/ski diff --cached --quiet; then
+            git -C external/ski commit -m "Update ski-jumping schedule for $SEASON"
+            git -C external/ski pull --rebase origin main
+            git -C external/ski push origin HEAD:main
+          fi
+
+      - name: Upload schedule evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ski-jumping-schedule-${{ steps.schedule_season.outputs.season }}-${{ github.run_id }}
+          path: |
+            ${{ steps.parameters.outputs.schedule_root }}/reports/
+            ${{ steps.parameters.outputs.schedule_root }}/candidate/
+            ${{ steps.parameters.outputs.schedule_root }}/acquisition/
+          if-no-files-found: warn
+          retention-days: 30
