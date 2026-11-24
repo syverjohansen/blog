@@ -35,6 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Check out notification runtime
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - name: Resolve ski source to an exact commit
         id: ski
         env:
@@ -166,6 +171,72 @@ jobs:
             --logical-date "${{ steps.parameters.outputs.logical_date }}" \
             --output "$EVIDENCE_ROOT/roster-review.json"
 
+      - name: Apply guarded automatic roster policy
+        if: steps.parameters.outputs.has_work == 'true'
+        working-directory: external/ski/elo/python/ski/polars
+        run: |
+          python3 cross_country_fantasyxc_review.py auto-promote \
+            --candidates "$EVIDENCE_ROOT/roster-candidates.json" \
+            --men-chrono excel365/men_chrono.csv \
+            --ladies-chrono excel365/ladies_chrono.csv \
+            --men-identity-history excel365/all_men_scrape.csv \
+            --ladies-identity-history excel365/all_ladies_scrape.csv \
+            --logical-date "${{ steps.parameters.outputs.logical_date }}" \
+            --output "$EVIDENCE_ROOT/automated-announced-rosters.json"
+
+      - name: Render country and event roster digest
+        if: steps.parameters.outputs.has_work == 'true'
+        id: digest
+        env:
+          LOGICAL_DATE: ${{ steps.parameters.outputs.logical_date }}
+        run: |
+          python3 .github/scripts/fantasyxc_roster_digest.py render \
+            --roster "$EVIDENCE_ROOT/automated-announced-rosters.json" \
+            --schedule external/ski/elo/python/ski/polars/excel365/weekends.csv \
+            --logical-date "$LOGICAL_DATE" \
+            --text-output "$EVIDENCE_ROOT/roster-email.txt" \
+            --html-output "$EVIDENCE_ROOT/roster-email.html" \
+            --metadata-output "$EVIDENCE_ROOT/roster-email-metadata.json"
+          digest=$(python3 -c \
+            'import json,sys; print(json.load(open(sys.argv[1]))["digest_sha256"])' \
+            "$EVIDENCE_ROOT/roster-email-metadata.json")
+          echo "sha256=$digest" >> "$GITHUB_OUTPUT"
+
+      - name: Restore sent-digest marker
+        if: steps.parameters.outputs.has_work == 'true'
+        id: sent_digest
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/fantasyxc-email-state
+          key: fantasyxc-email-v1-${{ steps.parameters.outputs.logical_date }}-${{ steps.digest.outputs.sha256 }}
+
+      - name: Email changed roster digest
+        if: >-
+          steps.parameters.outputs.has_work == 'true' &&
+          steps.sent_digest.outputs.cache-hit != 'true'
+        env:
+          FANTASYXC_EMAIL_ADDRESS: ${{ vars.FANTASYXC_NOTIFICATION_EMAIL || 'syverjohansen@gmail.com' }}
+          FANTASYXC_SMTP_PASSWORD: ${{ secrets.FANTASYXC_EMAIL_APP_PASSWORD }}
+        run: |
+          python3 .github/scripts/fantasyxc_roster_digest.py send \
+            --metadata "$EVIDENCE_ROOT/roster-email-metadata.json" \
+            --text "$EVIDENCE_ROOT/roster-email.txt" \
+            --html "$EVIDENCE_ROOT/roster-email.html" \
+            --sender "$FANTASYXC_EMAIL_ADDRESS" \
+            --recipient "$FANTASYXC_EMAIL_ADDRESS"
+          mkdir -p "$RUNNER_TEMP/fantasyxc-email-state"
+          cp "$EVIDENCE_ROOT/roster-email-metadata.json" \
+            "$RUNNER_TEMP/fantasyxc-email-state/sent.json"
+
+      - name: Save sent-digest marker
+        if: >-
+          steps.parameters.outputs.has_work == 'true' &&
+          steps.sent_digest.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/fantasyxc-email-state
+          key: fantasyxc-email-v1-${{ steps.parameters.outputs.logical_date }}-${{ steps.digest.outputs.sha256 }}
+
       - name: Record immutable run metadata
         if: steps.parameters.outputs.has_work == 'true'
         env:
@@ -192,6 +263,9 @@ jobs:
               encoding="utf-8",
           )
           candidates = json.loads((root / "roster-candidates.json").read_text())
+          automated = json.loads(
+              (root / "automated-announced-rosters.json").read_text()
+          )
           summary = os.environ["GITHUB_STEP_SUMMARY"]
           with Path(summary).open("a", encoding="utf-8") as handle:
               handle.write("## FantasyXC roster evidence\n\n")
@@ -199,6 +273,9 @@ jobs:
               handle.write(f"- Evidence cutoff: `{document['as_of']}`\n")
               handle.write(f"- Candidates: {len(candidates['candidates'])}\n")
               handle.write(f"- Review exceptions: {len(candidates['review_exceptions'])}\n")
+              handle.write(f"- Automatically applied: {len(automated['entries'])}\n")
+              handle.write(f"- Using fallback: {len(automated['unresolved'])}\n")
+              handle.write("- Email: sent only when the roster digest changes\n")
               handle.write("- Publication: **disabled**\n")
           PY
 
