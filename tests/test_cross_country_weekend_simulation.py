@@ -162,6 +162,7 @@ class CrossCountryOfficialQuotaShadowWorkflowTests(unittest.TestCase):
             "--quota-contract cross_country_world_cup_quotas_2027.json",
             self.source,
         )
+        self.assertNotIn("OFFICIAL_QUOTA_SHADOW", self.source)
 
     def test_quota_shadow_cannot_install_or_publish(self) -> None:
         install = self.source.split("name: Install validated weekend candidate", 1)[1]
