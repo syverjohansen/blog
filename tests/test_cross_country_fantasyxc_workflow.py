@@ -52,7 +52,11 @@ class CrossCountryFantasyXCWorkflowTests(unittest.TestCase):
         ledger_step = self.source.index("name: Build private prediction Elo ledger")
         promote = self.source.index("name: Apply guarded automatic roster policy")
         ledger_block = self.source[ledger_step:promote]
-        self.assertIn("uv run --with beautifulsoup4", ledger_block)
+        self.assertIn(
+            "python3 -m pip install --disable-pip-version-check beautifulsoup4",
+            ledger_block,
+        )
+        self.assertNotIn("uv run", ledger_block)
         self.assertIn("python3 cross_country_prediction_elo_pipeline.py", ledger_block)
 
     def test_hosted_evidence_remains_shadow_only(self) -> None:
