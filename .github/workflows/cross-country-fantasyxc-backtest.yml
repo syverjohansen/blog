@@ -1,0 +1,371 @@
+name: Cross-country FantasyXC roster backtest
+
+on:
+  workflow_run:
+    workflows: ["Cross-country weekend predictions"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Optional successful weekend-prediction run ID
+        required: false
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: cross-country-fantasyxc-roster-backtest
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Resolve official-startlist source run
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID_INPUT: ${{ inputs.source_run_id || '' }}
+          TRIGGER_RUN_ID: ${{ github.event.workflow_run.id || '' }}
+        run: |
+          source_run_id="${SOURCE_RUN_ID_INPUT:-$TRIGGER_RUN_ID}"
+          if [[ -z "$source_run_id" ]]; then
+            source_run_id=$(gh run list \
+              --repo "$GITHUB_REPOSITORY" \
+              --workflow cross-country-weekend-shadow.yml \
+              --status success \
+              --limit 1 \
+              --json databaseId \
+              --jq '.[0].databaseId')
+          fi
+          if ! [[ "$source_run_id" =~ ^[0-9]+$ ]]; then
+            echo "A numeric successful weekend-prediction run ID is required" >&2
+            exit 1
+          fi
+          conclusion=$(gh api \
+            "repos/$GITHUB_REPOSITORY/actions/runs/$source_run_id" \
+            --jq .conclusion)
+          if [[ "$conclusion" != "success" ]]; then
+            echo "Weekend-prediction source run must have succeeded" >&2
+            exit 1
+          fi
+          root="$RUNNER_TEMP/cross-country-fantasyxc-backtest"
+          mkdir -p "$root/official"
+          echo "source_run_id=$source_run_id" >> "$GITHUB_OUTPUT"
+          echo "BACKTEST_ROOT=$root" >> "$GITHUB_ENV"
+
+      - name: Download canonical weekend bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ steps.source.outputs.source_run_id }}
+        run: |
+          gh run download "$SOURCE_RUN_ID" \
+            --repo "$GITHUB_REPOSITORY" \
+            --pattern 'cross-country-weekend-shadow-*' \
+            --dir "$BACKTEST_ROOT/official"
+
+      - name: Require complete official FIS truth
+        id: truth
+        env:
+          SOURCE_RUN_ID: ${{ steps.source.outputs.source_run_id }}
+        run: |
+          python3 - "$GITHUB_OUTPUT" <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          root = Path(os.environ["BACKTEST_ROOT"])
+          reports = list((root / "official").glob("**/bundle/report.json"))
+          metadata = list((root / "official").glob("**/run_metadata.json"))
+          if len(reports) != 1 or len(metadata) != 1:
+              raise SystemExit("weekend artifact must contain one bundle and metadata file")
+          report = json.loads(reports[0].read_text(encoding="utf-8"))
+          run = json.loads(metadata[0].read_text(encoding="utf-8"))
+          logical_date = str(run.get("logical_date", ""))
+          events = report.get("events", [])
+          complete = (
+              report.get("status") == "candidate"
+              and bool(events)
+              and all(
+                  isinstance(event, dict)
+                  and event.get("source_mode") == "official_fis_startlist"
+                  for event in events
+              )
+          )
+          bundle = reports[0].parent
+          required = (bundle / "men_startlist.csv", bundle / "ladies_startlist.csv")
+          complete = complete and all(path.is_file() for path in required)
+          status = {
+              "schema_version": "nordicnumbers.cross-country-fantasyxc-truth-status/v1",
+              "logical_date": logical_date,
+              "source_run_id": os.environ["SOURCE_RUN_ID"],
+              "official_event_count": sum(
+                  isinstance(event, dict)
+                  and event.get("source_mode") == "official_fis_startlist"
+                  for event in events
+              ),
+              "event_count": len(events),
+              "has_complete_official_truth": complete,
+              "publication": {"status": "disabled"},
+          }
+          (root / "truth-status.json").write_text(
+              json.dumps(status, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          with Path(sys.argv[1]).open("a", encoding="utf-8") as output:
+              output.write(f"has_truth={str(complete).lower()}\n")
+              output.write(f"logical_date={logical_date}\n")
+              output.write(f"bundle={bundle}\n")
+          PY
+
+      - name: Explain incomplete official truth
+        if: steps.truth.outputs.has_truth != 'true'
+        run: >-
+          echo "The canonical weekend bundle still contains fallback or announced-roster
+          inputs; the research backtest will wait for complete official FIS startlists."
+
+      - name: Locate latest eligible pre-weekend evidence
+        if: steps.truth.outputs.has_truth == 'true'
+        id: evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOGICAL_DATE: ${{ steps.truth.outputs.logical_date }}
+        run: |
+          artifact_id=""
+          artifact_name=""
+          # Do not score evidence collected on race day, when an official
+          # startlist may already have been visible to the source account.
+          for offset in $(seq 1 14); do
+            as_of=$(date -u -d "$LOGICAL_DATE - $offset days" +%F)
+            candidate_name="cross-country-fantasyxc-$LOGICAL_DATE-$as_of"
+            candidate_id=$(gh api --method GET \
+              "repos/$GITHUB_REPOSITORY/actions/artifacts" \
+              -f name="$candidate_name" \
+              -f per_page=100 \
+              --jq '[.artifacts[] | select(.expired == false)] | sort_by(.created_at) | last | .id // empty')
+            if [[ -n "$candidate_id" ]]; then
+              artifact_id="$candidate_id"
+              artifact_name="$candidate_name"
+              break
+            fi
+          done
+          if ! [[ "$artifact_id" =~ ^[0-9]+$ ]]; then
+            echo "has_evidence=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          mkdir -p "$BACKTEST_ROOT/evidence"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" \
+            > "$BACKTEST_ROOT/evidence.zip"
+          unzip -q "$BACKTEST_ROOT/evidence.zip" -d "$BACKTEST_ROOT/evidence"
+          ski_sha=$(python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path(os.environ["BACKTEST_ROOT"]) / "evidence"
+          metadata = list(root.glob("**/run-metadata.json"))
+          candidates = list(root.glob("**/roster-candidates.json"))
+          if len(metadata) != 1 or len(candidates) != 1:
+              raise SystemExit("evidence artifact is missing unique metadata or candidates")
+          document = json.loads(metadata[0].read_text(encoding="utf-8"))
+          sha = str(document.get("ski_commit", ""))
+          if len(sha) != 40 or any(char not in "0123456789abcdef" for char in sha):
+              raise SystemExit("evidence artifact has an invalid ski commit")
+          print(sha)
+          PY
+          )
+          echo "artifact_id=$artifact_id" >> "$GITHUB_OUTPUT"
+          echo "artifact_name=$artifact_name" >> "$GITHUB_OUTPUT"
+          echo "has_evidence=true" >> "$GITHUB_OUTPUT"
+          echo "ski_sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Explain missing pre-weekend evidence
+        if: >-
+          steps.truth.outputs.has_truth == 'true' &&
+          steps.evidence.outputs.has_evidence != 'true'
+        run: >-
+          echo "No retained pre-weekend FantasyXC evidence exists for this weekend;
+          there is nothing valid to backtest."
+
+      - name: Check out pinned research runtime
+        if: >-
+          steps.truth.outputs.has_truth == 'true' &&
+          steps.evidence.outputs.has_evidence == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.evidence.outputs.ski_sha }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/ski/polars/cross_country_announced_rosters.py
+            /elo/python/ski/polars/cross_country_fantasyxc_backtest.py
+            /elo/python/ski/polars/cross_country_fantasyxc_evaluate.py
+            /elo/python/ski/polars/cross_country_fantasyxc_feed.py
+            /elo/python/ski/polars/cross_country_fantasyxc_resolve.py
+            /elo/python/ski/polars/cross_country_results_identity.py
+            /elo/python/ski/polars/cross_country_weekend_inputs.py
+            /elo/python/ski/polars/schedule_contract.py
+            /elo/python/ski/polars/cross_country_fantasyxc_automation_policy.json
+
+      - name: Score roster candidates against official startlists
+        if: >-
+          steps.truth.outputs.has_truth == 'true' &&
+          steps.evidence.outputs.has_evidence == 'true'
+        working-directory: external/ski/elo/python/ski/polars
+        env:
+          BUNDLE: ${{ steps.truth.outputs.bundle }}
+          LOGICAL_DATE: ${{ steps.truth.outputs.logical_date }}
+        run: |
+          candidates=$(python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          paths = list((Path(os.environ["BACKTEST_ROOT"]) / "evidence").glob(
+              "**/roster-candidates.json"
+          ))
+          if len(paths) != 1:
+              raise SystemExit("expected one candidate artifact")
+          print(paths[0])
+          PY
+          )
+          python3 cross_country_fantasyxc_backtest.py \
+            --candidates "$candidates" \
+            --official-startlist "$BUNDLE/men_startlist.csv" \
+            --official-startlist "$BUNDLE/ladies_startlist.csv" \
+            --logical-date "$LOGICAL_DATE" \
+            --output-dir "$BACKTEST_ROOT/backtest"
+
+      - name: Download prior research backtests
+        if: >-
+          steps.truth.outputs.has_truth == 'true' &&
+          steps.evidence.outputs.has_evidence == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$BACKTEST_ROOT/history"
+          gh api --method GET \
+            "repos/$GITHUB_REPOSITORY/actions/artifacts" \
+            -f name=cross-country-fantasyxc-backtest-state \
+            -f per_page=100 \
+            --jq '.artifacts[] | select(.expired == false) | .id' \
+            > "$BACKTEST_ROOT/history/artifact-ids.txt"
+          while IFS= read -r artifact_id; do
+            [[ -n "$artifact_id" ]] || continue
+            mkdir -p "$BACKTEST_ROOT/history/$artifact_id"
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" \
+              > "$BACKTEST_ROOT/history/$artifact_id.zip"
+            unzip -q "$BACKTEST_ROOT/history/$artifact_id.zip" \
+              -d "$BACKTEST_ROOT/history/$artifact_id"
+          done < "$BACKTEST_ROOT/history/artifact-ids.txt"
+
+      - name: Evaluate cumulative evidence gate
+        if: >-
+          steps.truth.outputs.has_truth == 'true' &&
+          steps.evidence.outputs.has_evidence == 'true'
+        working-directory: external/ski/elo/python/ski/polars
+        env:
+          LOGICAL_DATE: ${{ steps.truth.outputs.logical_date }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import shutil
+          from pathlib import Path
+
+          root = Path(os.environ["BACKTEST_ROOT"])
+          selected = {}
+          for path in (root / "history").glob("**/fantasyxc-backtest-report.json"):
+              report = json.loads(path.read_text(encoding="utf-8"))
+              logical_date = str(report.get("logical_date", ""))
+              if logical_date:
+                  artifact_id = int(path.relative_to(root / "history").parts[0])
+                  previous = selected.get(logical_date)
+                  if previous is None or artifact_id > previous[0]:
+                      selected[logical_date] = (artifact_id, path)
+          selected[os.environ["LOGICAL_DATE"]] = (
+              2**63 - 1,
+              root / "backtest" / "fantasyxc-backtest-report.json",
+          )
+          inputs = root / "evaluation-inputs"
+          inputs.mkdir(parents=True, exist_ok=True)
+          for logical_date, (_, path) in sorted(selected.items()):
+              shutil.copyfile(path, inputs / f"{logical_date}.json")
+          PY
+          reports=()
+          for report in "$BACKTEST_ROOT"/evaluation-inputs/*.json; do
+            reports+=(--report "$report")
+          done
+          python3 cross_country_fantasyxc_evaluate.py \
+            "${reports[@]}" \
+            --policy cross_country_fantasyxc_automation_policy.json \
+            --output "$BACKTEST_ROOT/evaluation.json"
+
+      - name: Record research summary
+        if: >-
+          steps.truth.outputs.has_truth == 'true' &&
+          steps.evidence.outputs.has_evidence == 'true'
+        env:
+          EVIDENCE_ARTIFACT_ID: ${{ steps.evidence.outputs.artifact_id }}
+          EVIDENCE_ARTIFACT_NAME: ${{ steps.evidence.outputs.artifact_name }}
+          LOGICAL_DATE: ${{ steps.truth.outputs.logical_date }}
+          SKI_SHA: ${{ steps.evidence.outputs.ski_sha }}
+          SOURCE_RUN_ID: ${{ steps.source.outputs.source_run_id }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path(os.environ["BACKTEST_ROOT"])
+          evaluation = json.loads((root / "evaluation.json").read_text(encoding="utf-8"))
+          metadata = {
+              "schema_version": "nordicnumbers.cross-country-fantasyxc-hosted-backtest/v1",
+              "logical_date": os.environ["LOGICAL_DATE"],
+              "blog_commit": os.environ["GITHUB_SHA"],
+              "ski_commit": os.environ["SKI_SHA"],
+              "official_source_run_id": os.environ["SOURCE_RUN_ID"],
+              "evidence_artifact_id": os.environ["EVIDENCE_ARTIFACT_ID"],
+              "evidence_artifact_name": os.environ["EVIDENCE_ARTIFACT_NAME"],
+              "publication": {"status": "disabled"},
+          }
+          (root / "run-metadata.json").write_text(
+              json.dumps(metadata, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as output:
+              output.write("## FantasyXC roster backtest\n\n")
+              output.write(f"- Weekend: `{metadata['logical_date']}`\n")
+              output.write(
+                  f"- Completed weekends: {evaluation['metrics']['completed_weekends']}\n"
+              )
+              output.write(
+                  f"- Evidence gate passed: **{evaluation['evidence_gate_passed']}**\n"
+              )
+              output.write("- Automatic promotion: **disabled**\n")
+          PY
+
+      - name: Retain cumulative research state
+        if: >-
+          always() &&
+          steps.truth.outputs.has_truth == 'true' &&
+          steps.evidence.outputs.has_evidence == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-country-fantasyxc-backtest-state
+          path: |
+            ${{ env.BACKTEST_ROOT }}/backtest/
+            ${{ env.BACKTEST_ROOT }}/evaluation.json
+            ${{ env.BACKTEST_ROOT }}/run-metadata.json
+            ${{ env.BACKTEST_ROOT }}/truth-status.json
+          if-no-files-found: error
+          retention-days: 180
