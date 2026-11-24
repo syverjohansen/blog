@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DAILY = ROOT / ".github/workflows/cross-country-site-data-update.yml"
 TEAM = ROOT / ".github/workflows/cross-country-team-predictions.yml"
 INDIVIDUAL = ROOT / ".github/workflows/cross-country-individual-predictions.yml"
+FANTASYXC = ROOT / ".github/workflows/cross-country-fantasyxc-evidence.yml"
 WEEKEND = ROOT / ".github/workflows/cross-country-weekend-shadow.yml"
 TOUR = ROOT / ".github/workflows/cross-country-tour-shadow.yml"
 FINAL_CLIMB = ROOT / ".github/workflows/cross-country-final-climb-shadow.yml"
@@ -16,6 +17,7 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         cls.daily = DAILY.read_text(encoding="utf-8")
         cls.team = TEAM.read_text(encoding="utf-8")
         cls.individual = INDIVIDUAL.read_text(encoding="utf-8")
+        cls.fantasyxc = FANTASYXC.read_text(encoding="utf-8")
         cls.weekend = WEEKEND.read_text(encoding="utf-8")
         cls.tour = TOUR.read_text(encoding="utf-8")
         cls.final_climb = FINAL_CLIMB.read_text(encoding="utf-8")
@@ -142,8 +144,13 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
 
     def test_prediction_workflows_form_one_ordered_chain(self) -> None:
         self.assertIn(
-            'workflows: ["Cross-country automatic daily pipeline"]', self.individual
+            'workflows: ["Cross-country automatic daily pipeline"]', self.fantasyxc
         )
+        self.assertIn(
+            "gh workflow run cross-country-individual-predictions.yml",
+            self.fantasyxc,
+        )
+        self.assertNotIn("workflow_run:", self.individual)
         self.assertIn('workflows: ["Cross-country individual predictions"]', self.team)
         self.assertIn('workflows: ["Cross-country team predictions"]', self.weekend)
         self.assertIn('workflows: ["Cross-country team predictions"]', self.tour)

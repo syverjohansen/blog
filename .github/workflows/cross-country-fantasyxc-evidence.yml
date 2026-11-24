@@ -19,9 +19,15 @@ on:
         required: true
         default: main
         type: string
+      continue_prediction_chain:
+        description: Dispatch individual predictions after evidence is saved
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
+  actions: write
 
 concurrency:
   group: cross-country-fantasyxc-roster-evidence
@@ -211,9 +217,11 @@ jobs:
           key: fantasyxc-email-v1-${{ steps.parameters.outputs.logical_date }}-${{ steps.digest.outputs.sha256 }}
 
       - name: Email changed roster digest
+        id: roster_email
         if: >-
           steps.parameters.outputs.has_work == 'true' &&
           steps.sent_digest.outputs.cache-hit != 'true'
+        continue-on-error: true
         env:
           FANTASYXC_EMAIL_ADDRESS: ${{ vars.FANTASYXC_NOTIFICATION_EMAIL || 'syverjohansen@gmail.com' }}
           FANTASYXC_SMTP_PASSWORD: ${{ secrets.FANTASYXC_EMAIL_APP_PASSWORD }}
@@ -231,11 +239,26 @@ jobs:
       - name: Save sent-digest marker
         if: >-
           steps.parameters.outputs.has_work == 'true' &&
-          steps.sent_digest.outputs.cache-hit != 'true'
+          steps.sent_digest.outputs.cache-hit != 'true' &&
+          steps.roster_email.outcome == 'success'
         uses: actions/cache/save@v4
         with:
           path: ${{ runner.temp }}/fantasyxc-email-state
           key: fantasyxc-email-v1-${{ steps.parameters.outputs.logical_date }}-${{ steps.digest.outputs.sha256 }}
+
+      - name: Stage automatic roster handoff
+        if: steps.parameters.outputs.has_work == 'true'
+        run: |
+          mkdir -p .fantasyxc-handoff
+          cp "$EVIDENCE_ROOT/automated-announced-rosters.json" \
+            .fantasyxc-handoff/automated-announced-rosters.json
+
+      - name: Save automatic roster handoff
+        if: steps.parameters.outputs.has_work == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .fantasyxc-handoff/automated-announced-rosters.json
+          key: fantasyxc-roster-v1-${{ steps.parameters.outputs.logical_date }}-${{ steps.parameters.outputs.as_of }}-${{ steps.digest.outputs.sha256 }}
 
       - name: Record immutable run metadata
         if: steps.parameters.outputs.has_work == 'true'
@@ -287,3 +310,15 @@ jobs:
           path: ${{ env.EVIDENCE_ROOT }}/
           if-no-files-found: error
           retention-days: 90
+
+      - name: Continue automatic prediction chain
+        if: >-
+          success() &&
+          (github.event_name == 'workflow_run' ||
+          inputs.continue_prediction_chain == true)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run cross-country-individual-predictions.yml \
+            --ref main \
+            -f ski_ref="$SKI_SHA"

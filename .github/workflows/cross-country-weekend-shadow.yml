@@ -170,6 +170,14 @@ jobs:
           )
           PY
 
+      - name: Restore latest automatic FantasyXC roster
+        uses: actions/cache/restore@v4
+        with:
+          path: .fantasyxc-handoff/automated-announced-rosters.json
+          key: fantasyxc-roster-v1-${{ env.LOGICAL_DATE }}-${{ github.run_id }}
+          restore-keys: |
+            fantasyxc-roster-v1-${{ env.LOGICAL_DATE }}-
+
       - name: Build isolated weekend input bundle
         working-directory: external/ski/elo/python/ski/polars
         run: |
@@ -182,6 +190,10 @@ jobs:
             --output-dir "$BUNDLE_ROOT"
             --quota-contract cross_country_world_cup_quotas_2027.json
           )
+          roster="$GITHUB_WORKSPACE/.fantasyxc-handoff/automated-announced-rosters.json"
+          if [[ -s "$roster" ]]; then
+            args+=(--announced-rosters "$roster")
+          fi
           python3 cross_country_weekend_inputs.py "${args[@]}"
 
       - name: Inspect bundle decision
