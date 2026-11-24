@@ -168,8 +168,10 @@ class CrossCountryOfficialQuotaShadowWorkflowTests(unittest.TestCase):
         restore = self.source.index("name: Restore latest automatic FantasyXC roster")
         build = self.source.index("name: Build isolated weekend input bundle")
         self.assertLess(restore, build)
-        self.assertIn("fantasyxc-roster-v1-${{ env.LOGICAL_DATE }}-", self.source)
+        self.assertIn("fantasyxc-roster-v2-${{ env.LOGICAL_DATE }}-", self.source)
         self.assertIn('args+=(--announced-rosters "$roster")', self.source)
+        self.assertIn("fis-prediction-ledger.csv", self.source)
+        self.assertIn('--prediction-elo-root "$RATING_ROOT"', self.source)
 
     def test_quota_shadow_cannot_install_or_publish(self) -> None:
         install = self.source.split("name: Install validated weekend candidate", 1)[1]

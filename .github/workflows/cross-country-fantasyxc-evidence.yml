@@ -39,7 +39,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 90
     steps:
       - name: Check out notification runtime
         uses: actions/checkout@v4
@@ -73,15 +73,30 @@ jobs:
             /elo/python/ski/polars/cross_country_fantasyxc_feed.py
             /elo/python/ski/polars/cross_country_fantasyxc_resolve.py
             /elo/python/ski/polars/cross_country_fantasyxc_review.py
+            /elo/python/ski/polars/cross_country_fis_prediction_acquire.py
+            /elo/python/ski/polars/cross_country_fis_prediction_identity.py
+            /elo/python/ski/polars/cross_country_fis_prediction_replay.py
+            /elo/python/ski/polars/cross_country_prediction_elo_pipeline.py
+            /elo/python/ski/polars/cross_country_prediction_elo_policy.json
+            /elo/python/ski/polars/cross_country_prediction_sources.py
+            /elo/python/ski/polars/cross_country_results_backfill.py
+            /elo/python/ski/polars/cross_country_results_elo_replay.py
+            /elo/python/ski/polars/cross_country_results_gap.py
             /elo/python/ski/polars/cross_country_results_identity.py
+            /elo/python/ski/polars/cross_country_schedule_scraper.py
             /elo/python/ski/polars/cross_country_weekend_inputs.py
             /elo/python/ski/polars/cross_country_world_cup_quotas.py
             /elo/python/ski/polars/schedule_contract.py
+            /elo/python/ski/polars/schedule_sources.py
+            /elo/python/ski/polars/excel365/races.csv
             /elo/python/ski/polars/excel365/weekends.csv
             /elo/python/ski/polars/excel365/men_chrono.csv
             /elo/python/ski/polars/excel365/ladies_chrono.csv
             /elo/python/ski/polars/excel365/all_men_scrape.csv
             /elo/python/ski/polars/excel365/all_ladies_scrape.csv
+            /elo/python/ski/polars/excel365/men_chrono_elevation.csv
+            /elo/python/ski/polars/excel365/ladies_chrono_elevation.csv
+            /elo/python/ski/polars/excel365/fis_identity_aliases.csv
 
       - name: Resolve bounded evidence window
         id: parameters
@@ -132,9 +147,12 @@ jobs:
               output.write("has_work=true\n")
               output.write(f"logical_date={logical_date.isoformat()}\n")
               output.write(f"as_of={as_of.isoformat()}\n")
+              fis_season = logical_date.year + 1 if logical_date.month >= 7 else logical_date.year
+              output.write(f"fis_season={fis_season}\n")
           PY
           {
             echo "EVIDENCE_ROOT=$root"
+            echo "LEDGER_ROOT=$root/prediction-elo-ledger"
             echo "SKI_SHA=$SKI_SHA"
           } >> "$GITHUB_ENV"
 
@@ -178,18 +196,42 @@ jobs:
             --logical-date "${{ steps.parameters.outputs.logical_date }}" \
             --output "$EVIDENCE_ROOT/roster-review.json"
 
+      - name: Build private prediction Elo ledger
+        id: prediction_ledger
+        if: steps.parameters.outputs.has_work == 'true'
+        continue-on-error: true
+        working-directory: external/ski/elo/python/ski/polars
+        run: |
+          python3 cross_country_prediction_elo_pipeline.py \
+            --season "${{ steps.parameters.outputs.fis_season }}" \
+            --as-of "${{ steps.parameters.outputs.as_of }}" \
+            --accepted-schedule excel365/races.csv \
+            --men-chrono excel365/men_chrono_elevation.csv \
+            --ladies-chrono excel365/ladies_chrono_elevation.csv \
+            --aliases excel365/fis_identity_aliases.csv \
+            --policy cross_country_prediction_elo_policy.json \
+            --output-dir "$LEDGER_ROOT" \
+            --allow-network
+
       - name: Apply guarded automatic roster policy
         if: steps.parameters.outputs.has_work == 'true'
         working-directory: external/ski/elo/python/ski/polars
         run: |
-          python3 cross_country_fantasyxc_review.py auto-promote \
-            --candidates "$EVIDENCE_ROOT/roster-candidates.json" \
-            --men-chrono excel365/men_chrono.csv \
-            --ladies-chrono excel365/ladies_chrono.csv \
-            --men-identity-history excel365/all_men_scrape.csv \
-            --ladies-identity-history excel365/all_ladies_scrape.csv \
-            --logical-date "${{ steps.parameters.outputs.logical_date }}" \
+          args=(
+            --candidates "$EVIDENCE_ROOT/roster-candidates.json"
+            --men-chrono excel365/men_chrono.csv
+            --ladies-chrono excel365/ladies_chrono.csv
+            --men-identity-history excel365/all_men_scrape.csv
+            --ladies-identity-history excel365/all_ladies_scrape.csv
+            --logical-date "${{ steps.parameters.outputs.logical_date }}"
             --output "$EVIDENCE_ROOT/automated-announced-rosters.json"
+          )
+          ledger="$LEDGER_ROOT/fis-prediction-ledger.csv"
+          if [[ -s "$ledger" ]]; then
+            args+=(--prediction-ledger "$ledger")
+          fi
+          python3 cross_country_fantasyxc_review.py auto-promote \
+            "${args[@]}"
 
       - name: Render country and event roster digest
         if: steps.parameters.outputs.has_work == 'true'
@@ -253,13 +295,17 @@ jobs:
           mkdir -p .fantasyxc-handoff
           cp "$EVIDENCE_ROOT/automated-announced-rosters.json" \
             .fantasyxc-handoff/automated-announced-rosters.json
+          if [[ -s "$LEDGER_ROOT/fis-prediction-ledger.csv" ]]; then
+            cp "$LEDGER_ROOT/fis-prediction-ledger.csv" \
+              .fantasyxc-handoff/fis-prediction-ledger.csv
+          fi
 
       - name: Save automatic roster handoff
         if: steps.parameters.outputs.has_work == 'true'
         uses: actions/cache/save@v4
         with:
-          path: .fantasyxc-handoff/automated-announced-rosters.json
-          key: fantasyxc-roster-v1-${{ steps.parameters.outputs.logical_date }}-${{ steps.parameters.outputs.as_of }}-${{ steps.digest.outputs.sha256 }}
+          path: .fantasyxc-handoff/
+          key: fantasyxc-roster-v2-${{ steps.parameters.outputs.logical_date }}-${{ steps.parameters.outputs.as_of }}-${{ steps.digest.outputs.sha256 }}
 
       - name: Record immutable run metadata
         if: steps.parameters.outputs.has_work == 'true'
@@ -299,9 +345,15 @@ jobs:
               handle.write(f"- Review exceptions: {len(candidates['review_exceptions'])}\n")
               handle.write(f"- Automatically applied: {len(automated['entries'])}\n")
               handle.write(f"- Using fallback: {len(automated['unresolved'])}\n")
+              handle.write(
+                  "- Private prediction Elo ledger: "
+                  f"**{os.environ.get('LEDGER_STATUS', 'unknown')}**\n"
+              )
               handle.write("- Email: sent only when the roster digest changes\n")
               handle.write("- Publication: **disabled**\n")
           PY
+        env:
+          LEDGER_STATUS: ${{ steps.prediction_ledger.outcome }}
 
       - name: Retain roster evidence and review checklist
         if: always() && steps.parameters.outputs.has_work == 'true'
