@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -36,6 +38,7 @@ CATEGORIES = (
     ("mixed_team", "Mixed", "Team"),
     ("mixed_team_sprint", "Mixed", "Team Sprint"),
 )
+NORMALIZATION_SCHEMA = "nordicnumbers.nordic-combined-startlist-normalization/v1"
 
 
 def write_csv(path: Path, fields: tuple[str, ...], rows: list[dict[str, object]]) -> None:
@@ -111,6 +114,47 @@ def build_runtime(root: Path, *, all_categories: bool = True) -> tuple[Path, Pat
     return blog, ski
 
 
+def build_normalized_startlists(
+    root: Path, ski: Path, *, all_categories: bool = True
+) -> tuple[Path, Path]:
+    normalization_root = root / "normalized"
+    candidate_root = normalization_root / "candidates"
+    candidate_root.mkdir(parents=True)
+    selected = CATEGORIES if all_categories else CATEGORIES[:1]
+    outputs: dict[str, dict[str, object]] = {}
+    for category, _, _ in selected:
+        relative = next(
+            str(value)
+            for value in CATEGORY_CONTRACTS[category]["inputs"]
+            if "startlist" in Path(str(value)).name
+        )
+        source = ski / relative
+        candidate = candidate_root / source.name
+        shutil.copy2(source, candidate)
+        with candidate.open(newline="", encoding="utf-8") as handle:
+            rows = sum(1 for _ in csv.DictReader(handle))
+        outputs[category] = {
+            "file": f"candidates/{candidate.name}",
+            "rows": rows,
+            "sha256": hashlib.sha256(candidate.read_bytes()).hexdigest(),
+        }
+    report = normalization_root / "report.json"
+    report.write_text(
+        json.dumps(
+            {
+                "schema_version": NORMALIZATION_SCHEMA,
+                "logical_date": DATE,
+                "status": "ready",
+                "prediction_eligible": True,
+                "accepted_startlists_modified": False,
+                "outputs": outputs,
+            }
+        ),
+        encoding="utf-8",
+    )
+    return candidate_root, report
+
+
 def write_workbook(path: Path, *, category: str, identity_drift: bool = False) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     workbook = Workbook()
@@ -174,6 +218,98 @@ def runner(*, identity_drift: str | None = None):
 
 
 class NordicCombinedPredictionShadowTests(unittest.TestCase):
+    def test_normalized_official_candidates_replace_stale_repository_startlists(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            blog, ski = build_runtime(root)
+            candidate_root, normalization_report = build_normalized_startlists(root, ski)
+            for category, _, _ in CATEGORIES:
+                relative = next(
+                    str(value)
+                    for value in CATEGORY_CONTRACTS[category]["inputs"]
+                    if "startlist" in Path(str(value)).name
+                )
+                accepted = ski / relative
+                accepted.write_text(
+                    accepted.read_text(encoding="utf-8").replace(DATE, "2026-02-09"),
+                    encoding="utf-8",
+                )
+            report_path = run_shadow(
+                blog_root=blog,
+                ski_root=ski,
+                output_root=root / "output",
+                logical_date=DATE,
+                run_id="normalized-startlists",
+                n_simulations=25,
+                random_seed=42,
+                blog_commit="a" * 40,
+                ski_commit="b" * 40,
+                startlist_root=candidate_root,
+                startlist_report=normalization_report,
+                command_runner=runner(),
+            )
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+
+        self.assertEqual("passed", report["status"])
+        self.assertEqual("normalized_official_fis", report["startlist_source"])
+        generated = [
+            item for item in report["inputs"]
+            if item.get("source") == "normalized_official_fis"
+        ]
+        self.assertEqual(8, len(generated))
+        self.assertTrue(all(item["rows"] == 2 for item in generated))
+
+    def test_normalized_candidate_checksum_drift_blocks_before_simulation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            blog, ski = build_runtime(root, all_categories=False)
+            candidate_root, normalization_report = build_normalized_startlists(
+                root, ski, all_categories=False
+            )
+            candidate = candidate_root / "startlist_races_men.csv"
+            candidate.write_text(candidate.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(PredictionShadowError, "checksum mismatch"):
+                run_shadow(
+                    blog_root=blog,
+                    ski_root=ski,
+                    output_root=root / "output",
+                    logical_date=DATE,
+                    run_id="checksum-drift",
+                    n_simulations=25,
+                    random_seed=42,
+                    blog_commit="a" * 40,
+                    ski_commit="b" * 40,
+                    startlist_root=candidate_root,
+                    startlist_report=normalization_report,
+                    command_runner=lambda *args, **kwargs: self.fail("simulation unexpectedly ran"),
+                )
+
+    def test_normalized_categories_must_exactly_match_plan(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            blog, ski = build_runtime(root, all_categories=False)
+            candidate_root, normalization_report = build_normalized_startlists(
+                root, ski, all_categories=False
+            )
+            document = json.loads(normalization_report.read_text(encoding="utf-8"))
+            document["outputs"]["ladies"] = document["outputs"]["men"]
+            normalization_report.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(PredictionShadowError, "categories do not match"):
+                run_shadow(
+                    blog_root=blog,
+                    ski_root=ski,
+                    output_root=root / "output",
+                    logical_date=DATE,
+                    run_id="category-drift",
+                    n_simulations=25,
+                    random_seed=42,
+                    blog_commit="a" * 40,
+                    ski_commit="b" * 40,
+                    startlist_root=candidate_root,
+                    startlist_report=normalization_report,
+                    command_runner=lambda *args, **kwargs: self.fail("simulation unexpectedly ran"),
+                )
+
     def test_all_eight_categories_are_isolated_validated_and_converted(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -273,6 +409,12 @@ class NordicCombinedPredictionShadowTests(unittest.TestCase):
         self.assertIn("contents: read", source)
         self.assertIn("ref: ${{ steps.ski.outputs.sha }}", source)
         self.assertIn("-m pipelines.nordic_combined_prediction_shadow", source)
+        self.assertIn("nordic_combined_startlist_acquire.py", source)
+        self.assertIn("nordic_combined_startlist_normalize.py", source)
+        self.assertIn('--startlist-root "$STARTLIST_CANDIDATE_ROOT"', source)
+        self.assertIn('--startlist-report "$STARTLIST_NORMALIZATION_REPORT"', source)
+        self.assertNotIn("/excel365/startlist_races_men.csv", source)
+        self.assertNotIn("/relay/excel365/startlist_team_races_men.csv", source)
         self.assertIn("continue-on-error: true", source)
         self.assertIn("if: always()", source)
         self.assertIn("retention-days: 30", source)

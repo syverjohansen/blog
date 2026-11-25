@@ -75,18 +75,14 @@ jobs:
             /elo/python/nordic-combined/polars/excel365/races.csv
             /elo/python/nordic-combined/polars/excel365/men_chrono_elevation.csv
             /elo/python/nordic-combined/polars/excel365/ladies_chrono_elevation.csv
-            /elo/python/nordic-combined/polars/excel365/startlist_races_men.csv
-            /elo/python/nordic-combined/polars/excel365/startlist_races_ladies.csv
             /elo/python/nordic-combined/polars/relay/excel365/men_team_chrono.csv
             /elo/python/nordic-combined/polars/relay/excel365/ladies_team_chrono.csv
             /elo/python/nordic-combined/polars/relay/excel365/mixed_team_chrono.csv
             /elo/python/nordic-combined/polars/relay/excel365/team_sprint_chrono.csv
-            /elo/python/nordic-combined/polars/relay/excel365/startlist_team_races_men.csv
-            /elo/python/nordic-combined/polars/relay/excel365/startlist_team_races_ladies.csv
-            /elo/python/nordic-combined/polars/relay/excel365/startlist_team_sprint_races_men.csv
-            /elo/python/nordic-combined/polars/relay/excel365/startlist_team_sprint_races_ladies.csv
-            /elo/python/nordic-combined/polars/relay/excel365/startlist_mixed_team_races_teams.csv
-            /elo/python/nordic-combined/polars/relay/excel365/startlist_mixed_team_sprint_races_teams.csv
+            /elo/python/nordic-combined/polars/nordic_combined_results_gap.py
+            /elo/python/nordic-combined/polars/nordic_combined_results_identity.py
+            /elo/python/nordic-combined/polars/nordic_combined_startlist_acquire.py
+            /elo/python/nordic-combined/polars/nordic_combined_startlist_normalize.py
 
       - name: Prepare immutable shadow parameters
         env:
@@ -116,6 +112,11 @@ jobs:
             echo "RUN_ID=$run_id"
             echo "SHADOW_ROOT=$shadow_root"
             echo "REPORT_PATH=$shadow_root/runs/$run_id/reports/shadow-report.json"
+            echo "STARTLIST_ACQUISITION_ROOT=$shadow_root/startlists/acquired"
+            echo "STARTLIST_NORMALIZATION_ROOT=$shadow_root/startlists/normalized"
+            echo "STARTLIST_CANDIDATE_ROOT=$shadow_root/startlists/normalized/candidates"
+            echo "STARTLIST_NORMALIZATION_REPORT=$shadow_root/startlists/normalized/report.json"
+            echo "STARTLIST_ALIAS_FILE=$shadow_root/startlists/fis_identity_aliases.csv"
           } >> "$GITHUB_ENV"
 
       - name: Set up Python validation runtime
@@ -128,12 +129,30 @@ jobs:
       - name: Install workbook validation dependencies
         run: python3 -m pip install -r pipelines/requirements-integration.txt
 
+      - name: Plan exact-date prediction work
+        id: plan
+        run: |
+          plan="$SHADOW_ROOT/plan-preflight.json"
+          mkdir -p "$SHADOW_ROOT"
+          python3 -m pipelines.nordic_combined_prediction_contract \
+            --schedule external/ski/elo/python/nordic-combined/polars/excel365/races.csv \
+            --logical-date "$LOGICAL_DATE" \
+            --output "$plan"
+          status=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$plan")
+          if [[ "$status" == "ready_for_shadow_implementation" ]]; then
+            echo "has_work=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_work=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Set up R
+        if: steps.plan.outputs.has_work == 'true'
         uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
 
       - name: Install R simulation dependencies
+        if: steps.plan.outputs.has_work == 'true'
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages: |
@@ -145,10 +164,48 @@ jobs:
             any::logger
             any::lubridate
 
-      - name: Run publication-disabled prediction shadow
-        id: run_shadow
+      - name: Acquire exact-date official FIS startlists
+        id: acquire_startlists
+        if: steps.plan.outputs.has_work == 'true'
         continue-on-error: true
         run: |
+          python3 external/ski/elo/python/nordic-combined/polars/nordic_combined_startlist_acquire.py \
+            --schedule external/ski/elo/python/nordic-combined/polars/excel365/races.csv \
+            --logical-date "$LOGICAL_DATE" \
+            --output-dir "$STARTLIST_ACQUISITION_ROOT" \
+            --allow-network \
+            --fail-if-waiting
+
+      - name: Normalize official startlists to canonical identities
+        id: normalize_startlists
+        if: steps.plan.outputs.has_work == 'true' && steps.acquire_startlists.outcome == 'success'
+        continue-on-error: true
+        run: |
+          mkdir -p "$(dirname "$STARTLIST_ALIAS_FILE")"
+          printf '%s\n' 'fis_competitor_id,fis_code,fis_name,canonical_sex,canonical_id,canonical_name' \
+            > "$STARTLIST_ALIAS_FILE"
+          python3 external/ski/elo/python/nordic-combined/polars/nordic_combined_startlist_normalize.py \
+            --acquired-startlists "$STARTLIST_ACQUISITION_ROOT/startlists.csv" \
+            --acquisition-report "$STARTLIST_ACQUISITION_ROOT/report.json" \
+            --men-history external/ski/elo/python/nordic-combined/polars/excel365/men_chrono_elevation.csv \
+            --ladies-history external/ski/elo/python/nordic-combined/polars/excel365/ladies_chrono_elevation.csv \
+            --aliases "$STARTLIST_ALIAS_FILE" \
+            --logical-date "$LOGICAL_DATE" \
+            --output-dir "$STARTLIST_NORMALIZATION_ROOT" \
+            --fail-on-unresolved
+
+      - name: Run publication-disabled prediction shadow
+        id: run_shadow
+        if: always()
+        continue-on-error: true
+        run: |
+          startlist_args=()
+          if [[ "${{ steps.plan.outputs.has_work }}" == "true" ]]; then
+            startlist_args=(
+              --startlist-root "$STARTLIST_CANDIDATE_ROOT"
+              --startlist-report "$STARTLIST_NORMALIZATION_REPORT"
+            )
+          fi
           python3 -m pipelines.nordic_combined_prediction_shadow \
             --blog-root "$GITHUB_WORKSPACE" \
             --ski-root "$GITHUB_WORKSPACE/external/ski" \
@@ -158,7 +215,8 @@ jobs:
             --n-simulations "$N_SIMULATIONS" \
             --random-seed "$RANDOM_SEED" \
             --blog-commit "$BLOG_SHA" \
-            --ski-commit "$SKI_SHA"
+            --ski-commit "$SKI_SHA" \
+            "${startlist_args[@]}"
 
       - name: Upload complete shadow evidence
         if: always()
