@@ -155,12 +155,15 @@ jobs:
           elif [[ "$promotion" == "approval_required" && "$ROLLOVER_ALLOWED" == "true" ]]; then
             shadow_report="${{ steps.parameters.outputs.schedule_root }}/reports/schedule-shadow.json"
             report_sha=$(sha256sum "$shadow_report" | cut -d ' ' -f 1)
-            python3 "$root/promote_schedule.py" \
-              --shadow-report "$shadow_report" \
-              --expected-report-sha256 "$report_sha" \
-              --accepted-dir "$root/excel365" \
-              --approve-season "$ACQUISITION_SEASON" \
-              --receipt "${{ steps.parameters.outputs.schedule_root }}/reports/promotion.json"
+            (
+              cd "$root"
+              python3 promote_schedule.py \
+                --shadow-report "$shadow_report" \
+                --expected-report-sha256 "$report_sha" \
+                --accepted-dir excel365 \
+                --approve-season "$ACQUISITION_SEASON" \
+                --receipt "${{ steps.parameters.outputs.schedule_root }}/reports/promotion.json"
+            )
             changed=true
           else
             echo "Schedule candidate is $promotion; retaining the accepted schedule." >&2
