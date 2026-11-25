@@ -77,14 +77,14 @@ jobs:
             /elo/python/skijump/polars/excel365/races.csv
             /elo/python/skijump/polars/excel365/men_chrono_elevation.csv
             /elo/python/skijump/polars/excel365/ladies_chrono_elevation.csv
-            /elo/python/skijump/polars/excel365/startlist_races_men.csv
-            /elo/python/skijump/polars/excel365/startlist_races_ladies.csv
+            /elo/python/skijump/polars/excel365/fis_identity_aliases.csv
             /elo/python/skijump/polars/relay/excel365/men_team_chrono.csv
             /elo/python/skijump/polars/relay/excel365/ladies_team_chrono.csv
             /elo/python/skijump/polars/relay/excel365/mixed_team_chrono.csv
-            /elo/python/skijump/polars/relay/excel365/startlist_team_races_men.csv
-            /elo/python/skijump/polars/relay/excel365/startlist_team_races_ladies.csv
-            /elo/python/skijump/polars/relay/excel365/startlist_mixed_team_races_teams.csv
+            /elo/python/skijump/polars/skijump_results_gap.py
+            /elo/python/skijump/polars/skijump_results_identity.py
+            /elo/python/skijump/polars/skijump_startlist_acquire.py
+            /elo/python/skijump/polars/skijump_startlist_normalize.py
 
       - name: Prepare immutable shadow parameters
         id: parameters
@@ -111,6 +111,8 @@ jobs:
           fi
           run_id="github-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           shadow_root="$RUNNER_TEMP/ski-jumping-prediction-shadow"
+          acquisition_root="$shadow_root/startlists/acquired"
+          normalization_root="$shadow_root/startlists/normalized"
           mkdir -p "$shadow_root"
           {
             echo "LOGICAL_DATE=$logical_date"
@@ -120,6 +122,10 @@ jobs:
             echo "SKI_SHA=$SKI_SHA"
             echo "RUN_ID=$run_id"
             echo "SHADOW_ROOT=$shadow_root"
+            echo "STARTLIST_ACQUISITION_ROOT=$acquisition_root"
+            echo "STARTLIST_NORMALIZATION_ROOT=$normalization_root"
+            echo "STARTLIST_CANDIDATE_ROOT=$normalization_root/candidates"
+            echo "STARTLIST_NORMALIZATION_REPORT=$normalization_root/report.json"
             echo "REPORT_PATH=$shadow_root/runs/$run_id/reports/shadow-report.json"
           } >> "$GITHUB_ENV"
           echo "artifact_name=ski-jumping-prediction-shadow-${logical_date}-${GITHUB_RUN_ID}" \
@@ -151,6 +157,29 @@ jobs:
 
       - name: Install workbook validation dependencies
         run: python3 -m pip install -r pipelines/requirements-integration.txt
+
+      - name: Acquire exact-date official FIS startlists
+        if: steps.plan.outputs.has_work == 'true'
+        run: |
+          python3 external/ski/elo/python/skijump/polars/skijump_startlist_acquire.py \
+            --schedule external/ski/elo/python/skijump/polars/excel365/races.csv \
+            --logical-date "$LOGICAL_DATE" \
+            --output-dir "$STARTLIST_ACQUISITION_ROOT" \
+            --allow-network \
+            --fail-if-waiting
+
+      - name: Normalize official startlists for the model
+        if: steps.plan.outputs.has_work == 'true'
+        run: |
+          python3 external/ski/elo/python/skijump/polars/skijump_startlist_normalize.py \
+            --acquired-startlists "$STARTLIST_ACQUISITION_ROOT/startlists.csv" \
+            --acquisition-report "$STARTLIST_ACQUISITION_ROOT/report.json" \
+            --men-history external/ski/elo/python/skijump/polars/excel365/men_chrono_elevation.csv \
+            --ladies-history external/ski/elo/python/skijump/polars/excel365/ladies_chrono_elevation.csv \
+            --aliases external/ski/elo/python/skijump/polars/excel365/fis_identity_aliases.csv \
+            --logical-date "$LOGICAL_DATE" \
+            --output-dir "$STARTLIST_NORMALIZATION_ROOT" \
+            --fail-on-unresolved
 
       - name: Set up R
         if: steps.plan.outputs.has_work == 'true'
@@ -184,7 +213,9 @@ jobs:
             --n-simulations "$N_SIMULATIONS" \
             --random-seed "$RANDOM_SEED" \
             --blog-commit "$BLOG_SHA" \
-            --ski-commit "$SKI_SHA"
+            --ski-commit "$SKI_SHA" \
+            --startlist-root "$STARTLIST_CANDIDATE_ROOT" \
+            --startlist-report "$STARTLIST_NORMALIZATION_REPORT"
 
       - name: Upload complete shadow evidence
         if: always()
