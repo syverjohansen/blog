@@ -381,14 +381,18 @@ class SkiJumpingPredictionShadowTests(unittest.TestCase):
                     command_runner=fake_runner,
                 )
 
-    def test_workflow_is_manual_read_only_pinned_and_retains_evidence(self) -> None:
+    def test_shadow_job_is_read_only_pinned_and_retains_evidence(self) -> None:
         source = WORKFLOW.read_text(encoding="utf-8")
         trigger = source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
         self.assertIn("workflow_dispatch:", trigger)
         self.assertNotIn("schedule:", trigger)
         self.assertNotIn("workflow_run:", trigger)
-        self.assertIn("contents: read", source)
-        self.assertNotIn("contents: write", source)
+        global_permissions = source.split("permissions:\n", 1)[1].split(
+            "\n\nconcurrency:", 1
+        )[0]
+        self.assertIn("contents: read", global_permissions)
+        shadow_job = source.split("  shadow:\n", 1)[1].split("\n  publish:\n", 1)[0]
+        self.assertNotIn("contents: write", shadow_job)
         self.assertIn("repos/syverjohansen/ski/commits/$SKI_REF", source)
         self.assertIn("ref: ${{ steps.ski.outputs.sha }}", source)
         self.assertIn("-m pipelines.skijump_prediction_shadow", source)
@@ -405,8 +409,8 @@ class SkiJumpingPredictionShadowTests(unittest.TestCase):
         self.assertIn("if: always()", source)
         self.assertIn("retention-days: 30", source)
         self.assertIn('"status": "disabled"', source)
-        self.assertNotIn("git push", source)
-        self.assertNotIn("hugo", source.lower())
+        self.assertNotIn("git push", shadow_job)
+        self.assertNotIn("hugo", shadow_job.lower())
 
 
 if __name__ == "__main__":
