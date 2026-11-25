@@ -1,6 +1,6 @@
 {
   "schema_version": "nordicnumbers.nordic-combined-prediction-inventory/v1",
-  "status": "runtime-parameterized",
+  "status": "publication-disabled-shadow-ready",
   "purpose": "Pin the accepted legacy inputs, model, outputs, and known gaps before hosted Nordic Combined prediction execution is enabled.",
   "repositories": {
     "blog": {
@@ -66,6 +66,7 @@
     "Official startlist acquisition and identity normalization are not yet normalized into a hosted, fixture-backed contract.",
     "The current R model emits probability workbooks only; publication must not reference legacy optional points JSON unless it actually exists.",
     "The R model stores one result per team category, so multiple same-category team events on one logical date are unsupported and must block.",
-    "Network startlist acquisition, deterministic simulation, semantic validation, Hugo rendering, and bounded publication remain future slices."
+    "The manual publication-disabled shadow now pins inputs and revisions, runs deterministic simulation, validates workbook identities and probabilities, converts JSON, and retains evidence without changing site content.",
+    "Network startlist acquisition and identity normalization, Hugo rendering, and bounded publication remain future slices."
   ]
 }
