@@ -20,8 +20,40 @@ library(lubridate)
 # CONFIGURATION
 # ============================================================================
 
+# Runtime contract. Defaults preserve the existing local behavior; hosted and
+# test runs supply explicit roots, dates, run IDs, simulation counts, and seeds
+# so they never depend on a user's home directory or the runner wall clock.
+NORDIC_INPUT_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_INPUT_ROOT",
+  "~/ski/elo/python/nordic-combined/polars/excel365"
+))
+NORDIC_TEAM_INPUT_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_TEAM_INPUT_ROOT",
+  file.path(dirname(NORDIC_INPUT_ROOT), "relay", "excel365")
+))
+NORDIC_OUTPUT_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_OUTPUT_ROOT",
+  "~/blog/daehl-e/content/post/nordic-combined/drafts/race-picks"
+))
+NORDIC_BLOG_ROOT <- path.expand(Sys.getenv("NORDIC_BLOG_ROOT", "~/blog/daehl-e"))
+NORDIC_RUN_ID <- Sys.getenv(
+  "NORDIC_RUN_ID",
+  format(Sys.time(), "%Y%m%dT%H%M%SZ", tz = "UTC")
+)
+NORDIC_LOGICAL_DATE_TEXT <- Sys.getenv("NORDIC_LOGICAL_DATE", "")
+NORDIC_LOAD_ENV <- tolower(Sys.getenv("NORDIC_LOAD_ENV", "true")) == "true"
+NORDIC_ENHANCED_LOGGING <- tolower(Sys.getenv("NORDIC_ENHANCED_LOGGING", "auto"))
+NORDIC_RANDOM_SEED <- suppressWarnings(as.integer(Sys.getenv(
+  "NORDIC_RANDOM_SEED",
+  "20260210"
+)))
+if (is.na(NORDIC_RANDOM_SEED)) {
+  stop("NORDIC_RANDOM_SEED must be an integer")
+}
+set.seed(NORDIC_RANDOM_SEED)
+
 # Load environment variables
-load_env <- function(env_path = "~/ski/elo/.env") {
+load_env <- function(env_path = Sys.getenv("NORDIC_ENV_FILE", "~/ski/elo/.env")) {
   env_file <- path.expand(env_path)
   if (file.exists(env_file)) {
     lines <- readLines(env_file, warn = FALSE)
@@ -40,13 +72,15 @@ load_env <- function(env_path = "~/ski/elo/.env") {
   return(FALSE)
 }
 
-load_env()
+if (NORDIC_LOAD_ENV) {
+  load_env()
+}
 TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 
 # ===== LOAD SPORT-SPECIFIC PARAMETERS =====
 # Source optimized parameters from sport_params.R
 # These values are calibrated via param-optimizer.R using historical backtesting
-sport_params_path <- "~/blog/daehl-e/content/post/shared/sport_params.R"
+sport_params_path <- file.path(NORDIC_BLOG_ROOT, "content/post/shared/sport_params.R")
 if (file.exists(path.expand(sport_params_path))) {
   source(sport_params_path)
   DEFAULT_PARAMS <- get_sport_params("nordic-combined")
@@ -65,7 +99,10 @@ if (file.exists(path.expand(sport_params_path))) {
 }
 
 # Simulation parameters (from optimized sport params)
-N_SIMULATIONS <- 10000                # Number of Monte Carlo iterations
+N_SIMULATIONS <- suppressWarnings(as.integer(Sys.getenv("NORDIC_N_SIMULATIONS", "10000")))
+if (is.na(N_SIMULATIONS) || N_SIMULATIONS < 1) {
+  stop("NORDIC_N_SIMULATIONS must be a positive integer")
+}
 DECAY_LAMBDA <- DEFAULT_PARAMS$decay_lambda
 SD_SCALE_FACTOR <- DEFAULT_PARAMS$sd_scale_factor
 SD_MIN <- DEFAULT_PARAMS$sd_min
@@ -99,12 +136,16 @@ TEAM_DISCIPLINES <- c("Team", "Team Sprint", "Mixed Team", "Mixed Team Sprint")
 # ============================================================================
 
 ENHANCED_LOGGING <- FALSE
-logging_utils_path <- "~/blog/daehl-e/content/post/shared/logging-utils.R"
-if (file.exists(path.expand(logging_utils_path))) {
+logging_utils_path <- file.path(NORDIC_BLOG_ROOT, "content/post/shared/logging-utils.R")
+log_dir <- path.expand(Sys.getenv(
+  "NORDIC_LOG_ROOT",
+  file.path(NORDIC_INPUT_ROOT, "race-picks-simulation", NORDIC_RUN_ID)
+))
+if (NORDIC_ENHANCED_LOGGING != "false" && file.exists(path.expand(logging_utils_path))) {
   tryCatch({
     source(logging_utils_path)
     ENHANCED_LOGGING <- TRUE
-    init_logging("nordic-combined", "race-picks")
+    init_logging("nordic-combined", "race-picks", log_dir = log_dir)
     log_config(list(
       TEST_MODE = TEST_MODE,
       N_HISTORY_REQUIRED = N_HISTORY_REQUIRED,
@@ -116,7 +157,13 @@ if (file.exists(path.expand(logging_utils_path))) {
       TEAM_SD_SCALE_FACTOR = TEAM_SD_SCALE_FACTOR,
       TEAM_SD_MIN = TEAM_SD_MIN,
       TEAM_SD_MAX = TEAM_SD_MAX,
-      GAM_FILL_WEIGHT_FACTOR = GAM_FILL_WEIGHT_FACTOR
+      GAM_FILL_WEIGHT_FACTOR = GAM_FILL_WEIGHT_FACTOR,
+      LOGICAL_DATE = NORDIC_LOGICAL_DATE_TEXT,
+      RUN_ID = NORDIC_RUN_ID,
+      RANDOM_SEED = NORDIC_RANDOM_SEED,
+      INPUT_ROOT = NORDIC_INPUT_ROOT,
+      TEAM_INPUT_ROOT = NORDIC_TEAM_INPUT_ROOT,
+      OUTPUT_ROOT = NORDIC_OUTPUT_ROOT
     ))
   }, error = function(e) {
     ENHANCED_LOGGING <- FALSE
@@ -124,7 +171,6 @@ if (file.exists(path.expand(logging_utils_path))) {
 }
 
 if (!ENHANCED_LOGGING) {
-  log_dir <- "~/ski/elo/python/nordic-combined/polars/excel365/race-picks-simulation"
   if (!dir.exists(log_dir)) {
     dir.create(log_dir, recursive = TRUE)
   }
@@ -144,8 +190,8 @@ log_info(paste("Enhanced logging:", ENHANCED_LOGGING))
 log_info("Loading data files...")
 if (ENHANCED_LOGGING) phase_start("Load Race Schedule")
 
-base_path <- "~/ski/elo/python/nordic-combined/polars/excel365"
-team_base_path <- "~/ski/elo/python/nordic-combined/polars/relay/excel365"
+base_path <- NORDIC_INPUT_ROOT
+team_base_path <- NORDIC_TEAM_INPUT_ROOT
 
 # Load races with error handling
 races_file <- if(TEST_MODE) {
@@ -167,8 +213,16 @@ races <- tryCatch({
   quit(save = "no", status = 1)
 })
 
-# Get today's date
-current_date <- as.Date(format(Sys.time(), tz = "UTC"))
+# Resolve the logical date independently of the wall clock.
+current_date <- if (nchar(NORDIC_LOGICAL_DATE_TEXT) > 0) {
+  parsed <- as.Date(NORDIC_LOGICAL_DATE_TEXT, format = "%Y-%m-%d")
+  if (is.na(parsed)) {
+    stop("NORDIC_LOGICAL_DATE must use YYYY-MM-DD")
+  }
+  parsed
+} else {
+  as.Date(format(Sys.time(), tz = "UTC"))
+}
 today_mmddyyyy <- format(current_date, "%m/%d/%Y")
 log_info(paste("Current date:", current_date, "(", today_mmddyyyy, ")"))
 
@@ -1679,8 +1733,8 @@ if (ENHANCED_LOGGING) {
 
 log_info("=== OUTPUT GENERATION ===")
 
-utc_date <- format(Sys.time(), "%Y%m%d", tz = "UTC")
-output_dir <- paste0("~/blog/daehl-e/content/post/nordic-combined/drafts/race-picks/", utc_date)
+utc_date <- format(current_date, "%Y%m%d")
+output_dir <- file.path(NORDIC_OUTPUT_ROOT, utc_date)
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }

@@ -1,0 +1,71 @@
+{
+  "schema_version": "nordicnumbers.nordic-combined-prediction-inventory/v1",
+  "status": "runtime-parameterized",
+  "purpose": "Pin the accepted legacy inputs, model, outputs, and known gaps before hosted Nordic Combined prediction execution is enabled.",
+  "repositories": {
+    "blog": {
+      "model": "content/post/nordic-combined/drafts/race-picks-simulation.R",
+      "model_parameters": "content/post/shared/sport_params.R",
+      "logging": "content/post/shared/logging-utils.R",
+      "converter": "static/python/excel_to_hugo_multiple_sheets.py",
+      "daily_data_root": "data/nordic-combined/drafts/race-picks/{date_key}",
+      "daily_post": "content/post/race-picks/{date_key}.md",
+      "weekend_data_root": "data/nordic-combined/drafts/weekly-picks/{date_key}",
+      "weekend_post": "content/post/weekly-picks/{date_key}.md"
+    },
+    "ski": {
+      "schedule": "elo/python/nordic-combined/polars/excel365/races.csv",
+      "weekends": "elo/python/nordic-combined/polars/excel365/weekends.csv",
+      "individual_histories": [
+        "elo/python/nordic-combined/polars/excel365/men_chrono_elevation.csv",
+        "elo/python/nordic-combined/polars/excel365/ladies_chrono_elevation.csv"
+      ],
+      "individual_daily_startlists": [
+        "elo/python/nordic-combined/polars/excel365/startlist_races_men.csv",
+        "elo/python/nordic-combined/polars/excel365/startlist_races_ladies.csv"
+      ],
+      "team_histories": [
+        "elo/python/nordic-combined/polars/relay/excel365/men_team_chrono.csv",
+        "elo/python/nordic-combined/polars/relay/excel365/ladies_team_chrono.csv",
+        "elo/python/nordic-combined/polars/relay/excel365/mixed_team_chrono.csv",
+        "elo/python/nordic-combined/polars/relay/excel365/team_sprint_chrono.csv"
+      ],
+      "team_daily_startlists": [
+        "elo/python/nordic-combined/polars/relay/excel365/startlist_team_races_men.csv",
+        "elo/python/nordic-combined/polars/relay/excel365/startlist_team_races_ladies.csv",
+        "elo/python/nordic-combined/polars/relay/excel365/startlist_team_sprint_races_men.csv",
+        "elo/python/nordic-combined/polars/relay/excel365/startlist_team_sprint_races_ladies.csv",
+        "elo/python/nordic-combined/polars/relay/excel365/startlist_mixed_team_races_teams.csv",
+        "elo/python/nordic-combined/polars/relay/excel365/startlist_mixed_team_sprint_races_teams.csv"
+      ]
+    }
+  },
+  "categories": {
+    "men": "men_position_probabilities.xlsx",
+    "ladies": "ladies_position_probabilities.xlsx",
+    "men_team": "men_team_position_probabilities.xlsx",
+    "ladies_team": "ladies_team_position_probabilities.xlsx",
+    "men_team_sprint": "men_team_sprint_position_probabilities.xlsx",
+    "ladies_team_sprint": "ladies_team_sprint_position_probabilities.xlsx",
+    "mixed_team": "mixed_team_position_probabilities.xlsx",
+    "mixed_team_sprint": "mixed_team_sprint_position_probabilities.xlsx"
+  },
+  "model_runtime_contract": {
+    "input_root": "NORDIC_INPUT_ROOT",
+    "team_input_root": "NORDIC_TEAM_INPUT_ROOT",
+    "output_root": "NORDIC_OUTPUT_ROOT",
+    "blog_root": "NORDIC_BLOG_ROOT",
+    "log_root": "NORDIC_LOG_ROOT",
+    "logical_date": "NORDIC_LOGICAL_DATE",
+    "run_id": "NORDIC_RUN_ID",
+    "random_seed": "NORDIC_RANDOM_SEED",
+    "simulation_count": "NORDIC_N_SIMULATIONS"
+  },
+  "known_gaps": [
+    "The retired master script invoked the model and converter from mutable home-directory worktrees without pinned inputs, an explicit logical date, a deterministic seed, or semantic output validation.",
+    "Official startlist acquisition and identity normalization are not yet normalized into a hosted, fixture-backed contract.",
+    "The current R model emits probability workbooks only; publication must not reference legacy optional points JSON unless it actually exists.",
+    "The R model stores one result per team category, so multiple same-category team events on one logical date are unsupported and must block.",
+    "Network startlist acquisition, deterministic simulation, semantic validation, Hugo rendering, and bounded publication remain future slices."
+  ]
+}
