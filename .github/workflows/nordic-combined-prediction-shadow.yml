@@ -82,6 +82,7 @@ jobs:
             /elo/python/nordic-combined/polars/relay/excel365/team_sprint_chrono.csv
             /elo/python/nordic-combined/polars/nordic_combined_results_gap.py
             /elo/python/nordic-combined/polars/nordic_combined_results_identity.py
+            /elo/python/nordic-combined/polars/nordic_combined_results_identity_aliases.csv
             /elo/python/nordic-combined/polars/nordic_combined_startlist_acquire.py
             /elo/python/nordic-combined/polars/nordic_combined_startlist_normalize.py
 
@@ -117,7 +118,7 @@ jobs:
             echo "STARTLIST_NORMALIZATION_ROOT=$shadow_root/normalized-startlists"
             echo "STARTLIST_CANDIDATE_ROOT=$shadow_root/normalized-startlists/candidates"
             echo "STARTLIST_NORMALIZATION_REPORT=$shadow_root/normalized-startlists/report.json"
-            echo "STARTLIST_ALIAS_FILE=$shadow_root/identity-aliases/fis_identity_aliases.csv"
+            echo "STARTLIST_ALIAS_FILE=$GITHUB_WORKSPACE/external/ski/elo/python/nordic-combined/polars/nordic_combined_results_identity_aliases.csv"
           } >> "$GITHUB_ENV"
 
       - name: Set up Python validation runtime
@@ -182,9 +183,6 @@ jobs:
         if: steps.plan.outputs.has_work == 'true' && steps.acquire_startlists.outcome == 'success'
         continue-on-error: true
         run: |
-          mkdir -p "$(dirname "$STARTLIST_ALIAS_FILE")"
-          printf '%s\n' 'fis_competitor_id,fis_code,fis_name,canonical_sex,canonical_id,canonical_name' \
-            > "$STARTLIST_ALIAS_FILE"
           python3 external/ski/elo/python/nordic-combined/polars/nordic_combined_startlist_normalize.py \
             --acquired-startlists "$STARTLIST_ACQUISITION_ROOT/startlists.csv" \
             --acquisition-report "$STARTLIST_ACQUISITION_ROOT/report.json" \

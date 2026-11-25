@@ -421,7 +421,17 @@ class NordicCombinedPredictionShadowTests(unittest.TestCase):
             "STARTLIST_NORMALIZATION_ROOT=$shadow_root/normalized-startlists", source
         )
         self.assertIn(
-            "STARTLIST_ALIAS_FILE=$shadow_root/identity-aliases/fis_identity_aliases.csv",
+            "/elo/python/nordic-combined/polars/nordic_combined_results_identity_aliases.csv",
+            source,
+        )
+        self.assertIn(
+            "STARTLIST_ALIAS_FILE=$GITHUB_WORKSPACE/external/ski/elo/python/"
+            "nordic-combined/polars/nordic_combined_results_identity_aliases.csv",
+            source,
+        )
+        self.assertNotIn(
+            "fis_competitor_id,fis_code,fis_name,canonical_sex,canonical_id,"
+            "canonical_name'",
             source,
         )
         self.assertNotIn("$shadow_root/startlists/", source)
