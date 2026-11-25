@@ -120,6 +120,13 @@ jobs:
           --accepted-races excel365/races.csv
           --output-root "${{ steps.parameters.outputs.schedule_root }}"
 
+      - name: Test schedule runtime before mutation
+        working-directory: external/ski/elo/python/nordic-combined/polars
+        run: >-
+          uv run --isolated --python 3.12
+          --with requests --with beautifulsoup4 --with pandas --with fuzzywuzzy
+          python -m unittest discover -s . -p 'test_*schedule*.py'
+
       - name: Stage validated schedule
         id: schedule_candidate
         env:
@@ -178,7 +185,28 @@ jobs:
           SEASON: ${{ steps.schedule_season.outputs.season }}
         run: |
           root="external/ski/elo/python/nordic-combined/polars"
-          python3 -m unittest discover -s "$root" -p 'test_*schedule*.py'
+          python3 - "$root" "$SEASON" <<'PY'
+          import sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1]).resolve()
+          season = int(sys.argv[2])
+          sys.path.insert(0, str(root))
+          from schedule_contract import (
+              RACES_COLUMNS,
+              WEEKENDS_COLUMNS,
+              read_csv,
+              validate_races,
+              validate_relationship,
+              validate_season_structure,
+          )
+
+          races = read_csv(root / "excel365/races.csv", RACES_COLUMNS)
+          weekends = read_csv(root / "excel365/weekends.csv", WEEKENDS_COLUMNS)
+          validate_races(races)
+          validate_season_structure(races, expected_season=season)
+          validate_relationship(races, weekends)
+          PY
           git -C external/ski config user.name "github-actions[bot]"
           git -C external/ski config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git -C external/ski add \
