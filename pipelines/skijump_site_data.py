@@ -19,6 +19,14 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+from pipelines.site_all_time import build_all_time_elo
+from pipelines.site_athletes import (
+    build_athlete_index,
+    build_grouped_athlete_histories,
+    build_skier_info,
+    build_skier_lookup,
+)
+from pipelines.site_head_to_head import build_head_to_head
 from pipelines.site_season_snapshot import (
     SeasonSnapshotError,
     build_season_snapshot,
@@ -34,6 +42,22 @@ CURRENT_RATINGS = {
     "Large_Pelo": "Large_Elo",
     "Flying_Pelo": "Flying_Elo",
 }
+
+ALL_TIME_RATINGS = {
+    "Elo": "Overall",
+    "Small_Elo": "Small",
+    "Medium_Elo": "Medium",
+    "Normal_Elo": "Normal",
+    "Large_Elo": "Large",
+    "Flying_Elo": "Flying",
+}
+
+HEAD_TO_HEAD_FIELDS = {"RaceType": "event"}
+ELO_COLUMNS = list(CURRENT_RATINGS.values())
+INTEGER_COLUMNS = {
+    "HillSize", "TeamEvent", "Place", "ID", "Season", "Race", "Exp", "Leg"
+}
+FLOAT_COLUMNS = {"Age", *ELO_COLUMNS, *CURRENT_RATINGS.keys()}
 
 REQUIRED_COLUMNS = {
     "Date", "City", "Country", "Sex", "HillSize", "RaceType", "TeamEvent",
@@ -236,6 +260,72 @@ def build_seasons_index(rows: list[dict[str, str]]) -> list[dict[str, Any]]:
     ]
 
 
+def _typed_value(column: str, value: str) -> Any:
+    value = value.strip()
+    if not value:
+        return None
+    if column in INTEGER_COLUMNS:
+        return int(float(value))
+    if column in FLOAT_COLUMNS:
+        return float(value)
+    return value
+
+
+def build_athlete_history_updates(
+    rows: list[dict[str, str]], season: int
+) -> dict[str, dict[str, list[Any]]]:
+    """Build the prior rollover plus requested-season profile overlay."""
+    prior_offseason = [
+        row
+        for row in rows
+        if row["Event"] == "Offseason" and int(row["Season"]) < season
+    ]
+    if not prior_offseason:
+        raise SiteDataError(f"no offseason ratings exist before season {season}")
+    rollover_season = max(int(row["Season"]) for row in prior_offseason)
+    selected = [
+        row
+        for row in rows
+        if (
+            row["Event"] == "Offseason"
+            and int(row["Season"]) == rollover_season
+        )
+        or int(row["Season"]) == season
+    ]
+
+    maxima: dict[tuple[int, int, str], float] = {}
+    for row in rows:
+        race_key = (int(row["Season"]), int(row["Race"]))
+        for column in ELO_COLUMNS:
+            value = _number(row[column])
+            if value is not None:
+                key = (*race_key, column)
+                maxima[key] = max(maxima.get(key, value), value)
+
+    by_athlete: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in selected:
+        record = {
+            column: _typed_value(column, value) for column, value in row.items()
+        }
+        race_key = (int(row["Season"]), int(row["Race"]))
+        for column in ELO_COLUMNS:
+            value = _number(row[column])
+            maximum = maxima.get((*race_key, column))
+            record[f"{column}_Pct"] = (
+                value / maximum * 100 if value is not None and maximum else 0
+            )
+        by_athlete[row["ID"]].append(record)
+
+    output: dict[str, dict[str, list[Any]]] = {}
+    for athlete_id, athlete_rows in by_athlete.items():
+        athlete_rows.sort(key=lambda row: (row["Date"], row["Season"], row["Race"]))
+        columns = list(athlete_rows[0])
+        output[athlete_id] = {
+            column: [row[column] for row in athlete_rows] for column in columns
+        }
+    return output
+
+
 def write_site_data(
     *, men_history: Path, ladies_history: Path, season: int, output_root: Path
 ) -> None:
@@ -245,6 +335,15 @@ def write_site_data(
     }
     output_root = output_root.expanduser().resolve()
     for sex, rows in histories.items():
+        _atomic_text(
+            output_root / f"{sex}_chrono_all_time.json",
+            json.dumps(
+                build_all_time_elo(rows, ALL_TIME_RATINGS),
+                ensure_ascii=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ),
+        )
         _atomic_text(
             output_root / f"{sex}_chrono_current.json",
             json.dumps(
@@ -268,6 +367,78 @@ def write_site_data(
         _atomic_text(
             output_root / sex / "seasons.json",
             json.dumps(build_seasons_index(rows), ensure_ascii=True),
+        )
+        _atomic_text(
+            output_root / f"{sex}_athlete_history_updates.json",
+            json.dumps(
+                build_athlete_history_updates(rows, season),
+                ensure_ascii=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ),
+        )
+        _atomic_text(
+            output_root / f"{sex}_all_ids.json",
+            json.dumps(
+                build_athlete_index(rows),
+                ensure_ascii=True,
+                separators=(",", ":"),
+            ),
+        )
+        _atomic_text(
+            output_root / f"{sex}_skiers_lookup.json",
+            json.dumps(
+                build_skier_lookup(rows),
+                ensure_ascii=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ),
+        )
+        history_groups = build_grouped_athlete_histories(
+            rows,
+            elo_columns=ELO_COLUMNS,
+            integer_columns=INTEGER_COLUMNS,
+            float_columns=FLOAT_COLUMNS,
+        )
+        for group, histories_by_id in history_groups.items():
+            _atomic_text(
+                output_root / sex / f"skiers_{group}.json",
+                json.dumps(
+                    histories_by_id,
+                    ensure_ascii=True,
+                    separators=(",", ":"),
+                    allow_nan=False,
+                ),
+            )
+        head_to_head, race_lookup = build_head_to_head(
+            rows, race_fields=HEAD_TO_HEAD_FIELDS
+        )
+        head_to_head_root = output_root / "head2head"
+        _atomic_text(
+            head_to_head_root / f"{sex}_head2head_data.json",
+            json.dumps(
+                head_to_head,
+                ensure_ascii=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ),
+        )
+        _atomic_text(
+            head_to_head_root / f"{sex}_race_lookup.json",
+            json.dumps(
+                race_lookup,
+                ensure_ascii=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ),
+        )
+        _atomic_text(
+            output_root / sex / "skier_info.json",
+            json.dumps(
+                build_skier_info(rows, sex),
+                ensure_ascii=True,
+                separators=(",", ":"),
+            ),
         )
 
 
