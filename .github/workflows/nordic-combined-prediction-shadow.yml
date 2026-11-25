@@ -113,11 +113,11 @@ jobs:
             echo "RUN_ID=$run_id"
             echo "SHADOW_ROOT=$shadow_root"
             echo "REPORT_PATH=$shadow_root/runs/$run_id/reports/shadow-report.json"
-            echo "STARTLIST_ACQUISITION_ROOT=$shadow_root/startlists/acquired"
-            echo "STARTLIST_NORMALIZATION_ROOT=$shadow_root/startlists/normalized"
-            echo "STARTLIST_CANDIDATE_ROOT=$shadow_root/startlists/normalized/candidates"
-            echo "STARTLIST_NORMALIZATION_REPORT=$shadow_root/startlists/normalized/report.json"
-            echo "STARTLIST_ALIAS_FILE=$shadow_root/startlists/fis_identity_aliases.csv"
+            echo "STARTLIST_ACQUISITION_ROOT=$shadow_root/acquired-startlists"
+            echo "STARTLIST_NORMALIZATION_ROOT=$shadow_root/normalized-startlists"
+            echo "STARTLIST_CANDIDATE_ROOT=$shadow_root/normalized-startlists/candidates"
+            echo "STARTLIST_NORMALIZATION_REPORT=$shadow_root/normalized-startlists/report.json"
+            echo "STARTLIST_ALIAS_FILE=$shadow_root/identity-aliases/fis_identity_aliases.csv"
           } >> "$GITHUB_ENV"
 
       - name: Set up Python validation runtime
