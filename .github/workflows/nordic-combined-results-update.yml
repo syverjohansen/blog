@@ -134,14 +134,30 @@ jobs:
           python3 - "$RESULTS_ROOT/acquisition/results.csv" <<'PY'
           import csv, sys
           rows = list(csv.DictReader(open(sys.argv[1], encoding="utf-8-sig")))
-          events = {(r["date"], r["sex"], r["season"], r["race"], r["event_kind"]) for r in rows}
+          events = {
+              (
+                  r["date"], r["sex"], r["season"], r["race"],
+                  r["event_kind"], r["race_type"], r["championship"],
+              )
+              for r in rows
+          }
           if len(events) != 1:
               raise SystemExit(f"hosted replay requires exactly one event; found {sorted(events)}")
           event = next(iter(events))
-          if (event[1], event[4]) != ("Mixed", "team_sprint"):
+          regular_individual = (
+              event[1] in {"M", "L"}
+              and event[4] == "individual"
+              and event[6] == "0"
+          )
+          regular_mixed_team_sprint = (
+              event[1] == "Mixed"
+              and event[4] == "team_sprint"
+              and event[6] == "0"
+          )
+          if not (regular_individual or regular_mixed_team_sprint):
               raise SystemExit(
                   "unsupported Nordic-combined hosted replay event; evidence retained: "
-                  f"sex={event[1]} kind={event[4]}"
+                  f"sex={event[1]} kind={event[4]} championship={event[6]}"
               )
           PY
 
