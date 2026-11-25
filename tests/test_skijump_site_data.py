@@ -139,8 +139,26 @@ class SkiJumpSiteDataTest(unittest.TestCase):
             )
 
             current = json.loads((output / "M_chrono_current.json").read_text())
+            all_time = json.loads((output / "M_chrono_all_time.json").read_text())
             rollover = json.loads((output / "M/2027/race_0.json").read_text())
             summary = json.loads((output / "M/2027/summary.json").read_text())
+            updates = json.loads(
+                (output / "M_athlete_history_updates.json").read_text()
+            )
+            athlete_ids = json.loads((output / "M_all_ids.json").read_text())
+            skier_lookup = json.loads(
+                (output / "M_skiers_lookup.json").read_text()
+            )
+            skier_info = json.loads((output / "M/skier_info.json").read_text())
+            skier_group = json.loads(
+                (output / "M/skiers_0_to_499_0.json").read_text()
+            )
+            head_to_head = json.loads(
+                (output / "head2head/M_head2head_data.json").read_text()
+            )
+            race_lookup = json.loads(
+                (output / "head2head/M_race_lookup.json").read_text()
+            )
 
             self.assertEqual([record["ID"] for record in current], [1, 3])
             self.assertEqual(current[0]["Pelo"], 1495.0)
@@ -165,6 +183,31 @@ class SkiJumpSiteDataTest(unittest.TestCase):
                     (3, "2026-11-22", "Large"),
                 ],
             )
+            self.assertEqual(all_time[0]["ID"], 2)
+            self.assertEqual(all_time[0]["Overall"], 1555.0)
+            self.assertEqual(all_time[0]["Overall_Date"], "2026-05-01")
+            self.assertEqual(
+                updates["1"]["Date"],
+                [
+                    "2026-05-01",
+                    "2026-11-20",
+                    "2026-11-21",
+                    "2026-11-22",
+                    "2027-05-01",
+                ],
+            )
+            self.assertEqual(
+                athlete_ids,
+                {"1": "Active", "2": "Inactive", "3": "Newcomer"},
+            )
+            self.assertEqual(skier_lookup[0]["group"], "0_to_499_0")
+            self.assertEqual(skier_lookup[0]["nation_code"], "nor")
+            self.assertEqual(skier_info[0]["image"], "/img/flags/nor.svg")
+            self.assertEqual(skier_group["1"]["Race"], [0, 1, 2, 3, 0])
+            self.assertEqual(skier_group["1"]["TeamEvent"], [0, 1, 0, 0, 0])
+            self.assertEqual(len(head_to_head["1"]), 3)
+            self.assertEqual(head_to_head["1"][0]["event"], "Team Large")
+            self.assertEqual(race_lookup["2027_1"]["event"], "Team Large")
 
     def test_completed_season_winner_uses_undiscounted_pelo(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
