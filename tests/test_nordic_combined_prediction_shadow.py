@@ -399,11 +399,12 @@ class NordicCombinedPredictionShadowTests(unittest.TestCase):
         self.assertEqual("skipped", report["status"])
         self.assertEqual("disabled", report["publication"]["status"])
 
-    def test_manual_workflow_is_read_only_and_retains_evidence(self) -> None:
+    def test_scheduled_workflow_is_read_only_and_retains_evidence(self) -> None:
         source = WORKFLOW.read_text(encoding="utf-8")
         trigger = source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
         self.assertIn("workflow_dispatch:", trigger)
-        self.assertNotIn("schedule:", trigger)
+        self.assertIn("schedule:", trigger)
+        self.assertIn('cron: "17 5,11,17,23 * 1-3,11-12 *"', trigger)
         self.assertNotIn("workflow_run:", trigger)
         self.assertNotIn("publish_predictions", source)
         self.assertIn("contents: read", source)
@@ -411,6 +412,10 @@ class NordicCombinedPredictionShadowTests(unittest.TestCase):
         self.assertIn("-m pipelines.nordic_combined_prediction_shadow", source)
         self.assertIn("nordic_combined_startlist_acquire.py", source)
         self.assertIn("nordic_combined_startlist_normalize.py", source)
+        self.assertIn("nordic_combined_shadow_retry.py", source)
+        self.assertIn("Retain waiting official-list evidence", source)
+        self.assertIn('steps.acquisition.outputs.status == \'waiting\'', source)
+        self.assertIn('report.get("reason") == "official_startlist_waiting"', source)
         self.assertIn("/pipelines/requirements-snapshot.txt", source)
         self.assertIn("Retain pre-run failure evidence", source)
         self.assertIn('"shadow runner did not produce its report"', source)
