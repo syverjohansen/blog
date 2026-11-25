@@ -230,3 +230,15 @@ jobs:
           path: ${{ steps.parameters.outputs.candidate_root }}
           if-no-files-found: warn
           retention-days: 30
+
+      - name: Continue with today's guarded prediction pipeline
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+        run: |
+          gh workflow run ski-jumping-prediction-shadow.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f ski_ref=main \
+            -f publish_predictions=true
+          echo "Dispatched the guarded ski-jumping prediction pipeline." >> "$GITHUB_STEP_SUMMARY"

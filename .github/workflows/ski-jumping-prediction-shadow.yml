@@ -22,6 +22,11 @@ on:
         required: true
         default: main
         type: string
+      publish_predictions:
+        description: Publish only after the complete shadow and Hugo gates pass
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -34,6 +39,11 @@ jobs:
   shadow:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    outputs:
+      artifact_name: ${{ steps.parameters.outputs.artifact_name }}
+      logical_date: ${{ steps.parameters.outputs.logical_date }}
+      run_id: ${{ steps.parameters.outputs.run_id }}
+      has_work: ${{ steps.plan.outputs.has_work }}
     steps:
       - name: Check out bounded blog runtime
         uses: actions/checkout@v4
@@ -130,6 +140,8 @@ jobs:
           } >> "$GITHUB_ENV"
           echo "artifact_name=ski-jumping-prediction-shadow-${logical_date}-${GITHUB_RUN_ID}" \
             >> "$GITHUB_OUTPUT"
+          echo "logical_date=$logical_date" >> "$GITHUB_OUTPUT"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
 
       - name: Build publication-disabled execution plan
         id: plan
@@ -251,3 +263,100 @@ jobs:
               raise SystemExit(f"unexpected shadow status: {report.get('status')}")
           print(f"Ski-jumping prediction shadow status={report['status']}")
           PY
+
+  publish:
+    name: Publish validated ski-jumping predictions
+    needs: shadow
+    if: >-
+      needs.shadow.result == 'success' &&
+      needs.shadow.outputs.has_work == 'true' &&
+      inputs.publish_predictions == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out publication base
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Download exact passed shadow evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.shadow.outputs.artifact_name }}
+          path: ${{ runner.temp }}/ski-jumping-shadow-artifact
+
+      - name: Set up Python publication runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipelines/requirements-integration.txt
+
+      - name: Install publication dependencies
+        run: python3 -m pip install -r pipelines/requirements-integration.txt
+
+      - name: Materialize parity-checked publication candidate
+        id: candidate
+        env:
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+          RUN_ID: ${{ needs.shadow.outputs.run_id }}
+        run: |
+          artifact_root="$RUNNER_TEMP/ski-jumping-shadow-artifact"
+          run_root="$artifact_root/runs/$RUN_ID"
+          date_key="${LOGICAL_DATE//-/}"
+          report="$RUNNER_TEMP/ski-jumping-publication-report.json"
+          python3 -m pipelines.skijump_prediction_publication \
+            --shadow-report "$run_root/reports/shadow-report.json" \
+            --normalization-report "$artifact_root/startlists/normalized/report.json" \
+            --workbook-root "$run_root/workbooks/$date_key" \
+            --repository-root "$GITHUB_WORKSPACE" \
+            --report "$report"
+          if [[ -z "$(git status --porcelain -- \
+            "data/skijump/drafts/race-picks/$date_key" \
+            "content/post/race-picks/ski-jumping-$date_key.md")" ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "date_key=$date_key" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Hugo
+        if: steps.candidate.outputs.changed == 'true'
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Render complete site candidate
+        if: steps.candidate.outputs.changed == 'true'
+        run: hugo --minify --destination "$RUNNER_TEMP/ski-jumping-publication-site"
+
+      - name: Publish validated ski-jumping predictions
+        if: steps.candidate.outputs.changed == 'true'
+        env:
+          DATE_KEY: ${{ steps.candidate.outputs.date_key }}
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+          RUN_ID: ${{ needs.shadow.outputs.run_id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            "data/skijump/drafts/race-picks/$DATE_KEY" \
+            "content/post/race-picks/ski-jumping-$DATE_KEY.md"
+          git commit -m "Publish ski-jumping race picks for $LOGICAL_DATE" \
+            -m "Validated shadow run: $RUN_ID"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Retain publication and parity report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ski-jumping-publication-${{ needs.shadow.outputs.logical_date }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/ski-jumping-publication-report.json
+          if-no-files-found: warn
+          retention-days: 30
