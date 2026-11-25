@@ -1,0 +1,238 @@
+name: Ski-jumping automatic results pipeline
+
+on:
+  workflow_run:
+    workflows: ["Ski-jumping automatic schedule pipeline"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      as_of:
+        description: Results cutoff (YYYY-MM-DD); defaults to yesterday UTC
+        required: false
+        type: string
+      ski_ref:
+        description: Ski branch, tag, or commit to start from
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ski-jumping-automatic-results-pipeline
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Resolve ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if ! [[ "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out ski-jumping results runtime and accepted data
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          token: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: true
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/skijump/polars/
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Resolve run parameters
+        id: parameters
+        env:
+          REQUESTED_AS_OF: ${{ inputs.as_of || '' }}
+        run: |
+          as_of="${REQUESTED_AS_OF:-$(date -u -d 'yesterday' +%F)}"
+          if ! [[ "$as_of" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+            echo "Invalid as_of date: $as_of" >&2
+            exit 1
+          fi
+          echo "as_of=$as_of" >> "$GITHUB_OUTPUT"
+          echo "results_root=$RUNNER_TEMP/ski-jumping-results-update" >> "$GITHUB_OUTPUT"
+
+      - name: Audit completed results
+        id: gap
+        working-directory: external/ski/elo/python/skijump/polars
+        env:
+          AS_OF: ${{ steps.parameters.outputs.as_of }}
+          RESULTS_ROOT: ${{ steps.parameters.outputs.results_root }}
+        run: |
+          mkdir -p "$RESULTS_ROOT"
+          python3 skijump_results_gap.py \
+            --schedule excel365/races.csv \
+            --men-chrono relay/excel365/men_chrono.csv \
+            --ladies-chrono relay/excel365/ladies_chrono.csv \
+            --men-team-chrono relay/excel365/men_team_chrono.csv \
+            --ladies-team-chrono relay/excel365/ladies_team_chrono.csv \
+            --mixed-team-chrono relay/excel365/mixed_team_chrono.csv \
+            --policy-exclusions skijump_results_policy_exclusions.csv \
+            --as-of "$AS_OF" \
+            --output "$RESULTS_ROOT/gap-report.json"
+          readarray -t values < <(python3 - "$RESULTS_ROOT/gap-report.json" <<'PY'
+          import json
+          import sys
+
+          report = json.load(open(sys.argv[1], encoding="utf-8"))
+          seasons = {int(row["season"]) for row in report["missing_races"]}
+          if len(seasons) > 1:
+              raise SystemExit(f"gaps span multiple seasons: {sorted(seasons)}")
+          print(report["missing_race_count"])
+          print(next(iter(seasons), ""))
+          PY
+          )
+          echo "count=${values[0]}" >> "$GITHUB_OUTPUT"
+          echo "season=${values[1]}" >> "$GITHUB_OUTPUT"
+          cat "$RESULTS_ROOT/gap-report.json" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Acquire missing FIS results
+        if: steps.gap.outputs.count != '0'
+        working-directory: external/ski/elo/python/skijump/polars
+        env:
+          AS_OF: ${{ steps.parameters.outputs.as_of }}
+          RESULTS_ROOT: ${{ steps.parameters.outputs.results_root }}
+        run: >-
+          uv run --isolated --python 3.12 --with beautifulsoup4
+          python skijump_results_acquire.py
+          --schedule excel365/races.csv
+          --men-chrono relay/excel365/men_chrono.csv
+          --ladies-chrono relay/excel365/ladies_chrono.csv
+          --men-team-chrono relay/excel365/men_team_chrono.csv
+          --ladies-team-chrono relay/excel365/ladies_team_chrono.csv
+          --mixed-team-chrono relay/excel365/mixed_team_chrono.csv
+          --policy-exclusions skijump_results_policy_exclusions.csv
+          --as-of "$AS_OF"
+          --output-dir "$RESULTS_ROOT/acquisition"
+          --allow-network
+          --fail-on-unresolved
+
+      - name: Resolve canonical athlete identities
+        if: steps.gap.outputs.count != '0'
+        working-directory: external/ski/elo/python/skijump/polars
+        env:
+          RESULTS_ROOT: ${{ steps.parameters.outputs.results_root }}
+        run: |
+          rows=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["acquired_result_rows"])' \
+            "$RESULTS_ROOT/acquisition/report.json")
+          if [[ "$rows" == "0" ]]; then
+            echo "Missing races produced no replayable result rows." >&2
+            exit 1
+          fi
+          python3 skijump_results_identity.py \
+            --results "$RESULTS_ROOT/acquisition/results.csv" \
+            --men-history excel365/all_men_scrape.csv \
+            --ladies-history excel365/all_ladies_scrape.csv \
+            --aliases excel365/fis_identity_aliases.csv \
+            --output-dir "$RESULTS_ROOT/identity" \
+            --fail-on-unresolved
+
+      - name: Build deterministic five-history replay
+        if: steps.gap.outputs.count != '0'
+        working-directory: external/ski/elo/python/skijump/polars
+        env:
+          RESULTS_ROOT: ${{ steps.parameters.outputs.results_root }}
+          SEASON: ${{ steps.gap.outputs.season }}
+        run: |
+          python3 skijump_results_elo_replay.py \
+            --mapped-results "$RESULTS_ROOT/identity/mapped_results.csv" \
+            --men-chrono relay/excel365/men_chrono.csv \
+            --ladies-chrono relay/excel365/ladies_chrono.csv \
+            --men-raw excel365/all_men_scrape.csv \
+            --ladies-raw excel365/all_ladies_scrape.csv \
+            --men-team-chrono relay/excel365/men_team_chrono.csv \
+            --ladies-team-chrono relay/excel365/ladies_team_chrono.csv \
+            --mixed-team-chrono relay/excel365/mixed_team_chrono.csv \
+            --season "$SEASON" \
+            --output-dir "$RESULTS_ROOT/replay"
+
+      - name: Build guarded promotion candidate
+        if: steps.gap.outputs.count != '0'
+        working-directory: external/ski/elo/python/skijump/polars
+        env:
+          RESULTS_ROOT: ${{ steps.parameters.outputs.results_root }}
+          SEASON: ${{ steps.gap.outputs.season }}
+        run: |
+          report="$RESULTS_ROOT/replay/replay_report.json"
+          report_sha=$(sha256sum "$report" | cut -d ' ' -f 1)
+          python3 skijump_results_promote.py \
+            --replay-report "$report" \
+            --expected-report-sha256 "$report_sha" \
+            --mapped-results "$RESULTS_ROOT/identity/mapped_results.csv" \
+            --men-chrono relay/excel365/men_chrono.csv \
+            --ladies-chrono relay/excel365/ladies_chrono.csv \
+            --men-raw excel365/all_men_scrape.csv \
+            --ladies-raw excel365/all_ladies_scrape.csv \
+            --men-team-chrono relay/excel365/men_team_chrono.csv \
+            --ladies-team-chrono relay/excel365/ladies_team_chrono.csv \
+            --mixed-team-chrono relay/excel365/mixed_team_chrono.csv \
+            --expected-season "$SEASON" \
+            --output-dir "$RESULTS_ROOT/promotion"
+
+      - name: Apply atomic results candidate
+        if: steps.gap.outputs.count != '0'
+        working-directory: external/ski/elo/python/skijump/polars
+        env:
+          RESULTS_ROOT: ${{ steps.parameters.outputs.results_root }}
+          SEASON: ${{ steps.gap.outputs.season }}
+        run: |
+          report="$RESULTS_ROOT/promotion/report.json"
+          report_sha=$(sha256sum "$report" | cut -d ' ' -f 1)
+          python3 skijump_results_apply.py \
+            --promotion-report "$report" \
+            --expected-report-sha256 "$report_sha" \
+            --accepted-dir relay/excel365 \
+            --approve-season "$SEASON" \
+            --backup-root "$RESULTS_ROOT/backups" \
+            --receipt "$RESULTS_ROOT/application-receipt.json"
+
+      - name: Validate and publish accepted ski-jumping results
+        if: steps.gap.outputs.count != '0'
+        env:
+          SEASON: ${{ steps.gap.outputs.season }}
+        run: |
+          root="external/ski/elo/python/skijump/polars"
+          uv run --isolated --python 3.12 --with pytest --with beautifulsoup4 \
+            pytest -q "$root"/test_skijump_results_*.py
+          git -C external/ski config user.name "github-actions[bot]"
+          git -C external/ski config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C external/ski add \
+            elo/python/skijump/polars/relay/excel365/men_chrono.csv \
+            elo/python/skijump/polars/relay/excel365/ladies_chrono.csv \
+            elo/python/skijump/polars/relay/excel365/men_team_chrono.csv \
+            elo/python/skijump/polars/relay/excel365/ladies_team_chrono.csv \
+            elo/python/skijump/polars/relay/excel365/mixed_team_chrono.csv
+          if ! git -C external/ski diff --cached --quiet; then
+            git -C external/ski commit -m "Update ski-jumping results for $SEASON"
+            git -C external/ski pull --rebase origin main
+            git -C external/ski push origin HEAD:main
+          fi
+
+      - name: Upload results evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ski-jumping-results-${{ steps.parameters.outputs.as_of }}-${{ github.run_id }}
+          path: ${{ steps.parameters.outputs.results_root }}/
+          if-no-files-found: warn
+          retention-days: 30
