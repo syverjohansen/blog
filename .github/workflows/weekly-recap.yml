@@ -62,6 +62,8 @@ jobs:
             /elo/python/alpine/polars/excel365/
             /elo/python/ski/polars/standings_scrape.py
             /elo/python/ski/polars/excel365/
+            /elo/python/skijump/polars/standings_scrape.py
+            /elo/python/skijump/polars/excel365/
 
       - name: Resolve logical date
         id: parameters
@@ -123,14 +125,25 @@ jobs:
             any::tidyverse
             any::writexl
 
-      - name: Prepare current cross-country recap history
+      - name: Prepare elevation-enriched recap histories
         if: >-
           steps.detect.outputs.should_run == 'true' &&
-          contains(steps.detect.outputs.sports, 'cross-country')
+          (contains(steps.detect.outputs.sports, 'cross-country') ||
+          contains(steps.detect.outputs.sports, 'skijump'))
         working-directory: blog
+        env:
+          REQUESTED_SPORTS: ${{ steps.detect.outputs.sports }}
         run: |
-          python3 -m pipelines.weekly_recap_publication prepare-cross-country \
-            --data-root "$NORDIC_SKI_ROOT/ski/polars/excel365"
+          IFS=',' read -ra sports <<< "$REQUESTED_SPORTS"
+          for sport in "${sports[@]}"; do
+            case "$sport" in
+              cross-country) ski_name=ski ;;
+              skijump) ski_name=skijump ;;
+              *) continue ;;
+            esac
+            python3 -m pipelines.weekly_recap_publication prepare-elevation \
+              --data-root "$NORDIC_SKI_ROOT/$ski_name/polars/excel365"
+          done
 
       - name: Generate and validate per-sport recap artifacts
         id: generate
@@ -151,6 +164,10 @@ jobs:
               cross-country)
                 ski_name=ski
                 recap_script=content/post/cross-country/drafts/race-recap2.R
+                ;;
+              skijump)
+                ski_name=skijump
+                recap_script=content/post/skijump/drafts/race-recap2.R
                 ;;
               *)
                 echo "Unsupported recap sport: $sport" >&2

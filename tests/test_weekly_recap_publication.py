@@ -8,7 +8,7 @@ from pathlib import Path
 from pipelines.weekly_recap_publication import (
     WeeklyRecapError,
     detect_recap_sports,
-    prepare_cross_country_history,
+    prepare_elevation_history,
     render_post,
     validate_sport_artifacts,
     write_post,
@@ -51,8 +51,14 @@ class WeeklyRecapPublicationTests(unittest.TestCase):
                 root / "ski/polars/excel365/races.csv",
                 ["11/15/2026"],
             )
+            _write_schedule(
+                root / "skijump/polars/excel365/races.csv",
+                ["11/21/2026"],
+            )
             sports = detect_recap_sports(root, date(2026, 11, 23))
-            self.assertEqual([sport.content_name for sport in sports], ["alpine"])
+            self.assertEqual(
+                [sport.content_name for sport in sports], ["alpine", "skijump"]
+            )
 
     def test_non_monday_is_always_a_no_op(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -76,7 +82,13 @@ class WeeklyRecapPublicationTests(unittest.TestCase):
             with self.assertRaisesRegex(WeeklyRecapError, "has no rows"):
                 validate_sport_artifacts(root, "alpine")
 
-    def test_prepares_current_cross_country_elevation_histories(self) -> None:
+    def test_allows_a_week_without_an_elo_change(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _write_artifacts(root, "skijump", empty="men_elo_change")
+            self.assertEqual(len(validate_sport_artifacts(root, "skijump")), 6)
+
+    def test_prepares_current_elevation_histories(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             fields = ("Date", "City", "Skier", "ID")
@@ -95,7 +107,7 @@ class WeeklyRecapPublicationTests(unittest.TestCase):
                 writer.writeheader()
                 writer.writerow({"City": "Ruka", "Elevation": 200})
 
-            prepare_cross_country_history(root)
+            prepare_elevation_history(root)
 
             with (root / "men_chrono_elevation.csv").open(
                 newline="", encoding="utf-8"
@@ -108,12 +120,15 @@ class WeeklyRecapPublicationTests(unittest.TestCase):
             root = Path(directory)
             _write_artifacts(root, "alpine")
             _write_artifacts(root, "cross-country")
+            _write_artifacts(root, "skijump")
             rendered = render_post(
-                date(2026, 11, 23), ("alpine", "cross-country"), root
+                date(2026, 11, 23), ("alpine", "cross-country", "skijump"), root
             )
             self.assertIn("11/16/2026 to 11/22/2026", rendered)
             self.assertIn("## Alpine", rendered)
             self.assertIn("## Cross Country", rendered)
+            self.assertIn("## Ski Jumping", rendered)
+            self.assertIn("skijump/drafts/weekly-recap/20261123", rendered)
             self.assertIn("cross-country/drafts/weekly-recap/20261123", rendered)
             output = root / "post.md"
             write_post(output, rendered)
