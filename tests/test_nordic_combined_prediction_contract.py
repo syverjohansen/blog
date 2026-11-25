@@ -184,7 +184,7 @@ class NordicCombinedPredictionContractTests(unittest.TestCase):
             "nordicnumbers.nordic-combined-prediction-inventory/v1",
             inventory["schema_version"],
         )
-        self.assertEqual("runtime-parameterized", inventory["status"])
+        self.assertEqual("publication-disabled-shadow-ready", inventory["status"])
         for key in ("model", "model_parameters", "logging", "converter"):
             self.assertTrue((ROOT / inventory["repositories"]["blog"][key]).is_file())
         gaps = " ".join(inventory["known_gaps"])

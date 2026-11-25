@@ -1,0 +1,196 @@
+name: Nordic Combined prediction shadow
+
+on:
+  workflow_dispatch:
+    inputs:
+      logical_date:
+        description: Race date (YYYY-MM-DD); defaults to today UTC
+        required: false
+        type: string
+      n_simulations:
+        description: Deterministic Monte Carlo iteration count
+        required: true
+        default: 250
+        type: number
+      random_seed:
+        description: Deterministic simulation seed
+        required: true
+        default: 20260210
+        type: number
+      ski_ref:
+        description: Accepted ski branch, tag, or commit to read
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nordic-combined-prediction-shadow
+  cancel-in-progress: false
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out bounded blog runtime
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /pipelines/__init__.py
+            /pipelines/requirements-integration.txt
+            /pipelines/nordic_combined_prediction_contract.py
+            /pipelines/nordic_combined_prediction_shadow.py
+            /content/post/nordic-combined/drafts/race-picks-simulation.R
+            /content/post/shared/logging-utils.R
+            /static/python/excel_to_hugo_multiple_sheets.py
+
+      - name: Resolve ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if ! [[ "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out only declared Nordic Combined inputs
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/nordic-combined/polars/excel365/races.csv
+            /elo/python/nordic-combined/polars/excel365/men_chrono_elevation.csv
+            /elo/python/nordic-combined/polars/excel365/ladies_chrono_elevation.csv
+            /elo/python/nordic-combined/polars/excel365/startlist_races_men.csv
+            /elo/python/nordic-combined/polars/excel365/startlist_races_ladies.csv
+            /elo/python/nordic-combined/polars/relay/excel365/men_team_chrono.csv
+            /elo/python/nordic-combined/polars/relay/excel365/ladies_team_chrono.csv
+            /elo/python/nordic-combined/polars/relay/excel365/mixed_team_chrono.csv
+            /elo/python/nordic-combined/polars/relay/excel365/team_sprint_chrono.csv
+            /elo/python/nordic-combined/polars/relay/excel365/startlist_team_races_men.csv
+            /elo/python/nordic-combined/polars/relay/excel365/startlist_team_races_ladies.csv
+            /elo/python/nordic-combined/polars/relay/excel365/startlist_team_sprint_races_men.csv
+            /elo/python/nordic-combined/polars/relay/excel365/startlist_team_sprint_races_ladies.csv
+            /elo/python/nordic-combined/polars/relay/excel365/startlist_mixed_team_races_teams.csv
+            /elo/python/nordic-combined/polars/relay/excel365/startlist_mixed_team_sprint_races_teams.csv
+
+      - name: Prepare immutable shadow parameters
+        env:
+          LOGICAL_DATE_INPUT: ${{ inputs.logical_date || '' }}
+          N_SIMULATIONS_INPUT: ${{ inputs.n_simulations || 250 }}
+          RANDOM_SEED_INPUT: ${{ inputs.random_seed || 20260210 }}
+          SKI_SHA: ${{ steps.ski.outputs.sha }}
+        run: |
+          logical_date="${LOGICAL_DATE_INPUT:-$(date -u +%F)}"
+          python3 - "$logical_date" "$N_SIMULATIONS_INPUT" "$RANDOM_SEED_INPUT" <<'PY'
+          from datetime import date
+          import sys
+          date.fromisoformat(sys.argv[1])
+          if int(sys.argv[2]) < 1:
+              raise SystemExit("n_simulations must be positive")
+          int(sys.argv[3])
+          PY
+          blog_sha=$(git rev-parse HEAD)
+          run_id="github-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          shadow_root="$RUNNER_TEMP/nordic-combined-prediction-shadow"
+          {
+            echo "LOGICAL_DATE=$logical_date"
+            echo "N_SIMULATIONS=$N_SIMULATIONS_INPUT"
+            echo "RANDOM_SEED=$RANDOM_SEED_INPUT"
+            echo "BLOG_SHA=$blog_sha"
+            echo "SKI_SHA=$SKI_SHA"
+            echo "RUN_ID=$run_id"
+            echo "SHADOW_ROOT=$shadow_root"
+            echo "REPORT_PATH=$shadow_root/runs/$run_id/reports/shadow-report.json"
+          } >> "$GITHUB_ENV"
+
+      - name: Set up Python validation runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipelines/requirements-integration.txt
+
+      - name: Install workbook validation dependencies
+        run: python3 -m pip install -r pipelines/requirements-integration.txt
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install R simulation dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::dplyr
+            any::tidyr
+            any::openxlsx
+            any::mgcv
+            any::leaps
+            any::logger
+            any::lubridate
+
+      - name: Run publication-disabled prediction shadow
+        id: run_shadow
+        continue-on-error: true
+        run: |
+          python3 -m pipelines.nordic_combined_prediction_shadow \
+            --blog-root "$GITHUB_WORKSPACE" \
+            --ski-root "$GITHUB_WORKSPACE/external/ski" \
+            --output-root "$SHADOW_ROOT" \
+            --logical-date "$LOGICAL_DATE" \
+            --run-id "$RUN_ID" \
+            --n-simulations "$N_SIMULATIONS" \
+            --random-seed "$RANDOM_SEED" \
+            --blog-commit "$BLOG_SHA" \
+            --ski-commit "$SKI_SHA"
+
+      - name: Upload complete shadow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nordic-combined-prediction-shadow-${{ env.LOGICAL_DATE }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/nordic-combined-prediction-shadow/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce retained publication-disabled result
+        if: always()
+        env:
+          RUNNER_OUTCOME: ${{ steps.run_shadow.outcome }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report_path = Path(os.environ["REPORT_PATH"])
+          if not report_path.is_file():
+              raise SystemExit(f"shadow report is missing: {report_path}")
+          report = json.loads(report_path.read_text(encoding="utf-8"))
+          expected = {
+              "reason": "shadow runs retain evidence and cannot create or publish posts",
+              "status": "disabled",
+          }
+          if report.get("publication") != expected:
+              raise SystemExit("shadow publication lock was not retained")
+          if os.environ["RUNNER_OUTCOME"] != "success":
+              raise SystemExit(f"shadow runner failed; evidence retained at {report_path}")
+          if report.get("status") not in {"passed", "skipped"}:
+              raise SystemExit(f"unexpected shadow status: {report.get('status')}")
+          PY
