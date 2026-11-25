@@ -14,6 +14,7 @@ from pathlib import Path
 SUPPORTED_SPORTS = {
     "alpine": "alpine",
     "cross-country": "ski",
+    "skijump": "skijump",
 }
 GENDERS = ("men", "ladies")
 ARTIFACT_TYPES = ("elo_change", "standings_predictions", "magic_numbers")
@@ -62,7 +63,7 @@ def detect_recap_sports(ski_root: Path, logical_date: date) -> tuple[RecapSport,
     return tuple(sorted(eligible))
 
 
-def prepare_cross_country_history(data_root: Path) -> None:
+def prepare_elevation_history(data_root: Path) -> None:
     elevations_path = data_root / "elevation.csv"
     try:
         with elevations_path.open(newline="", encoding="utf-8-sig") as handle:
@@ -99,11 +100,11 @@ def prepare_cross_country_history(data_root: Path) -> None:
             temporary.replace(output)
     except OSError as exc:
         raise WeeklyRecapError(
-            f"cannot prepare cross-country elevation history: {exc}"
+            f"cannot prepare elevation history: {exc}"
         ) from exc
 
 
-def _load_artifact(path: Path) -> dict:
+def _load_artifact(path: Path, *, allow_empty: bool = False) -> dict:
     try:
         document = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
@@ -112,7 +113,7 @@ def _load_artifact(path: Path) -> dict:
     rows = document.get("rows")
     if not isinstance(headers, list) or not headers:
         raise WeeklyRecapError(f"recap artifact has no headers: {path}")
-    if not isinstance(rows, list) or not rows:
+    if not isinstance(rows, list) or (not rows and not allow_empty):
         raise WeeklyRecapError(f"recap artifact has no rows: {path}")
     if any(not isinstance(row, list) or len(row) != len(headers) for row in rows):
         raise WeeklyRecapError(f"recap rows do not match headers: {path}")
@@ -127,7 +128,7 @@ def validate_sport_artifacts(data_root: Path, sport: str) -> tuple[Path, ...]:
         for artifact_type in ARTIFACT_TYPES
     )
     for path in expected:
-        _load_artifact(path)
+        _load_artifact(path, allow_empty=path.name.endswith("_elo_change.json"))
     return expected
 
 
@@ -157,6 +158,7 @@ def render_post(logical_date: date, sports: tuple[str, ...], data_root: Path) ->
     labels = {
         "alpine": "Alpine",
         "cross-country": "Cross Country",
+        "skijump": "Ski Jumping",
     }
     headings = {
         "elo_change": "Elo Change",
@@ -210,7 +212,7 @@ def parse_args() -> argparse.Namespace:
     detect = subparsers.add_parser("detect")
     detect.add_argument("--ski-root", required=True, type=Path)
     detect.add_argument("--logical-date", required=True, type=_logical_date)
-    prepare = subparsers.add_parser("prepare-cross-country")
+    prepare = subparsers.add_parser("prepare-elevation")
     prepare.add_argument("--data-root", required=True, type=Path)
     build = subparsers.add_parser("build")
     build.add_argument("--logical-date", required=True, type=_logical_date)
@@ -232,8 +234,8 @@ def main() -> int:
         _write_github_output(values)
         print(json.dumps(values, sort_keys=True))
         return 0
-    if args.command == "prepare-cross-country":
-        prepare_cross_country_history(args.data_root)
+    if args.command == "prepare-elevation":
+        prepare_elevation_history(args.data_root)
         return 0
     sports = tuple(sport for sport in args.sports.split(",") if sport)
     rendered = render_post(args.logical_date, sports, args.data_root)

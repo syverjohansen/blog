@@ -14,10 +14,11 @@ class WeeklyRecapWorkflowTests(unittest.TestCase):
         self.assertIn('workflows: ["Cross-country team predictions"]', self.text)
         self.assertIn("workflow_dispatch:", self.text)
 
-    def test_checkout_contains_shared_standings_contract_and_both_sports(self) -> None:
+    def test_checkout_contains_shared_standings_contract_and_all_sports(self) -> None:
         self.assertIn("/elo/python/standings_contract.py", self.text)
         self.assertIn("/elo/python/alpine/polars/standings_scrape.py", self.text)
         self.assertIn("/elo/python/ski/polars/standings_scrape.py", self.text)
+        self.assertIn("/elo/python/skijump/polars/standings_scrape.py", self.text)
 
     def test_generation_uses_isolated_outputs_and_validates_before_publish(
         self,
@@ -41,7 +42,7 @@ class WeeklyRecapWorkflowTests(unittest.TestCase):
         self.assertIn("^[0-9a-f]{40}$", self.text)
 
     def test_recap_scripts_use_injected_roots_and_logical_date(self) -> None:
-        for sport in ("alpine", "cross-country"):
+        for sport in ("alpine", "cross-country", "skijump"):
             script = (
                 ROOT / "content" / "post" / sport / "drafts" / "race-recap2.R"
             ).read_text(encoding="utf-8")
