@@ -43,16 +43,19 @@ class NordicCombinedResultsWorkflowTests(unittest.TestCase):
         self.assertIn("--fail-on-unresolved", self.text)
         self.assertGreaterEqual(self.text.count("--expected-report-sha256"), 2)
 
-    def test_regular_individual_and_mixed_team_sprint_are_supported(self) -> None:
+    def test_every_proven_event_shape_is_supported(self) -> None:
         self.assertIn("Enforce supported replay boundary", self.text)
         self.assertIn('event[1] in {"M", "L"}', self.text)
         self.assertIn('event[4] == "individual"', self.text)
-        self.assertIn('event[1] == "Mixed"', self.text)
+        self.assertIn('event[4] == "team"', self.text)
+        self.assertIn('event[5] == "Team"', self.text)
+        self.assertIn('event[1] in {"M", "Mixed"}', self.text)
         self.assertIn('event[4] == "team_sprint"', self.text)
-        self.assertIn('event[6] == "0"', self.text)
+        self.assertIn('event[6] not in {"0", "1"}', self.text)
 
     def _run_boundary(
-        self, *, sex: str, kind: str, championship: str
+        self, *, sex: str, kind: str, championship: str,
+        race_type: str | None = None,
     ) -> subprocess.CompletedProcess[str]:
         section = self.text.split("- name: Enforce supported replay boundary", 1)[1]
         script = section.split("<<'PY'\n", 1)[1].split("\n          PY", 1)[0]
@@ -72,9 +75,10 @@ class NordicCombinedResultsWorkflowTests(unittest.TestCase):
                 writer.writerow({
                     "date": "2026-03-01", "sex": sex, "season": "2026",
                     "race": "1", "event_kind": kind,
-                    "race_type": (
-                        "Team Sprint" if kind == "team_sprint" else "Individual"
-                    ),
+                    "race_type": race_type or {
+                        "individual": "Individual", "team": "Team",
+                        "team_sprint": "Team Sprint",
+                    }[kind],
                     "championship": championship,
                 })
             return subprocess.run(
@@ -82,24 +86,35 @@ class NordicCombinedResultsWorkflowTests(unittest.TestCase):
                 text=True, capture_output=True, check=False,
             )
 
-    def test_boundary_execution_accepts_both_proven_event_shapes(self) -> None:
-        for sex, kind in (
-            ("M", "individual"),
-            ("L", "individual"),
-            ("Mixed", "team_sprint"),
-        ):
-            with self.subTest(sex=sex, kind=kind):
-                result = self._run_boundary(sex=sex, kind=kind, championship="0")
-                self.assertEqual(result.returncode, 0, result.stderr)
-
-    def test_boundary_execution_rejects_championships_and_same_sex_teams(self) -> None:
+    def test_boundary_execution_accepts_every_proven_event_shape(self) -> None:
         for sex, kind, championship in (
-            ("M", "individual", "1"),
+            ("M", "individual", "0"),
+            ("L", "individual", "1"),
             ("M", "team", "0"),
+            ("M", "team", "1"),
+            ("M", "team_sprint", "0"),
+            ("Mixed", "team_sprint", "1"),
         ):
             with self.subTest(sex=sex, kind=kind, championship=championship):
                 result = self._run_boundary(
                     sex=sex, kind=kind, championship=championship
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_boundary_execution_rejects_unsupported_shapes(self) -> None:
+        for sex, kind, championship, race_type in (
+            ("L", "team", "0", "Team"),
+            ("Mixed", "team", "1", "Team"),
+            ("L", "team_sprint", "0", "Team Sprint"),
+            ("M", "individual", "2", "Individual"),
+            ("M", "team", "0", "Individual"),
+        ):
+            with self.subTest(
+                sex=sex, kind=kind, championship=championship, race_type=race_type
+            ):
+                result = self._run_boundary(
+                    sex=sex, kind=kind, championship=championship,
+                    race_type=race_type,
                 )
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn(
@@ -107,7 +122,7 @@ class NordicCombinedResultsWorkflowTests(unittest.TestCase):
                 )
 
     def test_unsupported_event_types_fail_closed_with_retained_evidence(self) -> None:
-        self.assertIn("if not (regular_individual or regular_mixed_team_sprint):", self.text)
+        self.assertIn("not (individual or mens_team or team_sprint)", self.text)
         self.assertIn("unsupported Nordic-combined hosted replay event", self.text)
         self.assertIn("championship={event[6]}", self.text)
         self.assertIn("if: always()", self.text)
@@ -122,7 +137,10 @@ class NordicCombinedResultsWorkflowTests(unittest.TestCase):
         staged = self.text.split("git -C external/ski add", 1)[1].split(
             "if ! git", 1
         )[0]
-        for name in ("men_chrono.csv", "ladies_chrono.csv", "team_sprint_chrono.csv"):
+        for name in (
+            "men_chrono.csv", "ladies_chrono.csv", "men_team_chrono.csv",
+            "team_sprint_chrono.csv",
+        ):
             self.assertIn(name, staged)
         self.assertIn("results_promotion_receipts", staged)
         self.assertNotIn("excel365/races.csv", staged)
