@@ -205,6 +205,18 @@ def build_plan(schedule: Path, logical_date: date) -> dict[str, object]:
         "model": {
             "entrypoint": "content/post/skijump/drafts/race-picks-simulation.R",
             "workbooks": workbooks,
+            "environment": {
+                "NORDIC_INPUT_ROOT": "<isolated-ski>/elo/python/skijump/polars/excel365",
+                "NORDIC_TEAM_INPUT_ROOT": "<isolated-ski>/elo/python/skijump/polars/relay/excel365",
+                "NORDIC_OUTPUT_ROOT": "<isolated-output>/workbooks",
+                "NORDIC_BLOG_ROOT": "<pinned-blog>",
+                "NORDIC_LOG_ROOT": "<isolated-output>/logs",
+                "NORDIC_LOGICAL_DATE": logical_date.isoformat(),
+                "NORDIC_RUN_ID": "<run-id>",
+                "NORDIC_RANDOM_SEED": "<integer-seed>",
+                "NORDIC_N_SIMULATIONS": "<positive-integer>",
+                "NORDIC_LOAD_ENV": "false",
+            },
         },
         "conversion": {
             "entrypoint": "static/python/excel_to_hugo_multiple_sheets.py",

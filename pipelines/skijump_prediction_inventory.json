@@ -43,9 +43,20 @@
     "ladies_team": "ladies_team_position_probabilities.xlsx",
     "mixed_team": "mixed_team_position_probabilities.xlsx"
   },
+  "model_runtime_contract": {
+    "input_root": "NORDIC_INPUT_ROOT",
+    "team_input_root": "NORDIC_TEAM_INPUT_ROOT",
+    "output_root": "NORDIC_OUTPUT_ROOT",
+    "blog_root": "NORDIC_BLOG_ROOT",
+    "log_root": "NORDIC_LOG_ROOT",
+    "logical_date": "NORDIC_LOGICAL_DATE",
+    "run_id": "NORDIC_RUN_ID",
+    "random_seed": "NORDIC_RANDOM_SEED",
+    "simulation_count": "NORDIC_N_SIMULATIONS"
+  },
   "known_gaps": [
     "The retired master prediction script ran startlist acquisition and post conversion but did not directly invoke race-picks-simulation.R.",
-    "The R model and legacy startlist scripts use home-directory paths and must be parameterized before hosted execution.",
+    "Legacy startlist acquisition scripts still use home-directory paths and must be replaced or parameterized before hosted execution.",
     "The current R model emits probability workbooks only; publication must not reference legacy optional points JSON unless it actually exists.",
     "The R model stores one result per team category, so multiple same-category team events on one logical date are unsupported and must block.",
     "Network startlist acquisition, deterministic simulation, semantic validation, Hugo rendering, and bounded publication remain future slices."
