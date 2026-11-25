@@ -10,11 +10,13 @@ from pipelines.site_rankings import RankingDataError, build_rankings, write_rank
 def race(
     *, athlete_id: int, name: str, event: str, place: int, season: int,
     distance: str = "10", birthday: str = "2000-11-19T00:00:00",
+    race_type: str = "Large", team_event: str = "0", city: str = "Oslo",
 ) -> dict[str, str]:
     return {
         "ID": str(athlete_id), "Skier": name, "Nation": "NOR",
         "Birthday": birthday, "Event": event, "Place": str(place),
-        "Season": str(season), "Distance": distance,
+        "Season": str(season), "Distance": distance, "RaceType": race_type,
+        "TeamEvent": team_event, "City": city,
     }
 
 
@@ -121,6 +123,56 @@ class SiteRankingsTest(unittest.TestCase):
         self.assertEqual(by_id[2]["WC"], 4.0)
         self.assertEqual(by_id[2]["WSC"], 10.0)
         self.assertEqual(by_id[2]["Olympics"], 20.0)
+
+    def test_ski_jumping_scores_individual_team_and_tournament_results(self) -> None:
+        history = [
+            race(
+                athlete_id=1, name="Jumper", event="Olympic Games", place=1,
+                season=2026, race_type="Team Large", team_event="1",
+            ),
+            race(
+                athlete_id=1, name="Jumper", event="World Championship",
+                place=2, season=2026,
+            ),
+            race(
+                athlete_id=1, name="Jumper",
+                event="Ski Flying World Championship", place=1, season=2026,
+                race_type="Flying",
+            ),
+            race(
+                athlete_id=1, name="Jumper", event="World Cup", place=3,
+                season=2027, race_type="Team Large", team_event="1",
+            ),
+            race(
+                athlete_id=1, name="Jumper", event="World Cup", place=1,
+                season=2027,
+            ),
+        ]
+        historical = [
+            race(
+                athlete_id=1, name="Jumper", event="4 Hill Tournament",
+                place=1, season=2026, race_type="4 Hill Tournament",
+                city="4 Hill Tournament",
+            ),
+            standings(athlete_id=1, name="Jumper", place=1, season=2026),
+            standings(athlete_id=1, name="Jumper", place=1, season=2027),
+        ]
+
+        result = build_rankings(
+            sport="ski-jumping",
+            history_rows=history,
+            historical_ranking_rows=historical,
+            target_season=2027,
+            as_of=date(2026, 11, 18),
+        )[0]
+
+        self.assertEqual(result["Olympics"], 20.0)
+        self.assertEqual(result["WSC"], 20.0)
+        self.assertEqual(result["4 Hills"], 20.0)
+        self.assertEqual(result["Ski Flying WC"], 20.0)
+        self.assertEqual(result["World Cup"], 9.0)
+        self.assertEqual(result["Table"], 80.0)
+        self.assertEqual(result["Total"], 169.0)
 
     def test_rejects_mismatched_team_members(self) -> None:
         with self.assertRaisesRegex(RankingDataError, "mismatched"):
