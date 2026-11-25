@@ -2,6 +2,7 @@ import csv
 import json
 import tempfile
 import unittest
+from datetime import date
 from pathlib import Path
 
 from pipelines.skijump_site_data import CURRENT_RATINGS, write_site_data
@@ -136,6 +137,9 @@ class SkiJumpSiteDataTest(unittest.TestCase):
                 ladies_history=ladies,
                 season=2027,
                 output_root=output,
+                as_of=date(2026, 11, 25),
+                men_ranking_history=men,
+                ladies_ranking_history=ladies,
             )
 
             current = json.loads((output / "M_chrono_current.json").read_text())
@@ -159,6 +163,7 @@ class SkiJumpSiteDataTest(unittest.TestCase):
             race_lookup = json.loads(
                 (output / "head2head/M_race_lookup.json").read_text()
             )
+            rankings = json.loads((output / "M/ranks.json").read_text())
 
             self.assertEqual([record["ID"] for record in current], [1, 3])
             self.assertEqual(current[0]["Pelo"], 1495.0)
@@ -208,6 +213,9 @@ class SkiJumpSiteDataTest(unittest.TestCase):
             self.assertEqual(len(head_to_head["1"]), 3)
             self.assertEqual(head_to_head["1"][0]["event"], "Team Large")
             self.assertEqual(race_lookup["2027_1"]["event"], "Team Large")
+            self.assertEqual(rankings[0]["Skier"], "Active")
+            self.assertEqual(rankings[0]["World Cup"], 14.0)
+            self.assertEqual(rankings[0]["Table"], 0.0)
 
     def test_completed_season_winner_uses_undiscounted_pelo(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

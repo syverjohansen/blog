@@ -16,6 +16,7 @@ import json
 import tempfile
 from collections import defaultdict
 from collections.abc import Iterable
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -27,6 +28,7 @@ from pipelines.site_athletes import (
     build_skier_lookup,
 )
 from pipelines.site_head_to_head import build_head_to_head
+from pipelines.site_rankings import build_rankings, read_csv, write_rankings
 from pipelines.site_season_snapshot import (
     SeasonSnapshotError,
     build_season_snapshot,
@@ -326,14 +328,53 @@ def build_athlete_history_updates(
     return output
 
 
+def _current_standings(
+    rows: list[dict[str, str]], season: int, as_of: date
+) -> list[dict[str, str]]:
+    """Return accepted target-season standings only after their dated close."""
+    output: list[dict[str, str]] = []
+    for row in rows:
+        if row["Event"] != "Standings" or int(row["Season"]) != season:
+            continue
+        try:
+            standing_date = date.fromisoformat(row["Date"].split("T", 1)[0])
+        except ValueError as exc:
+            raise SiteDataError(
+                f"invalid target-season standings date: {row['Date']!r}"
+            ) from exc
+        if standing_date > as_of:
+            continue
+        output.append(
+            {
+                "ID": row["ID"],
+                "Skier": row["Skier"],
+                "Nation": row["Nation"],
+                "Ranking": row["Place"],
+                "Season": row["Season"],
+            }
+        )
+    return output
+
+
 def write_site_data(
-    *, men_history: Path, ladies_history: Path, season: int, output_root: Path
+    *,
+    men_history: Path,
+    ladies_history: Path,
+    season: int,
+    output_root: Path,
+    as_of: date | None = None,
+    men_ranking_history: Path | None = None,
+    ladies_ranking_history: Path | None = None,
 ) -> None:
     histories = {
         "M": _read_history(men_history, "M"),
         "L": _read_history(ladies_history, "L"),
     }
     output_root = output_root.expanduser().resolve()
+    ranking_histories = {
+        "M": men_ranking_history,
+        "L": ladies_ranking_history,
+    }
     for sex, rows in histories.items():
         _atomic_text(
             output_root / f"{sex}_chrono_all_time.json",
@@ -440,6 +481,29 @@ def write_site_data(
                 separators=(",", ":"),
             ),
         )
+        if ranking_histories[sex] is not None:
+            historical = read_csv(
+                ranking_histories[sex],
+                {
+                    "Date", "City", "Event", "RaceType", "TeamEvent",
+                    "Season", "Place", "ID", "Skier", "Nation", "Birthday",
+                },
+            )
+            effective_as_of = as_of or date.today()
+            write_rankings(
+                output_root,
+                sex,
+                build_rankings(
+                    sport="ski-jumping",
+                    history_rows=rows,
+                    historical_ranking_rows=historical,
+                    target_season=season,
+                    as_of=effective_as_of,
+                    current_standings_rows=_current_standings(
+                        historical, season, effective_as_of
+                    ),
+                ),
+            )
 
 
 def parse_args() -> argparse.Namespace:
@@ -448,6 +512,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ladies-history", required=True, type=Path)
     parser.add_argument("--season", required=True, type=int)
     parser.add_argument("--output-root", required=True, type=Path)
+    parser.add_argument("--as-of", required=True, type=date.fromisoformat)
+    parser.add_argument("--men-ranking-history", required=True, type=Path)
+    parser.add_argument("--ladies-ranking-history", required=True, type=Path)
     return parser.parse_args()
 
 
@@ -458,6 +525,9 @@ def main() -> int:
         ladies_history=args.ladies_history,
         season=args.season,
         output_root=args.output_root,
+        as_of=args.as_of,
+        men_ranking_history=args.men_ranking_history,
+        ladies_ranking_history=args.ladies_ranking_history,
     )
     return 0
 

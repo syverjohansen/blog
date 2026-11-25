@@ -39,6 +39,16 @@ PODIUM_POINTS = {
     "xc_wc_individual": (8.0, 4.0, 4.0),
     "xc_wc_relay": (2.0, 1.0, 1.0),
     "xc_wc_ts": (4.0, 2.0, 2.0),
+    "sj_olympics_individual": (80.0, 40.0, 20.0),
+    "sj_olympics_team": (20.0, 10.0, 5.0),
+    "sj_wsc_individual": (40.0, 20.0, 10.0),
+    "sj_wsc_team": (10.0, 5.0, 2.5),
+    "sj_four_hills_individual": (20.0, 10.0, 5.0),
+    "sj_four_hills_team": (10.0, 5.0, 2.5),
+    "sj_flying_individual": (20.0, 10.0, 5.0),
+    "sj_flying_team": (10.0, 5.0, 2.5),
+    "sj_wc_individual": (8.0, 4.0, 4.0),
+    "sj_wc_team": (2.0, 1.0, 1.0),
 }
 
 
@@ -94,6 +104,15 @@ def _xc_race_type(distance: str) -> str:
     return "individual"
 
 
+def _skijump_race_type(row: dict[str, str]) -> str:
+    return (
+        "team"
+        if row.get("TeamEvent", "").strip() == "1"
+        or "team" in row.get("RaceType", "").casefold()
+        else "individual"
+    )
+
+
 def _race_category_and_points(
     row: dict[str, str], *, sport: str
 ) -> tuple[str, float]:
@@ -110,6 +129,24 @@ def _race_category_and_points(
         if event == "WSC":
             return "WSC", _podium_points(place, "alpine_wsc")
         return "WC", _podium_points(place, "alpine_wc")
+
+    if sport == "ski-jumping":
+        race_type = _skijump_race_type(row)
+        if olympics:
+            return "Olympics", _podium_points(
+                place, f"sj_olympics_{race_type}"
+            )
+        if event == "World Championship":
+            return "WSC", _podium_points(place, f"sj_wsc_{race_type}")
+        if event == "4 Hill Tournament" or row.get("City") == "4 Hill Tournament":
+            return "FourHills", _podium_points(
+                place, f"sj_four_hills_{race_type}"
+            )
+        if event == "Ski Flying World Championship":
+            return "SkiFlying", _podium_points(
+                place, f"sj_flying_{race_type}"
+            )
+        return "WC", _podium_points(place, f"sj_wc_{race_type}")
 
     race_type = _xc_race_type(row["Distance"].strip())
     if olympics:
@@ -158,10 +195,12 @@ def build_rankings(
     Historical ranking rows are used only for completed-season ``Standings``
     records.  Race results always come from accepted modern histories.
     """
-    if sport not in {"alpine", "cross-country"}:
+    if sport not in {"alpine", "cross-country", "ski-jumping"}:
         raise RankingDataError(f"unsupported ranking sport: {sport}")
 
-    categories = ("Olympics", "WSC", "Tour", "WC", "Table")
+    categories = (
+        "Olympics", "WSC", "Tour", "FourHills", "SkiFlying", "WC", "Table"
+    )
     points: dict[str, dict[str, float]] = defaultdict(
         lambda: {category: 0.0 for category in categories}
     )
@@ -199,6 +238,12 @@ def build_rankings(
         athlete_id = str(_integer(row, "ID", "historical ranking history"))
         if athlete_id not in identity or not identity[athlete_id].get("Birthday", "").strip():
             identity[athlete_id] = row
+        if sport == "ski-jumping" and row["Event"] == "4 Hill Tournament":
+            season = _integer(row, "Season", "historical Four Hills result")
+            category, score = _race_category_and_points(row, sport=sport)
+            points[athlete_id][category] += score
+            seasons[athlete_id].add(season)
+            continue
         if row["Event"] != "Standings":
             continue
         season = _integer(row, "Season", "historical standings")
@@ -257,9 +302,13 @@ def build_rankings(
         }
         if sport == "cross-country":
             record["Tour"] = category_points["Tour"]
+        elif sport == "ski-jumping":
+            record["4 Hills"] = category_points["FourHills"]
+            record["Ski Flying WC"] = category_points["SkiFlying"]
         record.update(
             {
-                "WC": category_points["WC"],
+                ("World Cup" if sport == "ski-jumping" else "WC"):
+                    category_points["WC"],
                 "Table": category_points["Table"],
                 "Total": total,
                 "From": min(athlete_seasons),
