@@ -131,6 +131,35 @@ class SiteArtifactManifestTest(unittest.TestCase):
         self.assertLess(tests, render)
         self.assertLess(render, publication)
 
+    def test_phase_six_nordic_combined_has_complete_hosted_ownership(self) -> None:
+        milestone = self.manifest["milestones"][
+            "phase_6_nordic_combined_site_parity"
+        ]
+        self.assertEqual(milestone["status"], "complete")
+        self.assertEqual(milestone["sports"], ["nordic-combined"])
+        coverage = self.manifest["sports"]["nordic-combined"]["coverage"]
+        self.assertEqual(
+            set(coverage),
+            set(self.manifest["families"]) - {"athlete_history_updates"},
+        )
+        self.assertEqual(
+            {contract["owner"] for contract in coverage.values()},
+            {"nordic_combined_site_data"},
+        )
+        owner = self.manifest["owners"]["nordic_combined_site_data"]
+        workflow = (BLOG_ROOT / owner["workflow"]).read_text(encoding="utf-8")
+        generation = workflow.index(
+            "python3 -m pipelines.nordic_combined_site_data"
+        )
+        tests = workflow.index("unittest discover", generation)
+        render = workflow.index("hugo --minify", tests)
+        publication = workflow.index(
+            "git add -- \"$artifact_root\"", render
+        )
+        self.assertLess(generation, tests)
+        self.assertLess(tests, render)
+        self.assertLess(render, publication)
+
     def test_every_live_layout_reference_has_exactly_one_artifact_family(self) -> None:
         families = self.manifest["families"]
         failures: list[str] = []

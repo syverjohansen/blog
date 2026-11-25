@@ -174,6 +174,39 @@ class SiteRankingsTest(unittest.TestCase):
         self.assertEqual(result["Table"], 80.0)
         self.assertEqual(result["Total"], 169.0)
 
+    def test_nordic_combined_scores_individual_team_and_team_sprint(self) -> None:
+        history = [
+            race(
+                athlete_id=1, name="Combined", event="Olympic Games",
+                place=1, season=2026, race_type="Team",
+            ),
+            race(
+                athlete_id=1, name="Combined", event="World Championship",
+                place=2, season=2026, race_type="Team Sprint",
+            ),
+            race(
+                athlete_id=1, name="Combined", event="World Cup",
+                place=3, season=2027, race_type="Individual Compact",
+            ),
+        ]
+        result = build_rankings(
+            sport="nordic-combined",
+            history_rows=history,
+            historical_ranking_rows=[
+                standings(
+                    athlete_id=1, name="Combined", place=1, season=2026
+                )
+            ],
+            target_season=2027,
+            as_of=date(2026, 11, 18),
+        )[0]
+
+        self.assertEqual(result["Olympics"], 20.0)
+        self.assertEqual(result["WSC"], 10.0)
+        self.assertEqual(result["WC"], 4.0)
+        self.assertEqual(result["Table"], 80.0)
+        self.assertEqual(result["Total"], 114.0)
+
     def test_rejects_mismatched_team_members(self) -> None:
         with self.assertRaisesRegex(RankingDataError, "mismatched"):
             build_rankings(
