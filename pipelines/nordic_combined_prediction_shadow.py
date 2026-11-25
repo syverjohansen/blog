@@ -21,6 +21,7 @@ from pipelines.nordic_combined_prediction_contract import CATEGORY_CONTRACTS, bu
 
 
 SCHEMA_VERSION = "nordicnumbers.nordic-combined-prediction-shadow/v1"
+NORMALIZATION_SCHEMA = "nordicnumbers.nordic-combined-startlist-normalization/v1"
 SAFE_RUN_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 INDIVIDUAL_COLUMNS = (
     "Skier", "ID", "Nation", "Sex", "Participation", "Win", "Podium",
@@ -104,6 +105,15 @@ def _startlist_relative(category: str) -> str:
     return candidates[0]
 
 
+STARTLIST_RELATIVES = {
+    _startlist_relative(category) for category in CATEGORY_CONTRACTS
+}
+STARTLIST_FILENAMES = {
+    category: Path(_startlist_relative(category)).name
+    for category in CATEGORY_CONTRACTS
+}
+
+
 def _canonical_id(value: object) -> str:
     if isinstance(value, bool) or value is None:
         return ""
@@ -175,8 +185,106 @@ def read_startlist_contract(
     return expected
 
 
+def _csv_row_count(path: Path) -> int:
+    with path.open(newline="", encoding="utf-8-sig") as handle:
+        reader = csv.reader(handle)
+        next(reader, None)
+        return sum(1 for row in reader if any(value.strip() for value in row))
+
+
+def validate_normalized_startlists(
+    *,
+    report_path: Path,
+    candidate_root: Path,
+    logical_date: date,
+    category_counts: dict[str, int],
+) -> tuple[list[dict[str, object]], dict[str, list[set[str]]]]:
+    """Verify normalized official candidates before exposing them to the model."""
+    try:
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise PredictionShadowError(
+            f"cannot read startlist normalization report: {report_path}"
+        ) from error
+    expected_header = {
+        "schema_version": NORMALIZATION_SCHEMA,
+        "logical_date": logical_date.isoformat(),
+        "status": "ready",
+        "prediction_eligible": True,
+        "accepted_startlists_modified": False,
+    }
+    observed_header = {key: report.get(key) for key in expected_header}
+    if observed_header != expected_header:
+        raise PredictionShadowError(
+            f"startlist normalization is not prediction eligible: {observed_header}"
+        )
+    active_categories = {
+        category for category, count in category_counts.items() if count
+    }
+    outputs = report.get("outputs")
+    if not isinstance(outputs, dict) or set(outputs) != active_categories:
+        raise PredictionShadowError(
+            "normalized startlist categories do not match the execution plan: "
+            f"observed={sorted(outputs) if isinstance(outputs, dict) else outputs!r} "
+            f"expected={sorted(active_categories)}"
+        )
+
+    candidate_root = candidate_root.resolve()
+    records: list[dict[str, object]] = []
+    identities: dict[str, list[set[str]]] = {}
+    for category in sorted(active_categories):
+        metadata = outputs.get(category)
+        if not isinstance(metadata, dict):
+            raise PredictionShadowError(
+                f"invalid normalization metadata for {category}: {metadata!r}"
+            )
+        candidate = (candidate_root / STARTLIST_FILENAMES[category]).resolve()
+        reported = (report_path.parent / str(metadata.get("file", ""))).resolve()
+        if candidate.parent != candidate_root or reported != candidate:
+            raise PredictionShadowError(
+                f"normalization report points outside the candidate root for {category}"
+            )
+        if not candidate.is_file() or candidate.stat().st_size == 0:
+            raise PredictionShadowError(
+                f"normalized startlist is missing or empty: {candidate}"
+            )
+        observed_sha = sha256(candidate)
+        if metadata.get("sha256") != observed_sha:
+            raise PredictionShadowError(
+                f"normalized startlist checksum mismatch for {category}"
+            )
+        rows = _csv_row_count(candidate)
+        if metadata.get("rows") != rows:
+            raise PredictionShadowError(
+                f"normalized startlist row count mismatch for {category}: "
+                f"report={metadata.get('rows')!r} observed={rows}"
+            )
+        identities[category] = read_startlist_contract(
+            candidate,
+            category=category,
+            count=category_counts[category],
+            logical_date=logical_date,
+        )
+        records.append(
+            {
+                "category": category,
+                "file": str(candidate),
+                "bytes": candidate.stat().st_size,
+                "rows": rows,
+                "sha256": observed_sha,
+                "source": "normalized_official_fis",
+            }
+        )
+    return records, identities
+
+
 def materialize_inputs(
-    *, run_root: Path, ski_root: Path, required_inputs: Iterable[str]
+    *,
+    run_root: Path,
+    ski_root: Path,
+    required_inputs: Iterable[str],
+    candidate_root: Path | None = None,
+    active_categories: set[str] | None = None,
 ) -> tuple[Path, Path, list[dict[str, object]]]:
     """Copy only declared inputs into immutable run-local model roots."""
     individual_root = run_root / "model-inputs/individual"
@@ -185,6 +293,8 @@ def materialize_inputs(
     team_root.mkdir(parents=True)
     records: list[dict[str, object]] = []
     for relative in sorted(required_inputs):
+        if candidate_root is not None and relative in STARTLIST_RELATIVES:
+            continue
         source = ski_root / relative
         if not source.is_file() or source.stat().st_size == 0:
             raise PredictionShadowError(f"required input is missing or empty: {relative}")
@@ -203,6 +313,25 @@ def materialize_inputs(
                 "materialized_as": str(destination.relative_to(run_root)),
             }
         )
+    if candidate_root is not None:
+        if active_categories is None:
+            raise PredictionShadowError("generated startlists require active categories")
+        for category in sorted(active_categories):
+            source = candidate_root / STARTLIST_FILENAMES[category]
+            relative = _startlist_relative(category)
+            destination_root = team_root if "/relay/excel365/" in relative else individual_root
+            destination = destination_root / source.name
+            shutil.copy2(source, destination)
+            records.append(
+                {
+                    "category": category,
+                    "file": str(source),
+                    "bytes": source.stat().st_size,
+                    "sha256": sha256(source),
+                    "materialized_as": str(destination.relative_to(run_root)),
+                    "source": "normalized_official_fis",
+                }
+            )
     return individual_root, team_root, records
 
 
@@ -305,6 +434,8 @@ def run_shadow(
     random_seed: int,
     blog_commit: str,
     ski_commit: str,
+    startlist_root: Path | None = None,
+    startlist_report: Path | None = None,
     rscript: str = "Rscript",
     command_runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
 ) -> Path:
@@ -367,13 +498,45 @@ def run_shadow(
         if plan["status"] != "ready_for_shadow_implementation":
             raise PredictionShadowError(f"prediction plan is blocked: {plan['blockers']}")
 
+        if (startlist_root is None) != (startlist_report is None):
+            raise PredictionShadowError(
+                "startlist root and normalization report must be provided together"
+            )
+        generated_startlists = startlist_root is not None
+        active_categories = {
+            category for category, count in plan["categories"].items() if count
+        }
+        expected_by_category: dict[str, list[set[str]]] = {}
+        generated_inputs: list[dict[str, object]] = []
+        if generated_startlists:
+            assert startlist_root is not None and startlist_report is not None
+            startlist_root = startlist_root.expanduser().resolve()
+            startlist_report = startlist_report.expanduser().resolve()
+            generated_inputs, expected_by_category = validate_normalized_startlists(
+                report_path=startlist_report,
+                candidate_root=startlist_root,
+                logical_date=target_date,
+                category_counts={
+                    category: int(count)
+                    for category, count in plan["categories"].items()
+                },
+            )
         individual_root, team_root, inputs = materialize_inputs(
             run_root=run_root,
             ski_root=ski_root,
             required_inputs=plan["required_ski_inputs"],
+            candidate_root=startlist_root if generated_startlists else None,
+            active_categories=active_categories,
         )
+        if generated_startlists:
+            generated_by_category = {
+                str(record["category"]): record for record in generated_inputs
+            }
+            for item in inputs:
+                category = item.get("category")
+                if category in generated_by_category:
+                    item["rows"] = generated_by_category[str(category)]["rows"]
         report["inputs"] = inputs
-        expected_by_category: dict[str, list[set[str]]] = {}
         startlist_rows: dict[str, list[int]] = {}
         for category, count_value in plan["categories"].items():
             count = int(count_value)
@@ -381,15 +544,25 @@ def run_shadow(
                 continue
             relative = _startlist_relative(category)
             root = team_root if "/relay/excel365/" in relative else individual_root
-            identities = read_startlist_contract(
-                root / Path(relative).name,
-                category=category,
-                count=count,
-                logical_date=target_date,
-            )
+            identities = expected_by_category.get(category)
+            if identities is None:
+                identities = read_startlist_contract(
+                    root / Path(relative).name,
+                    category=category,
+                    count=count,
+                    logical_date=target_date,
+                )
             expected_by_category[category] = identities
             startlist_rows[category] = [len(values) for values in identities]
-        report["startlist_source"] = "accepted_repository"
+        if generated_startlists:
+            assert startlist_report is not None
+            report["startlist_source"] = "normalized_official_fis"
+            report["startlist_normalization_report"] = {
+                "file": str(startlist_report),
+                "sha256": sha256(startlist_report),
+            }
+        else:
+            report["startlist_source"] = "accepted_repository"
         report["startlist_rows"] = startlist_rows
 
         environment = {
@@ -487,6 +660,8 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--random-seed", required=True, type=int)
     parser.add_argument("--blog-commit", required=True)
     parser.add_argument("--ski-commit", required=True)
+    parser.add_argument("--startlist-root", type=Path)
+    parser.add_argument("--startlist-report", type=Path)
     parser.add_argument("--rscript", default="Rscript")
     return parser.parse_args(argv)
 
@@ -504,6 +679,8 @@ def main(argv: Iterable[str] | None = None) -> int:
             random_seed=args.random_seed,
             blog_commit=args.blog_commit,
             ski_commit=args.ski_commit,
+            startlist_root=args.startlist_root,
+            startlist_report=args.startlist_report,
             rscript=args.rscript,
         )
     except Exception as error:  # noqa: BLE001 - CLI must expose retained failure
