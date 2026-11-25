@@ -49,6 +49,15 @@ PODIUM_POINTS = {
     "sj_flying_team": (10.0, 5.0, 2.5),
     "sj_wc_individual": (8.0, 4.0, 4.0),
     "sj_wc_team": (2.0, 1.0, 1.0),
+    "nc_olympics_individual": (80.0, 40.0, 20.0),
+    "nc_olympics_team": (20.0, 10.0, 5.0),
+    "nc_olympics_team_sprint": (40.0, 20.0, 10.0),
+    "nc_wsc_individual": (40.0, 20.0, 10.0),
+    "nc_wsc_team": (10.0, 5.0, 2.5),
+    "nc_wsc_team_sprint": (20.0, 10.0, 5.0),
+    "nc_wc_individual": (8.0, 4.0, 4.0),
+    "nc_wc_team": (2.0, 1.0, 1.0),
+    "nc_wc_team_sprint": (4.0, 2.0, 2.0),
 }
 
 
@@ -113,6 +122,15 @@ def _skijump_race_type(row: dict[str, str]) -> str:
     )
 
 
+def _nordic_combined_race_type(row: dict[str, str]) -> str:
+    race_type = row.get("RaceType", "").strip().casefold()
+    if race_type == "team sprint":
+        return "team_sprint"
+    if race_type == "team":
+        return "team"
+    return "individual"
+
+
 def _race_category_and_points(
     row: dict[str, str], *, sport: str
 ) -> tuple[str, float]:
@@ -147,6 +165,16 @@ def _race_category_and_points(
                 place, f"sj_flying_{race_type}"
             )
         return "WC", _podium_points(place, f"sj_wc_{race_type}")
+
+    if sport == "nordic-combined":
+        race_type = _nordic_combined_race_type(row)
+        if olympics:
+            return "Olympics", _podium_points(
+                place, f"nc_olympics_{race_type}"
+            )
+        if event == "World Championship":
+            return "WSC", _podium_points(place, f"nc_wsc_{race_type}")
+        return "WC", _podium_points(place, f"nc_wc_{race_type}")
 
     race_type = _xc_race_type(row["Distance"].strip())
     if olympics:
@@ -195,7 +223,9 @@ def build_rankings(
     Historical ranking rows are used only for completed-season ``Standings``
     records.  Race results always come from accepted modern histories.
     """
-    if sport not in {"alpine", "cross-country", "ski-jumping"}:
+    if sport not in {
+        "alpine", "cross-country", "ski-jumping", "nordic-combined"
+    }:
         raise RankingDataError(f"unsupported ranking sport: {sport}")
 
     categories = (
