@@ -1,0 +1,53 @@
+{
+  "schema_version": "nordicnumbers.skijump-prediction-inventory/v1",
+  "status": "inventory-only",
+  "purpose": "Pin the accepted legacy inputs, model, outputs, and known gaps before hosted ski-jumping prediction execution is enabled.",
+  "repositories": {
+    "blog": {
+      "model": "content/post/skijump/drafts/race-picks-simulation.R",
+      "model_parameters": "content/post/shared/sport_params.R",
+      "logging": "content/post/shared/logging-utils.R",
+      "converter": "static/python/excel_to_hugo_multiple_sheets.py",
+      "daily_data_root": "data/skijump/drafts/race-picks/{date_key}",
+      "daily_post": "content/post/race-picks/{date_key}.md",
+      "weekend_data_root": "data/skijump/drafts/weekly-picks/{date_key}",
+      "weekend_post": "content/post/weekly-picks/{date_key}.md"
+    },
+    "ski": {
+      "schedule": "elo/python/skijump/polars/excel365/races.csv",
+      "weekends": "elo/python/skijump/polars/excel365/weekends.csv",
+      "individual_histories": [
+        "elo/python/skijump/polars/excel365/men_chrono_elevation.csv",
+        "elo/python/skijump/polars/excel365/ladies_chrono_elevation.csv"
+      ],
+      "individual_daily_startlists": [
+        "elo/python/skijump/polars/excel365/startlist_races_men.csv",
+        "elo/python/skijump/polars/excel365/startlist_races_ladies.csv"
+      ],
+      "team_histories": [
+        "elo/python/skijump/polars/relay/excel365/men_team_chrono.csv",
+        "elo/python/skijump/polars/relay/excel365/ladies_team_chrono.csv",
+        "elo/python/skijump/polars/relay/excel365/mixed_team_chrono.csv"
+      ],
+      "team_daily_startlists": [
+        "elo/python/skijump/polars/relay/excel365/startlist_team_races_men.csv",
+        "elo/python/skijump/polars/relay/excel365/startlist_team_races_ladies.csv",
+        "elo/python/skijump/polars/relay/excel365/startlist_mixed_team_races_teams.csv"
+      ]
+    }
+  },
+  "categories": {
+    "men": "men_position_probabilities.xlsx",
+    "ladies": "ladies_position_probabilities.xlsx",
+    "men_team": "men_team_position_probabilities.xlsx",
+    "ladies_team": "ladies_team_position_probabilities.xlsx",
+    "mixed_team": "mixed_team_position_probabilities.xlsx"
+  },
+  "known_gaps": [
+    "The retired master prediction script ran startlist acquisition and post conversion but did not directly invoke race-picks-simulation.R.",
+    "The R model and legacy startlist scripts use home-directory paths and must be parameterized before hosted execution.",
+    "The current R model emits probability workbooks only; publication must not reference legacy optional points JSON unless it actually exists.",
+    "The R model stores one result per team category, so multiple same-category team events on one logical date are unsupported and must block.",
+    "Network startlist acquisition, deterministic simulation, semantic validation, Hugo rendering, and bounded publication remain future slices."
+  ]
+}
