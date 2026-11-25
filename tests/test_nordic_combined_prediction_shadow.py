@@ -414,6 +414,17 @@ class NordicCombinedPredictionShadowTests(unittest.TestCase):
         self.assertIn("/pipelines/requirements-snapshot.txt", source)
         self.assertIn("Retain pre-run failure evidence", source)
         self.assertIn('"shadow runner did not produce its report"', source)
+        self.assertIn(
+            "STARTLIST_ACQUISITION_ROOT=$shadow_root/acquired-startlists", source
+        )
+        self.assertIn(
+            "STARTLIST_NORMALIZATION_ROOT=$shadow_root/normalized-startlists", source
+        )
+        self.assertIn(
+            "STARTLIST_ALIAS_FILE=$shadow_root/identity-aliases/fis_identity_aliases.csv",
+            source,
+        )
+        self.assertNotIn("$shadow_root/startlists/", source)
         self.assertIn('--startlist-root "$STARTLIST_CANDIDATE_ROOT"', source)
         self.assertIn('--startlist-report "$STARTLIST_NORMALIZATION_REPORT"', source)
         self.assertNotIn("/excel365/startlist_races_men.csv", source)
