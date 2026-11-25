@@ -43,6 +43,7 @@ jobs:
           sparse-checkout: |
             /pipelines/__init__.py
             /pipelines/requirements-integration.txt
+            /pipelines/requirements-snapshot.txt
             /pipelines/nordic_combined_prediction_contract.py
             /pipelines/nordic_combined_prediction_shadow.py
             /content/post/nordic-combined/drafts/race-picks-simulation.R
@@ -217,6 +218,43 @@ jobs:
             --blog-commit "$BLOG_SHA" \
             --ski-commit "$SKI_SHA" \
             "${startlist_args[@]}"
+
+      - name: Retain pre-run failure evidence
+        if: always()
+        env:
+          RUNNER_OUTCOME: ${{ steps.run_shadow.outcome }}
+          ACQUISITION_OUTCOME: ${{ steps.acquire_startlists.outcome }}
+          NORMALIZATION_OUTCOME: ${{ steps.normalize_startlists.outcome }}
+        run: |
+          if [[ -f "$REPORT_PATH" ]]; then
+            exit 0
+          fi
+          mkdir -p "$(dirname "$REPORT_PATH")"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report = {
+              "schema_version": "nordicnumbers.nordic-combined-prediction-shadow/v1",
+              "pipeline_id": "nordic_combined_prediction_shadow",
+              "run_id": os.environ["RUN_ID"],
+              "logical_date": os.environ["LOGICAL_DATE"],
+              "status": "failed",
+              "error": "shadow runner did not produce its report",
+              "upstream_outcomes": {
+                  "acquisition": os.environ.get("ACQUISITION_OUTCOME", "unknown"),
+                  "normalization": os.environ.get("NORMALIZATION_OUTCOME", "unknown"),
+                  "runner": os.environ.get("RUNNER_OUTCOME", "unknown"),
+              },
+              "publication": {
+                  "status": "disabled",
+                  "reason": "shadow runs retain evidence and cannot create or publish posts",
+              },
+          }
+          path = Path(os.environ["REPORT_PATH"])
+          path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
 
       - name: Upload complete shadow evidence
         if: always()
