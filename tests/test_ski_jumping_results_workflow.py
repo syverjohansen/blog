@@ -44,6 +44,44 @@ class SkiJumpingResultsWorkflowTests(unittest.TestCase):
         self.assertGreaterEqual(self.text.count(marker), 6)
         self.assertNotIn("--fail-on-gaps", self.text)
 
+    def test_season_close_runs_after_results_and_is_manual_recoverable(self) -> None:
+        self.assertIn("workflow_dispatch:", self.text)
+        self.assertIn("as_of:", self.text)
+        results = self.text.index("skijump_results_apply.py")
+        close = self.text.index("skijump_season_close.py")
+        self.assertLess(results, close)
+        self.assertIn('close_date="$SEASON-05-01"', self.text)
+        self.assertIn("steps.season_close.outputs.status == 'candidate'", self.text)
+
+    def test_season_close_validates_all_histories_but_mutates_only_individuals(self) -> None:
+        close = self.text.split("python3 skijump_season_close.py", 1)[1].split(
+            "- name: Validate and publish ski-jumping season close", 1
+        )[0]
+        for argument in (
+            "--men-chrono",
+            "--ladies-chrono",
+            "--men-team-chrono",
+            "--ladies-team-chrono",
+            "--mixed-team-chrono",
+            "--policy-exclusions",
+        ):
+            self.assertIn(argument, close)
+        publish = self.text.split(
+            "- name: Validate and publish ski-jumping season close", 1
+        )[1].split("- name: Upload results evidence", 1)[0]
+        self.assertIn('pytest -q "$root"/test_skijump_*.py', publish)
+        self.assertIn("men_chrono.csv", publish)
+        self.assertIn("ladies_chrono.csv", publish)
+        self.assertNotIn("men_team_chrono.csv", publish)
+        self.assertNotIn("ladies_team_chrono.csv", publish)
+        self.assertNotIn("mixed_team_chrono.csv", publish)
+
+    def test_season_close_evidence_is_retained(self) -> None:
+        self.assertIn("season_close_root", self.text)
+        self.assertIn("season_close_root }}/report.json", self.text)
+        self.assertIn("season_close_root }}/candidate/men_chrono.csv", self.text)
+        self.assertIn("season_close_root }}/candidate/ladies_chrono.csv", self.text)
+
     def test_only_atomic_five_history_set_is_committed(self) -> None:
         staged = self.text.split("git -C external/ski add", 1)[1].split(
             "if ! git", 1
