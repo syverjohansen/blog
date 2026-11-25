@@ -144,17 +144,25 @@ jobs:
           if len(events) != 1:
               raise SystemExit(f"hosted replay requires exactly one event; found {sorted(events)}")
           event = next(iter(events))
-          regular_individual = (
+          individual = (
               event[1] in {"M", "L"}
               and event[4] == "individual"
-              and event[6] == "0"
+              and event[5] in {
+                  "Individual", "Individual Compact", "IndividualCompact",
+                  "Mass Start", "Sprint",
+              }
           )
-          regular_mixed_team_sprint = (
-              event[1] == "Mixed"
+          mens_team = (
+              event[1] == "M"
+              and event[4] == "team"
+              and event[5] == "Team"
+          )
+          team_sprint = (
+              event[1] in {"M", "Mixed"}
               and event[4] == "team_sprint"
-              and event[6] == "0"
+              and event[5] == "Team Sprint"
           )
-          if not (regular_individual or regular_mixed_team_sprint):
+          if event[6] not in {"0", "1"} or not (individual or mens_team or team_sprint):
               raise SystemExit(
                   "unsupported Nordic-combined hosted replay event; evidence retained: "
                   f"sex={event[1]} kind={event[4]} championship={event[6]}"
@@ -185,6 +193,7 @@ jobs:
             --mapped-results "$RESULTS_ROOT/identity/mapped_results.csv" \
             --men-history relay/excel365/men_chrono.csv \
             --ladies-history relay/excel365/ladies_chrono.csv \
+            --team-history relay/excel365/men_team_chrono.csv \
             --team-sprint-history relay/excel365/team_sprint_chrono.csv \
             --season "$SEASON" \
             --output-dir "$RESULTS_ROOT/replay"
@@ -204,6 +213,7 @@ jobs:
             --mapped-results "$RESULTS_ROOT/identity/mapped_results.csv" \
             --men-history relay/excel365/men_chrono.csv \
             --ladies-history relay/excel365/ladies_chrono.csv \
+            --team-history relay/excel365/men_team_chrono.csv \
             --team-sprint-history relay/excel365/team_sprint_chrono.csv \
             --expected-season "$SEASON" \
             --output-dir "$RESULTS_ROOT/promotion"
@@ -244,6 +254,7 @@ jobs:
           git -C external/ski add \
             elo/python/nordic-combined/polars/relay/excel365/men_chrono.csv \
             elo/python/nordic-combined/polars/relay/excel365/ladies_chrono.csv \
+            elo/python/nordic-combined/polars/relay/excel365/men_team_chrono.csv \
             elo/python/nordic-combined/polars/relay/excel365/team_sprint_chrono.csv \
             "elo/python/nordic-combined/polars/results_promotion_receipts/$SEASON-$AS_OF-results.json"
           if ! git -C external/ski diff --cached --quiet; then
