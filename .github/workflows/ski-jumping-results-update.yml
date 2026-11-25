@@ -71,6 +71,21 @@ jobs:
           fi
           echo "as_of=$as_of" >> "$GITHUB_OUTPUT"
           echo "results_root=$RUNNER_TEMP/ski-jumping-results-update" >> "$GITHUB_OUTPUT"
+          echo "season_close_root=$RUNNER_TEMP/ski-jumping-season-close" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve accepted schedule season
+        id: season
+        working-directory: external/ski/elo/python/skijump/polars
+        run: |
+          season=$(python3 - <<'PY'
+          from pathlib import Path
+
+          from schedule_contract import RACES_COLUMNS, infer_fis_season, read_csv
+
+          print(infer_fis_season(read_csv(Path("excel365/races.csv"), RACES_COLUMNS)))
+          PY
+          )
+          echo "season=$season" >> "$GITHUB_OUTPUT"
 
       - name: Audit completed results
         id: gap
@@ -213,7 +228,7 @@ jobs:
         run: |
           root="external/ski/elo/python/skijump/polars"
           uv run --isolated --python 3.12 --with pytest --with beautifulsoup4 \
-            pytest -q "$root"/test_skijump_results_*.py
+            pytest -q "$root"/test_skijump_*.py
           git -C external/ski config user.name "github-actions[bot]"
           git -C external/ski config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git -C external/ski add \
@@ -228,11 +243,71 @@ jobs:
             git -C external/ski push origin HEAD:main
           fi
 
+      - name: Build and stage guarded ski-jumping season close
+        id: season_close
+        working-directory: external/ski/elo/python/skijump/polars
+        env:
+          AS_OF: ${{ steps.parameters.outputs.as_of }}
+          SEASON: ${{ steps.season.outputs.season }}
+          SEASON_CLOSE_ROOT: ${{ steps.parameters.outputs.season_close_root }}
+        run: |
+          close_date="$SEASON-05-01"
+          if [[ "$AS_OF" < "$close_date" ]]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "Season $SEASON does not close before $close_date." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          python3 skijump_season_close.py \
+            --schedule excel365/races.csv \
+            --men-chrono relay/excel365/men_chrono.csv \
+            --ladies-chrono relay/excel365/ladies_chrono.csv \
+            --men-team-chrono relay/excel365/men_team_chrono.csv \
+            --ladies-team-chrono relay/excel365/ladies_team_chrono.csv \
+            --mixed-team-chrono relay/excel365/mixed_team_chrono.csv \
+            --policy-exclusions skijump_results_policy_exclusions.csv \
+            --season "$SEASON" \
+            --as-of "$AS_OF" \
+            --output-root "$SEASON_CLOSE_ROOT"
+          report="$SEASON_CLOSE_ROOT/report.json"
+          status=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$report")
+          if [[ "$status" == "candidate" ]]; then
+            cp "$SEASON_CLOSE_ROOT/candidate/men_chrono.csv" relay/excel365/men_chrono.csv
+            cp "$SEASON_CLOSE_ROOT/candidate/ladies_chrono.csv" relay/excel365/ladies_chrono.csv
+          elif [[ "$status" != "no_changes" ]]; then
+            echo "Unexpected season-close status: $status" >&2
+            exit 1
+          fi
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Validate and publish ski-jumping season close
+        if: steps.season_close.outputs.status == 'candidate'
+        env:
+          SEASON: ${{ steps.season.outputs.season }}
+        run: |
+          root="external/ski/elo/python/skijump/polars"
+          uv run --isolated --python 3.12 --with pytest --with beautifulsoup4 \
+            pytest -q "$root"/test_skijump_*.py
+          git -C external/ski config user.name "github-actions[bot]"
+          git -C external/ski config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C external/ski add \
+            elo/python/skijump/polars/relay/excel365/men_chrono.csv \
+            elo/python/skijump/polars/relay/excel365/ladies_chrono.csv
+          if ! git -C external/ski diff --cached --quiet; then
+            git -C external/ski commit -m "Close ski-jumping season $SEASON"
+            git -C external/ski pull --rebase origin main
+            git -C external/ski push origin HEAD:main
+          fi
+
       - name: Upload results evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ski-jumping-results-${{ steps.parameters.outputs.as_of }}-${{ github.run_id }}
-          path: ${{ steps.parameters.outputs.results_root }}/
+          path: |
+            ${{ steps.parameters.outputs.results_root }}/
+            ${{ steps.parameters.outputs.season_close_root }}/report.json
+            ${{ steps.parameters.outputs.season_close_root }}/candidate/men_chrono.csv
+            ${{ steps.parameters.outputs.season_close_root }}/candidate/ladies_chrono.csv
           if-no-files-found: warn
           retention-days: 30
