@@ -78,6 +78,15 @@ class SkiJumpingPredictionContractTests(unittest.TestCase):
             "content/post/race-picks/20260210.md", plan["candidate"]["post"]
         )
         self.assertEqual([], plan["candidate"]["optional_legacy_points_files"])
+        self.assertEqual(
+            "2026-02-10", plan["model"]["environment"]["NORDIC_LOGICAL_DATE"]
+        )
+        self.assertEqual(
+            "false", plan["model"]["environment"]["NORDIC_LOAD_ENV"]
+        )
+        self.assertIn(
+            "NORDIC_TEAM_INPUT_ROOT", plan["model"]["environment"]
+        )
 
     def test_multiple_individual_races_expand_converter_outputs(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
