@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build current cross-country Elo tables and one season's race archive."""
+"""Build current XC Elo and archives from latest actual season ratings."""
 
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ import json
 import tempfile
 from collections import defaultdict
 from collections.abc import Iterable
-from pathlib import Path
 from datetime import date
+from pathlib import Path
 from typing import Any
 
 from pipelines.site_all_time import build_all_time_elo
@@ -26,6 +26,11 @@ from pipelines.site_rankings import (
     read_csv,
     read_finalized_standings,
     write_rankings,
+)
+from pipelines.site_season_snapshot import (
+    SeasonSnapshotError,
+    build_season_snapshot,
+    current_season_rows,
 )
 
 CURRENT_RATINGS = {
@@ -191,20 +196,10 @@ def _birthday(value: str) -> str | None:
 def build_current_table(
     rows: list[dict[str, str]], season: int
 ) -> list[dict[str, Any]]:
-    active_ids = {
-        row["ID"]
-        for row in rows
-        if int(row["Season"]) == season and row["Event"] != "Offseason"
-    }
-    if not active_ids:
-        raise SiteDataError(f"season {season} contains no active racers")
-
-    latest: dict[str, dict[str, str]] = {}
-    for row in rows:
-        if row["ID"] in active_ids and int(row["Season"]) <= season:
-            latest[row["ID"]] = row
-    if set(latest) != active_ids:
-        raise SiteDataError("not every active athlete has a latest history row")
+    try:
+        latest = current_season_rows(rows, season)
+    except SeasonSnapshotError as exc:
+        raise SiteDataError(str(exc)) from exc
 
     ordered = sorted(
         latest.values(),
@@ -243,44 +238,15 @@ def build_season_archive(
     rows: list[dict[str, str]], season: int
 ) -> tuple[list[dict[str, Any]], dict[int, list[dict[str, Any]]]]:
     grouped: dict[int, list[dict[str, str]]] = defaultdict(list)
-    prior_offseason = [
-        row
-        for row in rows
-        if row["Event"] == "Offseason" and int(row["Season"]) < season
-    ]
-    if not prior_offseason:
-        raise SiteDataError(f"no offseason ratings exist before season {season}")
-    rollover_season = max(int(row["Season"]) for row in prior_offseason)
-    active_ids = {
-        row["ID"]
-        for row in rows
-        if int(row["Season"]) == season and row["Event"] != "Offseason"
-    }
-    rollover_rows = [
-        row.copy()
-        for row in prior_offseason
-        if int(row["Season"]) == rollover_season and row["ID"] in active_ids
-    ]
-    rollover_ids = {row["ID"] for row in rollover_rows}
-    rollover_template = next(
-        row for row in prior_offseason if int(row["Season"]) == rollover_season
-    )
-    for athlete_id in active_ids - rollover_ids:
-        first_start = next(
-            row
-            for row in rows
-            if row["ID"] == athlete_id
-            and int(row["Season"]) == season
-            and row["Event"] != "Offseason"
+    try:
+        grouped[0] = build_season_snapshot(
+            rows,
+            season,
+            {"Pelo": "Elo"},
+            extra_metadata={"MS": "0", "Technique": ""},
         )
-        starting_row = first_start.copy()
-        for column in ("Date", "City", "Country", "Event", "Distance", "Technique"):
-            starting_row[column] = rollover_template[column]
-        for previous, current in CURRENT_RATINGS.items():
-            starting_row[previous] = first_start[previous]
-            starting_row[current] = first_start[previous]
-        rollover_rows.append(starting_row)
-    grouped[0] = rollover_rows
+    except SeasonSnapshotError as exc:
+        raise SiteDataError(str(exc)) from exc
     for row in rows:
         if int(row["Season"]) == season and row["Event"] != "Offseason":
             grouped[int(row["Race"])].append(row)

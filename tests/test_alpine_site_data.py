@@ -75,6 +75,9 @@ class AlpineSiteDataTest(unittest.TestCase):
                     event="Offseason", place=2, pelo=1350, elo=1342.5, date="2026-05-01"),
                 row(sex="M", athlete_id=1, skier="Racer", season=2027, race=1,
                     event="World Cup", place=1, pelo=1385, elo=1400, date="2026-10-25"),
+                row(sex="M", athlete_id=1, skier="Racer", season=2027, race=0,
+                    event="Offseason", place=1, pelo=1400, elo=1200,
+                    date="2027-05-01"),
                 row(sex="M", athlete_id=3, skier="Returner", season=2027, race=1,
                     event="World Cup", place=2, pelo=1300, elo=1310, date="2026-10-25"),
             ]
@@ -151,13 +154,14 @@ class AlpineSiteDataTest(unittest.TestCase):
             )
             self.assertEqual(summary[0]["podium"][0]["name"], "L Winner")
             self.assertEqual(summary[0]["race_number"], 0)
+            self.assertEqual(summary[0]["date"], "2027-05-01")
             self.assertEqual(summary[0]["event"], "Offseason")
             self.assertEqual(rollover[0]["previous_elo"], 1400.0)
-            self.assertEqual(rollover[0]["new_elo"], 1385.0)
-            self.assertEqual(rollover[0]["change"], -15.0)
+            self.assertEqual(rollover[0]["new_elo"], 1395.0)
+            self.assertEqual(rollover[0]["change"], -5.0)
             self.assertEqual([record["id"] for record in rollover], [2, 100])
             self.assertEqual(rollover[1]["previous_elo"], 1300.0)
-            self.assertEqual(rollover[1]["new_elo"], 1300.0)
+            self.assertEqual(rollover[1]["new_elo"], 1305.0)
             self.assertEqual(results[0]["previous_elo"], 1385.0)
             self.assertEqual(results[0]["new_elo"], 1395.0)
             self.assertEqual(results[0]["change"], 10.0)

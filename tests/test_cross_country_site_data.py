@@ -168,6 +168,18 @@ class CrossCountrySiteDataTests(unittest.TestCase):
                     elo=1412,
                     date="2026-11-27",
                 ),
+                row(
+                    sex="M",
+                    athlete_id=1,
+                    skier="Racer",
+                    season=2027,
+                    race=0,
+                    event="Offseason",
+                    place=1,
+                    pelo=1412,
+                    elo=1200,
+                    date="2027-05-01",
+                ),
             ]
             ladies_rows = [
                 row(
@@ -281,10 +293,11 @@ class CrossCountrySiteDataTests(unittest.TestCase):
                 (output / "head2head/L_race_lookup.json").read_text()
             )
             self.assertEqual(summary[0]["race_number"], 0)
-            self.assertEqual(summary[0]["technique"], "C")
+            self.assertEqual(summary[0]["date"], "2027-05-01")
+            self.assertEqual(summary[0]["technique"], "")
             self.assertEqual(rollover[0]["previous_elo"], 1420.0)
-            self.assertEqual(rollover[0]["new_elo"], 1420.0)
-            self.assertEqual(rollover[0]["change"], 0.0)
+            self.assertEqual(rollover[0]["new_elo"], 1412.0)
+            self.assertEqual(rollover[0]["change"], -8.0)
             self.assertEqual(results[0]["previous_elo"], 1402.0)
             self.assertEqual(results[0]["new_elo"], 1412.0)
             self.assertEqual(results[0]["change"], 10.0)
