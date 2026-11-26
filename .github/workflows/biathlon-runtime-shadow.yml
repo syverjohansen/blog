@@ -1,0 +1,210 @@
+name: Biathlon guarded runtime shadow
+
+on:
+  workflow_dispatch:
+    inputs:
+      season_id:
+        description: Official IBU season identifier
+        required: true
+        default: "2526"
+        type: string
+      event_id:
+        description: Official IBU event identifier
+        required: true
+        default: BT2526SWRLCP01
+        type: string
+      race_ids:
+        description: Comma-separated official IBU race identifiers
+        required: true
+        default: BT2526SWRLCP01SWRL,BT2526SWRLCP01SMRL,BT2526SWRLCP01MXSR,BT2526SWRLCP01MXRL,BT2526SWRLCP01SWIN,BT2526SWRLCP01SMIN,BT2526SWRLCP01SWSP,BT2526SWRLCP01SMSP,BT2526SWRLCP01SWPU,BT2526SWRLCP01SMPU
+        type: string
+      ski_ref:
+        description: Ski branch, tag, or commit to resolve exactly
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: biathlon-runtime-shadow
+  cancel-in-progress: false
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Prepare immutable run paths
+        run: |
+          run_id="github-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          shadow_root="$RUNNER_TEMP/biathlon-runtime-shadow"
+          {
+            echo "RUN_ID=$run_id"
+            echo "SHADOW_ROOT=$shadow_root"
+            echo "REPORT_PATH=$shadow_root/$run_id/runtime_report.json"
+          } >> "$GITHUB_ENV"
+
+      - name: Resolve ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SKI_REF: ${{ inputs.ski_ref }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if ! [[ "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+          echo "SKI_SHA=$ski_sha" >> "$GITHUB_ENV"
+
+      - name: Check out the bounded Biathlon runtime
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/biathlon/polars
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: external/ski/elo/python/biathlon/polars/requirements-elo-parity.txt
+
+      - name: Install pinned shadow dependencies
+        run: |
+          python3 -m pip install \
+            -r external/ski/elo/python/biathlon/polars/requirements-elo-parity.txt \
+            certifi==2026.11.20
+
+      - name: Run publication-disabled Biathlon shadow
+        id: run_shadow
+        continue-on-error: true
+        working-directory: external/ski/elo/python/biathlon/polars
+        env:
+          SEASON_ID_INPUT: ${{ inputs.season_id }}
+          EVENT_ID_INPUT: ${{ inputs.event_id }}
+          RACE_IDS_INPUT: ${{ inputs.race_ids }}
+          SKI_SHA_VALUE: ${{ steps.ski.outputs.sha || 'unresolved' }}
+        run: |
+          export SSL_CERT_FILE
+          SSL_CERT_FILE=$(python3 -c 'import certifi; print(certifi.where())')
+          race_file="$RUNNER_TEMP/biathlon-race-ids.txt"
+          python3 - "$race_file" <<'PY'
+          import os
+          import re
+          import sys
+          from pathlib import Path
+
+          race_ids = [value.strip() for value in os.environ["RACE_IDS_INPUT"].split(",")]
+          if not race_ids or any(not re.fullmatch(r"[A-Z0-9_]+", value) for value in race_ids):
+              raise SystemExit("race_ids must be a non-empty comma-separated list of IBU identifiers")
+          if len(race_ids) != len(set(race_ids)):
+              raise SystemExit("race_ids contains duplicates")
+          Path(sys.argv[1]).write_text("\n".join(race_ids) + "\n", encoding="utf-8")
+          PY
+          mapfile -t race_ids < "$race_file"
+          race_args=()
+          for race_id in "${race_ids[@]}"; do
+            race_args+=(--race-id "$race_id")
+          done
+          python3 biathlon_runtime_shadow.py \
+            --season-id "$SEASON_ID_INPUT" \
+            --event-id "$EVENT_ID_INPUT" \
+            "${race_args[@]}" \
+            --output-root "$SHADOW_ROOT" \
+            --run-id "$RUN_ID" \
+            --code-commit "$SKI_SHA" \
+            --repo-root "$GITHUB_WORKSPACE/external/ski"
+
+      - name: Retain wrapper failure evidence
+        if: always()
+        env:
+          RUNNER_OUTCOME: ${{ steps.run_shadow.outcome }}
+          SEASON_ID_INPUT: ${{ inputs.season_id }}
+          EVENT_ID_INPUT: ${{ inputs.event_id }}
+          RACE_IDS_INPUT: ${{ inputs.race_ids }}
+        run: |
+          if [[ -f "$REPORT_PATH" ]]; then
+            exit 0
+          fi
+          mkdir -p "$(dirname "$REPORT_PATH")"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report = {
+              "schema_version": "nordicnumbers.biathlon-hosted-shadow-failure/v1",
+              "status": "failed",
+              "run_id": os.environ["RUN_ID"],
+              "season_id": os.environ["SEASON_ID_INPUT"],
+              "event_id": os.environ["EVENT_ID_INPUT"],
+              "race_ids_input": os.environ["RACE_IDS_INPUT"],
+              "code_commit": os.environ["SKI_SHA_VALUE"],
+              "runner_outcome": os.environ.get("RUNNER_OUTCOME", "unknown"),
+              "error": "guarded runtime did not produce its final report",
+              "accepted_data_mutated": False,
+              "promotion": {"status": "disabled"},
+              "publication": {"status": "disabled"},
+          }
+          path = Path(os.environ["REPORT_PATH"])
+          path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+
+      - name: Upload complete Biathlon shadow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: biathlon-runtime-shadow-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/biathlon-runtime-shadow/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce retained shadow result
+        if: always()
+        env:
+          RUNNER_OUTCOME: ${{ steps.run_shadow.outcome }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["REPORT_PATH"])
+          if not path.is_file():
+              raise SystemExit(f"Biathlon shadow report is missing: {path}")
+          report = json.loads(path.read_text(encoding="utf-8"))
+          if os.environ.get("RUNNER_OUTCOME") != "success":
+              raise SystemExit("Biathlon shadow runner failed; inspect the retained evidence")
+          if report.get("status") != "passed":
+              raise SystemExit("Biathlon shadow did not pass every stage")
+          if report.get("code_commit") != os.environ["SKI_SHA"]:
+              raise SystemExit("Biathlon shadow commit does not match the resolved checkout")
+          if report.get("accepted_data_mutated") is not False:
+              raise SystemExit("Biathlon shadow changed accepted data")
+          if report.get("promotion") != {"status": "disabled"}:
+              raise SystemExit("Biathlon shadow promotion lock was not retained")
+          if report.get("publication") != {"status": "disabled"}:
+              raise SystemExit("Biathlon shadow publication lock was not retained")
+          expected_stages = [
+              "capture_official_evidence",
+              "adapt_compatibility_candidates",
+              "replay_athlete_ratings",
+              "rebuild_relay_team_artifacts",
+          ]
+          stages = report.get("stages", [])
+          if [stage.get("name") for stage in stages] != expected_stages:
+              raise SystemExit("Biathlon shadow stage sequence is incomplete")
+          if any(stage.get("status") != "passed" for stage in stages):
+              raise SystemExit("Biathlon shadow retained a failed stage")
+          print("Biathlon hosted runtime shadow passed with all safety locks retained")
+          PY
