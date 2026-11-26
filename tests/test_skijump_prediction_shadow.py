@@ -385,7 +385,8 @@ class SkiJumpingPredictionShadowTests(unittest.TestCase):
         source = WORKFLOW.read_text(encoding="utf-8")
         trigger = source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
         self.assertIn("workflow_dispatch:", trigger)
-        self.assertNotIn("schedule:", trigger)
+        self.assertIn("schedule:", trigger)
+        self.assertIn('cron: "17 5,11,17,23 * 1-3,11-12 *"', trigger)
         self.assertNotIn("workflow_run:", trigger)
         global_permissions = source.split("permissions:\n", 1)[1].split(
             "\n\nconcurrency:", 1

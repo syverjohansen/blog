@@ -22,15 +22,17 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         cls.tour = TOUR.read_text(encoding="utf-8")
         cls.final_climb = FINAL_CLIMB.read_text(encoding="utf-8")
 
-    def test_daily_pipeline_is_chained_and_manual_without_an_independent_cron(
+    def test_daily_pipeline_is_independently_dispatched_without_its_own_cron(
         self,
     ) -> None:
         trigger = self.daily.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
-        self.assertIn("workflow_run:", trigger)
-        self.assertIn('workflows: ["Alpine Production Shadow"]', trigger)
         self.assertIn("workflow_dispatch:", trigger)
+        self.assertNotIn("workflow_run:", trigger)
         self.assertNotIn("schedule:", trigger)
-        self.assertIn("github.event.workflow_run.conclusion == 'success'", self.daily)
+        coordinator = (
+            ROOT / ".github/workflows/nordic-numbers-nightly.yml"
+        ).read_text(encoding="utf-8")
+        self.assertIn("workflow: cross-country-site-data-update.yml", coordinator)
 
     def test_schedule_results_and_site_publication_are_ordered(self) -> None:
         schedule = self.daily.index("name: Build isolated schedule candidate")

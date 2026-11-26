@@ -399,15 +399,18 @@ class NordicCombinedPredictionShadowTests(unittest.TestCase):
         self.assertEqual("skipped", report["status"])
         self.assertEqual("disabled", report["publication"]["status"])
 
-    def test_scheduled_workflow_is_read_only_and_retains_evidence(self) -> None:
+    def test_scheduled_workflow_retains_read_only_shadow_before_publication(self) -> None:
         source = WORKFLOW.read_text(encoding="utf-8")
         trigger = source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
         self.assertIn("workflow_dispatch:", trigger)
         self.assertIn("schedule:", trigger)
         self.assertIn('cron: "17 5,11,17,23 * 1-3,11-12 *"', trigger)
         self.assertNotIn("workflow_run:", trigger)
-        self.assertNotIn("publish_predictions", source)
+        self.assertIn("publish_predictions", source)
         self.assertIn("contents: read", source)
+        self.assertIn("contents: write", source)
+        self.assertIn("pipelines.nordic_combined_prediction_publication", source)
+        self.assertIn("inputs.publish_predictions == true", source)
         self.assertIn("ref: ${{ steps.ski.outputs.sha }}", source)
         self.assertIn("-m pipelines.nordic_combined_prediction_shadow", source)
         self.assertIn("nordic_combined_startlist_acquire.py", source)
@@ -447,8 +450,9 @@ class NordicCombinedPredictionShadowTests(unittest.TestCase):
         self.assertIn("continue-on-error: true", source)
         self.assertIn("if: always()", source)
         self.assertIn("retention-days: 30", source)
-        self.assertNotIn("git push", source)
-        self.assertNotIn("contents: write", source)
+        shadow_job = source.split("\n  publish:\n", 1)[0]
+        self.assertNotIn("git push", shadow_job)
+        self.assertIn("contents: read", shadow_job)
 
 
 if __name__ == "__main__":
