@@ -15,6 +15,7 @@ SUPPORTED_SPORTS = {
     "alpine": "alpine",
     "cross-country": "ski",
     "skijump": "skijump",
+    "biathlon": "biathlon",
 }
 GENDERS = ("men", "ladies")
 ARTIFACT_TYPES = ("elo_change", "standings_predictions", "magic_numbers")
@@ -159,6 +160,7 @@ def render_post(logical_date: date, sports: tuple[str, ...], data_root: Path) ->
         "alpine": "Alpine",
         "cross-country": "Cross Country",
         "skijump": "Ski Jumping",
+        "biathlon": "Biathlon",
     }
     headings = {
         "elo_change": "Elo Change",

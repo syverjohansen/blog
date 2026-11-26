@@ -64,6 +64,8 @@ jobs:
             /elo/python/ski/polars/excel365/
             /elo/python/skijump/polars/standings_scrape.py
             /elo/python/skijump/polars/excel365/
+            /elo/python/biathlon/polars/standings_scrape.py
+            /elo/python/biathlon/polars/excel365/
 
       - name: Resolve logical date
         id: parameters
@@ -129,7 +131,8 @@ jobs:
         if: >-
           steps.detect.outputs.should_run == 'true' &&
           (contains(steps.detect.outputs.sports, 'cross-country') ||
-          contains(steps.detect.outputs.sports, 'skijump'))
+          contains(steps.detect.outputs.sports, 'skijump') ||
+          contains(steps.detect.outputs.sports, 'biathlon'))
         working-directory: blog
         env:
           REQUESTED_SPORTS: ${{ steps.detect.outputs.sports }}
@@ -139,6 +142,7 @@ jobs:
             case "$sport" in
               cross-country) ski_name=ski ;;
               skijump) ski_name=skijump ;;
+              biathlon) ski_name=biathlon ;;
               *) continue ;;
             esac
             python3 -m pipelines.weekly_recap_publication prepare-elevation \
@@ -169,6 +173,10 @@ jobs:
                 ski_name=skijump
                 recap_script=content/post/skijump/drafts/race-recap2.R
                 ;;
+              biathlon)
+                ski_name=biathlon
+                recap_script=content/post/biathlon/drafts/race-recap2.R
+                ;;
               *)
                 echo "Unsupported recap sport: $sport" >&2
                 continue
@@ -176,7 +184,11 @@ jobs:
             esac
 
             data_root="$NORDIC_SKI_ROOT/$ski_name/polars/excel365"
-            if ! python3 "$NORDIC_SKI_ROOT/$ski_name/polars/standings_scrape.py"; then
+            standings_args=()
+            if [[ "$sport" == "biathlon" ]]; then
+              standings_args+=(--data-root "$data_root")
+            fi
+            if ! python3 "$NORDIC_SKI_ROOT/$ski_name/polars/standings_scrape.py" "${standings_args[@]}"; then
               echo "Standings refresh failed for $sport; excluding it from this recap." >&2
               continue
             fi

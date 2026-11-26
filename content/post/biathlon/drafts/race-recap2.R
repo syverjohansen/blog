@@ -11,21 +11,34 @@ library(mgcv)     # for GAM models
 library(leaps)    # for feature selection
 library(lubridate) # for date handling
 
-# Define file paths
-men_chrono_path <- "~/ski/elo/python/biathlon/polars/excel365/men_chrono_elevation.csv"
-ladies_chrono_path <- "~/ski/elo/python/biathlon/polars/excel365/ladies_chrono_elevation.csv"
-races_path <- "~/ski/elo/python/biathlon/polars/excel365/races.csv"
-base_dir <- "~/blog/daehl-e"
+# Hosted recap inputs are injected by the workflow. Local defaults preserve the
+# existing developer command without allowing CI to write into a home checkout.
+data_root <- Sys.getenv(
+  "NORDIC_RECAP_DATA_ROOT",
+  unset = path.expand("~/ski/elo/python/biathlon/polars/excel365")
+)
+output_root <- Sys.getenv(
+  "NORDIC_RECAP_OUTPUT_ROOT",
+  unset = path.expand("~/blog/daehl-e/content/post/biathlon/drafts/weekly-recap")
+)
+logical_date <- as.Date(Sys.getenv(
+  "NORDIC_LOGICAL_DATE",
+  unset = format(as.POSIXct(Sys.time(), tz = "GMT"), "%Y-%m-%d")
+))
+base_dir <- Sys.getenv("NORDIC_BLOG_ROOT", unset = path.expand("~/blog/daehl-e"))
+men_chrono_path <- file.path(data_root, "men_chrono_elevation.csv")
+ladies_chrono_path <- file.path(data_root, "ladies_chrono_elevation.csv")
+races_path <- file.path(data_root, "races.csv")
 
 # Function to get the current date in GMT formatted as YYYYMMDD
 get_gmt_date_formatted <- function() {
-  format(as.POSIXct(Sys.time(), tz = "GMT"), "%Y%m%d")
+  format(logical_date, "%Y%m%d")
 }
 
 # Define the base output directory function that uses the GMT date
 get_output_dir <- function() {
   date_str <- get_gmt_date_formatted()
-  file.path("~/blog/daehl-e/content/post/biathlon/drafts/weekly-recap", date_str)
+  file.path(output_root, date_str)
 }
 
 # Read the CSV files
@@ -48,7 +61,7 @@ lapply(ski_data, dim)
 # Function to generate weekly Elo change report
 generate_weekly_elo_change <- function(chrono_data, gender, base_dir) {
   # Get current date
-  current_date <- Sys.Date()
+  current_date <- logical_date
   
   # Get date from one week ago
   one_week_ago <- current_date - 7
@@ -475,8 +488,8 @@ print(final_predictions)
 print(all_predictions)
 
 # Load standings for both genders
-standings_df <- read_csv("~/ski/elo/python/biathlon/polars/excel365/men_standings.csv")
-ladies_standings_df <- read_csv("~/ski/elo/python/biathlon/polars/excel365/ladies_standings.csv")
+standings_df <- read_csv(file.path(data_root, "men_standings.csv"))
+ladies_standings_df <- read_csv(file.path(data_root, "ladies_standings.csv"))
 
 # Get top 30 skiers from each gender
 top_30_men <- standings_df %>%
@@ -501,7 +514,7 @@ calculate_skier_race_probabilities_biathlon <- function(chrono_data, skier_name)
     pull(Date)
   
   # Calculate date from 5 years ago
-  five_years_ago <- Sys.Date() - (5 * 365)
+  five_years_ago <- logical_date - (5 * 365)
   
   # Use 5 years ago or skier's first race, whichever is later
   start_date <- if(length(skier_first_race) == 0) {
@@ -593,7 +606,7 @@ create_race_probability_table_biathlon <- function(men_chrono, ladies_chrono, to
       pull(Date)
     
     # Calculate date from 5 years ago
-    five_years_ago <- Sys.Date() - (5 * 365)
+    five_years_ago <- logical_date - (5 * 365)
     
     # Use 5 years ago or skier's first race, whichever is later
     start_date <- if(length(skier_first_race) == 0) {
@@ -933,7 +946,7 @@ calculate_remaining_races_biathlon <- function(races_file) {
   races$Date <- as.Date(races$Date, format = "%m/%d/%Y")
   
   # Get current date in UTC
-  today_utc <- as.Date(Sys.time(), tz = "UTC")
+  today_utc <- logical_date
   
   # Filter for remaining races (excluding relays)
   remaining <- races %>%
@@ -1005,7 +1018,7 @@ calculate_remaining_races_biathlon <- function(races_file) {
 }
 
 # Calculate remaining races dynamically
-races_path <- "~/ski/elo/python/biathlon/polars/excel365/races.csv"
+races_path <- file.path(data_root, "races.csv")
 remaining_races_by_gender <- calculate_remaining_races_biathlon(races_path)
 print(remaining_races_by_gender)
 

@@ -19,6 +19,7 @@ class WeeklyRecapWorkflowTests(unittest.TestCase):
         self.assertIn("/elo/python/alpine/polars/standings_scrape.py", self.text)
         self.assertIn("/elo/python/ski/polars/standings_scrape.py", self.text)
         self.assertIn("/elo/python/skijump/polars/standings_scrape.py", self.text)
+        self.assertIn("/elo/python/biathlon/polars/standings_scrape.py", self.text)
 
     def test_generation_uses_isolated_outputs_and_validates_before_publish(
         self,
@@ -42,7 +43,7 @@ class WeeklyRecapWorkflowTests(unittest.TestCase):
         self.assertIn("^[0-9a-f]{40}$", self.text)
 
     def test_recap_scripts_use_injected_roots_and_logical_date(self) -> None:
-        for sport in ("alpine", "cross-country", "skijump"):
+        for sport in ("alpine", "cross-country", "skijump", "biathlon"):
             script = (
                 ROOT / "content" / "post" / sport / "drafts" / "race-recap2.R"
             ).read_text(encoding="utf-8")
