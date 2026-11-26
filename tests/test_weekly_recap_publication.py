@@ -55,9 +55,14 @@ class WeeklyRecapPublicationTests(unittest.TestCase):
                 root / "skijump/polars/excel365/races.csv",
                 ["11/21/2026"],
             )
+            _write_schedule(
+                root / "biathlon/polars/excel365/races.csv",
+                ["11/22/2026"],
+            )
             sports = detect_recap_sports(root, date(2026, 11, 23))
             self.assertEqual(
-                [sport.content_name for sport in sports], ["alpine", "skijump"]
+                [sport.content_name for sport in sports],
+                ["alpine", "biathlon", "skijump"],
             )
 
     def test_non_monday_is_always_a_no_op(self) -> None:
@@ -121,13 +126,18 @@ class WeeklyRecapPublicationTests(unittest.TestCase):
             _write_artifacts(root, "alpine")
             _write_artifacts(root, "cross-country")
             _write_artifacts(root, "skijump")
+            _write_artifacts(root, "biathlon")
             rendered = render_post(
-                date(2026, 11, 23), ("alpine", "cross-country", "skijump"), root
+                date(2026, 11, 23),
+                ("alpine", "biathlon", "cross-country", "skijump"),
+                root,
             )
             self.assertIn("11/16/2026 to 11/22/2026", rendered)
             self.assertIn("## Alpine", rendered)
             self.assertIn("## Cross Country", rendered)
             self.assertIn("## Ski Jumping", rendered)
+            self.assertIn("## Biathlon", rendered)
+            self.assertIn("biathlon/drafts/weekly-recap/20261123", rendered)
             self.assertIn("skijump/drafts/weekly-recap/20261123", rendered)
             self.assertIn("cross-country/drafts/weekly-recap/20261123", rendered)
             output = root / "post.md"

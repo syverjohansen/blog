@@ -58,6 +58,15 @@ PODIUM_POINTS = {
     "nc_wc_individual": (8.0, 4.0, 4.0),
     "nc_wc_team": (2.0, 1.0, 1.0),
     "nc_wc_team_sprint": (4.0, 2.0, 2.0),
+    "bt_olympics_individual": (80.0, 40.0, 20.0),
+    "bt_olympics_relay": (20.0, 10.0, 5.0),
+    "bt_olympics_single_mixed_relay": (40.0, 20.0, 10.0),
+    "bt_wsc_individual": (40.0, 20.0, 10.0),
+    "bt_wsc_relay": (10.0, 5.0, 2.5),
+    "bt_wsc_single_mixed_relay": (20.0, 10.0, 5.0),
+    "bt_wc_individual": (8.0, 4.0, 4.0),
+    "bt_wc_relay": (2.0, 1.0, 1.0),
+    "bt_wc_single_mixed_relay": (4.0, 2.0, 2.0),
 }
 
 
@@ -131,6 +140,15 @@ def _nordic_combined_race_type(row: dict[str, str]) -> str:
     return "individual"
 
 
+def _biathlon_race_type(row: dict[str, str]) -> str:
+    race_type = row.get("RaceType", "").strip().casefold()
+    if race_type == "single mixed relay":
+        return "single_mixed_relay"
+    if race_type in {"relay", "mixed relay"}:
+        return "relay"
+    return "individual"
+
+
 def _race_category_and_points(
     row: dict[str, str], *, sport: str
 ) -> tuple[str, float]:
@@ -175,6 +193,16 @@ def _race_category_and_points(
         if event == "World Championship":
             return "WSC", _podium_points(place, f"nc_wsc_{race_type}")
         return "WC", _podium_points(place, f"nc_wc_{race_type}")
+
+    if sport == "biathlon":
+        race_type = _biathlon_race_type(row)
+        if olympics:
+            return "Olympics", _podium_points(
+                place, f"bt_olympics_{race_type}"
+            )
+        if event == "World Championship":
+            return "WSC", _podium_points(place, f"bt_wsc_{race_type}")
+        return "WC", _podium_points(place, f"bt_wc_{race_type}")
 
     race_type = _xc_race_type(row["Distance"].strip())
     if olympics:
@@ -224,7 +252,8 @@ def build_rankings(
     records.  Race results always come from accepted modern histories.
     """
     if sport not in {
-        "alpine", "cross-country", "ski-jumping", "nordic-combined"
+        "alpine", "cross-country", "ski-jumping", "nordic-combined",
+        "biathlon",
     }:
         raise RankingDataError(f"unsupported ranking sport: {sport}")
 

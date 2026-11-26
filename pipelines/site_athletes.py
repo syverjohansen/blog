@@ -16,6 +16,7 @@ COUNTRY_CODES = {
     "Austria": "aut",
     "Azerbaijan": "aze",
     "Belarus": "blr",
+    "Biathlon Refugee Team": "unknown",
     "Belgium": "bel",
     "Bermuda": "ber",
     "Bolivia": "bol",

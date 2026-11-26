@@ -1,0 +1,284 @@
+name: Biathlon automatic site-data pipeline
+
+on:
+  schedule:
+    # The ski repository checks official results at 19:37 UTC. This bounded
+    # consumer follows after that transaction without requiring cross-repo
+    # workflow credentials or an unpinned artifact handoff.
+    - cron: "17 21 * 11,12,1,2,3 *"
+    # Verify the accepted season close once the competition year reaches May 1.
+    - cron: "17 21 1 5 *"
+  workflow_dispatch:
+    inputs:
+      as_of:
+        description: Site-data cutoff (YYYY-MM-DD); defaults to today UTC
+        required: false
+        type: string
+      ski_ref:
+        description: Accepted ski branch, tag, or commit to read
+        required: true
+        default: main
+        type: string
+      run_season_close:
+        description: Verify the guarded close (still rejects dates before May 1)
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: biathlon-automatic-site-data-pipeline
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out blog main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Verify cross-repository automation credential
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+        run: gh api repos/syverjohansen/ski --silent
+
+      - name: Resolve accepted ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          SKI_REF: ${{ inputs.ski_ref || 'main' }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/$SKI_REF" --jq .sha)
+          if ! [[ "$ski_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve ski ref: $SKI_REF" >&2
+            exit 1
+          fi
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out accepted biathlon histories
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          token: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/biathlon/polars/relay/excel365/men_chrono.csv
+            /elo/python/biathlon/polars/relay/excel365/ladies_chrono.csv
+            /elo/python/biathlon/polars/relay/excel365/men_relay_chrono.csv
+            /elo/python/biathlon/polars/relay/excel365/ladies_relay_chrono.csv
+            /elo/python/biathlon/polars/relay/excel365/mixed_relay_chrono.csv
+            /elo/python/biathlon/polars/relay/excel365/single_mixed_relay_chrono.csv
+            /elo/python/biathlon/polars/excel365/races.csv
+            /elo/python/biathlon/polars/biathlon_season_close.py
+            /ranks/biathlon/excel365/men_scrape_update.csv
+            /ranks/biathlon/excel365/ladies_scrape_update.csv
+
+      - name: Resolve generation parameters
+        id: parameters
+        env:
+          REQUESTED_AS_OF: ${{ inputs.as_of || '' }}
+        run: |
+          printf '/external/\n' >> "$GITHUB_WORKSPACE/.git/info/exclude"
+          as_of="${REQUESTED_AS_OF:-$(date -u +%F)}"
+          if ! [[ "$as_of" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+            echo "Invalid as_of date: $as_of" >&2
+            exit 1
+          fi
+          echo "as_of=$as_of" >> "$GITHUB_OUTPUT"
+          echo "candidate_root=$RUNNER_TEMP/biathlon-site-candidate" >> "$GITHUB_OUTPUT"
+          echo "season_close_root=$RUNNER_TEMP/biathlon-season-close" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve latest raced season
+        id: season
+        run: |
+          season=$(python3 - <<'PY'
+          import csv
+          from pathlib import Path
+
+          root = Path("external/ski/elo/python/biathlon/polars/relay/excel365")
+          seasons = []
+          for filename in ("men_chrono.csv", "ladies_chrono.csv"):
+              with (root / filename).open(newline="", encoding="utf-8-sig") as handle:
+                  seasons.extend(
+                      int(row["Season"])
+                      for row in csv.DictReader(handle)
+                      if row["Event"] != "Offseason"
+                  )
+          if not seasons:
+              raise SystemExit("accepted biathlon histories contain no races")
+          print(max(seasons))
+          PY
+          )
+          echo "season=$season" >> "$GITHUB_OUTPUT"
+
+      - name: Verify guarded Biathlon season close
+        id: season_close
+        env:
+          AS_OF: ${{ steps.parameters.outputs.as_of }}
+          FORCE_CLOSE: ${{ inputs.run_season_close || false }}
+          SEASON: ${{ steps.season.outputs.season }}
+        run: |
+          close_date="$SEASON-05-01"
+          if [[ "$AS_OF" < "$close_date" && "$FORCE_CLOSE" != "true" ]]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "Season $SEASON does not close before $close_date." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          root="external/ski/elo/python/biathlon/polars"
+          python3 "$root/biathlon_season_close.py" \
+            --schedule "$root/excel365/races.csv" \
+            --men-chrono "$root/relay/excel365/men_chrono.csv" \
+            --ladies-chrono "$root/relay/excel365/ladies_chrono.csv" \
+            --team-history "$root/relay/excel365/men_relay_chrono.csv" \
+            --team-history "$root/relay/excel365/ladies_relay_chrono.csv" \
+            --team-history "$root/relay/excel365/mixed_relay_chrono.csv" \
+            --team-history "$root/relay/excel365/single_mixed_relay_chrono.csv" \
+            --season "$SEASON" \
+            --as-of "$AS_OF" \
+            --output-root "${{ steps.parameters.outputs.season_close_root }}"
+          echo "status=verified" >> "$GITHUB_OUTPUT"
+          cat "${{ steps.parameters.outputs.season_close_root }}/report.json" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Generate isolated biathlon site candidate
+        run: |
+          uv run --isolated --python 3.12 \
+            python3 -m pipelines.biathlon_site_data \
+            --men-history external/ski/elo/python/biathlon/polars/relay/excel365/men_chrono.csv \
+            --ladies-history external/ski/elo/python/biathlon/polars/relay/excel365/ladies_chrono.csv \
+            --men-ranking-history external/ski/ranks/biathlon/excel365/men_scrape_update.csv \
+            --ladies-ranking-history external/ski/ranks/biathlon/excel365/ladies_scrape_update.csv \
+            --season "${{ steps.season.outputs.season }}" \
+            --as-of "${{ steps.parameters.outputs.as_of }}" \
+            --output-root "${{ steps.parameters.outputs.candidate_root }}"
+
+      - name: Validate candidate contract
+        env:
+          CANDIDATE_ROOT: ${{ steps.parameters.outputs.candidate_root }}
+          SEASON: ${{ steps.season.outputs.season }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path(os.environ["CANDIDATE_ROOT"]).resolve()
+          season = os.environ["SEASON"]
+          required = {
+              "M_chrono_current.json", "L_chrono_current.json",
+              "M_chrono_all_time.json", "L_chrono_all_time.json",
+              "M_all_ids.json", "L_all_ids.json",
+              "M_skiers_lookup.json", "L_skiers_lookup.json",
+              "M_athlete_history_updates.json", "L_athlete_history_updates.json",
+              "M/seasons.json", "L/seasons.json",
+              "M/skier_info.json", "L/skier_info.json",
+              "M/ranks.json", "L/ranks.json",
+              f"M/{season}/summary.json", f"L/{season}/summary.json",
+              f"M/{season}/race_0.json", f"L/{season}/race_0.json",
+              "head2head/M_head2head_data.json",
+              "head2head/L_head2head_data.json",
+              "head2head/M_race_lookup.json",
+              "head2head/L_race_lookup.json",
+          }
+          files = [path for path in root.rglob("*") if path.is_file()]
+          relative = {path.relative_to(root).as_posix() for path in files}
+          missing = sorted(required - relative)
+          if missing:
+              raise SystemExit(f"candidate is missing required artifacts: {missing}")
+          for sex in ("M", "L"):
+              if not list((root / sex).glob("skiers_*.json")):
+                  raise SystemExit(f"candidate has no {sex} athlete-history chunks")
+          for path in files:
+              if path.is_symlink() or path.suffix not in {".json", ".csv"}:
+                  raise SystemExit(f"unexpected candidate artifact: {path}")
+              if path.suffix == ".json":
+                  json.loads(path.read_text(encoding="utf-8"))
+          print(f"Validated {len(files)} candidate artifacts for season {season}.")
+          PY
+
+      - name: Materialize candidate into owned site root
+        env:
+          CANDIDATE_ROOT: ${{ steps.parameters.outputs.candidate_root }}
+          SEASON: ${{ steps.season.outputs.season }}
+        run: |
+          artifact_root="static/python/biathlon/excel365"
+          rm -rf "$artifact_root/M/$SEASON" "$artifact_root/L/$SEASON"
+          rsync -a "$CANDIDATE_ROOT/" "$artifact_root/"
+          unexpected=$(git status --porcelain=v1 --untracked-files=all | cut -c4- | \
+            grep -Ev '^static/python/biathlon/excel365/' || true)
+          if [[ -n "$unexpected" ]]; then
+            echo "Generation changed files outside the owned biathlon root:" >&2
+            echo "$unexpected" >&2
+            exit 1
+          fi
+
+      - name: Run complete blog test suite
+        run: |
+          uv run --isolated --python 3.12 \
+            --with-requirements pipelines/requirements-integration.txt \
+            python3 -m unittest discover -s tests -p 'test_*.py'
+
+      - name: Set up Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Render site candidate
+        run: hugo --minify --renderToMemory
+
+      - name: Publish validated biathlon site artifacts
+        env:
+          SEASON: ${{ steps.season.outputs.season }}
+          SKI_SHA: ${{ steps.ski.outputs.sha }}
+        run: |
+          artifact_root="static/python/biathlon/excel365"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "$artifact_root"
+          unexpected=$(git diff --cached --name-only | grep -Ev "^$artifact_root/" || true)
+          if [[ -n "$unexpected" ]]; then
+            echo "Refusing to publish staged files outside $artifact_root:" >&2
+            echo "$unexpected" >&2
+            exit 1
+          fi
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish biathlon site data for season $SEASON" \
+              -m "Ski source: $SKI_SHA"
+            git pull --rebase origin main
+            git push origin HEAD:main
+            echo "Published season $SEASON from ski commit $SKI_SHA." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Accepted biathlon histories produced no site changes." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload generated candidate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: biathlon-site-candidate-${{ github.run_id }}
+          path: ${{ steps.parameters.outputs.candidate_root }}
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload season-close evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: biathlon-season-close-${{ github.run_id }}
+          path: ${{ steps.parameters.outputs.season_close_root }}/report.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+

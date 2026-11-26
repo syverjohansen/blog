@@ -20,6 +20,11 @@
       "status": "complete",
       "sports": ["nordic-combined"],
       "requirement": "Every live Nordic Combined artifact family is generated, tested, rendered, and published after accepted results."
+    },
+    "phase_7_biathlon_site_parity": {
+      "status": "complete",
+      "sports": ["biathlon"],
+      "requirement": "Every live Biathlon artifact family is generated, tested, rendered, and published from accepted individual and relay-inclusive histories."
     }
   },
   "owners": {
@@ -50,6 +55,13 @@
       "generator": "pipelines/nordic_combined_site_data.py",
       "cadence": "after every successful accepted Nordic Combined results run",
       "source": "validated individual and member-level team histories plus ranking history from the pinned ski revision"
+    },
+    "biathlon_site_data": {
+      "state": "modernized",
+      "workflow": ".github/workflows/biathlon-site-data-update.yml",
+      "generator": "pipelines/biathlon_site_data.py",
+      "cadence": "daily after the accepted Biathlon result transaction and on the guarded May 1 close",
+      "source": "validated relay-inclusive athlete histories plus ranking history from the pinned ski revision"
     },
     "retired_master_automation": {
       "state": "legacy_gap",
@@ -206,17 +218,17 @@
     "biathlon": {
       "artifact_root": "static/python/biathlon/excel365",
       "coverage": {
-        "current_elo": {"owner": "retired_master_automation", "target_phase": 7},
-        "all_time_elo": {"owner": "retired_master_automation", "target_phase": 7},
-        "athlete_ids": {"owner": "retired_master_automation", "target_phase": 7},
-        "skier_lookup": {"owner": "retired_master_automation", "target_phase": 7},
-        "skier_groups": {"owner": "retired_master_automation", "target_phase": 7},
-        "skier_info": {"owner": "retired_master_automation", "target_phase": 7},
-        "rankings": {"owner": "retired_master_automation", "target_phase": 7},
-        "season_index": {"owner": "retired_master_automation", "target_phase": 7},
-        "race_summary": {"owner": "retired_master_automation", "target_phase": 7},
-        "race_results": {"owner": "retired_master_automation", "target_phase": 7},
-        "head_to_head": {"owner": "retired_master_automation", "target_phase": 7}
+        "current_elo": {"owner": "biathlon_site_data"},
+        "all_time_elo": {"owner": "biathlon_site_data"},
+        "athlete_ids": {"owner": "biathlon_site_data"},
+        "skier_lookup": {"owner": "biathlon_site_data"},
+        "skier_groups": {"owner": "biathlon_site_data"},
+        "skier_info": {"owner": "biathlon_site_data"},
+        "rankings": {"owner": "biathlon_site_data"},
+        "season_index": {"owner": "biathlon_site_data"},
+        "race_summary": {"owner": "biathlon_site_data"},
+        "race_results": {"owner": "biathlon_site_data"},
+        "head_to_head": {"owner": "biathlon_site_data"}
       }
     }
   }
