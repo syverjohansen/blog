@@ -307,7 +307,9 @@ jobs:
 
       - name: Render complete site candidate
         if: steps.publication.outputs.changed == 'true'
-        run: hugo --minify --destination "$RUNNER_TEMP/biathlon-site"
+        # Validate every page and template without writing the roughly 750 MB
+        # generated site to the runner's comparatively slow ephemeral disk.
+        run: hugo --minify --renderToMemory
 
       - name: Publish validated Biathlon predictions
         if: steps.publication.outputs.changed == 'true'
