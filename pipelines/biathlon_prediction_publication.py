@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import tempfile
 from datetime import UTC, date, datetime
 from pathlib import Path
@@ -21,6 +22,7 @@ from pipelines.biathlon_prediction_shadow import (
 
 
 SCHEMA_VERSION = "nordicnumbers.biathlon-prediction-publication/v1"
+FRONT_MATTER_DATE = re.compile(r"^date:\s*(\S+)\s*$", re.MULTILINE)
 LABELS = {
     "men": "Men", "ladies": "Ladies", "men_relay": "Men's Relay",
     "ladies_relay": "Ladies' Relay", "mixed_relay": "Mixed Relay",
@@ -99,12 +101,29 @@ def _output_name(workbook: str, sheet: str, count: int) -> str:
     return f"{stem}_{safe}.json"
 
 
-def _post(logical_date: date, artifacts: list[dict[str, Any]]) -> bytes:
+def _safe_publication_time(post: Path, current_time: datetime) -> datetime:
+    if post.is_file():
+        match = FRONT_MATTER_DATE.search(post.read_text(encoding="utf-8"))
+        if match:
+            try:
+                existing = datetime.fromisoformat(match.group(1).replace("Z", "+00:00"))
+            except ValueError:
+                existing = None
+            if existing is not None and existing.tzinfo is not None and existing <= current_time:
+                return existing
+    return current_time
+
+
+def _post(
+    logical_date: date,
+    artifacts: list[dict[str, Any]],
+    publication_time: datetime,
+) -> bytes:
     date_key = logical_date.strftime("%Y%m%d")
     lines = [
         "---",
         f'title: "Biathlon Race Picks for {logical_date.strftime("%m/%d/%Y")}"',
-        f"date: {logical_date.isoformat()}T06:00:00+00:00",
+        f"date: {publication_time.astimezone(UTC).isoformat(timespec='seconds')}",
         "draft: false",
         'tags: ["predictions", "skiing", "race-picks", "biathlon"]',
         "---", "",
@@ -131,6 +150,7 @@ def _post(logical_date: date, artifacts: list[dict[str, Any]]) -> bytes:
 def prepare_publication(
     *, shadow_report: Path, normalization_report: Path, workbook_root: Path,
     repository_root: Path, report_path: Path, evaluation_date: date | None = None,
+    publication_time: datetime | None = None,
 ) -> dict[str, Any]:
     shadow = _load(shadow_report)
     if (
@@ -141,7 +161,8 @@ def prepare_publication(
     ):
         raise BiathlonPublicationError("only a passed official-IBU shadow can publish")
     logical_date = date.fromisoformat(shadow["logical_date"])
-    if logical_date < (evaluation_date or datetime.now(UTC).date()):
+    current_time = publication_time or datetime.now(UTC)
+    if logical_date < (evaluation_date or current_time.date()):
         raise BiathlonPublicationError("past prediction runs cannot be published")
     normalization = _load(normalization_report)
     declared = shadow.get("startlist_normalization_report", {})
@@ -185,7 +206,11 @@ def prepare_publication(
                 "rows": len(document["rows"]), "sha256": hashlib.sha256(payload).hexdigest(),
             })
     post = repository_root / "content/post/race-picks" / f"biathlon-{date_key}.md"
-    writes.append((post, _post(logical_date, artifacts)))
+    writes.append((post, _post(
+        logical_date,
+        artifacts,
+        _safe_publication_time(post, current_time),
+    )))
     expected_data = {target.resolve() for target, _ in writes if target.parent == data_root}
     if data_root.exists():
         for stale in data_root.glob("*.json"):
