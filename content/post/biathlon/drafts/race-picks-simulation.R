@@ -20,6 +20,26 @@ library(lubridate)
 # CONFIGURATION
 # ============================================================================
 
+# Hosted runs pass explicit roots and a logical date. Defaults retain the local
+# developer workflow while keeping CI independent of home directories and wall
+# clock time.
+NORDIC_INPUT_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_INPUT_ROOT", "~/ski/elo/python/biathlon/polars/excel365"
+))
+NORDIC_RELAY_INPUT_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_RELAY_INPUT_ROOT", file.path(dirname(NORDIC_INPUT_ROOT), "relay", "excel365")
+))
+NORDIC_OUTPUT_ROOT <- path.expand(Sys.getenv(
+  "NORDIC_OUTPUT_ROOT", "~/blog/daehl-e/content/post/biathlon/drafts/race-picks"
+))
+NORDIC_BLOG_ROOT <- path.expand(Sys.getenv("NORDIC_BLOG_ROOT", "~/blog/daehl-e"))
+NORDIC_RUN_ID <- Sys.getenv("NORDIC_RUN_ID", format(Sys.time(), "%Y%m%dT%H%M%SZ", tz = "UTC"))
+NORDIC_LOGICAL_DATE_TEXT <- Sys.getenv("NORDIC_LOGICAL_DATE", "")
+NORDIC_LOAD_ENV <- tolower(Sys.getenv("NORDIC_LOAD_ENV", "true")) == "true"
+NORDIC_RANDOM_SEED <- suppressWarnings(as.integer(Sys.getenv("NORDIC_RANDOM_SEED", "20260210")))
+if (is.na(NORDIC_RANDOM_SEED)) stop("NORDIC_RANDOM_SEED must be an integer")
+set.seed(NORDIC_RANDOM_SEED)
+
 # Load environment variables
 load_env <- function(env_path = "~/ski/elo/.env") {
   env_file <- path.expand(env_path)
@@ -40,13 +60,13 @@ load_env <- function(env_path = "~/ski/elo/.env") {
   return(FALSE)
 }
 
-load_env()
+if (NORDIC_LOAD_ENV) load_env()
 TEST_MODE <- tolower(Sys.getenv("TEST_MODE", "false")) == "true"
 
 # ===== LOAD SPORT-SPECIFIC PARAMETERS =====
 # Source optimized parameters from sport_params.R
 # These values are calibrated via param-optimizer.R using historical backtesting
-sport_params_path <- "~/blog/daehl-e/content/post/shared/sport_params.R"
+sport_params_path <- file.path(NORDIC_BLOG_ROOT, "content/post/shared/sport_params.R")
 if (file.exists(path.expand(sport_params_path))) {
   source(sport_params_path)
   DEFAULT_PARAMS <- get_sport_params("biathlon")
@@ -65,7 +85,8 @@ if (file.exists(path.expand(sport_params_path))) {
 }
 
 # Simulation parameters (from optimized sport params)
-N_SIMULATIONS <- 10000                # Number of Monte Carlo iterations
+N_SIMULATIONS <- suppressWarnings(as.integer(Sys.getenv("NORDIC_N_SIMULATIONS", "10000")))
+if (is.na(N_SIMULATIONS) || N_SIMULATIONS < 1) stop("NORDIC_N_SIMULATIONS must be positive")
 DECAY_LAMBDA <- DEFAULT_PARAMS$decay_lambda
 SD_SCALE_FACTOR <- DEFAULT_PARAMS$sd_scale_factor
 SD_MIN <- DEFAULT_PARAMS$sd_min
@@ -102,12 +123,13 @@ RELAY_SD_MAX <- RELAY_TEAM_PARAMS$sd_max
 # ============================================================================
 
 ENHANCED_LOGGING <- FALSE
-logging_utils_path <- "~/blog/daehl-e/content/post/shared/logging-utils.R"
+logging_utils_path <- file.path(NORDIC_BLOG_ROOT, "content/post/shared/logging-utils.R")
+log_dir <- path.expand(Sys.getenv("NORDIC_LOG_ROOT", file.path(NORDIC_INPUT_ROOT, "race-picks-simulation", NORDIC_RUN_ID)))
 if (file.exists(path.expand(logging_utils_path))) {
   tryCatch({
     source(logging_utils_path)
     ENHANCED_LOGGING <- TRUE
-    init_logging("biathlon", "race-picks")
+    init_logging("biathlon", "race-picks", log_dir = log_dir)
     log_config(list(
       TEST_MODE = TEST_MODE,
       N_HISTORY_REQUIRED = N_HISTORY_REQUIRED,
@@ -127,7 +149,6 @@ if (file.exists(path.expand(logging_utils_path))) {
 }
 
 if (!ENHANCED_LOGGING) {
-  log_dir <- "~/ski/elo/python/biathlon/polars/excel365/race-picks-simulation"
   if (!dir.exists(log_dir)) {
     dir.create(log_dir, recursive = TRUE)
   }
@@ -147,7 +168,7 @@ log_info(paste("Enhanced logging:", ENHANCED_LOGGING))
 log_info("Loading data files...")
 if (ENHANCED_LOGGING) phase_start("Load Race Schedule")
 
-base_path <- "~/ski/elo/python/biathlon/polars/excel365"
+base_path <- NORDIC_INPUT_ROOT
 
 # Load races with error handling
 races_file <- if(TEST_MODE) {
@@ -170,7 +191,13 @@ races <- tryCatch({
 })
 
 # Get today's date
-current_date <- as.Date(format(Sys.time(), tz = "UTC"))
+current_date <- if (nchar(NORDIC_LOGICAL_DATE_TEXT) > 0) {
+  parsed <- as.Date(NORDIC_LOGICAL_DATE_TEXT, format = "%Y-%m-%d")
+  if (is.na(parsed)) stop("NORDIC_LOGICAL_DATE must use YYYY-MM-DD")
+  parsed
+} else {
+  as.Date(format(Sys.time(), tz = "UTC"))
+}
 today_mmddyyyy <- format(current_date, "%m/%d/%Y")
 log_info(paste("Current date:", current_date, "(", today_mmddyyyy, ")"))
 
@@ -283,7 +310,7 @@ ladies_startlist <- tryCatch({
 log_info(paste("Loaded startlists - Men:", nrow(men_startlist), "| Ladies:", nrow(ladies_startlist)))
 
 # Load relay startlists
-relay_base_path <- "~/ski/elo/python/biathlon/polars/relay/excel365"
+relay_base_path <- NORDIC_RELAY_INPUT_ROOT
 
 normalize_relay_startlist_columns <- function(df) {
   if (nrow(df) == 0) {
@@ -1615,8 +1642,8 @@ if (ENHANCED_LOGGING) {
 log_info("=== OUTPUT GENERATION ===")
 
 # Output directory with date folder
-utc_date <- format(Sys.time(), "%Y%m%d", tz = "UTC")
-output_dir <- paste0("~/blog/daehl-e/content/post/biathlon/drafts/race-picks/", utc_date)
+utc_date <- format(current_date, "%Y%m%d")
+output_dir <- file.path(NORDIC_OUTPUT_ROOT, utc_date)
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }

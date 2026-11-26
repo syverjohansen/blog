@@ -1,0 +1,340 @@
+name: Biathlon predictions
+
+on:
+  schedule:
+    - cron: "23 10,14,18,22 * 1-3,11-12 *"
+  workflow_dispatch:
+    inputs:
+      logical_date:
+        description: Race date (YYYY-MM-DD); defaults to the next race date within 48 hours
+        required: false
+        type: string
+      n_simulations:
+        description: Deterministic Monte Carlo iteration count
+        required: true
+        default: 10000
+        type: number
+      random_seed:
+        description: Deterministic simulation seed
+        required: true
+        default: 20261126
+        type: number
+permissions:
+  contents: read
+
+concurrency:
+  group: biathlon-predictions
+  cancel-in-progress: false
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      ready: ${{ steps.shadow_result.outputs.ready || 'false' }}
+      logical_date: ${{ steps.target.outputs.logical_date }}
+      date_key: ${{ steps.target.outputs.date_key }}
+      run_id: ${{ steps.runtime.outputs.run_id }}
+      artifact_name: biathlon-predictions-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Check out blog publication base
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Resolve ski source to an exact commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/main" --jq .sha)
+          [[ "$ski_sha" =~ ^[0-9a-f]{40}$ ]]
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out bounded accepted Biathlon inputs
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/biathlon/polars/biathlon_official_adapter.py
+            /elo/python/biathlon/polars/ibu_source_contract.py
+            /elo/python/biathlon/polars/biathlon_startlist_acquire.py
+            /elo/python/biathlon/polars/biathlon_startlist_normalize.py
+            /elo/python/biathlon/polars/ibu_identity_aliases.csv
+            /elo/python/biathlon/polars/excel365/races.csv
+            /elo/python/biathlon/polars/excel365/men_chrono.csv
+            /elo/python/biathlon/polars/excel365/ladies_chrono.csv
+            /elo/python/biathlon/polars/relay/excel365/men_relay_chrono.csv
+            /elo/python/biathlon/polars/relay/excel365/ladies_relay_chrono.csv
+            /elo/python/biathlon/polars/relay/excel365/mixed_relay_chrono.csv
+            /elo/python/biathlon/polars/relay/excel365/single_mixed_relay_chrono.csv
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipelines/requirements-integration.txt
+
+      - name: Install validation dependencies
+        run: python3 -m pip install -r pipelines/requirements-integration.txt certifi==2026.11.20
+
+      - name: Select one exact upcoming race date
+        id: target
+        env:
+          REQUESTED_DATE: ${{ inputs.logical_date || '' }}
+        run: |
+          python3 - <<'PY'
+          import csv
+          import os
+          from datetime import UTC, date, datetime, timedelta
+          from pathlib import Path
+
+          schedule = Path("external/ski/elo/python/biathlon/polars/excel365/races.csv")
+          requested = os.environ.get("REQUESTED_DATE", "").strip()
+          with schedule.open(newline="", encoding="utf-8-sig") as handle:
+              rows = list(csv.DictReader(handle))
+          def parse(value):
+              for pattern in ("%m/%d/%Y", "%m/%d/%y", "%Y-%m-%d"):
+                  try:
+                      return datetime.strptime(value.strip(), pattern).date()
+                  except ValueError:
+                      pass
+              raise SystemExit(f"Unsupported schedule date: {value!r}")
+          available = sorted({parse(row["Date"]) for row in rows})
+          if requested:
+              target = date.fromisoformat(requested)
+              if target not in available:
+                  raise SystemExit(f"No Biathlon race is scheduled for {target}")
+          else:
+              today = datetime.now(UTC).date()
+              candidates = [value for value in available if today <= value <= today + timedelta(days=2)]
+              unpublished = [
+                  value for value in candidates
+                  if not Path(f"content/post/race-picks/biathlon-{value.strftime('%Y%m%d')}.md").is_file()
+              ]
+              target = unpublished[0] if unpublished else None
+          output = Path(os.environ["GITHUB_OUTPUT"])
+          with output.open("a", encoding="utf-8") as handle:
+              handle.write(f"has_work={'true' if target else 'false'}\n")
+              if target:
+                  handle.write(f"logical_date={target.isoformat()}\n")
+                  handle.write(f"date_key={target.strftime('%Y%m%d')}\n")
+          PY
+
+      - name: Prepare isolated run paths
+        id: runtime
+        if: steps.target.outputs.has_work == 'true'
+        env:
+          LOGICAL_DATE: ${{ steps.target.outputs.logical_date }}
+          SKI_SHA: ${{ steps.ski.outputs.sha }}
+        run: |
+          run_id="github-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          root="$RUNNER_TEMP/biathlon-predictions"
+          {
+            echo "RUN_ID=$run_id"
+            echo "LOGICAL_DATE=$LOGICAL_DATE"
+            echo "DATE_KEY=${LOGICAL_DATE//-/}"
+            echo "SKI_SHA=$SKI_SHA"
+            echo "BLOG_SHA=$(git rev-parse HEAD)"
+            echo "RUN_ROOT=$root"
+            echo "ACQUISITION_ROOT=$root/acquired"
+            echo "NORMALIZATION_ROOT=$root/normalized"
+            echo "SHADOW_ROOT=$root/shadow"
+          } >> "$GITHUB_ENV"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+
+      - name: Acquire complete official IBU startlists
+        if: steps.target.outputs.has_work == 'true'
+        env:
+          SSL_CERT_FILE: ${{ env.pythonLocation }}/lib/python3.12/site-packages/certifi/cacert.pem
+        run: |
+          export SSL_CERT_FILE
+          SSL_CERT_FILE=$(python3 -c 'import certifi; print(certifi.where())')
+          python3 external/ski/elo/python/biathlon/polars/biathlon_startlist_acquire.py \
+            --schedule external/ski/elo/python/biathlon/polars/excel365/races.csv \
+            --logical-date "$LOGICAL_DATE" \
+            --output-dir "$ACQUISITION_ROOT"
+
+      - name: Classify official startlist state
+        id: source
+        if: steps.target.outputs.has_work == 'true'
+        run: |
+          status=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$ACQUISITION_ROOT/report.json")
+          case "$status" in
+            ready|waiting|no_work) ;;
+            *) echo "Unexpected acquisition status: $status" >&2; exit 1 ;;
+          esac
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+
+      - name: Normalize official rosters
+        if: steps.source.outputs.status == 'ready'
+        run: |
+          python3 external/ski/elo/python/biathlon/polars/biathlon_startlist_normalize.py \
+            --acquisition-dir "$ACQUISITION_ROOT" \
+            --men-history external/ski/elo/python/biathlon/polars/excel365/men_chrono.csv \
+            --ladies-history external/ski/elo/python/biathlon/polars/excel365/ladies_chrono.csv \
+            --aliases external/ski/elo/python/biathlon/polars/ibu_identity_aliases.csv \
+            --output-dir "$NORMALIZATION_ROOT"
+
+      - name: Set up R
+        if: steps.source.outputs.status == 'ready'
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install R model dependencies
+        if: steps.source.outputs.status == 'ready'
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::dplyr
+            any::tidyr
+            any::openxlsx
+            any::mgcv
+            any::leaps
+            any::logger
+            any::lubridate
+
+      - name: Run and validate publication-disabled shadow
+        if: steps.source.outputs.status == 'ready'
+        env:
+          N_SIMULATIONS: ${{ inputs.n_simulations || 10000 }}
+          RANDOM_SEED: ${{ inputs.random_seed || 20261126 }}
+        run: |
+          python3 -m pipelines.biathlon_prediction_shadow \
+            --blog-root "$GITHUB_WORKSPACE" \
+            --ski-root "$GITHUB_WORKSPACE/external/ski" \
+            --output-root "$SHADOW_ROOT" \
+            --logical-date "$LOGICAL_DATE" \
+            --run-id "$RUN_ID" \
+            --n-simulations "$N_SIMULATIONS" \
+            --random-seed "$RANDOM_SEED" \
+            --blog-commit "$BLOG_SHA" \
+            --ski-commit "$SKI_SHA" \
+            --startlist-root "$NORMALIZATION_ROOT/candidates" \
+            --startlist-report "$NORMALIZATION_ROOT/report.json"
+
+      - name: Expose passed shadow to publication job
+        id: shadow_result
+        if: steps.source.outputs.status == 'ready'
+        run: |
+          python3 - "$SHADOW_ROOT/runs/$RUN_ID/reports/shadow-report.json" <<'PY'
+          import json, sys
+          report = json.load(open(sys.argv[1]))
+          if report.get("status") != "passed":
+              raise SystemExit("Biathlon prediction shadow did not pass")
+          if report.get("publication", {}).get("status") != "disabled":
+              raise SystemExit("shadow publication lock was not retained")
+          PY
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Retain prediction evidence
+        if: always() && steps.target.outputs.has_work == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: biathlon-predictions-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/biathlon-predictions/
+          if-no-files-found: warn
+          retention-days: 30
+
+  publish:
+    name: Publish validated Biathlon predictions
+    needs: shadow
+    if: needs.shadow.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Check out publication base
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Download exact passed shadow evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.shadow.outputs.artifact_name }}
+          path: ${{ runner.temp }}/biathlon-predictions
+
+      - name: Set up Python publication runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipelines/requirements-integration.txt
+
+      - name: Install publication dependencies
+        run: python3 -m pip install -r pipelines/requirements-integration.txt
+
+      - name: Materialize validated prediction post
+        id: publication
+        env:
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+          DATE_KEY: ${{ needs.shadow.outputs.date_key }}
+          RUN_ID: ${{ needs.shadow.outputs.run_id }}
+        run: |
+          root="$RUNNER_TEMP/biathlon-predictions"
+          report="$RUNNER_TEMP/biathlon-publication-report.json"
+          python3 -m pipelines.biathlon_prediction_publication \
+            --shadow-report "$root/shadow/runs/$RUN_ID/reports/shadow-report.json" \
+            --normalization-report "$root/normalized/report.json" \
+            --workbook-root "$root/shadow/runs/$RUN_ID/workbooks/$DATE_KEY" \
+            --repository-root "$GITHUB_WORKSPACE" \
+            --report "$report"
+          if [[ -n "$(git status --porcelain -- \
+            "data/biathlon/drafts/race-picks/$DATE_KEY" \
+            "content/post/race-picks/biathlon-$DATE_KEY.md")" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Hugo
+        if: steps.publication.outputs.changed == 'true'
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Render complete site candidate
+        if: steps.publication.outputs.changed == 'true'
+        run: hugo --minify --destination "$RUNNER_TEMP/biathlon-site"
+
+      - name: Publish validated Biathlon predictions
+        if: steps.publication.outputs.changed == 'true'
+        env:
+          DATE_KEY: ${{ needs.shadow.outputs.date_key }}
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+          RUN_ID: ${{ needs.shadow.outputs.run_id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            "data/biathlon/drafts/race-picks/$DATE_KEY" \
+            "content/post/race-picks/biathlon-$DATE_KEY.md"
+          git commit -m "Publish Biathlon race picks for $LOGICAL_DATE" \
+            -m "Validated shadow run: $RUN_ID"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 5))
+          done
+          exit 1
+
+      - name: Retain publication report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: biathlon-publication-${{ needs.shadow.outputs.logical_date }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/biathlon-publication-report.json
+          if-no-files-found: warn
+          retention-days: 30
