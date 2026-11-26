@@ -6,6 +6,7 @@ from pathlib import Path
 
 BLOG_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = BLOG_ROOT / ".github/workflows/alpine-site-data-update.yml"
+COORDINATOR = BLOG_ROOT / ".github/workflows/nordic-numbers-nightly.yml"
 
 
 class AlpineSiteDataWorkflowTest(unittest.TestCase):
@@ -13,11 +14,13 @@ class AlpineSiteDataWorkflowTest(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.source = WORKFLOW.read_text(encoding="utf-8")
 
-    def test_scheduled_and_manual_triggers_are_available(self) -> None:
+    def test_manual_trigger_is_dispatched_by_the_nightly_coordinator(self) -> None:
         trigger = self.source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
-        self.assertIn("schedule:", trigger)
-        self.assertIn('cron: "15 0 * * *"', trigger)
         self.assertIn("workflow_dispatch:", trigger)
+        self.assertNotIn("schedule:", trigger)
+        coordinator = COORDINATOR.read_text(encoding="utf-8")
+        self.assertIn('cron: "15 0 * * *"', coordinator)
+        self.assertIn("workflow: alpine-site-data-update.yml", coordinator)
 
     def test_master_workflow_is_the_only_daily_alpine_scheduler(self) -> None:
         prediction_workflow = (

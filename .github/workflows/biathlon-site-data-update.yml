@@ -1,13 +1,6 @@
 name: Biathlon automatic site-data pipeline
 
 on:
-  schedule:
-    # The ski repository checks official results at 19:37 UTC. This bounded
-    # consumer follows after that transaction without requiring cross-repo
-    # workflow credentials or an unpinned artifact handoff.
-    - cron: "17 21 * 11,12,1,2,3 *"
-    # Verify the accepted season close once the competition year reaches May 1.
-    - cron: "17 21 1 5 *"
   workflow_dispatch:
     inputs:
       as_of:
@@ -24,8 +17,14 @@ on:
         required: false
         default: false
         type: boolean
+      run_predictions:
+        description: Trigger the guarded prediction publisher after site-data validation
+        required: true
+        default: true
+        type: boolean
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -262,6 +261,17 @@ jobs:
           else
             echo "Accepted biathlon histories produced no site changes." >> "$GITHUB_STEP_SUMMARY"
           fi
+
+      - name: Continue with guarded Biathlon predictions
+        if: inputs.run_predictions == true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run biathlon-predictions.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f ski_ref=main
+          echo "Dispatched the guarded Biathlon prediction publisher." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload generated candidate
         if: always()

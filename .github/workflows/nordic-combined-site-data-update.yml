@@ -17,6 +17,7 @@ on:
         type: string
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -221,6 +222,17 @@ jobs:
           else
             echo "Accepted nordic-combined histories produced no site changes." >> "$GITHUB_STEP_SUMMARY"
           fi
+
+      - name: Continue with guarded Nordic Combined predictions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run nordic-combined-prediction-shadow.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f ski_ref=main \
+            -f publish_predictions=true
+          echo "Dispatched the guarded Nordic Combined prediction publisher." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload generated candidate
         if: always()

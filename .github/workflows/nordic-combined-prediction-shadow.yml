@@ -24,9 +24,14 @@ on:
         required: true
         default: main
         type: string
+      publish_predictions:
+        description: Publish only after the complete shadow and Hugo gates pass
+        required: true
+        default: true
+        type: boolean
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: nordic-combined-prediction-shadow
@@ -36,6 +41,12 @@ jobs:
   shadow:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+    outputs:
+      has_work: ${{ steps.plan.outputs.has_work }}
+      logical_date: ${{ steps.parameters.outputs.logical_date }}
+      run_id: ${{ steps.parameters.outputs.run_id }}
     steps:
       - name: Check out bounded blog runtime
         uses: actions/checkout@v4
@@ -49,6 +60,7 @@ jobs:
             /pipelines/nordic_combined_prediction_contract.py
             /pipelines/nordic_combined_shadow_retry.py
             /pipelines/nordic_combined_prediction_shadow.py
+            /pipelines/nordic_combined_prediction_publication.py
             /content/post/nordic-combined/drafts/race-picks-simulation.R
             /content/post/shared/logging-utils.R
             /static/python/excel_to_hugo_multiple_sheets.py
@@ -90,6 +102,7 @@ jobs:
             /elo/python/nordic-combined/polars/nordic_combined_startlist_normalize.py
 
       - name: Prepare immutable shadow parameters
+        id: parameters
         env:
           LOGICAL_DATE_INPUT: ${{ inputs.logical_date || '' }}
           N_SIMULATIONS_INPUT: ${{ inputs.n_simulations || 250 }}
@@ -126,6 +139,10 @@ jobs:
             echo "STARTLIST_NORMALIZATION_REPORT=$shadow_root/normalized-startlists/report.json"
             echo "STARTLIST_ALIAS_FILE=$GITHUB_WORKSPACE/external/ski/elo/python/nordic-combined/polars/nordic_combined_results_identity_aliases.csv"
           } >> "$GITHUB_ENV"
+          {
+            echo "logical_date=$logical_date"
+            echo "run_id=$run_id"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Set up Python validation runtime
         uses: actions/setup-python@v5
@@ -325,3 +342,100 @@ jobs:
           if report.get("status") not in {"passed", "skipped"}:
               raise SystemExit(f"unexpected shadow status: {report.get('status')}")
           PY
+
+  publish:
+    name: Publish validated Nordic Combined predictions
+    needs: shadow
+    if: >-
+      needs.shadow.result == 'success' &&
+      needs.shadow.outputs.has_work == 'true' &&
+      (github.event_name == 'schedule' || inputs.publish_predictions == true)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Check out publication base
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Download passed Nordic Combined shadow
+        uses: actions/download-artifact@v4
+        with:
+          name: nordic-combined-prediction-shadow-${{ needs.shadow.outputs.logical_date }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/nordic-combined-shadow-artifact
+
+      - name: Set up Python publication runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipelines/requirements-integration.txt
+
+      - name: Install publication dependencies
+        run: python3 -m pip install -r pipelines/requirements-integration.txt
+
+      - name: Materialize validated publication candidate
+        id: candidate
+        env:
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+          RUN_ID: ${{ needs.shadow.outputs.run_id }}
+        run: |
+          artifact_root="$RUNNER_TEMP/nordic-combined-shadow-artifact"
+          run_root="$artifact_root/runs/$RUN_ID"
+          date_key="${LOGICAL_DATE//-/}"
+          report="$RUNNER_TEMP/nordic-combined-publication-report.json"
+          python3 -m pipelines.nordic_combined_prediction_publication \
+            --shadow-report "$run_root/reports/shadow-report.json" \
+            --normalization-report "$artifact_root/normalized-startlists/report.json" \
+            --workbook-root "$run_root/workbooks/$date_key" \
+            --repository-root "$GITHUB_WORKSPACE" \
+            --report "$report"
+          status=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$report")
+          if [[ "$status" == "prepared" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Hugo
+        if: steps.candidate.outputs.changed == 'true'
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.134.1"
+          extended: true
+
+      - name: Render complete site candidate
+        if: steps.candidate.outputs.changed == 'true'
+        run: hugo --minify --destination "$RUNNER_TEMP/nordic-combined-publication-site"
+
+      - name: Publish validated Nordic Combined predictions
+        if: steps.candidate.outputs.changed == 'true'
+        env:
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+        run: |
+          date_key="${LOGICAL_DATE//-/}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            "data/nordic-combined/drafts/race-picks/$date_key" \
+            "content/post/race-picks/nordic-combined-$date_key.md"
+          git commit -m "Publish Nordic Combined race picks for $LOGICAL_DATE" \
+            -m "Validated shadow run: ${{ needs.shadow.outputs.run_id }}"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 5))
+          done
+          exit 1
+
+      - name: Retain publication report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nordic-combined-publication-${{ needs.shadow.outputs.logical_date }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/nordic-combined-publication-report.json
+          if-no-files-found: warn
+          retention-days: 30

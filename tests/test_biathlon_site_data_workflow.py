@@ -13,11 +13,21 @@ class BiathlonSiteDataWorkflowTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.text = WORKFLOW.read_text(encoding="utf-8")
 
-    def test_follows_result_ingestion_daily_and_has_manual_recovery(self) -> None:
-        self.assertIn('cron: "17 21 * 11,12,1,2,3 *"', self.text)
-        self.assertIn('cron: "17 21 1 5 *"', self.text)
+    def test_is_dispatched_nightly_and_has_manual_recovery(self) -> None:
         self.assertIn("workflow_dispatch:", self.text)
         self.assertNotIn("workflow_run:", self.text)
+        self.assertNotIn("schedule:", self.text.split("on:\n", 1)[1].split("\npermissions:", 1)[0])
+        coordinator = (
+            ROOT / ".github/workflows/nordic-numbers-nightly.yml"
+        ).read_text(encoding="utf-8")
+        self.assertIn("workflow: biathlon-site-data-update.yml", coordinator)
+
+    def test_site_validation_continues_to_guarded_prediction_publication(self) -> None:
+        trigger = self.text.index("gh workflow run biathlon-predictions.yml")
+        publication = self.text.index("git push origin HEAD:main")
+        self.assertLess(publication, trigger)
+        self.assertIn("run_predictions:", self.text)
+        self.assertIn("if: inputs.run_predictions == true", self.text)
 
     def test_checkout_is_pinned_and_bounded_to_required_histories(self) -> None:
         self.assertIn("repos/syverjohansen/ski/commits/$SKI_REF", self.text)

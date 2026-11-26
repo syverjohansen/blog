@@ -1,0 +1,44 @@
+name: Nordic Numbers nightly coordinator
+
+on:
+  schedule:
+    - cron: "15 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: nordic-numbers-nightly-coordinator
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    name: Start ${{ matrix.sport }} lifecycle
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - sport: alpine
+            workflow: alpine-site-data-update.yml
+          - sport: cross-country
+            workflow: cross-country-site-data-update.yml
+          - sport: biathlon
+            workflow: biathlon-site-data-update.yml
+          - sport: ski-jumping
+            workflow: ski-jumping-schedule-update.yml
+          - sport: nordic-combined
+            workflow: nordic-combined-schedule-update.yml
+    steps:
+      - name: Dispatch independent sport lifecycle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WORKFLOW: ${{ matrix.workflow }}
+        run: |
+          gh workflow view "$WORKFLOW" --repo "$GITHUB_REPOSITORY" >/dev/null
+          gh workflow run "$WORKFLOW" \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main
+          echo "Dispatched $WORKFLOW from the nightly coordinator." >> "$GITHUB_STEP_SUMMARY"
