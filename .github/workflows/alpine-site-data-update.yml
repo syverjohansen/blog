@@ -320,7 +320,20 @@ jobs:
               git -C external/ski add elo/python/alpine/polars/excel365/ranking_standings
             fi
             git -C external/ski commit -m "Update Alpine data through $AS_OF"
-            git -C external/ski push origin HEAD:main
+            published=false
+            for attempt in 1 2 3; do
+              if git -C external/ski pull --rebase origin main && \
+                git -C external/ski push origin HEAD:main; then
+                published=true
+                break
+              fi
+              git -C external/ski rebase --abort 2>/dev/null || true
+              sleep $((attempt * 5))
+            done
+            if [[ "$published" != "true" ]]; then
+              echo "Unable to publish accepted Alpine data after 3 attempts" >&2
+              exit 1
+            fi
           fi
           echo "sha=$(git -C external/ski rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
@@ -376,7 +389,19 @@ jobs:
           git add static/python/alpine/excel365
           if ! git diff --cached --quiet; then
             git commit -m "Publish Alpine site data for season $SEASON"
-            git push origin HEAD:main
+            published=false
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push origin HEAD:main; then
+                published=true
+                break
+              fi
+              git rebase --abort 2>/dev/null || true
+              sleep $((attempt * 5))
+            done
+            if [[ "$published" != "true" ]]; then
+              echo "Unable to publish Alpine site data after 3 attempts" >&2
+              exit 1
+            fi
             echo "Published season $SEASON from ski commit $SKI_SHA." >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Accepted ski data produced no site changes." >> "$GITHUB_STEP_SUMMARY"

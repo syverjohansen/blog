@@ -106,6 +106,15 @@ class AlpineSiteDataWorkflowTest(unittest.TestCase):
         self.assertLess(tests, publication)
         self.assertNotIn("--force", self.source)
 
+    def test_both_shared_branch_writes_rebase_and_retry(self) -> None:
+        self.assertIn("git -C external/ski pull --rebase origin main", self.source)
+        self.assertIn("git pull --rebase origin main", self.source)
+        self.assertEqual(2, self.source.count("for attempt in 1 2 3; do"))
+        self.assertIn("git -C external/ski rebase --abort", self.source)
+        self.assertIn("git rebase --abort", self.source)
+        self.assertIn("Unable to publish accepted Alpine data after 3 attempts", self.source)
+        self.assertIn("Unable to publish Alpine site data after 3 attempts", self.source)
+
     def test_publisher_updates_all_alpine_site_artifacts(self) -> None:
         self.assertIn("--output-root static/python/alpine/excel365", self.source)
         self.assertIn("git add static/python/alpine/excel365", self.source)
