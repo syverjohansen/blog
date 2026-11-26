@@ -540,8 +540,11 @@ process_gender_probabilities <- function(startlist, chronos, races) {
           get_race_probability(chronos, skier, races$distance[i], races$technique[i])
       }
 
-      # For non-config nations, add additional skiers from this season
-      if(!is_config_nation) {
+      # Legacy runtimes may need to expand a thin startlist from history. The
+      # audited contract runtime already carries the complete quota-bounded
+      # candidate pool, so adding rows here would discard event provenance,
+      # private ratings, and reviewed roster exclusions.
+      if(!is_config_nation && !quota_contract_enabled(startlist)) {
         additional_skiers <- get_additional_nation_skiers(chronos, startlist, nation)
 
         if(length(additional_skiers) > 0) {

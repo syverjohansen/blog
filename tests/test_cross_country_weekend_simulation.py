@@ -62,6 +62,14 @@ class CrossCountryWeekendSimulationTests(unittest.TestCase):
         self.assertIn("Max_Nation_Starters", self.source)
         self.assertIn("Partial FIS quota contract", self.source)
         self.assertIn("Legacy runtimes retain their historical fallback", self.source)
+        self.assertIn(
+            "if(!is_config_nation && !quota_contract_enabled(startlist))",
+            self.source,
+        )
+        self.assertIn(
+            "audited contract runtime already carries the complete quota-bounded",
+            self.source,
+        )
 
     def test_normal_weekend_does_not_execute_fantasy_optimization(self) -> None:
         self.assertNotIn("fantasy_team <- optimize_weekly_team_simulation", self.source)
