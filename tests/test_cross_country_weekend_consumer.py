@@ -13,6 +13,7 @@ from pipelines.cross_country_weekend_consumer import (
     QUOTA_SOURCE_FIELDS,
     SCHEDULE_FIELDS,
     SHADOW_RATING_FIELDS,
+    SHADOW_RATING_QUOTA_FIELDS,
     SHADOW_RATING_SCHEMA,
     STARTLIST_FIELDS,
     WeekendConsumerError,
@@ -183,7 +184,12 @@ def write_shadow_ratings(
 ) -> None:
     directory = root / gender
     directory.mkdir(parents=True)
-    payload = csv_bytes(SHADOW_RATING_FIELDS, rows)
+    fields = (
+        SHADOW_RATING_QUOTA_FIELDS
+        if rows and all(field in rows[0] for field in QUOTA_SOURCE_FIELDS)
+        else SHADOW_RATING_FIELDS
+    )
+    payload = csv_bytes(fields, rows)
     (directory / "startlist_prediction_elo_shadow.csv").write_bytes(payload)
     report = {
         "schema_version": SHADOW_RATING_SCHEMA,
@@ -228,10 +234,20 @@ class CrossCountryWeekendConsumerTests(unittest.TestCase):
                 ladies=[],
                 quota_contract=True,
             )
+            ratings = root / "ratings"
+            write_shadow_ratings(
+                ratings,
+                gender="men",
+                rows=[
+                    rated_row(ordinary, "accepted_official_elo", "1650"),
+                    rated_row(personal, "accepted_official_elo", "1625"),
+                ],
+            )
             report = materialize_weekend_runtime(
                 bundle_dir=bundle,
                 logical_date=date(2026, 11, 27),
                 output_dir=root / "runtime",
+                prediction_elo_root=ratings,
             )
             with (root / "runtime/startlist_weekend_men.csv").open(
                 newline="", encoding="utf-8"

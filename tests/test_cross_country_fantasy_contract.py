@@ -71,6 +71,27 @@ class CrossCountryFantasyContractTests(unittest.TestCase):
         self.assertEqual((self.predictions[-1]["fis_code"],), plan.missing_fis_codes)
         self.assertFalse(plan.weekend_publication_blocked)
 
+    def test_irrelevant_team_ids_do_not_block_athlete_prices(self) -> None:
+        prices = [
+            *self.prices,
+            {
+                "athlete_id": -2,
+                "name": "GERMANY II",
+                "price": 1987,
+                "country": "DEU",
+                "gender": "mixed",
+                "active": False,
+                "is_team": True,
+            },
+        ]
+
+        plan = build_fantasy_plan(
+            prediction_rows=self.predictions, price_rows=prices
+        )
+
+        self.assertEqual("candidate", plan.status)
+        self.assertEqual(20, plan.priced_prediction_count)
+
     def test_name_match_cannot_replace_missing_fis_code(self) -> None:
         altered = dict(self.prices[-1])
         altered["athlete_id"] = 9_999_999

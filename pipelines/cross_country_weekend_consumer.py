@@ -93,12 +93,17 @@ ELO_STREAMS = (
     "Classic_Elo",
     "Freestyle_Elo",
 )
-SHADOW_RATING_FIELDS = (
-    *STARTLIST_FIELDS,
+SHADOW_RATING_VALUE_FIELDS = (
     "rating_source",
     "rating_as_of_date",
     "rating_k_factor",
     *ELO_STREAMS,
+)
+SHADOW_RATING_FIELDS = (*STARTLIST_FIELDS, *SHADOW_RATING_VALUE_FIELDS)
+SHADOW_RATING_QUOTA_FIELDS = (
+    *STARTLIST_FIELDS,
+    *QUOTA_SOURCE_FIELDS,
+    *SHADOW_RATING_VALUE_FIELDS,
 )
 SHADOW_RATING_SCHEMA = "nordicnumbers.cross-country-prediction-elo-shadow/v1"
 
@@ -397,8 +402,17 @@ def _load_shadow_ratings(
         if report.get("output_sha256") != _sha256(payload):
             raise WeekendConsumerError("shadow rating checksum mismatch")
         fields, overlay_rows = _read_csv(csv_path)
-        if fields != SHADOW_RATING_FIELDS:
+        has_quota_fields = all(field in source_rows[0] for field in QUOTA_SOURCE_FIELDS)
+        expected_fields = (
+            SHADOW_RATING_QUOTA_FIELDS if has_quota_fields else SHADOW_RATING_FIELDS
+        )
+        if fields != expected_fields:
             raise WeekendConsumerError("unexpected shadow rating fields")
+        identity_fields = (
+            (*STARTLIST_FIELDS, *QUOTA_SOURCE_FIELDS)
+            if has_quota_fields
+            else STARTLIST_FIELDS
+        )
 
         expected = {
             (row["race_id"], row["canonical_athlete_id"]): row for row in source_rows
@@ -411,7 +425,7 @@ def _load_shadow_ratings(
                     f"{csv_path}:{line}: unexpected or duplicate shadow athlete"
                 )
             observed.add(key)
-            if any(row[field] != expected[key][field] for field in STARTLIST_FIELDS):
+            if any(row[field] != expected[key][field] for field in identity_fields):
                 raise WeekendConsumerError(
                     f"{csv_path}:{line}: shadow identity differs from bundle"
                 )

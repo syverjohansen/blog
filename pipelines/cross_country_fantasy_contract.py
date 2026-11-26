@@ -188,20 +188,21 @@ def build_fantasy_plan(
     prices: dict[str, tuple[str, int]] = {}
     for index, row in enumerate(price_rows, start=1):
         _required_fields(row, PRICE_FIELDS, label=f"price row {index}")
+        if not isinstance(row["active"], bool) or not isinstance(row["is_team"], bool):
+            raise FantasyContractError(
+                f"price row {index} active/is_team values must be booleans"
+            )
+        if not row["active"] or row["is_team"]:
+            continue
         fis_code = str(row["athlete_id"]).strip()
         if not fis_code.isdigit():
             raise FantasyContractError(f"price row {index} has invalid athlete_id")
         if fis_code in prices:
             raise FantasyContractError(f"duplicate price FIS code: {fis_code}")
-        if not isinstance(row["active"], bool) or not isinstance(row["is_team"], bool):
-            raise FantasyContractError(
-                f"price row {index} active/is_team values must be booleans"
-            )
-        if row["active"] and not row["is_team"]:
-            prices[fis_code] = (
-                _sex(row["gender"], label=f"price row {index}"),
-                _price(row["price"], label=f"price row {index} price"),
-            )
+        prices[fis_code] = (
+            _sex(row["gender"], label=f"price row {index}"),
+            _price(row["price"], label=f"price row {index} price"),
+        )
 
     matched: dict[str, tuple[str, int]] = {}
     for fis_code, (_, prediction_sex) in predictions.items():
