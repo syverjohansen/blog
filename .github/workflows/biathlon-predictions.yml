@@ -305,11 +305,16 @@ jobs:
           hugo-version: "0.134.1"
           extended: true
 
-      - name: Render complete site candidate
+      - name: Render targeted Biathlon post candidate
         if: steps.publication.outputs.changed == 'true'
-        # Validate every page and template without writing the roughly 750 MB
-        # generated site to the runner's comparatively slow ephemeral disk.
-        run: hugo --minify --renderToMemory
+        env:
+          DATE_KEY: ${{ needs.shadow.outputs.date_key }}
+        run: |
+          python3 -m pipelines.biathlon_prediction_site_smoke \
+            --repository-root "$GITHUB_WORKSPACE" \
+            --post "$GITHUB_WORKSPACE/content/post/race-picks/biathlon-$DATE_KEY.md" \
+            --destination "$RUNNER_TEMP/biathlon-site" \
+            --report "$RUNNER_TEMP/biathlon-site-smoke.json"
 
       - name: Publish validated Biathlon predictions
         if: steps.publication.outputs.changed == 'true'
@@ -337,6 +342,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: biathlon-publication-${{ needs.shadow.outputs.logical_date }}-${{ github.run_id }}
-          path: ${{ runner.temp }}/biathlon-publication-report.json
+          path: |
+            ${{ runner.temp }}/biathlon-publication-report.json
+            ${{ runner.temp }}/biathlon-site-smoke.json
           if-no-files-found: warn
           retention-days: 30
