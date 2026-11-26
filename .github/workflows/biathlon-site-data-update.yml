@@ -97,14 +97,16 @@ jobs:
           echo "candidate_root=$RUNNER_TEMP/biathlon-site-candidate" >> "$GITHUB_OUTPUT"
           echo "season_close_root=$RUNNER_TEMP/biathlon-season-close" >> "$GITHUB_OUTPUT"
 
-      - name: Resolve latest raced season
+      - name: Resolve accepted history and schedule seasons
         id: season
         run: |
           season=$(python3 - <<'PY'
           import csv
+          from datetime import datetime
           from pathlib import Path
 
-          root = Path("external/ski/elo/python/biathlon/polars/relay/excel365")
+          biathlon = Path("external/ski/elo/python/biathlon/polars")
+          root = biathlon / "relay/excel365"
           seasons = []
           for filename in ("men_chrono.csv", "ladies_chrono.csv"):
               with (root / filename).open(newline="", encoding="utf-8-sig") as handle:
@@ -115,10 +117,22 @@ jobs:
                   )
           if not seasons:
               raise SystemExit("accepted biathlon histories contain no races")
-          print(max(seasons))
+          history_season = max(seasons)
+          with (biathlon / "excel365/races.csv").open(
+              newline="", encoding="utf-8-sig"
+          ) as handle:
+              schedule_seasons = [
+                  datetime.strptime(row["Date"], "%m/%d/%Y").year
+                  for row in csv.DictReader(handle)
+              ]
+          if not schedule_seasons:
+              raise SystemExit("accepted biathlon schedule contains no races")
+          print(f"{history_season} {max(schedule_seasons)}")
           PY
           )
-          echo "season=$season" >> "$GITHUB_OUTPUT"
+          read -r history_season schedule_season <<< "$season"
+          echo "season=$history_season" >> "$GITHUB_OUTPUT"
+          echo "schedule_season=$schedule_season" >> "$GITHUB_OUTPUT"
 
       - name: Verify guarded Biathlon season close
         id: season_close
@@ -126,7 +140,13 @@ jobs:
           AS_OF: ${{ steps.parameters.outputs.as_of }}
           FORCE_CLOSE: ${{ inputs.run_season_close || false }}
           SEASON: ${{ steps.season.outputs.season }}
+          SCHEDULE_SEASON: ${{ steps.season.outputs.schedule_season }}
         run: |
+          if [[ "$SEASON" != "$SCHEDULE_SEASON" && "$FORCE_CLOSE" != "true" ]]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "Season $SEASON remains open because the accepted schedule is for active season $SCHEDULE_SEASON." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
           close_date="$SEASON-05-01"
           if [[ "$AS_OF" < "$close_date" && "$FORCE_CLOSE" != "true" ]]; then
             echo "status=skipped" >> "$GITHUB_OUTPUT"
