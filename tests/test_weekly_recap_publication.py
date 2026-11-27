@@ -24,6 +24,12 @@ def _write_schedule(path: Path, dates: list[str]) -> None:
 
 
 def _write_artifacts(root: Path, sport: str, *, empty: str | None = None) -> None:
+    sport_change = {
+        "alpine": 10.0,
+        "biathlon": 40.0,
+        "cross-country": 30.0,
+        "skijump": 20.0,
+    }[sport]
     for gender in ("men", "ladies"):
         for artifact_type in (
             "elo_change",
@@ -32,9 +38,39 @@ def _write_artifacts(root: Path, sport: str, *, empty: str | None = None) -> Non
         ):
             path = root / sport / f"{gender}_{artifact_type}.json"
             path.parent.mkdir(parents=True, exist_ok=True)
-            rows = [] if empty == f"{gender}_{artifact_type}" else [["Athlete", 1]]
+            if artifact_type == "elo_change":
+                headers = [
+                    "Skier",
+                    "ID",
+                    "Nation",
+                    "Current Elo",
+                    "Previous Elo",
+                    "Change",
+                ]
+                change = sport_change + (0.5 if gender == "ladies" else 0.0)
+                rows = (
+                    []
+                    if empty == f"{gender}_{artifact_type}"
+                    else [
+                        [
+                            f"{sport} {gender} athlete",
+                            1,
+                            "Norway",
+                            1400 + change,
+                            1400,
+                            change,
+                        ]
+                    ]
+                )
+            else:
+                headers = ["Skier", "Value"]
+                rows = (
+                    []
+                    if empty == f"{gender}_{artifact_type}"
+                    else [["Athlete", 1]]
+                )
             path.write_text(
-                json.dumps({"headers": ["Skier", "Value"], "rows": rows}),
+                json.dumps({"headers": headers, "rows": rows}),
                 encoding="utf-8",
             )
 
@@ -140,6 +176,11 @@ class WeeklyRecapPublicationTests(unittest.TestCase):
             self.assertIn("biathlon/drafts/weekly-recap/20261123", rendered)
             self.assertIn("skijump/drafts/weekly-recap/20261123", rendered)
             self.assertIn("cross-country/drafts/weekly-recap/20261123", rendered)
+            self.assertIn("weekly_recap_preview:", rendered)
+            self.assertIn('athlete: "biathlon men athlete"', rendered)
+            self.assertIn('sport: "Biathlon"', rendered)
+            self.assertIn("elo_change: 40.0", rendered)
+            self.assertNotIn('athlete: "alpine men athlete"', rendered)
             output = root / "post.md"
             write_post(output, rendered)
             self.assertEqual(output.read_text(encoding="utf-8"), rendered)

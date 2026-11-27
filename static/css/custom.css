@@ -641,14 +641,16 @@ body p {
   border-color: #9fcbd5;
 }
 
-.fantasy-points-list {
+.fantasy-points-list,
+.recap-elo-list {
   margin: 8px 0 0;
   padding: 0;
   list-style: none;
   counter-reset: fantasy-rank;
 }
 
-.fantasy-points-list li {
+.fantasy-points-list li,
+.recap-elo-list li {
   display: grid;
   grid-template-columns: 20px minmax(0, 1fr) auto;
   gap: 8px;
@@ -658,14 +660,16 @@ body p {
   counter-increment: fantasy-rank;
 }
 
-.fantasy-points-list li::before {
+.fantasy-points-list li::before,
+.recap-elo-list li::before {
   content: counter(fantasy-rank);
   color: #8796a1;
   font-size: 12px;
   font-weight: 700;
 }
 
-.fantasy-points-athlete {
+.fantasy-points-athlete,
+.recap-elo-athlete {
   min-width: 0;
   overflow: hidden;
   color: #1f2f3d;
@@ -676,14 +680,16 @@ body p {
   white-space: nowrap;
 }
 
-.fantasy-points-score {
+.fantasy-points-score,
+.recap-elo-change {
   color: #00728a;
   font-size: 12px;
   font-weight: 700;
   white-space: nowrap;
 }
 
-.fantasy-points-list .prediction-preview-nation {
+.fantasy-points-list .prediction-preview-nation,
+.recap-elo-list .prediction-preview-nation {
   grid-column: 2 / 4;
   margin-top: -5px;
 }
