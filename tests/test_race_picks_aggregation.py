@@ -1,7 +1,7 @@
 import json
 import tempfile
 import unittest
-from datetime import date
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 from pipelines.race_picks_aggregation import (
@@ -56,6 +56,30 @@ class RacePicksAggregationTest(unittest.TestCase):
             self.assertEqual(rendered.count("## Cross-Country"), 1)
             self.assertEqual(rendered.count("Race Picks Methodology"), 1)
             self.assertFalse(legacy.exists())
+
+    def test_uses_generation_time_instead_of_future_race_time(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fragment(root, "biathlon", "Biathlon", "biathlon", "biathlon/picks")
+            generated = datetime(2026, 11, 26, 22, 15, 0, tzinfo=UTC)
+
+            build_combined_post(root, LOGICAL_DATE, publication_time=generated)
+
+            post = root / "content/post/race-picks/20261127.md"
+            self.assertIn("date: 2026-11-26T22:15:00+00:00", post.read_text())
+
+    def test_rerun_preserves_an_existing_visible_publication_time(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fragment(root, "biathlon", "Biathlon", "biathlon", "biathlon/picks")
+            initial = datetime(2026, 11, 26, 21, 0, 0, tzinfo=UTC)
+            later = datetime(2026, 11, 26, 23, 0, 0, tzinfo=UTC)
+            build_combined_post(root, LOGICAL_DATE, publication_time=initial)
+
+            build_combined_post(root, LOGICAL_DATE, publication_time=later)
+
+            post = root / "content/post/race-picks/20261127.md"
+            self.assertIn("date: 2026-11-26T21:00:00+00:00", post.read_text())
 
     def test_fails_closed_for_missing_referenced_data(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
