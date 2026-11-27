@@ -36,6 +36,7 @@ class CrossCountryTourShadowWorkflowTests(unittest.TestCase):
             "/cross_country_tour_inputs.py",
             "/cross_country_tour_contract.py",
             "/cross_country_weekend_inputs.py",
+            "/cross_country_announced_rosters.py",
             "/cross_country_results_identity.py",
             "/schedule_contract.py",
             "/cross_country_tour_publication.py",
