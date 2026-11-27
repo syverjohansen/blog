@@ -275,6 +275,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
+      actions: write
       contents: write
 
     steps:
@@ -309,60 +310,13 @@ jobs:
           date_key="${LOGICAL_DATE//-/}"
           if [[ -z "$(git status --porcelain -- \
             "data/alpine/drafts/race-picks/$date_key" \
-            "content/post/race-picks/$date_key.md")" ]]; then
+            "data/race-picks/fragments/$date_key/alpine.md")" ]]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
           echo "date_key=$date_key" >> "$GITHUB_OUTPUT"
           echo "report=$report" >> "$GITHUB_OUTPUT"
-
-      - name: Set up Hugo for final repository render
-        if: steps.candidate.outputs.changed == 'true'
-        uses: peaceiris/actions-hugo@v3
-        with:
-          hugo-version: "0.134.1"
-          extended: true
-
-      - name: Render the exact prediction page candidate
-        if: steps.candidate.outputs.changed == 'true'
-        env:
-          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
-        run: |
-          python3 - <<'PY'
-          import json
-          import os
-          from datetime import date
-          from pathlib import Path
-
-          from pipelines.test_pipeline import run_generated_site_smoke
-
-          root = Path.cwd()
-          logical_date = date.fromisoformat(os.environ["LOGICAL_DATE"])
-          date_key = logical_date.strftime("%Y%m%d")
-          data_root = root / "data"
-          genders = tuple(
-              gender
-              for gender in ("men", "ladies")
-              if (
-                  data_root
-                  / "alpine/drafts/race-picks"
-                  / date_key
-                  / f"{gender}_position_probabilities.json"
-              ).is_file()
-          )
-          if not genders:
-              raise SystemExit("publication candidate has no prediction data")
-          report = run_generated_site_smoke(
-              root,
-              data_root,
-              logical_date,
-              destination=Path(os.environ["RUNNER_TEMP"])
-              / "alpine-publication-site",
-              genders=genders,
-          )
-          print(json.dumps(report, sort_keys=True))
-          PY
 
       - name: Publish validated prediction post
         if: steps.candidate.outputs.changed == 'true'
@@ -375,10 +329,19 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
             "data/alpine/drafts/race-picks/$DATE_KEY" \
-            "content/post/race-picks/$DATE_KEY.md"
+            "data/race-picks/fragments/$DATE_KEY/alpine.md"
           git commit -m "Add Alpine race picks for $LOGICAL_DATE"
           git push origin HEAD:main
-          echo "Published validated race picks for $LOGICAL_DATE from shadow run $RUN_ID." >> "$GITHUB_STEP_SUMMARY"
+          echo "Published validated Alpine fragment for $LOGICAL_DATE from shadow run $RUN_ID." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Refresh combined Race Picks
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+        run: |
+          gh workflow run combined-race-picks.yml \
+            --ref main \
+            -f logical_date="$LOGICAL_DATE"
 
       - name: Upload publication candidate report
         if: always()

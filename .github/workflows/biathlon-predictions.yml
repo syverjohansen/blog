@@ -117,7 +117,9 @@ jobs:
               candidates = [value for value in available if today <= value <= today + timedelta(days=2)]
               unpublished = [
                   value for value in candidates
-                  if not Path(f"content/post/race-picks/biathlon-{value.strftime('%Y%m%d')}.md").is_file()
+                  if not Path(
+                      f"data/race-picks/fragments/{value.strftime('%Y%m%d')}/biathlon.md"
+                  ).is_file()
               ]
               target = unpublished[0] if unpublished else None
           output = Path(os.environ["GITHUB_OUTPUT"])
@@ -251,6 +253,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
+      actions: write
       contents: write
     steps:
       - name: Check out publication base
@@ -292,29 +295,11 @@ jobs:
             --report "$report"
           if [[ -n "$(git status --porcelain -- \
             "data/biathlon/drafts/race-picks/$DATE_KEY" \
-            "content/post/race-picks/biathlon-$DATE_KEY.md")" ]]; then
+            "data/race-picks/fragments/$DATE_KEY/biathlon.md")" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
-
-      - name: Set up Hugo
-        if: steps.publication.outputs.changed == 'true'
-        uses: peaceiris/actions-hugo@v3
-        with:
-          hugo-version: "0.134.1"
-          extended: true
-
-      - name: Render targeted Biathlon post candidate
-        if: steps.publication.outputs.changed == 'true'
-        env:
-          DATE_KEY: ${{ needs.shadow.outputs.date_key }}
-        run: |
-          python3 -m pipelines.biathlon_prediction_site_smoke \
-            --repository-root "$GITHUB_WORKSPACE" \
-            --post "$GITHUB_WORKSPACE/content/post/race-picks/biathlon-$DATE_KEY.md" \
-            --destination "$RUNNER_TEMP/biathlon-site" \
-            --report "$RUNNER_TEMP/biathlon-site-smoke.json"
 
       - name: Publish validated Biathlon predictions
         if: steps.publication.outputs.changed == 'true'
@@ -327,7 +312,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
             "data/biathlon/drafts/race-picks/$DATE_KEY" \
-            "content/post/race-picks/biathlon-$DATE_KEY.md"
+            "data/race-picks/fragments/$DATE_KEY/biathlon.md"
           git commit -m "Publish Biathlon race picks for $LOGICAL_DATE" \
             -m "Validated shadow run: $RUN_ID"
           for attempt in 1 2 3; do
@@ -336,6 +321,15 @@ jobs:
             sleep $((attempt * 5))
           done
           exit 1
+
+      - name: Refresh combined Race Picks
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+        run: |
+          gh workflow run combined-race-picks.yml \
+            --ref main \
+            -f logical_date="$LOGICAL_DATE"
 
       - name: Retain publication report
         if: always()

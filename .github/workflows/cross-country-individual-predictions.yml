@@ -10,6 +10,7 @@ on:
         type: string
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -171,19 +172,7 @@ jobs:
             --schedule "$NORDIC_SKI_DATA_ROOT/races.csv" \
             --logical-date "${{ steps.parameters.outputs.logical_date }}" \
             --data-root "data/cross-country/drafts/race-picks/$DATE_KEY" \
-            --output "content/post/race-picks/cross-country-individual-$DATE_KEY.md"
-
-      - name: Set up Hugo
-        if: steps.detect.outputs.has_individual_event == 'true'
-        uses: peaceiris/actions-hugo@v3
-        with:
-          hugo-version: "0.134.1"
-          extended: true
-
-      - name: Render site candidate
-        if: steps.detect.outputs.has_individual_event == 'true'
-        working-directory: blog
-        run: hugo --minify --destination "$RUNNER_TEMP/individual-site"
+            --output "data/race-picks/fragments/$DATE_KEY/cross-country-individual.md"
 
       - name: Publish validated individual predictions
         if: steps.detect.outputs.has_individual_event == 'true'
@@ -196,7 +185,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
             "data/cross-country/drafts/race-picks/$DATE_KEY" \
-            "content/post/race-picks/cross-country-individual-$DATE_KEY.md"
+            "data/race-picks/fragments/$DATE_KEY/cross-country-individual.md"
           if git diff --cached --quiet; then
             echo "Validated individual prediction artifacts are already current."
             exit 0
@@ -205,6 +194,17 @@ jobs:
             -m "Ski source: $SKI_SHA"
           git pull --rebase origin main
           git push origin HEAD:main
+
+      - name: Refresh combined Race Picks
+        if: steps.detect.outputs.has_individual_event == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOGICAL_DATE: ${{ steps.parameters.outputs.logical_date }}
+        run: |
+          gh workflow run combined-race-picks.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f logical_date="$LOGICAL_DATE"
 
       - name: Retain individual prediction evidence
         if: always() && steps.detect.outputs.has_individual_event == 'true'

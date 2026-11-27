@@ -276,6 +276,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
+      actions: write
       contents: write
 
     steps:
@@ -319,23 +320,12 @@ jobs:
             --report "$report"
           if [[ -z "$(git status --porcelain -- \
             "data/skijump/drafts/race-picks/$date_key" \
-            "content/post/race-picks/ski-jumping-$date_key.md")" ]]; then
+            "data/race-picks/fragments/$date_key/ski-jumping.md")" ]]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
           echo "date_key=$date_key" >> "$GITHUB_OUTPUT"
-
-      - name: Set up Hugo
-        if: steps.candidate.outputs.changed == 'true'
-        uses: peaceiris/actions-hugo@v3
-        with:
-          hugo-version: "0.134.1"
-          extended: true
-
-      - name: Render complete site candidate
-        if: steps.candidate.outputs.changed == 'true'
-        run: hugo --minify --destination "$RUNNER_TEMP/ski-jumping-publication-site"
 
       - name: Publish validated ski-jumping predictions
         if: steps.candidate.outputs.changed == 'true'
@@ -348,11 +338,20 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
             "data/skijump/drafts/race-picks/$DATE_KEY" \
-            "content/post/race-picks/ski-jumping-$DATE_KEY.md"
+            "data/race-picks/fragments/$DATE_KEY/ski-jumping.md"
           git commit -m "Publish ski-jumping race picks for $LOGICAL_DATE" \
             -m "Validated shadow run: $RUN_ID"
           git pull --rebase origin main
           git push origin HEAD:main
+
+      - name: Refresh combined Race Picks
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+        run: |
+          gh workflow run combined-race-picks.yml \
+            --ref main \
+            -f logical_date="$LOGICAL_DATE"
 
       - name: Retain publication and parity report
         if: always()

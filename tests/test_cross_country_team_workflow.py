@@ -41,15 +41,15 @@ class CrossCountryTeamWorkflowTests(unittest.TestCase):
         self.assertIn("$RUNNER_TEMP/team-event-inputs/relay.csv", self.source)
         self.assertIn("$RUNNER_TEMP/team-event-inputs/team_sprint.csv", self.source)
 
-    def test_validation_and_hugo_render_precede_narrow_publication(self) -> None:
+    def test_validation_and_narrow_publication_precede_combined_dispatch(self) -> None:
         build = self.source.index("cross_country_team_publication build")
-        render = self.source.index("hugo --minify")
         publication = self.source.index("git push origin HEAD:main")
-        self.assertLess(build, render)
-        self.assertLess(render, publication)
+        dispatch = self.source.index("gh workflow run combined-race-picks.yml")
+        self.assertLess(build, publication)
+        self.assertLess(publication, dispatch)
         self.assertIn('"data/cross-country/drafts/race-picks/$DATE_KEY"', self.source)
         self.assertIn(
-            '"content/post/race-picks/cross-country-team-$DATE_KEY.md"', self.source
+            '"data/race-picks/fragments/$DATE_KEY/cross-country-team.md"', self.source
         )
         self.assertNotIn("git add .", self.source)
         self.assertNotIn("--force", self.source)
