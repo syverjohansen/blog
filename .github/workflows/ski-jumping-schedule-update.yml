@@ -169,7 +169,9 @@ jobs:
           SEASON: ${{ steps.schedule_season.outputs.season }}
         run: |
           root="external/ski/elo/python/skijump/polars"
-          python3 -m unittest discover -s "$root" -p 'test_*schedule*.py'
+          uv run --isolated --python 3.12 \
+            --with requests --with beautifulsoup4 --with pandas --with fuzzywuzzy \
+            python -m unittest discover -s "$root" -p 'test_*schedule*.py'
           git -C external/ski config user.name "github-actions[bot]"
           git -C external/ski config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git -C external/ski add \
