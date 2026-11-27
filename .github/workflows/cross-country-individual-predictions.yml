@@ -61,11 +61,13 @@ jobs:
       - name: Resolve logical date
         id: parameters
         run: |
-          echo "NORDIC_PREDICTION_OUTPUT_ROOT=$RUNNER_TEMP/cross-country-individual-predictions" >> "$GITHUB_ENV"
-          echo "NORDIC_LOG_ROOT=$RUNNER_TEMP/cross-country-individual-logs" >> "$GITHUB_ENV"
+          prediction_root="$RUNNER_TEMP/cross-country-individual-predictions"
+          log_root="$RUNNER_TEMP/cross-country-individual-logs"
+          echo "NORDIC_PREDICTION_OUTPUT_ROOT=$prediction_root" >> "$GITHUB_ENV"
+          echo "NORDIC_LOG_ROOT=$log_root" >> "$GITHUB_ENV"
           echo "logical_date=$(date -u +%F)" >> "$GITHUB_OUTPUT"
           echo "date_key=$(date -u +%Y%m%d)" >> "$GITHUB_OUTPUT"
-          mkdir -p "$NORDIC_PREDICTION_OUTPUT_ROOT" "$NORDIC_LOG_ROOT"
+          mkdir -p "$prediction_root" "$log_root"
 
       - name: Detect today's individual events
         id: detect
