@@ -30,6 +30,18 @@ class CrossCountryIndividualWorkflowTests(unittest.TestCase):
         self.assertLess(detection, setup_r)
         self.assertIn(condition, self.source[blog_checkout:setup_r])
 
+    def test_output_roots_are_initialized_before_github_env_is_reloaded(self) -> None:
+        parameters = self.source.split("name: Resolve logical date", 1)[1].split(
+            "- name: Detect today's individual events", 1
+        )[0]
+        self.assertIn('prediction_root="$RUNNER_TEMP/', parameters)
+        self.assertIn('log_root="$RUNNER_TEMP/', parameters)
+        self.assertIn('mkdir -p "$prediction_root" "$log_root"', parameters)
+        self.assertNotIn(
+            'mkdir -p "$NORDIC_PREDICTION_OUTPUT_ROOT" "$NORDIC_LOG_ROOT"',
+            parameters,
+        )
+
     def test_current_elo_inputs_and_startlists_precede_simulation(self) -> None:
         prepare = self.source.index("cross_country_individual_publication prepare")
         startlist = self.source.index("startlist-scrape-races.py")
