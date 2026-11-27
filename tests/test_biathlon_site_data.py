@@ -123,9 +123,9 @@ class BiathlonSiteDataTest(unittest.TestCase):
                     date="2026-05-01", race_type="Offseason", distance="0",
                 ),
                 row(
-                    sex="L", athlete_id=4, skier="Lady", season=2027,
+                    sex="L", athlete_id=4, skier="Lady", season=2026,
                     race=1, event="World Cup", place=1, pelo=1385, elo=1405,
-                    date="2026-11-20",
+                    date="2025-11-20",
                 ),
             ]
             write_history(men, men_rows)
@@ -164,11 +164,23 @@ class BiathlonSiteDataTest(unittest.TestCase):
                 (output / "head2head/M_race_lookup.json").read_text()
             )
             rankings = json.loads((output / "M/ranks.json").read_text())
+            ladies_current = json.loads(
+                (output / "L_chrono_current.json").read_text()
+            )
+            ladies_summary = json.loads(
+                (output / "L/2027/summary.json").read_text()
+            )
+            ladies_rollover = json.loads(
+                (output / "L/2027/race_0.json").read_text()
+            )
 
             self.assertEqual([record["ID"] for record in current], [1, 3])
             self.assertEqual(current[0]["Pelo"], 1495.0)
             self.assertEqual(current[0]["Individual_Pelo"], 1495.0)
             self.assertEqual(current[0]["Birthday"], "2000-01-02")
+            self.assertEqual(ladies_current, [])
+            self.assertEqual(ladies_summary, [])
+            self.assertEqual(ladies_rollover, [])
             self.assertEqual([record["id"] for record in rollover], [1, 3])
             self.assertEqual(rollover[0]["previous_elo"], 1500.0)
             self.assertEqual(rollover[0]["new_elo"], 1495.0)
