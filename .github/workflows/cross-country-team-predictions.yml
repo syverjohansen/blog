@@ -186,7 +186,7 @@ jobs:
             --schedule "$NORDIC_SKI_DATA_ROOT/races.csv" \
             --logical-date "${{ steps.parameters.outputs.logical_date }}" \
             --data-root "data/cross-country/drafts/race-picks/$DATE_KEY" \
-            --output "data/race-picks/fragments/$DATE_KEY/cross-country-team.md"
+            --output "race-picks/fragments/$DATE_KEY/cross-country-team.md"
 
       - name: Publish validated team predictions
         if: steps.detect.outputs.has_team_event == 'true'
@@ -199,7 +199,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
             "data/cross-country/drafts/race-picks/$DATE_KEY" \
-            "data/race-picks/fragments/$DATE_KEY/cross-country-team.md"
+            "race-picks/fragments/$DATE_KEY/cross-country-team.md"
           if git diff --cached --quiet; then
             echo "Validated team prediction artifacts are already current."
             exit 0

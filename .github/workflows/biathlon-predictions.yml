@@ -118,7 +118,7 @@ jobs:
               unpublished = [
                   value for value in candidates
                   if not Path(
-                      f"data/race-picks/fragments/{value.strftime('%Y%m%d')}/biathlon.md"
+                      f"race-picks/fragments/{value.strftime('%Y%m%d')}/biathlon.md"
                   ).is_file()
               ]
               target = unpublished[0] if unpublished else None
@@ -295,7 +295,7 @@ jobs:
             --report "$report"
           if [[ -n "$(git status --porcelain -- \
             "data/biathlon/drafts/race-picks/$DATE_KEY" \
-            "data/race-picks/fragments/$DATE_KEY/biathlon.md")" ]]; then
+            "race-picks/fragments/$DATE_KEY/biathlon.md")" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -312,7 +312,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
             "data/biathlon/drafts/race-picks/$DATE_KEY" \
-            "data/race-picks/fragments/$DATE_KEY/biathlon.md"
+            "race-picks/fragments/$DATE_KEY/biathlon.md"
           git commit -m "Publish Biathlon race picks for $LOGICAL_DATE" \
             -m "Validated shadow run: $RUN_ID"
           for attempt in 1 2 3; do

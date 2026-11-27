@@ -62,7 +62,7 @@ class AlpineProductionWorkflowTests(unittest.TestCase):
         self.assertIn("actions: write", candidate)
         self.assertIn('"data/alpine/drafts/race-picks/$DATE_KEY"', candidate)
         self.assertIn(
-            '"data/race-picks/fragments/$DATE_KEY/alpine.md"', candidate
+            '"race-picks/fragments/$DATE_KEY/alpine.md"', candidate
         )
         self.assertIn("git push origin HEAD:main", candidate)
         self.assertNotIn("git add .", candidate)

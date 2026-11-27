@@ -285,7 +285,7 @@ def prepare_publication(
 
     post_path = (
         repository_root
-        / "data/race-picks/fragments"
+        / "race-picks/fragments"
         / date_key
         / "ski-jumping.md"
     )

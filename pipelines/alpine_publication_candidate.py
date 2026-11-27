@@ -172,7 +172,7 @@ def prepare_candidate(
 
     content_path = (
         repository_root
-        / "data/race-picks/fragments"
+        / "race-picks/fragments"
         / date_key
         / "alpine.md"
     )

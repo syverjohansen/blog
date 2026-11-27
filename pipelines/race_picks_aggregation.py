@@ -34,7 +34,7 @@ FRONT_MATTER_DATE = re.compile(r"^date:\s*(?P<value>\S+)\s*$", re.MULTILINE)
 def fragment_path(repository_root: Path, logical_date: date, name: str) -> Path:
     return (
         repository_root
-        / "data/race-picks/fragments"
+        / "race-picks/fragments"
         / logical_date.strftime("%Y%m%d")
         / f"{name}.md"
     )

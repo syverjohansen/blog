@@ -207,7 +207,7 @@ def prepare_publication(
             })
     post = (
         repository_root
-        / "data/race-picks/fragments"
+        / "race-picks/fragments"
         / date_key
         / "biathlon.md"
     )
