@@ -25,6 +25,10 @@ class CombinedRacePicksWorkflowTest(unittest.TestCase):
         self.assertLess(render, publish)
         self.assertNotIn("data/race-picks/fragments", self.source[publish:])
 
+    def test_night_before_render_includes_future_dated_post(self) -> None:
+        aggregator = (ROOT / "pipelines/race_picks_aggregation.py").read_text()
+        self.assertIn('"--buildFuture"', aggregator)
+
 
 if __name__ == "__main__":
     unittest.main()

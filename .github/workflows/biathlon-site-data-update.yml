@@ -289,8 +289,7 @@ jobs:
         run: |
           gh workflow run biathlon-predictions.yml \
             --repo "$GITHUB_REPOSITORY" \
-            --ref main \
-            -f ski_ref=main
+            --ref main
           echo "Dispatched the guarded Biathlon prediction publisher." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload generated candidate

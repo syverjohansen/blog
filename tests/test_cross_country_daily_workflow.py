@@ -146,24 +146,23 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
 
     def test_prediction_workflows_form_one_ordered_chain(self) -> None:
         self.assertIn(
-            'workflows: ["Cross-country automatic daily pipeline"]', self.fantasyxc
+            "gh workflow run cross-country-fantasyxc-evidence.yml", self.daily
         )
         self.assertIn(
             "gh workflow run cross-country-individual-predictions.yml",
             self.fantasyxc,
         )
         self.assertNotIn("workflow_run:", self.individual)
-        self.assertIn('workflows: ["Cross-country individual predictions"]', self.team)
-        self.assertIn('workflows: ["Cross-country team predictions"]', self.weekend)
-        self.assertIn('workflows: ["Cross-country team predictions"]', self.tour)
+        self.assertIn("gh workflow run cross-country-team-predictions.yml", self.individual)
+        self.assertIn("gh workflow run cross-country-weekend-shadow.yml", self.team)
+        self.assertIn("gh workflow run cross-country-tour-shadow.yml", self.team)
         self.assertIn(
-            'workflows: ["Cross-country Tour de Ski predictions"]',
-            self.final_climb,
+            "gh workflow run cross-country-final-climb-shadow.yml", self.tour
         )
-        self.assertIn("github.event.workflow_run.conclusion == 'success'", self.tour)
-        self.assertIn(
-            "github.event.workflow_run.conclusion == 'success'", self.final_climb
-        )
+        for source in (
+            self.fantasyxc, self.team, self.weekend, self.tour, self.final_climb
+        ):
+            self.assertNotIn("workflow_run:", source.split("on:\n", 1)[1].split("\npermissions:", 1)[0])
         self.assertNotIn(
             "schedule:", self.tour.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
         )

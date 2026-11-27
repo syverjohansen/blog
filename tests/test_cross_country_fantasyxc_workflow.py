@@ -79,7 +79,8 @@ class CrossCountryFantasyXCWorkflowTests(unittest.TestCase):
         dispatch = self.source.index("name: Continue automatic prediction chain")
         self.assertIn("actions: write", self.source)
         self.assertIn("success()", self.source[dispatch:])
-        self.assertIn("github.event_name == 'workflow_run'", self.source[dispatch:])
+        self.assertIn("inputs.continue_prediction_chain == true", self.source[dispatch:])
+        self.assertNotIn("workflow_run:", self.source)
         self.assertIn(
             "gh workflow run cross-country-individual-predictions.yml",
             self.source[dispatch:],

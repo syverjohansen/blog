@@ -206,6 +206,15 @@ jobs:
             --ref main \
             -f logical_date="$LOGICAL_DATE"
 
+      - name: Continue with team predictions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run cross-country-team-predictions.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f ski_ref=main
+
       - name: Retain individual prediction evidence
         if: always() && steps.detect.outputs.has_individual_event == 'true'
         uses: actions/upload-artifact@v4

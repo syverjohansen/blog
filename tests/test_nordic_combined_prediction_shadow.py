@@ -419,6 +419,10 @@ class NordicCombinedPredictionShadowTests(unittest.TestCase):
         self.assertIn("Retain waiting official-list evidence", source)
         self.assertIn('steps.acquisition.outputs.status == \'waiting\'', source)
         self.assertIn('report.get("reason") == "official_startlist_waiting"', source)
+        self.assertIn("needs.shadow.outputs.ready == 'true'", source)
+        self.assertIn(
+            "ready={str(report.get('status') == 'passed').lower()}", source
+        )
         self.assertIn("/pipelines/requirements-snapshot.txt", source)
         self.assertIn("Retain pre-run failure evidence", source)
         self.assertIn('"shadow runner did not produce its report"', source)

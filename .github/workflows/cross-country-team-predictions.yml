@@ -1,9 +1,6 @@
 name: Cross-country team predictions
 
 on:
-  workflow_run:
-    workflows: ["Cross-country individual predictions"]
-    types: [completed]
   workflow_dispatch:
     inputs:
       ski_ref:
@@ -22,9 +19,6 @@ concurrency:
 
 jobs:
   predict-and-publish:
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -219,6 +213,19 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --ref main \
             -f logical_date="$LOGICAL_DATE"
+
+      - name: Continue with weekend and Tour predictions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run cross-country-weekend-shadow.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f ski_ref=main
+          gh workflow run cross-country-tour-shadow.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f ski_ref=main
 
       - name: Retain team prediction evidence
         if: always() && steps.detect.outputs.has_team_event == 'true'

@@ -28,6 +28,8 @@ class BiathlonSiteDataWorkflowTests(unittest.TestCase):
         self.assertLess(publication, trigger)
         self.assertIn("run_predictions:", self.text)
         self.assertIn("if: inputs.run_predictions == true", self.text)
+        dispatch = self.text[trigger:].split("- name:", 1)[0]
+        self.assertNotIn("ski_ref", dispatch)
 
     def test_checkout_is_pinned_and_bounded_to_required_histories(self) -> None:
         self.assertIn("repos/syverjohansen/ski/commits/$SKI_REF", self.text)

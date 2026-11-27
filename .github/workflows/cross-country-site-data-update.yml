@@ -23,6 +23,7 @@ on:
         type: boolean
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -451,6 +452,16 @@ jobs:
             git pull --rebase origin main
             git push origin HEAD:main
           fi
+
+      - name: Continue with FantasyXC evidence and predictions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run cross-country-fantasyxc-evidence.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f ski_ref=main \
+            -f continue_prediction_chain=true
 
       - name: Upload update evidence
         if: always()

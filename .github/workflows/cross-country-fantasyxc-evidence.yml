@@ -1,9 +1,6 @@
 name: Cross-country FantasyXC roster evidence
 
 on:
-  workflow_run:
-    workflows: ["Cross-country automatic daily pipeline"]
-    types: [completed]
   workflow_dispatch:
     inputs:
       logical_date:
@@ -35,9 +32,6 @@ concurrency:
 
 jobs:
   evidence:
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -364,10 +358,7 @@ jobs:
           retention-days: 90
 
       - name: Continue automatic prediction chain
-        if: >-
-          success() &&
-          (github.event_name == 'workflow_run' ||
-          inputs.continue_prediction_chain == true)
+        if: success() && inputs.continue_prediction_chain == true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

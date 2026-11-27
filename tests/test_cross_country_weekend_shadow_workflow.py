@@ -11,15 +11,13 @@ class CrossCountryWeekendShadowWorkflowTests(unittest.TestCase):
         cls.source = WORKFLOW.read_text(encoding="utf-8")
         cls.trigger = cls.source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
 
-    def test_workflow_is_chained_manual_and_github_hosted(self) -> None:
-        self.assertIn("workflow_run:", self.trigger)
-        self.assertIn('workflows: ["Cross-country team predictions"]', self.trigger)
+    def test_workflow_is_explicitly_dispatched_manual_and_github_hosted(self) -> None:
+        self.assertNotIn("workflow_run:", self.trigger)
         self.assertIn("workflow_dispatch:", self.trigger)
         self.assertNotIn("schedule:", self.trigger)
         self.assertIn("runs-on: ubuntu-latest", self.source)
         self.assertNotIn("self-hosted", self.source)
         self.assertIn("permissions:\n  contents: write", self.source)
-        self.assertIn("github.event.workflow_run.conclusion == 'success'", self.source)
 
     def test_cross_repository_source_is_resolved_and_bounded(self) -> None:
         self.assertIn("repos/syverjohansen/ski/commits/$SKI_REF", self.source)

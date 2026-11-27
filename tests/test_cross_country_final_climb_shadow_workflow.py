@@ -11,17 +11,13 @@ class CrossCountryFinalClimbShadowWorkflowTests(unittest.TestCase):
         cls.source = WORKFLOW.read_text(encoding="utf-8")
         cls.trigger = cls.source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
 
-    def test_is_daily_chained_manual_guarded_and_github_hosted(self) -> None:
+    def test_is_explicitly_dispatched_manual_guarded_and_github_hosted(self) -> None:
         self.assertTrue(
             self.source.startswith("name: Cross-country Final Climb predictions\n")
         )
         self.assertIn("workflow_dispatch:", self.trigger)
-        self.assertIn("workflow_run:", self.trigger)
-        self.assertIn(
-            'workflows: ["Cross-country Tour de Ski predictions"]', self.trigger
-        )
+        self.assertNotIn("workflow_run:", self.trigger)
         self.assertNotIn("schedule:", self.trigger)
-        self.assertIn("github.event.workflow_run.conclusion == 'success'", self.source)
         self.assertIn("permissions:\n  contents: write", self.source)
         self.assertIn("runs-on: ubuntu-latest", self.source)
         self.assertNotIn("self-hosted", self.source)

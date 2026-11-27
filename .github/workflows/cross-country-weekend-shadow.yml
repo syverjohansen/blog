@@ -1,9 +1,6 @@
 name: Cross-country weekend predictions
 
 on:
-  workflow_run:
-    workflows: ["Cross-country team predictions"]
-    types: [completed]
   workflow_dispatch:
     inputs:
       logical_date:
@@ -40,9 +37,6 @@ concurrency:
 
 jobs:
   shadow:
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 45
 

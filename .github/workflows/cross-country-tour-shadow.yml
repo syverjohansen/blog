@@ -1,9 +1,6 @@
 name: Cross-country Tour de Ski predictions
 
 on:
-  workflow_run:
-    workflows: ["Cross-country team predictions"]
-    types: [completed]
   workflow_dispatch:
     inputs:
       logical_date:
@@ -27,6 +24,7 @@ on:
         type: string
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -35,9 +33,6 @@ concurrency:
 
 jobs:
   shadow:
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -357,6 +352,15 @@ jobs:
               json.dumps(report, indent=2, sort_keys=True) + "\n"
           )
           PY
+
+      - name: Continue with Final Climb predictions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run cross-country-final-climb-shadow.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f ski_ref=main
 
       - name: Retain complete Tour shadow evidence
         if: always()

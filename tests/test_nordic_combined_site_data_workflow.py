@@ -13,12 +13,9 @@ class NordicCombinedSiteDataWorkflowTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.text = WORKFLOW.read_text(encoding="utf-8")
 
-    def test_follows_successful_results_and_has_manual_recovery(self) -> None:
-        self.assertIn(
-            'workflows: ["Nordic-combined automatic results pipeline"]', self.text
-        )
+    def test_is_explicitly_dispatched_and_has_manual_recovery(self) -> None:
         self.assertIn("workflow_dispatch:", self.text)
-        self.assertIn("workflow_run.conclusion == 'success'", self.text)
+        self.assertNotIn("workflow_run:", self.text)
 
     def test_checkout_is_pinned_and_bounded_to_required_histories(self) -> None:
         self.assertIn("repos/syverjohansen/ski/commits/$SKI_REF", self.text)
