@@ -35,21 +35,58 @@ jobs:
             exit 1
           fi
 
+      - name: Resolve schedules to an exact ski commit
+        id: ski
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ski_sha=$(gh api "repos/syverjohansen/ski/commits/main" --jq .sha)
+          [[ "$ski_sha" =~ ^[0-9a-f]{40}$ ]]
+          echo "sha=$ski_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out bounded sport schedules
+        uses: actions/checkout@v4
+        with:
+          repository: syverjohansen/ski
+          ref: ${{ steps.ski.outputs.sha }}
+          path: external/ski
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /elo/python/alpine/polars/excel365/races.csv
+            /elo/python/ski/polars/excel365/races.csv
+            /elo/python/skijump/polars/excel365/races.csv
+            /elo/python/nordic-combined/polars/excel365/races.csv
+            /elo/python/biathlon/polars/excel365/races.csv
+
       - name: Build one combined Race Picks post
+        id: build
         env:
           LOGICAL_DATE: ${{ inputs.logical_date }}
         run: |
           python3 -m pipelines.race_picks_aggregation build \
             --logical-date "$LOGICAL_DATE" \
+            --ski-root external/ski \
             --report "$RUNNER_TEMP/combined-race-picks-build.json"
+          status=$(REPORT="$RUNNER_TEMP/combined-race-picks-build.json" \
+            python3 -c 'import json,os; print(json.load(open(os.environ["REPORT"]))["status"])')
+          if [ "$status" = "waiting" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "Race Picks are waiting for the remaining scheduled sports." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Set up Hugo
+        if: steps.build.outputs.ready == 'true'
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: "0.134.1"
           extended: true
 
       - name: Render exact combined page
+        if: steps.build.outputs.ready == 'true'
         env:
           LOGICAL_DATE: ${{ inputs.logical_date }}
         run: |
@@ -59,6 +96,7 @@ jobs:
             --report "$RUNNER_TEMP/combined-race-picks-render.json"
 
       - name: Publish only the combined post
+        if: steps.build.outputs.ready == 'true'
         env:
           LOGICAL_DATE: ${{ inputs.logical_date }}
         run: |
