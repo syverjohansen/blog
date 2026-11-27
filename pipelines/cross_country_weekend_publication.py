@@ -181,9 +181,9 @@ def _fantasy_candidate_documents(
     teams_path: Path | None,
     logical_date: date,
     date_key: str,
-) -> tuple[dict[str, Any], dict[Path, bytes], list[str], int]:
+) -> tuple[dict[str, Any], dict[Path, bytes], list[str], int, list[dict[str, Any]]]:
     if report_path is None and teams_path is None:
-        return {"status": "not_requested", "included": False}, {}, [], 0
+        return {"status": "not_requested", "included": False}, {}, [], 0, []
     if report_path is None or teams_path is None:
         raise WeekendPublicationError(
             "fantasy report and teams paths must be supplied together"
@@ -215,6 +215,7 @@ def _fantasy_candidate_documents(
             {},
             [],
             0,
+            [],
         )
     if status != "candidate":
         raise WeekendPublicationError(
@@ -271,6 +272,7 @@ def _fantasy_candidate_documents(
     documents: dict[Path, bytes] = {}
     sections = ["## Fantasy XC Teams", ""]
     total_rows = 0
+    previews: list[dict[str, Any]] = []
     for objective in candidate_objectives:
         team = team_documents[objective]
         if not isinstance(team, dict) or not isinstance(team.get("rows"), list):
@@ -317,6 +319,19 @@ def _fantasy_candidate_documents(
             for row in team["rows"]
         ]
         total_rows += len(rows)
+        featured = sorted(
+            team["rows"],
+            key=lambda row: (-float(row["objective_points"]), str(row["skier"])),
+        )[:3]
+        previews.append(
+            {
+                "objective": objective,
+                "label": FANTASY_LABELS[objective],
+                "projected_points": f"{sum(float(row['objective_points']) for row in team['rows']):,.1f}",
+                "budget_used": f"{validation['total_price']:,}",
+                "featured_athletes": [str(row["skier"]) for row in featured],
+            }
+        )
         filename = f"fantasy-{objective}.json"
         stem = filename.removesuffix(".json")
         sections.extend(
@@ -348,7 +363,32 @@ def _fantasy_candidate_documents(
         documents,
         sections,
         total_rows,
+        previews,
     )
+
+
+def _fantasy_preview_front_matter(previews: list[dict[str, Any]]) -> list[str]:
+    if not previews:
+        return []
+    lines = [
+        'description: "Optimized Cross-Country fantasy teams for the weekend, including sprint and distance lineups."',
+        "fantasy_team_previews:",
+    ]
+    for preview in previews:
+        lines.extend(
+            (
+                f"  - objective: {json.dumps(preview['objective'], ensure_ascii=False)}",
+                f"    label: {json.dumps(preview['label'], ensure_ascii=False)}",
+                f"    projected_points: {json.dumps(preview['projected_points'], ensure_ascii=False)}",
+                f"    budget_used: {json.dumps(preview['budget_used'], ensure_ascii=False)}",
+                "    featured_athletes:",
+            )
+        )
+        lines.extend(
+            f"      - {json.dumps(athlete, ensure_ascii=False)}"
+            for athlete in preview["featured_athletes"]
+        )
+    return lines
 
 
 def build_weekend_candidate(
@@ -436,7 +476,7 @@ def build_weekend_candidate(
         )
     workbook.close()
 
-    fantasy, fantasy_documents, fantasy_sections, fantasy_rows = (
+    fantasy, fantasy_documents, fantasy_sections, fantasy_rows, fantasy_previews = (
         _fantasy_candidate_documents(
             report_path=fantasy_report_path,
             teams_path=fantasy_teams_path,
@@ -457,6 +497,7 @@ def build_weekend_candidate(
             "draft: false",
             f'weekend_source_state: "{source_state}"',
             'tags: ["predictions", "cross-country", "weekend-picks"]',
+            *_fantasy_preview_front_matter(fantasy_previews),
             "---",
             "",
             "*See [Race Picks Methodology](/post/methods/race-picks/) for details.*",

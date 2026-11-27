@@ -315,6 +315,13 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             self.assertIn("### Upside Team", post)
             self.assertIn("### Sprint Team", post)
             self.assertIn("### Distance Team", post)
+            self.assertIn("fantasy_team_previews:", post)
+            self.assertIn('label: "Expected Points"', post)
+            self.assertIn('projected_points: "1,480.0"', post)
+            self.assertIn('budget_used: "80,000"', post)
+            self.assertIn('      - "Fantasy Normal 0"', post)
+            self.assertIn('      - "Fantasy Normal 1"', post)
+            self.assertIn('      - "Fantasy Normal 2"', post)
             for objective in OBJECTIVES:
                 document = json.loads(
                     (
@@ -345,6 +352,10 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             self.assertFalse(report["fantasy"]["included"])
             self.assertNotIn(
                 "Fantasy XC Teams",
+                (output / "content/post/weekly-picks/20261127.md").read_text(),
+            )
+            self.assertNotIn(
+                "fantasy_team_previews:",
                 (output / "content/post/weekly-picks/20261127.md").read_text(),
             )
 
