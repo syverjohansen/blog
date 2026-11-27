@@ -25,6 +25,12 @@ class CombinedRacePicksWorkflowTest(unittest.TestCase):
         self.assertLess(render, publish)
         self.assertNotIn("race-picks/fragments", self.source[publish:])
 
+    def test_publication_waits_for_every_scheduled_sport(self) -> None:
+        self.assertIn("Check out bounded sport schedules", self.source)
+        self.assertIn("--ski-root external/ski", self.source)
+        self.assertIn("steps.build.outputs.ready == 'true'", self.source)
+        self.assertIn("Race Picks are waiting for the remaining scheduled sports", self.source)
+
     def test_night_before_render_includes_future_dated_post(self) -> None:
         aggregator = (ROOT / "pipelines/race_picks_aggregation.py").read_text()
         self.assertIn('"--buildFuture"', aggregator)

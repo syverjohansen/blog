@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import re
 import shutil
@@ -24,12 +25,55 @@ FRAGMENT_GROUPS = (
     ("nordic-combined", ("nordic-combined",)),
     ("biathlon", ("biathlon",)),
 )
+SPORT_SCHEDULES = (
+    ("alpine", "elo/python/alpine/polars/excel365/races.csv"),
+    ("cross-country", "elo/python/ski/polars/excel365/races.csv"),
+    ("skijump", "elo/python/skijump/polars/excel365/races.csv"),
+    ("nordic-combined", "elo/python/nordic-combined/polars/excel365/races.csv"),
+    ("biathlon", "elo/python/biathlon/polars/excel365/races.csv"),
+)
 SHORTCODE = re.compile(
     r'\{\{<\s+(?P<sport>[a-z-]+)/datatable\s+"(?P<reference>[^"]+)"\s*>\}\}'
 )
 METHODOLOGY = re.compile(r"^\*See \[Race Picks Methodology\].*\*$")
 FRONT_MATTER_DATE = re.compile(r"^date:\s*(?P<value>\S+)\s*$", re.MULTILINE)
 HEADING = re.compile(r"^(?P<level>#{2,3})\s+(?P<label>.+?)\s*$")
+
+
+def _schedule_date(value: str) -> date:
+    for pattern in ("%m/%d/%Y", "%m/%d/%y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(value.strip(), pattern).date()
+        except ValueError:
+            pass
+    raise RacePicksAggregationError(f"unsupported schedule date: {value!r}")
+
+
+def scheduled_sports(ski_root: Path, logical_date: date) -> list[str]:
+    """Return sports with at least one scheduled event on the target date."""
+    expected: list[str] = []
+    for sport, relative_path in SPORT_SCHEDULES:
+        schedule = ski_root / relative_path
+        if not schedule.is_file():
+            raise RacePicksAggregationError(f"sport schedule is missing: {schedule}")
+        with schedule.open(newline="", encoding="utf-8-sig") as handle:
+            rows = csv.DictReader(handle)
+            if "Date" not in (rows.fieldnames or []):
+                raise RacePicksAggregationError(
+                    f"sport schedule has no Date column: {schedule}"
+                )
+            if any(_schedule_date(row["Date"]) == logical_date for row in rows):
+                expected.append(sport)
+    return expected
+
+
+def _missing_sports(expected: list[str], included: list[str]) -> list[str]:
+    included_groups = {
+        group
+        for group, fragment_names in FRAGMENT_GROUPS
+        if any(name in included for name in fragment_names)
+    }
+    return [sport for sport in expected if sport not in included_groups]
 
 
 def fragment_path(repository_root: Path, logical_date: date, name: str) -> Path:
@@ -192,6 +236,7 @@ def build_combined_post(
     logical_date: date,
     *,
     publication_time: datetime | None = None,
+    expected_sports: list[str] | None = None,
 ) -> dict[str, object]:
     repository_root = repository_root.resolve()
     sections: list[str] = []
@@ -210,6 +255,16 @@ def build_combined_post(
             # Individual and team Cross Country fragments share one public section.
             merged.extend(["", *additional[1:]])
         sections.append("\n".join(merged).strip())
+    expected_sports = expected_sports or []
+    missing_sports = _missing_sports(expected_sports, included)
+    if missing_sports:
+        return {
+            "status": "waiting",
+            "logical_date": logical_date.isoformat(),
+            "fragments": included,
+            "expected_sports": expected_sports,
+            "missing_sports": missing_sports,
+        }
     if not sections:
         raise RacePicksAggregationError(
             f"no prediction fragments exist for {logical_date.isoformat()}"
@@ -263,6 +318,8 @@ def build_combined_post(
         "logical_date": logical_date.isoformat(),
         "post": str(target.relative_to(repository_root)),
         "fragments": included,
+        "expected_sports": expected_sports,
+        "missing_sports": [],
         "references": references,
         "removed_legacy_posts": removed,
     }
@@ -349,11 +406,20 @@ def main() -> int:
         command.add_argument("--repository-root", type=Path, default=Path.cwd())
         command.add_argument("--logical-date", type=date.fromisoformat, required=True)
         command.add_argument("--report", type=Path, required=True)
+        if name == "build":
+            command.add_argument("--ski-root", type=Path)
         if name == "render":
             command.add_argument("--destination", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "build":
-        report = build_combined_post(args.repository_root, args.logical_date)
+        expected = (
+            scheduled_sports(args.ski_root.resolve(), args.logical_date)
+            if args.ski_root
+            else None
+        )
+        report = build_combined_post(
+            args.repository_root, args.logical_date, expected_sports=expected
+        )
     else:
         report = render_combined_post(
             args.repository_root, args.logical_date, args.destination

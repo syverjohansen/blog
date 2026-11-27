@@ -8,10 +8,28 @@ from pipelines.race_picks_aggregation import (
     RacePicksAggregationError,
     build_combined_post,
     fragment_path,
+    scheduled_sports,
 )
 
 
 LOGICAL_DATE = date(2026, 11, 27)
+
+
+def schedules(root: Path, active: set[str]) -> Path:
+    ski_root = root / "ski"
+    paths = {
+        "alpine": "elo/python/alpine/polars/excel365/races.csv",
+        "cross-country": "elo/python/ski/polars/excel365/races.csv",
+        "skijump": "elo/python/skijump/polars/excel365/races.csv",
+        "nordic-combined": "elo/python/nordic-combined/polars/excel365/races.csv",
+        "biathlon": "elo/python/biathlon/polars/excel365/races.csv",
+    }
+    for sport, relative_path in paths.items():
+        path = ski_root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        event_date = "11/27/2026" if sport in active else "11/28/2026"
+        path.write_text(f"Date,City\n{event_date},Test City\n", encoding="utf-8")
+    return ski_root
 
 
 def fragment(
@@ -48,6 +66,54 @@ def fragment(
 
 
 class RacePicksAggregationTest(unittest.TestCase):
+    def test_scheduled_sports_are_derived_from_all_sport_schedules(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            ski_root = schedules(root, {"alpine", "cross-country", "biathlon"})
+
+            expected = scheduled_sports(ski_root, LOGICAL_DATE)
+
+            self.assertEqual(expected, ["alpine", "cross-country", "biathlon"])
+
+    def test_waits_without_modifying_post_when_scheduled_sport_is_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fragment(root, "biathlon", "Biathlon", "biathlon", "biathlon/picks")
+            post = root / "content/post/race-picks/20261127.md"
+            post.parent.mkdir(parents=True)
+            post.write_text("existing post", encoding="utf-8")
+
+            report = build_combined_post(
+                root,
+                LOGICAL_DATE,
+                expected_sports=["cross-country", "biathlon"],
+            )
+
+            self.assertEqual(report["status"], "waiting")
+            self.assertEqual(report["missing_sports"], ["cross-country"])
+            self.assertEqual(post.read_text(encoding="utf-8"), "existing post")
+
+    def test_builds_once_every_scheduled_sport_has_a_fragment(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fragment(root, "biathlon", "Biathlon", "biathlon", "biathlon/picks")
+            fragment(
+                root,
+                "cross-country-individual",
+                "Cross-Country",
+                "cross-country",
+                "cross-country/picks",
+            )
+
+            report = build_combined_post(
+                root,
+                LOGICAL_DATE,
+                expected_sports=["cross-country", "biathlon"],
+            )
+
+            self.assertEqual(report["status"], "prepared")
+            self.assertEqual(report["missing_sports"], [])
+
     def test_fragments_are_kept_outside_hugo_data_directory(self) -> None:
         root = Path("/repository")
 
