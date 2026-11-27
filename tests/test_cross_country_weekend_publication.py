@@ -33,15 +33,22 @@ from pipelines.cross_country_weekend_shadow import (
 
 
 def write_evidence(root: Path, *, fallback: bool = True) -> tuple[Path, Path, Path]:
+    write_schedule(root)
     workbook_path = root / "weekend.xlsx"
     workbook = Workbook()
     men = workbook.active
     men.title = "Men Top 30"
     men.append(EXPECTED_HEADERS)
     men.append(("First Man", 101, "Norway", "M", 150.5, 3, 20.0, 50.0))
+    men.append(("Second Man", 102, "Sweden", "M", 140.5, 3, 18.0, 48.0))
+    men.append(("Third Man", 103, "Finland", "M", 130.5, 3, 16.0, 46.0))
+    men.append(("Fourth Man", 104, "France", "M", 120.5, 3, 14.0, 44.0))
     ladies = workbook.create_sheet("Ladies Top 30")
     ladies.append(EXPECTED_HEADERS)
     ladies.append(("First Woman", 201, "Sweden", "L", 160.5, 3, 25.0, 55.0))
+    ladies.append(("Second Woman", 202, "Norway", "L", 150.5, 3, 23.0, 53.0))
+    ladies.append(("Third Woman", 203, "Finland", "L", 140.5, 3, 21.0, 51.0))
+    ladies.append(("Fourth Woman", 204, "Germany", "L", 130.5, 3, 19.0, 49.0))
     workbook.save(workbook_path)
     workbook_sha = hashlib.sha256(workbook_path.read_bytes()).hexdigest()
 
@@ -71,8 +78,8 @@ def write_evidence(root: Path, *, fallback: bool = True) -> tuple[Path, Path, Pa
                 "logical_date": "2026-11-27",
                 "publication": {"status": "disabled"},
                 "sheets": {
-                    "Men Top 30": {"rows": 1, "sex": "M"},
-                    "Ladies Top 30": {"rows": 1, "sex": "L"},
+                    "Men Top 30": {"rows": 4, "sex": "M"},
+                    "Ladies Top 30": {"rows": 4, "sex": "L"},
                 },
                 "outputs": {
                     "weekend_top_30_predicted_points.xlsx": {"sha256": workbook_sha}
@@ -87,11 +94,11 @@ def write_evidence(root: Path, *, fallback: bool = True) -> tuple[Path, Path, Pa
 def write_schedule(root: Path) -> Path:
     schedule = root / "weekends.csv"
     schedule.write_text(
-        "Date,Race_Date,Distance,Stage\n"
-        "11/27/2026,11/27/2026,Sprint,0\n"
-        "11/27/2026,11/28/2026,10,0\n"
-        "11/27/2026,11/29/2026,Rel,0\n"
-        "12/29/2026,01/01/2027,10,1\n",
+        "Date,Race_Date,Distance,Stage,City\n"
+        "11/27/2026,11/27/2026,Sprint,0,Ruka\n"
+        "11/27/2026,11/28/2026,10,0,Ruka\n"
+        "11/27/2026,11/29/2026,Rel,0,Ruka\n"
+        "12/29/2026,01/01/2027,10,1,Val Mustair\n",
         encoding="utf-8",
     )
     return schedule
@@ -220,7 +227,7 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             self.assertEqual(report["status"], "candidate")
             self.assertEqual(report["source_state"], "provisional")
             self.assertEqual(report["publication"], {"status": "disabled"})
-            self.assertEqual(report["row_count"], 2)
+            self.assertEqual(report["row_count"], 8)
 
             men = json.loads(
                 (
@@ -233,10 +240,18 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             self.assertIn("validated latest-season fallback pools", post)
             self.assertIn('weekend_source_state: "provisional"', post)
             self.assertIn(
+                'title: "FantasyXC Fantasy Picks for Ruka November 27–29, 2026"',
+                post,
+            )
+            self.assertIn("fantasy_points_preview:", post)
+            self.assertIn('    - athlete: "First Man"', post)
+            self.assertIn('    - athlete: "Third Woman"', post)
+            self.assertNotIn("Fourth Man", post.split("---", 2)[1])
+            self.assertIn(
                 'cross-country/datatable "cross-country/weekly-picks/20261127/men"',
                 post,
             )
-            self.assertNotIn("Fantasy", post)
+            self.assertNotIn("## Fantasy XC Teams", post)
 
     def test_official_candidate_discloses_official_startlists(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -315,13 +330,8 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
             self.assertIn("### Upside Team", post)
             self.assertIn("### Sprint Team", post)
             self.assertIn("### Distance Team", post)
-            self.assertIn("fantasy_team_previews:", post)
-            self.assertIn('label: "Expected Points"', post)
-            self.assertIn('projected_points: "1,480.0"', post)
-            self.assertIn('budget_used: "80,000"', post)
-            self.assertIn('      - "Fantasy Normal 0"', post)
-            self.assertIn('      - "Fantasy Normal 1"', post)
-            self.assertIn('      - "Fantasy Normal 2"', post)
+            self.assertIn("fantasy_points_preview:", post)
+            self.assertNotIn("fantasy_team_previews:", post)
             for objective in OBJECTIVES:
                 document = json.loads(
                     (
@@ -354,8 +364,8 @@ class CrossCountryWeekendPublicationTests(unittest.TestCase):
                 "Fantasy XC Teams",
                 (output / "content/post/weekly-picks/20261127.md").read_text(),
             )
-            self.assertNotIn(
-                "fantasy_team_previews:",
+            self.assertIn(
+                "fantasy_points_preview:",
                 (output / "content/post/weekly-picks/20261127.md").read_text(),
             )
 
