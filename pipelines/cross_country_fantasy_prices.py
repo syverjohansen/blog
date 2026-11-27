@@ -6,8 +6,10 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import tempfile
 import time
+import unicodedata
 from collections.abc import Callable
 from datetime import UTC, date, datetime
 from pathlib import Path
@@ -181,6 +183,101 @@ def _parse_prices(payload: bytes) -> list[dict[str, object]]:
     return value
 
 
+def _normalized_name(value: object) -> tuple[str, ...]:
+    """Return the same strict, order-independent tokens used by FIS identity."""
+
+    transliteration = str.maketrans(
+        {
+            "æ": "ae",
+            "ø": "oe",
+            "œ": "oe",
+            "ł": "l",
+            "ð": "d",
+            "þ": "th",
+            "ß": "ss",
+        }
+    )
+    decomposed = unicodedata.normalize(
+        "NFKD", str(value).lower().translate(transliteration)
+    )
+    ascii_like = "".join(
+        character for character in decomposed if not unicodedata.combining(character)
+    )
+    return tuple(sorted(re.findall(r"[a-z0-9]+", ascii_like)))
+
+
+def _active_priced_predictions(
+    predictions: list[dict[str, object]], prices: list[dict[str, object]]
+) -> tuple[list[dict[str, object]], dict[str, int]]:
+    """Select fantasy-eligible predictions without guessing identities.
+
+    A supplied FIS code is authoritative and can only join that exact price row.
+    Rows without a FIS code may be bridged to the active Fantasy XC feed only
+    when sex plus normalized full-name tokens identify exactly one athlete.  The
+    resolved FIS code is retained in the priced artifact so all downstream work
+    continues to use the stable identifier rather than the display name.
+    """
+
+    active_prices = {
+        str(row.get("athlete_id", "")).strip(): row
+        for row in prices
+        if row.get("active") is True and row.get("is_team") is False
+    }
+    names: dict[tuple[str, tuple[str, ...]], list[str]] = {}
+    for fis_code, row in active_prices.items():
+        gender = str(row.get("gender", "")).strip().upper()
+        sex = {"M": "M", "F": "L", "L": "L"}.get(gender, "")
+        tokens = _normalized_name(row.get("name", ""))
+        if fis_code.isdigit() and sex and tokens:
+            names.setdefault((sex, tokens), []).append(fis_code)
+
+    resolved: list[dict[str, object]] = []
+    exact_fis = 0
+    exact_name = 0
+    unavailable = 0
+    ambiguous = 0
+    for prediction in predictions:
+        supplied_fis = str(prediction.get("fis_code", "")).strip()
+        if supplied_fis:
+            if supplied_fis in active_prices:
+                resolved.append(
+                    {**prediction, "identity_match_method": "exact_fis_code"}
+                )
+                exact_fis += 1
+            else:
+                # Never replace a present but conflicting FIS identity by name.
+                unavailable += 1
+            continue
+
+        sex = str(prediction.get("sex", "")).strip().upper()
+        candidates = names.get(
+            (sex, _normalized_name(prediction.get("canonical_name", ""))), []
+        )
+        if len(candidates) == 1:
+            resolved.append(
+                {
+                    **prediction,
+                    "fis_code": candidates[0],
+                    "identity_match_method": "exact_active_name_tokens",
+                }
+            )
+            exact_name += 1
+        elif candidates:
+            ambiguous += 1
+        else:
+            unavailable += 1
+
+    return resolved, {
+        "input_rows": len(predictions),
+        "active_price_rows": len(active_prices),
+        "exact_fis_matches": exact_fis,
+        "exact_name_bridges": exact_name,
+        "unavailable_rows": unavailable,
+        "ambiguous_name_rows": ambiguous,
+        "eligible_rows": len(resolved),
+    }
+
+
 def _priced_rows(
     predictions: list[dict[str, object]], prices: list[dict[str, object]]
 ) -> list[dict[str, object]]:
@@ -258,8 +355,12 @@ def capture_and_enrich_prices(
     }
     try:
         prices = _parse_prices(payload)
+        eligible_predictions, identity_resolution = _active_priced_predictions(
+            predictions, prices
+        )
+        base["identity_resolution"] = identity_resolution
         plan = build_fantasy_plan(
-            prediction_rows=predictions,
+            prediction_rows=eligible_predictions,
             price_rows=prices,
             price_source=PRICE_SOURCE,
         )
@@ -289,7 +390,7 @@ def capture_and_enrich_prices(
             "random_seed": random_seed,
             "n_simulations": n_simulations,
         },
-        "rows": _priced_rows(predictions, prices),
+        "rows": _priced_rows(eligible_predictions, prices),
     }
     priced_bytes = _json_bytes(priced_document)
     priced_path = output_dir / "fantasy_priced_inputs.json"
