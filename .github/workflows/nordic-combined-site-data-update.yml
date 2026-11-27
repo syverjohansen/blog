@@ -196,7 +196,7 @@ jobs:
           extended: true
 
       - name: Render site candidate
-        run: hugo --minify --renderToMemory
+        run: python3 -m pipelines.sport_site_smoke --sport nordic-combined
 
       - name: Publish validated nordic-combined site artifacts
         env:

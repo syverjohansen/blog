@@ -195,7 +195,7 @@ jobs:
           extended: true
 
       - name: Render site candidate
-        run: hugo --minify --destination "$RUNNER_TEMP/ski-jumping-site"
+        run: python3 -m pipelines.sport_site_smoke --sport skijump
 
       - name: Publish validated ski-jumping site artifacts
         env:
