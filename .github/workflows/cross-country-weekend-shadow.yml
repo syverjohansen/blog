@@ -340,6 +340,7 @@ jobs:
             --runtime-report "$RUNTIME_ROOT/runtime_report.json" \
             --validation-report "$VALIDATION_REPORT" \
             --logical-date "$LOGICAL_DATE" \
+            --schedule external/ski/elo/python/ski/polars/excel365/weekends.csv \
             --fantasy-report "$FANTASY_OPTIMIZER_REPORT" \
             --fantasy-teams "$FANTASY_ROOT/fantasy_teams.json" \
             --output-root "$CANDIDATE_ROOT"

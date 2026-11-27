@@ -27,18 +27,22 @@
             {{ end }}
             </div>
         </div>
-    {{ else if .Params.fantasy_team_previews }}
-        <div class="prediction-preview fantasy-preview">
-            <div class="prediction-preview-label">Fantasy XC lineups</div>
+    {{ else if .Params.fantasy_points_preview }}
+        <div class="prediction-preview fantasy-points-preview">
+            <div class="prediction-preview-label">Top projected weekend points</div>
             <div class="prediction-preview-grid">
-            {{ range first 5 .Params.fantasy_team_previews }}
+            {{ range $gender := slice "men" "women" }}
                 <div class="prediction-preview-item">
-                    <div class="prediction-preview-event">{{ .label }}</div>
-                    <div class="fantasy-preview-result">
-                        <span class="fantasy-preview-points">{{ .projected_points }} projected pts</span>
-                        <span class="fantasy-preview-budget">{{ .budget_used }} budget</span>
-                    </div>
-                    <div class="fantasy-preview-athletes">Top projections: {{ delimit .featured_athletes " &middot; " }}</div>
+                    <div class="prediction-preview-event">{{ humanize $gender }}</div>
+                    <ol class="fantasy-points-list">
+                    {{ range index $element.Params.fantasy_points_preview $gender }}
+                        <li>
+                            <span class="fantasy-points-athlete">{{ .athlete }}</span>
+                            <span class="fantasy-points-score">{{ printf "%.2f" .projected_points }} pts</span>
+                            {{ with .nation }}<span class="prediction-preview-nation">{{ . }}</span>{{ end }}
+                        </li>
+                    {{ end }}
+                    </ol>
                 </div>
             {{ end }}
             </div>

@@ -146,7 +146,7 @@ def validate_weekend_shadow(
         if headers != EXPECTED_HEADERS:
             raise WeekendShadowError(f"unexpected headers in {sheet_name}: {headers}")
         data = list(rows)
-        if not 1 <= len(data) <= 30:
+        if not data:
             raise WeekendShadowError(f"invalid row count in {sheet_name}: {len(data)}")
         expected_sex = SHEET_SEX[sheet_name]
         athletes: set[str] = set()

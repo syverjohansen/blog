@@ -1420,7 +1420,6 @@ if (!is.null(men_results) && nrow(men_results$athlete_totals) > 0) {
   weekly_points_sheets[["Men Top 30"]] <- men_results$athlete_totals %>%
     mutate(Sex = "M") %>%
     arrange(desc(Total_Points)) %>%
-    slice_head(n = 30) %>%
     transmute(
       Skier,
       ID = athlete_id,
@@ -1437,7 +1436,6 @@ if (!is.null(ladies_results) && nrow(ladies_results$athlete_totals) > 0) {
   weekly_points_sheets[["Ladies Top 30"]] <- ladies_results$athlete_totals %>%
     mutate(Sex = "L") %>%
     arrange(desc(Total_Points)) %>%
-    slice_head(n = 30) %>%
     transmute(
       Skier,
       ID = athlete_id,
@@ -1458,8 +1456,8 @@ weekly_points_file <- file.path(weekly_output_dir, "weekend_top_30_predicted_poi
 write_xlsx(weekly_points_sheets, weekly_points_file)
 log_info(paste("Weekly points workbook saved to:", weekly_points_file))
 
-# Preserve the complete optimizer input separately from the top-30 website
-# workbook. Fantasy price acquisition and team selection remain separate steps.
+# Preserve the complete optimizer input separately from the website workbook.
+# Fantasy price acquisition and team selection remain separate steps.
 fantasy_input_sheets <- list()
 
 if (!is.null(men_results) && nrow(men_results$athlete_totals) > 0) {

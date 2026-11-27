@@ -59,6 +59,10 @@ class CrossCountryWeekendShadowWorkflowTests(unittest.TestCase):
         self.assertIn('"ski_commit": os.environ["SKI_SHA"]', self.source)
         self.assertIn('--fantasy-report "$FANTASY_OPTIMIZER_REPORT"', self.source)
         self.assertIn('--fantasy-teams "$FANTASY_ROOT/fantasy_teams.json"', self.source)
+        self.assertIn(
+            "--schedule external/ski/elo/python/ski/polars/excel365/weekends.csv",
+            self.source,
+        )
 
     def test_no_work_date_avoids_expensive_r_runtime(self) -> None:
         condition = "if: steps.bundle.outputs.has_work == 'true'"

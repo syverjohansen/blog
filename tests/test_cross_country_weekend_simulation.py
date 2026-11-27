@@ -87,6 +87,13 @@ class CrossCountryWeekendSimulationTests(unittest.TestCase):
         self.assertNotIn("write.xlsx(weekly_points_sheets", self.source)
         self.assertEqual(self.source.count("ID = athlete_id"), 2)
 
+    def test_website_workbook_keeps_every_predicted_athlete(self) -> None:
+        output_section = self.source.split("# SHADOW WEEKEND OUTPUT", 1)[1]
+        website_section = output_section.split("fantasy_input_sheets <- list()", 1)[0]
+        self.assertNotIn("slice_head(n = 30)", website_section)
+        self.assertIn('weekly_points_sheets[["Men Top 30"]]', website_section)
+        self.assertIn('weekly_points_sheets[["Ladies Top 30"]]', website_section)
+
     def test_writes_full_pool_specialist_fantasy_input(self) -> None:
         self.assertIn(
             "safe_points <- apply(all_sims, 1, quantile, probs = 0.1", self.source

@@ -141,6 +141,75 @@ def resolve_active_weekend_group_date(*, schedule_path: Path, as_of: date) -> da
     return active[0] if active else as_of
 
 
+def _weekend_title(*, schedule_path: Path, logical_date: date) -> tuple[str, str]:
+    """Return the single venue and human-readable race-date span for a group."""
+    try:
+        with schedule_path.open(newline="", encoding="utf-8-sig") as handle:
+            reader = csv.DictReader(handle)
+            fields = set(reader.fieldnames or ())
+            required = {"Date", "Race_Date", "City"}
+            if missing := sorted(required - fields):
+                raise WeekendPublicationError(
+                    f"weekend schedule is missing title columns: {missing}"
+                )
+            rows = [
+                row
+                for row in reader
+                if _schedule_date(row["Date"]) == logical_date
+            ]
+    except OSError as exc:
+        raise WeekendPublicationError(f"cannot read weekend schedule: {exc}") from exc
+    if not rows:
+        raise WeekendPublicationError(
+            f"weekend schedule has no group for {logical_date.isoformat()}"
+        )
+    cities = sorted({row["City"].strip() for row in rows if row["City"].strip()})
+    if len(cities) != 1:
+        raise WeekendPublicationError(
+            f"weekend group must have one venue, found: {cities}"
+        )
+    race_dates = sorted({_schedule_date(row["Race_Date"]) for row in rows})
+    first, last = race_dates[0], race_dates[-1]
+    if first == last:
+        date_span = f"{first.strftime('%B')} {first.day}, {first.year}"
+    elif first.year == last.year and first.month == last.month:
+        date_span = f"{first.strftime('%B')} {first.day}–{last.day}, {first.year}"
+    elif first.year == last.year:
+        date_span = (
+            f"{first.strftime('%B')} {first.day}–"
+            f"{last.strftime('%B')} {last.day}, {first.year}"
+        )
+    else:
+        date_span = (
+            f"{first.strftime('%B')} {first.day}, {first.year}–"
+            f"{last.strftime('%B')} {last.day}, {last.year}"
+        )
+    return cities[0], date_span
+
+
+def _points_preview_front_matter(
+    previews: dict[str, list[dict[str, Any]]], *, location: str, date_span: str
+) -> list[str]:
+    lines = [
+        (
+            'description: "Top projected FantasyXC weekend scorers for '
+            f'{location}, {date_span}."'
+        ),
+        "fantasy_points_preview:",
+    ]
+    for gender in ("men", "women"):
+        lines.append(f"  {gender}:")
+        for athlete in previews[gender]:
+            lines.extend(
+                (
+                    f"    - athlete: {json.dumps(athlete['athlete'], ensure_ascii=False)}",
+                    f"      nation: {json.dumps(athlete['nation'], ensure_ascii=False)}",
+                    f"      projected_points: {athlete['projected_points']:.2f}",
+                )
+            )
+    return lines
+
+
 def _validated_candidate_outputs(
     candidate_root: Path, logical_date: date
 ) -> tuple[dict[str, Any], dict[Path, bytes]]:
@@ -181,9 +250,9 @@ def _fantasy_candidate_documents(
     teams_path: Path | None,
     logical_date: date,
     date_key: str,
-) -> tuple[dict[str, Any], dict[Path, bytes], list[str], int, list[dict[str, Any]]]:
+) -> tuple[dict[str, Any], dict[Path, bytes], list[str], int]:
     if report_path is None and teams_path is None:
-        return {"status": "not_requested", "included": False}, {}, [], 0, []
+        return {"status": "not_requested", "included": False}, {}, [], 0
     if report_path is None or teams_path is None:
         raise WeekendPublicationError(
             "fantasy report and teams paths must be supplied together"
@@ -215,7 +284,6 @@ def _fantasy_candidate_documents(
             {},
             [],
             0,
-            [],
         )
     if status != "candidate":
         raise WeekendPublicationError(
@@ -272,7 +340,6 @@ def _fantasy_candidate_documents(
     documents: dict[Path, bytes] = {}
     sections = ["## Fantasy XC Teams", ""]
     total_rows = 0
-    previews: list[dict[str, Any]] = []
     for objective in candidate_objectives:
         team = team_documents[objective]
         if not isinstance(team, dict) or not isinstance(team.get("rows"), list):
@@ -319,19 +386,6 @@ def _fantasy_candidate_documents(
             for row in team["rows"]
         ]
         total_rows += len(rows)
-        featured = sorted(
-            team["rows"],
-            key=lambda row: (-float(row["objective_points"]), str(row["skier"])),
-        )[:3]
-        previews.append(
-            {
-                "objective": objective,
-                "label": FANTASY_LABELS[objective],
-                "projected_points": f"{sum(float(row['objective_points']) for row in team['rows']):,.1f}",
-                "budget_used": f"{validation['total_price']:,}",
-                "featured_athletes": [str(row["skier"]) for row in featured],
-            }
-        )
         filename = f"fantasy-{objective}.json"
         stem = filename.removesuffix(".json")
         sections.extend(
@@ -363,32 +417,7 @@ def _fantasy_candidate_documents(
         documents,
         sections,
         total_rows,
-        previews,
     )
-
-
-def _fantasy_preview_front_matter(previews: list[dict[str, Any]]) -> list[str]:
-    if not previews:
-        return []
-    lines = [
-        'description: "Optimized Cross-Country fantasy teams for the weekend, including sprint and distance lineups."',
-        "fantasy_team_previews:",
-    ]
-    for preview in previews:
-        lines.extend(
-            (
-                f"  - objective: {json.dumps(preview['objective'], ensure_ascii=False)}",
-                f"    label: {json.dumps(preview['label'], ensure_ascii=False)}",
-                f"    projected_points: {json.dumps(preview['projected_points'], ensure_ascii=False)}",
-                f"    budget_used: {json.dumps(preview['budget_used'], ensure_ascii=False)}",
-                "    featured_athletes:",
-            )
-        )
-        lines.extend(
-            f"      - {json.dumps(athlete, ensure_ascii=False)}"
-            for athlete in preview["featured_athletes"]
-        )
-    return lines
 
 
 def build_weekend_candidate(
@@ -398,6 +427,7 @@ def build_weekend_candidate(
     validation_report_path: Path,
     logical_date: date,
     output_root: Path,
+    schedule_path: Path | None = None,
     fantasy_report_path: Path | None = None,
     fantasy_teams_path: Path | None = None,
 ) -> dict[str, Any]:
@@ -444,6 +474,7 @@ def build_weekend_candidate(
     documents: dict[Path, bytes] = {}
     sections: list[str] = []
     total_rows = 0
+    points_previews: dict[str, list[dict[str, Any]]] = {"men": [], "women": []}
     for sheet_name in workbook.sheetnames:
         if sheet_name not in SHEET_OUTPUTS:
             raise WeekendPublicationError(f"unsupported workbook sheet: {sheet_name}")
@@ -457,6 +488,15 @@ def build_weekend_candidate(
             raise WeekendPublicationError(f"invalid rows in {sheet_name}")
         total_rows += len(data_rows)
         gender = "Men" if expected_sex == "M" else "Women"
+        preview_key = gender.lower()
+        points_previews[preview_key] = [
+            {
+                "athlete": str(row[0]),
+                "nation": str(row[2]),
+                "projected_points": float(row[4]),
+            }
+            for row in sorted(data_rows, key=lambda row: float(row[4]), reverse=True)[:3]
+        ]
         stem = filename.removesuffix(".json")
         sections.extend(
             (
@@ -476,7 +516,7 @@ def build_weekend_candidate(
         )
     workbook.close()
 
-    fantasy, fantasy_documents, fantasy_sections, fantasy_rows, fantasy_previews = (
+    fantasy, fantasy_documents, fantasy_sections, fantasy_rows = (
         _fantasy_candidate_documents(
             report_path=fantasy_report_path,
             teams_path=fantasy_teams_path,
@@ -488,16 +528,21 @@ def build_weekend_candidate(
     sections.extend(fantasy_sections)
 
     source_state, note = _provenance_note(runtime.get("event_modes", {}))
-    display_date = logical_date.strftime("%m/%d/%Y")
+    location, date_span = _weekend_title(
+        schedule_path=schedule_path or runtime_report_path.parent / "weekends.csv",
+        logical_date=logical_date,
+    )
     post = "\n".join(
         (
             "---",
-            f'title: "Cross-Country Weekend Picks for {display_date}"',
+            f'title: "FantasyXC Fantasy Picks for {location} {date_span}"',
             f"date: {logical_date_text}T00:00:00+00:00",
             "draft: false",
             f'weekend_source_state: "{source_state}"',
             'tags: ["predictions", "cross-country", "weekend-picks"]',
-            *_fantasy_preview_front_matter(fantasy_previews),
+            *_points_preview_front_matter(
+                points_previews, location=location, date_span=date_span
+            ),
             "---",
             "",
             "*See [Race Picks Methodology](/post/methods/race-picks/) for details.*",
@@ -623,7 +668,7 @@ def render_weekend_candidate(
     html = page.read_text(encoding="utf-8")
     json_roots = candidate_root / "data/cross-country/weekly-picks" / date_key
     expected_markers = [
-        f"Cross-Country Weekend Picks for {logical_date.strftime('%m/%d/%Y')}",
+        "FantasyXC Fantasy Picks for ",
         "table-cross-countryweekly-picks" + date_key + "men",
         "table-cross-countryweekly-picks" + date_key + "ladies",
     ]
@@ -769,6 +814,7 @@ def main() -> int:
     build.add_argument("--validation-report", required=True, type=Path)
     build.add_argument("--logical-date", required=True, type=date.fromisoformat)
     build.add_argument("--output-root", required=True, type=Path)
+    build.add_argument("--schedule", required=True, type=Path)
     build.add_argument("--fantasy-report", type=Path)
     build.add_argument("--fantasy-teams", type=Path)
     render = subparsers.add_parser("render")
@@ -794,6 +840,7 @@ def main() -> int:
             validation_report_path=args.validation_report,
             logical_date=args.logical_date,
             output_root=args.output_root,
+            schedule_path=args.schedule,
             fantasy_report_path=args.fantasy_report,
             fantasy_teams_path=args.fantasy_teams,
         )
