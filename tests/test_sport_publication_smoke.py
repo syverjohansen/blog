@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -36,6 +37,35 @@ class SportPublicationSmokeTests(unittest.TestCase):
             path.write_text("[]\n", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "publication data is empty"):
                 MODULE.load_nonempty_json(path)
+
+    def test_biathlon_static_contract_allows_one_sex_to_start_first(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for relative in MODULE.STATIC_JSON:
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                payload = [] if relative == "L_chrono_current.json" else [{"ok": True}]
+                path.write_text(json.dumps(payload), encoding="utf-8")
+
+            checked = MODULE.validate_static_json(root, "biathlon")
+
+            self.assertEqual(checked, list(MODULE.STATIC_JSON))
+
+    def test_biathlon_static_contract_rejects_no_active_season_racers(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for relative in MODULE.STATIC_JSON:
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                payload = (
+                    []
+                    if relative in MODULE.PARTIAL_SEASON_JSON["biathlon"]
+                    else [{"ok": True}]
+                )
+                path.write_text(json.dumps(payload), encoding="utf-8")
+
+            with self.assertRaisesRegex(ValueError, "every active-season sex"):
+                MODULE.validate_static_json(root, "biathlon")
 
     def test_unknown_sport_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "Unknown sport"):
