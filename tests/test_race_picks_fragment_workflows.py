@@ -18,7 +18,7 @@ class RacePicksFragmentWorkflowTest(unittest.TestCase):
         for filename, fragment in contracts.items():
             with self.subTest(workflow=filename):
                 source = (ROOT / ".github/workflows" / filename).read_text()
-                publication = source.index("data/race-picks/fragments/")
+                publication = source.index("race-picks/fragments/")
                 self.assertIn(fragment, source)
                 dispatch = source.index("gh workflow run combined-race-picks.yml")
                 self.assertLess(publication, dispatch)

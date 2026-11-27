@@ -54,7 +54,7 @@ class CrossCountryTeamWorkflowTests(unittest.TestCase):
         self.assertLess(publication, dispatch)
         self.assertIn('"data/cross-country/drafts/race-picks/$DATE_KEY"', self.source)
         self.assertIn(
-            '"data/race-picks/fragments/$DATE_KEY/cross-country-team.md"', self.source
+            '"race-picks/fragments/$DATE_KEY/cross-country-team.md"', self.source
         )
         self.assertNotIn("git add .", self.source)
         self.assertNotIn("--force", self.source)

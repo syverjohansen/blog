@@ -155,7 +155,7 @@ class NordicCombinedPredictionPublicationTests(unittest.TestCase):
                 evaluation_date=date(2026, 11, 25),
             )
             data_root = repository / "data/nordic-combined/drafts/race-picks/20261125"
-            post = repository / "data/race-picks/fragments/20261125/nordic-combined.md"
+            post = repository / "race-picks/fragments/20261125/nordic-combined.md"
             rendered = post.read_text(encoding="utf-8")
 
             self.assertEqual("prepared", report["status"])
@@ -249,7 +249,7 @@ class NordicCombinedPredictionPublicationTests(unittest.TestCase):
         self.assertIn("gh workflow run combined-race-picks.yml", source)
         self.assertIn("actions: write", source)
         self.assertIn("git pull --rebase origin main", source)
-        self.assertIn("data/race-picks/fragments/$date_key/nordic-combined.md", source)
+        self.assertIn("race-picks/fragments/$date_key/nordic-combined.md", source)
         self.assertIn("inputs.publish_predictions == true", source)
 
 

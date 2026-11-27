@@ -29,6 +29,16 @@ def fragment(root: Path, name: str, heading: str, sport: str, reference: str) ->
 
 
 class RacePicksAggregationTest(unittest.TestCase):
+    def test_fragments_are_kept_outside_hugo_data_directory(self) -> None:
+        root = Path("/repository")
+
+        path = fragment_path(root, LOGICAL_DATE, "biathlon")
+
+        self.assertEqual(
+            path.relative_to(root),
+            Path("race-picks/fragments/20261127/biathlon.md"),
+        )
+
     def test_builds_one_ordered_post_and_removes_legacy_pages(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

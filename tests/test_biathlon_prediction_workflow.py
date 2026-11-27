@@ -30,7 +30,7 @@ class BiathlonPredictionWorkflowTests(unittest.TestCase):
         self.assertLess(publication, dispatch)
         self.assertIn('"data/biathlon/drafts/race-picks/$DATE_KEY"', self.source)
         self.assertIn(
-            '"data/race-picks/fragments/$DATE_KEY/biathlon.md"', self.source
+            '"race-picks/fragments/$DATE_KEY/biathlon.md"', self.source
         )
         self.assertNotIn("git add .", self.source)
 

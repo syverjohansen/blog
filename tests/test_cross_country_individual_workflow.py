@@ -71,7 +71,7 @@ class CrossCountryIndividualWorkflowTests(unittest.TestCase):
         self.assertLess(publication, dispatch)
         self.assertIn('"data/cross-country/drafts/race-picks/$DATE_KEY"', self.source)
         self.assertIn(
-            '"data/race-picks/fragments/$DATE_KEY/cross-country-individual.md"',
+            '"race-picks/fragments/$DATE_KEY/cross-country-individual.md"',
             self.source,
         )
         self.assertNotIn("git add .", self.source)

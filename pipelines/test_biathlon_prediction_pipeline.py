@@ -114,7 +114,7 @@ def test_shadow_and_publication_are_guarded_end_to_end(tmp_path: Path) -> None:
         evaluation_date=date(2026, 11, 26),
     )
     assert prepared["status"] == "prepared"
-    post = repository / "data/race-picks/fragments/20261127/biathlon.md"
+    post = repository / "race-picks/fragments/20261127/biathlon.md"
     assert "draft: false" in post.read_text()
     assert "biathlon/datatable" in post.read_text()
     assert (repository / "data/biathlon/drafts/race-picks/20261127/ladies_position_probabilities.json").is_file()

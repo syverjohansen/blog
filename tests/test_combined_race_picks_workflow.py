@@ -23,7 +23,7 @@ class CombinedRacePicksWorkflowTest(unittest.TestCase):
         publish = self.source.index("git add -A -- content/post/race-picks")
         self.assertLess(build, render)
         self.assertLess(render, publish)
-        self.assertNotIn("data/race-picks/fragments", self.source[publish:])
+        self.assertNotIn("race-picks/fragments", self.source[publish:])
 
     def test_night_before_render_includes_future_dated_post(self) -> None:
         aggregator = (ROOT / "pipelines/race_picks_aggregation.py").read_text()
