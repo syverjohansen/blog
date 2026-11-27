@@ -14,7 +14,15 @@ from pipelines.race_picks_aggregation import (
 LOGICAL_DATE = date(2026, 11, 27)
 
 
-def fragment(root: Path, name: str, heading: str, sport: str, reference: str) -> None:
+def fragment(
+    root: Path,
+    name: str,
+    heading: str,
+    sport: str,
+    reference: str,
+    *,
+    rows: list[list[object]] | None = None,
+) -> None:
     path = fragment_path(root, LOGICAL_DATE, name)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -25,7 +33,18 @@ def fragment(root: Path, name: str, heading: str, sport: str, reference: str) ->
     )
     data = root / "data" / f"{reference}.json"
     data.parent.mkdir(parents=True, exist_ok=True)
-    data.write_text(json.dumps({"rows": [["Athlete", 1]]}))
+    data.write_text(
+        json.dumps(
+            {
+                "headers": ["Skier", "ID", "Nation", "Win", "Podium"],
+                "rows": rows
+                or [
+                    ["Runner Up", 2, "NOR", 20.0, 60.0],
+                    ["Predicted Winner", 1, "SWE", 42.5, 75.0],
+                ],
+            }
+        )
+    )
 
 
 class RacePicksAggregationTest(unittest.TestCase):
@@ -65,7 +84,55 @@ class RacePicksAggregationTest(unittest.TestCase):
             self.assertLess(rendered.index("## Cross-Country"), rendered.index("## Biathlon"))
             self.assertEqual(rendered.count("## Cross-Country"), 1)
             self.assertEqual(rendered.count("Race Picks Methodology"), 1)
+            self.assertIn("predicted_winners:", rendered)
+            self.assertIn('winner: "Predicted Winner"', rendered)
+            self.assertIn('description: "Predicted winners:', rendered)
             self.assertFalse(legacy.exists())
+
+    def test_preview_winner_uses_highest_win_probability_not_row_order(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fragment(
+                root,
+                "biathlon",
+                "Biathlon",
+                "biathlon",
+                "biathlon/picks",
+                rows=[
+                    ["First Row", 1, "FRA", 11.0, 30.0],
+                    ["Actual Favorite", 2, "NOR", 51.5, 80.0],
+                ],
+            )
+
+            build_combined_post(root, LOGICAL_DATE)
+
+            rendered = (root / "content/post/race-picks/20261127.md").read_text()
+            self.assertIn('sport: "Biathlon"', rendered)
+            self.assertIn('event: "Event"', rendered)
+            self.assertIn('winner: "Actual Favorite"', rendered)
+            self.assertIn('nation: "NOR"', rendered)
+            self.assertIn("win_probability: 51.5", rendered)
+
+    def test_preview_supports_team_tables_and_normalizes_probability(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fragment(root, "biathlon", "Biathlon", "biathlon", "biathlon/relay")
+            data = root / "data/biathlon/relay.json"
+            data.write_text(
+                json.dumps(
+                    {
+                        "headers": ["Nation", "Participation", "Win", "Podium"],
+                        "rows": [["FRA", 1, 0.612, 0.82], ["NOR", 1, 0.388, 0.74]],
+                    }
+                )
+            )
+
+            build_combined_post(root, LOGICAL_DATE)
+
+            rendered = (root / "content/post/race-picks/20261127.md").read_text()
+            self.assertIn('winner: "FRA"', rendered)
+            self.assertIn('nation: ""', rendered)
+            self.assertIn("win_probability: 61.2", rendered)
 
     def test_uses_generation_time_instead_of_future_race_time(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
