@@ -41,6 +41,10 @@ STATIC_JSON = (
     "M/ranks.json",
 )
 
+PARTIAL_SEASON_JSON = {
+    "biathlon": frozenset({"L_chrono_current.json", "M_chrono_current.json"}),
+}
+
 
 def load_contracts(repo_root: Path) -> dict[str, dict[str, str]]:
     path = repo_root / "pipelines" / "sport_publication_contracts.json"
@@ -50,13 +54,39 @@ def load_contracts(repo_root: Path) -> dict[str, dict[str, str]]:
     return contracts
 
 
-def load_nonempty_json(path: Path) -> Any:
+def load_json(path: Path) -> Any:
     if not path.is_file():
         raise FileNotFoundError(f"Required publication data is missing: {path}")
     value = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(value, (list, dict)) or not value:
+    if not isinstance(value, (list, dict)):
+        raise ValueError(f"Required publication data is not a collection: {path}")
+    return value
+
+
+def load_nonempty_json(path: Path) -> Any:
+    value = load_json(path)
+    if not value:
         raise ValueError(f"Required publication data is empty: {path}")
     return value
+
+
+def validate_static_json(static_root: Path, sport: str) -> list[str]:
+    checked_json: list[str] = []
+    partial_season_files = PARTIAL_SEASON_JSON.get(sport, frozenset())
+    partial_season_values: list[Any] = []
+    for relative in STATIC_JSON:
+        path = static_root / relative
+        if relative in partial_season_files:
+            partial_season_values.append(load_json(path))
+        else:
+            load_nonempty_json(path)
+        checked_json.append(relative)
+
+    if partial_season_values and not any(partial_season_values):
+        raise ValueError(
+            f"Required publication data is empty for every active-season sex: {static_root}"
+        )
+    return checked_json
 
 
 def find_prediction_fixture(repo_root: Path, sport: str) -> tuple[Path, list[str]]:
@@ -85,11 +115,10 @@ def validate_contract(repo_root: Path, sport: str) -> dict[str, Any]:
         checked_pages.append(str(path.relative_to(repo_root)))
 
     static_root = repo_root / "static" / "python" / sport / "excel365"
-    checked_json: list[str] = []
-    for relative in STATIC_JSON:
-        path = static_root / relative
-        load_nonempty_json(path)
-        checked_json.append(str(path.relative_to(repo_root)))
+    checked_json = [
+        str((static_root / relative).relative_to(repo_root))
+        for relative in validate_static_json(static_root, sport)
+    ]
 
     prediction_post, prediction_refs = find_prediction_fixture(repo_root, sport)
     for reference in prediction_refs:
