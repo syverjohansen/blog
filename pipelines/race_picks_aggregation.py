@@ -9,7 +9,7 @@ import re
 import shutil
 import subprocess
 import tempfile
-from datetime import date
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 
@@ -28,6 +28,7 @@ SHORTCODE = re.compile(
     r'\{\{<\s+(?P<sport>[a-z-]+)/datatable\s+"(?P<reference>[^"]+)"\s*>\}\}'
 )
 METHODOLOGY = re.compile(r"^\*See \[Race Picks Methodology\].*\*$")
+FRONT_MATTER_DATE = re.compile(r"^date:\s*(?P<value>\S+)\s*$", re.MULTILINE)
 
 
 def fragment_path(repository_root: Path, logical_date: date, name: str) -> Path:
@@ -78,7 +79,25 @@ def _validate_references(repository_root: Path, markdown: str) -> list[str]:
     return references
 
 
-def build_combined_post(repository_root: Path, logical_date: date) -> dict[str, object]:
+def _safe_publication_time(post: Path, current_time: datetime) -> datetime:
+    if post.is_file():
+        match = FRONT_MATTER_DATE.search(post.read_text(encoding="utf-8"))
+        if match:
+            try:
+                previous = datetime.fromisoformat(match.group("value"))
+            except ValueError:
+                previous = None
+            if previous is not None and previous.tzinfo is not None and previous <= current_time:
+                return previous
+    return current_time
+
+
+def build_combined_post(
+    repository_root: Path,
+    logical_date: date,
+    *,
+    publication_time: datetime | None = None,
+) -> dict[str, object]:
     repository_root = repository_root.resolve()
     sections: list[str] = []
     included: list[str] = []
@@ -101,10 +120,15 @@ def build_combined_post(repository_root: Path, logical_date: date) -> dict[str, 
             f"no prediction fragments exist for {logical_date.isoformat()}"
         )
 
+    date_key = logical_date.strftime("%Y%m%d")
+    target = repository_root / "content/post/race-picks" / f"{date_key}.md"
+    visible_time = _safe_publication_time(
+        target, publication_time or datetime.now(UTC)
+    )
     markdown = (
         "---\n"
         f'title: "Race Picks for {logical_date.strftime("%m/%d/%Y")}"\n'
-        f"date: {logical_date.isoformat()}T06:00:00+00:00\n"
+        f"date: {visible_time.astimezone(UTC).isoformat(timespec='seconds')}\n"
         "draft: false\n"
         'tags: ["predictions", "skiing", "race-picks"]\n'
         "---\n\n"
@@ -113,8 +137,6 @@ def build_combined_post(repository_root: Path, logical_date: date) -> dict[str, 
         + "\n"
     )
     references = _validate_references(repository_root, markdown)
-    date_key = logical_date.strftime("%Y%m%d")
-    target = repository_root / "content/post/race-picks" / f"{date_key}.md"
     target.parent.mkdir(parents=True, exist_ok=True)
     previous = target.read_text(encoding="utf-8") if target.is_file() else None
     with tempfile.NamedTemporaryFile(
