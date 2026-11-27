@@ -1,0 +1,16 @@
+---
+title: "Biathlon Race Picks for 11/27/2026"
+date: 2026-11-27T01:27:04+00:00
+draft: false
+tags: ["predictions", "skiing", "race-picks", "biathlon"]
+---
+
+*See [Race Picks Methodology](/post/methods/race-picks/) for details on how these predictions are generated.*
+
+## Biathlon
+
+### Ladies
+
+#### Position Probabilities
+
+{{< biathlon/datatable "biathlon/drafts/race-picks/20261127/ladies_position_probabilities" >}}
