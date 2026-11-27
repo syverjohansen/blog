@@ -148,7 +148,37 @@ class CrossCountryFantasyPriceTests(unittest.TestCase):
             report, _ = self.run_capture(root, missing_fis=True)
             self.assertEqual("blocked", report["status"])
             self.assertFalse(report["weekend_publication_blocked"])
+            self.assertEqual(15, report["identity_resolution"]["eligible_rows"])
             self.assertFalse((root / "fantasy/fantasy_priced_inputs.json").exists())
+
+    def test_blank_fis_code_uses_unique_exact_active_name_tokens(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workbook = root / "weekend_fantasy_inputs.xlsx"
+            prices = write_workbook(workbook, missing_fis=True)
+            prices[-1]["name"] = "15 NAME Prediction"
+            report = capture_and_enrich_prices(
+                workbook_path=workbook,
+                logical_date=date(2026, 11, 27),
+                random_seed=42,
+                n_simulations=250,
+                output_dir=root / "fantasy",
+                report_path=root / "report.json",
+                opener=lambda *_args, **_kwargs: FakeResponse(
+                    json.dumps(prices).encode()
+                ),
+                sleep=lambda _seconds: None,
+            )
+            self.assertEqual("candidate", report["status"])
+            self.assertEqual(1, report["identity_resolution"]["exact_name_bridges"])
+            document = json.loads(
+                (root / "fantasy/fantasy_priced_inputs.json").read_text()
+            )
+            bridged = document["rows"][-1]
+            self.assertEqual(str(prices[-1]["athlete_id"]), bridged["fis_code"])
+            self.assertEqual(
+                "exact_active_name_tokens", bridged["identity_match_method"]
+            )
 
     def test_same_name_with_wrong_fis_code_does_not_match(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -170,7 +200,8 @@ class CrossCountryFantasyPriceTests(unittest.TestCase):
                 sleep=lambda _seconds: None,
             )
             self.assertEqual("blocked", report["status"])
-            self.assertIn("lack an active exact FIS-code price", report["reason"])
+            self.assertEqual(15, report["identity_resolution"]["eligible_rows"])
+            self.assertIn("8 men / 8 ladies", report["reason"])
 
     def test_malformed_payload_is_captured_and_blocked(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
