@@ -1,9 +1,6 @@
 name: Nordic-combined automatic results pipeline
 
 on:
-  workflow_run:
-    workflows: ["Nordic-combined automatic schedule pipeline"]
-    types: [completed]
   workflow_dispatch:
     inputs:
       as_of:
@@ -17,6 +14,7 @@ on:
         type: string
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -25,9 +23,6 @@ concurrency:
 
 jobs:
   update:
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -262,6 +257,15 @@ jobs:
             git -C external/ski pull --rebase origin main
             git -C external/ski push origin HEAD:main
           fi
+
+      - name: Continue with Nordic Combined site publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run nordic-combined-site-data-update.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f ski_ref=main
 
       - name: Upload results evidence
         if: always()

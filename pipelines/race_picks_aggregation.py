@@ -192,6 +192,7 @@ def render_combined_post(
             "--destination",
             str(destination),
             "--cleanDestinationDir",
+            "--buildFuture",
             "--noBuildLock",
             "--panicOnWarning",
             "--logLevel",

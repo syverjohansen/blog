@@ -399,6 +399,7 @@ class SkiJumpingPredictionShadowTests(unittest.TestCase):
         self.assertIn("-m pipelines.skijump_prediction_shadow", source)
         self.assertIn("skijump_startlist_acquire.py", source)
         self.assertIn("skijump_startlist_normalize.py", source)
+        self.assertIn("/pipelines/requirements-snapshot.txt", source)
         self.assertIn('--startlist-root "$STARTLIST_CANDIDATE_ROOT"', source)
         self.assertIn('--startlist-report "$STARTLIST_NORMALIZATION_REPORT"', source)
         sparse_checkout = source.split("sparse-checkout: |", 2)[2].split(

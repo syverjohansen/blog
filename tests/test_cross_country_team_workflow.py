@@ -10,14 +10,13 @@ class CrossCountryTeamWorkflowTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.source = WORKFLOW.read_text(encoding="utf-8")
 
-    def test_workflow_is_chained_manual_and_github_hosted(self) -> None:
+    def test_workflow_is_explicitly_dispatched_manual_and_github_hosted(self) -> None:
         trigger = self.source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
-        self.assertIn("workflow_run:", trigger)
-        self.assertIn('workflows: ["Cross-country individual predictions"]', trigger)
-        self.assertIn("types: [completed]", trigger)
+        self.assertNotIn("workflow_run:", trigger)
         self.assertNotIn("schedule:", trigger)
         self.assertIn("workflow_dispatch:", trigger)
-        self.assertIn("github.event.workflow_run.conclusion == 'success'", self.source)
+        self.assertIn("gh workflow run cross-country-weekend-shadow.yml", self.source)
+        self.assertIn("gh workflow run cross-country-tour-shadow.yml", self.source)
         self.assertIn("runs-on: ubuntu-latest", self.source)
         self.assertNotIn("self-hosted", self.source)
 

@@ -46,6 +46,7 @@ jobs:
     outputs:
       has_work: ${{ steps.plan.outputs.has_work }}
       logical_date: ${{ steps.parameters.outputs.logical_date }}
+      ready: ${{ steps.shadow_result.outputs.ready }}
       run_id: ${{ steps.parameters.outputs.run_id }}
     steps:
       - name: Check out bounded blog runtime
@@ -310,6 +311,7 @@ jobs:
           retention-days: 30
 
       - name: Enforce retained publication-disabled result
+        id: shadow_result
         if: always()
         env:
           RUNNER_OUTCOME: ${{ steps.run_shadow.outcome }}
@@ -336,11 +338,12 @@ jobs:
           ):
               if os.environ.get("ACQUISITION_STATUS") != "waiting":
                   raise SystemExit("waiting report lacks a waiting acquisition")
-              raise SystemExit(0)
-          if os.environ["RUNNER_OUTCOME"] != "success":
+          elif os.environ["RUNNER_OUTCOME"] != "success":
               raise SystemExit(f"shadow runner failed; evidence retained at {report_path}")
-          if report.get("status") not in {"passed", "skipped"}:
+          elif report.get("status") not in {"passed", "skipped"}:
               raise SystemExit(f"unexpected shadow status: {report.get('status')}")
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+              output.write(f"ready={str(report.get('status') == 'passed').lower()}\n")
           PY
 
   publish:
@@ -349,6 +352,7 @@ jobs:
     if: >-
       needs.shadow.result == 'success' &&
       needs.shadow.outputs.has_work == 'true' &&
+      needs.shadow.outputs.ready == 'true' &&
       (github.event_name == 'schedule' || inputs.publish_predictions == true)
     runs-on: ubuntu-latest
     timeout-minutes: 30

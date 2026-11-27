@@ -13,12 +13,11 @@ class SkiJumpingResultsWorkflowTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.text = WORKFLOW.read_text(encoding="utf-8")
 
-    def test_workflow_follows_schedule_and_has_manual_recovery(self) -> None:
-        self.assertIn(
-            'workflows: ["Ski-jumping automatic schedule pipeline"]', self.text
-        )
+    def test_workflow_is_explicitly_dispatched_and_has_manual_recovery(self) -> None:
         self.assertIn("workflow_dispatch:", self.text)
-        self.assertIn("workflow_run.conclusion == 'success'", self.text)
+        self.assertNotIn("workflow_run:", self.text)
+        self.assertIn("gh workflow run ski-jumping-site-data-update.yml", self.text)
+        self.assertIn("actions: write", self.text)
 
     def test_checkout_is_bounded_to_ski_jumping(self) -> None:
         self.assertIn("/elo/python/skijump/polars/", self.text)

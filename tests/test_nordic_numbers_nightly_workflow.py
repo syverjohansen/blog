@@ -95,6 +95,30 @@ class NordicNumbersNightlyWorkflowTests(unittest.TestCase):
         self.assertIn("-f publish_predictions=true", nordic_site)
         self.assertIn("Publish validated Nordic Combined predictions", nordic_prediction)
 
+    def test_multistage_lifecycles_use_explicit_dispatches(self) -> None:
+        workflows = ROOT / ".github/workflows"
+        expected = {
+            "cross-country-site-data-update.yml": "cross-country-fantasyxc-evidence.yml",
+            "ski-jumping-schedule-update.yml": "ski-jumping-results-update.yml",
+            "ski-jumping-results-update.yml": "ski-jumping-site-data-update.yml",
+            "nordic-combined-schedule-update.yml": "nordic-combined-results-update.yml",
+            "nordic-combined-results-update.yml": "nordic-combined-site-data-update.yml",
+        }
+        for source_name, target_name in expected.items():
+            source = (workflows / source_name).read_text(encoding="utf-8")
+            self.assertIn(f"gh workflow run {target_name}", source)
+            self.assertIn("actions: write", source)
+        for name in (
+            "cross-country-fantasyxc-evidence.yml",
+            "ski-jumping-results-update.yml",
+            "ski-jumping-site-data-update.yml",
+            "nordic-combined-results-update.yml",
+            "nordic-combined-site-data-update.yml",
+        ):
+            source = (workflows / name).read_text(encoding="utf-8")
+            trigger = source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
+            self.assertNotIn("workflow_run:", trigger)
+
 
 if __name__ == "__main__":
     unittest.main()

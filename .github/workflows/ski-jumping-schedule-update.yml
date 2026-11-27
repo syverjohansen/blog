@@ -14,6 +14,7 @@ on:
         type: string
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -182,6 +183,15 @@ jobs:
             git -C external/ski pull --rebase origin main
             git -C external/ski push origin HEAD:main
           fi
+
+      - name: Continue with guarded ski-jumping results
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run ski-jumping-results-update.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f ski_ref=main
 
       - name: Upload schedule evidence
         if: always()
