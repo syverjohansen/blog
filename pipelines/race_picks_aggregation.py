@@ -29,6 +29,7 @@ SHORTCODE = re.compile(
 )
 METHODOLOGY = re.compile(r"^\*See \[Race Picks Methodology\].*\*$")
 FRONT_MATTER_DATE = re.compile(r"^date:\s*(?P<value>\S+)\s*$", re.MULTILINE)
+HEADING = re.compile(r"^(?P<level>#{2,3})\s+(?P<label>.+?)\s*$")
 
 
 def fragment_path(repository_root: Path, logical_date: date, name: str) -> Path:
@@ -79,6 +80,100 @@ def _validate_references(repository_root: Path, markdown: str) -> list[str]:
     return references
 
 
+def _predicted_winners(repository_root: Path, markdown: str) -> list[dict[str, object]]:
+    """Extract the highest win probability from each event table for previews."""
+    winners: list[dict[str, object]] = []
+    sport = "Race Picks"
+    event = "Event"
+    for line in markdown.splitlines():
+        heading = HEADING.match(line)
+        if heading:
+            if heading.group("level") == "##":
+                sport = heading.group("label")
+            else:
+                event = heading.group("label")
+            continue
+        shortcode = SHORTCODE.search(line)
+        if not shortcode:
+            continue
+        reference = shortcode.group("reference")
+        path = repository_root / "data" / f"{reference}.json"
+        document = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(document, dict):
+            continue
+        headers = document.get("headers")
+        rows = document.get("rows")
+        if not isinstance(headers, list) or not isinstance(rows, list):
+            continue
+        competitor_header = next(
+            (name for name in ("Skier", "Team", "Team_Name", "Nation") if name in headers),
+            None,
+        )
+        win_header = next((name for name in ("Win", "Win_Prob") if name in headers), None)
+        if competitor_header is None or win_header is None:
+            continue
+        competitor_index = headers.index(competitor_header)
+        nation_index = headers.index("Nation") if "Nation" in headers else None
+        win_index = headers.index(win_header)
+        candidates: list[tuple[float, list[object]]] = []
+        for row in rows:
+            required_indexes = [competitor_index, win_index]
+            if nation_index is not None:
+                required_indexes.append(nation_index)
+            if not isinstance(row, list) or len(row) <= max(required_indexes):
+                continue
+            try:
+                probability = float(row[win_index])
+            except (TypeError, ValueError):
+                continue
+            candidates.append((probability, row))
+        if not candidates:
+            continue
+        probability, winner = max(candidates, key=lambda candidate: candidate[0])
+        if 0 <= probability <= 1:
+            probability *= 100
+        nation = ""
+        if nation_index is not None and nation_index != competitor_index:
+            nation = str(winner[nation_index])
+        winners.append(
+            {
+                "sport": sport,
+                "event": event,
+                "winner": str(winner[competitor_index]),
+                "nation": nation,
+                "win_probability": round(probability, 1),
+            }
+        )
+    return winners
+
+
+def _winner_front_matter(winners: list[dict[str, object]]) -> str:
+    if not winners:
+        return ""
+    names = [str(winner["winner"]) for winner in winners]
+    if len(names) == 1:
+        summary = names[0]
+    elif len(names) == 2:
+        summary = " and ".join(names)
+    else:
+        summary = ", ".join(names[:-1]) + f", and {names[-1]}"
+    lines = [
+        f"description: {json.dumps(f'Predicted winners: {summary}.', ensure_ascii=False)}",
+        "predicted_winners:",
+    ]
+    for winner in winners:
+        lines.extend(
+            [
+                f"  - sport: {json.dumps(winner['sport'], ensure_ascii=False)}",
+                f"    event: {json.dumps(winner['event'], ensure_ascii=False)}",
+                f"    winner: {json.dumps(winner['winner'], ensure_ascii=False)}",
+                f"    nation: {json.dumps(winner['nation'], ensure_ascii=False)}",
+                f"    win_probability: {winner['win_probability']}",
+            ]
+        )
+    return "\n".join(lines) + "\n"
+
+
 def _safe_publication_time(post: Path, current_time: datetime) -> datetime:
     if post.is_file():
         match = FRONT_MATTER_DATE.search(post.read_text(encoding="utf-8"))
@@ -125,18 +220,23 @@ def build_combined_post(
     visible_time = _safe_publication_time(
         target, publication_time or datetime.now(UTC)
     )
+    body = (
+        "*See [Race Picks Methodology](/post/methods/race-picks/) for details on how these predictions are generated.*\n\n"
+        + "\n\n".join(sections)
+        + "\n"
+    )
+    references = _validate_references(repository_root, body)
+    winners = _predicted_winners(repository_root, body)
     markdown = (
         "---\n"
         f'title: "Race Picks for {logical_date.strftime("%m/%d/%Y")}"\n'
         f"date: {visible_time.astimezone(UTC).isoformat(timespec='seconds')}\n"
         "draft: false\n"
         'tags: ["predictions", "skiing", "race-picks"]\n'
-        "---\n\n"
-        "*See [Race Picks Methodology](/post/methods/race-picks/) for details on how these predictions are generated.*\n\n"
-        + "\n\n".join(sections)
-        + "\n"
+        + _winner_front_matter(winners)
+        + "---\n\n"
+        + body
     )
-    references = _validate_references(repository_root, markdown)
     target.parent.mkdir(parents=True, exist_ok=True)
     previous = target.read_text(encoding="utf-8") if target.is_file() else None
     with tempfile.NamedTemporaryFile(
