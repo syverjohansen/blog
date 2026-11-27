@@ -1,0 +1,124 @@
+{
+  "headers": [
+    "Skier",
+    "Nation",
+    "Sex",
+    "Price",
+    "Projected Points"
+  ],
+  "objective": "normal",
+  "rows": [
+    [
+      "Mika Vermeulen",
+      "Austria",
+      "M",
+      3244,
+      124.56
+    ],
+    [
+      "Iivo Niskanen",
+      "Finland",
+      "M",
+      6040,
+      133.88
+    ],
+    [
+      "Martin L\u00f8wstr\u00f8m Nyenget",
+      "Norway",
+      "M",
+      8895,
+      162.74
+    ],
+    [
+      "Emil Iversen",
+      "Norway",
+      "M",
+      3366,
+      140.53
+    ],
+    [
+      "Johannes H\u00f8sflot Kl\u00e6bo",
+      "Norway",
+      "M",
+      19320,
+      262.64
+    ],
+    [
+      "Harald \u00d8stberg Amundsen",
+      "Norway",
+      "M",
+      12390,
+      163.56
+    ],
+    [
+      "Saveliy Korostelev",
+      "Russia",
+      "M",
+      2707,
+      174.39
+    ],
+    [
+      "Lars Heggen",
+      "Norway",
+      "M",
+      5290,
+      134.44
+    ],
+    [
+      "Heidi Weng",
+      "Norway",
+      "L",
+      7538,
+      169.6
+    ],
+    [
+      "Karoline Gr\u00f8tting",
+      "Norway",
+      "L",
+      225,
+      130.85
+    ],
+    [
+      "Natalia Nepryaeva",
+      "Russia",
+      "L",
+      2993,
+      159.52
+    ],
+    [
+      "Dariya Nepryaeva",
+      "Russia",
+      "L",
+      926,
+      143.07
+    ],
+    [
+      "Moa Ilar",
+      "Sweden",
+      "L",
+      8118,
+      175.79
+    ],
+    [
+      "Emma Ribom",
+      "Sweden",
+      "L",
+      4960,
+      154.64
+    ],
+    [
+      "Frida Karlsson",
+      "Sweden",
+      "L",
+      7783,
+      208.8
+    ],
+    [
+      "Linn Svahn",
+      "Sweden",
+      "L",
+      6113,
+      190.58
+    ]
+  ]
+}

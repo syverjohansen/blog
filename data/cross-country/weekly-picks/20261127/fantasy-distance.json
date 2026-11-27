@@ -1,0 +1,124 @@
+{
+  "headers": [
+    "Skier",
+    "Nation",
+    "Sex",
+    "Price",
+    "Projected Points"
+  ],
+  "objective": "distance",
+  "rows": [
+    [
+      "Mika Vermeulen",
+      "Austria",
+      "M",
+      3244,
+      124.56
+    ],
+    [
+      "Iivo Niskanen",
+      "Finland",
+      "M",
+      6040,
+      133.88
+    ],
+    [
+      "Hugo Lapalus",
+      "France",
+      "M",
+      3383,
+      103.06
+    ],
+    [
+      "Martin L\u00f8wstr\u00f8m Nyenget",
+      "Norway",
+      "M",
+      8895,
+      162.74
+    ],
+    [
+      "Emil Iversen",
+      "Norway",
+      "M",
+      3366,
+      140.53
+    ],
+    [
+      "Johannes H\u00f8sflot Kl\u00e6bo",
+      "Norway",
+      "M",
+      19320,
+      169.17
+    ],
+    [
+      "Andreas Fjorden Ree",
+      "Norway",
+      "M",
+      4880,
+      125.5
+    ],
+    [
+      "Saveliy Korostelev",
+      "Russia",
+      "M",
+      2707,
+      134.45
+    ],
+    [
+      "Teresa Stadlober",
+      "Austria",
+      "L",
+      4639,
+      136.39
+    ],
+    [
+      "Heidi Weng",
+      "Norway",
+      "L",
+      7538,
+      169.6
+    ],
+    [
+      "Kristin Austgulen Fosn\u00e6s",
+      "Norway",
+      "L",
+      2814,
+      104.56
+    ],
+    [
+      "Karoline Gr\u00f8tting",
+      "Norway",
+      "L",
+      225,
+      130.85
+    ],
+    [
+      "Dariya Nepryaeva",
+      "Russia",
+      "L",
+      926,
+      113.62
+    ],
+    [
+      "Ebba Andersson",
+      "Sweden",
+      "L",
+      7279,
+      142.78
+    ],
+    [
+      "Moa Ilar",
+      "Sweden",
+      "L",
+      8118,
+      119.57
+    ],
+    [
+      "Frida Karlsson",
+      "Sweden",
+      "L",
+      7783,
+      154.94
+    ]
+  ]
+}

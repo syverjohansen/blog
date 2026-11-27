@@ -1,0 +1,124 @@
+{
+  "headers": [
+    "Skier",
+    "Nation",
+    "Sex",
+    "Price",
+    "Projected Points"
+  ],
+  "objective": "sprint",
+  "rows": [
+    [
+      "Lauri Vuorinen",
+      "Finland",
+      "M",
+      2221,
+      61.32
+    ],
+    [
+      "Jules Chappaz",
+      "France",
+      "M",
+      1809,
+      61.97
+    ],
+    [
+      "Erik Valnes",
+      "Norway",
+      "M",
+      7016,
+      80.84
+    ],
+    [
+      "Johannes H\u00f8sflot Kl\u00e6bo",
+      "Norway",
+      "M",
+      19320,
+      93.48
+    ],
+    [
+      "Harald \u00d8stberg Amundsen",
+      "Norway",
+      "M",
+      12390,
+      66.56
+    ],
+    [
+      "Ansgar Evensen",
+      "Norway",
+      "M",
+      1502,
+      73.68
+    ],
+    [
+      "Anton Grahn",
+      "Sweden",
+      "M",
+      493,
+      56.34
+    ],
+    [
+      "Oskar Opstad Vike",
+      "Norway",
+      "M",
+      1965,
+      66.09
+    ],
+    [
+      "Jasmi Joensuu",
+      "Finland",
+      "L",
+      5549,
+      73.13
+    ],
+    [
+      "Johanna Matintalo",
+      "Finland",
+      "L",
+      2704,
+      61.42
+    ],
+    [
+      "Laura Gimmler",
+      "Germany",
+      "L",
+      1513,
+      56.25
+    ],
+    [
+      "Natalia Nepryaeva",
+      "Russia",
+      "L",
+      2993,
+      79.01
+    ],
+    [
+      "Maja Dahlqvist",
+      "Sweden",
+      "L",
+      9435,
+      78.67
+    ],
+    [
+      "Emma Ribom",
+      "Sweden",
+      "L",
+      4960,
+      78.06
+    ],
+    [
+      "Johanna Hagstr\u00f6m",
+      "Sweden",
+      "L",
+      3986,
+      79.1
+    ],
+    [
+      "Linn Svahn",
+      "Sweden",
+      "L",
+      6113,
+      88.3
+    ]
+  ]
+}
