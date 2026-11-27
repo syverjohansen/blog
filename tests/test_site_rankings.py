@@ -4,7 +4,7 @@ import unittest
 from datetime import date
 from pathlib import Path
 
-from pipelines.site_rankings import RankingDataError, build_rankings, write_rankings
+from pipelines.site_rankings import RankingDataError, _age, build_rankings, write_rankings
 
 
 def race(
@@ -32,6 +32,21 @@ def standings(
 
 
 class SiteRankingsTest(unittest.TestCase):
+    def test_age_accepts_iso_dates_and_timestamps(self) -> None:
+        as_of = date(2026, 11, 27)
+
+        self.assertEqual(_age("2003-01-01", as_of), 23)
+        self.assertEqual(_age("2003-01-01 00:00:00", as_of), 23)
+        self.assertEqual(_age("2003-01-01T00:00:00.000000", as_of), 23)
+
+    def test_age_preserves_unknown_and_rejects_malformed_birthdays(self) -> None:
+        as_of = date(2026, 11, 27)
+
+        self.assertIsNone(_age("", as_of))
+        self.assertIsNone(_age("1700-01-01 00:00:00", as_of))
+        with self.assertRaisesRegex(RankingDataError, "invalid Birthday"):
+            _age("not-a-date", as_of)
+
     def test_alpine_scores_races_and_only_completed_historical_standings(self) -> None:
         rows = [
             race(athlete_id=1, name="Winner", event="Olympic Games", place=1, season=2026),
