@@ -149,7 +149,7 @@ class SkiJumpPredictionPublicationTests(unittest.TestCase):
                 evaluation_date=date(2026, 11, 25),
             )
             data_root = repository / "data/skijump/drafts/race-picks/20261125"
-            post = repository / "content/post/race-picks/ski-jumping-20261125.md"
+            post = repository / "data/race-picks/fragments/20261125/ski-jumping.md"
             rendered = post.read_text(encoding="utf-8")
 
             self.assertEqual("prepared", report["status"])
@@ -238,9 +238,10 @@ class SkiJumpPredictionPublicationTests(unittest.TestCase):
         self.assertIn("-f publish_predictions=true", site_data_source)
         self.assertIn("pipelines.skijump_prediction_publication", source)
         self.assertIn("contents: write", source)
-        self.assertIn('hugo-version: "0.134.1"', source)
+        self.assertIn("gh workflow run combined-race-picks.yml", source)
+        self.assertIn("actions: write", source)
         self.assertIn("git pull --rebase origin main", source)
-        self.assertIn("content/post/race-picks/ski-jumping-$DATE_KEY.md", source)
+        self.assertIn("data/race-picks/fragments/$DATE_KEY/ski-jumping.md", source)
         self.assertIn("inputs.publish_predictions == true", source)
 
 

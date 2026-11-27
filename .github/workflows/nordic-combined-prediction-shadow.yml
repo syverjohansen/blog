@@ -353,6 +353,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
+      actions: write
       contents: write
     steps:
       - name: Check out publication base
@@ -400,17 +401,6 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Set up Hugo
-        if: steps.candidate.outputs.changed == 'true'
-        uses: peaceiris/actions-hugo@v3
-        with:
-          hugo-version: "0.134.1"
-          extended: true
-
-      - name: Render complete site candidate
-        if: steps.candidate.outputs.changed == 'true'
-        run: hugo --minify --destination "$RUNNER_TEMP/nordic-combined-publication-site"
-
       - name: Publish validated Nordic Combined predictions
         if: steps.candidate.outputs.changed == 'true'
         env:
@@ -421,7 +411,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
             "data/nordic-combined/drafts/race-picks/$date_key" \
-            "content/post/race-picks/nordic-combined-$date_key.md"
+            "data/race-picks/fragments/$date_key/nordic-combined.md"
           git commit -m "Publish Nordic Combined race picks for $LOGICAL_DATE" \
             -m "Validated shadow run: ${{ needs.shadow.outputs.run_id }}"
           for attempt in 1 2 3; do
@@ -430,6 +420,15 @@ jobs:
             sleep $((attempt * 5))
           done
           exit 1
+
+      - name: Refresh combined Race Picks
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOGICAL_DATE: ${{ needs.shadow.outputs.logical_date }}
+        run: |
+          gh workflow run combined-race-picks.yml \
+            --ref main \
+            -f logical_date="$LOGICAL_DATE"
 
       - name: Retain publication report
         if: always()

@@ -170,7 +170,12 @@ def prepare_candidate(
             )
         planned.append((target_root / filename, source.read_bytes(), semantic))
 
-    content_path = repository_root / "content/post/race-picks" / f"{date_key}.md"
+    content_path = (
+        repository_root
+        / "data/race-picks/fragments"
+        / date_key
+        / "alpine.md"
+    )
     planned.append(
         (
             content_path,

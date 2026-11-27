@@ -114,7 +114,7 @@ class AlpinePublicationCandidateTests(unittest.TestCase):
                 / "repository/data/alpine/drafts/race-picks/20261121"
                 / "ladies_position_probabilities.json"
             )
-            content = root / "repository/content/post/race-picks/20261121.md"
+            content = root / "repository/data/race-picks/fragments/20261121/alpine.md"
             self.assertTrue(data.is_file())
             rendered = content.read_text()
             self.assertIn("Race Picks for 11/21/2026", rendered)

@@ -18,23 +18,19 @@ class BiathlonPredictionWorkflowTests(unittest.TestCase):
         self.assertIn("needs: shadow", publish)
         self.assertIn("if: needs.shadow.outputs.ready == 'true'", publish)
 
-    def test_generated_post_is_rendered_without_the_full_historical_site(self) -> None:
-        render = self.source.index("name: Render targeted Biathlon post candidate")
-        publication = self.source.index(
-            "name: Publish validated Biathlon predictions", render
-        )
-        render_step = self.source[render:publication]
-        self.assertIn("pipelines.biathlon_prediction_site_smoke", render_step)
-        self.assertIn('biathlon-$DATE_KEY.md', render_step)
-        self.assertIn('biathlon-site-smoke.json', render_step)
+    def test_combined_post_is_dispatched_after_fragment_publication(self) -> None:
+        publication = self.source.index("name: Publish validated Biathlon predictions")
+        dispatch = self.source.index("gh workflow run combined-race-picks.yml")
+        self.assertLess(publication, dispatch)
+        self.assertIn("actions: write", self.source)
 
     def test_publication_is_narrow_and_follows_site_validation(self) -> None:
-        render = self.source.index("pipelines.biathlon_prediction_site_smoke")
         publication = self.source.index("git push origin HEAD:main")
-        self.assertLess(render, publication)
+        dispatch = self.source.index("gh workflow run combined-race-picks.yml")
+        self.assertLess(publication, dispatch)
         self.assertIn('"data/biathlon/drafts/race-picks/$DATE_KEY"', self.source)
         self.assertIn(
-            '"content/post/race-picks/biathlon-$DATE_KEY.md"', self.source
+            '"data/race-picks/fragments/$DATE_KEY/biathlon.md"', self.source
         )
         self.assertNotIn("git add .", self.source)
 

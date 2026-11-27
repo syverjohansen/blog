@@ -288,7 +288,10 @@ def prepare_publication(
             )
 
     post_path = (
-        repository_root / "content/post/race-picks" / f"nordic-combined-{date_key}.md"
+        repository_root
+        / "data/race-picks/fragments"
+        / date_key
+        / "nordic-combined.md"
     )
     planned_files.append((post_path, _render_post(logical_date, artifacts)))
     for target, payload in planned_files:

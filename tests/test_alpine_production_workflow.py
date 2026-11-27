@@ -58,10 +58,12 @@ class AlpineProductionWorkflowTests(unittest.TestCase):
         self.assertIn("contents: write", candidate)
         self.assertNotIn("pull-requests: write", candidate)
         self.assertIn("pipelines.alpine_publication_candidate", candidate)
-        self.assertIn("run_generated_site_smoke", candidate)
-        self.assertNotIn("hugo --minify", candidate)
+        self.assertIn("gh workflow run combined-race-picks.yml", candidate)
+        self.assertIn("actions: write", candidate)
         self.assertIn('"data/alpine/drafts/race-picks/$DATE_KEY"', candidate)
-        self.assertIn('"content/post/race-picks/$DATE_KEY.md"', candidate)
+        self.assertIn(
+            '"data/race-picks/fragments/$DATE_KEY/alpine.md"', candidate
+        )
         self.assertIn("git push origin HEAD:main", candidate)
         self.assertNotIn("git add .", candidate)
         self.assertNotIn("--force", candidate)
@@ -69,10 +71,10 @@ class AlpineProductionWorkflowTests(unittest.TestCase):
         self.assertNotIn("gh pr merge", candidate)
 
         validation = candidate.index("pipelines.alpine_publication_candidate")
-        render = candidate.index("run_generated_site_smoke")
         publication = candidate.index("git push origin HEAD:main")
-        self.assertLess(validation, render)
-        self.assertLess(render, publication)
+        aggregation = candidate.index("gh workflow run combined-race-picks.yml")
+        self.assertLess(validation, publication)
+        self.assertLess(publication, aggregation)
 
     def test_obsolete_host_automation_is_removed(self) -> None:
         self.assertFalse((ROOT / "master_automation_ubuntu.sh").exists())

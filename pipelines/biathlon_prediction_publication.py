@@ -205,7 +205,12 @@ def prepare_publication(
                 "file": str(target.relative_to(repository_root)),
                 "rows": len(document["rows"]), "sha256": hashlib.sha256(payload).hexdigest(),
             })
-    post = repository_root / "content/post/race-picks" / f"biathlon-{date_key}.md"
+    post = (
+        repository_root
+        / "data/race-picks/fragments"
+        / date_key
+        / "biathlon.md"
+    )
     writes.append((post, _post(
         logical_date,
         artifacts,
