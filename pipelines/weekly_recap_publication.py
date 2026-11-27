@@ -17,6 +17,12 @@ SUPPORTED_SPORTS = {
     "skijump": "skijump",
     "biathlon": "biathlon",
 }
+SPORT_LABELS = {
+    "alpine": "Alpine",
+    "cross-country": "Cross Country",
+    "skijump": "Ski Jumping",
+    "biathlon": "Biathlon",
+}
 GENDERS = ("men", "ladies")
 ARTIFACT_TYPES = ("elo_change", "standings_predictions", "magic_numbers")
 
@@ -133,6 +139,72 @@ def validate_sport_artifacts(data_root: Path, sport: str) -> tuple[Path, ...]:
     return expected
 
 
+def _weekly_elo_preview(
+    sports: tuple[str, ...], data_root: Path
+) -> dict[str, list[dict[str, object]]]:
+    preview: dict[str, list[dict[str, object]]] = {"men": [], "women": []}
+    required = {"Skier", "Nation", "Change"}
+    for sport in sports:
+        for gender in GENDERS:
+            path = data_root / sport / f"{gender}_elo_change.json"
+            document = _load_artifact(path, allow_empty=True)
+            headers = document["headers"]
+            if missing := sorted(required - set(headers)):
+                raise WeeklyRecapError(
+                    f"Elo preview artifact is missing columns {missing}: {path}"
+                )
+            indexes = {name: headers.index(name) for name in required}
+            preview_gender = "men" if gender == "men" else "women"
+            for row in document["rows"]:
+                try:
+                    change = float(row[indexes["Change"]])
+                except (TypeError, ValueError) as exc:
+                    raise WeeklyRecapError(
+                        f"invalid Elo change in recap artifact: {path}"
+                    ) from exc
+                if change <= 0:
+                    continue
+                preview[preview_gender].append(
+                    {
+                        "athlete": str(row[indexes["Skier"]]),
+                        "nation": str(row[indexes["Nation"]]),
+                        "sport": SPORT_LABELS[sport],
+                        "elo_change": round(change, 1),
+                    }
+                )
+    for gender in preview:
+        preview[gender] = sorted(
+            preview[gender],
+            key=lambda athlete: (
+                -float(athlete["elo_change"]),
+                str(athlete["athlete"]),
+                str(athlete["sport"]),
+            ),
+        )[:3]
+    return preview
+
+
+def _preview_front_matter(
+    preview: dict[str, list[dict[str, object]]]
+) -> list[str]:
+    lines = [
+        'description: "The biggest men\'s and women\'s Elo gains across Nordic Numbers this week."',
+        "weekly_recap_preview:",
+    ]
+    for gender in ("men", "women"):
+        lines.append(f"  {gender}:")
+        for athlete in preview[gender]:
+            lines.extend(
+                (
+                    f"    - athlete: {json.dumps(athlete['athlete'], ensure_ascii=False)}",
+                    f"      nation: {json.dumps(athlete['nation'], ensure_ascii=False)}",
+                    f"      sport: {json.dumps(athlete['sport'], ensure_ascii=False)}",
+                    f"      elo_change: {athlete['elo_change']:.1f}",
+                )
+            )
+    return lines
+
+
 def render_post(logical_date: date, sports: tuple[str, ...], data_root: Path) -> str:
     if logical_date.weekday() != 0:
         raise WeeklyRecapError("weekly recap date must be a Monday")
@@ -147,28 +219,24 @@ def render_post(logical_date: date, sports: tuple[str, ...], data_root: Path) ->
     start = logical_date - timedelta(days=7)
     end = logical_date - timedelta(days=1)
     date_key = logical_date.strftime("%Y%m%d")
+    preview = _weekly_elo_preview(sports, data_root)
     lines = [
         "---",
         f'title: "Weekly Recap for week of {start.strftime("%m/%d/%Y")} to {end.strftime("%m/%d/%Y")}"',
         f"date: {logical_date.isoformat()}T02:00:00+00:00",
         "draft: false",
         'tags: ["recap", "skiing", "weekly-recap", "standings", "elo"]',
+        *_preview_front_matter(preview),
         "---",
         "",
     ]
-    labels = {
-        "alpine": "Alpine",
-        "cross-country": "Cross Country",
-        "skijump": "Ski Jumping",
-        "biathlon": "Biathlon",
-    }
     headings = {
         "elo_change": "Elo Change",
         "standings_predictions": "Standings Predictions",
         "magic_numbers": "Magic Numbers",
     }
     for sport in sports:
-        lines.extend([f"## {labels[sport]}", ""])
+        lines.extend([f"## {SPORT_LABELS[sport]}", ""])
         for gender in GENDERS:
             lines.extend([f"### {'Men' if gender == 'men' else 'Ladies'}", ""])
             for artifact_type in ARTIFACT_TYPES:

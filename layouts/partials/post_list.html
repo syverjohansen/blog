@@ -47,6 +47,26 @@
             {{ end }}
             </div>
         </div>
+    {{ else if .Params.weekly_recap_preview }}
+        <div class="prediction-preview recap-preview">
+            <div class="prediction-preview-label">Biggest Elo gains this week</div>
+            <div class="prediction-preview-grid">
+            {{ range $gender := slice "men" "women" }}
+                <div class="prediction-preview-item">
+                    <div class="prediction-preview-event">{{ humanize $gender }}</div>
+                    <ol class="recap-elo-list">
+                    {{ range index $element.Params.weekly_recap_preview $gender }}
+                        <li>
+                            <span class="recap-elo-athlete">{{ .athlete }}</span>
+                            <span class="recap-elo-change">{{ printf "+%.1f" .elo_change }} Elo</span>
+                            <span class="prediction-preview-nation">{{ .sport }}{{ with .nation }} &middot; {{ . }}{{ end }}</span>
+                        </li>
+                    {{ end }}
+                    </ol>
+                </div>
+            {{ end }}
+            </div>
+        </div>
     {{ else }}
         <div class="post-content-preview">
     {{ with .Description }}
