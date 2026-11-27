@@ -90,6 +90,8 @@ jobs:
             /elo/python/ski/polars/cross_country_tour_inputs.py
             /elo/python/ski/polars/cross_country_tour_contract.py
             /elo/python/ski/polars/cross_country_weekend_inputs.py
+            /elo/python/ski/polars/cross_country_announced_rosters.py
+            /elo/python/ski/polars/cross_country_world_cup_quotas.py
             /elo/python/ski/polars/cross_country_results_identity.py
             /elo/python/ski/polars/schedule_contract.py
             /elo/python/ski/polars/excel365/weekends.csv
