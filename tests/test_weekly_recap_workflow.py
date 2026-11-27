@@ -42,6 +42,12 @@ class WeeklyRecapWorkflowTests(unittest.TestCase):
         self.assertIn("blog_sha", self.text)
         self.assertIn("^[0-9a-f]{40}$", self.text)
 
+    def test_python_runtime_is_pinned_before_system_install(self) -> None:
+        setup = self.text.index("actions/setup-python@v5")
+        install = self.text.index("uv pip install --system")
+        self.assertLess(setup, install)
+        self.assertIn('python-version: "3.12"', self.text[setup:install])
+
     def test_recap_scripts_use_injected_roots_and_logical_date(self) -> None:
         for sport in ("alpine", "cross-country", "skijump", "biathlon"):
             script = (

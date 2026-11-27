@@ -40,6 +40,12 @@ class CrossCountryTeamWorkflowTests(unittest.TestCase):
         self.assertIn("$RUNNER_TEMP/team-event-inputs/relay.csv", self.source)
         self.assertIn("$RUNNER_TEMP/team-event-inputs/team_sprint.csv", self.source)
 
+    def test_python_runtime_is_pinned_before_system_install(self) -> None:
+        setup = self.source.index("actions/setup-python@v5")
+        install = self.source.index("uv pip install --system")
+        self.assertLess(setup, install)
+        self.assertIn('python-version: "3.12"', self.source[setup:install])
+
     def test_validation_and_narrow_publication_precede_combined_dispatch(self) -> None:
         build = self.source.index("cross_country_team_publication build")
         publication = self.source.index("git push origin HEAD:main")

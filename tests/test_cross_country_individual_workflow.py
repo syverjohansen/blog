@@ -42,6 +42,12 @@ class CrossCountryIndividualWorkflowTests(unittest.TestCase):
             parameters,
         )
 
+    def test_python_runtime_is_pinned_before_system_install(self) -> None:
+        setup = self.source.index("actions/setup-python@v5")
+        install = self.source.index("uv pip install --system")
+        self.assertLess(setup, install)
+        self.assertIn('python-version: "3.12"', self.source[setup:install])
+
     def test_current_elo_inputs_and_startlists_precede_simulation(self) -> None:
         prepare = self.source.index("cross_country_individual_publication prepare")
         startlist = self.source.index("startlist-scrape-races.py")
