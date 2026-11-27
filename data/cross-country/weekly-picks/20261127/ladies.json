@@ -1,0 +1,315 @@
+{
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Sex",
+    "Predicted Weekend Points",
+    "Races Count",
+    "Avg Win Probability",
+    "Avg Podium Probability"
+  ],
+  "rows": [
+    [
+      "Frida Karlsson",
+      "3998",
+      "Sweden",
+      "L",
+      183.55,
+      3,
+      19.5,
+      36.3
+    ],
+    [
+      "Heidi Weng",
+      "60",
+      "Norway",
+      "L",
+      169.6,
+      2,
+      12.2,
+      42.2
+    ],
+    [
+      "Linn Svahn",
+      "3190",
+      "Sweden",
+      "L",
+      156.92,
+      3,
+      13.3,
+      37.6
+    ],
+    [
+      "Jessie Diggins",
+      "131",
+      "USA",
+      "L",
+      154.68,
+      2,
+      17.8,
+      36
+    ],
+    [
+      "Ebba Andersson",
+      "1789",
+      "Sweden",
+      "L",
+      151.14,
+      3,
+      4.3,
+      17.2
+    ],
+    [
+      "Teresa Stadlober",
+      "529",
+      "Austria",
+      "L",
+      145.55,
+      3,
+      2.1,
+      10.3
+    ],
+    [
+      "Dariya Nepryaeva",
+      "6555",
+      "Russia",
+      "L",
+      144.55,
+      3,
+      0.5,
+      3.7
+    ],
+    [
+      "Moa Ilar",
+      "1866",
+      "Sweden",
+      "L",
+      142.7,
+      3,
+      2.8,
+      9.9
+    ],
+    [
+      "Jasmi Joensuu",
+      "1675",
+      "Finland",
+      "L",
+      135.37,
+      2,
+      4.6,
+      13.4
+    ],
+    [
+      "Karoline Gr\u00f8tting",
+      "6419",
+      "Norway",
+      "L",
+      134.19,
+      2,
+      3.6,
+      16.6
+    ],
+    [
+      "Johanna Matintalo",
+      "1761",
+      "Finland",
+      "L",
+      122.91,
+      2,
+      0.8,
+      5.4
+    ],
+    [
+      "Emma Ribom",
+      "1844",
+      "Sweden",
+      "L",
+      118.25,
+      3,
+      5.1,
+      11.2
+    ],
+    [
+      "Katharina Hennig Dotzler",
+      "1618",
+      "Germany",
+      "L",
+      111.65,
+      3,
+      0.9,
+      3.6
+    ],
+    [
+      "Tiril Udnes Weng",
+      "1668",
+      "Norway",
+      "L",
+      108.72,
+      3,
+      0,
+      0.1
+    ],
+    [
+      "Pia Fink",
+      "4004",
+      "Germany",
+      "L",
+      106.74,
+      3,
+      0,
+      1.5
+    ],
+    [
+      "Anja Weber",
+      "6338",
+      "Switzerland",
+      "L",
+      106.57,
+      3,
+      0.1,
+      0.8
+    ],
+    [
+      "Katerina Janatova",
+      "3198",
+      "Czechia",
+      "L",
+      106.23,
+      3,
+      0,
+      0.4
+    ],
+    [
+      "Kristin Austgulen Fosn\u00e6s",
+      "4268",
+      "Norway",
+      "L",
+      105.12,
+      2,
+      0.4,
+      2.2
+    ],
+    [
+      "Nadine F\u00e4hndrich",
+      "1590",
+      "Switzerland",
+      "L",
+      104.14,
+      2,
+      5.2,
+      13.8
+    ],
+    [
+      "Nadja K\u00e4lin",
+      "6639",
+      "Switzerland",
+      "L",
+      100.47,
+      3,
+      0.4,
+      2.3
+    ],
+    [
+      "Caterina Ganz",
+      "1721",
+      "Italy",
+      "L",
+      99.81,
+      3,
+      0.1,
+      0.3
+    ],
+    [
+      "Maja Dahlqvist",
+      "1673",
+      "Sweden",
+      "L",
+      95.14,
+      2,
+      3.8,
+      17.2
+    ],
+    [
+      "Laura Gimmler",
+      "1495",
+      "Germany",
+      "L",
+      89.63,
+      3,
+      0.1,
+      1.2
+    ],
+    [
+      "Kristine Stav\u00e5s Skistad",
+      "3207",
+      "Norway",
+      "L",
+      85.37,
+      1,
+      16.8,
+      47.6
+    ],
+    [
+      "Helen Hoffmann",
+      "6691",
+      "Germany",
+      "L",
+      83.46,
+      3,
+      0,
+      0.3
+    ],
+    [
+      "Lotta Udnes Weng",
+      "1671",
+      "Norway",
+      "L",
+      82.98,
+      2,
+      0.2,
+      1
+    ],
+    [
+      "Natalia Nepryaeva",
+      "571",
+      "Russia",
+      "L",
+      80.51,
+      1,
+      8.8,
+      34.4
+    ],
+    [
+      "Coletta Rydzek",
+      "3254",
+      "Germany",
+      "L",
+      80,
+      3,
+      0.4,
+      1.1
+    ],
+    [
+      "Alison Mackie",
+      "10185",
+      "Canada",
+      "L",
+      79.97,
+      3,
+      0,
+      0.1
+    ],
+    [
+      "Eva Ingebrigtsen",
+      "10145",
+      "Norway",
+      "L",
+      75.52,
+      2,
+      0.2,
+      0.2
+    ]
+  ],
+  "sheet_name": "Ladies Top 30"
+}

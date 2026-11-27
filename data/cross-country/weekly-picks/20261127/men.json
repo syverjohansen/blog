@@ -1,0 +1,315 @@
+{
+  "headers": [
+    "Skier",
+    "ID",
+    "Nation",
+    "Sex",
+    "Predicted Weekend Points",
+    "Races Count",
+    "Avg Win Probability",
+    "Avg Podium Probability"
+  ],
+  "rows": [
+    [
+      "Johannes H\u00f8sflot Kl\u00e6bo",
+      "5164",
+      "Norway",
+      "M",
+      262.64,
+      3,
+      24.8,
+      55.5
+    ],
+    [
+      "Saveliy Korostelev",
+      "13188",
+      "Russia",
+      "M",
+      173.93,
+      3,
+      1.7,
+      8.5
+    ],
+    [
+      "Harald \u00d8stberg Amundsen",
+      "5449",
+      "Norway",
+      "M",
+      163.93,
+      2,
+      18.6,
+      42.2
+    ],
+    [
+      "Martin L\u00f8wstr\u00f8m Nyenget",
+      "2295",
+      "Norway",
+      "M",
+      162.74,
+      2,
+      14.8,
+      43.2
+    ],
+    [
+      "Mika Vermeulen",
+      "12673",
+      "Austria",
+      "M",
+      154.03,
+      3,
+      6,
+      16.1
+    ],
+    [
+      "Emil Iversen",
+      "1467",
+      "Norway",
+      "M",
+      140.94,
+      2,
+      8.6,
+      25
+    ],
+    [
+      "Iivo Niskanen",
+      "1470",
+      "Finland",
+      "M",
+      133.95,
+      2,
+      3.8,
+      19
+    ],
+    [
+      "Lars Heggen",
+      "19104",
+      "Norway",
+      "M",
+      133.45,
+      3,
+      0.9,
+      3.5
+    ],
+    [
+      "Andreas Fjorden Ree",
+      "8678",
+      "Norway",
+      "M",
+      126.34,
+      2,
+      5,
+      15.6
+    ],
+    [
+      "Edvin Anger",
+      "14039",
+      "Sweden",
+      "M",
+      122.34,
+      3,
+      2.7,
+      8.3
+    ],
+    [
+      "Elia Barp",
+      "14042",
+      "Italy",
+      "M",
+      119.25,
+      3,
+      1.2,
+      3.9
+    ],
+    [
+      "Hugo Lapalus",
+      "6018",
+      "France",
+      "M",
+      104.55,
+      3,
+      0.1,
+      1.1
+    ],
+    [
+      "Joe Davies",
+      "14110",
+      "Great Britain",
+      "M",
+      102.66,
+      3,
+      0,
+      0.4
+    ],
+    [
+      "Davide Graz",
+      "12165",
+      "Italy",
+      "M",
+      98.61,
+      3,
+      0,
+      0.8
+    ],
+    [
+      "Gus Schumacher",
+      "9172",
+      "USA",
+      "M",
+      98.49,
+      3,
+      0.5,
+      1.9
+    ],
+    [
+      "Andrew Musgrave",
+      "277",
+      "Great Britain",
+      "M",
+      95.07,
+      3,
+      0.1,
+      1.3
+    ],
+    [
+      "Mathis Desloges",
+      "12767",
+      "France",
+      "M",
+      84.83,
+      3,
+      0.1,
+      0.9
+    ],
+    [
+      "Theo Schely",
+      "12166",
+      "France",
+      "M",
+      84.04,
+      3,
+      0,
+      0
+    ],
+    [
+      "Ben Ogden",
+      "9179",
+      "USA",
+      "M",
+      81.75,
+      2,
+      1.4,
+      6.2
+    ],
+    [
+      "Erik Valnes",
+      "5923",
+      "Norway",
+      "M",
+      80.84,
+      1,
+      10.8,
+      37.2
+    ],
+    [
+      "Mattis Stenshagen",
+      "5165",
+      "Norway",
+      "M",
+      80.05,
+      1,
+      11.2,
+      36.8
+    ],
+    [
+      "Michal Novak",
+      "3655",
+      "Czechia",
+      "M",
+      78.75,
+      3,
+      0.1,
+      0.8
+    ],
+    [
+      "Friedrich Moch",
+      "9323",
+      "Germany",
+      "M",
+      75.2,
+      3,
+      1.3,
+      4.1
+    ],
+    [
+      "William Poromaa",
+      "12573",
+      "Sweden",
+      "M",
+      73.94,
+      3,
+      0.1,
+      2.3
+    ],
+    [
+      "Jules Chappaz",
+      "12181",
+      "France",
+      "M",
+      73.73,
+      2,
+      2.2,
+      6.2
+    ],
+    [
+      "Ansgar Evensen",
+      "8246",
+      "Norway",
+      "M",
+      73.11,
+      1,
+      11.6,
+      26
+    ],
+    [
+      "Antoine Cyr",
+      "9225",
+      "Canada",
+      "M",
+      70.27,
+      3,
+      0,
+      0
+    ],
+    [
+      "Ristomatti Hakola",
+      "2553",
+      "Finland",
+      "M",
+      69.13,
+      2,
+      0,
+      0.6
+    ],
+    [
+      "Lauri Vuorinen",
+      "2874",
+      "Finland",
+      "M",
+      67.77,
+      2,
+      0.6,
+      3.4
+    ],
+    [
+      "Jiri Tuz",
+      "17348",
+      "Czechia",
+      "M",
+      66.6,
+      3,
+      0.7,
+      3.6
+    ]
+  ],
+  "sheet_name": "Men Top 30"
+}
