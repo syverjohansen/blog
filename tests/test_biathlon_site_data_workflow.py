@@ -61,7 +61,7 @@ class BiathlonSiteDataWorkflowTests(unittest.TestCase):
         contract = self.text.index("name: Validate candidate contract")
         materialization = self.text.index("name: Materialize candidate into owned site root")
         tests = self.text.index("python3 -m unittest discover")
-        render = self.text.index("hugo --minify")
+        render = self.text.index("python3 -m pipelines.sport_site_smoke")
         publication = self.text.index("git push origin HEAD:main")
         self.assertLess(generation, contract)
         self.assertLess(contract, materialization)
@@ -69,7 +69,7 @@ class BiathlonSiteDataWorkflowTests(unittest.TestCase):
         self.assertLess(tests, render)
         self.assertLess(render, publication)
         self.assertIn("$RUNNER_TEMP/biathlon-site-candidate", self.text)
-        self.assertIn("hugo --minify --renderToMemory", self.text)
+        self.assertIn("--sport biathlon", self.text)
 
     def test_current_season_is_regenerated_without_deleting_history(self) -> None:
         self.assertIn('rm -rf "$artifact_root/M/$SEASON"', self.text)

@@ -38,7 +38,7 @@ class SkiJumpingSiteDataWorkflowTests(unittest.TestCase):
         contract = self.text.index("name: Validate candidate contract")
         materialization = self.text.index("name: Materialize candidate into owned site root")
         tests = self.text.index("python3 -m unittest discover")
-        render = self.text.index("hugo --minify")
+        render = self.text.index("python3 -m pipelines.sport_site_smoke")
         publication = self.text.index("git push origin HEAD:main")
         self.assertLess(generation, contract)
         self.assertLess(contract, materialization)

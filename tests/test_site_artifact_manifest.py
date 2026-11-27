@@ -123,7 +123,7 @@ class SiteArtifactManifestTest(unittest.TestCase):
         workflow = (BLOG_ROOT / owner["workflow"]).read_text(encoding="utf-8")
         generation = workflow.index("python3 -m pipelines.skijump_site_data")
         tests = workflow.index("unittest discover", generation)
-        render = workflow.index("hugo --minify", tests)
+        render = workflow.index("python3 -m pipelines.sport_site_smoke", tests)
         publication = workflow.index(
             "git add -- \"$artifact_root\"", render
         )
@@ -152,7 +152,7 @@ class SiteArtifactManifestTest(unittest.TestCase):
             "python3 -m pipelines.nordic_combined_site_data"
         )
         tests = workflow.index("unittest discover", generation)
-        render = workflow.index("hugo --minify", tests)
+        render = workflow.index("python3 -m pipelines.sport_site_smoke", tests)
         publication = workflow.index(
             "git add -- \"$artifact_root\"", render
         )
@@ -179,7 +179,7 @@ class SiteArtifactManifestTest(unittest.TestCase):
         workflow = (BLOG_ROOT / owner["workflow"]).read_text(encoding="utf-8")
         generation = workflow.index("python3 -m pipelines.biathlon_site_data")
         tests = workflow.index("unittest discover", generation)
-        render = workflow.index("hugo --minify", tests)
+        render = workflow.index("python3 -m pipelines.sport_site_smoke", tests)
         publication = workflow.index('git add -- "$artifact_root"', render)
         self.assertLess(generation, tests)
         self.assertLess(tests, render)

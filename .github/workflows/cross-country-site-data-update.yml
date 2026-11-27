@@ -423,7 +423,7 @@ jobs:
           steps.season_close.outputs.status == 'candidate' ||
           steps.standings.outputs.changed == 'true'
         working-directory: blog
-        run: hugo --minify --destination "$RUNNER_TEMP/cross-country-site"
+        run: python3 -m pipelines.sport_site_smoke --sport cross-country
 
       - name: Publish validated site artifacts
         if: >-
