@@ -166,6 +166,13 @@ def build_current_table(
     return output
 
 
+def _has_active_racers(rows: list[dict[str, str]], season: int) -> bool:
+    return any(
+        int(row["Season"]) == season and row["Event"] != "Offseason"
+        for row in rows
+    )
+
+
 def _podium(rows: list[dict[str, str]]) -> list[dict[str, str] | None]:
     by_place: dict[int, dict[str, str]] = {}
     for row in rows:
@@ -400,6 +407,11 @@ def write_site_data(
         "M": men_ranking_history,
         "L": ladies_ranking_history,
     }
+    active_sexes = {
+        sex: _has_active_racers(rows, season) for sex, rows in histories.items()
+    }
+    if not any(active_sexes.values()):
+        raise SiteDataError(f"season {season} contains no active racers")
     for sex, rows in histories.items():
         _atomic_text(
             output_root / f"{sex}_chrono_all_time.json",
@@ -413,13 +425,19 @@ def write_site_data(
         _atomic_text(
             output_root / f"{sex}_chrono_current.json",
             json.dumps(
-                build_current_table(rows, season),
+                build_current_table(rows, season) if active_sexes[sex] else [],
                 ensure_ascii=True,
                 separators=(",", ":"),
                 allow_nan=False,
             ),
         )
-        summaries, races = build_season_archive(rows, season)
+        if active_sexes[sex]:
+            summaries, races = build_season_archive(rows, season)
+        else:
+            # A season can begin with one sex racing before the other. Keep the
+            # required per-sex artifacts present and explicitly empty until an
+            # accepted result exists; never fill them with prior-season racers.
+            summaries, races = [], {0: []}
         season_root = output_root / sex / str(season)
         _atomic_text(
             season_root / "summary.json",
