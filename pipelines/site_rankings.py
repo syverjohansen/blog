@@ -215,11 +215,11 @@ def _race_category_and_points(
 
 
 def _age(birthday: str, as_of: date) -> int | None:
-    birthday = birthday.strip().split("T", 1)[0]
+    birthday = birthday.strip()
     if not birthday or birthday.startswith("1700-01-01"):
         return None
     try:
-        born = datetime.strptime(birthday, "%Y-%m-%d").date()
+        born = datetime.fromisoformat(birthday).date()
     except ValueError as exc:
         raise RankingDataError(f"invalid Birthday: {birthday!r}") from exc
     return as_of.year - born.year - ((as_of.month, as_of.day) < (born.month, born.day))
