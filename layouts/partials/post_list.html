@@ -11,11 +11,11 @@
             {{ . }}
         </h3>
     {{ end }}
-    {{ with .Params.predicted_winners }}
+    {{ if .Params.predicted_winners }}
         <div class="prediction-preview">
             <div class="prediction-preview-label">Predicted winners</div>
             <div class="prediction-preview-grid">
-            {{ range first 6 . }}
+            {{ range first 6 .Params.predicted_winners }}
                 <div class="prediction-preview-item">
                     <div class="prediction-preview-event">{{ .sport }} &middot; {{ .event }}</div>
                     <div class="prediction-preview-result">
@@ -23,6 +23,22 @@
                         <span class="prediction-preview-odds">{{ .win_probability }}% win</span>
                     </div>
                     {{ with .nation }}<div class="prediction-preview-nation">{{ . }}</div>{{ end }}
+                </div>
+            {{ end }}
+            </div>
+        </div>
+    {{ else if .Params.fantasy_team_previews }}
+        <div class="prediction-preview fantasy-preview">
+            <div class="prediction-preview-label">Fantasy XC lineups</div>
+            <div class="prediction-preview-grid">
+            {{ range first 5 .Params.fantasy_team_previews }}
+                <div class="prediction-preview-item">
+                    <div class="prediction-preview-event">{{ .label }}</div>
+                    <div class="fantasy-preview-result">
+                        <span class="fantasy-preview-points">{{ .projected_points }} projected pts</span>
+                        <span class="fantasy-preview-budget">{{ .budget_used }} budget</span>
+                    </div>
+                    <div class="fantasy-preview-athletes">Top projections: {{ delimit .featured_athletes " &middot; " }}</div>
                 </div>
             {{ end }}
             </div>
