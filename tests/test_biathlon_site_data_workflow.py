@@ -98,7 +98,7 @@ class BiathlonSiteDataWorkflowTests(unittest.TestCase):
         self.assertIn("--men-ranking-history", self.text)
         self.assertIn("--ladies-ranking-history", self.text)
         self.assertIn("--as-of", self.text)
-        self.assertIn("date -u +%F", self.text)
+        self.assertIn("TZ=America/New_York date +%F", self.text)
 
 
 if __name__ == "__main__":

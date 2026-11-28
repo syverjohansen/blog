@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       as_of:
-        description: Results cutoff (YYYY-MM-DD); defaults to yesterday UTC
+        description: Results cutoff (YYYY-MM-DD); defaults to the current America/New_York date
         required: false
         type: string
       schedule_season:
@@ -76,7 +76,7 @@ jobs:
           REQUESTED_AS_OF: ${{ inputs.as_of || '' }}
           REQUESTED_SCHEDULE_SEASON: ${{ inputs.schedule_season || '' }}
         run: |
-          as_of="${REQUESTED_AS_OF:-$(date -u -d 'yesterday' +%F)}"
+          as_of="${REQUESTED_AS_OF:-$(TZ=America/New_York date +%F)}"
           if ! [[ "$as_of" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
             echo "Invalid as_of date: $as_of" >&2
             exit 1
