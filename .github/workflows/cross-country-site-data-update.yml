@@ -92,7 +92,18 @@ jobs:
           echo "schedule_root=$RUNNER_TEMP/cross-country-schedule-update" >> "$GITHUB_OUTPUT"
           echo "results_root=$RUNNER_TEMP/cross-country-results-update" >> "$GITHUB_OUTPUT"
           echo "team_results_root=$RUNNER_TEMP/cross-country-team-results-update" >> "$GITHUB_OUTPUT"
+          echo "prediction_ledger_root=$RUNNER_TEMP/cross-country-prediction-ledger" >> "$GITHUB_OUTPUT"
           echo "season_close_root=$RUNNER_TEMP/cross-country-season-close" >> "$GITHUB_OUTPUT"
+
+      - name: Restore latest all-race prediction Elo handoff
+        id: prediction_ledger_cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .fantasyxc-handoff/
+          key: cross-country-results-ledger-v1-${{ steps.parameters.outputs.as_of }}
+          restore-keys: |
+            cross-country-results-ledger-v1-
+            fantasyxc-roster-v2-
 
       - name: Resolve schedule acquisition season
         id: schedule_season
@@ -190,19 +201,56 @@ jobs:
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
           cat "$report" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Prepare all-race prediction Elo fallback
+        continue-on-error: true
+        working-directory: external/ski/elo/python/ski/polars
+        run: |
+          ledger="$GITHUB_WORKSPACE/.fantasyxc-handoff/fis-prediction-ledger.csv"
+          if [[ ! -s "$ledger" ]]; then
+            uv run --with requests --with beautifulsoup4 \
+              python cross_country_prediction_elo_pipeline.py \
+              --season "${{ steps.schedule_season.outputs.season }}" \
+              --as-of "${{ steps.parameters.outputs.as_of }}" \
+              --accepted-schedule excel365/races.csv \
+              --men-chrono excel365/men_chrono_elevation.csv \
+              --ladies-chrono excel365/ladies_chrono_elevation.csv \
+              --aliases excel365/fis_identity_aliases.csv \
+              --policy cross_country_prediction_elo_policy.json \
+              --output-dir "${{ steps.parameters.outputs.prediction_ledger_root }}" \
+              --allow-network
+            mkdir -p "$GITHUB_WORKSPACE/.fantasyxc-handoff"
+            cp "${{ steps.parameters.outputs.prediction_ledger_root }}/fis-prediction-ledger.csv" \
+              "$ledger"
+          fi
+
+      - name: Save reusable all-race prediction Elo handoff
+        if: always() && hashFiles('.fantasyxc-handoff/fis-prediction-ledger.csv') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: .fantasyxc-handoff/
+          key: cross-country-results-ledger-v1-${{ steps.parameters.outputs.as_of }}-${{ github.run_id }}
+
       - name: Build isolated results candidate
         working-directory: external/ski/elo/python/ski/polars
         run: |
-          python3 cross_country_results_update.py \
-            --schedule excel365/races.csv \
-            --men-chrono excel365/men_chrono.csv \
-            --ladies-chrono excel365/ladies_chrono.csv \
-            --men-reference-history relay/excel365/men_chrono.csv \
-            --ladies-reference-history relay/excel365/ladies_chrono.csv \
-            --aliases excel365/fis_identity_aliases.csv \
-            --as-of "${{ steps.parameters.outputs.as_of }}" \
-            --output-root "${{ steps.parameters.outputs.results_root }}" \
+          args=(
+            --schedule excel365/races.csv
+            --men-chrono excel365/men_chrono.csv
+            --ladies-chrono excel365/ladies_chrono.csv
+            --men-reference-history relay/excel365/men_chrono.csv
+            --ladies-reference-history relay/excel365/ladies_chrono.csv
+            --aliases excel365/fis_identity_aliases.csv
+            --as-of "${{ steps.parameters.outputs.as_of }}"
+            --output-root "${{ steps.parameters.outputs.results_root }}"
             --allow-network
+          )
+          ledger="$GITHUB_WORKSPACE/.fantasyxc-handoff/fis-prediction-ledger.csv"
+          if [[ -s "$ledger" ]]; then
+            args+=(--prediction-ledger "$ledger")
+          else
+            echo "Prediction ledger unavailable; using deterministic newcomer prior." >&2
+          fi
+          python3 cross_country_results_update.py "${args[@]}"
 
       - name: Read and stage results candidate
         id: results_candidate

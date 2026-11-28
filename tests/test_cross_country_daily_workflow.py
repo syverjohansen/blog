@@ -137,6 +137,22 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
             "--ladies-reference-history relay/excel365/ladies_chrono.csv", self.daily
         )
 
+    def test_first_a_tier_start_reuses_or_builds_all_race_prediction_elo(self) -> None:
+        restore = self.daily.index("name: Restore latest all-race prediction Elo handoff")
+        results = self.daily.index("name: Build isolated results candidate")
+        self.assertLess(restore, results)
+        self.assertIn("cross-country-results-ledger-v1-", self.daily)
+        self.assertIn("fantasyxc-roster-v2-", self.daily)
+        self.assertIn("cross_country_prediction_elo_pipeline.py", self.daily)
+        prepare = self.daily.index("name: Prepare all-race prediction Elo fallback")
+        self.assertIn("continue-on-error: true", self.daily[prepare:results])
+        self.assertIn(
+            '--prediction-ledger "$ledger"',
+            self.daily,
+        )
+        self.assertIn("using deterministic newcomer prior", self.daily)
+        self.assertIn("name: Save reusable all-race prediction Elo handoff", self.daily)
+
     def test_team_results_are_validated_and_retained_as_daily_evidence(self) -> None:
         team_results = self.daily.index("cross_country_team_results_update.py")
         team_tests = self.daily.index("-p 'test_cross_country_team_*.py'")
