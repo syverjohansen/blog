@@ -42,6 +42,10 @@ class NordicCombinedResultsWorkflowTests(unittest.TestCase):
         self.assertIn("--fail-on-unresolved", self.text)
         self.assertGreaterEqual(self.text.count("--expected-report-sha256"), 2)
 
+    def test_first_a_tier_starts_bridge_from_prediction_histories(self) -> None:
+        self.assertEqual(self.text.count("--men-reference-history excel365/all_M.csv"), 2)
+        self.assertEqual(self.text.count("--ladies-reference-history excel365/all_L.csv"), 2)
+
     def test_every_proven_event_shape_is_supported(self) -> None:
         self.assertIn("Enforce supported replay boundary", self.text)
         self.assertIn('event[1] in {"M", "L"}', self.text)
