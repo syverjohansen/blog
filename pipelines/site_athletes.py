@@ -129,10 +129,26 @@ COUNTRY_CODES = {
     "Yugoslavia": "yug",
     "Zimbabwe": "zim",
 }
+COUNTRY_NAMES_BY_CODE = {
+    code.casefold(): name for name, code in COUNTRY_CODES.items()
+}
 
 
 class AthleteMetadataError(RuntimeError):
     """Raised when accepted history cannot produce safe athlete metadata."""
+
+
+def normalize_nation(value: str, athlete_id: int) -> tuple[str, str]:
+    """Return the canonical country name and flag code for history metadata."""
+    nation = value.strip()
+    if nation in COUNTRY_CODES:
+        return nation, COUNTRY_CODES[nation]
+    canonical_name = COUNTRY_NAMES_BY_CODE.get(nation.casefold())
+    if canonical_name is None:
+        raise AthleteMetadataError(
+            f"athlete {athlete_id} has unsupported nation: {nation!r}"
+        )
+    return canonical_name, COUNTRY_CODES[canonical_name]
 
 
 def _athlete_id(row: dict[str, str]) -> int:
@@ -189,12 +205,7 @@ def build_skier_info(rows: list[dict[str, str]], sex: str) -> list[dict[str, Any
         nation = row.get("Nation", "").strip()
         if not name:
             raise AthleteMetadataError(f"athlete {athlete_id} has no display name")
-        try:
-            nation_code = COUNTRY_CODES[nation]
-        except KeyError as error:
-            raise AthleteMetadataError(
-                f"athlete {athlete_id} has unsupported nation: {nation!r}"
-            ) from error
+        _, nation_code = normalize_nation(nation, athlete_id)
         output.append(
             {
                 "id": athlete_id,
@@ -230,12 +241,7 @@ def build_skier_lookup(rows: list[dict[str, str]]) -> list[dict[str, Any]]:
         nation = row.get("Nation", "").strip()
         if not name:
             raise AthleteMetadataError(f"athlete {athlete_id} has no display name")
-        try:
-            nation_code = COUNTRY_CODES[nation]
-        except KeyError as error:
-            raise AthleteMetadataError(
-                f"athlete {athlete_id} has unsupported nation: {nation!r}"
-            ) from error
+        nation, nation_code = normalize_nation(nation, athlete_id)
         output.append(
             {
                 "id": athlete_id,
