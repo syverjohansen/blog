@@ -31,17 +31,21 @@ def sha256(path: Path) -> str:
 
 def write_workbook(
     path: Path, sheets: list[tuple[str, tuple[str, ...], list[tuple[object, ...]]]]
-) -> dict[str, int]:
+) -> dict[str, dict[str, float | int]]:
     path.parent.mkdir(parents=True, exist_ok=True)
     workbook = Workbook()
     workbook.remove(workbook.active)
-    counts: dict[str, int] = {}
+    counts: dict[str, dict[str, float | int]] = {}
     for name, headers, rows in sheets:
         sheet = workbook.create_sheet(name)
         sheet.append(headers)
         for row in rows:
             sheet.append(row)
-        counts[name] = len(rows)
+        win_index = headers.index("Win")
+        counts[name] = {
+            "rows": len(rows),
+            "win_total": sum(float(row[win_index]) for row in rows),
+        }
     workbook.save(path)
     return counts
 
@@ -211,6 +215,29 @@ class NordicCombinedPredictionPublicationTests(unittest.TestCase):
             repository.mkdir()
 
             with self.assertRaisesRegex(NordicCombinedPublicationError, "hash mismatch"):
+                prepare_publication(
+                    shadow_report_path=evidence["shadow"],
+                    normalization_report_path=evidence["normalization"],
+                    workbook_root=evidence["workbooks"],
+                    repository_root=repository,
+                    report_path=root / "report.json",
+                    evaluation_date=date(2026, 11, 25),
+                )
+            self.assertEqual([], list(repository.rglob("*")))
+
+    def test_shadow_sheet_evidence_mismatch_blocks_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            evidence = build_evidence(root)
+            shadow = json.loads(evidence["shadow"].read_text(encoding="utf-8"))
+            shadow["outputs"]["workbooks"][0]["sheets"]["Men Race 1"]["rows"] = 999
+            evidence["shadow"].write_text(json.dumps(shadow), encoding="utf-8")
+            repository = root / "repository"
+            repository.mkdir()
+
+            with self.assertRaisesRegex(
+                NordicCombinedPublicationError, "workbook sheet parity failed"
+            ):
                 prepare_publication(
                     shadow_report_path=evidence["shadow"],
                     normalization_report_path=evidence["normalization"],

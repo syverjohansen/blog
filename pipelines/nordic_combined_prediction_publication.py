@@ -109,7 +109,7 @@ def _workbook_documents(path: Path) -> list[dict[str, Any]]:
     return documents
 
 
-def _validate_document(document: dict[str, Any], category: str) -> None:
+def _validate_document(document: dict[str, Any], category: str) -> float:
     expected = TEAM_COLUMNS if category not in {"men", "ladies"} else INDIVIDUAL_COLUMNS
     headers = document["headers"]
     rows = document["rows"]
@@ -141,6 +141,7 @@ def _validate_document(document: dict[str, Any], category: str) -> None:
         raise NordicCombinedPublicationError(
             f"winner probabilities do not sum to 100 for {category}/{document['sheet_name']}"
         )
+    return win_total
 
 
 def _output_name(workbook: Path, sheet_name: str, sheet_count: int) -> str:
@@ -265,13 +266,15 @@ def prepare_publication(
             raise NordicCombinedPublicationError(f"workbook hash mismatch: {filename}")
         documents = _workbook_documents(workbook)
         declared_sheets = declared.get("sheets")
-        observed_sheets = {
-            document["sheet_name"]: len(document["rows"]) for document in documents
-        }
+        observed_sheets = {}
+        for document in documents:
+            observed_sheets[document["sheet_name"]] = {
+                "rows": len(document["rows"]),
+                "win_total": _validate_document(document, category),
+            }
         if declared_sheets != observed_sheets:
             raise NordicCombinedPublicationError(f"workbook sheet parity failed: {filename}")
         for document in documents:
-            _validate_document(document, category)
             output_name = _output_name(workbook, document["sheet_name"], len(documents))
             payload = _json_bytes(document)
             target = target_data_root / output_name
