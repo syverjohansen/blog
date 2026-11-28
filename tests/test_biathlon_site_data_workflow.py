@@ -35,16 +35,24 @@ class BiathlonSiteDataWorkflowTests(unittest.TestCase):
         self.assertIn("repos/syverjohansen/ski/commits/$SKI_REF", self.text)
         self.assertIn("ref: ${{ steps.ski.outputs.sha }}", self.text)
         for path in (
-            "/elo/python/biathlon/polars/relay/excel365/men_chrono.csv",
-            "/elo/python/biathlon/polars/relay/excel365/ladies_chrono.csv",
+            "/elo/python/biathlon/polars/relay/excel365/",
             "/ranks/biathlon/excel365/men_scrape_update.csv",
             "/ranks/biathlon/excel365/ladies_scrape_update.csv",
-            "/elo/python/biathlon/polars/biathlon_season_close.py",
-            "/elo/python/biathlon/polars/excel365/races.csv",
+            "/elo/python/biathlon/polars/*.py",
+            "/elo/python/biathlon/polars/excel365/",
         ):
             self.assertIn(path, self.text)
         self.assertNotIn("/elo/python/alpine/", self.text)
         self.assertNotIn("/elo/python/ski/polars/", self.text)
+
+    def test_results_are_acquired_before_resolving_and_publishing_site_season(self) -> None:
+        acquisition = self.text.index("python biathlon_results_update.py")
+        publication = self.text.index("name: Publish validated accepted biathlon data")
+        season = self.text.index("name: Resolve accepted history and schedule seasons")
+        self.assertLess(acquisition, publication)
+        self.assertLess(publication, season)
+        self.assertIn("--allow-network --apply", self.text)
+        self.assertIn("SKI_SHA: ${{ steps.publish_ski.outputs.sha }}", self.text)
 
     def test_may_first_close_is_guarded_and_evidence_is_retained(self) -> None:
         close = self.text.index("name: Verify guarded Biathlon season close")
@@ -64,7 +72,7 @@ class BiathlonSiteDataWorkflowTests(unittest.TestCase):
         materialization = self.text.index("name: Materialize candidate into owned site root")
         tests = self.text.index("python3 -m unittest discover")
         render = self.text.index("python3 -m pipelines.sport_site_smoke")
-        publication = self.text.index("git push origin HEAD:main")
+        publication = self.text.index("git push origin HEAD:main", self.text.index("name: Publish validated biathlon site artifacts"))
         self.assertLess(generation, contract)
         self.assertLess(contract, materialization)
         self.assertLess(materialization, tests)

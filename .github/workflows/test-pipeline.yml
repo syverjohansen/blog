@@ -35,6 +35,9 @@ jobs:
       - name: Run orchestration and snapshot unit tests
         run: python3 -m unittest discover -s tests -p 'test_*.py'
 
+      - name: Test daily email and persistent identity review reporting
+        run: python3 -m unittest discover -s .github/scripts -p 'test_*digest.py'
+
       - name: Run deterministic pipeline gates
         run: >-
           python3 pipelines/test_pipeline.py all

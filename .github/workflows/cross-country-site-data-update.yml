@@ -30,6 +30,7 @@ on:
 permissions:
   actions: write
   contents: write
+  issues: write
 
 concurrency:
   group: cross-country-automatic-daily-pipeline
@@ -463,7 +464,7 @@ jobs:
           steps.standings.outputs.changed == 'true'
         working-directory: blog
         run: >-
-          uv run --with-requirements pipelines/requirements-integration.txt
+          uv run --isolated --python 3.12 --with-requirements pipelines/requirements-integration.txt
           python -m unittest discover -s tests -p 'test_*.py'
 
       - name: Set up Hugo
@@ -537,13 +538,13 @@ jobs:
             ${{ steps.parameters.outputs.results_root }}/report.json
             ${{ steps.parameters.outputs.results_root }}/gap-report.json
             ${{ steps.parameters.outputs.results_root }}/acquisition/report.json
-            ${{ steps.parameters.outputs.results_root }}/identity/report.json
+            ${{ steps.parameters.outputs.results_root }}/identity/
             ${{ steps.parameters.outputs.results_root }}/replay/report.json
             ${{ steps.parameters.outputs.results_root }}/promotion/report.json
             ${{ steps.parameters.outputs.team_results_root }}/report.json
             ${{ steps.parameters.outputs.team_results_root }}/gap-report.json
             ${{ steps.parameters.outputs.team_results_root }}/acquisition/report.json
-            ${{ steps.parameters.outputs.team_results_root }}/identity/report.json
+            ${{ steps.parameters.outputs.team_results_root }}/identity/
             ${{ steps.parameters.outputs.team_results_root }}/replay/report.json
             ${{ steps.parameters.outputs.team_results_root }}/promotion/report.json
             ${{ steps.parameters.outputs.season_close_root }}/report.json
@@ -551,3 +552,36 @@ jobs:
             ${{ steps.parameters.outputs.season_close_root }}/candidate/ladies_chrono.csv
           if-no-files-found: warn
           retention-days: 30
+
+      - name: Check out daily results reporting helper
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: daily-reporting
+          sparse-checkout: .github/scripts
+          persist-credentials: false
+
+      - name: Email results and update athlete review queue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT_STATUS: ${{ job.status }}
+          RESULTS_AS_OF: ${{ steps.parameters.outputs.as_of || inputs.as_of || '' }}
+          FANTASYXC_EMAIL_ADDRESS: ${{ vars.FANTASYXC_NOTIFICATION_EMAIL || 'syverjohansen@gmail.com' }}
+          FANTASYXC_SMTP_PASSWORD: ${{ secrets.FANTASYXC_EMAIL_APP_PASSWORD }}
+        run: |
+          as_of="${RESULTS_AS_OF:-$(TZ=America/New_York date +%F)}"
+          python3 daily-reporting/.github/scripts/daily_results_digest.py \
+            --sport cross-country --as-of "$as_of" --status "$RESULT_STATUS" \
+            --root "$RUNNER_TEMP/cross-country-results-update" --root "$RUNNER_TEMP/cross-country-team-results-update" --history-root external/ski/elo/python/ski/polars/excel365 --aliases external/ski/elo/python/ski/polars/excel365/fis_identity_aliases.csv \
+            --output "$RUNNER_TEMP/cross-country-daily-digest" --sync-issues --send
+
+      - name: Upload daily results digest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-country-daily-digest-${{ github.run_id }}
+          path: ${{ runner.temp }}/cross-country-daily-digest/
+          if-no-files-found: warn
+          retention-days: 90
