@@ -129,6 +129,14 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         self.assertNotIn("git add .", self.daily)
         self.assertNotIn("--force", self.daily)
 
+    def test_first_individual_start_can_bridge_from_accepted_team_history(self) -> None:
+        self.assertIn(
+            "--men-reference-history relay/excel365/men_chrono.csv", self.daily
+        )
+        self.assertIn(
+            "--ladies-reference-history relay/excel365/ladies_chrono.csv", self.daily
+        )
+
     def test_team_results_are_validated_and_retained_as_daily_evidence(self) -> None:
         team_results = self.daily.index("cross_country_team_results_update.py")
         team_tests = self.daily.index("-p 'test_cross_country_team_*.py'")
