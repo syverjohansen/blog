@@ -92,6 +92,8 @@ jobs:
             /elo/python/nordic-combined/polars/excel365/races.csv
             /elo/python/nordic-combined/polars/excel365/men_chrono_elevation.csv
             /elo/python/nordic-combined/polars/excel365/ladies_chrono_elevation.csv
+            /elo/python/nordic-combined/polars/excel365/startlist_races_men.csv
+            /elo/python/nordic-combined/polars/excel365/startlist_races_ladies.csv
             /elo/python/nordic-combined/polars/relay/excel365/men_team_chrono.csv
             /elo/python/nordic-combined/polars/relay/excel365/ladies_team_chrono.csv
             /elo/python/nordic-combined/polars/relay/excel365/mixed_team_chrono.csv
@@ -202,6 +204,8 @@ jobs:
             --acquisition-report "$STARTLIST_ACQUISITION_ROOT/report.json" \
             --men-history external/ski/elo/python/nordic-combined/polars/excel365/men_chrono_elevation.csv \
             --ladies-history external/ski/elo/python/nordic-combined/polars/excel365/ladies_chrono_elevation.csv \
+            --men-roster external/ski/elo/python/nordic-combined/polars/excel365/startlist_races_men.csv \
+            --ladies-roster external/ski/elo/python/nordic-combined/polars/excel365/startlist_races_ladies.csv \
             --aliases "$STARTLIST_ALIAS_FILE" \
             --logical-date "$LOGICAL_DATE" \
             --output-dir "$STARTLIST_NORMALIZATION_ROOT" \

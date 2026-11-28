@@ -449,7 +449,18 @@ class NordicCombinedPredictionShadowTests(unittest.TestCase):
         self.assertNotIn("$shadow_root/startlists/", source)
         self.assertIn('--startlist-root "$STARTLIST_CANDIDATE_ROOT"', source)
         self.assertIn('--startlist-report "$STARTLIST_NORMALIZATION_REPORT"', source)
-        self.assertNotIn("/excel365/startlist_races_men.csv", source)
+        self.assertIn("/excel365/startlist_races_men.csv", source)
+        self.assertIn("/excel365/startlist_races_ladies.csv", source)
+        self.assertIn(
+            "--men-roster external/ski/elo/python/nordic-combined/polars/"
+            "excel365/startlist_races_men.csv",
+            source,
+        )
+        self.assertIn(
+            "--ladies-roster external/ski/elo/python/nordic-combined/polars/"
+            "excel365/startlist_races_ladies.csv",
+            source,
+        )
         self.assertNotIn("/relay/excel365/startlist_team_races_men.csv", source)
         self.assertIn("continue-on-error: true", source)
         self.assertIn("if: always()", source)
