@@ -197,6 +197,8 @@ jobs:
             --schedule excel365/races.csv \
             --men-chrono excel365/men_chrono.csv \
             --ladies-chrono excel365/ladies_chrono.csv \
+            --men-reference-history relay/excel365/men_chrono.csv \
+            --ladies-reference-history relay/excel365/ladies_chrono.csv \
             --aliases excel365/fis_identity_aliases.csv \
             --as-of "${{ steps.parameters.outputs.as_of }}" \
             --output-root "${{ steps.parameters.outputs.results_root }}" \
