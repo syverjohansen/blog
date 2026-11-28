@@ -25,7 +25,21 @@ class NordicNumbersNightlyWorkflowTests(unittest.TestCase):
         ):
             self.assertIn(f"workflow: {workflow}", self.source)
         self.assertIn('gh workflow run "$WORKFLOW"', self.source)
+        self.assertIn("TZ=America/New_York date +%F", self.source)
+        self.assertIn('-f as_of="$as_of"', self.source)
         self.assertIn("actions: write", self.source)
+
+    def test_every_sport_root_accepts_the_shared_results_cutoff(self) -> None:
+        for name in (
+            "alpine-site-data-update.yml",
+            "cross-country-site-data-update.yml",
+            "biathlon-site-data-update.yml",
+            "ski-jumping-schedule-update.yml",
+            "nordic-combined-schedule-update.yml",
+        ):
+            source = (ROOT / ".github/workflows" / name).read_text(encoding="utf-8")
+            trigger = source.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
+            self.assertIn("as_of:", trigger)
 
     def test_former_roots_do_not_retain_cross_sport_or_duplicate_schedules(self) -> None:
         for name in (
@@ -40,6 +54,28 @@ class NordicNumbersNightlyWorkflowTests(unittest.TestCase):
             self.assertIn("workflow_dispatch:", trigger)
             self.assertNotIn("schedule:", trigger)
             self.assertNotIn("workflow_run:", trigger)
+
+    def test_schedule_stages_forward_cutoff_to_results_stages(self) -> None:
+        workflows = ROOT / ".github/workflows"
+        for name in (
+            "ski-jumping-schedule-update.yml",
+            "nordic-combined-schedule-update.yml",
+        ):
+            source = (workflows / name).read_text(encoding="utf-8")
+            self.assertIn('-f as_of="${{ steps.parameters.outputs.as_of }}"', source)
+
+    def test_direct_results_runs_default_to_current_site_date(self) -> None:
+        workflows = ROOT / ".github/workflows"
+        for name in (
+            "alpine-site-data-update.yml",
+            "cross-country-site-data-update.yml",
+            "biathlon-site-data-update.yml",
+            "ski-jumping-results-update.yml",
+            "nordic-combined-results-update.yml",
+        ):
+            source = (workflows / name).read_text(encoding="utf-8")
+            self.assertIn("TZ=America/New_York date +%F", source)
+            self.assertNotIn("date -u -d 'yesterday' +%F", source)
 
     def test_startlist_pollers_remain_scheduled_and_publication_enabled(self) -> None:
         for name in (

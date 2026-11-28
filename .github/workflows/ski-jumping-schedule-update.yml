@@ -3,6 +3,10 @@ name: Ski-jumping automatic schedule pipeline
 on:
   workflow_dispatch:
     inputs:
+      as_of:
+        description: Results cutoff (YYYY-MM-DD); defaults to the current America/New_York date
+        required: false
+        type: string
       schedule_season:
         description: Optional season; defaults to accepted season or next season from October 1
         required: false
@@ -57,14 +61,21 @@ jobs:
       - name: Resolve run parameters
         id: parameters
         env:
+          REQUESTED_AS_OF: ${{ inputs.as_of || '' }}
           REQUESTED_SCHEDULE_SEASON: ${{ inputs.schedule_season || '' }}
         run: |
+          as_of="${REQUESTED_AS_OF:-$(TZ=America/New_York date +%F)}"
+          if ! [[ "$as_of" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+            echo "Invalid as_of date: $as_of" >&2
+            exit 1
+          fi
           season="$REQUESTED_SCHEDULE_SEASON"
           if [[ -n "$season" ]] && ! [[ "$season" =~ ^[0-9]{4}$ ]]; then
             echo "Invalid season: $season" >&2
             exit 1
           fi
           echo "run_date=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+          echo "as_of=$as_of" >> "$GITHUB_OUTPUT"
           echo "requested_schedule_season=$season" >> "$GITHUB_OUTPUT"
           echo "schedule_root=$RUNNER_TEMP/ski-jumping-schedule-update" >> "$GITHUB_OUTPUT"
 
@@ -191,6 +202,7 @@ jobs:
           gh workflow run ski-jumping-results-update.yml \
             --repo "$GITHUB_REPOSITORY" \
             --ref main \
+            -f as_of="${{ steps.parameters.outputs.as_of }}" \
             -f ski_ref=main
 
       - name: Upload schedule evidence

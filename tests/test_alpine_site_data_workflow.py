@@ -132,8 +132,8 @@ class AlpineSiteDataWorkflowTest(unittest.TestCase):
         self.assertLess(close, standings)
         self.assertLess(standings, generation)
 
-    def test_defaults_to_yesterday_and_retains_manual_override(self) -> None:
-        self.assertIn("date -u -d 'yesterday' +%F", self.source)
+    def test_defaults_to_current_site_date_and_retains_manual_override(self) -> None:
+        self.assertIn("TZ=America/New_York date +%F", self.source)
         self.assertIn("REQUESTED_AS_OF", self.source)
 
 
