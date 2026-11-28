@@ -26,6 +26,7 @@ on:
 permissions:
   actions: write
   contents: write
+  issues: write
 
 concurrency:
   group: biathlon-automatic-site-data-pipeline
@@ -68,17 +69,15 @@ jobs:
           token: ${{ secrets.BLOG_AUTOMATION_TOKEN }}
           path: external/ski
           fetch-depth: 1
-          persist-credentials: false
+          persist-credentials: true
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            /elo/python/biathlon/polars/relay/excel365/men_chrono.csv
-            /elo/python/biathlon/polars/relay/excel365/ladies_chrono.csv
-            /elo/python/biathlon/polars/relay/excel365/men_relay_chrono.csv
-            /elo/python/biathlon/polars/relay/excel365/ladies_relay_chrono.csv
-            /elo/python/biathlon/polars/relay/excel365/mixed_relay_chrono.csv
-            /elo/python/biathlon/polars/relay/excel365/single_mixed_relay_chrono.csv
-            /elo/python/biathlon/polars/excel365/races.csv
-            /elo/python/biathlon/polars/biathlon_season_close.py
+            /elo/python/biathlon/polars/*.py
+            /elo/python/biathlon/polars/*.csv
+            /elo/python/biathlon/polars/*.txt
+            /elo/python/biathlon/polars/excel365/
+            /elo/python/biathlon/polars/relay/*.py
+            /elo/python/biathlon/polars/relay/excel365/
             /ranks/biathlon/excel365/men_scrape_update.csv
             /ranks/biathlon/excel365/ladies_scrape_update.csv
 
@@ -95,7 +94,35 @@ jobs:
           fi
           echo "as_of=$as_of" >> "$GITHUB_OUTPUT"
           echo "candidate_root=$RUNNER_TEMP/biathlon-site-candidate" >> "$GITHUB_OUTPUT"
+          echo "results_root=$RUNNER_TEMP/biathlon-results-update" >> "$GITHUB_OUTPUT"
           echo "season_close_root=$RUNNER_TEMP/biathlon-season-close" >> "$GITHUB_OUTPUT"
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Acquire finalized IBU results and rebuild ratings
+        working-directory: external/ski/elo/python/biathlon/polars
+        run: |
+          uv run --isolated --python 3.12 \
+            --with polars==0.20.31 --with pandas==2.2.3 --with numpy==2.1.1 \
+            python biathlon_results_update.py \
+            --as-of "${{ steps.parameters.outputs.as_of }}" \
+            --output-root "${{ steps.parameters.outputs.results_root }}" \
+            --allow-network --apply
+
+      - name: Publish validated accepted biathlon data
+        id: publish_ski
+        working-directory: external/ski
+        run: |
+          root=elo/python/biathlon/polars
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "$root/excel365" "$root/relay/excel365" "$root/ibu_identity_aliases.csv"
+          if ! git diff --cached --quiet; then
+            git commit -m "Update biathlon results through ${{ steps.parameters.outputs.as_of }}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Resolve accepted history and schedule seasons
         id: season
@@ -260,7 +287,7 @@ jobs:
       - name: Publish validated biathlon site artifacts
         env:
           SEASON: ${{ steps.season.outputs.season }}
-          SKI_SHA: ${{ steps.ski.outputs.sha }}
+          SKI_SHA: ${{ steps.publish_ski.outputs.sha }}
         run: |
           artifact_root="static/python/biathlon/excel365"
           git config user.name "github-actions[bot]"
@@ -292,6 +319,15 @@ jobs:
             --ref main
           echo "Dispatched the guarded Biathlon prediction publisher." >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Upload biathlon results and identity evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: biathlon-results-${{ github.run_id }}
+          path: ${{ steps.parameters.outputs.results_root }}/
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Upload generated candidate
         if: always()
         uses: actions/upload-artifact@v4
@@ -310,4 +346,36 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
+      - name: Check out daily results reporting helper
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: daily-reporting
+          sparse-checkout: .github/scripts
+          persist-credentials: false
 
+      - name: Email results and update athlete review queue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT_STATUS: ${{ job.status }}
+          RESULTS_AS_OF: ${{ steps.parameters.outputs.as_of || inputs.as_of || '' }}
+          FANTASYXC_EMAIL_ADDRESS: ${{ vars.FANTASYXC_NOTIFICATION_EMAIL || 'syverjohansen@gmail.com' }}
+          FANTASYXC_SMTP_PASSWORD: ${{ secrets.FANTASYXC_EMAIL_APP_PASSWORD }}
+        run: |
+          as_of="${RESULTS_AS_OF:-$(TZ=America/New_York date +%F)}"
+          python3 daily-reporting/.github/scripts/daily_results_digest.py \
+            --sport biathlon --as-of "$as_of" --status "$RESULT_STATUS" \
+            --root "$RUNNER_TEMP/biathlon-results-update" \
+            --ibu-aliases external/ski/elo/python/biathlon/polars/ibu_identity_aliases.csv \
+            --output "$RUNNER_TEMP/biathlon-daily-digest" --sync-issues --send
+
+      - name: Upload daily results digest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: biathlon-daily-digest-${{ github.run_id }}
+          path: ${{ runner.temp }}/biathlon-daily-digest/
+          if-no-files-found: warn
+          retention-days: 90

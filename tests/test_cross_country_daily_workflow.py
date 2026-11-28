@@ -141,7 +141,7 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
 
     def test_complete_blog_suite_installs_its_declared_dependencies(self) -> None:
         self.assertIn(
-            "uv run --with-requirements pipelines/requirements-integration.txt",
+            "uv run --isolated --python 3.12 --with-requirements pipelines/requirements-integration.txt",
             self.daily,
         )
 

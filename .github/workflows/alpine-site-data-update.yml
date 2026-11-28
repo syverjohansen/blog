@@ -30,6 +30,7 @@ on:
 permissions:
   actions: write
   contents: write
+  issues: write
 
 concurrency:
   group: alpine-automatic-daily-pipeline
@@ -437,7 +438,7 @@ jobs:
             ${{ steps.parameters.outputs.results_root }}/gap-report.json
             ${{ steps.parameters.outputs.results_root }}/acquisition/report.json
             ${{ steps.parameters.outputs.results_root }}/acquisition/results.csv
-            ${{ steps.parameters.outputs.results_root }}/identity/report.json
+            ${{ steps.parameters.outputs.results_root }}/identity/
             ${{ steps.parameters.outputs.results_root }}/replay/report.json
             ${{ steps.parameters.outputs.results_root }}/promotion/report.json
             ${{ steps.parameters.outputs.season_close_root }}/report.json
@@ -445,3 +446,36 @@ jobs:
             ${{ steps.parameters.outputs.season_close_root }}/candidate/ladies_chrono.csv
           if-no-files-found: warn
           retention-days: 30
+
+      - name: Check out daily results reporting helper
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: daily-reporting
+          sparse-checkout: .github/scripts
+          persist-credentials: false
+
+      - name: Email results and update athlete review queue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT_STATUS: ${{ job.status }}
+          RESULTS_AS_OF: ${{ steps.parameters.outputs.as_of || inputs.as_of || '' }}
+          FANTASYXC_EMAIL_ADDRESS: ${{ vars.FANTASYXC_NOTIFICATION_EMAIL || 'syverjohansen@gmail.com' }}
+          FANTASYXC_SMTP_PASSWORD: ${{ secrets.FANTASYXC_EMAIL_APP_PASSWORD }}
+        run: |
+          as_of="${RESULTS_AS_OF:-$(TZ=America/New_York date +%F)}"
+          python3 daily-reporting/.github/scripts/daily_results_digest.py \
+            --sport alpine --as-of "$as_of" --status "$RESULT_STATUS" \
+            --root "$RUNNER_TEMP/alpine-results-update" \
+            --output "$RUNNER_TEMP/alpine-daily-digest" --sync-issues --send
+
+      - name: Upload daily results digest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alpine-daily-digest-${{ github.run_id }}
+          path: ${{ runner.temp }}/alpine-daily-digest/
+          if-no-files-found: warn
+          retention-days: 90
