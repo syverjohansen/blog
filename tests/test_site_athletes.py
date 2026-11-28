@@ -165,6 +165,29 @@ class SiteAthletesTest(unittest.TestCase):
         with self.assertRaisesRegex(AthleteMetadataError, "unsupported nation"):
             build_skier_info(rows, "L")
 
+    def test_normalizes_fis_nation_codes_from_accepted_history(self) -> None:
+        rows = [
+            row(
+                athlete_id="3270010",
+                skier="Irish Newcomer",
+                nation="IRL",
+                date="2026-11-27",
+                season="2027",
+                race="1",
+            )
+        ]
+        self.assertEqual(build_skier_info(rows, "M")[0]["nation"], "irl")
+        self.assertEqual(
+            build_skier_lookup(rows)[0],
+            {
+                "id": 3270010,
+                "skier": "Irish Newcomer",
+                "nation": "Ireland",
+                "nation_code": "irl",
+                "group": "1000_plus_3270000",
+            },
+        )
+
     def test_rejects_invalid_ids_and_empty_names(self) -> None:
         invalid_id = [
             row(

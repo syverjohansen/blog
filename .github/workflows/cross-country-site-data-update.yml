@@ -21,6 +21,11 @@ on:
         required: false
         default: false
         type: boolean
+      force_site_refresh:
+        description: Rebuild site artifacts from accepted ski data even when no new result candidate exists
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   actions: write
@@ -414,6 +419,7 @@ jobs:
 
       - name: Check out blog for site publication
         if: >-
+          inputs.force_site_refresh == true ||
           steps.results_candidate.outputs.status == 'candidate' ||
           steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||
@@ -426,6 +432,7 @@ jobs:
 
       - name: Generate cross-country site artifacts
         if: >-
+          inputs.force_site_refresh == true ||
           steps.results_candidate.outputs.status == 'candidate' ||
           steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||
@@ -449,15 +456,19 @@ jobs:
 
       - name: Run complete blog test suite
         if: >-
+          inputs.force_site_refresh == true ||
           steps.results_candidate.outputs.status == 'candidate' ||
           steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||
           steps.standings.outputs.changed == 'true'
         working-directory: blog
-        run: uv run --with polars python -m unittest discover -s tests -p 'test_*.py'
+        run: >-
+          uv run --with-requirements pipelines/requirements-integration.txt
+          python -m unittest discover -s tests -p 'test_*.py'
 
       - name: Set up Hugo
         if: >-
+          inputs.force_site_refresh == true ||
           steps.results_candidate.outputs.status == 'candidate' ||
           steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||
@@ -469,6 +480,7 @@ jobs:
 
       - name: Render site candidate
         if: >-
+          inputs.force_site_refresh == true ||
           steps.results_candidate.outputs.status == 'candidate' ||
           steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||
@@ -478,6 +490,7 @@ jobs:
 
       - name: Publish validated site artifacts
         if: >-
+          inputs.force_site_refresh == true ||
           steps.results_candidate.outputs.status == 'candidate' ||
           steps.team_results_candidate.outputs.status == 'candidate' ||
           steps.season_close.outputs.status == 'candidate' ||

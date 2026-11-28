@@ -55,6 +55,7 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         self.assertLess(render, publish_site)
 
     def test_site_work_is_gated_on_results_close_or_final_standings(self) -> None:
+        force_condition = "inputs.force_site_refresh == true ||"
         results_condition = "steps.results_candidate.outputs.status == 'candidate' ||"
         team_results_condition = (
             "steps.team_results_candidate.outputs.status == 'candidate' ||"
@@ -65,6 +66,7 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         self.assertGreaterEqual(self.daily.count(team_results_condition), 6)
         self.assertGreaterEqual(self.daily.count(close_condition), 6)
         self.assertGreaterEqual(self.daily.count(standings_condition), 6)
+        self.assertGreaterEqual(self.daily.count(force_condition), 6)
         checkout = self.daily.index("name: Check out blog for site publication")
         generator = self.daily.index("name: Generate cross-country site artifacts")
         self.assertLess(checkout, generator)
@@ -72,6 +74,14 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         self.assertIn(team_results_condition, self.daily[checkout:generator])
         self.assertIn(close_condition, self.daily[checkout:generator])
         self.assertIn(standings_condition, self.daily[checkout:generator])
+        self.assertIn(force_condition, self.daily[checkout:generator])
+
+    def test_manual_site_refresh_is_explicit_and_defaults_off(self) -> None:
+        trigger = self.daily.split("on:\n", 1)[1].split("\npermissions:", 1)[0]
+        self.assertIn("force_site_refresh:", trigger)
+        force = trigger.split("force_site_refresh:", 1)[1]
+        self.assertIn("default: false", force)
+        self.assertIn("type: boolean", force)
 
     def test_rankings_include_accepted_team_histories_and_final_standings(self) -> None:
         self.assertIn("/elo/python/standings_contract.py", self.daily)
@@ -128,6 +138,12 @@ class CrossCountryDailyWorkflowTests(unittest.TestCase):
         self.assertIn("git add static/python/cross-country/excel365", self.daily)
         self.assertNotIn("git add .", self.daily)
         self.assertNotIn("--force", self.daily)
+
+    def test_complete_blog_suite_installs_its_declared_dependencies(self) -> None:
+        self.assertIn(
+            "uv run --with-requirements pipelines/requirements-integration.txt",
+            self.daily,
+        )
 
     def test_first_individual_start_can_bridge_from_accepted_team_history(self) -> None:
         self.assertIn(
